@@ -1,0 +1,12 @@
+{
+  "decisions": [
+    {
+      "blindId": "W032",
+      "finalWeightPotential": "moderate",
+      "rationale": "Die Originalbänder bleiben sichtbar: Lane A bewertet die duale Silikon- plus kationische Polymerpersistenz als high, Lane B begrenzt sie wegen der ungewöhnlich starken Reset-Seite auf moderate. Die finale Abwägung folgt moderate.",
+      "whyThisBand": "Dual silicone + cationic guar rejects low, but unusually strong SLES/SLS/CAPB plus TEA-dodecylbenzenesulfonate reset bounds the persistent stack; no rich 2-in-1/oil/fatty architecture makes high less supported.",
+      "whyNotNeighborBand": "Low would ignore both silicone signals and the cationic guar route. High would require stronger support for net persistence after the unusually strong multi-anionic reset, such as a richer 2-in-1, oil, or fatty-conditioning architecture.",
+      "classificationConfidence": { "value": "moderate", "limitingFactor": "The exact formula is supported by current German sources, but INCI cannot quantify the net balance of silicone deposition and unusually strong cleansing." }
+    }
+  ]
+}

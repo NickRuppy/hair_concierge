@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W030",
+  "formula": {
+    "inciFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"cationic_polymer","name":"hydroxypropyl guar hydroxypropyltrimonium chloride","position":6},{"family":"weak_refatter","name":"glyceryl oleate","position":7},{"family":"weak_refatter","name":"lecithin","position":17}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":3},{"family":"nonionic_surfactant","name":"coco-glucoside","position":4}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Kationisches Guar an Position 6 und Glyceryl Oleate direkt danach ergeben eine plausibel spürbare, aber nicht schwere Pflegefracht."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das Polymer kann haften, während die Refatter überwiegend schwach beziehungsweise später sind."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, Betain und Coco-Glucoside an Position 2-4 bilden eine breite frühe Reinigungsbasis."
+  },
+  "competingSignals": [
+    "Breite frühe Tenside sprechen gegen high.",
+    "Polymer und Glyceryl Oleate stehen früh genug für eine merkliche Pflegewirkung."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate beschreibt die plausible, aber begrenzte Rückstandsbildung aus frühem Polymer plus Refatter unter starker Reinigung.",
+  "whyNotNeighborBand": "Low unterschätzt die frühe Kombination zweier Pflegerouten; high fehlt ohne Silikon, reiches Lipidgerüst oder schwache Reinigung die Tragfähigkeit.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "INCI-only lässt die tatsächliche Polymer- und Refattermenge offen."
+  }
+}

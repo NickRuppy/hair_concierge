@@ -1,0 +1,486 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "ead1333b-6839-464d-b272-673d39bb95a4:e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Sodium Laureth Sulfate is the first cleanser after water; Cocamidopropyl Betaine and Coco-Glucoside appear as co-surfactants.",
+      "Parfum appears before preservatives and minor care ingredients.",
+      "Glyceryl Oleate and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride are present after the preservative/pH-control region.",
+      "Sodium Hyaluronate and Aloe Barbadensis Leaf Juice Powder are late formula observations, not evidence for a measurable hydrating treatment effect."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Moisture, hyaluron/aloe, gentle/pH-skin-neutral, no silicones.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-1675524"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glyceryl oleate",
+      "hydrogenated palm glycerides citrate",
+      "lecithin"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES-led cleanser with amphoteric/nonionic support indicates ordinary moderate cleansing, not a low-cleanse co-wash or a clarifier.",
+      "supportingSignals": [
+        {
+          "observation": "SLES plus Cocamidopropyl Betaine and Coco-Glucoside",
+          "inference": "balanced regular cleansing architecture",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No disclosed active-matter level or finished shampoo cleansing test",
+          "inference": "do not infer exact strength",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Late glyceryl oleate and cationic guar support light after-feel, but not a high-conditioning shampoo claim.",
+      "supportingSignals": [
+        {
+          "observation": "Glyceryl Oleate and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride are present",
+          "inference": "plausible light refatting/deposition support",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone, fatty alcohol base, or finished combing/deposition data",
+          "inference": "conditioning remains low-confidence and bounded",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone or heavy oil system is visible; late conditioning clues suggest low rather than zero weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone tokens and only late glyceryl oleate/cationic guar",
+          "inference": "low expected buildup/weight for a rinse-off shampoo",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "low-residue-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum and minor conditioning ingredients are below unknown thresholds",
+          "inference": "fine-hair feel cannot be proven from INCI alone",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "low-residue-architecture"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula supports ordinary cleansing with light care; late hyaluron/aloe observations do not justify a stronger treatment focus.",
+      "supportingSignals": [
+        {
+          "observation": "Regular surfactant system plus late humectant/care ingredients",
+          "inference": "general regular shampoo with moisture-positioned story",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "general-care-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No finished-product hydration or pH data",
+          "inference": "do not classify as a treatment or scalp-active product",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "general-care-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact INCI and page positioning support a gentle secondary focus through a moderated SLES blend and pH-skin-neutral mildness claim, while fragrance and absent tolerance testing keep this separate from sensitive-scalp fit.",
+      "supportingSignals": [
+        {
+          "observation": "SLES is buffered by Cocamidopropyl Betaine/Coco-Glucoside and the dm page positions the product as pH-skin-neutral mild care.",
+          "inference": "A gentle secondary product focus is formula-coherent, not a tolerance guarantee.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "mildness-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum is present and no sensitive-scalp tolerance test is cited.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "mildness-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The INCI supports a normal wash-day shampoo role; no reset, medicated, or treatment role is supported.",
+      "supportingSignals": [
+        {
+          "observation": "Moderate regular cleanser with low conditioning/weight potential",
+          "inference": "regular use role",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No user profile or cadence test included",
+          "inference": "do not derive individual frequency",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "dm-de-1675524"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675524"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      0,
+      1
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {},
+    "weightDepositionLoad": "Formula-only signals are bounded; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established from the captured formula evidence.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula-only assessment; no shampoo-only performance outcome is established."
+  },
+  "claimAudit": [
+    {
+      "claim": "Moisture, hyaluron/aloe, gentle/pH-skin-neutral, no silicones.",
+      "verdict": "indeterminate",
+      "support": "The claim is recorded separately from the formula pass.",
+      "limitation": "Plausible as a regular silicone-free moisture-positioned shampoo; no exact hydration percentage, pH, or sensitive-scalp suitability inferred.",
+      "sourceIds": [
+        "dm-de-1675524"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-1675524",
+    "dm-bg-1675524"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The record makes no medical diagnosis, treatment, or efficacy claim; any scalp positioning remains cosmetic and non-approved."
+  }
+}

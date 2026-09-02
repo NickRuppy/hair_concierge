@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:alverde-nutri-care",
+  "candidateId": "alverde-nutri-care",
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "exactIdentity": {
+    "brand": "alverde NATURKOSMETIK",
+    "name": "Shampoo Nutri Care",
+    "market": "DE",
+    "packSize": "200 ml",
+    "gtinAliases": ["4066447975284"]
+  },
+  "selectionArchetype": "natural-cosmetic repair/care positioning",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/3108258/alverde-naturkosmetik-shampoo-nutri-care",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "dm is the brand owner/manufacturer-distributor for alverde; its current German PDP is treated as official evidence and exposes exact GTIN plus full INCI.",
+  "officialClaimSummary": [
+    "Pflegendes Shampoo für strapaziertes Haar.",
+    "Mit Bio-Mandel-Extrakt und Arginin.",
+    "Zertifizierte Naturkosmetik, vegan, ohne Silikone."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Repair/care positioning is strong, with explicit damaged-hair target.",
+    "Use instructions are regular rinse-out shampoo instructions."
+  ],
+  "corroboratingUrls": [],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Current official dm page positions a care shampoo for damaged hair, not a deep-cleansing or occasional reset SKU."
+  },
+  "notes": "No independent retailer corroboration was added because the brand-owner PDP already contains exact GTIN and complete current INCI."
+}

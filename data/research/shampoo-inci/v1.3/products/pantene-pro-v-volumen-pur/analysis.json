@@ -1,0 +1,510 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad:573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "SLES and Cocamidopropyl Betaine form a concise cleanser system with Xylenesulfonate as hydrotrope.",
+      "No silicone, oil or cationic polymer is listed, producing a low-deposition architecture.",
+      "Hydroxypropyl Methylcellulose is a film cue, but its late position and absent tress data do not prove volume.",
+      "Two current exact-GTIN German retailers agree on the formula; no current official German ingredient page was located."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Bis zu 100 % gestärkteres*, voller aussehendes Haar. *Gegen Stylingschäden vs. nur Shampoo",
+      "sourceLocation": "product_page",
+      "scope": "multi_product",
+      "sourceIds": [
+        "dm-de-1581103"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [
+      "sodium xylenesulfonate"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [
+      "hydroxypropyl methylcellulose"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The matching dm and Rossmann formula evidence supports moderate regular cleansing from a concise SLES/CAPB cleanser system.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and Cocamidopropyl Betaine form a concise cleanser system.",
+          "inference": "Moderate regular cleansing is formula-coherent.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active-matter and comparative cleansing data are unavailable.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula lacks silicone, a lipid phase or cationic polymer, so low conditioning is a confident broad product-property call from INCI.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone, lipid phase or cationic polymer is present.",
+          "inference": "Low deposition and conditioning are formula-coherent.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only combing test is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Low expected weight suits the volume architecture because no major heavy depositor is listed; HPMC film feel remains a bounded counter-signal.",
+      "supportingSignals": [
+        {
+          "observation": "No major heavy depositor is listed.",
+          "inference": "Low expected weight is formula-coherent.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "HPMC can form a film and repeat-use feel is untested.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A silicone/oil-light formula with Hydroxypropyl Methylcellulose supports volume as the primary focus, without proving lift magnitude.",
+      "supportingSignals": [
+        {
+          "observation": "The formula avoids silicones/oils and includes Hydroxypropyl Methylcellulose.",
+          "inference": "Volume primary focus is formula-coherent.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only lift, body or fiber-diameter endpoint is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The light film and low-residue cues mainly reinforce the primary volume story; no independent secondary focus is strong enough for the database value.",
+      "supportingSignals": [
+        {
+          "observation": "Low residue and HPMC/Panthenol cues point back to volume/lightness.",
+          "inference": "The secondary-focus value should remain empty.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone, gloss endpoint or separate repair/gentle mechanism is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Moderate cleansing with minimal deposition supports a frequent-use product role for users who tolerate SLES and fragrance.",
+      "supportingSignals": [
+        {
+          "observation": "Moderate cleansing is paired with minimal deposition.",
+          "inference": "Frequent use is a coherent product role.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No sensitive-scalp or cadence study is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "dm-de-1581103"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "dm-de-1581103",
+            "rossmann-de-8700216558761"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to volumeV1.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent volumeV1 cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Two exact-GTIN retailers corroborate the formula; volume/strength evidence is routine-level and official/package evidence is absent."
+  },
+  "claimAudit": [
+    {
+      "claim": "Bis zu 100 % gestärkteres*, voller aussehendes Haar. *Gegen Stylingschäden vs. nur Shampoo",
+      "verdict": "indeterminate",
+      "support": "Exact-GTIN retailer pages consistently record volume positioning and the formula is low-deposition with a film-forming cue.",
+      "limitation": "The comparison is routine-level against shampoo alone with no public protocol; it does not isolate shampoo contribution.",
+      "sourceIds": [
+        "dm-de-1581103",
+        "rossmann-de-8700216558761"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-1581103",
+    "rossmann-de-8700216558761"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The product makes cosmetic volume, strength and shine-positioning claims without a medical claim."
+  }
+}

@@ -1,0 +1,2996 @@
+{
+  "schemaVersion": "approved-shampoo-weight-consistency-v1",
+  "evaluatedOn": "2026-08-27",
+  "releaseSnapshotAt": "2026-08-26T13:16:06.309Z",
+  "scope": "Weight potential only; same approved stored formulas; no catalog writes or approval changes.",
+  "assessment": "Share with caveats; not a replacement-label approval.",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "counts": {
+    "total": 51,
+    "approved": 50,
+    "blocked": 1,
+    "profiles": 18
+  },
+  "rows": [
+    {
+      "candidateId": "guhl-kopfhaut-sensitive",
+      "name": "Guhl Kopfhaut Sensitive",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/guhl-kopfhaut-sensitive/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/guhl-kopfhaut-sensitive/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "salthouse-anti-fett",
+      "name": "Salthouse Anti Fett",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-fett/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-fett/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 9
+              },
+              {
+                "name": "dimethicone",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "moderate",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz moderate."
+      },
+      "changed": true,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "name": "Wahre Schätze Sanfte Hafermilch",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 19
+              },
+              {
+                "name": "polyquaternium-7",
+                "position": 22
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "dicaprylyl ether",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "glycine soja oil/soybean oil",
+            "position": 6,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "peg-60 hydrogenated castor oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride, polyquaternium-7); lipid_refatting weak (dicaprylyl ether); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "langhaarmaedchen-beautiful-curls",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "old": "low",
+      "oldRationale": "No silicone and only light deposition reduce buildup risk.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "guhl-hyaluron-plus",
+      "name": "Guhl Hyaluron+",
+      "old": "moderate",
+      "oldRationale": "Pearlizer/refatting/cationic guar create moderate weight potential without silicone-heavy persistence.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "hydrogenated vegetable oil",
+            "position": 6,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "hask-argan-oil",
+      "name": "Hask Shampoo Argan Oil",
+      "old": "moderate",
+      "oldRationale": "Meaningful deposition is present without silicone-heavy persistence.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "polyquaternium-10",
+                "position": 9
+              },
+              {
+                "name": "polyquaternium-7",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "argania spinosa (argan) kernel oil",
+                "position": 7
+              },
+              {
+                "name": "dicaprylyl ether",
+                "position": 12
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (polyquaternium-10, polyquaternium-7); lipid_refatting substantive (argania spinosa (argan) kernel oil, dicaprylyl ether, glyceryl oleate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "salthouse-anti-juckreiz",
+      "name": "Salthouse Anti Juckreiz",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-juckreiz/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-juckreiz/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "dejan-garz-shampoo",
+      "name": "Dejan Garz Shampoo",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 8
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 11
+              },
+              {
+                "name": "lecithin",
+                "position": 15
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "quaternium-80",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, hydrogenated palm glycerides citrate, lecithin, ascorbyl palmitate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/dejan-garz-shampoo/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/dejan-garz-shampoo/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "salthouse-anti-schuppen",
+      "name": "Salthouse Anti Schuppen",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "litsea cubeba fruit oil",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "citrus sinensis peel oil expressed",
+            "position": 17,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (litsea cubeba fruit oil); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "ogx-renewing",
+      "name": "OGX Renewing",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "amodimethicone",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "argania spinosa kernel oil",
+                "position": 6
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (amodimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (argania spinosa kernel oil, hydrogenated castor oil); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/ogx-renewing/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/ogx-renewing/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sebamed-anti-schuppen",
+      "name": "Sebamed Anti Schuppen",
+      "old": "low",
+      "oldRationale": "Low expected weight is plausible. Cationic-starch concentration and persistence are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl oxidized starch pg-trimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "lavera-basis-sensitiv",
+      "name": "Lavera Basis Sensitiv",
+      "old": "moderate",
+      "oldRationale": "Some weight potential is plausible, especially for fine hair. No silicone is present and rinse-off concentrations are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "helianthus annuus (sunflower) seed oil",
+                "position": 11
+              },
+              {
+                "name": "cetearyl alcohol",
+                "position": 15
+              },
+              {
+                "name": "pca glyceryl oleate",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "citrus aurantium peel oil**",
+            "position": 30,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "citrus limon (lemon) peel oil**",
+            "position": 32,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "citrus aurantium bergamia (bergamot) peel oil**",
+            "position": 36,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "lavandula oil/extract**",
+            "position": 39,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "high"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (helianthus annuus (sunflower) seed oil, cetearyl alcohol, pca glyceryl oleate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/lavera-basis-sensitiv/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/lavera-basis-sensitiv/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "ogx-biotin-collagen",
+      "name": "OGX Biotin & Collagen",
+      "old": "moderate",
+      "oldRationale": "Several deposition routes can add noticeable bodying film, but one silicone plus a regular cleanser base does not justify high WT.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "amodimethicone",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 12
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 16
+              },
+              {
+                "name": "lecithin",
+                "position": 19
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 27
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "starch hydroxypropyltrimonium chloride",
+            "position": 9,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: silicone substantive (amodimethicone); lipid_refatting weak (glyceryl oleate, hydrogenated palm glycerides citrate, lecithin, ascorbyl palmitate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/ogx-biotin-collagen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/ogx-biotin-collagen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "syoss-intense-curls",
+      "name": "Syoss Intense Curls",
+      "old": "moderate",
+      "oldRationale": "Two silicones plus cationic guar support moderate weight or buildup potential, bounded by unknown concentration and repeat-use persistence.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethicone",
+                "position": 8
+              },
+              {
+                "name": "amodimethicone",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 5
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 15
+              },
+              {
+                "name": "prunus armeniaca (apricot) kernel oil",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethicone, amodimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (peg-7 glyceryl cocoate, hydrogenated castor oil, prunus armeniaca (apricot) kernel oil); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-curls/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-curls/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "swiss-o-par-teebaumol",
+      "name": "Swiss-O-Par Teebaumöl",
+      "old": "low",
+      "oldRationale": "Low residue or weight is plausible. Tea-tree-oil concentration and repeat-use feel are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "low",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "low",
+          "10": "low",
+          "12": "low"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig low: lipid_refatting weak (peg-7 glyceryl cocoate); Regelkonfidenz high."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sebamed-urea-5",
+      "name": "Sebamed Urea 5%",
+      "old": "low",
+      "oldRationale": "No rich silicone/oil deposition system is present; weight potential remains low despite cationic starch and lipid-like thickeners.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "helianthus annuus seed oil",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl oxidized starch pg-trimonium chloride); lipid_refatting weak (helianthus annuus seed oil); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sante-glossy-shine",
+      "name": "Sante Glossy Shine",
+      "old": "low",
+      "oldRationale": "Low expected weight is plausible. Protein/lipid concentrations and repeat-use persistence are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 14
+              },
+              {
+                "name": "pca glyceryl oleate",
+                "position": 19
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 22
+              },
+              {
+                "name": "lecithin",
+                "position": 27
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 28
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed corn protein",
+                "position": 10
+              },
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 11
+              },
+              {
+                "name": "hydrolyzed soy protein",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: lipid_refatting weak (glyceryl oleate, pca glyceryl oleate, hydrogenated palm glycerides citrate, lecithin, ascorbyl palmitate); protein_film weak (hydrolyzed corn protein, hydrolyzed wheat protein, hydrolyzed soy protein); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sante-glossy-shine/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sante-glossy-shine/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "pantene-anti-schuppen",
+      "name": "Pantene Anti Schuppen",
+      "old": "moderate",
+      "oldRationale": "Moderate weight potential is plausible, especially for fine hair. Concentrations and repeat-use persistence are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 6
+              },
+              {
+                "name": "dimethicone",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/pantene-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/pantene-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "neqi-volume-victory",
+      "name": "Neqi Volume Victory",
+      "old": "low",
+      "oldRationale": "No silicone and limited cationic load keep weight low-to-moderate.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "low",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-18 glyceryl oleate/cocoate",
+                "position": 5
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "juniperus virginiana oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "polyquaternium-11",
+            "position": 17,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "low",
+          "10": "low",
+          "12": "low"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig low: lipid_refatting weak (peg-18 glyceryl oleate/cocoate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/neqi-volume-victory/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/neqi-volume-victory/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sante-sensitive-care",
+      "name": "Sante Sensitive Care",
+      "old": "low",
+      "oldRationale": "Low expected weight is plausible. Protein concentration and repeat-use feel are unknown.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "low",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed corn protein",
+                "position": 13
+              },
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 14
+              },
+              {
+                "name": "hydrolyzed soy protein",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "low",
+          "10": "low",
+          "12": "low"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig low: protein_film weak (hydrolyzed corn protein, hydrolyzed wheat protein, hydrolyzed soy protein); Regelkonfidenz high."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sante-sensitive-care/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sante-sensitive-care/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "monday-volume-kraft-fuelle",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "old": "moderate",
+      "oldRationale": "Polymer/oil load creates moderate buildup risk despite silicone absence.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "polyquaternium-10",
+                "position": 13
+              },
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 20
+              },
+              {
+                "name": "polyquaternium-7",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "cocos nucifera (coconut) oil",
+                "position": 11
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "polyquaternium-11",
+            "position": 22,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "high"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (polyquaternium-10, hydroxypropyl guar hydroxypropyltrimonium chloride, polyquaternium-7); lipid_refatting weak (cocos nucifera (coconut) oil, glyceryl oleate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "pantene-pro-v-volumen-pur",
+      "name": "Pantene Pro-V Volumen Pur",
+      "old": "low",
+      "oldRationale": "Low expected weight suits the volume architecture because no major heavy depositor is listed; HPMC film feel remains a bounded counter-signal.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "low",
+        "status": "provisional",
+        "routes": [],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "low",
+          "10": "low",
+          "12": "low"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig low: keine persistente Route; Regelkonfidenz high."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/pantene-pro-v-volumen-pur/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/pantene-pro-v-volumen-pur/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "head-shoulders-sensitive",
+      "name": "Head & Shoulders Anti Schuppen Sensitive",
+      "old": "moderate",
+      "oldRationale": "The silicone/cationic deposition route creates real weight potential, but the strong cleanser base and shampoo format keep it below high.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 10
+              },
+              {
+                "name": "dimethicone",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "moderate",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz moderate."
+      },
+      "changed": true,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-sensitive/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-sensitive/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "pantene-grow-abundance",
+      "name": "Pantene Grow Abundance",
+      "old": "moderate",
+      "oldRationale": "Silicone and cationic deposition create repeat-use weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 10
+              },
+              {
+                "name": "dimethicone",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "moderate",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz moderate."
+      },
+      "changed": true,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/pantene-grow-abundance/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/pantene-grow-abundance/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "guhl-anti-schuppen",
+      "name": "Guhl Anti Schuppen",
+      "old": "low",
+      "oldRationale": "No silicone or heavy lipid system is disclosed.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/guhl-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/guhl-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "ogx-rosemary",
+      "name": "OGX Rosemary",
+      "old": "moderate",
+      "oldRationale": "Amodimethicone and cationic starch create repeat-use weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "amodimethicone",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon außerhalb der ersten 10 Positionen."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 15
+              },
+              {
+                "name": "lecithin",
+                "position": 16
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 23
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 29
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "starch hydroxypropyltrimonium chloride",
+            "position": 17,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: silicone weak (amodimethicone); lipid_refatting weak (glyceryl oleate, lecithin, hydrogenated palm glycerides citrate, ascorbyl palmitate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sebamed-anti-schuppen-plus",
+      "name": "Sebamed Anti Schuppen Plus",
+      "old": "low",
+      "oldRationale": "No silicone, oil or rich multi-polymer system is disclosed.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl oxidized starch pg-trimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen-plus/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen-plus/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "loreal-elvital-glycolic-gloss",
+      "name": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+      "old": "moderate",
+      "oldRationale": "Silicone deposition creates weight potential, partly offset by strong cleansing.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethicone",
+                "position": 6
+              },
+              {
+                "name": "amodimethicone",
+                "position": 24
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethicone, amodimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "guhl-kraft-und-fuelle",
+      "name": "Guhl Kraft & Fülle",
+      "old": "low",
+      "oldRationale": "No silicone/oil-rich system and efficient cleanser base keep weight low.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 7
+              },
+              {
+                "name": "lecithin",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, lecithin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/guhl-kraft-und-fuelle/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/guhl-kraft-und-fuelle/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "schauma-anti-schuppen",
+      "name": "Schauma Anti Schuppen",
+      "old": "moderate",
+      "oldRationale": "Multiple light lipid/deposition ingredients create moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 8
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 13
+              },
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, hydrogenated castor oil, peg-7 glyceryl cocoate); Regelkonfidenz high."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/schauma-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/schauma-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "hair-biology-revitalize-soothe",
+      "name": "Hair Biology Revitalize & Soothe",
+      "old": "high",
+      "oldRationale": "Multiple silicones and cationic deposition create high weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 10
+              },
+              {
+                "name": "dimethicone",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "moderate",
+        "productConfidence": "low",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz moderate."
+      },
+      "changed": false,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "cantu-locken-pflege",
+      "name": "Cantu Shampoo Locken Pflege",
+      "old": "moderate",
+      "oldRationale": "Butter, glycol distearate and cationic/polyquat deposition support moderate weight potential even though no silicones are visible.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "butyrospermum parkii (shea) butter",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "polyquaternium-39",
+            "position": 19,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (butyrospermum parkii (shea) butter); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": true,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-ultra-sensitive",
+      "name": "Balea Ultra Sensitive",
+      "old": "low",
+      "oldRationale": "No silicone or heavy oil system appears; conditioning support is light/refatting rather than high-deposition.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "ascorbyl palmitate",
+                "position": 10
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 11
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 13
+              },
+              {
+                "name": "lecithin",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (ascorbyl palmitate, glyceryl oleate, hydrogenated palm glycerides citrate, lecithin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-ultra-sensitive/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-ultra-sensitive/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "neqi-moisture-mystery",
+      "name": "Neqi Moisture Mystery",
+      "old": "low",
+      "oldRationale": "Selected official formula has no silicone and limited deposition aids.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "low",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-18 glyceryl oleate/cocoate",
+                "position": 5
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "juniperus virginiana oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "low",
+          "10": "low",
+          "12": "low"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig low: lipid_refatting weak (peg-18 glyceryl oleate/cocoate); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/neqi-moisture-mystery/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/neqi-moisture-mystery/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-2-in-1-urea-5",
+      "name": "Balea 2 in 1 Urea 5%",
+      "old": "moderate",
+      "oldRationale": "Several refatting/deposition ingredients create moderate weight potential without silicone persistence.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "ascorbyl palmitate",
+                "position": 11
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 13
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 18
+              },
+              {
+                "name": "lecithin",
+                "position": 19
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (ascorbyl palmitate, glyceryl oleate, hydrogenated palm glycerides citrate, lecithin); Regelkonfidenz high."
+      },
+      "changed": false,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-2-in-1-urea-5/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-2-in-1-urea-5/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "syoss-intense-fullness-shampoo",
+      "name": "Syoss Intense Fullness Shampoo",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethicone",
+                "position": 8
+              },
+              {
+                "name": "amodimethicone",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 5
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 15
+              },
+              {
+                "name": "prunus armeniaca (apricot) kernel oil",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethicone, amodimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (peg-7 glyceryl cocoate, hydrogenated castor oil, prunus armeniaca (apricot) kernel oil); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-fullness-shampoo/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-fullness-shampoo/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "ogx-keratin-oil",
+      "name": "OGX Keratin Oil",
+      "old": "moderate",
+      "oldRationale": "Multiple depositing/lipid routes support moderate weight potential, capped below high by rinse-off context and regular cleansing.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "amodimethicone",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "argania spinosa kernel oil",
+                "position": 7
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (amodimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (argania spinosa kernel oil, hydrogenated castor oil); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/ogx-keratin-oil/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/ogx-keratin-oil/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "hask-curl-care",
+      "name": "Hask Curl Care Shampoo",
+      "old": "moderate",
+      "oldRationale": "Several depositors create weight potential, partly offset by strong cleansing and no silicone.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "polyquaternium-10",
+                "position": 13
+              },
+              {
+                "name": "polyquaternium-7",
+                "position": 15
+              },
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "cocos nucifera (coconut) oil",
+                "position": 7
+              },
+              {
+                "name": "argania spinosa (argan) kernel oil",
+                "position": 8
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 14
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (polyquaternium-10, polyquaternium-7, guar hydroxypropyltrimonium chloride); lipid_refatting substantive (cocos nucifera (coconut) oil, argania spinosa (argan) kernel oil, hydrogenated palm glycerides citrate, glyceryl oleate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/hask-curl-care/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/hask-curl-care/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "guhl-frische-und-leichtigkeit",
+      "name": "Guhl Frische und Leichtigkeit",
+      "old": "low",
+      "oldRationale": "No silicone or rich lipid system; strong cleansing gives useful reset capacity.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 6
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, ascorbyl palmitate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/guhl-frische-und-leichtigkeit/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/guhl-frische-und-leichtigkeit/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-professional-ultimate-volume",
+      "name": "Balea Professional Ultimate Volume",
+      "old": "low",
+      "oldRationale": "The formula lacks silicones/heavy oils and is positioned for volume, so low weight is plausible.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); protein_film weak (hydrolyzed wheat protein); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-professional-ultimate-volume/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-professional-ultimate-volume/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "silicone",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dimethiconol",
+                "position": 7
+              },
+              {
+                "name": "dimethicone",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes nichtflüchtiges Silikon in den ersten 10 Positionen."
+          },
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: silicone substantive (dimethiconol, dimethicone); cationic_polymer substantive (guar hydroxypropyltrimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "langhaarmadchen-lovely-long",
+      "name": "Langhaarmädchen Lovely Long",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "argania spinosa kernel oil",
+                "position": 7
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (argania spinosa kernel oil, hydrogenated castor oil); protein_film weak (hydrolyzed wheat protein); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/langhaarmadchen-lovely-long/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/langhaarmadchen-lovely-long/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "sebamed-every-day-shampoo",
+      "name": "Sebamed Every-Day Shampoo",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl oxidized starch pg-trimonium chloride); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-aqua-hyaluron",
+      "name": "Balea Aqua Hyaluron",
+      "old": "low",
+      "oldRationale": "No silicone or heavy oil system is visible; late conditioning clues suggest low rather than zero weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 9
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 15
+              },
+              {
+                "name": "lecithin",
+                "position": 16
+              },
+              {
+                "name": "ascorbyl palmitate",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, hydrogenated palm glycerides citrate, lecithin, ascorbyl palmitate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-kopfhaut-sensitive",
+      "name": "Balea Kopfhaut Sensitive Shampoo",
+      "old": "low",
+      "oldRationale": "No silicone/heavy oil system is visible; humectant/starch feel components may add slip but not high residue.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-kopfhaut-sensitive/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-kopfhaut-sensitive/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "nivea-shampoo-conditioner-2in1",
+      "name": "Nivea Shampoo&Conditioner 2in1",
+      "old": "moderate",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "dicaprylyl ether",
+                "position": 10
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 11
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "moderate",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (dicaprylyl ether, glyceryl oleate, hydrogenated castor oil); Regelkonfidenz moderate."
+      },
+      "changed": true,
+      "windowSensitive": true,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/nivea-shampoo-conditioner-2in1/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/nivea-shampoo-conditioner-2in1/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "balea-med-anti-schuppen",
+      "name": "Balea Med Anti Schuppen",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 13
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, hydrogenated palm glycerides citrate); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/balea-med-anti-schuppen/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/balea-med-anti-schuppen/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "syoss-intense-volume-shampoo",
+      "name": "Syoss Intense Volume Shampoo",
+      "old": "low",
+      "oldRationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 10
+              },
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 12
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 5
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, peg-7 glyceryl cocoate, hydrogenated castor oil); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-volume-shampoo/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/syoss-intense-volume-shampoo/analysis.json"
+      ]
+    },
+    {
+      "candidateId": "pantene-hydra-glow",
+      "name": "Pantene Hydra Glow Shampoo",
+      "old": "low",
+      "oldRationale": "No silicone/oil-rich system is present and strong cleansing offsets the moderate fatty-alcohol/polymer deposition signal.",
+      "oldConfidence": "moderate",
+      "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "needs_review",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "stearyl alcohol",
+                "position": 6
+              },
+              {
+                "name": "cetyl alcohol",
+                "position": 9
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "polyquaternium-6",
+            "position": 14,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "low",
+        "productConfidence": "low",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (stearyl alcohol, cetyl alcohol); Regelkonfidenz low. Nicht gelistete potenziell relevante Stoffe erfordern eine Prüfung."
+      },
+      "changed": true,
+      "windowSensitive": false,
+      "sourceFiles": [
+        "data/research/shampoo-inci/v1.3/products/pantene-hydra-glow/formula-source.json",
+        "data/research/shampoo-inci/v1.3/products/pantene-hydra-glow/analysis.json"
+      ]
+    }
+  ],
+  "stats": {
+    "old": {
+      "low": 26,
+      "moderate": 23,
+      "high": 1
+    },
+    "new": {
+      "moderate": 28,
+      "high": 17,
+      "low": 5
+    },
+    "status": {
+      "provisional": 38,
+      "needs_review": 12
+    },
+    "transitions": {
+      "low -> moderate": 20,
+      "moderate -> high": 15,
+      "moderate -> moderate": 8,
+      "low -> low": 5,
+      "high -> high": 1,
+      "low -> high": 1
+    },
+    "ruleConfidence": {
+      "high": 33,
+      "moderate": 5,
+      "low": 12
+    }
+  },
+  "interpretation": {
+    "changed": 36,
+    "unchanged": 14,
+    "changedWithoutDictionaryGap": 32,
+    "changedWithDictionaryGap": 4,
+    "unchangedWithoutDictionaryGap": 6,
+    "unchangedWithDictionaryGap": 8,
+    "windowSensitive": 8,
+    "lowToModerateDrivenBySingleCationicRoute": 19,
+    "remainingLowToModerateDrivenByTwoWeakRoutes": 1,
+    "notEmpiricalAccuracy": true
+  },
+  "recommendation": "Retain the approved baseline. Calibrate the translation from conditioning/deposition evidence to perceptible weight before approving revised values. Resolve dictionary gaps and review changed properties only in a separate version."
+}

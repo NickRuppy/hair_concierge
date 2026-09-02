@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W046",
+  "formula": {
+    "inciFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "protein_film",
+        "name": "hydrolyzed keratin",
+        "position": 12
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 14
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 7
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 17
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 16,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Protein an Position 12 und kationisches Guar an Position 14 sind relevante, aber späte und schlanke Depositionssignale."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Proteinfilm und Guar können leicht verbleiben, wirken ohne Lipid/Silikon und bei später Position nicht stark kumulativ."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES früh, Coco-Glucoside und zusätzlich CAPB stützen eine starke Reinigungs- und Ausspülbasis."
+  },
+  "competingSignals": [
+    "Keine Silikone, Öle oder Rückfetter im Evidenzpaket.",
+    "Glycol Distearate ist ausgeschlossen."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil die gesicherte Deposition spät und schlank ist und der Reset deutlich dagegensteht.",
+  "whyNotNeighborBand": "Moderate wäre nur bei unerwartet hoher Protein-/Guar-Dosierung plausibel; High fehlt jede reich persistente Architektur.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und mögliche Low-vs-Moderate-Dosierungsunsicherheit."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W014",
+  "formula": {
+    "inciFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "starch hydroxypropyltrimonium chloride",
+        "position": 9
+      },
+      { "family": "silicone", "name": "amodimethicone", "position": 10 },
+      { "family": "weak_refatter", "name": "glyceryl oleate", "position": 12 },
+      { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 16 },
+      { "family": "weak_refatter", "name": "lecithin", "position": 19 },
+      { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 27 }
+    ],
+    "resetRelevant": [
+      { "family": "anionic_surfactant", "name": "sodium methyl cocoyl taurate", "position": 2 },
+      { "family": "nonionic_surfactant", "name": "decyl glucoside", "position": 3 },
+      { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 },
+      { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 11 }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Bestätigte kationische Stärke, Amodimethicone und mehrere Refetter bilden eine konvergierende Depositionsbasis."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Amodimethicone und die bestätigte kationische Stärke sind persistent plausibel; die Refetter ergänzen mögliche kumulative Rückstände."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Taurate, Decyl Glucoside, CAPB und Coco-Glucoside reinigen breit, aber eher mild/moderat gegenüber der Depositionsseite."
+  },
+  "competingSignals": [
+    "Breite Tensidmischung spricht gegen maximale Schwere, die bestätigte Stärke-/Silikon-/Refetter-Konvergenz nach oben."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "Die Formel enthält genug persistente, konvergierende Systeme für high trotz moderatem Reset.",
+  "whyNotNeighborBand": "Nicht moderate, weil Amodimethicone und mehrere Refetter durch eine bestätigte kationische Stärkeroute im oberen Bereich verstärkt werden.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die Einstufung bleibt durch Retailer-Identität und unbekannte Einsatzmengen begrenzt."
+  }
+}

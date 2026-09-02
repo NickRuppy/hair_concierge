@@ -1,0 +1,1361 @@
+{
+  "schemaVersion": "shampoo-research-holdout-report-v2",
+  "status": "internal_research_only",
+  "repeatabilityGatePassed": true,
+  "candidateState": "validator_passed_preview",
+  "approvalStateMode": "validator_preview_forced_approved",
+  "legacyState": "new_product_no_legacy_baseline",
+  "candidates": [
+    {
+      "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:alverde-nutri-care",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:isana-professional-plex",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:herbal-essences-fiji",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:gliss-scalp-balance-sanft",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:nivea-classic-care",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:nivea-men-anti-schuppen",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:guhl-langzeit-volumen",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+      "analysisStatus": "validator_passed_preview"
+    }
+  ],
+  "process": {
+    "blindPasses": 10,
+    "productsWithFinalDelta": 10,
+    "finalDeltaCount": 18,
+    "formulaSourceTypes": {
+      "official": 7,
+      "package": 1,
+      "retailer": 2
+    },
+    "rows": [
+      {
+        "candidateId": "balea-professional-oil-repair-intensiv",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 3
+      },
+      {
+        "candidateId": "alverde-nutri-care",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "isana-professional-plex",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "herbal-essences-fiji",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "garnier-fructis-kraft-glanz",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "gliss-scalp-balance-sanft",
+        "formulaSourceType": "package",
+        "identityConfidence": "high",
+        "finalDeltaCount": 3
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "nivea-men-anti-schuppen",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "guhl-langzeit-volumen",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "jean-len-repair-dattel-vanille",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "low",
+        "finalDeltaCount": 1
+      }
+    ]
+  },
+  "classifications": {
+    "byProperty": {
+      "cleansingStrength": {
+        "moderate": 2,
+        "strong": 8
+      },
+      "conditioningLevel": {
+        "high": 4,
+        "moderate": 6
+      },
+      "weightPotential": {
+        "high": 4,
+        "moderate": 6
+      },
+      "focusPrimary": {
+        "general": 1,
+        "gentle": 2,
+        "repair": 5,
+        "scalp_active": 1,
+        "volume": 1
+      },
+      "focusSecondary": {
+        "[\"shine\"]": 3,
+        "[]": 7
+      },
+      "usageRole": {
+        "regular": 9,
+        "treatment": 1
+      },
+      "scalpComfortTarget": {
+        "not_targeted": 9,
+        "targeted": 1
+      },
+      "dandruffSupport": {
+        "not_supported": 8,
+        "supported": 2
+      }
+    },
+    "identityConfidence": {
+      "high": 1,
+      "low": 1,
+      "moderate": 8
+    },
+    "conflictStatus": {
+      "none": 10
+    },
+    "rows": [
+      {
+        "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:alverde-nutri-care",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:isana-professional-plex",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:herbal-essences-fiji",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "general",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "repair",
+          "focusSecondary": [
+            "shine"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:gliss-scalp-balance-sanft",
+        "identityConfidence": "high",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "gentle",
+          "focusSecondary": [
+            "shine"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:nivea-classic-care",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "gentle",
+          "focusSecondary": [
+            "shine"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:nivea-men-anti-schuppen",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "scalp_active",
+          "focusSecondary": [],
+          "usageRole": "treatment",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:guhl-langzeit-volumen",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "volume",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "supported"
+        }
+      },
+      {
+        "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+        "identityConfidence": "low",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      }
+    ]
+  },
+  "profiles": [
+    {
+      "profileKey": "fixture-fine-low-density-oily-volume",
+      "rankingHash": "8b99cba416dae8aaa365afe22264302e9a284e2c63f6306a92e465097475ff22",
+      "ranked": [
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-treated-balanced-shine",
+      "rankingHash": "c0f5c32896a9b5920e48fa101d16f70b7f81cb2eb5e2e83e80256e51abe63f43",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-dry-scalp-frizz",
+      "rankingHash": "f96bb88f12ce946c0f7501360e9592dec751b06a11b151d6321955a7e552caae",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-balanced-general",
+      "rankingHash": "0c29f3e610daa5abbe62fde1ae23f83ad060d22663bfa521b136fda8c0fcdaaf",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-oily-high-load",
+      "rankingHash": "82caad4153470fdefb732eecd5fa4f706c584402e523b5085db5f1724f6bfeff",
+      "ranked": [
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-low-volume-frequent-wash",
+      "rankingHash": "e94c6a9a27b8f0e66628db9fc4b9025b98c114e8158c35dc4d63fb9dce69d252",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-dry-damaged-smoothing",
+      "rankingHash": "31678c5f28ba470e1d7127cbd31852319d07907e138cea8e13eeedaca6a553c4",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-curly-frizz-definition",
+      "rankingHash": "b34d32bbf7981bfc839ebec11a6e83d7a4f35db165c21d317b37c8d010e42666",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-treated-breakage-repair",
+      "rankingHash": "ddf5bc2d901bf1902c9afbb54459c28b2e168abcdbaaade80c4c1044ea66e021",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-itch",
+      "rankingHash": "4531afaa91391bf95d626d3483c6ea063b5e5e224a1e929530608182a54fcb2f",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-oily-dandruff",
+      "rankingHash": "a3773efaaca878ded0222140db943fce355d2afa17edcb29daf61c985bd3bd51",
+      "ranked": [
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-dry-flakes",
+      "rankingHash": "4531afaa91391bf95d626d3483c6ea063b5e5e224a1e929530608182a54fcb2f",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-oily",
+      "rankingHash": "cc5922f52333140626b6e4615551d9c0d0134959372d2417f87e8c1de65dd387",
+      "ranked": [
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-balanced",
+      "rankingHash": "dee06926cab96c1d92da09831ef6911c665f02e4f9d38701171bf15966a8fe59",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-medical-boundary",
+      "rankingHash": "ce739a10bae3fbe1b4a91a4992ac2a69bbc882201dd06cac166cbc3e9bb4cfcc",
+      "ranked": [],
+      "abstentions": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        }
+      ]
+    },
+    {
+      "profileKey": "fixture-research-only-fragrance-avoidance",
+      "rankingHash": "8277194ee1512068f19e31978e6a0ebbf4fd72a352d123530b3ee3a3f33e29ea",
+      "ranked": [
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-straight-balanced-low-shine",
+      "rankingHash": "a65360d076843a133db027da08317dac02585555e9b830bdb2fc9a5801143d30",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coily-dry-definition",
+      "rankingHash": "c2c5998b88dc4a416ab2381eff19f28c3802a379273f69a7da2acef4bd11054e",
+      "ranked": [
+        {
+          "productId": "holdout-v2:alverde-nutri-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:herbal-essences-fiji",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+          "overall": "unknown"
+        },
+        {
+          "productId": "holdout-v2:gliss-scalp-balance-sanft",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:isana-professional-plex",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-classic-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:guhl-langzeit-volumen",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v2:nivea-men-anti-schuppen",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    }
+  ],
+  "agreement": {
+    "judgedDecisions": 70,
+    "exactAgreement": 0.8571428571428571,
+    "byProperty": {
+      "cleansingStrength": 0.6,
+      "conditioningLevel": 0.9,
+      "weightPotential": 0.9,
+      "focusPrimary": 1,
+      "focusSecondary": 0.8,
+      "usageRole": 0.8,
+      "scalpComfortTarget": 1
+    },
+    "dandruffMechanicalAgreement": 1,
+    "disagreements": [
+      {
+        "candidateId": "gliss-scalp-balance-sanft",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "gliss-scalp-balance-sanft",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "property": "conditioningLevel"
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "property": "weightPotential"
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "nivea-classic-care",
+        "property": "usageRole"
+      },
+      {
+        "candidateId": "guhl-langzeit-volumen",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "guhl-langzeit-volumen",
+        "property": "usageRole"
+      },
+      {
+        "candidateId": "jean-len-repair-dattel-vanille",
+        "property": "cleansingStrength"
+      }
+    ],
+    "repeatabilityGate": {
+      "overallMinimum": 0.75,
+      "perPropertyMinimum": 0.6,
+      "overallPassed": true,
+      "failedProperties": [],
+      "passed": true
+    },
+    "defaults": {
+      "cleansingStrength": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "moderate": 2,
+          "strong": 8
+        },
+        "secondLabelDistribution": {
+          "moderate": 6,
+          "strong": 4
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.6
+      },
+      "conditioningLevel": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "high": 4,
+          "moderate": 6
+        },
+        "secondLabelDistribution": {
+          "high": 3,
+          "moderate": 7
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.9
+      },
+      "weightPotential": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "high": 4,
+          "moderate": 6
+        },
+        "secondLabelDistribution": {
+          "high": 3,
+          "moderate": 7
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.9
+      },
+      "focusPrimary": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "general": 1,
+          "gentle": 2,
+          "repair": 5,
+          "scalp_active": 1,
+          "volume": 1
+        },
+        "secondLabelDistribution": {
+          "general": 1,
+          "gentle": 2,
+          "repair": 5,
+          "scalp_active": 1,
+          "volume": 1
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 1
+      },
+      "focusSecondary": {
+        "defaultValue": [],
+        "firstLabelDistribution": {
+          "[\"shine\"]": 3,
+          "[]": 7
+        },
+        "secondLabelDistribution": {
+          "[\"shine\"]": 1,
+          "[]": 9
+        },
+        "nonDefaultDecisions": 3,
+        "conditionalNonDefaultAgreement": 0.3333333333333333
+      },
+      "usageRole": {
+        "defaultValue": "regular",
+        "firstLabelDistribution": {
+          "regular": 9,
+          "treatment": 1
+        },
+        "secondLabelDistribution": {
+          "frequent": 2,
+          "regular": 7,
+          "treatment": 1
+        },
+        "nonDefaultDecisions": 3,
+        "conditionalNonDefaultAgreement": 0.3333333333333333
+      },
+      "scalpComfortTarget": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "not_targeted": 9,
+          "targeted": 1
+        },
+        "secondLabelDistribution": {
+          "not_targeted": 9,
+          "targeted": 1
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 1
+      }
+    }
+  },
+  "unexpectedAbstentions": [],
+  "validationGatePassed": true,
+  "reportHash": "19a1359a3fb55a4f18c05c21255094342621be3de997d3d1977cb489e90bbe83"
+}

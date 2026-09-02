@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+  "market": "DE",
+  "packSize": "400 ml",
+  "gtinEan": "810006945461",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "cantu-uk-official-cleansing-cream",
+      "type": "official",
+      "market": "GB",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.cantubeauty.co.uk/products/cleansing-cream-shampoo/",
+      "rawInci": "AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDE DIPA, GLYCERIN, ACRYLATES COPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN.",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "dm-de-1675020",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+      "rawInci": "AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDE DIPA, GLYCERIN, ACRYLATES COPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN",
+      "productMatch": "exact_gtin",
+      "gtinEan": "810006945461"
+    },
+    {
+      "id": "rossmann-de-0810006943450",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-cantu-sulfate-free-cleansing-cream-shampoo/p/0810006943450",
+      "rawInci": "Aqua (Water), Sodium C14-16 Olefin Sulfonate, Cocamidopropyl Betaine, Cocamide DIPA, Glycerin, Acrylates Copolymer, Phenoxyethanol, PEG-150 Distearate, Parfum (Fragrance), Butyrospermum Parkii (Shea) Butter, Polyester-37, Sodium Hydroxide, Glycol Distearate, Panthenol, Guar Hydroxypropyltrimonium Chloride, Ethylhexylglycerin, Disodium EDTA, Steareth-4, Polyquaternium-39, Sodium Benzoate, Citric Acid, Polysorbate 20, Sodium Chloride, Tocopherol, Benzyl Benzoate, Coumarin",
+      "productMatch": "unverified",
+      "gtinEan": "0810006943450"
+    }
+  ],
+  "rawInci": "AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDE DIPA, GLYCERIN, ACRYLATES COPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN",
+  "normalizedInci": [
+    "aqua (water)",
+    "sodium c14-16 olefin sulfonate",
+    "cocamidopropyl betaine",
+    "cocamide dipa",
+    "glycerin",
+    "acrylates copolymer",
+    "phenoxyethanol",
+    "peg-150 distearate",
+    "parfum (fragrance)",
+    "butyrospermum parkii (shea) butter",
+    "polyester-37",
+    "sodium hydroxide",
+    "glycol distearate",
+    "panthenol (vitamin b5)",
+    "guar hydroxypropyltrimonium chloride",
+    "ethylhexylglycerin",
+    "disodium edta",
+    "steareth-4",
+    "polyquaternium-39",
+    "sodium benzoate",
+    "citric acid",
+    "polysorbate 20",
+    "sodium chloride",
+    "tocopherol (vitamin e)",
+    "benzyl benzoate",
+    "coumarin"
+  ],
+  "inciFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

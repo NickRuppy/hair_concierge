@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+  "market": "DE",
+  "packSize": "400 ml",
+  "gtinEan": "4006000193991",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T22:15:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "nivea-de-2in1-express-4006000193991-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "locator": "https://www.nivea.de/produkte/2in1-express-shampoo-and-spuelung-400ml-40060001939910001.html",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Aloe Barbadensis Leaf Juice Powder, Guar Hydroxypropyltrimonium Chloride, Dicaprylyl Ether, Glyceryl Oleate, Glycerin, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Parfum"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Aloe Barbadensis Leaf Juice Powder, Guar Hydroxypropyltrimonium Chloride, Dicaprylyl Ether, Glyceryl Oleate, Glycerin, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Parfum",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "decyl glucoside",
+    "coco-glucoside",
+    "sodium chloride",
+    "citric acid",
+    "aloe barbadensis leaf juice powder",
+    "guar hydroxypropyltrimonium chloride",
+    "dicaprylyl ether",
+    "glyceryl oleate",
+    "glycerin",
+    "glycol distearate",
+    "hydrogenated castor oil",
+    "sodium benzoate",
+    "benzoic acid",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "parfum"
+  ],
+  "inciFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

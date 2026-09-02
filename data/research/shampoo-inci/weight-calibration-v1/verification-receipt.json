@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "shampoo-weight-verification-v1",
+  "date": "2026-08-27",
+  "verdict": "No blocking findings. Ready for research review only.",
+  "scope": "Weight-potential calibration extension only; not the whole long-running dirty branch.",
+  "branch": "codex/shampoo-inci-research-engine",
+  "head": "4632a38b3841e610c3ebeb48494a9144424fb634",
+  "base": "1261924770d7008c023fbcbb91062aa572504030",
+  "worktree": "/Users/nick/AI_work/hair_conscierge/.worktrees/shampoo-inci-research-engine",
+  "contentFingerprint": "554238ee9ad5c3eda0ef4739d2743d195d4d8427b124079297332805c0376e84",
+  "fingerprintMethod": "SHA-256 of sorted path<TAB>sha256<LF> manifest. This receipt is excluded to avoid self-reference.",
+  "files": [
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/adjudication.md",
+      "sha256": "43a0247f73852222928da55b20cda9800ef446fcb70922fdc5d03f084011ebeb"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/labels-a.json",
+      "sha256": "caaf2b6cdba8e25fc01f70a6466fb4819dcd662f4fc59879b0da5d7f7d8e3f2e"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/labels-b.json",
+      "sha256": "f2328315229a9175f563a1efcd20dd8c63fdbfe4c3a9da200f58617eec342e67"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/labels-freeze.json",
+      "sha256": "03355c25a573a0ec44610050470efb14aa90b790903ad36322dff378c0210036"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/mapping.json",
+      "sha256": "de568a5359b82acbb63d8cdc99c5540e46593e133c4e458ca811b27e187b53d4"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/packet.json",
+      "sha256": "0c69fc6588a9bacad973ba5c999d47d8f5c8a0d61c0c7682a8f3cce387b1f697"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/protocol.json",
+      "sha256": "d06dd5489ce7834373689314df5a8857d018e954d8c8b841ccef20fde5b2860f"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/report.json",
+      "sha256": "7d107b5364ab1de799df3a8811e2034dca082f251f8ade19c4d9c775a7e791fc"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/report.md",
+      "sha256": "fddf47f70278f31b4026defbcf679d3bb160a5d55b77e98fd5b39b46a5a33fb4"
+    },
+    {
+      "path": "data/research/shampoo-inci/weight-calibration-v1/start-receipt.json",
+      "sha256": "40807576f9fb72da1c2d2e86944b6374679751da20ee0c3ec9b28b208993b8df"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.3/new-product-research-runbook.md",
+      "sha256": "f259957a23e5ece01d2fccf8ad95e30e52a4d631c3f82c1ea3ad6d43c2c62939"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.4-draft/README.md",
+      "sha256": "d3734d16f8ccacc367558756ae18aaba310424e0c873e4ffb771f86e921e470e"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.4-draft/operational-amendment.md",
+      "sha256": "64cc9bd8da1b4baff7d700d0cb781640cbb253c3bd78cb417baf5b21bd7d3286"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.4-draft/weight-potential-calibration.md",
+      "sha256": "5b865a37c289ddffdd6121ae2e08def028b47b7bbb095ddc2905df34da60a8d0"
+    },
+    {
+      "path": "plans/2026-08-27-shampoo-weight-calibration.md",
+      "sha256": "97452b14bf87d921f87f5813ed180fe0acbafc5f69cd3c36226df59ca79a394f"
+    },
+    {
+      "path": "scripts/shampoo-research/calibrate-weight.ts",
+      "sha256": "75f19e2d663e3f76f5f4ce5a76ead553c0d5ee993a9422e7b2f7cd522144fb3d"
+    },
+    {
+      "path": "src/lib/shampoo-research/weight-calibration.ts",
+      "sha256": "f9afacd9206de80e96f35af5a44a338fe8c61d3be78a74030551a73f966830e0"
+    },
+    {
+      "path": "tests/shampoo-research-weight-calibration.test.ts",
+      "sha256": "8601e7bbbd3961b2de89582a884fa548319ef4c74fd8f9cc6dd8dc7d62edc27b"
+    },
+    {
+      "path": "tests/shampoo-research-weight-report.test.ts",
+      "sha256": "cf6a104c1cf506260db013023b636d2e2d48b86463660e0fa16f858e8b09cb45"
+    }
+  ],
+  "outcomes": {
+    "policy": "Explicit route recognition, strength conditions, exclusions and 8/10/12 sensitivity documented; policy hash frozen before independent labeling.",
+    "rerun": "Exactly the ten original holdout-v2 manifest candidates, using the original formula fingerprints.",
+    "repeatability": {
+      "labelAgreement": "10/10",
+      "previousLabelAgreement": "9/10",
+      "routeAgreement": "10/10",
+      "windowAgreement": "9/10",
+      "measuredAccuracy": null
+    },
+    "distribution": {
+      "high": 2,
+      "moderate": 8,
+      "low": 0
+    },
+    "changedProducts": [
+      "isana-professional-plex: high to moderate",
+      "jean-len-repair-dattel-vanille: high to moderate"
+    ],
+    "history": "193 existing research/index files remain byte-identical to the start receipt.",
+    "confidence": "INCI-only product confidence remains moderate or low; high rule confidence does not override researcher caveats.",
+    "preservation": "No approval, production matching, catalog, database, schema, original audit or source-formula changes in this extension."
+  },
+  "verification": [
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research*.test.ts*",
+      "result": "174/174 passed on final content"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npx eslint --no-ignore src/lib/shampoo-research/weight-calibration.ts scripts/shampoo-research/calibrate-weight.ts tests/shampoo-research-weight-calibration.test.ts tests/shampoo-research-weight-report.test.ts",
+      "result": "passed with zero warnings/errors"
+    },
+    {
+      "command": "npm run research:shampoo:validate-holdout",
+      "result": "10/10 valid"
+    },
+    {
+      "command": "npm run research:shampoo:validate-holdout-v2",
+      "result": "10/10 valid"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx scripts/shampoo-research/calibrate-weight.ts --write",
+      "result": "generated only sibling report.md/report.json"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx scripts/shampoo-research/calibrate-weight.ts",
+      "result": "read-only pass; frozen policy, packet, labels and 193 historical hashes verified"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "git status --short --untracked-files=normal (root)",
+      "result": "Only pre-existing .claude/launch.json and apps/product-intake-review/public/ remain; unrelated files preserved"
+    }
+  ],
+  "redGreenEvidence": [
+    "Synthetic evaluator tests failed first, then passed against frozen rule rows.",
+    "Regression cases cover duplicate route/ingredient evidence, wrong positions, exact membership and null/null non-agreement.",
+    "Known payload/unknown-family and PEG-derived-oil/opaque-blend regressions fixed to conform to frozen policy.",
+    "Report caveat visibility assertion failed before the scoped presentation fix, then passed."
+  ],
+  "review": {
+    "findings": [],
+    "lanes": [
+      "Main-session correctness and evidence review of evaluator, CLI, report and routing.",
+      "Main-session structural review for isolation and narrow scope.",
+      "Read-only Claude scoped code review: no hard defects; verified exact-ten membership, frozen history, no production imports and honest confidence framing."
+    ],
+    "deltaAfterCounterpart": "Report-only caveat prominence and regression assertions; parent inspected the delta and reran all 174 tests, typecheck, scoped lint and historical validators. No policy, thresholds or label answers changed.",
+    "residualObservations": [
+      "Garnier Carbomer is flagged by both raters but not the literal evaluator dictionary. Kept visible for follow-up without changing frozen labels or adding a weight vote.",
+      "alverde window-8 annotation from rater A incorrectly removes weak refatters; original answer retained and operator error explained in adjudication.",
+      "Refatters may be excluded from an independent extra vote while still appearing within grouped lipid evidence."
+    ]
+  },
+  "manualEvidence": "Read final Markdown table, reasoning, preserved caveats and adjudication. Confirmed two changed labels and links to explanations. No UI was changed.",
+  "skippedChecks": [
+    "Production build/browser flow: isolated research CLI/module with no UI or production call-site changes.",
+    "Database integration or production apply: no schema/database changes authorized.",
+    "Empirical weight/performance testing: not performed; agreement is not accuracy."
+  ],
+  "residualRisks": [
+    "Same-lineage raters and shared source packet are not independent empirical validation.",
+    "No low-weight or silicone-containing real product in this cohort; synthetic tests validate mechanics only.",
+    "Previous v2 labeling had positioning while this rerun is formula-only; agreement improvement is not a controlled estimate of rule effect.",
+    "One formula identity remains low confidence.",
+    "Heuristic prominence windows and route thresholds are not concentration or deposition measurements.",
+    "The archived paired-report integration test intentionally requires unchanged frozen history."
+  ],
+  "artifactDisposition": {
+    "commitIntended": "The 19 manifest files plus this receipt; retained locally for future authorized publication.",
+    "transient": "/tmp/shampoo-weight-plan-review.md and /tmp/shampoo-weight-code-review.md stay outside the repository and are not commit artifacts.",
+    "unrelated": "Pre-existing branch changes and root untracked files preserved.",
+    "publication": "No commit, push, PR, merge, deploy or production apply performed."
+  }
+}

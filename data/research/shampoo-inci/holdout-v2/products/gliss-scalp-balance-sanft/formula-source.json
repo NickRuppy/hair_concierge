@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:gliss-scalp-balance-sanft",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4015100893021",
+  "formulaCode": null,
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "formulaSourceType": "package",
+  "sourceRecords": [
+    {
+      "id": "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27",
+      "type": "package",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://dm.henkel-dam.com/is/image/henkel/4015100893021_C7N1_S01_V01_GLISS_SHP_Scalp_Balance_Sanft_200ml_GSSS0_3066112_back-DE",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Biotin, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citrus Limon (Lemon) Peel Oil, Alpha-Isomethyl Ionone, Propylene Glycol",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4015100893021"
+    },
+    {
+      "id": "dm-de-gliss-scalp-balance-sanft-4015100893021-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://www.dm.de/p/d/3119263/schwarzkopf-gliss-shampoo-scalp-balance-sanft",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Biotin, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citrus Limon (Lemon) Peel Oil, Alpha-Isomethyl Ionone, Propylene Glycol",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4015100893021"
+    }
+  ],
+  "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Biotin, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citrus Limon (Lemon) Peel Oil, Alpha-Isomethyl Ionone, Propylene Glycol",
+  "normalizedInci": [
+    "aqua (water, eau)",
+    "sodium laureth sulfate",
+    "sodium chloride",
+    "cocamidopropyl betaine",
+    "panthenol",
+    "biotin",
+    "sodium benzoate",
+    "parfum (fragrance)",
+    "coco-glucoside",
+    "citric acid",
+    "glyceryl oleate",
+    "peg-7 glyceryl cocoate",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "glycol distearate",
+    "laureth-4",
+    "hydrogenated castor oil",
+    "peg-120 methyl glucose dioleate",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "sodium hydroxide",
+    "citrus limon (lemon) peel oil",
+    "alpha-isomethyl ionone",
+    "propylene glycol"
+  ],
+  "inciFingerprint": "ca38a7bf239d06376aa7a036f6388a512fa8f1d691a6a447e0554a133daba0f2",
+  "identityConfidence": "high",
+  "conflictStatus": "none",
+  "conflictRationale": "Manufacturer HTML lazy-loads its ingredient panel, but the official exact-GTIN German back-pack image exposes a fully legible INCI, barcode and 200 ml size. Package transcription matches dm's exact-GTIN list. The pack image shows reference 3073444 / GSSS0; this is retained as a pack reference, not assumed to be a formula code."
+}

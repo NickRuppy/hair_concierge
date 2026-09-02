@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W027",
+  "formula": { "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad", "sourceTier": "retailer", "capturedAt": "2026-08-10T20:30:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "silicone", "name": "amodimethicone", "position": 11 }, { "family": "weak_refatter", "name": "glyceryl oleate", "position": 15 }, { "family": "weak_refatter", "name": "lecithin", "position": 16 }, { "family": "cationic_polymer", "name": "starch hydroxypropyltrimonium chloride", "position": 17 }, { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 23 }, { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 29 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium methyl cocoyl taurate", "position": 2 }, { "family": "nonionic_surfactant", "name": "decyl glucoside", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 }, { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 12 }], "excludedIngredients": [{ "name": "rosmarinus officinalis leaf oil", "position": 6, "reason": "Ätherisches Duftöl ist kein Lipid-Payload." }, { "name": "mentha piperita oil", "position": 7, "reason": "Ätherisches Duftöl ist kein Lipid-Payload." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Das Silikon liegt nicht isoliert vor: kationische Stärke, Glyceryl Oleate, Lecithin und weitere spätere Refatter schaffen eine merkliche, aber begrenzte Ablagerungsseite." },
+  "persistence": { "value": "moderate", "rationale": "Amodimethicone mit kationischem Polymer ist eine plausible haftende Kombination; die breite Reinigung und die späte Lage weiterer Refatter begrenzen eine hohe Persistenzannahme." },
+  "resetCapacity": { "value": "moderate", "rationale": "Die frühen Tenside sind breit und ausreichend reinigend, aber milder als eine frühe SLES/SLS-Doppelbasis und daher kein starker Gegenanker." },
+  "competingSignals": ["Milde Tenside sprechen gegen eine überzogene Annahme maximaler Schwere.", "Silikon, kationische Stärke und mehrere Pflegehilfen bilden zusammen eine starke Persistenzarchitektur."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die gekoppelte Silikon-/Polymerroute und ergänzende Refatter sprechen gegen Low, bleiben im Kontext der breiten Tensidbasis und überwiegend späteren Pflegesignale aber begrenzt.",
+  "whyNotNeighborBand": "Low würde die mehrschichtige Ablagerungsseite unterschätzen; High ist ohne eine reichere frühe Pflegearchitektur oder geringere Reset-Kapazität nicht ausreichend belegt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "Die beiden aktuellen deutschen Quellen sichern die Formel, aber INCI liefert keine Messung der auf dem Haar verbleibenden Menge." }
+}

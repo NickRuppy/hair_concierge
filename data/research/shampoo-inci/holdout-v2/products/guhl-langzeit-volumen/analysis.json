@@ -1,0 +1,545 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:guhl-langzeit-volumen:94b69db71ebff4ee6078bb5dd9173cdf86a83090fe93da25d5f0d0d09b7a2323",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES-geführte Reinigungsbasis mit Cocamidopropyl Betaine und Coco-Glucoside.",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht früh genug für einen plausiblen kationischen Depositionsweg.",
+      "Lactic Acid ist prominent gelistet, Citric Acid zusätzlich später; ohne fertigen pH-Wert bleibt der saure Oberflächenweg unsicher.",
+      "Tetrasodium Glutamate Diacetate ist ein erkennbarer GLDA-Chelator und stützt schwache bis moderate anorganische Entfernung.",
+      "Piroctone Olamine ist als anerkannter Anti-Schuppen-Wirkstoff enthalten; CI 42090 und CI 60730 sind optische Expositions-/Farbhinweise, aber ohne Claim kein Tonungsbeweis.",
+      "Nach dem Blindpass wurden S2, Chelation und R4 auf maximal 1 begrenzt: kein fertiger pH, keine belastbare Chelationsleistung und kein stressorspezifischer Shampoo-Schutzbeleg. Die acht Produktwerte wurden dadurch nicht geändert.",
+      "S3 und V3 auf maximal 1 begrenzt: Diese Entfernungseffekte dürfen die dokumentierten organischen/anorganischen Entfernungsrouten nicht übersteigen. Die direkte Volumenpositionierung bleibt unverändert."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Langzeit Volumen",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Sorbitan Caprylate"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Acacia Senegal Gum Extract"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sodium Laureth Sulfate steht früh und wird durch Cocamidopropyl Betaine und Coco-Glucoside ergänzt. Das stützt eine starke, aber durch amphotere/nichtionische Co-Tenside moderierte Reinigungsbandbreite.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate steht früh und wird durch Cocamidopropyl Betaine und Coco-Glucoside ergänzt. Das stützt eine starke, aber durch amphotere/nichtionische Co-Tenside moderierte Reinigungsbandbreite.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht.",
+      "supportingSignals": [
+        {
+          "observation": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Positionierung ersetzt keinen Beleg für messbare Shampoo-only Leistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sekundärfokus bleibt leer, weil Säuren, Chelator und Pflegepolymere ohne Produktpositionierung keine eigenständige zweite Rolle sicher belegen. Diese Routen bleiben in den Scores sichtbar.",
+      "supportingSignals": [
+        {
+          "observation": "Sekundärfokus bleibt leer, weil Säuren, Chelator und Pflegepolymere ohne Produktpositionierung keine eigenständige zweite Rolle sicher belegen. Diese Routen bleiben in den Scores sichtbar.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Hersteller-FAQ erlaubt tägliches Waschen; der v1.4-Trigger frequent verlangt zusätzlich nicht-starke Reinigung. Bei dieser starken Einordnung bleibt regular bestehen; ohne Reset-Absicht wird nicht alternating gewählt.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-FAQ erlaubt tägliches Waschen; der v1.4-Trigger frequent verlangt zusätzlich nicht-starke Reinigung. Bei dieser starken Einordnung bleibt regular bestehen; ohne Reset-Absicht wird nicht alternating gewählt.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Trotz Piroctone Olamine, Feuchthaltestoffen und Lactic Acid ist kein separater, kohärent belegter Komfortpfad für trockene, juckende oder empfindliche Kopfhaut sichtbar. Parfum, Farbstoffe und Duftstoff bleiben Expositionshinweise.",
+      "supportingSignals": [
+        {
+          "observation": "Trotz Piroctone Olamine, Feuchthaltestoffen und Lactic Acid ist kein separater, kohärent belegter Komfortpfad für trockene, juckende oder empfindliche Kopfhaut sichtbar. Parfum, Farbstoffe und Duftstoff bleiben Expositionshinweise.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Anti-Schuppen-Präsenz ist kein eigenständiger Beleg für trockene oder sensible Kopfhaut.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige Formel enthält Piroctone Olamine. Nach Vertrag ist damit der anerkannte Anti-Schuppen-Formelweg supported; Konzentration und Endpunktwirkung bleiben unbewiesen.",
+      "supportingSignals": [
+        {
+          "observation": "Die vollständige Formel enthält Piroctone Olamine. Nach Vertrag ist damit der anerkannte Anti-Schuppen-Formelweg supported; Konzentration und Endpunktwirkung bleiben unbewiesen.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Wirkstoffpräsenz belegt keine konkrete Einsatzmenge oder Endproduktwirksamkeit.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+        "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Sodium Laureth Sulfate steht früh und wird durch Cocamidopropyl Betaine und Coco-Glucoside ergänzt. Das stützt eine starke, aber durch amphotere/nichtionische Co-Tenside moderierte Reinigungsbandbreite.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "cleansing: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "conditioningDeposition: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "weightBuildup: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "shineS1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "shineS3: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "volumeV1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "smoothing: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "repairR1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "mildnessPotential: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      }
+    },
+    "weightDepositionLoad": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+    "weightPersistence": "Ein kationischer Polymerweg kann haarsubstantiv sein; keine Wiederholungswäsche- oder Residue-Messung liegt vor.",
+    "weightResetCapacity": "Starke Reinigung ist separat erfasst und hebt den Depositionsweg nicht automatisch auf.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine spezifische echte Bond-Reparatur ist belegt.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Hersteller-INCI mit exakter Händlerkorroboration und separater Claim-Prüfung; keine fertigen Leistungs- oder Verträglichkeitstests erfasst."
+  },
+  "claimAudit": [
+    {
+      "claim": "Langzeit Volumen",
+      "verdict": "plausible",
+      "support": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht.",
+      "limitation": "Keine öffentliche Shampoo-only Endpunktprüfung erfasst; Positionierung ist nicht selbst Leistungsnachweis.",
+      "sourceIds": [
+        "guhl-de-langzeit-volumen-4072600282427-2026-08-27"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+    "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Shampoo-Klassifikation. Wirkstoffpräsenz und Produktrolle werden nicht als Diagnose, Behandlungsempfehlung für Erkrankungen oder Wirksamkeitsgarantie verwendet."
+  }
+}

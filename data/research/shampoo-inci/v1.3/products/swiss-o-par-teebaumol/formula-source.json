@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4104260076501",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "swissopar-de-teebaumoel",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://swissopar.de/produkt/teebaumoel-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol"
+    },
+    {
+      "id": "dm-de-1028618",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "melaleuca alternifolia leaf oil",
+    "sodium chloride",
+    "peg-7 glyceryl cocoate",
+    "coco-betaine",
+    "phenoxyethanol",
+    "benzyl alcohol",
+    "sodium benzoate",
+    "coco glucoside",
+    "citric acid",
+    "glycol distearate",
+    "potassium sorbate",
+    "limonene",
+    "glycerin",
+    "tocopherol"
+  ],
+  "inciFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

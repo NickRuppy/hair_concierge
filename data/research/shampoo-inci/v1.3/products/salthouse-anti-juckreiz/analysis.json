@@ -1,0 +1,490 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731:67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES leads and Laureth-9 appears before salt and CAPB.",
+      "Urea and cationic guar are present before glycerin and panthenol.",
+      "Menthol and mint oil provide a sensory cooling route.",
+      "No Piroctone Olamine or other recognized anti-dandruff active is disclosed."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "beruhigend bei juckender und empfindlicher Kopfhaut",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "laureth-9",
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid",
+      "lactic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "SLES leads and Laureth-9 appears before salt and CAPB.",
+          "inference": "The cleanser system is consistent with moderate rinse-off cleansing.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support low conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Urea and cationic guar are present before glycerin and panthenol.",
+          "inference": "The care system supports low shampoo conditioning.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Urea and cationic guar are present before glycerin and panthenol.",
+          "inference": "The rinse-off residue architecture indicates low weight potential.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is scalp_active.",
+      "supportingSignals": [
+        {
+          "observation": "The exact manufacturer page positions this formula for itchy, dry and sensitive scalp and names Laureth-9, urea and panthenol.",
+          "inference": "The source and formula align on scalp_active as the primary focus.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No secondary focus is established strongly enough beyond the scalp-comfort positioning and regular cleanser architecture.",
+      "supportingSignals": [
+        {
+          "observation": "The formula has scalp-comfort and care cues, but they do not create a separate shine, repair, volume or clarifying focus.",
+          "inference": "The secondary-focus value should remain empty.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact percentages and finished-product comparative endpoints are not published.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The captured directions and cleanser architecture support a regular usage role, while tolerance and itch outcomes remain product-fit questions.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate regular use.",
+          "inference": "Regular use is a coherent product role.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No repeat-use tolerance or itch endpoint is published.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact German positioning targets itchy/dry/sensitive scalp, and Laureth-9, urea and panthenol provide a coherent cosmetic anti-itch/comfort route. Menthol/mint remain tolerance heads-ups, not an automatic downgrade.",
+      "supportingSignals": [
+        {
+          "observation": "Exact German positioning targets itchy/dry/sensitive scalp, and Laureth-9, urea and panthenol provide a coherent cosmetic anti-itch/comfort route. Menthol/mint remain tolerance heads-ups, not an automatic downgrade.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "salthouse-de-anti-juckreiz-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "present",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product mildnessPotential endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "beruhigend bei juckender und empfindlicher Kopfhaut",
+      "verdict": "plausible",
+      "support": "The exact manufacturer page positions this formula for itchy, dry and sensitive scalp and names Laureth-9, urea and panthenol.",
+      "limitation": "The page supplies no blinded tolerance endpoint or ingredient concentration.",
+      "sourceIds": [
+        "salthouse-de-anti-juckreiz-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "salthouse-de-anti-juckreiz-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The exact shampoo targets cosmetic itch/dry/sensitive-scalp comfort. Disease-adjacent background wording is retained as explanation context but does not turn this rinse-off shampoo into a medical treatment claim."
+  }
+}

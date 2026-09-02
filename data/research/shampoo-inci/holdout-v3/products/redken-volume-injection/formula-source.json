@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v3:redken-volume-injection",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "3474636920266",
+  "formulaCode": null,
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-de-redken-volume-injection-3474636920266-2026-09-01",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.redken.eu/de-de/produkte/haarpflege/volume-injection/volume-injection-shampoo",
+      "rawInci": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • SODIUM LAURYL SULFATE • SODIUM CHLORIDE • GLYCOL DISTEARATE • HEXYLENE GLYCOL • PARFUM / FRAGRANCE • CITRIC ACID • AMINOPROPYL TRIETHOXYSILANE • SODIUM BENZOATE • SODIUM HYDROXIDE • ACRYLATES COPOLYMER • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • ALCOHOL DENAT. • POLYQUATERNIUM-30 • SALICYLIC ACID • BENZYL ALCOHOL • LINALOOL • HEXYL CINNAMAL • ALPHA-ISOMETHYL IONONE • LIMONENE (F.I.L. Z287065/1).",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "retailer-de-redken-volume-injection-3474636920266-2026-09-01",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://de.lorealpartnershop.com/default/volume-injection-shampoo/DE3474636920266.html",
+      "rawInci": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • SODIUM LAURYL SULFATE • SODIUM CHLORIDE • GLYCOL DISTEARATE • HEXYLENE GLYCOL • PARFUM / FRAGRANCE • CITRIC ACID • AMINOPROPYL TRIETHOXYSILANE • SODIUM BENZOATE • SODIUM HYDROXIDE • ACRYLATES COPOLYMER • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • ALCOHOL DENAT. • POLYQUATERNIUM-30 • SALICYLIC ACID • BENZYL ALCOHOL • LINALOOL • HEXYL CINNAMAL • ALPHA-ISOMETHYL IONONE • LIMONENE (F.I.L. Z287065/1).",
+      "productMatch": "exact_gtin",
+      "gtinEan": "3474636920266"
+    }
+  ],
+  "rawInci": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • SODIUM LAURYL SULFATE • SODIUM CHLORIDE • GLYCOL DISTEARATE • HEXYLENE GLYCOL • PARFUM / FRAGRANCE • CITRIC ACID • AMINOPROPYL TRIETHOXYSILANE • SODIUM BENZOATE • SODIUM HYDROXIDE • ACRYLATES COPOLYMER • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • ALCOHOL DENAT. • POLYQUATERNIUM-30 • SALICYLIC ACID • BENZYL ALCOHOL • LINALOOL • HEXYL CINNAMAL • ALPHA-ISOMETHYL IONONE • LIMONENE (F.I.L. Z287065/1).",
+  "normalizedInci": [
+    "aqua/water",
+    "sodium laureth sulfate",
+    "coco-betaine",
+    "sodium lauryl sulfate",
+    "sodium chloride",
+    "glycol distearate",
+    "hexylene glycol",
+    "parfum/fragrance",
+    "citric acid",
+    "aminopropyl triethoxysilane",
+    "sodium benzoate",
+    "sodium hydroxide",
+    "acrylates copolymer",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "alcohol denat.",
+    "polyquaternium-30",
+    "salicylic acid",
+    "benzyl alcohol",
+    "linalool",
+    "hexyl cinnamal",
+    "alpha-isomethyl ionone",
+    "limonene"
+  ],
+  "inciFingerprint": "80cfb9d27d631ee32d498d326f073463f55b43c93622eabb0c0cd5836d607817",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

@@ -1,0 +1,290 @@
+{
+  "candidate_id": "kerastase-nutritive-bain-satin-riche",
+  "rawInci": "AQUA / WATER / EAU • SODIUM LAURETH SULFATE • GLYCERIN • GLYCOL DISTEARATE • DIMETHICONE • SODIUM CHLORIDE • COCAMIDOPROPYL BETAINE • SODIUM LAURYL SULFATE • HEXYLENE GLYCOL • CITRIC ACID • STEARAMIDOPROPYL DIMETHYLAMINE • SODIUM BENZOATE • SODIUM HYDROXIDE • AMODIMETHICONE • COCO-BETAINE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • TRIDECETH-10 • SALICYLIC ACID • CARBOMER • PANTHENOL • NIACINAMIDE • ASCORBYL GLUCOSIDE • BUTYLENE GLYCOL • LINALOOL • PEG-100 STEARATE • STEARETH-6 • LIMONENE • TRIDECETH-3 • PHENOXYETHANOL • HYDROLYZED WHEAT PROTEIN • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • FUMARIC ACID • ACETIC ACID • IRIS FLORENTINA ROOT EXTRACT • PARFUM / FRAGRANCE.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium lauryl sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-betaine",
+      "ascorbyl glucoside"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone",
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "stearamidopropyl dimethylamine"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed wheat protein",
+      "hydrolyzed corn protein",
+      "hydrolyzed soy protein"
+    ],
+    "acids": [
+      "citric acid",
+      "salicylic acid",
+      "fumaric acid",
+      "acetic acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "high",
+    "usageRole": "high",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+      "formula": {
+        "inciFingerprint": "7b7baa371bdde991ea0067a7b18554e694618198d5a9af43df34a8760e342986",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 5
+          },
+          {
+            "family": "cationic_conditioner",
+            "name": "stearamidopropyl dimethylamine",
+            "position": 11
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 14
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 16
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed wheat protein",
+            "position": 30
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed corn protein",
+            "position": 31
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed soy protein",
+            "position": 32
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 7
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 8
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 15
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 4,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "high",
+        "rationale": "Frühes Dimethicone, Stearamidopropyl Dimethylamine, Amodimethicone, Guar und mehrere Proteine bilden konvergierende Ablagerungswege."
+      },
+      "persistence": {
+        "value": "high",
+        "rationale": "Frühes Dimethicone, Stearamidopropyl Dimethylamine, Amodimethicone, Guar und mehrere Proteine bilden konvergierende Ablagerungswege."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "high",
+      "whyThisBand": "Frühes Dimethicone, Stearamidopropyl Dimethylamine, Amodimethicone, Guar und mehrere Proteine bilden konvergierende Ablagerungswege.",
+      "whyNotNeighborBand": "Nicht moderate, weil frühes Silikon und mehrere substantielle kationische/Silikon-/Proteinwege zusammenwirken.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "high",
+      "confidence": "moderate",
+      "rationale": "Frühes Dimethicone, Stearamidopropyl Dimethylamine, Amodimethicone, Guar und mehrere Proteine bilden konvergierende Ablagerungswege."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "62094726b59d39117d2226587a4fcd98367aec25b7d69fb23c97177b6517b3cd"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": null,
+      "formulaCompatible": true,
+      "formulaRoute": "Kein engerer Fokuswert wird aus der Positionierung abgeleitet.",
+      "decisionReason": "General bleibt die passende Fokusklasse."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [],
+  "payloadHash": "e5216370e3d75e6e3d73241cf59295e93abe552db5b2f611e1babadce3895e10"
+}

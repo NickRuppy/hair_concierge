@@ -1,0 +1,1334 @@
+{
+  "schemaVersion": "shampoo-research-holdout-report-v1",
+  "status": "internal_research_only",
+  "repeatabilityGatePassed": false,
+  "candidateState": "validator_passed_preview",
+  "approvalStateMode": "validator_preview_forced_approved",
+  "legacyState": "new_product_no_legacy_baseline",
+  "candidates": [
+    {
+      "productId": "holdout-v1:alverde-ultra-sensitiv",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:isana-med-jeden-tag",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:ducray-extra-mild",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:john-frieda-volume-lift",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:balea-professional-traumlocken",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+      "analysisStatus": "validator_passed_preview"
+    }
+  ],
+  "process": {
+    "blindPasses": 10,
+    "productsWithFinalDelta": 6,
+    "finalDeltaCount": 12,
+    "formulaSourceTypes": {
+      "official": 7,
+      "retailer": 3
+    },
+    "rows": [
+      {
+        "candidateId": "alverde-ultra-sensitiv",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "isana-med-jeden-tag",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "ducray-extra-mild",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "low",
+        "finalDeltaCount": 4
+      },
+      {
+        "candidateId": "john-frieda-volume-lift",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "low",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "loreal-elvital-bond-repair-plus",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "kerastase-specifique-bain-divalent",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "balea-shampoo-feuchtigkeit",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "balea-professional-traumlocken",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "head-shoulders-2in1-classic-clean",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "low",
+        "finalDeltaCount": 0
+      }
+    ]
+  },
+  "classifications": {
+    "byProperty": {
+      "cleansingStrength": {
+        "low": 1,
+        "moderate": 4,
+        "strong": 5
+      },
+      "conditioningLevel": {
+        "high": 3,
+        "low": 2,
+        "moderate": 5
+      },
+      "weightPotential": {
+        "low": 3,
+        "moderate": 7
+      },
+      "focusPrimary": {
+        "gentle": 2,
+        "repair": 3,
+        "scalp_active": 3,
+        "shine": 1,
+        "volume": 1
+      },
+      "focusSecondary": {
+        "[\"clarifying\",\"shine\"]": 1,
+        "[\"clarifying\",\"volume\"]": 1,
+        "[\"general\"]": 2,
+        "[\"shine\",\"repair\"]": 2,
+        "[\"shine\"]": 2,
+        "[\"volume\"]": 2
+      },
+      "usageRole": {
+        "alternating": 1,
+        "frequent": 2,
+        "regular": 6,
+        "treatment": 1
+      },
+      "scalpComfortTarget": {
+        "not_targeted": 5,
+        "targeted": 5
+      },
+      "dandruffSupport": {
+        "not_supported": 9,
+        "supported": 1
+      }
+    },
+    "identityConfidence": {
+      "low": 3,
+      "moderate": 7
+    },
+    "conflictStatus": {
+      "none": 10
+    },
+    "rows": [
+      {
+        "productId": "holdout-v1:alverde-ultra-sensitiv",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "low",
+          "conditioningLevel": "low",
+          "weightPotential": "low",
+          "focusPrimary": "gentle",
+          "focusSecondary": [
+            "general"
+          ],
+          "usageRole": "frequent",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:isana-med-jeden-tag",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "low",
+          "weightPotential": "low",
+          "focusPrimary": "scalp_active",
+          "focusSecondary": [
+            "volume"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:ducray-extra-mild",
+        "identityConfidence": "low",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "low",
+          "focusPrimary": "gentle",
+          "focusSecondary": [
+            "general"
+          ],
+          "usageRole": "frequent",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:john-frieda-volume-lift",
+        "identityConfidence": "low",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "volume",
+          "focusSecondary": [
+            "shine",
+            "repair"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "repair",
+          "focusSecondary": [
+            "clarifying",
+            "shine"
+          ],
+          "usageRole": "alternating",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "scalp_active",
+          "focusSecondary": [
+            "clarifying",
+            "volume"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "shine",
+          "focusSecondary": [
+            "volume"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:balea-professional-traumlocken",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "high",
+          "weightPotential": "moderate",
+          "focusPrimary": "repair",
+          "focusSecondary": [
+            "shine"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "moderate",
+          "focusPrimary": "scalp_active",
+          "focusSecondary": [
+            "shine",
+            "repair"
+          ],
+          "usageRole": "treatment",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "supported"
+        }
+      },
+      {
+        "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+        "identityConfidence": "low",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "moderate",
+          "focusPrimary": "repair",
+          "focusSecondary": [
+            "shine"
+          ],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      }
+    ]
+  },
+  "profiles": [
+    {
+      "profileKey": "fixture-fine-low-density-oily-volume",
+      "rankingHash": "2032e0674b6d3b6a934e3f8098180bc372e940d98fad2fc4520b6c346b4dc90e",
+      "ranked": [
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-treated-balanced-shine",
+      "rankingHash": "c4b9fb02dfc1f2bb8925ef2e2d3ec593b974d1796136ae304c6e1541219ff3d7",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-dry-scalp-frizz",
+      "rankingHash": "5d224af93947ec9a09539950be6e191ed419ca2b7b302d1f1e322745738d2ecc",
+      "ranked": [
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-balanced-general",
+      "rankingHash": "c4d907d327c0148d25eb1b2391f52aad110d7490d8bf110414365fd1d9314806",
+      "ranked": [
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-oily-high-load",
+      "rankingHash": "75d9d04d104a96025dc3c6758d975d566e68b3b1c033f1d8885bcad4cb297b20",
+      "ranked": [
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-low-volume-frequent-wash",
+      "rankingHash": "4e188f6cd18032cfd4e40c8045db6cdac89f5b962d9387bc7acbe8543f4cd883",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-dry-damaged-smoothing",
+      "rankingHash": "39b310ea4b0d3b652ece787a493e55f1a457a5d850463ea736a774a646b5f128",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-curly-frizz-definition",
+      "rankingHash": "f7a144f2284d14cd297c73b91dd134acbd82a750c4910ec4bed35dd196a287ac",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-treated-breakage-repair",
+      "rankingHash": "3a0fe6f2e6c8344549d592014fb16c58119cfb5f7c5a200f020b3d12bb63e16b",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-itch",
+      "rankingHash": "0ec3bc718a1b052da4b41ec968d4437de7545d9c63a118c0103a8ccfb4c6022c",
+      "ranked": [
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-oily-dandruff",
+      "rankingHash": "6ddc8834f97582516193ea00a40ac3fb1ef6da4bf55d564a15e397d51fcbaf57",
+      "ranked": [
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-dry-flakes",
+      "rankingHash": "0ec3bc718a1b052da4b41ec968d4437de7545d9c63a118c0103a8ccfb4c6022c",
+      "ranked": [
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-oily",
+      "rankingHash": "ae425eab549184e4c8a4693af7713d52abfd546108fd9d56c43fbecfc422499d",
+      "ranked": [
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-balanced",
+      "rankingHash": "9acda7db00d0463df598d45b60e6c0bf17c142b004d5473be7ac99fcd2f2277c",
+      "ranked": [
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-medical-boundary",
+      "rankingHash": "a5e415761c9cc35b814823a2aafc5881c882adab105d7da71cba3e12e8314210",
+      "ranked": [],
+      "abstentions": [
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        }
+      ]
+    },
+    {
+      "profileKey": "fixture-research-only-fragrance-avoidance",
+      "rankingHash": "4a7137461a6f584d5793283e483b1f633b5d7b470644c9fd2fa0f7d95689a288",
+      "ranked": [
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-straight-balanced-low-shine",
+      "rankingHash": "48e80e9cfc2bfb0f713ddbcdc13b9416084b7ee3e3752daa4b5a8e94cd2d2d0b",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coily-dry-definition",
+      "rankingHash": "a55ed61d05a6f63f169028070af2963be9753b4364c2a687bb0a9fb4d839b9a6",
+      "ranked": [
+        {
+          "productId": "holdout-v1:balea-professional-traumlocken",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:ducray-extra-mild",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:alverde-ultra-sensitiv",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:john-frieda-volume-lift",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v1:isana-med-jeden-tag",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    }
+  ],
+  "agreement": {
+    "judgedDecisions": 70,
+    "exactAgreement": 0.6857142857142857,
+    "byProperty": {
+      "cleansingStrength": 0.8,
+      "conditioningLevel": 0.9,
+      "weightPotential": 0.7,
+      "focusPrimary": 0.6,
+      "focusSecondary": 0.1,
+      "usageRole": 0.7,
+      "scalpComfortTarget": 1
+    },
+    "dandruffMechanicalAgreement": 1,
+    "disagreements": [
+      {
+        "candidateId": "alverde-ultra-sensitiv",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "isana-med-jeden-tag",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "isana-med-jeden-tag",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "isana-med-jeden-tag",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "isana-med-jeden-tag",
+        "property": "usageRole"
+      },
+      {
+        "candidateId": "ducray-extra-mild",
+        "property": "conditioningLevel"
+      },
+      {
+        "candidateId": "ducray-extra-mild",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "loreal-elvital-bond-repair-plus",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "loreal-elvital-bond-repair-plus",
+        "property": "usageRole"
+      },
+      {
+        "candidateId": "kerastase-specifique-bain-divalent",
+        "property": "weightPotential"
+      },
+      {
+        "candidateId": "kerastase-specifique-bain-divalent",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "balea-shampoo-feuchtigkeit",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "balea-shampoo-feuchtigkeit",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "balea-professional-traumlocken",
+        "property": "weightPotential"
+      },
+      {
+        "candidateId": "balea-professional-traumlocken",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "balea-professional-traumlocken",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "head-shoulders-2in1-classic-clean",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "property": "weightPotential"
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "dove-taegliche-feuchtigkeit-2in1",
+        "property": "usageRole"
+      }
+    ],
+    "repeatabilityGate": {
+      "overallMinimum": 0.75,
+      "perPropertyMinimum": 0.6,
+      "overallPassed": false,
+      "failedProperties": [
+        "focusSecondary"
+      ],
+      "passed": false
+    }
+  },
+  "unexpectedAbstentions": [],
+  "reportHash": "2aa5d4510a18d8fe6ecdc48888446d1483a5b19a94e3993f6d0fffc1710aa0ca"
+}

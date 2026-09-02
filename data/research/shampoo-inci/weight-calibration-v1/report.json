@@ -1,0 +1,1266 @@
+{
+  "schemaVersion": "shampoo-weight-calibration-report-v1",
+  "policyVersion": "shampoo-weight-v1",
+  "status": "research_only_provisional",
+  "experiment": "same-ten paired calibration; not new holdout or accuracy measurement",
+  "sourceSnapshotAt": "2026-08-27T16:09:50.195Z",
+  "policySha256": "5b865a37c289ddffdd6121ae2e08def028b47b7bbb095ddc2905df34da60a8d0",
+  "packetSha256": "0c69fc6588a9bacad973ba5c999d47d8f5c8a0d61c0c7682a8f3cce387b1f697",
+  "labelHashes": {
+    "a": "caaf2b6cdba8e25fc01f70a6466fb4819dcd662f4fc59879b0da5d7f7d8e3f2e",
+    "b": "f2328315229a9175f563a1efcd20dd8c63fdbfe4c3a9da200f58617eec342e67"
+  },
+  "frozenHistoryFilesVerified": 193,
+  "unchangedProperties": [
+    "cleansingStrength",
+    "conditioningLevel",
+    "focusPrimary",
+    "focusSecondary",
+    "usageRole",
+    "scalpComfortTarget",
+    "dandruffSupport"
+  ],
+  "agreement": {
+    "compared": 10,
+    "aWithB": 10,
+    "aWithEngine": 10,
+    "bWithEngine": 10
+  },
+  "previousAgreement": {
+    "compared": 10,
+    "agreed": 9
+  },
+  "distribution": {
+    "previousFirst": {
+      "low": 0,
+      "moderate": 6,
+      "high": 4,
+      "unclassified": 0
+    },
+    "previousSecond": {
+      "low": 0,
+      "moderate": 7,
+      "high": 3,
+      "unclassified": 0
+    },
+    "labelerA": {
+      "low": 0,
+      "moderate": 8,
+      "high": 2,
+      "unclassified": 0
+    },
+    "labelerB": {
+      "low": 0,
+      "moderate": 8,
+      "high": 2,
+      "unclassified": 0
+    },
+    "engine": {
+      "low": 0,
+      "moderate": 8,
+      "high": 2,
+      "unclassified": 0
+    }
+  },
+  "changedProducts": [
+    "isana-professional-plex",
+    "jean-len-repair-dattel-vanille"
+  ],
+  "disagreements": [],
+  "routeDisagreements": [],
+  "windowDisagreements": [
+    "alverde-nutri-care"
+  ],
+  "needsReview": [
+    "garnier-fructis-kraft-glanz"
+  ],
+  "unresolvedEvidenceDifferences": [
+    "garnier-fructis-kraft-glanz"
+  ],
+  "confidence": {
+    "rule": {
+      "low": 0,
+      "moderate": 0,
+      "high": 10,
+      "unclassified": 0
+    },
+    "product": {
+      "low": 1,
+      "moderate": 9,
+      "high": 0,
+      "unclassified": 0
+    }
+  },
+  "independence": "Two fresh no-context labelers received only the written policy and anonymized INCI packet, not old labels, evaluator code or each other's output.",
+  "limitations": [
+    "Shared source packet and model lineage; not independent source discovery or empirical accuracy.",
+    "Same known ten-product cohort; paired calibration rather than a new holdout.",
+    "No desired agreement or product-confidence target; preserve disagreement without tuning.",
+    "INCI-only product confidence is capped at moderate; high rule confidence is not measured accuracy.",
+    "No automatic approval, production data update, live fit change or empirical weight test.",
+    "Original v2 labels used claims; new raters are formula-only. Comparison is not a controlled estimate of the rule effect."
+  ],
+  "rows": [
+    {
+      "candidateId": "balea-professional-oil-repair-intensiv",
+      "name": "Balea Professional Shampoo Oil Repair Intensiv",
+      "brand": "Balea Professional",
+      "blindId": "A",
+      "formulaFingerprint": "689733084ff714faf5752f96affb87876bd4116df9392cdc2300eb3a67e73e1e",
+      "identityConfidence": "moderate",
+      "previousFirst": "high",
+      "previousSecond": "high",
+      "previousRationale": "Nach v1.4 zählen der frühe Ölkomplex und kationisches Guar als zwei unterschiedliche substantive Depositionsrouten; deshalb ist das Beschwerungspotenzial hoch, auch wenn die Reinigung stark ist.",
+      "labelerA": "high",
+      "labelerB": "high",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "argania spinosa kernel oil",
+                "position": 5
+              },
+              {
+                "name": "orbignya oleifera seed oil",
+                "position": 6
+              },
+              {
+                "name": "sclerocarya birrea seed oil",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed keratin",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "peg-40 hydrogenated castor oil",
+            "position": 12,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 13,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (argania spinosa kernel oil, orbignya oleifera seed oil, sclerocarya birrea seed oil); protein_film weak (hydrolyzed keratin); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Zwei substanzielle Routen sind vorhanden: kationisches Polymer und prominente Payload-Öle mit Polymerunterstützung. Das späte Keratin bleibt nur eine schwache Zusatzroute.",
+        "b": "Zwei substantielle Routentypen: frühe Payload-Öle plus erkannter Guar-Quat; zusätzlich nur schwaches Keratin. Das Ergebnis bleibt über die Fenster 8/10/12 stabil."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "b": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "alverde-nutri-care",
+      "name": "alverde NATURKOSMETIK Shampoo Nutri Care",
+      "brand": "alverde NATURKOSMETIK",
+      "blindId": "B",
+      "formulaFingerprint": "05bbbca8881b1ffa973aa86ef21db280a455796ccd8577fffc251c155b1365ab",
+      "identityConfidence": "moderate",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "Es gibt keine substantive Polymer- oder Silikonroute; mehrere schwache Refatting-, Humectant- und Film-Signale reichen nach v1.4 für moderates, nicht hohes Gewicht.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "ascorbyl palmitate",
+                "position": 10
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 14
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 17
+              },
+              {
+                "name": "lecithin",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "ascorbyl palmitate",
+            "position": 10,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "glyceryl oleate",
+            "position": 14,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 17,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "lecithin",
+            "position": 18,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: lipid_refatting weak (ascorbyl palmitate, glyceryl oleate, hydrogenated palm glycerides citrate, lecithin); protein_film weak (hydrolyzed wheat protein); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": false,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Bei Fenster 10 ergeben Protein und schwache Refatter zwei unterschiedliche schwache Routen, daher moderate. Bei Fenster 8 fällt der Refatter an Position 10 heraus, wodurch nur eine schwache Route bleibt.",
+        "b": "Keine substantielle Route, aber zwei verschiedene schwache Routentypen: Protein und schwache Refatter. Deshalb moderate; Fensteränderungen verschieben keine Payload-Bedingung."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "low",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "isana-professional-plex",
+      "name": "ISANA PROFESSIONAL Plex Shampoo",
+      "brand": "ISANA PROFESSIONAL",
+      "blindId": "C",
+      "formulaFingerprint": "375479ebe8b3a2fa7f4a250d6455cb171f88b69e0d311b8fd1b660f796d0ab97",
+      "identityConfidence": "moderate",
+      "previousFirst": "high",
+      "previousSecond": "high",
+      "previousRationale": "Cationic-Polymer-Deposition und protein-/aminoacidbasierter Film sind zwei unterschiedliche substantive Route-Arten; nach v1.4 bleibt das Gewichtspotenzial hoch.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+                "position": 16
+              },
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 17
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "ascorbyl palmitate",
+                "position": 9
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 14
+              },
+              {
+                "name": "hydrogenated palm glycerides citrate",
+                "position": 23
+              },
+              {
+                "name": "lecithin",
+                "position": 24
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "oryza sativa seed protein",
+                "position": 6
+              },
+              {
+                "name": "hydrolyzed wheat protein",
+                "position": 18
+              },
+              {
+                "name": "hydrolyzed soy protein",
+                "position": 20
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "ascorbyl palmitate",
+            "position": 9,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "glyceryl oleate",
+            "position": 14,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 23,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "lecithin",
+            "position": 24,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl oxidized starch pg-trimonium chloride, hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (ascorbyl palmitate, glyceryl oleate, hydrogenated palm glycerides citrate, lecithin); protein_film weak (oryza sativa seed protein, hydrolyzed wheat protein, hydrolyzed soy protein); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Die kationische Polymerroute ist die einzige substanzielle Route. Protein und schwache Refatter ändern die Einstufung nicht auf high, weil keine zweite substanzielle Route vorliegt.",
+        "b": "Genau eine substantielle Route durch erkannte kationische Polymere. Protein und Refatter bleiben schwach; mehrere Polymere zählen nicht als mehrere Routenvoten."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "herbal-essences-fiji",
+      "name": "Herbal Essences Shampoo Fiji",
+      "brand": "Herbal Essences",
+      "blindId": "D",
+      "formulaFingerprint": "3f61f3ba85eaf215b60dffee572dcf0187b73897fb51488e52e99164f028a45d",
+      "identityConfidence": "moderate",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "One substantive PQ-10 route meets the v1.4 moderate threshold, while the otherwise lightweight architecture prevents high.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "polyquaternium-10",
+                "position": 11
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 17,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (polyquaternium-10); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Genau eine substanzielle Route ist vorhanden: Polyquaternium-10. Weitere erkannte schwache Gewichtsroute ist nicht vorhanden.",
+        "b": "Genau eine substantielle Route durch Polyquaternium-10; keine zweite substantive Route und weniger als zwei schwache Routentypen."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "garnier-fructis-kraft-glanz",
+      "name": "GARNIER FRUCTIS Shampoo Kraft & Glanz",
+      "brand": "GARNIER FRUCTIS",
+      "blindId": "E",
+      "formulaFingerprint": "5aa65301a69e27682f0c6892e40c226f68248702a73a5ca2988a9987f936e604",
+      "identityConfidence": "moderate",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "The cationic polymer is one substantive route; protein-film and lipid/emollient cues are weak, so v1.4 supports moderate rather than high weight.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 6
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "octyldodecanol",
+                "position": 25
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          },
+          {
+            "kind": "protein_film",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "hydroxypropyltrimonium lemon protein",
+                "position": 10
+              }
+            ],
+            "ruleReason": "Protein-/Keratinhinweise bleiben in dieser INCI-only-Policy schwach."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 4,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "citrus grandis peel oil/grapefruit peel oil",
+            "position": 29,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (octyldodecanol); protein_film weak (hydroxypropyltrimonium lemon protein); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Die Polymerroute macht die Formel moderate. Das kationische Protein ist nur Protein, nicht Polymer; Octyldodecanol liegt zu spät für eine substanzielle Lipidroute. Carbomer bleibt als unaufgelöster Polymer-Hinweis sichtbar.",
+        "b": "Provisorisch moderate: eine substantielle kationische Polymerroute, dazu schwaches kationisches Protein und spätes Octyldodecanol. Carbomer bleibt als ungelöste potenziell gewichtrelevante Polymerlücke sichtbar."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [
+          {
+            "name": "carbomer",
+            "reason": "Unlisted polymer; als möglicher Recognition-Gap sichtbar gehalten, aber nicht als bekannte Route gezählt."
+          }
+        ],
+        "b": [
+          {
+            "name": "carbomer",
+            "reason": "Unlistedes Polymer; keine anerkannte Route in dieser Policy, aber als Polymer/Filmhinweis reviewpflichtig statt still ausgeschlossen."
+          }
+        ]
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": false,
+        "bWithEngine": false
+      }
+    },
+    {
+      "candidateId": "gliss-scalp-balance-sanft",
+      "name": "Schwarzkopf GLISS Scalp Balance Sanftes Shampoo",
+      "brand": "Schwarzkopf GLISS",
+      "blindId": "F",
+      "formulaFingerprint": "ca38a7bf239d06376aa7a036f6388a512fa8f1d691a6a447e0554a133daba0f2",
+      "identityConfidence": "high",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "Nach v1.4 reicht ein substantieller kationischer Polymerweg für moderates Gewicht; mehrere schwache Rückfettungswege erhöhen die Plausibilität. Es fehlt aber ein zweiter klar substantieller Weg wie Silikon oder ein reiches Lipidgerüst, daher nicht hoch.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 13
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 11
+              },
+              {
+                "name": "peg-7 glyceryl cocoate",
+                "position": 12
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 16
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glyceryl oleate",
+            "position": 11,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "peg-7 glyceryl cocoate",
+            "position": 12,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 14,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 17,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "citrus limon (lemon) peel oil",
+            "position": 20,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, peg-7 glyceryl cocoate, hydrogenated castor oil); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Genau eine substanzielle Route ist vorhanden: das kationische Polymer. Die Refatter erscheinen erst außerhalb des Fensters 10 oder sind schwache Refatter, daher keine zweite substanzielle Route.",
+        "b": "Genau eine substantielle Route durch den Guar-Quat. Die Refatter sind entweder ausdrücklich schwach oder außerhalb der getesteten Payload-Fenster, daher keine zweite substantielle Route."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "nivea-classic-care",
+      "name": "NIVEA Shampoo Classic Care",
+      "brand": "NIVEA",
+      "blindId": "G",
+      "formulaFingerprint": "53a18adf83c0dfb43dc15b59a24d8ca2769753881f1a98660a1ad25489e55eb6",
+      "identityConfidence": "moderate",
+      "previousFirst": "high",
+      "previousSecond": "moderate",
+      "previousRationale": "Zwei substanzielle Routen — kationisches Guar sowie Lipid-/Öl-/Rückfettungssystem — stützen hohes Gewichtspotenzial; die starke Reinigung hebt sie nicht automatisch auf.",
+      "labelerA": "high",
+      "labelerB": "high",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "high",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "gossypium hirsutum seed oil",
+                "position": 6
+              },
+              {
+                "name": "dicaprylyl ether",
+                "position": 9
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 10
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 12
+              }
+            ],
+            "ruleReason": "Prominenter Lipid-Payload mit gelistetem kationischem Polymer (Fenster 10)."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glyceryl oleate",
+            "position": 10,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 11,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig high: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting substantive (gossypium hirsutum seed oil, dicaprylyl ether, glyceryl oleate, hydrogenated castor oil); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Kationisches Polymer plus prominenter Lipid-Payload ergeben zwei substanzielle Routen. Mehrere Lipidstoffe bleiben eine Route, reichen hier aber zusammen mit dem Polymer für high.",
+        "b": "Zwei substantielle Routentypen: frühes Payload-Öl im Zusammenspiel mit erkanntem Guar-Quat. Weitere Lipidstoffe erhöhen nicht die Routenzahl."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        },
+        "b": {
+          "8": "high",
+          "10": "high",
+          "12": "high"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "nivea-men-anti-schuppen",
+      "name": "NIVEA MEN Anti Schuppen Shampoo",
+      "brand": "NIVEA MEN",
+      "blindId": "H",
+      "formulaFingerprint": "cce2372259fe6a7e6fbe027b47514ba6bcf0060500db6a3b9646b192158e6f74",
+      "identityConfidence": "moderate",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "Nach v1.4 ist cationic_polymer über Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil sowie Glycerin/Propylene Glycol/Butylene Glycol; ohne zweiten klar substantiellen Weg bleibt das Gewicht moderat.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 14
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 16
+              },
+              {
+                "name": "dicaprylyl ether",
+                "position": 17
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 18
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 15,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "glyceryl oleate",
+            "position": 16,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate, dicaprylyl ether, hydrogenated castor oil); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Das kationische Polymer liefert genau eine substanzielle Route. Die Lipidstoffe erscheinen zu spät, deshalb entsteht keine zweite substanzielle Route.",
+        "b": "Eine substantielle kationische Polymerroute. Die Lipidroute bleibt schwach, weil kein Payload-Öl/Fettalkohol/Emollient im Fenster 8/10/12 liegt."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "guhl-langzeit-volumen",
+      "name": "GUHL Langzeit Volumen Kräftigendes Shampoo",
+      "brand": "GUHL",
+      "blindId": "I",
+      "formulaFingerprint": "94b69db71ebff4ee6078bb5dd9173cdf86a83090fe93da25d5f0d0d09b7a2323",
+      "identityConfidence": "moderate",
+      "previousFirst": "moderate",
+      "previousSecond": "moderate",
+      "previousRationale": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+                "position": 7
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "glyceryl oleate",
+                "position": 8
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glyceryl oleate",
+            "position": 8,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "moderate",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (hydroxypropyl guar hydroxypropyltrimonium chloride); lipid_refatting weak (glyceryl oleate); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Die Polymerroute ist substantiell. Glyceryl Oleate bleibt als schwacher Refatter eine zweite, aber nicht substanzielle Route; dadurch bleibt die Formel moderate.",
+        "b": "Genau eine substantielle Route durch Hydroxypropyl Guar Hydroxypropyltrimonium Chloride. Glyceryl Oleate bleibt ein schwacher Refatter und begründet keine zweite substantielle Route."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    },
+    {
+      "candidateId": "jean-len-repair-dattel-vanille",
+      "name": "Jean&Len Shampoo Repair Dattel & Vanille",
+      "brand": "Jean&Len",
+      "blindId": "J",
+      "formulaFingerprint": "961668caae8c4241fb9bd5593904f74375c1f344633c9ffd52f37efb9b1aa7c7",
+      "identityConfidence": "low",
+      "previousFirst": "high",
+      "previousSecond": "high",
+      "previousRationale": "Zwei substanzielle Routen — Lipid-/Rückfettungssystem und kationisches Guar — stützen hohes Gewichtspotenzial; die starke Reinigung hebt sie nicht automatisch auf.",
+      "labelerA": "moderate",
+      "labelerB": "moderate",
+      "engine": {
+        "policyVersion": "shampoo-weight-v1",
+        "value": "moderate",
+        "status": "provisional",
+        "routes": [
+          {
+            "kind": "cationic_polymer",
+            "strength": "substantive",
+            "ingredients": [
+              {
+                "name": "guar hydroxypropyltrimonium chloride",
+                "position": 15
+              }
+            ],
+            "ruleReason": "Gelistertes kationisches Polymer ist unabhängig von der Position eine substantielle Route."
+          },
+          {
+            "kind": "lipid_refatting",
+            "strength": "weak",
+            "ingredients": [
+              {
+                "name": "peg-18 glyceryl oleate/cocoate",
+                "position": 6
+              },
+              {
+                "name": "hydrogenated castor oil",
+                "position": 16
+              },
+              {
+                "name": "prunus armeniaca kernel oil",
+                "position": 19
+              },
+              {
+                "name": "glyceryl oleate",
+                "position": 21
+              }
+            ],
+            "ruleReason": "Lipid/Refatter ohne beide Bedingungen für eine substantielle Route."
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 4,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-18 glyceryl oleate/cocoate",
+            "position": 6,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          },
+          {
+            "name": "peg-40 hydrogenated castor oil",
+            "position": 7,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          },
+          {
+            "name": "glyceryl oleate",
+            "position": 21,
+            "reason": "Schwacher Refatter ohne eigenständige Zusatzstimme."
+          }
+        ],
+        "unresolvedIngredients": [],
+        "windowLabels": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "ruleConfidence": "high",
+        "productConfidence": "low",
+        "rationale": "Vorläufig moderate: cationic_polymer substantive (guar hydroxypropyltrimonium chloride); lipid_refatting weak (peg-18 glyceryl oleate/cocoate, hydrogenated castor oil, prunus armeniaca kernel oil, glyceryl oleate); Regelkonfidenz high."
+      },
+      "agreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "routeAgreement": {
+        "aWithB": true,
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "windowAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      },
+      "labelerRationales": {
+        "a": "Genau eine substanzielle Route ist vorhanden: das kationische Polymer. Die Lipidroute bleibt schwach, weil nur ein schwacher Refatter früh liegt und die Payload-Öle außerhalb des prominenten Fensters stehen.",
+        "b": "Genau eine substantielle Route durch Guar-Quat. Frühes PEG-18 Glyceryl Oleate/Cocoate bleibt als schwacher Refatter schwach; die Payload-Öle liegen erst nach Fenster 12."
+      },
+      "labelerWindowLabels": {
+        "a": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        },
+        "b": {
+          "8": "moderate",
+          "10": "moderate",
+          "12": "moderate"
+        }
+      },
+      "labelerUnresolvedIngredients": {
+        "a": [],
+        "b": []
+      },
+      "unresolvedEvidenceAgreement": {
+        "aWithEngine": true,
+        "bWithEngine": true
+      }
+    }
+  ]
+}

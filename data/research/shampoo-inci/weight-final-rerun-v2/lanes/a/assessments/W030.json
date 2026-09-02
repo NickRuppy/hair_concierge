@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W030",
+  "formula": {
+    "inciFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 6
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 7
+      },
+      {
+        "family": "weak_refatter",
+        "name": "lecithin",
+        "position": 17
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 4
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Kationisches Guar an Position 6 und Glyceryl Oleate an Position 7 bilden eine klare, aber begrenzte Depositionskombination; Lecithin liegt deutlich später."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das Polymer kann haften, während die Rückfetter keine stark reiche oder silikonartige Persistenz zeigen."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, CAPB und Coco-Glucoside früh im INCI stützen eine starke Reinigungsbasis."
+  },
+  "competingSignals": [
+    "Breite frühe Tensidbasis spricht gegen hohe Schwere.",
+    "Keine Silikone oder schweren Öle; Lecithin ist nachgeordnet."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil Polymer plus Rückfetter ein spürbares, aber durch starke Reinigung begrenztes Rückstandsrisiko erzeugen.",
+  "whyNotNeighborBand": "Low wäre zu zurückhaltend für die frühen Depositionssignale; High ist ohne Silikon, Ölphase oder schwachem Reset nicht gestützt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel und klare Signale, aber nur moderate Identitätssicherheit und INCI-only-Dosierungsunsicherheit."
+  }
+}

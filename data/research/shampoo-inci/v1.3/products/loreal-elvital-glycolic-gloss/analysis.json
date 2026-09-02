@@ -1,0 +1,603 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-matching-v1.3",
+  "formulaVersionId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e:aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Blind formula pass: SLES-led anionic cleansing base with betaine support.",
+      "Early dimethicone plus cationic guar and later amodimethicone creates a coherent silicone deposition architecture.",
+      "Multiple acids are present, but glycolic acid is late and no finished pH is disclosed.",
+      "Separate 200 ml olefin-sulfonate/no-silicone version is a material identity boundary, not merged."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Spiegelglanz / intensiver Glanz",
+      "sourceLocation": "product_page",
+      "scope": "multi_product",
+      "sourceIds": [
+        "loreal-de-300ml",
+        "dm-de-3138002"
+      ]
+    },
+    {
+      "textVerbatim": "reinigt sanft, ohne zu beschweren",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "loreal-de-300ml",
+        "dm-de-3138002"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Cocamide MEA",
+      "Coco-Betaine",
+      "Trideceth-10",
+      "Trideceth-3"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethicone",
+      "Amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "PEG-100 Stearate"
+    ],
+    "proteinsFilmFormers": [
+      "Carbomer"
+    ],
+    "acids": [
+      "Acetic Acid",
+      "Salicylic Acid",
+      "Fumaric Acid",
+      "Citric Acid",
+      "Glycolic Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES-led base supports strong cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate is the primary surfactant",
+          "inference": "SLES-led base supports strong cleansing.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Betaines moderate feel but do not make this a gentle cleanser",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dimethicone, amodimethicone and cationic guar support high deposition for a shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Early dimethicone plus cationic guar and amodimethicone",
+          "inference": "Dimethicone, amodimethicone and cationic guar support high deposition for a shampoo.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "conditioning-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Rinse-off format limits persistence versus conditioner",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-deposition"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silicone deposition creates weight potential, partly offset by strong cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethicone and amodimethicone are present",
+          "inference": "Silicone deposition creates weight potential, partly offset by strong cleansing.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "weight-deposition-balance"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong cleansing can reduce net buildup",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "weight-deposition-balance"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest coherent route is deposition shine.",
+      "supportingSignals": [
+        {
+          "observation": "S1 silicone/cationic route is stronger than acid route",
+          "inference": "The strongest coherent route is deposition shine.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "primary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "S2 remains capped without pH",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "repair"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Temporary lubrication can support damaged-feel care, not bond repair.",
+      "supportingSignals": [
+        {
+          "observation": "Silicone lubrication route",
+          "inference": "Temporary lubrication can support damaged-feel care, not bond repair.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "secondary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No bond-specific system",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular cosmetic shine shampoo, not a reset or treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Ordinary rinse-out directions",
+          "inference": "Regular cosmetic shine shampoo, not a reset or treatment.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Weight risk limits frequent-use fit for some profiles",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "dm-de-3138002",
+            "loreal-de-300ml"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002",
+        "loreal-de-300ml"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-3138002"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-3138002"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "dm-de-3138002"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "dm-de-3138002"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-3138002"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      4
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      3,
+      4
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      3,
+      4
+    ],
+    "repairR1": [
+      3,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to cleansing, not to a neighboring marketing or treatment endpoint."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to conditioningDeposition, not to a neighboring marketing or treatment endpoint."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to weightBuildup, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS1, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "shineS3 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS3, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV1, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV3": {
+        "g1FunctionalRelevance": "volumeV3 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV3, not to a neighboring marketing or treatment endpoint."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to smoothing, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR1, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "repairR2 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR2, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR4": {
+        "g1FunctionalRelevance": "repairR4 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR4, not to a neighboring marketing or treatment endpoint."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organicClarification has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to organicClarification, not to a neighboring marketing or treatment endpoint."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to mildnessPotential, not to a neighboring marketing or treatment endpoint."
+      }
+    },
+    "weightDepositionLoad": "Moderate-to-high for a shampoo because dimethicone is early and amodimethicone plus cationic guar are present.",
+    "weightPersistence": "Moderate; silicone deposition may persist depending on routine.",
+    "weightResetCapacity": "Moderate cleansing partly offsets deposition but does not remove weight risk.",
+    "r4TargetStressor": "combing friction",
+    "r4ProtectiveRoute": "silicone/cationic lubrication",
+    "r3FormulaSignalNote": "No bond-specific active or bond-repair route; glycolic-acid gloss wording is not bond repair evidence.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula and public marketing/consumer-review evidence only; no controlled shampoo-only test with comparator was found."
+  },
+  "claimAudit": [
+    {
+      "claim": "Spiegelglanz / intensiver Glanz",
+      "verdict": "plausible",
+      "support": "Strong S1 silicone/cationic deposition route supports shine and smoothing.",
+      "limitation": "No disclosed shampoo-only instrumental test; glycolic acid alone is not the main mechanism in this formula.",
+      "sourceIds": [
+        "loreal-de-300ml",
+        "dm-de-3138002"
+      ]
+    },
+    {
+      "claim": "reinigt sanft, ohne zu beschweren",
+      "verdict": "weak",
+      "support": "Betaine co-surfactants and rinse-off format support some mildness/weight balance.",
+      "limitation": "SLES-led cleansing and silicone deposition counter both mildness and no-weight wording.",
+      "sourceIds": [
+        "loreal-de-300ml",
+        "dm-de-3138002"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-3138002",
+    "loreal-de-300ml",
+    "budni-de-300ml",
+    "incidecoder-200ml-conflict"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Rinse-off cosmetic shampoo; no dandruff, hair-loss, dermatitis or other medical treatment classification is made."
+  }
+}

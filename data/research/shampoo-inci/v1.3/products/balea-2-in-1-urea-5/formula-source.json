@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "4066447591644",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T20:30:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-balea-med-2in1-urea-1376376-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "locator": "https://www.dm.de/p/d/1376376/balea-med-duschgel-2in1-dusche-shampoo-5-prozent-urea",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Cocamidopropyl Betaine, Glycerin, Sodium Chloride, Sodium Lactate, Panthenol, Allantoin, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Phenoxyethanol, Benzyl Alcohol, Piroctone Olamine, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Cocamidopropyl Betaine, Glycerin, Sodium Chloride, Sodium Lactate, Panthenol, Allantoin, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Phenoxyethanol, Benzyl Alcohol, Piroctone Olamine, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "urea",
+    "cocamidopropyl betaine",
+    "glycerin",
+    "sodium chloride",
+    "sodium lactate",
+    "panthenol",
+    "allantoin",
+    "tocopherol",
+    "ascorbyl palmitate",
+    "parfum",
+    "glyceryl oleate",
+    "coco-glucoside",
+    "glycol distearate",
+    "laureth-4",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "hydrogenated palm glycerides citrate",
+    "lecithin",
+    "phenoxyethanol",
+    "benzyl alcohol",
+    "piroctone olamine",
+    "benzoic acid",
+    "citric acid",
+    "sodium hydroxide"
+  ],
+  "inciFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

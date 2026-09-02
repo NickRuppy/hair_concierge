@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "shampoo-weight-mapping-v1",
+  "sourceManifest": "data/research/shampoo-inci/holdout-v2/holdout-manifest.json",
+  "products": [
+    {
+      "id": "A",
+      "candidateId": "balea-professional-oil-repair-intensiv",
+      "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+      "formulaFingerprint": "689733084ff714faf5752f96affb87876bd4116df9392cdc2300eb3a67e73e1e",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/balea-professional-oil-repair-intensiv/formula-source.json"
+    },
+    {
+      "id": "B",
+      "candidateId": "alverde-nutri-care",
+      "productId": "holdout-v2:alverde-nutri-care",
+      "formulaFingerprint": "05bbbca8881b1ffa973aa86ef21db280a455796ccd8577fffc251c155b1365ab",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/alverde-nutri-care/formula-source.json"
+    },
+    {
+      "id": "C",
+      "candidateId": "isana-professional-plex",
+      "productId": "holdout-v2:isana-professional-plex",
+      "formulaFingerprint": "375479ebe8b3a2fa7f4a250d6455cb171f88b69e0d311b8fd1b660f796d0ab97",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/formula-source.json"
+    },
+    {
+      "id": "D",
+      "candidateId": "herbal-essences-fiji",
+      "productId": "holdout-v2:herbal-essences-fiji",
+      "formulaFingerprint": "3f61f3ba85eaf215b60dffee572dcf0187b73897fb51488e52e99164f028a45d",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/herbal-essences-fiji/formula-source.json"
+    },
+    {
+      "id": "E",
+      "candidateId": "garnier-fructis-kraft-glanz",
+      "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+      "formulaFingerprint": "5aa65301a69e27682f0c6892e40c226f68248702a73a5ca2988a9987f936e604",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/garnier-fructis-kraft-glanz/formula-source.json"
+    },
+    {
+      "id": "F",
+      "candidateId": "gliss-scalp-balance-sanft",
+      "productId": "holdout-v2:gliss-scalp-balance-sanft",
+      "formulaFingerprint": "ca38a7bf239d06376aa7a036f6388a512fa8f1d691a6a447e0554a133daba0f2",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/gliss-scalp-balance-sanft/formula-source.json"
+    },
+    {
+      "id": "G",
+      "candidateId": "nivea-classic-care",
+      "productId": "holdout-v2:nivea-classic-care",
+      "formulaFingerprint": "53a18adf83c0dfb43dc15b59a24d8ca2769753881f1a98660a1ad25489e55eb6",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/formula-source.json"
+    },
+    {
+      "id": "H",
+      "candidateId": "nivea-men-anti-schuppen",
+      "productId": "holdout-v2:nivea-men-anti-schuppen",
+      "formulaFingerprint": "cce2372259fe6a7e6fbe027b47514ba6bcf0060500db6a3b9646b192158e6f74",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/nivea-men-anti-schuppen/formula-source.json"
+    },
+    {
+      "id": "I",
+      "candidateId": "guhl-langzeit-volumen",
+      "productId": "holdout-v2:guhl-langzeit-volumen",
+      "formulaFingerprint": "94b69db71ebff4ee6078bb5dd9173cdf86a83090fe93da25d5f0d0d09b7a2323",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/guhl-langzeit-volumen/formula-source.json"
+    },
+    {
+      "id": "J",
+      "candidateId": "jean-len-repair-dattel-vanille",
+      "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+      "formulaFingerprint": "961668caae8c4241fb9bd5593904f74375c1f344633c9ffd52f37efb9b1aa7c7",
+      "sourcePath": "data/research/shampoo-inci/holdout-v2/products/jean-len-repair-dattel-vanille/formula-source.json"
+    }
+  ]
+}

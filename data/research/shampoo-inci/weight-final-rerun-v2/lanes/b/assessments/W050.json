@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W050",
+  "formula": {
+    "inciFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"payload_lipid","name":"stearyl alcohol","position":6},{"family":"payload_lipid","name":"cetyl alcohol","position":9},{"family":"cationic_polymer","name":"polyquaternium-6","position":14},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":15}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Stearyl Alcohol und Cetyl Alcohol stehen relativ prominent und werden durch zwei kationische Polymere ergänzt."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Fettalkohol-Lipidpayloads plus kationische Polymere stützen haftende, bewegungsreduzierende Rückstände."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES und Betain reinigen solide, aber die Tensidbreite ist begrenzt und steht einer reicheren Pflegearchitektur gegenüber."
+  },
+  "competingSignals": [
+    "SLES-basierte Reinigung spricht gegen ungehemmte Ablagerung.",
+    "Frühe Fettalkohole plus zwei Polymere sprechen für hohe Beschwerungsplausibilität."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist gestützt, weil eine fettalkoholreiche, polymerverstärkte Architektur eine spürbare Reduktion von Bewegung oder Ansatzlift plausibel macht.",
+  "whyNotNeighborBand": "Moderate würde die Kombination aus zwei relativ prominenten Fettalkoholen und zwei kationischen Polymeren zu niedrig gewichten.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und fehlende Konzentrationsdaten begrenzen die Sicherheit."
+  }
+}

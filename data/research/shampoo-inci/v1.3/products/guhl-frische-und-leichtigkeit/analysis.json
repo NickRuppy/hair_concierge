@@ -1,0 +1,594 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf:a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Sodium Laureth Sulfate is the lead cleanser with Cocamidopropyl Betaine and Coco-Glucoside support.",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride and Glyceryl Oleate create a light non-silicone deposition/refatting system.",
+      "Zinc PCA, Piroctone Olamine, GLDA and citrus/fragrance materials are present; no exact pH or percentage is inferred."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "hilft, schnelles Nachfetten zu verzögern, ohne Ansatz und Spitzen auszutrocknen",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Langanhaltendes Frischegefühl; effektiv reinigend; mit belebender Zitronenmelisse",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-de-4072600282274-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES-led anti-fat architecture supports strong cleansing for oily roots.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "SLES-led anti-fat architecture supports strong cleansing for oily roots.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic guar plus glyceryl oleate supports modest rinse-off conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Cationic guar plus glyceryl oleate supports modest rinse-off conditioning.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone or rich lipid system; strong cleansing gives useful reset capacity.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "No silicone or rich lipid system; strong cleansing gives useful reset capacity.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "low-weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "low-weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest direct mechanism is clean-light root lift from oil removal and low weight.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "The strongest direct mechanism is clean-light root lift from oil removal and low weight.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "clean-light-volume"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "clean-light-volume"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Secondary effect is ordinary light conditioning without a specialist treatment route.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Secondary effect is ordinary light conditioning without a specialist treatment route.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular oil-control shampoo role; not a periodic clarifier or treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Regular oil-control shampoo role; not a periodic clarifier or treatment.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine, Zinc PCA and oil-control positioning create a coherent ingredient-based route for oily-dandruff support, while unknown concentration and absent dandruff testing cap confidence.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine and Zinc PCA are present in the exact DE formula alongside strong oil-control cleansing.",
+          "inference": "The combined active and cleansing architecture is relevant to an oily-dandruff cosmetic context.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "dm-de-4072600282274-2026-08-10"
+          ],
+          "mechanismIds": [
+            "piroctone-olamine-dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The product is not explicitly positioned or tested for dandruff and the active concentration is unknown.",
+          "inference": "Support is bounded and must not be presented as treatment efficacy.",
+          "sourceIds": [
+            "official-guhl-2026-08-10",
+            "rossmann-4072600282274-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "dm-de-4072600282274-2026-08-10",
+        "rossmann-4072600282274-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "piroctone-olamine-dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      2,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      3,
+      3
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      2,
+      2
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Sebum removal is directly relevant to quick-regreasing roots.",
+        "g2FormulaRelevanceAndDelivery": "SLES appears second with amphoteric/nonionic support.",
+        "g3EndpointSpecificity": "Endpoint is cleansing, not citrus freshness."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Cationic guar/refatting can reduce friction.",
+        "g2FormulaRelevanceAndDelivery": "Both signals sit in a plausible rinse-off context.",
+        "g3EndpointSpecificity": "Endpoint is light conditioning, not repair."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Surface smoothing can improve apparent shine.",
+        "g2FormulaRelevanceAndDelivery": "Cationic guar plus glyceryl oleate gives an aligned light S1 route.",
+        "g3EndpointSpecificity": "Separated from acidic and optical shine."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "Sebum removal can reduce dulling residue.",
+        "g2FormulaRelevanceAndDelivery": "Anti-fat SLES architecture supports organic removal.",
+        "g3EndpointSpecificity": "Organic oil/sebum removal, not mineral chelation."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Root lift can benefit from oil removal and low weight.",
+        "g2FormulaRelevanceAndDelivery": "Strong cleansing and low WT support the route.",
+        "g3EndpointSpecificity": "Clean-light volume, not fiber thickening."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Lubrication can reduce rough feel.",
+        "g2FormulaRelevanceAndDelivery": "Cationic guar and glyceryl oleate are plausible smoothing signals.",
+        "g3EndpointSpecificity": "No humidity-duration claim inferred."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lower friction can reduce grooming stress.",
+        "g2FormulaRelevanceAndDelivery": "The cationic/refatting system supports light lubrication.",
+        "g3EndpointSpecificity": "Damage management, not structural repair."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "Oil-control target is organic residue.",
+        "g2FormulaRelevanceAndDelivery": "SLES-led cleansing supports everyday organic clarification.",
+        "g3EndpointSpecificity": "Not elevated to reset clarifier."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Dryness claim makes mildness potential relevant.",
+        "g2FormulaRelevanceAndDelivery": "Co-surfactants/refatting moderate cleanser base.",
+        "g3EndpointSpecificity": "SLES/fragrance cap tolerance inference."
+      }
+    },
+    "weightDepositionLoad": "light cationic polymer plus one refatting agent",
+    "weightPersistence": "low persistence; no silicone or heavy oil system",
+    "weightResetCapacity": "moderate to high through SLES-led cleansing",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-targeted ingredient or bond-specific technology.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact INCI and public claims only; no public product-specific shampoo-only test protocol was used to raise formula scores."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti-Fett / verzögert schnelles Nachfetten",
+      "verdict": "plausible",
+      "support": "Efficient cleansing plus low weight supports oil-control feel.",
+      "limitation": "No public shampoo-only regreasing test details or comparator.",
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ]
+    },
+    {
+      "claim": "ohne auszutrocknen",
+      "verdict": "indeterminate",
+      "support": "Co-surfactants and refatting signals moderate a bare SLES system.",
+      "limitation": "Dryness and tolerance cannot be established from INCI alone.",
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-guhl-2026-08-10",
+    "dm-de-4072600282274-2026-08-10",
+    "rossmann-4072600282274-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Oil-control, freshness and ingredient-based anti-flake relevance are cosmetic scalp targeting; no disease-treatment claim is inferred."
+  }
+}

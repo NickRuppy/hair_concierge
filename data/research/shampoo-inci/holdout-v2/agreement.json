@@ -1,0 +1,382 @@
+{
+  "schema_version": "shampoo-research-holdout-agreement-v2",
+  "independence": {
+    "method": "Fresh no-context labelers, fixed source packets and normative rules, no access to first labels",
+    "limitation": "Same model lineage; classification agreement is not accuracy or real-world outcome validation.",
+    "sequencingDeviation": "Second labeling ran concurrently after source packets were fixed, before all first audit files had been materialized. First-label judgments were produced independently; no labels were reconciled for agreement."
+  },
+  "labels": [
+    {
+      "candidate_id": "balea-professional-oil-repair-intensiv",
+      "properties": {
+        "cleansingStrength": {
+          "value": "strong",
+          "rationale": "SLES direkt nach Wasser mit Cocamidopropyl Betaine ergibt ein kräftiges Reinigungsgerüst; Öl- und Pflegeanteile dämpfen die Wahrnehmung, machen es aber nicht mild oder reset-artig."
+        },
+        "conditioningLevel": {
+          "value": "high",
+          "rationale": "Drei Pflanzenöle, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, Rapeseedamide, kationisches Guar und Keratin bilden zusammen eine klare Pflege-/Glättungsarchitektur."
+        },
+        "weightPotential": {
+          "value": "high",
+          "rationale": "Netto überwiegen mehrere substantielle Rückstandswege: frühe/mittlere Öl- und Lipidroute plus kationisches Guar und Proteinfilm; die Reinigung kompensiert, löscht diese Deposition aber nicht."
+        },
+        "focusPrimary": {
+          "value": "repair",
+          "rationale": "Name und Claims zielen auf Oil Repair für extrem strapaziertes/trockenes Haar; die Öl-, Lipid-, Guar- und Keratinroute ist dafür formelkompatibel."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Kein separater zweiter Produktauftrag mit eigener Formelroute; Ölpflege, Keratin und Trockenheitsclaim stützen denselben Repair-/Care-Fokus."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Normales Ausspül-Shampoo ohne Deep-Cleansing-, Reset-, Wirkstoff- oder expliziten Häufigkeits-Trigger; daher bleibt die Standardrolle regular."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Positionierung betrifft trockenes/strapaziertes Haar und Längenpflege, nicht gezielt trockene, juckende, schuppige oder sensitive Kopfhaut."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole; Öl- oder Pflegeclaims ersetzen den gesperrten Anti-Schuppen-Wirkstoffweg nicht."
+      }
+    },
+    {
+      "candidate_id": "alverde-nutri-care",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "Lauryl/Coco-Glucoside plus Sodium Coco-Sulfate liefern verlässliche Reinigung, aber das nichtionisch geprägte Naturkosmetik-Gerüst und Pflegehumectants sprechen gegen strong."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Hydrolyzed Wheat Protein, Glycerin/Sucrose, Glyceryl Oleate, Inulin und Lecithin stützen Pflege, aber ohne Silikon oder kationische Deposition bleibt es nicht high."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Mehrere leichte Wege aus Proteinfilm, Glyceryl Oleate/Lecithin und Humectants können etwas Rückstand geben; es fehlt aber eine starke persistente Silikon- oder Kationikroute."
+        },
+        "focusPrimary": {
+          "value": "repair",
+          "rationale": "Der beschädigtes-Haar-/Nutri-Care-Claim ist dominant und wird durch Protein, refattende Lipide und Humectants ausreichend gestützt."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Keine eigenständige zweite Positionierung mit separater Formelroute; Mandel-/Pflegehinweise gehören zum Repair-/Care-Hauptfokus."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Reguläres Ausspül-Shampoo ohne expliziten häufigen Gebrauch, Reset-Absicht oder anerkannten Problemwirkstoff; Standardrolle regular."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Quellen zielen auf strapaziertes Haar, nicht auf kosmetische Kopfhautberuhigung, Juckreiz, trockene Schuppen oder sensitive Kopfhaut."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole; trockene-Haar-Pflege ist kein Anti-Schuppen-Support."
+      }
+    },
+    {
+      "candidate_id": "isana-professional-plex",
+      "properties": {
+        "cleansingStrength": {
+          "value": "strong",
+          "rationale": "SLES steht direkt nach Wasser, Sodium Chloride sehr früh und Cocamidopropyl Betaine folgt; die Pflegefracht verhindert Clarifying, aber nicht die starke Basisreinigung."
+        },
+        "conditioningLevel": {
+          "value": "high",
+          "rationale": "Frühes Panthenol/Reisprotein, kationische Stärke, kationisches Guar, weitere Proteine/Aminosäuren und Glyceryl Oleate ergeben eine deutlich pflegende Plex-/Repair-Architektur."
+        },
+        "weightPotential": {
+          "value": "high",
+          "rationale": "Netto liegen mindestens zwei substantielle Depositionrouten vor: kationische Polymere/Stärke plus Proteinfilm, unterstützt durch Panthenol und leichte Refattung."
+        },
+        "focusPrimary": {
+          "value": "repair",
+          "rationale": "Plex-, geschädigte Haarstruktur-, Spliss- und Haarbruchclaims dominieren; Protein-/kationische Filmrouten machen diese Repair-Richtung plausibel."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Plex, Stärke und Haarbruch sind keine getrennten Sekundärfoki, sondern Varianten desselben Repair-Auftrags; keine unabhängige Shine-, Volume- oder Scalp-Route."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Trotz starker Reinigung ist das Produkt als normales Repair-Shampoo positioniert; kein Reset-/Clarifying-Intent und kein anerkannter Anti-Schuppen-Wirkstoff."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Claims betreffen Haarstruktur, Spliss und Haarbruch; es gibt keinen gezielten Komfortpfad für trockene, juckende oder sensitive Kopfhaut."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole; Plex-/Proteinpflege zählt nicht als Anti-Schuppen-Wirkstoffroute."
+      }
+    },
+    {
+      "candidate_id": "herbal-essences-fiji",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "Sodium Cocoyl Isethionate, Betaines und Sarcosinate bilden ein wirksames, aber milder angelegtes sulfatfreies Reinigungssystem; kein Reset- oder Strong-Cleansing-Claim."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-10 liefert eine echte kationische Pflege-/Slip-Route; Glycerin und Kokosfruchtsaft stehen spät und stützen nur leicht."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Eine substantielle kationische Polymerroute rechtfertigt moderate Deposition; silikonfrei, kaum Öle und Lightweight-Positionierung sprechen klar gegen high."
+        },
+        "focusPrimary": {
+          "value": "general",
+          "rationale": "Der dominante Claim ist leichte Feuchtigkeit, der in den festen Fokuswerten nicht sauber als eigener Hair-Fokus abbildbar ist; keine klare Repair-, Shine-, Volume-, Gentle- oder Scalp-Priorität."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Kein distinkter Sekundärclaim mit unabhängiger Formelroute; Kokos- und Feuchtigkeitshinweise bleiben innerhalb der allgemeinen leichten Pflegepositionierung."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Normale Shampoo-Anwendung mit anschließend empfohlener Spülung; kein expliziter Frequent-, Reset-, Clarifying- oder Treatment-Trigger."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Leichte Feuchtigkeit bezieht sich auf Haarpflege; die Quellen nennen keine gezielte trockene, juckende, schuppige oder sensitive Kopfhaut."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole; Duft, Citrusöl oder Kokosbestandteil ändern diese gesperrte Regel nicht."
+      }
+    },
+    {
+      "candidate_id": "garnier-fructis-kraft-glanz",
+      "properties": {
+        "cleansingStrength": {
+          "value": "strong",
+          "rationale": "Die kanonische Herstellerformel ist SLES-/Coco-Betaine-geführt und relativ leicht beschwert; damit starke Alltagsreinigung, aber ohne Clarifying-/Reset-Positionierung."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Glycol Distearate, kationisches Guar, Hydroxypropyltrimonium Lemon Protein und Octyldodecanol stützen Glättung/Schutz, aber ohne Silikon oder reiches Lipidsystem nicht high."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Eine substantielle kationische Guar-/Proteinfilmroute kann Rückstand und Griff geben; starke Reinigung und fehlende Silikone/Ölfülle begrenzen die Netto-Schwere."
+        },
+        "focusPrimary": {
+          "value": "repair",
+          "rationale": "Kraft-/kräftigender Faser-Claim dominiert neben Glanz; kationisches Guar und kationisches Protein liefern eine kompatible, wenn auch temporäre Schutz-/Filmroute."
+        },
+        "focusSecondary": {
+          "value": [
+            "shine"
+          ],
+          "rationale": "Glanz ist explizit im Produktnamen/Claim und hat eine eigene plausible Route über Glättungsfilm, Glycol Distearate und Säure-/pH-Management; Volume bleibt zu wenig unabhängig."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Normales Shampoo mit Strength-/Glanzpositionierung; starke Reinigung allein reicht nach v1.4 nicht für alternating, und es fehlt ein Reset- oder Treatment-Trigger."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Dermatologisch getestet und Duft-/Säureexposition sind keine gezielte Kopfhaut-Komfortpositionierung; Fokus liegt auf Haarfaser, Glanz und Stärke."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Die vollständige kanonische Hersteller-INCI enthält weder Piroctone Olamine noch Climbazole; damit kein gesperrter Anti-Schuppen-Support."
+      }
+    },
+    {
+      "candidate_id": "gliss-scalp-balance-sanft",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "SLES steht früh und wird durch Cocamidopropyl Betaine sowie Coco-Glucoside ergänzt; Refetter und Guar bremsen eine Strong-Einstufung."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Panthenol, Glyceryl Oleate, PEG-7 Glyceryl Cocoate und kationisches Guar liefern eine plausible leichte bis mittlere Pflegearchitektur ohne Silikon."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Eine substanzielle Route über kationisches Guar plus schwächere Refetter/Oel-Signale spricht für spürbare, aber nicht schwere Ablagerung."
+        },
+        "focusPrimary": {
+          "value": "gentle",
+          "rationale": "Name und Packungsrichtung stellen sanfte Kopfhaut-Balance in den Vordergrund; die moderate, refettete SLES-Basis ist damit kompatibel."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Feuchtigkeit/Glanz sind vorhanden, nutzen aber dieselbe leichte Pflege- und Refetterroute und bilden keinen klar unabhängigen Zweitfokus."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Die autoritative Richtung nennt regelmäßige Anwendung; kein expliziter Daily-/Frequent-Trigger und kein Reset- oder Treatment-Trigger."
+        },
+        "scalpComfortTarget": {
+          "value": "targeted",
+          "rationale": "Scalp-Balance und sanfte Kopfhaut-Positionierung sind ausdrücklich; moderate Reinigung, Panthenol und Refetter geben dafür eine kosmetische Route."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole."
+      }
+    },
+    {
+      "candidate_id": "nivea-classic-care",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "SLES ist der Hauptreiniger, aber Betain, Glucoside, pH-/Mild-Positionierung und mehrere Refetter halten die Einstufung bei moderat."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Guar Hydroxypropyltrimonium Chloride, Baumwollsamenoel, Dicaprylyl Ether und Glyceryl Oleate ergeben eine klare Nicht-Silikon-Pflege."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Kationisches Guar ist eine substanzielle Route; Oel/Emollients ergänzen sie, aber ohne Silikon oder schwere Mehrfachfilme bleibt es moderat."
+        },
+        "focusPrimary": {
+          "value": "gentle",
+          "rationale": "Mildes, pH-optimiertes Classic-Care-Shampoo ist die dominante Positionierung; die Formel stützt eher sanfte Pflege als Spezialeffekte."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Gesunder Glanz ist genannt, aber der plausible Glanzweg ist dieselbe Guar-/Oel-/Refetterpflege und kein unabhängiger Zweitmechanismus."
+        },
+        "usageRole": {
+          "value": "frequent",
+          "rationale": "Milde/Daily-Care-Positionierung plus nicht starke Reinigung erfüllt den v1.4-Trigger fuer frequent; es ist kein Reset- oder Treatmentprodukt."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Formel ist mild/allgemein kopfhautbezogen, aber kein gezieltes Trockenheits-, Juckreiz-, Schuppen- oder Sensitiv-Kopfhautprodukt."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole."
+      }
+    },
+    {
+      "candidate_id": "nivea-men-anti-schuppen",
+      "properties": {
+        "cleansingStrength": {
+          "value": "strong",
+          "rationale": "SLES, Cocamidopropyl Betaine, Laureth-9 und Glucoside bilden eine breite frühe Reinigungsbasis mit nur nachgelagerter Pflege."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Guar-Polymer, Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil liefern Pflege, aber ohne starke Silikon-/Mehrfachdeposition."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Kationisches Guar ist eine substanzielle Ablagerungsroute; die Lipid-/Refetter-Signale sind eher ergänzend und werden durch starke Reinigung relativiert."
+        },
+        "focusPrimary": {
+          "value": "scalp_active",
+          "rationale": "Anti-Schuppen ist die dominante Problempositionierung und Piroctone Olamine ist als anerkannte Route in der Formel enthalten."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Weitere Pflege- oder Wurzelstaerke-Hinweise bleiben nachrangig und haben keinen eigenständigen, dominanten Zweitfokus."
+        },
+        "usageRole": {
+          "value": "treatment",
+          "rationale": "Der erkannte Anti-Schuppen-Wirkstoff ist der Auswahlgrund; regelmäßige Anwendung ändert die active-led Treatment-Rolle nicht."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Das Produkt zielt auf Schuppen ueber den separaten Wirkstoffpfad, nicht auf trockene, sensible oder juckende Kopfhaut-Komfortpflege."
+        }
+      },
+      "dandruff_support": {
+        "value": "supported",
+        "rationale": "Die vollständige INCI enthält Piroctone Olamine; das reicht nach der gesperrten Regel fuer Support, nicht fuer garantierte Wirksamkeit."
+      }
+    },
+    {
+      "candidate_id": "guhl-langzeit-volumen",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "SLES mit Betain und Coco-Glucoside reinigt solide, aber es gibt keinen Reset-/Tiefenreinigungsauftrag und mehrere leichte Pflegeanteile."
+        },
+        "conditioningLevel": {
+          "value": "moderate",
+          "rationale": "Kationisches Guar, Glyceryl Oleate und Panthenol geben eine mittlere leichte Pflegebasis, passend zu Volumen statt reichhaltiger Reparatur."
+        },
+        "weightPotential": {
+          "value": "moderate",
+          "rationale": "Guar ist eine substanzielle Route und Glyceryl Oleate/Panthenol sind Zusatzsignale; die Volumenpositionierung verhindert keine Netto-Deposition."
+        },
+        "focusPrimary": {
+          "value": "volume",
+          "rationale": "Langzeit-Volumen fuer feines/plattes Haar ist klar dominant; niedrige bis mittlere Ablagerung und ordentliche Reinigung sind damit kompatibel."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Piroctone Olamine ist formelrelevant, aber laut Quellen nicht die Produktpositionierung; kein eigenständiger zweiter Fokus."
+        },
+        "usageRole": {
+          "value": "frequent",
+          "rationale": "Die Hersteller-FAQ erlaubt tägliches Waschen und die Reinigung ist nicht strong; damit greift der frequent-Trigger."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Positionierung ist Volumen fuer feines Haar; kein gezieltes Trockenheits-, Juckreiz- oder Sensitiv-Kopfhautziel."
+        }
+      },
+      "dandruff_support": {
+        "value": "supported",
+        "rationale": "Die vollständige INCI enthält Piroctone Olamine; die gesperrte Formelregel zählt das als supported, auch wenn der Fokus Volumen bleibt."
+      }
+    },
+    {
+      "candidate_id": "jean-len-repair-dattel-vanille",
+      "properties": {
+        "cleansingStrength": {
+          "value": "moderate",
+          "rationale": "SLES und Betain reinigen deutlich, werden aber durch viele frühe Refetter/Emollients und Repair-Care-Positionierung abgefedert."
+        },
+        "conditioningLevel": {
+          "value": "high",
+          "rationale": "Frühe Glyceryl-Oleate/Cocoate- und Castor-Oil-PEG-Systeme, Panthenol, Guar und Oel ergeben eine reichhaltige mehrteilige Pflegearchitektur."
+        },
+        "weightPotential": {
+          "value": "high",
+          "rationale": "Eine substantive Lipid-/Refetterroute plus kationisches Guar bilden zwei relevante Depositionwege; fuer feines Haar ist Gewicht plausibel."
+        },
+        "focusPrimary": {
+          "value": "repair",
+          "rationale": "Repair fuer stark strapaziertes/trockenes Haar ist die dominante Richtung; die reichhaltige Pflegeformel stützt Schutz/Bruchreduktion plausibel."
+        },
+        "focusSecondary": {
+          "value": [],
+          "rationale": "Feuchtigkeit und Glanz sind Claims, aber sie laufen ueber dieselbe Repair-/Pflegeablagerung und sind kein unabhängiger Zweitfokus."
+        },
+        "usageRole": {
+          "value": "regular",
+          "rationale": "Normales rinse-off Repair-Shampoo ohne Tiefenreinigung, Wirkstoffbehandlung oder expliziten Frequent-Trigger."
+        },
+        "scalpComfortTarget": {
+          "value": "not_targeted",
+          "rationale": "Die Claims richten sich an trockenes/strapaziertes Haar, nicht gezielt an trockene, juckende, sensible oder schuppige Kopfhaut."
+        }
+      },
+      "dandruff_support": {
+        "value": "not_supported",
+        "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole."
+      }
+    }
+  ]
+}

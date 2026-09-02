@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-final-weight-assessment-freeze-v1",
+  "lanes": {
+    "a": {
+      "records": 50,
+      "sha256": "915f83443b8d02e6e0f7565d39522d6435726eebc471419a9d2a808137a422d8"
+    },
+    "b": {
+      "records": 50,
+      "sha256": "a4c4d50b3b090298b0d278df6410afbfdfd783379f6d586b175f83b50bb612fe"
+    }
+  },
+  "disagreements": 2,
+  "adjudicationSha256": "c9d8d4fa04e9500e5cb2e7b8aedb88c70e37ddd8ed404b8db3d0ec9b295743c1"
+}

@@ -1,0 +1,536 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:balea-professional-oil-repair-intensiv:689733084ff714faf5752f96affb87876bd4116df9392cdc2300eb3a67e73e1e",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES appears second, followed by Cocamidopropyl Betaine and salt.",
+      "Three botanical oils appear before fragrance, suggesting a meaningful oil/refatting signal for a rinse-off shampoo.",
+      "Guar Hydroxypropyltrimonium Chloride supplies a cationic polymer deposition route.",
+      "Hydrolyzed Keratin is present late and should be treated as weak surface-film support.",
+      "No silicone or recognized anti-dandruff active is listed.",
+      "Post-unblind score adjustment: conditioningDeposition [2,3] -> [3,3] and weightBuildup [2,2] -> [3,3], because the revealed Oil-Repair positioning plus early three-oil complex and cationic guar support two distinct substantive deposition route kinds under v1.4; cleansing is not used to cancel deposition."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Pflege-Formel mit 3-fach Öl-Komplex und Keratin; für extrem strapaziertes und trockenes Haar; ohne Silikone.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Laureth-4",
+      "PEG-40 Hydrogenated Castor Oil",
+      "Disodium Cocoyl Glutamate",
+      "Sodium Cocoyl Glutamate"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Argania Spinosa Kernel Oil",
+      "Orbignya Oleifera Seed Oil",
+      "Sclerocarya Birrea Seed Oil",
+      "Glycol Distearate",
+      "PEG-4 Rapeseedamide"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Keratin"
+    ],
+    "acids": [
+      "Benzoic Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES steht direkt nach Wasser und wird durch CAPB sowie Glutamate ergänzt; die Öl-/Refattinglast ändert die Reinigungsstärke nicht zu niedrig, daher bleibt die direkte Reinigung stark.",
+      "supportingSignals": [
+        {
+          "observation": "SLES + CAPB + Glutamate liefern eine starke, aber nicht resetartige Reinigungsbasis.",
+          "inference": "SLES steht direkt nach Wasser und wird durch CAPB sowie Glutamate ergänzt; die Öl-/Refattinglast ändert die Reinigungsstärke nicht zu niedrig, daher bleibt die direkte Reinigung stark.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Öle und Glycol Distearate können das Hautgefühl abpuffern, belegen aber keine milde oder niedrige Reinigung.",
+          "inference": "Öle und Glycol Distearate können das Hautgefühl abpuffern, belegen aber keine milde oder niedrige Reinigung.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Der unblindete Oil-Repair-Kontext passt zur Formel: drei Pflanzenöle vor Parfum, kationisches Guar und Keratin stützen ein hohes, nicht-silikonisches Pflege-/Depositionspotenzial im Shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Drei Öle vor Parfum plus kationisches Guar bilden ein klares nicht-silikonisches Pflege-/Depositionssystem.",
+          "inference": "Der unblindete Oil-Repair-Kontext passt zur Formel: drei Pflanzenöle vor Parfum, kationisches Guar und Keratin stützen ein hohes, nicht-silikonisches Pflege-/Depositionspotenzial im Shampoo.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Rinse-off-Deposition bleibt ohne Fertigprodukttest unsicher; deshalb keine zugespitzte Wirksamkeitsaussage.",
+          "inference": "Rinse-off-Deposition bleibt ohne Fertigprodukttest unsicher; deshalb keine zugespitzte Wirksamkeitsaussage.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nach v1.4 zählen der frühe Ölkomplex und kationisches Guar als zwei unterschiedliche substantive Depositionsrouten; deshalb ist das Beschwerungspotenzial hoch, auch wenn die Reinigung stark ist.",
+      "supportingSignals": [
+        {
+          "observation": "Früher Ölkomplex und kationisches Guar sind zwei unterschiedliche substantive Depositionsrouten.",
+          "inference": "Nach v1.4 zählen der frühe Ölkomplex und kationisches Guar als zwei unterschiedliche substantive Depositionsrouten; deshalb ist das Beschwerungspotenzial hoch, auch wenn die Reinigung stark ist.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die genaue Öl-/Guar-Abscheidung ist nicht gemessen, daher bleibt die Confidence trotz hoher Klasse moderat.",
+          "inference": "Die genaue Öl-/Guar-Abscheidung ist nicht gemessen, daher bleibt die Confidence trotz hoher Klasse moderat.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die dominierende Oil-Repair-/Trockenhaar-Positionierung ist formelkompatibel über Öl, kationisches Guar und Keratin; Repair beschreibt hier temporäre kosmetische Pflege, keine echte Strukturheilung.",
+      "supportingSignals": [
+        {
+          "observation": "Oil-Repair-/Keratin-Positionierung und Formelroute passen zu Repair als temporärer Pflege-/Oberflächenroute.",
+          "inference": "Die dominierende Oil-Repair-/Trockenhaar-Positionierung ist formelkompatibel über Öl, kationisches Guar und Keratin; Repair beschreibt hier temporäre kosmetische Pflege, keine echte Strukturheilung.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keratin ist spät und darf nicht als biologische Reparatur überinterpretiert werden.",
+          "inference": "Keratin ist spät und darf nicht als biologische Reparatur überinterpretiert werden.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Kein zweiter Nutzen ist zugleich separat positioniert und über eine unabhängige Route stärker als der Repair-Fokus; secondary bleibt leer.",
+      "supportingSignals": [
+        {
+          "observation": "Kein unabhängiger sekundärer Claim mit eigener Formelroute bleibt neben Repair übrig.",
+          "inference": "Kein zweiter Nutzen ist zugleich separat positioniert und über eine unabhängige Route stärker als der Repair-Fokus; secondary bleibt leer.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Glanz/Smoothing wären Folge der Pflegearchitektur, nicht ein separater Claim-Fokus.",
+          "inference": "Glanz/Smoothing wären Folge der Pflegearchitektur, nicht ein separater Claim-Fokus.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Quelle zeigt normale Shampooanwendung und keine Tiefenreinigung, aktive Schuppenroute oder ausdrückliche tägliche Nutzung; v1.4 default regular bleibt.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle zeigt normale Shampooanwendung ohne Reset-, Frequent- oder Treatment-Trigger.",
+          "inference": "Die Quelle zeigt normale Shampooanwendung und keine Tiefenreinigung, aktive Schuppenroute oder ausdrückliche tägliche Nutzung; v1.4 default regular bleibt.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Starke Reinigung allein erzeugt keinen alternating/reset-Trigger ohne Reset-Intent.",
+          "inference": "Starke Reinigung allein erzeugt keinen alternating/reset-Trigger ohne Reset-Intent.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Trockenes/strapaziertes Haar ist kein Kopfhautkomfort-Target; ohne sensitive, juckende, trockene Kopfhaut oder Verträglichkeitsroute bleibt der Wert not_targeted.",
+      "supportingSignals": [
+        {
+          "observation": "Die Produktpositionierung zielt auf trockenes/strapaziertes Haar, nicht auf kosmetischen Kopfhautkomfort.",
+          "inference": "Trockenes/strapaziertes Haar ist kein Kopfhautkomfort-Target; ohne sensitive, juckende, trockene Kopfhaut oder Verträglichkeitsroute bleibt der Wert not_targeted.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum ist ein Expositionshinweis, aber nicht der Grund für not_targeted.",
+          "inference": "Parfum ist ein Expositionshinweis, aber nicht der Grund für not_targeted.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige Formel enthält weder Piroctone Olamine noch Climbazole; Öl-/Repair-Claims ändern den gesperrten Anti-Schuppen-Wert nicht.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen in der vollständigen INCI.",
+          "inference": "Die vollständige Formel enthält weder Piroctone Olamine noch Climbazole; Öl-/Repair-Claims ändern den gesperrten Anti-Schuppen-Wert nicht.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Normale Reinigung kann lose Rückstände entfernen, ist aber keine anerkannte Anti-Schuppen-Route.",
+          "inference": "Normale Reinigung kann lose Rückstände entfernen, ist aber keine anerkannte Anti-Schuppen-Route.",
+          "sourceIds": [
+            "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Residue: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Residue: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Beschwerung/Residue: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      }
+    },
+    "weightDepositionLoad": "Die Beschwerung wird qualitativ aus v1.4-Route-Arten abgeleitet; INCI liefert keine exakten Einsatzmengen oder Wiederholungs-/Residue-Daten.",
+    "weightPersistence": "Persistenz bleibt mechanistisch begrenzt, weil keine wiederholten Shampoo-only Ablagerungsdaten im Quellenpaket vorliegen.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Chelator-/Klärungsarchitektur abgeleitet; keine Fertigprodukt-Resetprüfung ist erfasst.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine anerkannte echte Bond-Repair-Route wird aus INCI abgeleitet; Plex/Keratin/Protein-Sprache bleibt kosmetisch und temporär.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and unblinded product/source-packet claim audit only; no public shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "3-fach Öl-Komplex und Keratin für extrem strapaziertes und trockenes Haar",
+      "verdict": "plausible",
+      "support": "Die kanonische Formel enthält Argan-, Babassu- und Marulaöl vor Parfum sowie kationisches Guar und Hydrolyzed Keratin; damit ist ein Repair-/Pflegefokus als temporäre Oberflächenpflege kompatibel.",
+      "limitation": "Keine Shampoo-only Endpunkttests; Keratin ist spät und belegt keine strukturelle Reparatur.",
+      "sourceIds": [
+        "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Dry/damaged-hair repair positioning is ordinary cosmetic hair-care positioning, not scalp disease or treatment."
+  }
+}

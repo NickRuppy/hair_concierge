@@ -1,0 +1,603 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "c07a181b-3d55-4d47-ad68-9c1e324d4496:1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Current DE dm.de GTIN 071164341438 is a 473 ml product and is not merged with older 355 ml formulas.",
+      "Olefin sulfonate appears second, with Cocamide MIPA, CAPB and Coco-Glucoside support.",
+      "Multiple cationic/film-forming polymers plus coconut oil, argan oil and glyceryl oleate support curl smoothing/deposition; official and dm differ only in fragrance-detail exposure list."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "gently removes build-up without stripping away natural oils",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-hask-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Hydrates and protects curl texture from damage and frizz",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-hask-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "für schwungvolle und definierte Locken ohne Frizz",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-de-071164341438-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium C14-16 Olefin Sulfonate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MIPA",
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-10",
+      "Polyquaternium-7",
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Cocos Nucifera (Coconut) Oil",
+      "Argania Spinosa (Argan) Kernel Oil",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Glyceryl Oleate"
+    ],
+    "proteinsFilmFormers": [
+      "Polyimide-1",
+      "Panthenol"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Trisodium Ethylenediamine Disuccinate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Olefin-sulfonate-led formula supports strong cleansing and buildup removal.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Olefin-sulfonate-led formula supports strong cleansing and buildup removal.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple polyquats/guar plus oils/refatting support high rinse-off conditioning for shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Multiple polyquats/guar plus oils/refatting support high rinse-off conditioning for shampoo.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "curl-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "curl-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Several depositors create weight potential, partly offset by strong cleansing and no silicone.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Several depositors create weight potential, partly offset by strong cleansing and no silicone.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The defensible repair focus is protective conditioning/frizz damage management.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "The defensible repair focus is protective conditioning/frizz damage management.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "protective-conditioning-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "protective-conditioning-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine",
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Secondary mechanisms are S1 shine and regular curl-care use.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Secondary mechanisms are S1 shine and regular curl-care use.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular curl shampoo role; not a medicated or occasional-reset product.",
+      "supportingSignals": [
+        {
+          "observation": "Exact INCI architecture was reviewed before marketing claims.",
+          "inference": "Regular curl shampoo role; not a medicated or occasional-reset product.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The curl-conditioning formula has no captured anti-dandruff active, dandruff positioning or dandruff endpoint; strong cleansing alone does not establish support.",
+      "supportingSignals": [
+        {
+          "observation": "Captured claims and formula mechanisms concern curls, conditioning and frizz rather than dandruff.",
+          "inference": "The product should not be selected as a dandruff-support shampoo.",
+          "sourceIds": [
+            "official-hask-2026-08-10",
+            "dm-de-071164341438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong cleansing can remove surface oil and loose scale temporarily.",
+          "inference": "Nonspecific washing is not a dandruff-targeted route.",
+          "sourceIds": [
+            "dm-de-071164341438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-hask-2026-08-10",
+        "dm-de-071164341438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      3,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      2,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      1
+    ],
+    "volumeV2": [
+      2,
+      2
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      3,
+      3
+    ],
+    "repairR1": [
+      3,
+      3
+    ],
+    "repairR2": [
+      2,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      2,
+      2
+    ],
+    "organicClarification": [
+      2,
+      2
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Buildup removal is directly relevant.",
+        "g2FormulaRelevanceAndDelivery": "Olefin sulfonate plus co-surfactants create a strong cleanser system.",
+        "g3EndpointSpecificity": "Cleansing strength, not mildness."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Curl frizz/manageability can improve through deposition.",
+        "g2FormulaRelevanceAndDelivery": "Multiple cationic polymers plus oils/refatting create coherent rinse-off conditioning.",
+        "g3EndpointSpecificity": "Conditioning/deposition, not permanent curl repair."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Multiple polymers/oils can add residue.",
+        "g2FormulaRelevanceAndDelivery": "Several depositors are present, but strong cleanser/no silicone cap at moderate.",
+        "g3EndpointSpecificity": "Weight separated from conditioning benefit."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Smoothing film/lubrication can increase shine.",
+        "g2FormulaRelevanceAndDelivery": "Polyquats, guar, oils and glyceryl oleate are aligned S1 signals.",
+        "g3EndpointSpecificity": "Deposition shine, not acid shine."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "Removing buildup can improve curl shine/definition.",
+        "g2FormulaRelevanceAndDelivery": "Strong cleanser and buildup wording support organic removal.",
+        "g3EndpointSpecificity": "Organic buildup, not hard-water chelation."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Polymer film can add curl grip/shape.",
+        "g2FormulaRelevanceAndDelivery": "Polyimide-1 with polyquats is coherent body/hold context.",
+        "g3EndpointSpecificity": "Body support, not fiber diameter."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Frizz is directly affected by lubrication and cationic films.",
+        "g2FormulaRelevanceAndDelivery": "Several aligned depositors support smoothing.",
+        "g3EndpointSpecificity": "No humidity-duration inference."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Reduced friction can reduce mechanical stress.",
+        "g2FormulaRelevanceAndDelivery": "Oils, glyceryl oleate and cationic polymers support lubrication.",
+        "g3EndpointSpecificity": "Protective conditioning, not biological repair."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Film formers can temporarily coat rough areas.",
+        "g2FormulaRelevanceAndDelivery": "Polyimide-1 plus polyquats pass film-relevance gate.",
+        "g3EndpointSpecificity": "Surface film, not bond repair."
+      },
+      "repairR4": {
+        "g1FunctionalRelevance": "Named stressor is grooming/frizz-related mechanical stress on curls.",
+        "g2FormulaRelevanceAndDelivery": "Lubricating oils and cationic/polymer film provide matching route.",
+        "g3EndpointSpecificity": "Capped at 2 without public breakage protocol."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "Buildup removal is explicitly named.",
+        "g2FormulaRelevanceAndDelivery": "Olefin sulfonate base reaches organic residue.",
+        "g3EndpointSpecificity": "Moderate because product is still conditioning."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Gentle/non-stripping claim makes mildness relevant.",
+        "g2FormulaRelevanceAndDelivery": "Co-surfactants and refatting can moderate cleanser feel.",
+        "g3EndpointSpecificity": "Olefin sulfonate/fragrance prevent strong mildness inference."
+      }
+    },
+    "weightDepositionLoad": "moderate to high: several cationic polymers plus oils/refatting",
+    "weightPersistence": "moderate: polymer film may persist, no silicone-heavy persistence",
+    "weightResetCapacity": "moderate through strong cleanser base",
+    "r4TargetStressor": "grooming/frizz-related mechanical stress on curls",
+    "r4ProtectiveRoute": "lubricating oils and cationic/polymer film reduce friction and roughness",
+    "r3FormulaSignalNote": "No bond-specific technology; vitamin E/panthenol/oils are not bond signals.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact INCI and public claims only; no public product-specific shampoo-only test protocol was used to raise formula scores."
+  },
+  "claimAudit": [
+    {
+      "claim": "removes build-up without stripping",
+      "verdict": "plausible",
+      "support": "Strong cleanser plus conditioning/refatting system supports cleansing with care offset.",
+      "limitation": "No public stripping/mildness comparator or measured lipid-retention test.",
+      "sourceIds": [
+        "official-hask-2026-08-10"
+      ]
+    },
+    {
+      "claim": "protects curls from damage and frizz",
+      "verdict": "plausible",
+      "support": "Lubricating and cationic-film signals support frizz reduction and damage management.",
+      "limitation": "Protection magnitude and duration are not public; not bond repair.",
+      "sourceIds": [
+        "official-hask-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-hask-2026-08-10",
+    "dm-de-071164341438-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Curl damage/frizz claims are cosmetic damage-management claims, not medical scalp treatment."
+  }
+}

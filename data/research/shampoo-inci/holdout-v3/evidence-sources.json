@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "shampoo-research-evidence-sources-v1",
+  "sources": [
+    {
+      "id": "eu-1223-article-19",
+      "kind": "regulation",
+      "title": "EU Cosmetics Regulation 1223/2009, Article 19",
+      "locator": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02009R1223-20240404",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "pubmed-coacervate-17728938",
+      "kind": "literature",
+      "title": "Conditioning shampoo coacervate deposition study",
+      "locator": "https://pubmed.ncbi.nlm.nih.gov/17728938/",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-eucerin-dermocapillaire-ph5-2026-09-01",
+      "kind": "claim",
+      "title": "Eucerin DermoCapillaire pH5 Shampoo — German official product page",
+      "locator": "https://www.eucerin.de/produkte/dermocapillaire/ph5-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-eucerin-dermocapillaire-ph5-2026-09-01",
+      "kind": "claim",
+      "title": "Eucerin DermoCapillaire pH5 Shampoo — German retailer product page",
+      "locator": "https://www.dm.de/p/d/3087005/eucerin-eucerin-dermo-capillaire-ph5-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-eucerin-dermocapillaire-ph5-corroborating-2026-09-01",
+      "kind": "claim",
+      "title": "Eucerin DermoCapillaire pH5 Shampoo — corroborating German retailer product page",
+      "locator": "https://www.shop-apotheke.com/beauty/9508071/eucerin-dermocapillaire-ph5-shampoo.htm",
+      "capturedAt": "2026-09-01T18:27:52+02:00"
+    },
+    {
+      "id": "official-claim-de-loreal-elvital-hydra-hyaluronic-2026-09-01",
+      "kind": "claim",
+      "title": "L'Oréal Paris Elvital Hydra Hyaluronic Feuchtigkeit Auffüllendes Shampoo — German official product page",
+      "locator": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-300ml",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-loreal-elvital-hydra-hyaluronic-2026-09-01",
+      "kind": "claim",
+      "title": "L'Oréal Paris Elvital Hydra Hyaluronic Feuchtigkeit Auffüllendes Shampoo — German retailer product page",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-hydra-hyaluronic-72h-feuchtigkeits-auffuellendes-shampoo/p/3600524137465",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-redken-volume-injection-2026-09-01",
+      "kind": "claim",
+      "title": "Redken Volume Injection Shampoo — German official product page",
+      "locator": "https://www.redken.eu/de-de/produkte/haarpflege/volume-injection/volume-injection-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-redken-volume-injection-2026-09-01",
+      "kind": "claim",
+      "title": "Redken Volume Injection Shampoo — German retailer product page",
+      "locator": "https://de.lorealpartnershop.com/default/volume-injection-shampoo/DE3474636920266.html",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-vichy-dercos-anti-schuppen-sensitiv-2026-09-01",
+      "kind": "claim",
+      "title": "Vichy Dercos Anti-Schuppen Sensitiv Shampoo — German official product page",
+      "locator": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-sensitiv-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-vichy-dercos-anti-schuppen-sensitiv-2026-09-01",
+      "kind": "claim",
+      "title": "Vichy Dercos Anti-Schuppen Sensitiv Shampoo — German retailer product page",
+      "locator": "https://www.shop-apotheke.com/beauty/359988/vichy-dercos-anti-schuppen-sensitiv-shampoo.htm",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-urtekram-fragrance-free-sensitive-scalp-2026-09-01",
+      "kind": "claim",
+      "title": "Urtekram Fragrance Free Sensitive Scalp Shampoo — German official product page",
+      "locator": "https://www.urtekram.de/produkte/fragrance-free-sensitive-scalp-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-urtekram-fragrance-free-sensitive-scalp-2026-09-01",
+      "kind": "claim",
+      "title": "Urtekram Fragrance Free Sensitive Scalp Shampoo — German retailer product page",
+      "locator": "https://www.ecco-verde.de/urtekram/fragrance-free-sensitive-scalp-shampoo?sai=48979",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-kerastase-nutritive-bain-satin-riche-2026-09-01",
+      "kind": "claim",
+      "title": "Kérastase Nutritive Bain Satin Riche — German official product page",
+      "locator": "https://www.kerastase.de/produktlinien/produktlinien/nutritive/bain-satin-riche/3474637154943.html",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-kerastase-nutritive-bain-satin-riche-2026-09-01",
+      "kind": "claim",
+      "title": "Kérastase Nutritive Bain Satin Riche — German retailer product page",
+      "locator": "https://www.cocooncenter.com/premium/kerastase-bain-satin-riche-nutritive/113130.html",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-syoss-intense-repair-2026-09-01",
+      "kind": "claim",
+      "title": "Syoss Intense Repair Shampoo — German official product page",
+      "locator": "https://www.syoss.de/",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-syoss-intense-repair-2026-09-01",
+      "kind": "claim",
+      "title": "Syoss Intense Repair Shampoo — German retailer product page",
+      "locator": "https://www.dm.de/p/d/3047031/syoss-shampoo-intense-repair",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-syoss-intense-repair-corroborating-2026-09-01",
+      "kind": "claim",
+      "title": "Syoss Intense Repair Shampoo — corroborating German retailer product page",
+      "locator": "https://www.budni.de/sortiment/produkte/6500479005",
+      "capturedAt": "2026-09-01T18:27:52+02:00"
+    },
+    {
+      "id": "official-claim-de-pantene-3in1-repair-care-2026-09-01",
+      "kind": "claim",
+      "title": "Pantene Pro-V 3in1 Repair & Care Shampoo, Conditioner & Haarkur — German official product page",
+      "locator": "https://www.pantene.de/",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-pantene-3in1-repair-care-2026-09-01",
+      "kind": "claim",
+      "title": "Pantene Pro-V 3in1 Repair & Care Shampoo, Conditioner & Haarkur — German retailer product page",
+      "locator": "https://www.dm.de/p/d/1561889/pantene-pro-v-shampoo-und-conditioner-und-haarkur-3in1-repair-und-care",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-wella-invigo-nutri-enrich-2026-09-01",
+      "kind": "claim",
+      "title": "Wella Professionals Invigo Nutri-Enrich Deep Nourishing Shampoo — German official product page",
+      "locator": "https://www.wella.com/professional/de-DE/products/haarpflege/invigo-nutri-enrich/invigo-nutri-enrich-deep-nourishing-shampoo",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-wella-invigo-nutri-enrich-2026-09-01",
+      "kind": "claim",
+      "title": "Wella Professionals Invigo Nutri-Enrich Deep Nourishing Shampoo — German retailer product page",
+      "locator": "https://www.shop-apotheke.com/beauty/upmRAU9KD/wella-invigo-nutri-enrich-deep-nourishing-shampoo.htm",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "official-claim-de-jean-len-green-apple-lemongrass-2026-09-01",
+      "kind": "claim",
+      "title": "Jean&Len Green Apple & Lemongrass Shampoo — German official product page",
+      "locator": "https://www.jeanlen.de/shampoo-fuer-schnell-fettendes-haar-green-apple-lemongrass",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    },
+    {
+      "id": "retailer-claim-de-jean-len-green-apple-lemongrass-2026-09-01",
+      "kind": "claim",
+      "title": "Jean&Len Green Apple & Lemongrass Shampoo — German retailer product page",
+      "locator": "https://www.dm.de/p/d/3086484/jean-und-len-shampoo-green-apple-lemongrass",
+      "capturedAt": "2026-09-01T18:16:12+02:00"
+    }
+  ]
+}

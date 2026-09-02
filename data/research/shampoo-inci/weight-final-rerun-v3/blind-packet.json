@@ -1,0 +1,559 @@
+{
+  "schemaVersion": "shampoo-weight-correction-v3-blind-packet-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "policyPath": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+  "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+  "products": [
+    {
+      "blindId": "W004",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "rawInci": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1)",
+      "normalizedInci": [
+        "aqua/water",
+        "sodium laureth sulfate",
+        "coco-betaine",
+        "glycol distearate",
+        "glycerin",
+        "glycine soja oil/soybean oil",
+        "aloe barbadensis leaf juice",
+        "avena sativa kernel extract/oat kernel extract",
+        "oryza sativa starch/rice starch",
+        "ppg-5-ceteth-20",
+        "peg-55 propylene glycol oleate",
+        "peg-60 hydrogenated castor oil",
+        "dicaprylyl ether",
+        "dilauryl thiodipropionate",
+        "carbomer",
+        "sodium chloride",
+        "sodium hydroxide",
+        "propylene glycol",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "citric acid",
+        "xanthan gum",
+        "polyquaternium-7",
+        "tocopherol",
+        "potassium sorbate",
+        "sodium benzoate",
+        "salicylic acid",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [],
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "glycine soja oil/soybean oil",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "dicaprylyl ether",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 19
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-7",
+            "position": 22
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 4,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-60 hydrogenated castor oil",
+            "position": 12,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W006",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Coco-Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Hydrogenated Vegetable Oil, Lactic Acid, Glyceryl Oleate, Guar Hydroxypropyltrimonium Chloride, Sorbitan Caprylate, Erythritol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Citric Acid, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 45100, CI 60730",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "coco-glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "hydrogenated vegetable oil",
+        "lactic acid",
+        "glyceryl oleate",
+        "guar hydroxypropyltrimonium chloride",
+        "sorbitan caprylate",
+        "erythritol",
+        "glycerin",
+        "panthenol",
+        "tetrasodium glutamate diacetate",
+        "piroctone olamine",
+        "citric acid",
+        "hydrolyzed hyaluronic acid",
+        "sodium hyaluronate",
+        "sodium benzoate",
+        "parfum",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "ci 45100",
+        "ci 60730"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [],
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated vegetable oil",
+            "position": 6
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 8
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 9
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W027",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium methyl cocoyl taurate",
+        "decyl glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "rosmarinus officinalis leaf oil",
+        "mentha piperita oil",
+        "menthol",
+        "menthyl lactate",
+        "sodium hydrolyzed potato starch dodecenylsuccinate",
+        "amodimethicone",
+        "coco-glucoside",
+        "coconut acid",
+        "disodium tetrapropenyl succinate",
+        "glyceryl oleate",
+        "lecithin",
+        "starch hydroxypropyltrimonium chloride",
+        "peg-150 distearate",
+        "hexylene glycol",
+        "citric acid",
+        "sodium lactate",
+        "sodium hydroxide",
+        "hydrogenated palm glycerides citrate",
+        "lactic acid",
+        "urea",
+        "sodium benzoate",
+        "benzoic acid",
+        "tocopherol",
+        "ascorbyl palmitate",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [
+        {
+          "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+          "normalizedInci": [
+            "aqua/water/eau",
+            "sodium methyl cocoyl taurate",
+            "decyl glucoside",
+            "cocamidopropyl betaine",
+            "sodium chloride",
+            "rosmarinus officinalis leaf oil",
+            "mentha piperita oil",
+            "menthol",
+            "menthyl lactate",
+            "sodium hydrolyzed potato starch dodecenylsuccinate",
+            "amodimethicone",
+            "coco-glucoside",
+            "coconut acid",
+            "disodium tetrapropenyl succinate",
+            "glyceryl oleate",
+            "lecithin",
+            "starch hydroxypropyltrimonium chloride",
+            "peg-150 distearate",
+            "hexylene glycol",
+            "citric acid",
+            "sodium lactate",
+            "sodium hydroxide",
+            "hydrogenated palm glycerides citrate",
+            "lactic acid",
+            "urea",
+            "sodium benzoate",
+            "benzoic acid",
+            "tocopherol",
+            "ascorbyl palmitate",
+            "parfum/fragrance"
+          ],
+          "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+          "materialFormulaConflict": false
+        },
+        {
+          "sourceUrl": "https://pepperyspot.com/de/products/ogx-rosemary-mint-shampoo-385-ml",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+          "normalizedInci": [
+            "aqua/water/eau",
+            "sodium methyl cocoyl taurate",
+            "decyl glucoside",
+            "cocamidopropyl betaine",
+            "sodium chloride",
+            "rosmarinus officinalis leaf oil",
+            "mentha piperita oil",
+            "menthol",
+            "menthyl lactate",
+            "sodium hydrolyzed potato starch dodecenylsuccinate",
+            "amodimethicone",
+            "coco-glucoside",
+            "coconut acid",
+            "disodium tetrapropenyl succinate",
+            "glyceryl oleate",
+            "lecithin",
+            "starch hydroxypropyltrimonium chloride",
+            "peg-150 distearate",
+            "hexylene glycol",
+            "citric acid",
+            "sodium lactate",
+            "sodium hydroxide",
+            "hydrogenated palm glycerides citrate",
+            "lactic acid",
+            "urea",
+            "sodium benzoate",
+            "benzoic acid",
+            "tocopherol",
+            "ascorbyl palmitate",
+            "parfum/fragrance"
+          ],
+          "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+          "materialFormulaConflict": false
+        }
+      ],
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 11
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 16
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "starch hydroxypropyltrimonium chloride",
+            "position": 17
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 23
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 29
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 12
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "rosmarinus officinalis leaf oil",
+            "position": 6,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "mentha piperita oil",
+            "position": 7,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W032",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium lauryl sulfate",
+        "sodium chloride",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "glycol distearate",
+        "citric acid",
+        "sodium citrate",
+        "dimethiconol",
+        "parfum",
+        "piroctone olamine",
+        "dimethicone",
+        "sodium benzoate",
+        "guar hydroxypropyltrimonium chloride",
+        "tea-dodecylbenzenesulfonate",
+        "hexyl cinnamal",
+        "tetrasodium edta",
+        "sodium hydroxide",
+        "trideceth-10",
+        "linalool",
+        "hydroxycitronellal",
+        "geraniol",
+        "panthenol",
+        "panthenyl ethyl ether",
+        "citronellol",
+        "propylene glycol",
+        "magnesium nitrate",
+        "camellia sinensis leaf extract",
+        "niacinamide",
+        "triethylene glycol",
+        "benzyl alcohol",
+        "methylchloroisothiazolinone",
+        "magnesium chloride",
+        "methylisothiazolinone"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+          "normalizedInci": [
+            "aqua",
+            "sodium laureth sulfate",
+            "sodium lauryl sulfate",
+            "sodium chloride",
+            "sodium xylenesulfonate",
+            "cocamidopropyl betaine",
+            "glycol distearate",
+            "citric acid",
+            "sodium citrate",
+            "dimethiconol",
+            "parfum",
+            "piroctone olamine",
+            "dimethicone",
+            "sodium benzoate",
+            "guar hydroxypropyltrimonium chloride",
+            "tea-dodecylbenzenesulfonate",
+            "hexyl cinnamal",
+            "tetrasodium edta",
+            "sodium hydroxide",
+            "trideceth-10",
+            "linalool",
+            "hydroxycitronellal",
+            "geraniol",
+            "panthenol",
+            "panthenyl ethyl ether",
+            "citronellol",
+            "propylene glycol",
+            "magnesium nitrate",
+            "camellia sinensis leaf extract",
+            "niacinamide",
+            "triethylene glycol",
+            "benzyl alcohol",
+            "methylchloroisothiazolinone",
+            "magnesium chloride",
+            "methylisothiazolinone"
+          ],
+          "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+          "materialFormulaConflict": false
+        },
+        {
+          "sourceUrl": "https://www.shop-apotheke.com/beauty/upmYKEFMP/hair-biology-shampoo-revitalize-soothe.htm",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+          "normalizedInci": [
+            "aqua",
+            "sodium laureth sulfate",
+            "sodium lauryl sulfate",
+            "sodium chloride",
+            "sodium xylenesulfonate",
+            "cocamidopropyl betaine",
+            "glycol distearate",
+            "citric acid",
+            "sodium citrate",
+            "dimethiconol",
+            "parfum",
+            "piroctone olamine",
+            "dimethicone",
+            "sodium benzoate",
+            "guar hydroxypropyltrimonium chloride",
+            "tea-dodecylbenzenesulfonate",
+            "hexyl cinnamal",
+            "tetrasodium edta",
+            "sodium hydroxide",
+            "trideceth-10",
+            "linalool",
+            "hydroxycitronellal",
+            "geraniol",
+            "panthenol",
+            "panthenyl ethyl ether",
+            "citronellol",
+            "propylene glycol",
+            "magnesium nitrate",
+            "camellia sinensis leaf extract",
+            "niacinamide",
+            "triethylene glycol",
+            "benzyl alcohol",
+            "methylchloroisothiazolinone",
+            "magnesium chloride",
+            "methylisothiazolinone"
+          ],
+          "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+          "materialFormulaConflict": false
+        }
+      ],
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 10
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 6
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 7,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    }
+  ]
+}

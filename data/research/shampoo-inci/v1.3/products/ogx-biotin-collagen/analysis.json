@@ -1,0 +1,564 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918:b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "GTIN 3574661800202 is corroborated by dm, Rossmann, and Mueller with only formatting differences.",
+      "Sodium Methyl Cocoyl Taurate, Decyl Glucoside, and Cocamidopropyl Betaine form the cleanser base.",
+      "Hydrolyzed Collagen, modified potato starch, cationic starch, Amodimethicone, and Glyceryl Oleate form the bodying/deposition architecture."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Hinterlaesst Volumen und ein seidiges Gefuehl",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "bis zu 72 Stunden lang mehr Volumen und intensive Fuelle",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Methyl Cocoyl Taurate",
+      "Decyl Glucoside",
+      "Cocamidopropyl Betaine"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Starch Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Collagen",
+      "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "PEG-150 Distearate"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Disodium Tetrapropenyl Succinate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The sulfate-free taurate/glucoside/betaine blend supports regular cleansing, not a strong reset role.",
+      "supportingSignals": [
+        {
+          "observation": "Early taurate, glucoside, and amphoteric surfactants are present.",
+          "inference": "Regular cleansing is plausible.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "taurate-glucoside-amphoteric-cleansing"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "taurate-glucoside-amphoteric-cleansing"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Amodimethicone, cationic starch, collagen, and glyceryl oleate give a coherent shampoo-conditioning signal.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone, Starch Hydroxypropyltrimonium Chloride, Hydrolyzed Collagen, and Glyceryl Oleate are present.",
+          "inference": "Multiple routes can improve slip and surface feel after rinsing.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "silicone-cationic-starch-protein-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "silicone-cationic-starch-protein-deposition"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Several deposition routes can add noticeable bodying film, but one silicone plus a regular cleanser base does not justify high WT.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone, cationic starch, collagen, and lipid-like conditioners coexist.",
+          "inference": "Moderate weight/buildup potential is plausible on fine hair.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "multi-route-light-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "multi-route-light-deposition"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest specific formula signal is a bodying network, not acidic shine or bond repair.",
+      "supportingSignals": [
+        {
+          "observation": "Hydrolyzed collagen, modified potato starch, cationic starch, and moderate cleansing are aligned.",
+          "inference": "The formula leans volume/body.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "v2-bodying-film-network"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "v2-bodying-film-network"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "repair",
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Secondary signals are cosmetic surface film/lubrication and gloss; they do not prove structural repair.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone, protein, and glyceryl oleate are present.",
+          "inference": "Surface repair language and deposition shine are plausible.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "surface-film-shine"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "surface-film-shine"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Ordinary rinse-out directions and regular cleanser architecture support a regular wash role.",
+      "supportingSignals": [
+        {
+          "observation": "Directions are wet-hair lather and rinse, followed by conditioner.",
+          "inference": "The product is not a treatment or reset product.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "regular-rinse-out-use"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "regular-rinse-out-use"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "dm-ogx-biotin-collagen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      3,
+      3
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      2,
+      2
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Early surfactants are functional cleansers.",
+        "g2FormulaRelevanceAndDelivery": "They lead a rinse-off shampoo formula.",
+        "g3EndpointSpecificity": "Endpoint is regular sebum/soil removal."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Silicone, cationic starch, collagen, and glyceryl oleate can affect slip.",
+        "g2FormulaRelevanceAndDelivery": "Multiple hair-substantive routes are present together.",
+        "g3EndpointSpecificity": "Endpoint is conditioning, not permanent repair."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Depositors can add residue.",
+        "g2FormulaRelevanceAndDelivery": "Amodimethicone plus cationic starch supports moderate persistence.",
+        "g3EndpointSpecificity": "Endpoint is weight/buildup."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Film/deposition can increase surface gloss.",
+        "g2FormulaRelevanceAndDelivery": "Amodimethicone and cationic starch plausibly deposit.",
+        "g3EndpointSpecificity": "Route is deposition shine."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Clean roots can support lift.",
+        "g2FormulaRelevanceAndDelivery": "The cleanser system is coherent but not clarifying.",
+        "g3EndpointSpecificity": "Route is clean/light root lift."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Protein and starch films can create grip/body.",
+        "g2FormulaRelevanceAndDelivery": "Multiple aligned bodying signals are present.",
+        "g3EndpointSpecificity": "Endpoint is temporary body, not fiber growth."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Silicone/lipids can reduce friction.",
+        "g2FormulaRelevanceAndDelivery": "They occur with cationic starch context.",
+        "g3EndpointSpecificity": "Endpoint is smoothing."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lubrication can reduce grooming friction.",
+        "g2FormulaRelevanceAndDelivery": "Silicone, cationic starch, and glyceryl oleate form a plausible system.",
+        "g3EndpointSpecificity": "This is protective conditioning."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Hydrolyzed collagen/starch films can coat surfaces.",
+        "g2FormulaRelevanceAndDelivery": "Cationic starch and silicone reinforce delivery context.",
+        "g3EndpointSpecificity": "This is temporary surface film/patching."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Surfactant blend affects relative tolerance potential.",
+        "g2FormulaRelevanceAndDelivery": "The blend has amphoteric/nonionic support.",
+        "g3EndpointSpecificity": "Endpoint is only mildness potential."
+      }
+    },
+    "weightDepositionLoad": "Moderate: silicone, cationic starch, protein, and lipid-like conditioners.",
+    "weightPersistence": "Moderate: amodimethicone and cationic starch can persist but the system is not rich.",
+    "weightResetCapacity": "Moderate: regular cleanser base but not a reset product.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Biotin/collagen are generic cues only; no bond-specific route.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": true,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact DE formula verified by matching GTIN retailer records. No public shampoo-only instrumental volume/repair test found."
+  },
+  "claimAudit": [
+    {
+      "claim": "Volume and fuller appearance",
+      "verdict": "plausible",
+      "support": "Starch/protein/cationic bodying network supports body/volume formula signal.",
+      "limitation": "Duration and magnitude are not public shampoo-only proof.",
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ]
+    },
+    {
+      "claim": "Biotin/collagen strengthening",
+      "verdict": "weak",
+      "support": "Hydrolyzed collagen can contribute surface film.",
+      "limitation": "Biotin is not treated as a growth, bond, or structural-repair active in rinse-off shampoo.",
+      "sourceIds": [
+        "dm-ogx-biotin-collagen-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-ogx-biotin-collagen-2026-08-10",
+    "rossmann-ogx-biotin-collagen-2026-08-10",
+    "mueller-ogx-biotin-collagen-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Cosmetic shampoo classification; no medical/scalp-active recommendation route is created."
+  }
+}

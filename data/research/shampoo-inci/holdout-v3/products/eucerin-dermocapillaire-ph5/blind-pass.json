@@ -1,0 +1,256 @@
+{
+  "candidate_id": "eucerin-dermocapillaire-ph5",
+  "rawInci": "Aqua, Sorbitol, Sodium Myreth Sulfate, Sodium Laureth Sulfate, Sodium Cocoamphoacetate, PEG-120 Methyl Glucose Dioleate, Sodium Chloride, PEG-40 Hydrogenated Castor Oil, Panthenol, Polyquaternium-10, Citric Acid, Anise Alcohol, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, Hexyl Cinnamal, Linalool, Benzyl Salicylate, Parfum.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium myreth sulfate",
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "peg-120 methyl glucose dioleate",
+      "peg-40 hydrogenated castor oil",
+      "anise alcohol"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+      "formula": {
+        "inciFingerprint": "e414eaec790404e800d55eb57761815fc5e0cf648b627cd36bd88265668e1148",
+        "sourceTier": "retailer",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-10",
+            "position": 10
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 4
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "sodium cocoamphoacetate",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 6,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-40 hydrogenated castor oil",
+            "position": 8,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Nur Polyquaternium-10 als spätes Polymer; PEG-120 Methyl Glucose Dioleate und PEG-40 Hydrogenated Castor Oil zählen nicht als persistente Nutzlast."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Nur Polyquaternium-10 als spätes Polymer; PEG-120 Methyl Glucose Dioleate und PEG-40 Hydrogenated Castor Oil zählen nicht als persistente Nutzlast."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "low",
+      "whyThisBand": "Nur Polyquaternium-10 als spätes Polymer; PEG-120 Methyl Glucose Dioleate und PEG-40 Hydrogenated Castor Oil zählen nicht als persistente Nutzlast.",
+      "whyNotNeighborBand": "Nicht moderate, weil nur ein später Polymerweg gegen starke Reset-Kapazität steht.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "low",
+      "confidence": "moderate",
+      "rationale": "Nur Polyquaternium-10 als spätes Polymer; PEG-120 Methyl Glucose Dioleate und PEG-40 Hydrogenated Castor Oil zählen nicht als persistente Nutzlast."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "11217332f8e3571c50e7c06c5aaffa16f259038d03cd5373f7171b11a8cf03b2"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "gentle",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "gentle",
+      "reason": "Die nach der Blindphase geprüfte pH- und sensible-Kopfhaut-Positionierung ist gentle-kompatibel."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "targeted",
+      "reason": "Die geprüfte Positionierung adressiert kosmetischen Kopfhautkomfort; Duftstoffe begrenzen daraus keine Verträglichkeitszusage."
+    }
+  ],
+  "payloadHash": "dbfbc92a7778c432d6138d0aaca77dbcb021d756a880df4a461e5eb4ffa9ea4d"
+}

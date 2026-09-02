@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+  "market": "DE",
+  "packSize": "385 ml",
+  "gtinEan": "3574661799438",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "rossmann-de-ogx-renewing-3574661799438-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-shampoo/p/3574661799438",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+      "productMatch": "exact_gtin",
+      "gtinEan": "3574661799438"
+    },
+    {
+      "id": "dm-de-ogx-renewing-3574661799438-2026-08-24",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-24T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1442074/ogx-shampoo-renewing-argan-oil-of-marocco",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+      "productMatch": "exact_gtin",
+      "gtinEan": "3574661799438"
+    }
+  ],
+  "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+  "normalizedInci": [
+    "aqua/water/eau",
+    "sodium methyl cocoyl taurate",
+    "decyl glucoside",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "argania spinosa kernel oil",
+    "sodium hydrolyzed potato starch dodecenylsuccinate",
+    "coco-glucoside",
+    "amodimethicone",
+    "guar hydroxypropyltrimonium chloride",
+    "hydrogenated castor oil",
+    "coconut acid",
+    "disodium tetrapropenyl succinate",
+    "glycol distearate",
+    "peg-150 distearate",
+    "hexylene glycol",
+    "citric acid",
+    "sodium hydroxide",
+    "sodium benzoate",
+    "benzoic acid",
+    "parfum/fragrance"
+  ],
+  "inciFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

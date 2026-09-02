@@ -1,0 +1,52 @@
+{
+  "date": "2026-08-27",
+  "assessment": "Share with caveats; no model or approval changes",
+  "scope": "Read-only comparison of the 50 approved v1.3 shampoos against frozen shampoo-weight-v1. Not an all-property audit.",
+  "checks": [
+    "Saved release rebuilt with matching releaseHash",
+    "Independent explorer verifies 50 unique approved member and review records with formula/audit fingerprint alignment",
+    "Saved replay.cjs reproduces the exact main evaluation JSON",
+    "Independent SQLite aggregation reproduces 36 changed and 14 unchanged, plus all band counts",
+    "193 historical files unchanged under prior calibration freeze; prior 19-file calibration receipt also unchanged",
+    "git diff --check passes",
+    "Canonical report artifact validation passes"
+  ],
+  "result": {
+    "changed": 36,
+    "unchanged": 14,
+    "lowToModerate": 20,
+    "moderateToHigh": 15,
+    "lowToHigh": 1,
+    "dictionaryGaps": 12,
+    "windowSensitive": 8
+  },
+  "decision": "Do not bulk-replace approved values. New presence-to-weight thresholds need calibration; old and new labels are not ground truth.",
+  "reportDelivery": {
+    "html": "blocked",
+    "reason": "Canonical portable report delivery failed static-chart verification: reader_timeout, state fallback. No generated HTML is claimed ready.",
+    "available": "review.md preserves the report narrative and all 50 product comparisons; audit.json and queries preserve reproducibility.",
+    "validatedArtifact": "artifact.json",
+    "externalPublication": false
+  },
+  "sources": [
+    {
+      "title": "Evaluation of novel synthetic conditioning polymers for shampoos",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19450423/"
+    },
+    {
+      "title": "Use of statistical modeling to predict formulation effects on deposition and conditioning",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21635845/"
+    }
+  ],
+  "skipped": [
+    "Empirical weight tests",
+    "Fresh manufacturer formula research",
+    "Other property reclassification",
+    "Profile matching replay",
+    "Production writes",
+    "Policy modification"
+  ],
+  "filesKept": "Only new approved-weight-consistency-v1 audit/report/replay/source files; existing research and approvals untouched.",
+  "agent": "approved_weight_crosscheck: DONE_WITH_CONCERNS; concerns incorporated",
+  "next": "Calibrate using representative light/rich/silicone/boundary formulas, then rerun approved cohort and review justified property deltas only."
+}

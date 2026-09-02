@@ -1,0 +1,220 @@
+{
+  "candidate_id": "alverde-nutri-care",
+  "blindCode": "B",
+  "rawInci": "Ingredients: Aqua, Lauryl Glucoside, Coco-Glucoside, Sodium Coco-Sulfate, Sucrose, Glycerin, Sodium Chloride, Hydrolyzed Wheat Protein, Tocopherol, Ascorbyl Palmitate, Prunus Amygdalus Dulcis Seed Extract, Parfum, Sorbitol, Glyceryl Oleate, Sodium Levulinate, Inulin, Hydrogenated Palm Glycerides Citrate, Lecithin, Levulinic Acid, p-Anisic Acid, Benzoic Acid, Citric Acid, Sodium Hydroxide, Vanillin",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Lauryl Glucoside",
+      "Coco-Glucoside",
+      "Sodium Coco-Sulfate"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Wheat Protein",
+      "Inulin"
+    ],
+    "acids": [
+      "Levulinic Acid",
+      "p-Anisic Acid",
+      "Benzoic Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "unknown",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Glucosides lead the surfactant system with Sodium Coco-Sulfate as an efficient anionic cleanser, supporting moderate cleansing with possible upper-moderate strength.",
+    "conditioningLevel": "Glyceryl Oleate, lecithin and hydrolyzed wheat protein support light-to-moderate refatting and surface feel, but there is no cationic polymer or silicone deposition bridge.",
+    "weightPotential": "Several weak-to-moderate refatting/film signals may leave light residue, but no substantive silicone or cationic polymer route is present.",
+    "focusPrimary": "Formula signals are balanced between cleansing, mildness potential and light conditioning, so blind formula-only classification stays general.",
+    "focusSecondary": "No distinct claim-led secondary role is available, and v1.4 defaults secondary focus to empty.",
+    "usageRole": "No explicit frequent-use, reset or treatment trigger is available, so usage remains regular.",
+    "scalpComfortTarget": "Glucoside-led cleansing and refatting/humectant support suggest comfort-leaning potential, but fragrance and no tolerance testing leave scalp-comfort targeting unknown rather than established.",
+    "dandruffSupport": "The complete formula does not list Piroctone Olamine or Climbazole."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "low",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Lauryl Glucoside and Coco-Glucoside precede Sodium Coco-Sulfate.",
+    "Sucrose, Glycerin and Sorbitol create a notable humectant/sugar matrix.",
+    "Glyceryl Oleate, lecithin and hydrogenated palm glycerides citrate provide refatting or lipid-like support.",
+    "Hydrolyzed Wheat Protein and Inulin provide weak film/body support.",
+    "No cationic polymer, silicone, chelator or recognized anti-dandruff active is listed."
+  ],
+  "counterSignals": [
+    "Sodium Coco-Sulfate can still contribute meaningful detergency; sulfate-free-style architecture is not automatically mild.",
+    "Protein without a cationic/deposition aid is capped as weak film support.",
+    "Citric and other acids do not establish finished acidic pH from INCI alone.",
+    "Botanical extract and antioxidants are not primary performance mechanisms."
+  ],
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "0c6495a1b4c204f92f261fb36b6f41b99f0f066f0f9bd706a66d77de0be726b0"
+  },
+  "payloadHash": "d68ee2725d9e71daee0d9db50fc462b6a5a964f067d6ec72eed95ed40fe07900",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "reason": "Nutri-Care und strapaziertes Haar wählen Repair/Pflege als Fokus; die Formel stützt das nur als temporäre kosmetische Oberfläche über Protein und Refatting."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "unknown",
+      "finalValue": "not_targeted",
+      "reason": "Die unblindeten Claims nennen strapaziertes Haar, nicht Kopfhautkomfort; deshalb wird das vorherige unknown zu not_targeted, ohne eine Ungeeignetheit abzuleiten."
+    }
+  ],
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "repair",
+      "formulaCompatible": true,
+      "formulaRoute": "Hydrolyzed Wheat Protein plus Glyceryl Oleate/Lecithin/Inulin stützen leichte temporäre Pflege für strapaziertes Haar.",
+      "decisionReason": "Die unblindete Nutri-Care-/strapaziertes-Haar-Positionierung ist dominant; die Formel ist schwach bis moderat kompatibel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Reguläres Rinse-off-Shampoo ohne Frequent-, Reset- oder Treatment-Trigger."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Glyceryl Oleate, Lecithin und Hydrogenated Palm Glycerides Citrate sind leichte Refatting-Signale."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredientPosition": "mid",
+          "evidence": "Hydrolyzed Wheat Protein und Inulin geben leichten Film-/Body-Support."
+        },
+        {
+          "kind": "humectant_refatting",
+          "strength": "weak",
+          "ingredientPosition": "mid",
+          "evidence": "Sucrose, Glycerin und Sorbitol erhöhen Feuchtigkeits-/Rückstandsgefühl nur leicht."
+        }
+      ],
+      "competingSignals": [
+        "No cationic polymer, silicone, or rich oil bridge."
+      ],
+      "confidenceLimit": "sub1_uncertainty"
+    }
+  }
+}

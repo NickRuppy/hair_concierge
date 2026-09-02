@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W029",
+  "formula": {
+    "inciFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"silicone","name":"dimethicone","position":6},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":7},{"family":"silicone","name":"amodimethicone","position":24}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":5},{"family":"nonionic_surfactant","name":"cocamide mea","position":8},{"family":"amphoteric_surfactant","name":"coco-betaine","position":9}],"excludedIngredients":[{"name":"glycol distearate","position":3,"reason":"Zählt nicht als persistente Route."},{"name":"citrus limon peel oil","position":30,"reason":"Ätherisches Duftöl ist kein Lipid-Payload."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Dimethicone an Position 6, kationisches Guar an Position 7 und zusätzlich spätes Amodimethicone ergeben mehrere konvergierende Ablagerungstechnologien."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Silikone plus kationisches Polymer sind plausibel haftend; die Kombination erhöht die Chance wiederholter oder spürbarer Rückstände."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES und mehrere Co-Tenside reinigen solide, stehen aber neben frühen persistenten Silikon-/Polymer-Signalen."
+  },
+  "competingSignals": [
+    "Die SLES-basierte Reinigung begrenzt die Beschwerung teilweise.",
+    "Glycol Distearate ist explizit kein persistenter Routenbeleg."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist gestützt, weil frühes Dimethicone und kationisches Guar zusammen mit Amodimethicone mehr als eine begrenzte Pflegeablagerung erwarten lassen.",
+  "whyNotNeighborBand": "Moderate würde die frühe Silikon-Polymer-Konvergenz unterschätzen; die Reinigung ist nicht schwach, aber nicht ausreichend, um diese Persistenz sicher auf bounded zu reduzieren.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und unbekannte Silikon-Dispersion/Konzentrationen lassen trotz klarer Architektur eine gewisse Bandunsicherheit."
+  }
+}

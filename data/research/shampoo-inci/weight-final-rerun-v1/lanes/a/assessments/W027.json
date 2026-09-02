@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W027",
+  "formula": {
+    "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "low"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "silicone",
+        "name": "amodimethicone",
+        "position": 11
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 15
+      },
+      {
+        "family": "weak_refatter",
+        "name": "lecithin",
+        "position": 16
+      },
+      {
+        "family": "weak_refatter",
+        "name": "hydrogenated palm glycerides citrate",
+        "position": 23
+      },
+      {
+        "family": "weak_refatter",
+        "name": "ascorbyl palmitate",
+        "position": 29
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium methyl cocoyl taurate",
+        "position": 2
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "decyl glucoside",
+        "position": 3
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 12
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "rosmarinus officinalis leaf oil",
+        "position": 6,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      },
+      {
+        "name": "mentha piperita oil",
+        "position": 7,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      }
+    ],
+    "unresolvedIngredients": [
+      {
+        "name": "starch hydroxypropyltrimonium chloride",
+        "position": 17,
+        "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+      }
+    ]
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Amodimethicone an Position 11 plus mehrere Rückfetter und ein ungelöstes kationisches Stärke-Derivat sprechen für eine merkliche, aber nicht eindeutig schwere Last."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Amodimethicone und mögliche kationische Stärke können haften; die Rückfetter sind eher nachgeordnet."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Taurat, Decyl Glucoside, CAPB und Coco-Glucoside liefern ordentliche Reinigung, aber keine harte Klär-Architektur."
+  },
+  "competingSignals": [
+    "Mehrere milde Tenside begrenzen die Schwere der Ablagerung.",
+    "Die stärkeren Lipid-/Refatter-Signale liegen überwiegend nach dem Silikon und nicht sehr früh."
+  ],
+  "unresolvedFacts": [
+    "Starch Hydroxypropyltrimonium Chloride an Position 17 ist potenziell gewichtsrelevant, aber die genaue Funktion/Retentionsstärke bleibt offen.",
+    "Formelidentität ist nur niedrig sicher."
+  ],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist der beste vorläufige Band, weil ein Silikon plus mehrere schwache/unklare Depositionswege ein merkliches Rückstandsrisiko erzeugen.",
+  "whyNotNeighborBand": "Low wäre zu leicht für Amodimethicone und die mögliche kationische Stärke; High bleibt wegen milder, aber breiter Reinigung, nachgeordneter Rückfetter und niedriger Identitätssicherheit nicht belastbar.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Niedrige Formelidentität und ein ungelöster gewichtsrelevanter Stärke-Inhaltsstoff begrenzen die Verlässlichkeit."
+  }
+}

@@ -1,0 +1,578 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-matching-v1.3",
+  "formulaVersionId": "64fb44d5-8701-46ab-bcba-f1747f071e48:3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Blind formula pass: sulfate-free sulfosuccinate/amphoteric base.",
+      "Polyquaternium-11 plus panthenol/oat peptide creates body-film and light conditioning signals.",
+      "No silicone is listed; isothiazolinone preservatives and fragrance allergens are present."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "strengthening VOLUME VICTORY shampoo with pro-vitamin B5",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "neqi-official-en"
+      ]
+    },
+    {
+      "textVerbatim": "91% confirmed gentle cleansing; 94% liked fragrance",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "notino-de-neq02466"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Disodium Laureth Sulfosuccinate",
+      "Cocamidopropyl Hydroxysultaine",
+      "Cocamidopropyl Betaine"
+    ],
+    "surfactantsSecondary": [
+      "PEG-18 Glyceryl Oleate/Cocoate",
+      "Cocamide MEA",
+      "Laureth-10"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-11"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "PEG-18 Glyceryl Oleate/Cocoate",
+      "Glycol Distearate",
+      "C13-15 Alkanes"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Avena Sativa (Oat) Peptide"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sulfosuccinate/amphoteric blend supports moderate regular cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Disodium Laureth Sulfosuccinate with CAPB/hydroxysultaine",
+          "inference": "Sulfosuccinate/amphoteric blend supports moderate regular cleansing.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No clarifying directions",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "draft"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "PQ-11 and refatting agents support light-to-moderate conditioning/body.",
+      "supportingSignals": [
+        {
+          "observation": "Polyquaternium-11 plus PEG-18 glyceryl oleate/cocoate",
+          "inference": "PQ-11 and refatting agents support light-to-moderate conditioning/body.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "conditioning-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone or rich conditioner base",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-deposition"
+      ],
+      "reviewStatus": "draft"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone and limited cationic load keep weight low-to-moderate.",
+      "supportingSignals": [
+        {
+          "observation": "Silicone not listed in selected sources",
+          "inference": "No silicone and limited cationic load keep weight low-to-moderate.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "weight-deposition-balance"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "PQ-11 can still deposit",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "weight-deposition-balance"
+      ],
+      "reviewStatus": "draft"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Volume route is supported by clean-light cleansing plus PQ-11 body film.",
+      "supportingSignals": [
+        {
+          "observation": "V1 and V2 both reach 2",
+          "inference": "Volume route is supported by clean-light cleansing plus PQ-11 body film.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "primary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Not a strong reset formula",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus-route"
+      ],
+      "reviewStatus": "draft"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sulfate-free cleanser can support gentler-feel positioning.",
+      "supportingSignals": [
+        {
+          "observation": "Sulfosuccinate/amphoteric base",
+          "inference": "Sulfate-free cleanser can support gentler-feel positioning.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "secondary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Isothiazolinones/fragrance limit sensitive-scalp confidence",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus-route"
+      ],
+      "reviewStatus": "draft"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular volume shampoo, not a reset or treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Ordinary rinse-out directions",
+          "inference": "Regular volume shampoo, not a reset or treatment.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Consumer test details incomplete",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en",
+            "notino-de-neq02466"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "draft"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "draft"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      2,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to cleansing, not to a neighboring marketing or treatment endpoint."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to conditioningDeposition, not to a neighboring marketing or treatment endpoint."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to weightBuildup, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS1, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV1, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV2, not to a neighboring marketing or treatment endpoint."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to smoothing, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR1, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "repairR2 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR2, not to a neighboring marketing or treatment endpoint."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to mildnessPotential, not to a neighboring marketing or treatment endpoint."
+      }
+    },
+    "weightDepositionLoad": "Low-to-moderate; PQ-11 and refatting agents deposit but silicone is absent.",
+    "weightPersistence": "Low-to-moderate; polymer film may persist less than silicone.",
+    "weightResetCapacity": "Low-to-moderate; regular cleanser, not reset.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific chemistry; panthenol/peptide claims are surface-care signals only.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula evidence plus an incomplete consumer-perception claim; no controlled comparator test was found."
+  },
+  "claimAudit": [
+    {
+      "claim": "strengthening and noticeably fuller hair",
+      "verdict": "plausible",
+      "support": "PQ-11 plus panthenol/oat peptide can support body and light conditioning.",
+      "limitation": "No instrumental volume or strengthening endpoint is disclosed.",
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02466"
+      ]
+    },
+    {
+      "claim": "gentle cleansing consumer result",
+      "verdict": "indeterminate",
+      "support": "Notino reports a consumer study with 31 people for cleansing perception.",
+      "limitation": "Comparator, method, substrate and full protocol are not disclosed, so it does not increase formula scores.",
+      "sourceIds": [
+        "notino-de-neq02466"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "neqi-official-en",
+    "notino-de-neq02466",
+    "newflagpro-cz-ean"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Rinse-off cosmetic shampoo; no dandruff, hair-loss, dermatitis or other medical treatment classification is made."
+  }
+}

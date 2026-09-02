@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:wella-invigo-nutri-enrich",
+  "candidateId": "wella-invigo-nutri-enrich",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Wella Professionals",
+    "name": "Invigo Nutri-Enrich Deep Nourishing Shampoo",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": [
+      "4064666585765"
+    ]
+  },
+  "selectionArchetype": "deep nourishment-positioned shampoo for dry or stressed hair",
+  "canonicalFormulaSourceUrl": "https://www.wella.com/professional/de-DE/products/haarpflege/invigo-nutri-enrich/invigo-nutri-enrich-deep-nourishing-shampoo",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "deep nourishment direction",
+    "dry/stressed hair direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Nourishment and dry-hair positioning are permitted later focus evidence.",
+    "The product is not positioned as a deep-cleansing or periodic-reset shampoo."
+  ],
+  "corroboratingUrls": [
+    "https://www.shop-apotheke.com/beauty/upmRAU9KD/wella-invigo-nutri-enrich-deep-nourishing-shampoo.htm"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "The repeated Glycerin entry is preserved faithfully from the source formula. Official formula is canonical.",
+  "officialProductPage": "https://www.wella.com/professional/de-DE/products/haarpflege/invigo-nutri-enrich/invigo-nutri-enrich-deep-nourishing-shampoo"
+}

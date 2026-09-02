@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "shampoo-inci-v1.4-ready-check-v1",
+  "checkedAt": "2026-09-01T19:05:00+02:00",
+  "branch": "codex/shampoo-inci-research-engine",
+  "headSha": "4632a38b3841e610c3ebeb48494a9144424fb634",
+  "baseSha": "3f9b284b2e06168bfbd8272f0615c0b9491df4f9",
+  "scope": "Research-only Shampoo v1.4 method, four-case weight closure, 50-product candidate, and 10-product holdout-v3. The wider pre-existing dirty worktree was not treated as this delta.",
+  "artifacts": {
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "candidateSha256": "3c2c1bbe55d48a09a742591d33c9bd05bb41f9bcad45de9514ef0b79226a0e06",
+    "weightCorrectionReportSha256": "f2f9353dded6bacc59376eb4575fa45598e1c21af98d1a445e4cd719bb30425f",
+    "holdoutReportSha256": "e372c555a4cec0e7005c5dd647d6b9c0d66783ee327bc2e3ee49316a607b3d4d",
+    "holdoutInternalReportHash": "f2760e0d43096db4ca2d51af5270ff8d363cc93eecc3ae852bb7aab340afa3fc"
+  },
+  "outcomes": {
+    "activeCandidateProducts": 50,
+    "directPropertiesPerProduct": 8,
+    "lowConfidenceProperties": 0,
+    "missingRationaleReferences": 0,
+    "holdoutProducts": 10,
+    "holdoutOverallAgreement": 0.8571428571428571,
+    "holdoutDandruffAgreement": 1,
+    "holdoutProfilesReplayed": 18,
+    "candidateStatus": "finalizable",
+    "holdoutGatePassed": true
+  },
+  "verification": [
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research-*.test.ts",
+      "result": "passed 199/199"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npx eslint --no-ignore <v1.4 Shampoo TypeScript scope>",
+      "result": "passed with zero warnings"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "npm run research:shampoo:weight-v3:report && npm run research:shampoo:build-v14-candidate",
+      "result": "reproduced; candidate finalizable"
+    },
+    {
+      "command": "npm run research:shampoo:validate-holdout-v3 && npm run research:shampoo:report-holdout-v3",
+      "result": "10/10 valid; repeatability gate passed"
+    }
+  ],
+  "review": {
+    "counterpart": "Claude Code read-only review completed; both hard findings were resolved and mechanical integrity findings were covered by tests.",
+    "workerExplorerUse": "Independent formula raters, holdout labelers, a judgment adjudicator, a targeted OGX explorer, and a bounded integrity worker were used; the orchestrator integrated and reverified all results.",
+    "remainingRisk": "INCI cannot reveal exact concentrations or finished-product deposition. Holdout focus defaults showed prevalence-sensitive kappa, so the raw labels and adjudication remain visible rather than being tuned to a target distribution."
+  },
+  "stopBoundary": "No catalog import, database write, product matching activation, production deployment, commit, push, or merge was performed."
+}

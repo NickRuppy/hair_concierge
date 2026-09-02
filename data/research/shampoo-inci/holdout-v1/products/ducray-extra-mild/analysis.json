@@ -1,0 +1,519 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:ducray-extra-mild:809600e77543bbd4e2da88ec7e2f94713680c3980ebdee2c19f801623c8415c3",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES + CAPB + Coco-Glucoside bilden eine übliche moderierte Tensidbasis.",
+      "Glyceryl Oleate und Hydrogenated Vegetable Glycerides Citrate geben ein leichtes Lipid-/Rückfettungssignal.",
+      "Keine Silikone, kationischen Polymere, Proteine oder Chelatoren."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Extra mild, hohe Verträglichkeit, normales bis empfindliches Haar, ganze Familie und tägliche/frequente Anwendung positioniert; historische abweichende Gleich-GTIN-Formel bleibt nur Provenienz.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Vegetable Glycerides Citrate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES ist Haupttensid, aber CAPB und Coco-Glucoside moderieren das System; ohne breite Reset- oder Chelatorarchitektur bleibt die Reinigung moderat.",
+      "supportingSignals": [
+        {
+          "observation": "SLES wird durch CAPB und Coco-Glucoside ergänzt.",
+          "inference": "Das ergibt moderate, nicht resetartige Reinigung.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "SLES an zweiter Stelle kann stärker reinigen als sehr milde Systeme.",
+          "inference": "Daher nicht niedrig.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glyceryl Oleate und Hydrogenated Vegetable Glycerides Citrate liefern leichte Rückfettung/Smoothing, aber ohne starke kationische oder silikonische Deposition.",
+      "supportingSignals": [
+        {
+          "observation": "Glyceryl Oleate und pflanzliche Glycerid-/Citrat-Lipide sind vorhanden.",
+          "inference": "Leichte Rückfettung/Smoothing ist plausibel.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keine kationische Coacervation oder Silikone sind sichtbar.",
+          "inference": "Nicht high-conditioning.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Rückfettungssignale sind begrenzt und nicht persistent; keine Silikone oder schweren Polymere sind in der kanonischen aktuellen Formel.",
+      "supportingSignals": [
+        {
+          "observation": "Keine Silikone und keine hohe Polymerlast in der aktuellen kanonischen Formel.",
+          "inference": "Beschwerungspotenzial bleibt niedrig.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "low-residue-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Glyceryl Oleate kann leicht deponieren.",
+          "inference": "Das ist ein begrenztes, nicht stark beschwerendes Signal.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "low-residue-architecture"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Extra-Mild-/High-Tolerance-Positionierung plus moderate Co-Tensid-Architektur machen gentle zum stärksten Produktfokus.",
+      "supportingSignals": [
+        {
+          "observation": "Extra Mild, hohe Verträglichkeit und Familien-/Daily-Positionierung sind unblindet sichtbar.",
+          "inference": "Gentle ist die passendste Produktinterpretation.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "gentle-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum ist vorhanden und kann für einzelne Sensitive-Nutzer relevant sein.",
+          "inference": "Das löscht den Produktzielwert nicht.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "gentle-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Formel erfüllt vor allem eine breite, allgemeine Daily-Shampoo-Rolle; kein starker Volumen-, Repair-, Glanz- oder Klärungsmechanismus dominiert sekundär.",
+      "supportingSignals": [
+        {
+          "observation": "Die Rezeptur deckt Standardreinigung plus leichte Rückfettung ab.",
+          "inference": "General ist der stärkste sekundäre Nutzen.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "general-care-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Historische Formel zeigte andere Pflege-/Polymerhinweise.",
+          "inference": "Sie bleibt Provenienz, aber nicht die aktuelle kanonische Formel.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "general-care-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Current Ducray/dm positioning says daily/frequent and whole-family use; die moderate SLES-Co-Tensid-Formel ist damit vereinbar.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle positioniert das Produkt für häufige/tägliche Nutzung.",
+          "inference": "Die moderate Reinigung widerspricht dieser Rolle nicht.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "frequent-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Bei sehr trockener Kopfhaut kann SLES auch in milder Positionierung zu viel sein.",
+          "inference": "Die Fit-Matrix muss das gesondert bewerten.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "frequent-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die exakte aktuelle Produktpositionierung zielt auf normales bis empfindliches Haar/Kopfhaut und hohe Verträglichkeit; die Formel hat eine moderate, rückfettend abgepufferte Route.",
+      "supportingSignals": [
+        {
+          "observation": "Normales bis empfindliches Haar/Kopfhaut und hohe Verträglichkeit werden als Produktziel genannt.",
+          "inference": "Das ist ein gezielter kosmetischer Komforttarget.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die aktuelle INCI hat Parfum und keine öffentlich erfassten Toleranztests.",
+          "inference": "Die Klassifikation ist Ziel/Mechanismus, kein universelles Toleranzversprechen.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die aktuelle kanonische INCI enthält weder Piroctone Olamine noch Climbazole; die historische Gleich-GTIN-Provenienz ändert diese aktuelle Klassifikation nicht.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen in der aktuellen Formel.",
+          "inference": "Kein MVP-Anti-Schuppen-Support.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Normale Reinigung kann lose Flakes abwaschen.",
+          "inference": "Das ist keine anerkannte Anti-Schuppen-Route.",
+          "sourceIds": [
+            "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      }
+    },
+    "weightDepositionLoad": "Aus der INCI wird nur eine qualitative Deposition-/Beschwerungsbandbreite abgeleitet; keine Einsatzmengen oder Wiederholungsdaten sind öffentlich.",
+    "weightPersistence": "Keine wiederholte Anwendung oder Residue-Messung ist erfasst; Persistenz bleibt mechanistisch begrenzt.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Klärungsarchitektur abgeleitet, nicht aus einem fertigen Produkttest.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond- oder strukturreparierende Route ist in der aktuellen kanonischen Formel sichtbar.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and product-page claim audit only; no shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Extra mild, hohe Verträglichkeit, ganze Familie, tägliche/frequente Nutzung",
+      "verdict": "plausible",
+      "support": "Die aktuelle kanonische Formel ist moderat und rückfettend abgepuffert; die Positionierung klärt Fokus und Rolle.",
+      "limitation": "Die deutsche Herstellerseite liefert nicht die vollständige INCI im Artefakt; dm exact-GTIN ist kanonische Formelquelle, und die historische abweichende Liste bleibt nicht handlungsleitend.",
+      "sourceIds": [
+        "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-ducray-extra-mild-3282770148282-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "High-tolerance-/sensitive-positioning is cosmetic comfort positioning, not disease treatment."
+  }
+}

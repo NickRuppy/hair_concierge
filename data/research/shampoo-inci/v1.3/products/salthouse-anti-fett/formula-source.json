@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4008890006467",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "salthouse-de-anti-fett-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://salthouse.com/de/produkte/anti-fett-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Sodium Benzoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Maris Sal (Dead Sea Salt), Butylene Glycol, Citric Acid, Potassium Sorbate, Panthenol, Citrus Aurantium Dulcis (Orange) Peel Oil, Limonene, Menthol, Mentha Arvensis Leaf Oil, Glycerin, Cymbopogon Schoenanthus Leaf Extract, Cimicifuga Racemosa Root Extract, Lepidium Meyenii Root Extract, Silybum Marianum Seed Extract, Urtica Dioica (Nettle) Leaf Extract"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Sodium Benzoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Maris Sal (Dead Sea Salt), Butylene Glycol, Citric Acid, Potassium Sorbate, Panthenol, Citrus Aurantium Dulcis (Orange) Peel Oil, Limonene, Menthol, Mentha Arvensis Leaf Oil, Glycerin, Cymbopogon Schoenanthus Leaf Extract, Cimicifuga Racemosa Root Extract, Lepidium Meyenii Root Extract, Silybum Marianum Seed Extract, Urtica Dioica (Nettle) Leaf Extract",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "sodium benzoate",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "maris sal (dead sea salt)",
+    "butylene glycol",
+    "citric acid",
+    "potassium sorbate",
+    "panthenol",
+    "citrus aurantium dulcis (orange) peel oil",
+    "limonene",
+    "menthol",
+    "mentha arvensis leaf oil",
+    "glycerin",
+    "cymbopogon schoenanthus leaf extract",
+    "cimicifuga racemosa root extract",
+    "lepidium meyenii root extract",
+    "silybum marianum seed extract",
+    "urtica dioica (nettle) leaf extract"
+  ],
+  "inciFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

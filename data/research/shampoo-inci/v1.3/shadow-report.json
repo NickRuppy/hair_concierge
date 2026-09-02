@@ -1,0 +1,2668 @@
+{
+  "schemaVersion": "shampoo-shadow-report-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "snapshotHash": "0683ba88d0b2ff26968eca6a0da7ceb7f56e4b2e1e60f9f6c828880a3ed17b6a",
+  "modelVersion": "shampoo-research-v1.3-artifact-lab",
+  "knowledgeBaseVersion": "shampoo-v1.3-2026-08-10-artifacts",
+  "summary": {
+    "releaseMembers": 51,
+    "approvedProducts": 50,
+    "blockedProducts": 1,
+    "profiles": 18,
+    "catalogBaselinesAvailable": 50,
+    "newProductsWithoutLegacyBaseline": 0,
+    "directFieldStates": {
+      "agree": 50,
+      "diverge": 54,
+      "notProjected": 46,
+      "noBaseline": 0
+    }
+  },
+  "products": [
+    {
+      "catalogProductId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "candidateId": "guhl-kopfhaut-sensitive",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "irritated"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "candidateId": "salthouse-anti-fett",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "oily"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "clarifying"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "trocken"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "dry"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "candidateId": "langhaarmaedchen-beautiful-curls",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "candidateId": "guhl-hyaluron-plus",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "normal"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "balanced"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "candidateId": "hask-argan-oil",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "trocken"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "dry"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "candidateId": "salthouse-anti-juckreiz",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "candidateId": "dejan-garz-shampoo",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "candidateId": "salthouse-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "candidateId": "ogx-renewing",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "candidateId": "sebamed-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "candidateId": "lavera-basis-sensitiv",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "candidateId": "ogx-biotin-collagen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "candidateId": "syoss-intense-curls",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "candidateId": "swiss-o-par-teebaumol",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "oily"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "candidateId": "sebamed-urea-5",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen",
+            "trocken"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "dry",
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "candidateId": "sante-glossy-shine",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "candidateId": "pantene-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "candidateId": "neqi-volume-victory",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "candidateId": "sante-sensitive-care",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "candidateId": "monday-volume-kraft-fuelle",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "oily"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "candidateId": "pantene-pro-v-volumen-pur",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "oily"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "candidateId": "head-shoulders-sensitive",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "candidateId": "pantene-grow-abundance",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "irritated"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "744de604-d266-453b-a56b-eea92c5ca565",
+      "candidateId": "guhl-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "candidateId": "ogx-rosemary",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_reset_role",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "normal",
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "balanced",
+          "current": [
+            "oily"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "clarifying"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "candidateId": "sebamed-anti-schuppen-plus",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "oily"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "candidateId": "loreal-elvital-glycolic-gloss",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "candidateId": "guhl-kraft-und-fuelle",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "oily"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "candidateId": "schauma-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "candidateId": "hair-biology-revitalize-soothe",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "trocken"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dry"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "candidateId": "cantu-locken-pflege",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_reset_role",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "normal",
+          "current": [
+            "normal"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "balanced",
+          "current": [
+            "balanced"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "candidateId": "balea-ultra-sensitive",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "candidateId": "neqi-moisture-mystery",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal",
+            "trocken"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced",
+            "dry"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "candidateId": "balea-2-in-1-urea-5",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "trocken"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dry"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "candidateId": "syoss-intense-fullness-shampoo",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "candidateId": "ogx-keratin-oil",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "trocken"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "dry"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "candidateId": "hask-curl-care",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "candidateId": "guhl-frische-und-leichtigkeit",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "dehydriert-fettig"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "oily"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "regular"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "candidateId": "balea-professional-ultimate-volume",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "diverge"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "irritated"
+          ],
+          "state": "diverge"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "candidateId": "langhaarmadchen-lovely-long",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "candidateId": "sebamed-every-day-shampoo",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "gentle",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "gentle",
+          "current": [
+            "gentle"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "candidateId": "balea-aqua-hyaluron",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "candidateId": "balea-kopfhaut-sensitive",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_scalp_comfort_target",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "irritationen",
+          "current": [
+            "irritationen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "irritated",
+          "current": [
+            "irritated"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "candidateId": "nivea-shampoo-conditioner-2in1",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "trocken"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "dry"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "candidateId": "balea-med-anti-schuppen",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_dandruff_support",
+          "ingredient_cleansing_strength"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": "schuppen",
+          "current": [
+            "schuppen"
+          ],
+          "state": "agree"
+        },
+        "scalpRoute": {
+          "projected": "dandruff",
+          "current": [
+            "dandruff"
+          ],
+          "state": "agree"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "regular"
+          ],
+          "state": "agree"
+        }
+      }
+    },
+    {
+      "catalogProductId": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+      "candidateId": "ogx-renewing-argan-oil-of-morocco-renewing-argan-oil-of-morocco-shampoo",
+      "outcome": "blocked",
+      "blockerCode": "catalog_entry_superseded",
+      "baselineState": "blocked_release_member",
+      "projection": null,
+      "comparisons": null
+    },
+    {
+      "catalogProductId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "candidateId": "syoss-intense-volume-shampoo",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "regular",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "regular",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    },
+    {
+      "catalogProductId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "candidateId": "pantene-hydra-glow",
+      "outcome": "approved",
+      "baselineState": "available",
+      "projection": {
+        "shampoo_bucket": null,
+        "scalp_route": null,
+        "cleansing_intensity": "clarifying",
+        "rationaleCodes": [
+          "ingredient_cleansing_strength",
+          "legacy_scalp_route_not_projected"
+        ]
+      },
+      "comparisons": {
+        "shampooBucket": {
+          "projected": null,
+          "current": [
+            "normal"
+          ],
+          "state": "not_projected"
+        },
+        "scalpRoute": {
+          "projected": null,
+          "current": [
+            "balanced"
+          ],
+          "state": "not_projected"
+        },
+        "cleansingIntensity": {
+          "projected": "clarifying",
+          "current": [
+            "gentle"
+          ],
+          "state": "diverge"
+        }
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "profileKey": "fixture-fine-low-density-oily-volume",
+      "label": "Fein · geringe Dichte · fettige Kopfhaut · Volumen",
+      "thickness": "fine",
+      "primaryBucket": "dehydriert-fettig",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+      ],
+      "currentPrimaryEligible": [
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+        "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+        "7e95671b-41a7-4f5c-9188-e535e46678ba"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+        "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+        "7e95671b-41a7-4f5c-9188-e535e46678ba"
+      ],
+      "top5Overlap": [
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad"
+      ],
+      "ingredientOnlyTop5": [
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+      ],
+      "currentOnlyTop5": [
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+        "7e95671b-41a7-4f5c-9188-e535e46678ba"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "b51fa170180bc9ddc94cf1e66f4e8958dafd738e2b8ef5395d72392f9ce85615"
+    },
+    {
+      "profileKey": "fixture-fine-treated-balanced-shine",
+      "label": "Fein · behandelt · ausgeglichene Kopfhaut · Glanz",
+      "thickness": "fine",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "1f51a69f-c946-4898-9091-2fd2c59fb467",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a"
+      ],
+      "currentPrimaryEligible": [
+        "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "fcbc469f-93c8-4be5-85db-e789b09189c7",
+        "ead1333b-6839-464d-b272-673d39bb95a4",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "1f51a69f-c946-4898-9091-2fd2c59fb467"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "fcbc469f-93c8-4be5-85db-e789b09189c7",
+        "ead1333b-6839-464d-b272-673d39bb95a4",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "1f51a69f-c946-4898-9091-2fd2c59fb467",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a"
+      ],
+      "currentOnlyTop5": [
+        "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "fcbc469f-93c8-4be5-85db-e789b09189c7",
+        "ead1333b-6839-464d-b272-673d39bb95a4",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "937902f554b4407d2e892ddd1247810575a5bf5f9906515fb95f7efd3c5ed1ad"
+    },
+    {
+      "profileKey": "fixture-fine-dry-scalp-frizz",
+      "label": "Fein · trockenes Kopfhautgefühl · Frizz",
+      "thickness": "fine",
+      "primaryBucket": "trocken",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e",
+        "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b"
+      ],
+      "currentPrimaryEligible": [
+        "51a0b647-2794-49a3-96e1-e7695432561e",
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "51a0b647-2794-49a3-96e1-e7695432561e",
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "top5Overlap": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b"
+      ],
+      "ingredientOnlyTop5": [
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e",
+        "a79513be-e34b-4a1e-b7eb-b3d4b58160be"
+      ],
+      "currentOnlyTop5": [
+        "51a0b647-2794-49a3-96e1-e7695432561e",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "726b285995c0d836a7224c2f14e7890b8dc2829b29fb899a3ffea8b6a3d77d48"
+    },
+    {
+      "profileKey": "fixture-normal-balanced-general",
+      "label": "Normal · ausgeglichene Kopfhaut · allgemein",
+      "thickness": "normal",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentPrimaryEligible": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentOnlyTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "6f163c8964d8e3645e8b2965b7873b733105c2d091cddfccc6dccb45321b6606"
+    },
+    {
+      "profileKey": "fixture-normal-oily-high-load",
+      "label": "Normal · fettige Kopfhaut · hohe Produktlast",
+      "thickness": "normal",
+      "primaryBucket": "dehydriert-fettig",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentPrimaryEligible": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+        "7b5ec424-d21f-4eb8-999e-7aed98e94b86"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+        "7b5ec424-d21f-4eb8-999e-7aed98e94b86"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "03b847e5-01b9-40e5-950a-98efc73abb3a",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentOnlyTop5": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+        "7b5ec424-d21f-4eb8-999e-7aed98e94b86"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "e1468f6b58a046e4533d4e8788d8b06159df31b84e6089aa92158e8886a0f79f"
+    },
+    {
+      "profileKey": "fixture-normal-low-volume-frequent-wash",
+      "label": "Normal · wenig Volumen · häufiges Waschen",
+      "thickness": "normal",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+        "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+        "3f3c7d89-9e7b-4e91-85f7-d3c58d304918"
+      ],
+      "currentPrimaryEligible": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "64fb44d5-8701-46ab-bcba-f1747f071e48",
+        "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+        "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+        "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+        "3f3c7d89-9e7b-4e91-85f7-d3c58d304918"
+      ],
+      "currentOnlyTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "afb4c5889f00a92ec6a5329a060ad6c1223bdf183a7103c226e8a43bbcf2a38d"
+    },
+    {
+      "profileKey": "fixture-coarse-dry-damaged-smoothing",
+      "label": "Grob · trocken · geschädigt · Glättung",
+      "thickness": "coarse",
+      "primaryBucket": "trocken",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10"
+      ],
+      "currentPrimaryEligible": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "top5Overlap": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a"
+      ],
+      "ingredientOnlyTop5": [
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10"
+      ],
+      "currentOnlyTop5": [
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "aa87654a134d0833e75479da6ce1d8888de97409717b60c2c94f4b395797bfff"
+    },
+    {
+      "profileKey": "fixture-coarse-curly-frizz-definition",
+      "label": "Grob · lockig · Frizz · Definition",
+      "thickness": "coarse",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "currentPrimaryEligible": [
+        "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+        "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+        "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+        "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+        "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "currentOnlyTop5": [
+        "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+        "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+        "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "6cbd4d0eaaad17443ad224304e736bdc08226fc36db17819e69f3c523bdb382e"
+    },
+    {
+      "profileKey": "fixture-treated-breakage-repair",
+      "label": "Behandelt · Haarbruch · Reparatur",
+      "thickness": "normal",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentPrimaryEligible": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "top5Overlap": [
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40"
+      ],
+      "ingredientOnlyTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03"
+      ],
+      "currentOnlyTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "51dfa6f6814da8cd0211fb0c82ad7b12a2d97d5fa1d3ae523d936a3772eb97e7"
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-itch",
+      "label": "Leicht empfindlich · Juckreiz",
+      "thickness": "normal",
+      "primaryBucket": "irritationen",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentPrimaryEligible": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "top5Overlap": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentOnlyTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "04fe854f4f0058cc90f62b6dc6fec12f724fb0ca9f7639904172aef3ebbd62bc"
+    },
+    {
+      "profileKey": "fixture-oily-dandruff",
+      "label": "Fettige Kopfhaut · fettige Schuppen",
+      "thickness": "normal",
+      "primaryBucket": "schuppen",
+      "secondaryBucket": "dehydriert-fettig",
+      "ingredientTop5": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+        "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "261e5c9f-d312-4206-82da-fbd0ab6f3614"
+      ],
+      "currentPrimaryEligible": [
+        "5effc311-25d7-44dd-8c16-b93c182068d3",
+        "9d8d4709-4041-495e-98ee-e0261fa30e27",
+        "744de604-d266-453b-a56b-eea92c5ca565"
+      ],
+      "currentSecondaryEligible": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+        "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+        "7b5ec424-d21f-4eb8-999e-7aed98e94b86"
+      ],
+      "currentTop5": [
+        "5effc311-25d7-44dd-8c16-b93c182068d3",
+        "9d8d4709-4041-495e-98ee-e0261fa30e27",
+        "744de604-d266-453b-a56b-eea92c5ca565",
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff"
+      ],
+      "top5Overlap": [
+        "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf"
+      ],
+      "ingredientOnlyTop5": [
+        "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+        "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "261e5c9f-d312-4206-82da-fbd0ab6f3614"
+      ],
+      "currentOnlyTop5": [
+        "5effc311-25d7-44dd-8c16-b93c182068d3",
+        "9d8d4709-4041-495e-98ee-e0261fa30e27",
+        "744de604-d266-453b-a56b-eea92c5ca565",
+        "9bfad335-a086-45a0-9af7-f26b36b4ecff"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "dc968d69f566c2a14ca598e1139ebef5f042315165c91a9a12d7ff849832c698"
+    },
+    {
+      "profileKey": "fixture-dry-flakes",
+      "label": "Trockene Kopfhaut · trockene Schüppchen",
+      "thickness": "coarse",
+      "primaryBucket": "trocken",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentPrimaryEligible": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentOnlyTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "d7c6ea7f21df9e09c19bc1a22aa651dccf919aea8be294e0b05c9371af8781ed"
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-oily",
+      "label": "Ölige Kopfhaut · leicht empfindlich",
+      "thickness": "normal",
+      "primaryBucket": "irritationen",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentPrimaryEligible": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "top5Overlap": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentOnlyTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "508dae098f1b3e35d90cba7f975d925b0242d5f449af087a8f0e6a4bfcadec33"
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-balanced",
+      "label": "Ausgeglichen · leicht empfindlich",
+      "thickness": "normal",
+      "primaryBucket": "irritationen",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentPrimaryEligible": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "top5Overlap": [
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+        "678119a0-9070-4faf-b9ed-7c0ac008767e"
+      ],
+      "currentOnlyTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "e4af303478393d500d0e742d4bfc6e8ee5a8aaf30bd1bed38d7499e7eee410f9"
+    },
+    {
+      "profileKey": "fixture-medical-boundary",
+      "label": "Medizinische Grenze",
+      "thickness": "normal",
+      "primaryBucket": "irritationen",
+      "secondaryBucket": null,
+      "ingredientTop5": [],
+      "currentPrimaryEligible": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [],
+      "currentOnlyTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "abstentionCount": 51,
+      "rankingHash": "44686da548632309fefe18cd3f02f90d352b7b5f48705a38ccc476a8bb6ee91e"
+    },
+    {
+      "profileKey": "fixture-research-only-fragrance-avoidance",
+      "label": "Forschungsprofil · Duftstoffe vermeiden",
+      "thickness": "normal",
+      "primaryBucket": "irritationen",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+        "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace"
+      ],
+      "currentPrimaryEligible": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+        "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace"
+      ],
+      "currentOnlyTop5": [
+        "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+        "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+        "3d94c017-9edb-4ba0-accd-4772e262f012"
+      ],
+      "abstentionCount": 49,
+      "rankingHash": "4b1b804151dcfb9fe4eec83fcd85f0c67544f0c196d9a37b37edb30d78d8c4a8"
+    },
+    {
+      "profileKey": "fixture-straight-balanced-low-shine",
+      "label": "Glatt · ausgeglichen · wenig Glanz",
+      "thickness": "normal",
+      "primaryBucket": "normal",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "1f51a69f-c946-4898-9091-2fd2c59fb467",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10"
+      ],
+      "currentPrimaryEligible": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "top5Overlap": [
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10"
+      ],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "1f51a69f-c946-4898-9091-2fd2c59fb467"
+      ],
+      "currentOnlyTop5": [
+        "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+        "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+        "57bae8c8-0ebd-4722-b955-c760d8ffcdbb"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "c284bd2a3aeff30a202b461bf3ae010d78b4f03ec8fe5b9c1c74a2fb64c079c1"
+    },
+    {
+      "profileKey": "fixture-coily-dry-definition",
+      "label": "Kraus · trocken · Definition",
+      "thickness": "coarse",
+      "primaryBucket": "trocken",
+      "secondaryBucket": null,
+      "ingredientTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "currentPrimaryEligible": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "currentSecondaryEligible": [],
+      "currentTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "top5Overlap": [],
+      "ingredientOnlyTop5": [
+        "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+        "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+        "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+        "3d94c017-9edb-4ba0-accd-4772e262f012",
+        "b000d235-1fc6-434c-9ba1-f1207d36cded"
+      ],
+      "currentOnlyTop5": [
+        "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+        "17b6d50e-ca5b-4f66-bdd7-39bd19afe748"
+      ],
+      "abstentionCount": 1,
+      "rankingHash": "d4343c766b64060902947d6c707dee4048a04cf64914206833e9cd2789713f53"
+    }
+  ],
+  "generatedAt": "2026-08-26T14:39:35.832Z",
+  "reportHash": "17e81ea0b74af8b360b58efb664ddd8ea78b8be1a4e147073400b3def934d960"
+}

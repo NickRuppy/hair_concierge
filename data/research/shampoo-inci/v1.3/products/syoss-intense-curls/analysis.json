@@ -1,0 +1,521 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946:cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "SLES and Cocamidopropyl Betaine form the main cleanser system.",
+      "Hydrolyzed Keratin, Panthenol, two silicones and cationic guar create a coherent deposition cluster.",
+      "The current official formula is the canonical classification source; a retailer tail-list variant is not merged into this formula version.",
+      "The 3% wording names a Panthenol moisture complex, not 3% pure Panthenol."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Mit 3% Panthenol-Feuchtigkeits-Komplex",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [
+      "peg-7 glyceryl cocoate",
+      "peg-40 hydrogenated castor oil",
+      "laureth-4",
+      "laureth-23",
+      "trideceth-10"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone",
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "peg-7 glyceryl cocoate",
+      "hydrogenated castor oil",
+      "glycol distearate",
+      "apricot kernel oil"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed keratin"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The official German formula supports ordinary moderate cleansing from an SLES/betaine cleanser system.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and betaine form the main cleanser system.",
+          "inference": "Ordinary moderate cleansing is formula-coherent.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active-matter levels and comparative cleansing data are absent.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dimethicone, Amodimethicone, cationic guar and refatting agents support moderate shampoo deposition and slip.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethicone, Amodimethicone, cationic guar and several refatting agents are present.",
+          "inference": "Moderate shampoo deposition and slip are formula-coherent.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No combing or deposition measurement isolates the shampoo.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Two silicones plus cationic guar support moderate weight or buildup potential, bounded by unknown concentration and repeat-use persistence.",
+      "supportingSignals": [
+        {
+          "observation": "Two silicones and cationic guar create multiple deposition cues.",
+          "inference": "Moderate weight or buildup potential is formula-coherent.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Concentration and repeat-use persistence are unknown.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "General curl-positioned care is the closest allowed direct property: regular cleansing is paired with several conditioning and film-forming cues.",
+      "supportingSignals": [
+        {
+          "observation": "Regular cleansing is paired with Dimethicone, Amodimethicone, cationic guar, Panthenol and Hydrolyzed Keratin.",
+          "inference": "General curl-care product focus is formula-coherent within the current taxonomy.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The taxonomy has no dedicated curl-focus value and no curl-specific finished-product endpoint is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine",
+        "repair"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silicones support surface smoothing/shine and Hydrolyzed Keratin is a temporary film cue, so shine plus bounded repair are coherent secondary focuses.",
+      "supportingSignals": [
+        {
+          "observation": "Silicones support surface smoothing; hydrolyzed keratin is a temporary film cue.",
+          "inference": "Shine and bounded repair secondary focuses are formula-coherent.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only shine, breakage or repair endpoint is captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The official formula supports a regular wash role for the intended curl-care context; fine or buildup-prone users may prefer alternating use.",
+      "supportingSignals": [
+        {
+          "observation": "Ordinary cleansing coexists with several depositors.",
+          "inference": "Regular use is a coherent product role.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fine or buildup-prone users may prefer alternating use.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "syoss-de-intense-curls"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent conditioningDeposition cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent weightBuildup cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent shineS1 cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent smoothing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact official German formula is captured; no shampoo-only performance test is public."
+  },
+  "claimAudit": [
+    {
+      "claim": "Mit 3% Panthenol-Feuchtigkeits-Komplex",
+      "verdict": "indeterminate",
+      "support": "The official exact-product page uses the 3% complex wording and Panthenol is listed.",
+      "limitation": "The complex composition and pure Panthenol percentage are not disclosed.",
+      "sourceIds": [
+        "syoss-de-intense-curls"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "syoss-de-intense-curls"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The product makes cosmetic curl-care and appearance claims, not a medical claim."
+  }
+}

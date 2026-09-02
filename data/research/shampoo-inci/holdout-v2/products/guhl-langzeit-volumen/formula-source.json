@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:guhl-langzeit-volumen",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4072600282427",
+  "formulaCode": null,
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "guhl-de-langzeit-volumen-4072600282427-2026-08-27",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://www.guhl.com/produkt/langzeit-volumen/langzeit-volumen-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Sodium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Glycine, Piroctone Olamine, Glycerin, Citric Acid, Acacia Senegal Gum Extract, Centaurea Cyanus Flower Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 42090, CI 60730",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4072600282427"
+    },
+    {
+      "id": "dm-de-guhl-langzeit-volumen-4072600282427-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://www.dm.de/p/d/1446992/guhl-shampoo-langzeit-volumen",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Sodium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Glycine, Piroctone Olamine, Glycerin, Citric Acid, Acacia Senegal Gum Extract, Centaurea Cyanus Flower Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 42090, CI 60730",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4072600282427"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Sodium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Glycine, Piroctone Olamine, Glycerin, Citric Acid, Acacia Senegal Gum Extract, Centaurea Cyanus Flower Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 42090, CI 60730",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "coco-glucoside",
+    "lactic acid",
+    "sodium chloride",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "glyceryl oleate",
+    "sorbitan caprylate",
+    "erythritol",
+    "panthenol",
+    "tetrasodium glutamate diacetate",
+    "glycine",
+    "piroctone olamine",
+    "glycerin",
+    "citric acid",
+    "acacia senegal gum extract",
+    "centaurea cyanus flower extract",
+    "sodium benzoate",
+    "potassium sorbate",
+    "parfum",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "ci 42090",
+    "ci 60730"
+  ],
+  "inciFingerprint": "94b69db71ebff4ee6078bb5dd9173cdf86a83090fe93da25d5f0d0d09b7a2323",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "Current German manufacturer INCI matches dm's exact-GTIN 250 ml list. The official page was updated 2026-08-22 and includes a daily-washing FAQ. The manufacturer ingredient list contains Piroctone Olamine despite volume positioning."
+}

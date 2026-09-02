@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+  "market": "DE",
+  "packSize": "330 ml",
+  "gtinEan": "4063528078285",
+  "formulaCode": null,
+  "capturedAt": "2026-08-23T12:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "neqi-official-en",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://en.neqi-hair.com/products/moisture-mystery-shampoo",
+      "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl betaine, Cocamidopropyl hydroxysultaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Algin, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Cocamide MEA, Laureth-10, C13-15 alkanes, Propylene glycol, Glycerin, Ethylhexyl methoxycinnamate, Diethylamino hydroxybenzoyl hexyl benzoate, Linalyl acetate, Caramel, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Limonene, Linalool"
+    },
+    {
+      "id": "neqi-official-de-2026-08-23",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-23T12:00:00.000+02:00",
+      "locator": "https://neqi-hair.com/products/moisture-mystery-shampoo",
+      "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl betaine, Cocamidopropyl hydroxysultaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Algin, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Cocamide MEA, Laureth-10, C13-15 alkanes, Propylene glycol, Glycerin, Ethylhexyl methoxycinnamate, Diethylamino hydroxybenzoyl hexyl benzoate, Linalyl acetate, Caramel, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Limonene, Linalool"
+    },
+    {
+      "id": "notino-de-neq02453",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.notino.de/neqi/moisture-mystery-hydratisierendes-shampoo-fuer-alle-haartypen/",
+      "rawInci": "AQUA [WATER], DISODIUM LAURETH SULFOSUCCINATE, COCAMIDOPROPYL BETAINE, COCAMIDOPROPYL HYDROXYSULTAINE, PEG-18 GLYCERYL OLEATE/COCOATE, PARFUM [FRAGRANCE], ALGIN, AVENA SATIVA (OAT) PEPTIDE, GARDENIA TAITENSIS FLOWER EXTRACT, LYCIUM BARBARUM FRUIT EXTRACT, MALVA SYLVESTRIS (MALLOW) EXTRACT, JUNIPERUS VIRGINIANA OIL, CITRUS AURANTIUM PEEL OIL, GLYCOL DISTEARATE, CITRIC ACID, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, SODIUM CHLORIDE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDE MEA, LAURETH-10, C13-15 ALKANE, PROPYLENE GLYCOL, GLYCERIN, ETHYLHEXYL METHOXYCINNAMATE, DIETHYLAMINO HYDROXYBENZOYL HEXYL BENZOATE, LINALYL ACETATE, CARAMEL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, 1,2-HEXANEDIOL, CAPRYLYL GLYCOL, HEXYL CINNAMAL, LIMONENE, LINALOOL."
+    },
+    {
+      "id": "newflagpro-cz-ean",
+      "type": "other",
+      "market": "CZ",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.newflagpro.cz/neqi-moisture-mystery-shampoo-330ml-p6288/",
+      "rawInci": "EAN 4063528078285; product code NQ-MM-SH-201; INCI not published on this page."
+    }
+  ],
+  "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl betaine, Cocamidopropyl hydroxysultaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Algin, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Cocamide MEA, Laureth-10, C13-15 alkanes, Propylene glycol, Glycerin, Ethylhexyl methoxycinnamate, Diethylamino hydroxybenzoyl hexyl benzoate, Linalyl acetate, Caramel, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Limonene, Linalool",
+  "normalizedInci": [
+    "aqua [water]",
+    "disodium laureth sulfosuccinate",
+    "cocamidopropyl betaine",
+    "cocamidopropyl hydroxysultaine",
+    "peg-18 glyceryl oleate/cocoate",
+    "parfum [fragrance]",
+    "algin",
+    "avena sativa (oat) peptide",
+    "gardenia taitensis flower extract",
+    "lycium barbarum fruit extract",
+    "malva sylvestris (mallow) extract",
+    "juniperus virginiana oil",
+    "citrus aurantium peel oil",
+    "glycol distearate",
+    "citric acid",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "cocamide mea",
+    "laureth-10",
+    "c13-15 alkanes",
+    "propylene glycol",
+    "glycerin",
+    "ethylhexyl methoxycinnamate",
+    "diethylamino hydroxybenzoyl hexyl benzoate",
+    "linalyl acetate",
+    "caramel",
+    "methylchloroisothiazolinone",
+    "methylisothiazolinone",
+    "1,2-hexanediol",
+    "caprylyl glycol",
+    "hexyl cinnamal",
+    "limonene",
+    "linalool"
+  ],
+  "inciFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "Die aktuelle DE-Hersteller-INCI ist die kanonische Formel. Der offizielle Shopify-Variantenendpunkt bestätigt für 330 ml SKU NQ-MM-SH-201 den Barcode 4063528078285; dm-DE und Rossmann bestätigen Produkt, Größe und GTIN unabhängig. Abweichende Händler-INCI bleiben als Quellenprovenienz erhalten und werden nicht mit der Herstellerformel zusammengeführt."
+}

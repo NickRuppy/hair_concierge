@@ -1,0 +1,773 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Approved shampoo weight audit",
+    "sources": [
+      {
+        "id": "audit",
+        "label": "Approved shampoo weight comparison, 27 August 2026",
+        "path": "data/research/shampoo-inci/approved-weight-consistency-v1/audit.json"
+      },
+      {
+        "id": "policy",
+        "label": "Frozen weight rule policy",
+        "path": "docs/research/shampoo-inci/v1.4-draft/weight-potential-calibration.md"
+      },
+      {
+        "id": "paper",
+        "label": "Lepilleur et al. 2011: formulation and deposition",
+        "href": "https://pubmed.ncbi.nlm.nih.gov/21635845/"
+      },
+      {
+        "id": "transition-query",
+        "label": "Transition counts from the approved-formula audit",
+        "path": "data/research/shampoo-inci/approved-weight-consistency-v1/transition-counts.sql",
+        "query": {
+          "engine": "SQLite",
+          "language": "sql",
+          "sql": "SELECT json_extract(value, '$.old') || ' -> ' || json_extract(value, '$.engine.value') AS transition, count(*) AS count, 50 AS denominator, count(*) / 50.0 AS share FROM json_each(readfile('data/research/shampoo-inci/approved-weight-consistency-v1/audit.json'), '$.rows') GROUP BY transition ORDER BY count DESC, transition;",
+          "description": "Counts old-to-new weight transitions from the 50 reviewed audit rows. The underlying formula evaluation and source identities are preserved in audit.json and replay.cjs.",
+          "tables_used": [
+            "data/research/shampoo-inci/approved-weight-consistency-v1/audit.json"
+          ],
+          "filters": [
+            "All 50 approved-formula audit rows"
+          ],
+          "metric_definitions": {
+            "count": "Number of audited products in each old-to-new weight transition; total 50"
+          }
+        }
+      },
+      {
+        "id": "products-query",
+        "label": "Approved product comparison rows",
+        "path": "data/research/shampoo-inci/approved-weight-consistency-v1/products-query.sql",
+        "query": {
+          "engine": "SQLite",
+          "language": "sql",
+          "sql": "SELECT json_extract(value, '$.candidateId') AS candidateId, json_extract(value, '$.name') AS name, json_extract(value, '$.old') AS old, json_extract(value, '$.engine.value') AS next, json_extract(value, '$.engine.routes') AS routes, json_extract(value, '$.engine.unresolvedIngredients') AS gaps, json_extract(value, '$.windowSensitive') AS windowSensitive, json_extract(value, '$.formulaFingerprint') AS formulaFingerprint FROM json_each(readfile('data/research/shampoo-inci/approved-weight-consistency-v1/audit.json'), '$.rows');",
+          "description": "Reads reviewed audit rows; human-readable route and review-note strings are composed from the returned arrays.",
+          "tables_used": [
+            "data/research/shampoo-inci/approved-weight-consistency-v1/audit.json"
+          ],
+          "filters": [
+            "All 50 approved-formula rows"
+          ]
+        }
+      },
+      {
+        "id": "distribution-query",
+        "label": "Weight band counts",
+        "path": "data/research/shampoo-inci/approved-weight-consistency-v1/distribution-query.sql",
+        "query": {
+          "engine": "SQLite",
+          "language": "sql",
+          "sql": "WITH rows AS (SELECT json_extract(value, '$.old') AS old, json_extract(value, '$.engine.value') AS new FROM json_each(readfile('data/research/shampoo-inci/approved-weight-consistency-v1/audit.json'), '$.rows')), bands AS (SELECT 'low' AS band, 0 AS ord UNION ALL SELECT 'moderate', 1 UNION ALL SELECT 'high', 2) SELECT band, ord AS 'order', (SELECT count(*) FROM rows WHERE old = band) AS approved, (SELECT count(*) FROM rows WHERE new = band) AS new, 50 AS denominator FROM bands ORDER BY ord;",
+          "description": "Reads reviewed audit rows; human-readable route and review-note strings are composed from the returned arrays.",
+          "tables_used": [
+            "data/research/shampoo-inci/approved-weight-consistency-v1/audit.json"
+          ],
+          "filters": [
+            "All 50 approved-formula rows"
+          ]
+        }
+      }
+    ],
+    "charts": [
+      {
+        "id": "transitions",
+        "title": "Weight-label transitions",
+        "subtitle": "50 approved formulas; stored label compared with the new provisional rule",
+        "type": "bar",
+        "dataset": "transitions",
+        "sourceId": "transition-query",
+        "encodings": {
+          "x": {
+            "field": "transition",
+            "type": "nominal",
+            "label": "Old → new"
+          },
+          "y": {
+            "field": "count",
+            "type": "quantitative",
+            "label": "Products"
+          }
+        },
+        "options": {
+          "showValues": true
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "products",
+        "title": "All 50 approved products",
+        "dataset": "products",
+        "sourceId": "products-query",
+        "defaultSort": {
+          "field": "review",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "name",
+            "label": "Product",
+            "type": "text"
+          },
+          {
+            "field": "old",
+            "label": "Approved weight",
+            "type": "text"
+          },
+          {
+            "field": "next",
+            "label": "New provisional weight",
+            "type": "text"
+          },
+          {
+            "field": "review",
+            "label": "Review note",
+            "type": "text"
+          },
+          {
+            "field": "reason",
+            "label": "New rule evidence",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "distribution",
+        "title": "Weight distribution",
+        "dataset": "distribution",
+        "sourceId": "distribution-query",
+        "defaultSort": {
+          "field": "approved",
+          "direction": "desc"
+        },
+        "columns": [
+          {
+            "field": "band",
+            "label": "Weight",
+            "type": "text"
+          },
+          {
+            "field": "approved",
+            "label": "Approved",
+            "format": "number"
+          },
+          {
+            "field": "new",
+            "label": "New provisional",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Approved shampoo weight audit"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **Yes, the new system reaches different conclusions for many approved products.** Weight changes for 36 of 50 formulas, always upwards; 14 remain in the same band.\n- **This is not evidence that 36 approvals were wrong.** The new mechanism-counting rule creates a systematic upward shift that needs calibration before replacing the baseline.\n- **Your approvals are preserved.** This is a separate read-only comparison of the approved formulas, not a new product review or a database update.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "body": "## The comparison uses the exact formulas you approved\n\nThe baseline is the saved release from 26 August 2026: 50 approved products and one blocked entry. The release was rebuilt and its hash matched; approval and formula links remain valid. Each approved product contributes one row. Only weight potential is recalculated with the frozen shampoo-weight-v1 policy; all other properties and approvals remain unchanged. The analysis date is 27 August 2026.\n\nA changed label means that two rule versions disagree. It does not identify which version is empirically more accurate.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "change",
+        "type": "markdown",
+        "body": "## The shift is systematic, not a few isolated exceptions\n\nTwenty products move from low to moderate, fifteen from moderate to high, and one from low to high. No product moves down. The chart counts all 50 approved products, including unchanged bands. This is an impact screen, not a recommended bulk update.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "transition-chart",
+        "type": "chart",
+        "chartId": "transitions"
+      },
+      {
+        "id": "mix",
+        "type": "markdown",
+        "body": "## The low-weight group shrinks from 26 products to five\n\nHigh-weight classifications rise from one to seventeen. A shift of this size could materially change later fine-hair matching if weight is used there. No matching replay or user recommendation was changed in this pass; that consequence still needs explicit testing.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "distribution-table",
+        "type": "table",
+        "tableId": "distribution"
+      },
+      {
+        "id": "mechanisms",
+        "type": "markdown",
+        "body": "## A conditioning clue is being treated as a weight threshold\n\nNineteen of the twenty low-to-moderate changes have exactly one substantial route: a recognized cationic polymer. The rule counts that route at any ingredient-list position. Examples include Guhl Kopfhaut Sensitive, Salthouse Anti Juckreiz and Balea Ultra Sensitive. Their older reasoning allowed light conditioning without assigning moderate weight.\n\nSante Glossy Shine is the remaining low-to-moderate case: two weak route kinds—protein plus refatting—now reach moderate automatically. The key calibration question is whether these patterns establish noticeable weight, rather than simply some conditioning potential.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "evidence",
+        "type": "markdown",
+        "body": "## More repeatable does not automatically mean more accurate\n\nThe primary research supports formulation-dependent deposition and conditioning; it does not validate our fixed route counts as a measurement of heaviness. [Lepilleur et al.](https://pubmed.ncbi.nlm.nih.gov/21635845/) studied how formulation composition changes deposition and sensory conditioning.\n\nOur inference is that the recognition rules can be useful while the translation into low/moderate/high weight still needs calibration. The previous 10/10 researcher agreement demonstrated reproducibility on ten shared formulas, not universal correctness."
+      },
+      {
+        "id": "gaps",
+        "type": "markdown",
+        "body": "## Dictionary coverage and cutoff sensitivity need separate handling\n\nTwelve products contain an ingredient the current dictionary does not resolve. Four of these change label and eight retain their previous label. These overlap with the 36 changed and 14 unchanged products—they are not twelve additional products.\n\nSome gaps are naming or formatting coverage, such as soybean-oil aliases or citrus-oil suffixes; others are unlisted conditioning polymers. Eight products also change band when the prominence window moves between the first 8, 10 and 12 ingredients. Those windows are proxies, not concentration boundaries.\n\nA same-band result is therefore not always a complete pass, and a computable new band is not necessarily ready for approval.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "detail",
+        "type": "markdown",
+        "body": "## Review the property differences, not every product from scratch\n\nThe table preserves every approved baseline alongside the provisional result and its route evidence. Changed products are listed first; dictionary gaps and window sensitivity remain visible. No row below is an automatically accepted correction.",
+        "sourceId": "audit"
+      },
+      {
+        "id": "products-table",
+        "type": "table",
+        "tableId": "products"
+      },
+      {
+        "id": "next",
+        "type": "markdown",
+        "body": "## Keep approvals intact and calibrate the boundary first\n\n1. Retain the approved release as the baseline and keep this comparison as a separate version.\n2. Revisit the automatic moderate-weight floor for a single conditioning polymer and the automatic upgrade from two weak routes. Do not force the outcome to reproduce the old distribution.\n3. Resolve ingredient aliases and missing polymer families without treating a missing dictionary entry as evidence of low weight.\n4. Use representative light, rich, silicone-containing and boundary formulas to test the revised rule against independently established product behavior where available.\n5. Rerun the full approved cohort. Ask for approval only on evidence-backed changed properties, then separately replay profile matching before any production rollout."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "body": "## What still needs an answer\n\nWhich evidence should distinguish lightweight conditioning from a meaningful loss of movement or root lift? Are early silicones or fatty alcohols plus a polymer sufficient for high weight in each formula, or are some serving mainly formulation roles? Those are model-calibration questions; neither the old labels nor the new deterministic output are a gold standard."
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "body": "## Limits of this audit\n\nThis pass verifies weight-rule consistency and preserves the original formulas. It does not refresh manufacturer pages, measure deposition or heaviness, rerun every other research property, or determine the final impact on personal recommendations. Product confidence is not raised merely because the rule is deterministic. There are no approval or live-data changes."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "datasets": {
+      "transitions": [
+        {
+          "transition": "low -> moderate",
+          "count": 20,
+          "denominator": 50,
+          "share": 0.4
+        },
+        {
+          "transition": "moderate -> high",
+          "count": 15,
+          "denominator": 50,
+          "share": 0.3
+        },
+        {
+          "transition": "moderate -> moderate",
+          "count": 8,
+          "denominator": 50,
+          "share": 0.16
+        },
+        {
+          "transition": "low -> low",
+          "count": 5,
+          "denominator": 50,
+          "share": 0.1
+        },
+        {
+          "transition": "high -> high",
+          "count": 1,
+          "denominator": 50,
+          "share": 0.02
+        },
+        {
+          "transition": "low -> high",
+          "count": 1,
+          "denominator": 50,
+          "share": 0.02
+        }
+      ],
+      "distribution": [
+        {
+          "band": "low",
+          "order": 0,
+          "approved": 26,
+          "new": 5,
+          "denominator": 50
+        },
+        {
+          "band": "moderate",
+          "order": 1,
+          "approved": 23,
+          "new": 28,
+          "denominator": 50
+        },
+        {
+          "band": "high",
+          "order": 2,
+          "approved": 1,
+          "new": 17,
+          "denominator": 50
+        }
+      ],
+      "products": [
+        {
+          "name": "Guhl Kopfhaut Sensitive",
+          "candidateId": "guhl-kopfhaut-sensitive",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #9; lipid_refatting weak: glyceryl oleate #10",
+          "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0"
+        },
+        {
+          "name": "Salthouse Anti Fett",
+          "candidateId": "salthouse-anti-fett",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #6",
+          "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512"
+        },
+        {
+          "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+          "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed; Cutoff-sensitive",
+          "reason": "silicone substantive: dimethiconol #9, dimethicone #10; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #17",
+          "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b"
+        },
+        {
+          "name": "Wahre Schätze Sanfte Hafermilch",
+          "candidateId": "wahre-schatze-sanfte-hafermilch",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: glycine soja oil/soybean oil, peg-60 hydrogenated castor oil",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #19, polyquaternium-7 #22; lipid_refatting weak: dicaprylyl ether #13",
+          "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730"
+        },
+        {
+          "name": "Langhaarmädchen Beautiful Curls Shampoo",
+          "candidateId": "langhaarmaedchen-beautiful-curls",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #17; lipid_refatting weak: glyceryl oleate #11",
+          "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8"
+        },
+        {
+          "name": "Guhl Hyaluron+",
+          "candidateId": "guhl-hyaluron-plus",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: hydrogenated vegetable oil",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #9; lipid_refatting weak: glyceryl oleate #8",
+          "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5"
+        },
+        {
+          "name": "Hask Shampoo Argan Oil",
+          "candidateId": "hask-argan-oil",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: polyquaternium-10 #9, polyquaternium-7 #10; lipid_refatting substantive: argania spinosa (argan) kernel oil #7, dicaprylyl ether #12, glyceryl oleate #14",
+          "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481"
+        },
+        {
+          "name": "Salthouse Anti Juckreiz",
+          "candidateId": "salthouse-anti-juckreiz",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #7",
+          "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b"
+        },
+        {
+          "name": "Dejan Garz Shampoo",
+          "candidateId": "dejan-garz-shampoo",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed; Dictionary: quaternium-80",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #10; lipid_refatting weak: glyceryl oleate #8, hydrogenated palm glycerides citrate #11, lecithin #15, ascorbyl palmitate #16",
+          "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad"
+        },
+        {
+          "name": "Salthouse Anti Schuppen",
+          "candidateId": "salthouse-anti-schuppen",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed; Dictionary: citrus sinensis peel oil expressed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #6; lipid_refatting weak: litsea cubeba fruit oil #18",
+          "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee"
+        },
+        {
+          "name": "OGX Renewing",
+          "candidateId": "ogx-renewing",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: amodimethicone #9; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #10; lipid_refatting substantive: argania spinosa kernel oil #6, hydrogenated castor oil #11",
+          "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592"
+        },
+        {
+          "name": "Sebamed Anti Schuppen",
+          "candidateId": "sebamed-anti-schuppen",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl oxidized starch pg-trimonium chloride #13",
+          "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865"
+        },
+        {
+          "name": "Lavera Basis Sensitiv",
+          "candidateId": "lavera-basis-sensitiv",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: citrus aurantium peel oil**, citrus limon (lemon) peel oil**, citrus aurantium bergamia (bergamot) peel oil**, lavandula oil/extract**; Cutoff-sensitive",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #21; lipid_refatting weak: helianthus annuus (sunflower) seed oil #11, cetearyl alcohol #15, pca glyceryl oleate #16",
+          "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3"
+        },
+        {
+          "name": "OGX Biotin & Collagen",
+          "candidateId": "ogx-biotin-collagen",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: starch hydroxypropyltrimonium chloride",
+          "reason": "silicone substantive: amodimethicone #10; lipid_refatting weak: glyceryl oleate #12, hydrogenated palm glycerides citrate #16, lecithin #19, ascorbyl palmitate #27",
+          "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471"
+        },
+        {
+          "name": "Syoss Intense Curls",
+          "candidateId": "syoss-intense-curls",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: dimethicone #8, amodimethicone #12; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #13; lipid_refatting weak: peg-7 glyceryl cocoate #5, hydrogenated castor oil #15, prunus armeniaca (apricot) kernel oil #21; protein_film weak: hydrolyzed keratin #6",
+          "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae"
+        },
+        {
+          "name": "Swiss-O-Par Teebaumöl",
+          "candidateId": "swiss-o-par-teebaumol",
+          "old": "low",
+          "next": "low",
+          "review": "Same band",
+          "reason": "lipid_refatting weak: peg-7 glyceryl cocoate #6",
+          "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c"
+        },
+        {
+          "name": "Sebamed Urea 5%",
+          "candidateId": "sebamed-urea-5",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl oxidized starch pg-trimonium chloride #15; lipid_refatting weak: helianthus annuus seed oil #21",
+          "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121"
+        },
+        {
+          "name": "Sante Glossy Shine",
+          "candidateId": "sante-glossy-shine",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "lipid_refatting weak: glyceryl oleate #14, pca glyceryl oleate #19, hydrogenated palm glycerides citrate #22, lecithin #27, ascorbyl palmitate #28; protein_film weak: hydrolyzed corn protein #10, hydrolyzed wheat protein #11, hydrolyzed soy protein #12",
+          "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd"
+        },
+        {
+          "name": "Pantene Anti Schuppen",
+          "candidateId": "pantene-anti-schuppen",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: dimethiconol #6, dimethicone #11; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #13",
+          "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88"
+        },
+        {
+          "name": "Neqi Volume Victory",
+          "candidateId": "neqi-volume-victory",
+          "old": "low",
+          "next": "low",
+          "review": "Same band; Dictionary: juniperus virginiana oil, polyquaternium-11",
+          "reason": "lipid_refatting weak: peg-18 glyceryl oleate/cocoate #5",
+          "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef"
+        },
+        {
+          "name": "Sante Sensitive Care",
+          "candidateId": "sante-sensitive-care",
+          "old": "low",
+          "next": "low",
+          "review": "Same band",
+          "reason": "protein_film weak: hydrolyzed corn protein #13, hydrolyzed wheat protein #14, hydrolyzed soy protein #15",
+          "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e"
+        },
+        {
+          "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+          "candidateId": "monday-volume-kraft-fuelle",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: polyquaternium-11; Cutoff-sensitive",
+          "reason": "cationic_polymer substantive: polyquaternium-10 #13, hydroxypropyl guar hydroxypropyltrimonium chloride #20, polyquaternium-7 #21; lipid_refatting weak: cocos nucifera (coconut) oil #11, glyceryl oleate #15",
+          "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490"
+        },
+        {
+          "name": "Pantene Pro-V Volumen Pur",
+          "candidateId": "pantene-pro-v-volumen-pur",
+          "old": "low",
+          "next": "low",
+          "review": "Same band",
+          "reason": "No counted deposition route",
+          "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78"
+        },
+        {
+          "name": "Head & Shoulders Anti Schuppen Sensitive",
+          "candidateId": "head-shoulders-sensitive",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed; Cutoff-sensitive",
+          "reason": "silicone substantive: dimethiconol #10, dimethicone #14; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #12",
+          "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02"
+        },
+        {
+          "name": "Pantene Grow Abundance",
+          "candidateId": "pantene-grow-abundance",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed; Cutoff-sensitive",
+          "reason": "silicone substantive: dimethiconol #10, dimethicone #14; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #11",
+          "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d"
+        },
+        {
+          "name": "Guhl Anti Schuppen",
+          "candidateId": "guhl-anti-schuppen",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #9; lipid_refatting weak: glyceryl oleate #7",
+          "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054"
+        },
+        {
+          "name": "OGX Rosemary",
+          "candidateId": "ogx-rosemary",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band; Dictionary: starch hydroxypropyltrimonium chloride",
+          "reason": "silicone weak: amodimethicone #11; lipid_refatting weak: glyceryl oleate #15, lecithin #16, hydrogenated palm glycerides citrate #23, ascorbyl palmitate #29",
+          "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad"
+        },
+        {
+          "name": "Sebamed Anti Schuppen Plus",
+          "candidateId": "sebamed-anti-schuppen-plus",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl oxidized starch pg-trimonium chloride #6",
+          "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f"
+        },
+        {
+          "name": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+          "candidateId": "loreal-elvital-glycolic-gloss",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: dimethicone #6, amodimethicone #24; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #7",
+          "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c"
+        },
+        {
+          "name": "Guhl Kraft & Fülle",
+          "candidateId": "guhl-kraft-und-fuelle",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #6; lipid_refatting weak: glyceryl oleate #7, lecithin #17",
+          "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3"
+        },
+        {
+          "name": "Schauma Anti Schuppen",
+          "candidateId": "schauma-anti-schuppen",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #11; lipid_refatting weak: glyceryl oleate #8, hydrogenated castor oil #13, peg-7 glyceryl cocoate #16",
+          "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400"
+        },
+        {
+          "name": "Hair Biology Revitalize & Soothe",
+          "candidateId": "hair-biology-revitalize-soothe",
+          "old": "high",
+          "next": "high",
+          "review": "Same band; Cutoff-sensitive",
+          "reason": "silicone substantive: dimethiconol #10, dimethicone #13; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #15",
+          "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595"
+        },
+        {
+          "name": "Cantu Shampoo Locken Pflege",
+          "candidateId": "cantu-locken-pflege",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed; Dictionary: polyquaternium-39; Cutoff-sensitive",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #15; lipid_refatting substantive: butyrospermum parkii (shea) butter #10",
+          "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56"
+        },
+        {
+          "name": "Balea Ultra Sensitive",
+          "candidateId": "balea-ultra-sensitive",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #12; lipid_refatting weak: ascorbyl palmitate #10, glyceryl oleate #11, hydrogenated palm glycerides citrate #13, lecithin #14",
+          "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64"
+        },
+        {
+          "name": "Neqi Moisture Mystery",
+          "candidateId": "neqi-moisture-mystery",
+          "old": "low",
+          "next": "low",
+          "review": "Same band; Dictionary: juniperus virginiana oil",
+          "reason": "lipid_refatting weak: peg-18 glyceryl oleate/cocoate #5",
+          "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac"
+        },
+        {
+          "name": "Balea 2 in 1 Urea 5%",
+          "candidateId": "balea-2-in-1-urea-5",
+          "old": "moderate",
+          "next": "moderate",
+          "review": "Same band",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #17; lipid_refatting weak: ascorbyl palmitate #11, glyceryl oleate #13, hydrogenated palm glycerides citrate #18, lecithin #19",
+          "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab"
+        },
+        {
+          "name": "Syoss Intense Fullness Shampoo",
+          "candidateId": "syoss-intense-fullness-shampoo",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: dimethicone #8, amodimethicone #12; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #13; lipid_refatting weak: peg-7 glyceryl cocoate #5, hydrogenated castor oil #15, prunus armeniaca (apricot) kernel oil #21; protein_film weak: hydrolyzed keratin #6",
+          "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d"
+        },
+        {
+          "name": "OGX Keratin Oil",
+          "candidateId": "ogx-keratin-oil",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: amodimethicone #10; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #11; lipid_refatting substantive: argania spinosa kernel oil #7, hydrogenated castor oil #12; protein_film weak: hydrolyzed keratin #6",
+          "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e"
+        },
+        {
+          "name": "Hask Curl Care Shampoo",
+          "candidateId": "hask-curl-care",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: polyquaternium-10 #13, polyquaternium-7 #15, guar hydroxypropyltrimonium chloride #18; lipid_refatting substantive: cocos nucifera (coconut) oil #7, argania spinosa (argan) kernel oil #8, hydrogenated palm glycerides citrate #14, glyceryl oleate #16",
+          "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2"
+        },
+        {
+          "name": "Guhl Frische und Leichtigkeit",
+          "candidateId": "guhl-frische-und-leichtigkeit",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #8; lipid_refatting weak: glyceryl oleate #6, ascorbyl palmitate #14",
+          "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240"
+        },
+        {
+          "name": "Balea Professional Ultimate Volume",
+          "candidateId": "balea-professional-ultimate-volume",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #10; protein_film weak: hydrolyzed wheat protein #6",
+          "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe"
+        },
+        {
+          "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+          "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "silicone substantive: dimethiconol #7, dimethicone #13; cationic_polymer substantive: guar hydroxypropyltrimonium chloride #14",
+          "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12"
+        },
+        {
+          "name": "Langhaarmädchen Lovely Long",
+          "candidateId": "langhaarmadchen-lovely-long",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #8; lipid_refatting substantive: argania spinosa kernel oil #7, hydrogenated castor oil #16; protein_film weak: hydrolyzed wheat protein #6",
+          "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662"
+        },
+        {
+          "name": "Sebamed Every-Day Shampoo",
+          "candidateId": "sebamed-every-day-shampoo",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl oxidized starch pg-trimonium chloride #11",
+          "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02"
+        },
+        {
+          "name": "Balea Aqua Hyaluron",
+          "candidateId": "balea-aqua-hyaluron",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #10; lipid_refatting weak: glyceryl oleate #9, hydrogenated palm glycerides citrate #15, lecithin #16, ascorbyl palmitate #17",
+          "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816"
+        },
+        {
+          "name": "Balea Kopfhaut Sensitive Shampoo",
+          "candidateId": "balea-kopfhaut-sensitive",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #14; protein_film weak: hydrolyzed keratin #12",
+          "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c"
+        },
+        {
+          "name": "Nivea Shampoo&Conditioner 2in1",
+          "candidateId": "nivea-shampoo-conditioner-2in1",
+          "old": "moderate",
+          "next": "high",
+          "review": "Changed; Cutoff-sensitive",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #9; lipid_refatting substantive: dicaprylyl ether #10, glyceryl oleate #11, hydrogenated castor oil #14",
+          "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be"
+        },
+        {
+          "name": "Balea Med Anti Schuppen",
+          "candidateId": "balea-med-anti-schuppen",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #8; lipid_refatting weak: glyceryl oleate #13, hydrogenated palm glycerides citrate #15",
+          "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c"
+        },
+        {
+          "name": "Syoss Intense Volume Shampoo",
+          "candidateId": "syoss-intense-volume-shampoo",
+          "old": "low",
+          "next": "moderate",
+          "review": "Changed",
+          "reason": "cationic_polymer substantive: hydroxypropyl guar hydroxypropyltrimonium chloride #18; lipid_refatting weak: glyceryl oleate #10, peg-7 glyceryl cocoate #12, hydrogenated castor oil #16; protein_film weak: hydrolyzed keratin #5",
+          "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d"
+        },
+        {
+          "name": "Pantene Hydra Glow Shampoo",
+          "candidateId": "pantene-hydra-glow",
+          "old": "low",
+          "next": "high",
+          "review": "Changed; Dictionary: polyquaternium-6",
+          "reason": "cationic_polymer substantive: guar hydroxypropyltrimonium chloride #15; lipid_refatting substantive: stearyl alcohol #6, cetyl alcohol #9",
+          "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441"
+        }
+      ]
+    }
+  }
+}

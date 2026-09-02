@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4070765001648",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-1675524",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+      "rawInci": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE."
+    },
+    {
+      "id": "dm-bg-1675524",
+      "type": "official",
+      "market": "BG",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm-drogeriemarkt.bg/p/d/1675524/balea-professional-shampoan-aqua-hyaluron",
+      "rawInci": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE."
+    }
+  ],
+  "rawInci": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "parfum",
+    "sodium benzoate",
+    "citric acid",
+    "coco-glucoside",
+    "glyceryl oleate",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "aloe barbadensis leaf juice powder",
+    "potassium sorbate",
+    "sodium hyaluronate",
+    "tocopherol",
+    "hydrogenated palm glycerides citrate",
+    "lecithin",
+    "ascorbyl palmitate"
+  ],
+  "inciFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

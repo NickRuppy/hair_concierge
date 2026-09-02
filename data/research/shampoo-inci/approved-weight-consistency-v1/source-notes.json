@@ -1,0 +1,69 @@
+{
+  "audience": "product stakeholders",
+  "delivery": "portable html in Codex desktop; no external publishing",
+  "sourceMetadata": {
+    "engine": "local Node.js / TypeScript",
+    "language": "javascript",
+    "description": "Rebuild and validate the saved release; select its 50 approved members; run frozen shampoo-weight-v1 on the exact stored formula and compare weightPotential. No new formulas or approval mutations.",
+    "tables_used": [
+      "data/research/shampoo-inci/v1.3/release.json",
+      "data/research/shampoo-inci/v1.3/lab-review-state.json",
+      "data/research/shampoo-inci/v1.3/products/*/formula-source.json",
+      "data/research/shampoo-inci/v1.3/products/*/analysis.json",
+      "src/lib/shampoo-research/weight-calibration.ts"
+    ],
+    "filters": [
+      "release member outcome = approved; 50 of 51",
+      "Exclude one blocked member; no replacements or reserves"
+    ],
+    "metric_definitions": {
+      "changed": "Count of approved product rows where stored weightPotential differs from deterministic provisional label; denominator 50.",
+      "unknowns": "Rows with unresolvedIngredients; overlaps with changed and unchanged.",
+      "windowSensitive": "Rows where labels differ across first-8/10/12 position windows; not concentration estimates."
+    }
+  },
+  "scope": "Read-only audit, no engine changes. Same exact 50 approved formulas.",
+  "structure": [
+    "Title",
+    "Executive Summary",
+    "Exact approved baseline",
+    "Systematic transition evidence",
+    "Distribution comparison",
+    "Rule mechanism explanation",
+    "Primary-evidence boundary",
+    "Dictionary and cutoff caveats",
+    "Exact all-product lookup",
+    "Recommendations",
+    "Open calibration questions",
+    "Limits"
+  ],
+  "chartContract": {
+    "question": "Which approved weight bands change under the frozen rule?",
+    "family": "comparison",
+    "variant": "bar",
+    "rows": 6,
+    "grain": "transition category across 50 approved products",
+    "denominator": 50,
+    "palette": "single neutral/blue series",
+    "x": "old to new label",
+    "y": "count; zero baseline",
+    "source": "audit.json",
+    "scope": "same stored formulas; not a time trend"
+  },
+  "validation": {
+    "cohort": "50 approved unique formula/audit-aligned records; one blocked excluded",
+    "release": "saved release hash equals rebuilt release",
+    "crossCheck": "Independent fast_explorer reproduced all counts and fingerprints.",
+    "confidence": "Share with caveats; no accuracy estimate.",
+    "reportValidatorIssue": "The renderer requires SQL for chart/table provenance. Real read-only SQLite queries were executed over the saved audit rows, independently reproducing the transition and distribution counts and selecting product rows; their exact SQL is saved and linked. Canonical validation now passes. Original Node evaluation remains preserved in replay.cjs."
+  },
+  "noMutations": [
+    "approvals",
+    "formula sources",
+    "old analyses",
+    "engine policy",
+    "production matching",
+    "database"
+  ],
+  "artifactDisposition": "Keep local audit, reproducibility query and report artifacts; no commit or external publication."
+}

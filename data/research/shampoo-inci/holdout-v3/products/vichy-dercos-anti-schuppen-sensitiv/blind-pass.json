@@ -1,0 +1,260 @@
+{
+  "candidate_id": "vichy-dercos-anti-schuppen-sensitiv",
+  "rawInci": "AQUA / WATER • SODIUM METHYL COCOYL TAURATE • LAURETH-5 CARBOXYLIC ACID • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • BISABOLOL • FARNESOL • HEXYLENE GLYCOL • LACTIC ACID • PEG-150 DISTEARATE • PEG-55 PROPYLENE GLYCOL OLEATE • PIROCTONE OLAMINE • POLYQUATERNIUM-10 • PROPYLENE GLYCOL • SALICYLIC ACID • SODIUM BENZOATE • SODIUM HYDROXIDE • SODIUM LAUROYL GLUTAMATE • PARFUM / FRAGRANCE.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium methyl cocoyl taurate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "peg-55 propylene glycol oleate",
+      "piroctone olamine"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "laureth-5 carboxylic acid",
+      "lactic acid",
+      "salicylic acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "high",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+      "formula": {
+        "inciFingerprint": "7e128d54a4405651c6a358a01bd789d7182ababcb08593b37413a3839ae9d6bf",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-10",
+            "position": 13
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauroyl glutamate",
+            "position": 18
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Polyquaternium-10 ist der einzige erkennbare Depositionsweg; Taurate, CAPB und Sodium Lauroyl Glutamate bilden die Reset-Seite."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Polyquaternium-10 ist der einzige erkennbare Depositionsweg; Taurate, CAPB und Sodium Lauroyl Glutamate bilden die Reset-Seite."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "low",
+      "whyThisBand": "Polyquaternium-10 ist der einzige erkennbare Depositionsweg; Taurate, CAPB und Sodium Lauroyl Glutamate bilden die Reset-Seite.",
+      "whyNotNeighborBand": "Nicht moderate, weil nur ein Polymerweg ohne Silikon-, Lipid- oder Mehrfach-Filmsystem vorliegt.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "low",
+      "confidence": "moderate",
+      "rationale": "Polyquaternium-10 ist der einzige erkennbare Depositionsweg; Taurate, CAPB und Sodium Lauroyl Glutamate bilden die Reset-Seite."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "fc121bc2ac79f371c500930a6f3c4bb01b89a6dc25c7a36b65a3c3685d2b4b79"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "scalp_active",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Anerkannter kosmetischer Anti-Schuppen-Wirkstoff plus problemgeführte Positionierung."
+      ],
+      "rationale": "Die finale problemgeführte Aktivrolle erfüllt den Treatment-Trigger."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "scalp_active",
+      "reason": "Die nach der Blindphase geprüfte Anti-Schuppen-Positionierung ist durch Piroctone Olamine als anerkannten kosmetischen Wirkstoffweg kompatibel."
+    },
+    {
+      "property": "usageRole",
+      "blindValue": "regular",
+      "finalValue": "treatment",
+      "reason": "Problemgeführte Anti-Schuppen-Positionierung plus Piroctone Olamine erfüllt den Treatment-Trigger."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "targeted",
+      "reason": "Die geprüfte sensible-/Juckreiz-Positionierung adressiert kosmetischen Kopfhautkomfort."
+    }
+  ],
+  "payloadHash": "5e9c9d9a1620eeafeed1cc3ff705ba2e90aa3b62969f5cb8c86bdd277ecdf92e"
+}

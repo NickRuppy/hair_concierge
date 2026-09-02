@@ -1,0 +1,135 @@
+{
+  "schema_version": "shampoo-research-holdout-agreement-v1",
+  "labels": [
+    {
+      "candidate_id": "alverde-ultra-sensitiv",
+      "properties": {
+        "cleansingStrength": { "value": "low", "rationale": "Coco-Glucoside ist das einzige klare Tensid; effiziente anionische Reiniger fehlen." },
+        "conditioningLevel": { "value": "low", "rationale": "Glycerin und Betaine liefern Feuchtigkeitssignale, aber kein ausgeprägtes Depositionssystem." },
+        "weightPotential": { "value": "low", "rationale": "Plausibel persistente Depositionsstoffe fehlen." },
+        "focusPrimary": { "value": "gentle", "rationale": "Die parfumfreie Minimalformel stützt die Ultra-Sensitiv-Positionierung." },
+        "focusSecondary": { "value": [], "rationale": "Ein zweiter kohärenter Fokus ist nicht erkennbar." },
+        "usageRole": { "value": "frequent", "rationale": "Niedrige Reinigungs- und Ablagerungslast passt zu häufiger Anwendung." },
+        "scalpComfortTarget": { "value": "targeted", "rationale": "Sensitiv-Kontext und geringe Expositionskomplexität zielen auf Kopfhautkomfort." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "isana-med-jeden-tag",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "SLES wird durch amphotere und mildere Co-Tenside moderiert." },
+        "conditioningLevel": { "value": "low", "rationale": "Urea und Panthenol stützen Komfort, aber kein klares Haar-Depositionssystem." },
+        "weightPotential": { "value": "low", "rationale": "Silikone, kationische Polymere und reichere Lipidträger fehlen." },
+        "focusPrimary": { "value": "gentle", "rationale": "Jeden-Tag- und Sensitiv-Positionierung wird durch Urea und Panthenol gestützt." },
+        "focusSecondary": { "value": ["scalp_active"], "rationale": "Urea und Panthenol sind plausible Kopfhautkomfort-Signale." },
+        "usageRole": { "value": "frequent", "rationale": "Daily-use-Kontext und geringe Depositionslast sprechen für häufige Anwendung." },
+        "scalpComfortTarget": { "value": "targeted", "rationale": "MED-Kontext plus Urea und Panthenol zielen auf Kopfhautkomfort." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "ducray-extra-mild",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "SLES wird durch CAPB und Coco-Glucoside abgefedert." },
+        "conditioningLevel": { "value": "low", "rationale": "Leichte Rückfetter sind vorhanden, aber ohne starkes kationisches oder silikonisches System." },
+        "weightPotential": { "value": "low", "rationale": "Nur leichte Refatting-Signale, keine persistenten Filmrouten." },
+        "focusPrimary": { "value": "gentle", "rationale": "Extra-mild-Kontext passt zu moderierter Tensidbasis und leichter Rückfettung." },
+        "focusSecondary": { "value": [], "rationale": "Keine robuste zweite Wirkungsrichtung ist ableitbar." },
+        "usageRole": { "value": "frequent", "rationale": "Frequent-use-Positionierung und geringe Gewichtslast sprechen für häufige Wäsche." },
+        "scalpComfortTarget": { "value": "targeted", "rationale": "Das extra-milde Profil zielt auf Verträglichkeit und Komfort." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "john-frieda-volume-lift",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "SLES mit Coco-Glucoside und CAPB reinigt solide, ohne klare Reset-Architektur." },
+        "conditioningLevel": { "value": "moderate", "rationale": "Glyceryl Oleate, kationisches Guar, Panthenol und Proteine ergeben leichte Pflege." },
+        "weightPotential": { "value": "moderate", "rationale": "Guar, Rückfetter und Proteinfilme können aufbauen; Silikone fehlen." },
+        "focusPrimary": { "value": "volume", "rationale": "Reinigung, Leichtigkeit und Proteinfilm stützen die Volumenpositionierung." },
+        "focusSecondary": { "value": ["repair", "shine"], "rationale": "Proteine und Guar stützen Oberflächenfilm, Glyceryl Oleate leichte Glättung." },
+        "usageRole": { "value": "regular", "rationale": "Plausibel für normale Volumenwäsche, ohne Treatment- oder Reset-Rolle." },
+        "scalpComfortTarget": { "value": "not_targeted", "rationale": "Kein Kopfhautkomfort-Fokus; Duftstoffe sind vorhanden." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "loreal-elvital-bond-repair-plus",
+      "properties": {
+        "cleansingStrength": { "value": "strong", "rationale": "C14-16 Olefin Sulfonate plus Sarcosinate und Betaines ergibt effiziente Reinigung." },
+        "conditioningLevel": { "value": "moderate", "rationale": "Kationisches Guar, Polyquaternium-7 und Refatting stützen mittlere Pflege." },
+        "weightPotential": { "value": "moderate", "rationale": "Mehrere Depositionssignale bilden Film; schwere Silikone fehlen." },
+        "focusPrimary": { "value": "repair", "rationale": "Bond- und Repair-Kontext wird als kosmetische Oberflächenpflege interpretiert." },
+        "focusSecondary": { "value": ["shine"], "rationale": "Kationische Polymere und Refatting können Glanz unterstützen." },
+        "usageRole": { "value": "regular", "rationale": "Repair-Shampoo für Routinewäsche; starke Reinigung schließt frequent aus." },
+        "scalpComfortTarget": { "value": "not_targeted", "rationale": "Kein Sensitiv- oder Kopfhautkomfort-Fokus." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "kerastase-specifique-bain-divalent",
+      "properties": {
+        "cleansingStrength": { "value": "strong", "rationale": "SLES und TEA-Lauryl Sulfate stehen früh; Ölwurzel-Kontext stützt hohe Reinigung." },
+        "conditioningLevel": { "value": "moderate", "rationale": "Polyquaternium-11, kationisches Guar und Glycol Distearate liefern mittlere Pflege." },
+        "weightPotential": { "value": "low", "rationale": "Silikone, Öle und Butter fehlen; leichte Filme werden durch starke Reinigung begrenzt." },
+        "focusPrimary": { "value": "scalp_active", "rationale": "Ölige Ansätze, Salicylsäure und Capryloyl Glycine ergeben einen Kopfhautfokus." },
+        "focusSecondary": { "value": ["clarifying"], "rationale": "Die Tensidarchitektur kann Sebum und organische Rückstände deutlich entfernen." },
+        "usageRole": { "value": "regular", "rationale": "Als ausgleichendes Shampoo für regelmäßige Nutzung positioniert." },
+        "scalpComfortTarget": { "value": "targeted", "rationale": "Sebum- und Kopfhautwirkstoff-Kontext macht die Kopfhaut zum expliziten Ziel." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "balea-shampoo-feuchtigkeit",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "SLES, CAPB und Coco-Glucoside reinigen solide; Rückfetter moderieren." },
+        "conditioningLevel": { "value": "moderate", "rationale": "Glyceryl Oleate, kationische Polymere und Panthenol stützen mittlere Pflege." },
+        "weightPotential": { "value": "moderate", "rationale": "Mehrere leichte Depositions- und Refatting-Signale können aufbauen." },
+        "focusPrimary": { "value": "general", "rationale": "Feuchtigkeit ist keine eigene Fokusklasse; die Formel ist balanciert statt klar spezialisiert." },
+        "focusSecondary": { "value": ["shine"], "rationale": "Refatting und kationische Polymere können Glättung und Glanz unterstützen." },
+        "usageRole": { "value": "regular", "rationale": "Moderate Reinigung und Pflege passen zu normaler Routinewäsche." },
+        "scalpComfortTarget": { "value": "not_targeted", "rationale": "Keine Sensitiv-, Schuppen- oder Kopfhautwirkstoff-Positionierung." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "balea-professional-traumlocken",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "SLES steht früh, wird aber von Co-Tensiden und reichhaltiger Pflege moderiert." },
+        "conditioningLevel": { "value": "high", "rationale": "Rückfetter, Shea Butter, Öle, Keratin und kationisches Guar ergeben reichhaltige Pflege." },
+        "weightPotential": { "value": "high", "rationale": "Mehrere Lipide, Butter, Proteinfilm und Guar erhöhen die Depositionslast." },
+        "focusPrimary": { "value": "shine", "rationale": "Lockenpflege wird mechanistisch vor allem durch Glättung, Schmierung und Film abgebildet." },
+        "focusSecondary": { "value": ["repair"], "rationale": "Keratin und Lipidfilm stützen temporäre Oberflächenpflege." },
+        "usageRole": { "value": "regular", "rationale": "Reichhaltiges Lockenpflegeshampoo ohne Reset- oder Treatment-Anweisung." },
+        "scalpComfortTarget": { "value": "not_targeted", "rationale": "Formel und Positionierung zielen auf Längen und Lockenpflege." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    },
+    {
+      "candidate_id": "head-shoulders-2in1-classic-clean",
+      "properties": {
+        "cleansingStrength": { "value": "strong", "rationale": "SLES, CAPB und TEA-Dodecylbenzenesulfonate liefern effiziente Reinigung." },
+        "conditioningLevel": { "value": "high", "rationale": "Dimethiconol, Dimethicone und kationisches Guar bilden ein klares 2-in-1-System." },
+        "weightPotential": { "value": "moderate", "rationale": "Silikone und Guar können Rückstand erzeugen, werden aber von starker Tensidbasis begrenzt." },
+        "focusPrimary": { "value": "scalp_active", "rationale": "Anti-Schuppen-Kontext und Piroctone Olamine machen die Kopfhautfunktion dominant." },
+        "focusSecondary": { "value": ["shine"], "rationale": "Silikone und Guar unterstützen Glättung und Glanz." },
+        "usageRole": { "value": "treatment", "rationale": "Die aktive Anti-Schuppen-Funktion ist die bestimmende Nutzungsrolle." },
+        "scalpComfortTarget": { "value": "targeted", "rationale": "Schuppenaktive Formel und Claim richten sich direkt an die Kopfhaut." }
+      },
+      "dandruff_support": { "value": "supported", "rationale": "Piroctone Olamine ist in der vollständigen INCI enthalten." }
+    },
+    {
+      "candidate_id": "dove-taegliche-feuchtigkeit-2in1",
+      "properties": {
+        "cleansingStrength": { "value": "moderate", "rationale": "Mehrere Tenside reinigen deutlich; die frühe Silikon- und Pflegephase moderiert das Netto-Profil." },
+        "conditioningLevel": { "value": "high", "rationale": "Frühes Dimethiconol, Guar, Kokosöl, Aminosäuren und Protein ergeben starke 2-in-1-Pflege." },
+        "weightPotential": { "value": "high", "rationale": "Dimethiconol, Öl, Proteinfilm und Guar erzeugen relevante Depositionslast." },
+        "focusPrimary": { "value": "shine", "rationale": "Silikonbasierte Glättung und Deposition sind der stärkste mechanistische Fokus." },
+        "focusSecondary": { "value": ["general", "repair"], "rationale": "Tägliche 2-in-1-Pflege ist allgemein; Protein liefert sekundäre Oberflächenpflege." },
+        "usageRole": { "value": "frequent", "rationale": "Daily-Moisture- und 2-in-1-Kontext zielt auf häufige Nutzung." },
+        "scalpComfortTarget": { "value": "not_targeted", "rationale": "Keine Schuppen-, Sensitiv- oder Kopfhautwirkstoff-Positionierung." }
+      },
+      "dandruff_support": { "value": "not_supported", "rationale": "Vollständige INCI ohne Piroctone Olamine oder Climbazole." }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "4067796002621",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T22:15:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+      "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | SODIUM CHLORIDE | GLYCERIN | HYDROLYZED WHEAT PROTEIN | ARGANIA SPINOSA KERNEL OIL | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | BIS|(ISOSTEAROYL/OLEOYL ISOPROPYL) DIMONIUM METHOSULFATE | COCO|GLUCOSIDE | PRUNUS AMYGDALUS DULCIS FLOWER EXTRACT | PISUM SATIVUM SPROUT EXTRACT | CITRIC ACID | BENZOIC ACID | GLYCOL DISTEARATE | HYDROGENATED CASTOR OIL | LAURETH|2 | PARFUM | HEXYL CINNAMAL | SODIUM BENZOATE | PHENOXYETHANOL."
+    }
+  ],
+  "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | SODIUM CHLORIDE | GLYCERIN | HYDROLYZED WHEAT PROTEIN | ARGANIA SPINOSA KERNEL OIL | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | BIS|(ISOSTEAROYL/OLEOYL ISOPROPYL) DIMONIUM METHOSULFATE | COCO|GLUCOSIDE | PRUNUS AMYGDALUS DULCIS FLOWER EXTRACT | PISUM SATIVUM SPROUT EXTRACT | CITRIC ACID | BENZOIC ACID | GLYCOL DISTEARATE | HYDROGENATED CASTOR OIL | LAURETH|2 | PARFUM | HEXYL CINNAMAL | SODIUM BENZOATE | PHENOXYETHANOL.",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "glycerin",
+    "hydrolyzed wheat protein",
+    "argania spinosa kernel oil",
+    "guar hydroxypropyltrimonium chloride",
+    "bis|(isostearoyl/oleoyl isopropyl) dimonium methosulfate",
+    "coco-glucoside",
+    "prunus amygdalus dulcis flower extract",
+    "pisum sativum sprout extract",
+    "citric acid",
+    "benzoic acid",
+    "glycol distearate",
+    "hydrogenated castor oil",
+    "laureth|2",
+    "parfum",
+    "hexyl cinnamal",
+    "sodium benzoate",
+    "phenoxyethanol"
+  ],
+  "inciFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "shampoo-research-evidence-sources-v1",
+  "sources": [
+    {
+      "id": "eu-1223-article-19",
+      "kind": "regulation",
+      "title": "EU Cosmetics Regulation 1223/2009, Article 19",
+      "locator": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02009R1223-20240404",
+      "capturedAt": "2026-08-23T12:00:00.000+02:00"
+    },
+    {
+      "id": "official-head-shoulders-ingredients-2026-08-10",
+      "kind": "claim",
+      "title": "Head & Shoulders Germany ingredient overview",
+      "locator": "https://www.headandshoulders.de/de-de/inhaltsstoffe/",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00"
+    },
+    {
+      "id": "pubmed-coacervate-17728938",
+      "kind": "literature",
+      "title": "Conditioning shampoo coacervate deposition study",
+      "locator": "https://pubmed.ncbi.nlm.nih.gov/17728938/",
+      "capturedAt": "2026-08-23T12:00:00.000+02:00"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W031",
+  "formula": {
+    "inciFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 8
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 11
+      },
+      {
+        "family": "payload_lipid",
+        "name": "hydrogenated castor oil",
+        "position": 13
+      },
+      {
+        "family": "weak_refatter",
+        "name": "peg-7 glyceryl cocoate",
+        "position": 16
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 7
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 9,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Glyceryl Oleate, kationisches Guar, Hydrogenated Castor Oil und PEG-7 Glyceryl Cocoate ergeben mehrere Depositionssignale mittlerer Stärke."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das kationische Polymer und Castor-Oil-Payload können haften; die Architektur bleibt aber durch Shampoo-Kontext und Tenside begrenzt."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES, CAPB und Coco-Glucoside reinigen solide, aber nicht so klärend, dass die Lipid-/Polymerkombination irrelevant wäre."
+  },
+  "competingSignals": [
+    "SLES steht früh und Glycol Distearate wurde nicht als persistente Route gewertet.",
+    "Die stärkeren Payloads liegen nicht ganz am Anfang."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist am besten gestützt, weil mehrere leichte bis mittlere Routen zusammen merkliche, aber gebundene Rückstände plausibel machen.",
+  "whyNotNeighborBand": "Low unterschätzt die Kombination aus Polymer und Lipid-Payload; High wäre ohne Silikon oder klar begrenzten Reset zu stark.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unklare Einsatzmengen."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4103040048448",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-sebamed-urea-5-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/",
+      "rawInci": "Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Lactic Acid, Tocopherol, Helianthus annuus seed oil"
+    },
+    {
+      "id": "dm-sebamed-urea-5-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut",
+      "rawInci": "Ingredients: Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Lactic Acid, Sodium Lactate, Sodium Chloride, Tocopherol, Helianthus annuus seed oil."
+    }
+  ],
+  "rawInci": "Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Lactic Acid, Tocopherol, Helianthus annuus seed oil",
+  "normalizedInci": [
+    "aqua",
+    "urea",
+    "disodium laureth sulfosuccinate",
+    "sodium lauryl sulfoacetate",
+    "laureth-9",
+    "lauryl glucoside",
+    "sodium laureth sulfate",
+    "parfum",
+    "peg-120 methyl glucose dioleate",
+    "phenoxyethanol",
+    "citric acid",
+    "laureth-2",
+    "peg/ppg-120/10 trimethylolpropane trioleate",
+    "sodium benzoate",
+    "hydroxypropyl oxidized starch pg-trimonium chloride",
+    "sodium citrate",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "sodium chloride",
+    "lactic acid",
+    "tocopherol",
+    "helianthus annuus seed oil"
+  ],
+  "inciFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

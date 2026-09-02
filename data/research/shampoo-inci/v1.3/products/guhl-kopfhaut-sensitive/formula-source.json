@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4072600283172",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "guhl-de-kopfhaut-sensitive-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.guhl.com/produkt/kopfhaut-sensitiv/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "coco-glucoside",
+    "betaine",
+    "glycerin",
+    "panthenol",
+    "lactic acid",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "glyceryl oleate",
+    "sorbitan caprylate",
+    "erythritol",
+    "sodium chloride",
+    "tetrasodium glutamate diacetate",
+    "piroctone olamine",
+    "maltodextrin",
+    "citric acid",
+    "mentha aquatica leaf extract",
+    "tilia cordata flower extract",
+    "sodium benzoate",
+    "parfum",
+    "ci 42090",
+    "caramel"
+  ],
+  "inciFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

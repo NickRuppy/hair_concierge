@@ -1,0 +1,556 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "bef4f219-2c1f-4e02-8e3a-93056b95465a:e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Rossmann exact-GTIN page for 3574661798448 identifies Strength & Length Keratin Oil Shampoo 385 ml.",
+      "The cleanser base is Sodium Methyl Cocoyl Taurate, Decyl Glucoside, and Cocamidopropyl Betaine.",
+      "Hydrolyzed Keratin, Argania Spinosa Kernel Oil, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, and Hydrogenated Castor Oil create the main repair/smoothing architecture."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "verhindert das Haarpflege Shampoo nachweislich Haarbruch und reduziert Spliss um bis zu 80%",
+      "sourceLocation": "product_page",
+      "scope": "multi_product",
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Methyl Cocoyl Taurate",
+      "Decyl Glucoside",
+      "Cocamidopropyl Betaine"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Argania Spinosa Kernel Oil",
+      "Hydrogenated Castor Oil"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Keratin",
+      "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "Glycol Distearate",
+      "PEG-150 Distearate"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Disodium Tetrapropenyl Succinate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The taurate/glucoside/betaine system supports regular cleansing, not a clarifying reset.",
+      "supportingSignals": [
+        {
+          "observation": "Early sulfate-free surfactant blend is present.",
+          "inference": "Regular cleansing is plausible.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "taurate-glucoside-amphoteric-cleansing"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "taurate-glucoside-amphoteric-cleansing"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silicone, cationic guar, keratin, argan oil, and castor oil support moderate rinse-off conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Keratin, Argan Oil, and Hydrogenated Castor Oil are present.",
+          "inference": "A coherent smoothing/lubricating system is plausible.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "silicone-cationic-guar-lipid-protein-conditioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "silicone-cationic-guar-lipid-protein-conditioning"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple depositing/lipid routes support moderate weight potential, capped below high by rinse-off context and regular cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone, cationic guar, argan oil, and castor oil are present.",
+          "inference": "Some persistence or coating is plausible with repeat use.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "multi-route-repair-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "multi-route-repair-deposition"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula leans cosmetic repair/protection through lubrication and surface film, not bond repair.",
+      "supportingSignals": [
+        {
+          "observation": "Keratin, silicone, cationic guar, and oils are aligned with smoothing/protective conditioning.",
+          "inference": "Repair/protective-conditioning is the primary formula focus.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "r1-r2-surface-repair"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "r1-r2-surface-repair"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silicone and oils support deposition shine as a secondary focus.",
+      "supportingSignals": [
+        {
+          "observation": "Amodimethicone and oils are present.",
+          "inference": "Surface alignment/gloss is plausible.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "deposition-shine"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "deposition-shine"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Directions are ordinary rinse-out use; the formula is not an occasional reset or leave-on treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Retailer directions say lather, rinse, then conditioner.",
+          "inference": "Regular/alternating wash role is plausible.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "regular-rinse-out-use"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "regular-rinse-out-use"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "rossmann-ogx-keratin-oil-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      2,
+      2
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      2,
+      2
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Early surfactants cleanse.",
+        "g2FormulaRelevanceAndDelivery": "They lead the shampoo formula.",
+        "g3EndpointSpecificity": "Endpoint is regular cleansing."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Silicone, cationic guar, keratin, and oils can condition.",
+        "g2FormulaRelevanceAndDelivery": "Multiple routes are present together.",
+        "g3EndpointSpecificity": "Endpoint is conditioning/deposition."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Depositors and oils can add residue.",
+        "g2FormulaRelevanceAndDelivery": "Multiple routes support moderate persistence.",
+        "g3EndpointSpecificity": "Endpoint is weight/buildup."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Silicone/oils can improve gloss.",
+        "g2FormulaRelevanceAndDelivery": "They are paired with cationic guar context.",
+        "g3EndpointSpecificity": "Route is deposition shine."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Clean roots can support lift.",
+        "g2FormulaRelevanceAndDelivery": "Moderate cleanser system is present.",
+        "g3EndpointSpecificity": "Route is clean/light lift."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Keratin/starch films can add body.",
+        "g2FormulaRelevanceAndDelivery": "Signals are present but not the dominant architecture.",
+        "g3EndpointSpecificity": "Endpoint is temporary body."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Silicone/oils/cationic guar can reduce friction.",
+        "g2FormulaRelevanceAndDelivery": "They form the clearest architecture.",
+        "g3EndpointSpecificity": "Endpoint is smoothing."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lubrication can reduce grooming stress.",
+        "g2FormulaRelevanceAndDelivery": "Silicone, guar, and oils provide a plausible route.",
+        "g3EndpointSpecificity": "This is protective conditioning."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Hydrolyzed keratin can form surface film.",
+        "g2FormulaRelevanceAndDelivery": "It appears with deposition aids.",
+        "g3EndpointSpecificity": "Endpoint is surface film/patching."
+      },
+      "repairR4": {
+        "g1FunctionalRelevance": "Mechanical grooming breakage is a relevant stressor.",
+        "g2FormulaRelevanceAndDelivery": "Lubrication/smoothing routes can reduce frictional stress.",
+        "g3EndpointSpecificity": "The stressor-route pair is grooming stress through lubrication."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Surfactant blend affects tolerance potential.",
+        "g2FormulaRelevanceAndDelivery": "Sulfate-free amphoteric/nonionic-supported blend is present.",
+        "g3EndpointSpecificity": "Endpoint is only mildness potential."
+      }
+    },
+    "weightDepositionLoad": "Moderate: silicone, cationic guar, protein, argan oil, and castor oil.",
+    "weightPersistence": "Moderate: silicone and cationic polymer can persist.",
+    "weightResetCapacity": "Moderate: cleanser system is regular, not clarifying.",
+    "r4TargetStressor": "mechanical grooming breakage",
+    "r4ProtectiveRoute": "lubrication and friction reduction from silicone, cationic guar, and oils",
+    "r3FormulaSignalNote": "Hydrolyzed keratin is not a bond-specific active; R3 remains capped at generic protein.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": true,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [
+      {
+        "endpoint": "breakage and split ends claim",
+        "scope": "multi_product",
+        "sourceIds": [
+          "rossmann-ogx-keratin-oil-2026-08-10"
+        ]
+      }
+    ],
+    "scopeNotes": "Exact-GTIN DE formula from Rossmann. Breakage/split-end claim is retailer/manufacturer copy and states shampoo plus conditioner scope, so it does not upgrade formula scores."
+  },
+  "claimAudit": [
+    {
+      "claim": "Breakage and split-end reduction up to 80 percent",
+      "verdict": "plausible",
+      "support": "Lubricating silicone/cationic/oil/protein system can plausibly reduce grooming friction.",
+      "limitation": "Public copy is multi-product and does not provide shampoo-only protocol details.",
+      "sourceIds": [
+        "rossmann-ogx-keratin-oil-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "rossmann-ogx-keratin-oil-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Cosmetic breakage/split-end surface-management claim; no scalp treatment suitability is created."
+  }
+}

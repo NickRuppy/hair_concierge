@@ -1,0 +1,493 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:alverde-ultra-sensitiv:ef5d32adb69577f943166241c4b3415a315f4c955c4f6df7433e8a73ec50294e",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Sehr kurze, duftfreie Formel mit Coco-Glucoside als einzigem erkennbaren Tensid.",
+      "Glycerin, Betaine und Pentylene Glycol sind Feuchthalte-/Formelhilfen, aber keine starke Haar-Deposition.",
+      "Citric Acid ist ohne pH-Daten nur ein schwaches Säure-Signal."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Duftstofffrei, sulfatfrei, silikonfrei und alkoholfrei; für empfindliche Kopfhaut und tägliche Reinigung positioniert.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Coco-Glucoside"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Coco-Glucoside ist der einzige erkennbare Tensidträger; ohne anionische Haupttenside bleibt die Reinigungsstärke niedrig bis mild.",
+      "supportingSignals": [
+        {
+          "observation": "Coco-Glucoside steht als einziger klarer Tensidträger in der INCI.",
+          "inference": "Das spricht für niedrige bis milde Reinigung ohne Reset-Anspruch.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Coco-Glucoside kann je nach Aktivgehalt stärker wirken als erwartet.",
+          "inference": "Exakte Einsatzmenge und fertige Reinigungsleistung sind nicht öffentlich.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glycerin und Betaine stützen Feuchtigkeit/Komfort, aber es fehlt ein kationisches, silikonisches oder lipidreiches Deposition-System.",
+      "supportingSignals": [
+        {
+          "observation": "Glycerin, Betaine und Pentylene Glycol sind vorhanden, aber keine Haar-Depositionstreiber.",
+          "inference": "Die Pflege ist eher Feuchthalte-/Formelkomfort als spürbare Haarconditionierung.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "humectant-light-care"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Humectants können das Haargefühl verbessern.",
+          "inference": "Das reicht aber nicht für moderate oder hohe Haarconditionierung.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "humectant-light-care"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine Silikone, Öle oder kationischen Polymere; die Formel wirkt sehr leicht und hat nur minimale Rückstands-/Beschwerungssignale.",
+      "supportingSignals": [
+        {
+          "observation": "Silikone, Öle, kationische Polymere und Proteine fehlen.",
+          "inference": "Die Formel sollte wenig aufbauen oder beschweren.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "low-residue-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Xanthan Gum kann Produktviskosität/Filmgefühl beeinflussen.",
+          "inference": "Es ist hier kein starkes Haar-Beschwerungssystem.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "low-residue-architecture"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die kurze, duftfreie und sulfatfreie Glucosid-Formel plus Sensitive-Positionierung macht den sanften Fokus am plausibelsten.",
+      "supportingSignals": [
+        {
+          "observation": "Die Formel ist kurz, duftfrei und glucosid-geführt.",
+          "inference": "Der stärkste direkte Produktfokus ist sanfte Reinigung.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "gentle-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance-free beweist keine universelle Verträglichkeit.",
+          "inference": "Die Aussage bleibt eine Produktziel- und Formelklassifikation.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "gentle-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Neben dem sanften Hauptprofil bleibt ein allgemeiner Basis-Shampoo-Nutzen; ein zweiter starker Spezialmechanismus ist nicht sichtbar.",
+      "supportingSignals": [
+        {
+          "observation": "Die Architektur erfüllt einen Basis-Shampoo-Nutzen ohne Spezialroute.",
+          "inference": "General bleibt als sekundäre Einordnung angemessen.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "general-care-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keine Spezialtests zu Volumen, Glanz, Repair oder Klärung sind erfasst.",
+          "inference": "Daher kein stärkerer sekundärer Fokus.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "general-care-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Niedrige Reinigung, niedrige Ablagerung und die tägliche Sensitive-Positionierung passen zu häufiger Nutzung bei kosmetisch gesundem Haar.",
+      "supportingSignals": [
+        {
+          "observation": "Niedrige Reinigungs- und Ablagerungssignale passen zur Daily-use-Positionierung.",
+          "inference": "Häufige Nutzung ist als Produktrolle plausibel.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "frequent-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Individuelle Waschfrequenz und Kopfhautreaktionen variieren.",
+          "inference": "Die Rolle ist kein täglicher Verträglichkeitsbeweis.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "frequent-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Empfindliche-Kopfhaut-Positionierung, Duftfreiheit und eine milde Humectant-/Glucosid-Route ergeben ein gezieltes kosmetisches Kopfhaut-Komfortprofil.",
+      "supportingSignals": [
+        {
+          "observation": "Sensitive-Positionierung, Duftfreiheit, Glycerin und Betaine sind gemeinsam sichtbar.",
+          "inference": "Das Produkt zielt kosmetisch auf Kopfhautkomfort, ohne individuelle Verträglichkeit zu beweisen.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ohne fertige Toleranzdaten bleibt die Verträglichkeit individuell.",
+          "inference": "Die Klassifikation ersetzt keine medizinische Bewertung.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole; trockene Schüppchen bleiben eine Dry-/Sensitive-Route, keine Anti-Schuppen-Stütze.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen in der vollständigen INCI.",
+          "inference": "Der gesperrte Anti-Schuppen-Support ist nicht vorhanden.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Normale Reinigung kann lose trockene Schüppchen entfernen.",
+          "inference": "Das wird nicht als Anti-Schuppen-Wirkstoffroute gezählt.",
+          "sourceIds": [
+            "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "verified_absent",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      }
+    },
+    "weightDepositionLoad": "Aus der INCI wird nur eine qualitative Deposition-/Beschwerungsbandbreite abgeleitet; keine Einsatzmengen oder Wiederholungsdaten sind öffentlich.",
+    "weightPersistence": "Keine wiederholte Anwendung oder Residue-Messung ist erfasst; Persistenz bleibt mechanistisch begrenzt.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Klärungsarchitektur abgeleitet, nicht aus einem fertigen Produkttest.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond- oder strukturreparierende Route ist in der INCI sichtbar.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and product-page claim audit only; no shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Sensitive-/Daily-use- und frei-von-Positionierung",
+      "verdict": "plausible",
+      "support": "Die INCI bestätigt Duftstoff-, Silikon- und Sulfatfreiheit sowie eine milde Glucosid-Architektur.",
+      "limitation": "Keine fertigen Toleranz- oder Kopfhaut-Endpunktdaten; individuelle Sensitive-Eignung bleibt ein Fit-Thema.",
+      "sourceIds": [
+        "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Sensitive-Kopfhaut- und tägliche-Reinigung-Positionierung ist kosmetischer Komfort, keine Krankheitsbehandlung."
+  }
+}

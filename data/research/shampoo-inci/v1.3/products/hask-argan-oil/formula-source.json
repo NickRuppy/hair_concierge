@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+  "market": "DE",
+  "packSize": "473 ml",
+  "gtinEan": "071164341469",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T00:00:00+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "official-hask-2026-08-10",
+      "type": "official",
+      "market": "US",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://haskbeauty.com/products/repair-arganoil-shampoo",
+      "rawInci": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "dm-de-071164341469-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil",
+      "rawInci": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+      "productMatch": "exact_gtin",
+      "gtinEan": "071164341469"
+    }
+  ],
+  "rawInci": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+  "normalizedInci": [
+    "aqua/water/eau",
+    "sodium c14-16 olefin sulfonate",
+    "cocamide mipa",
+    "sodium chloride",
+    "cocamidopropyl betaine",
+    "glycerin",
+    "argania spinosa (argan) kernel oil",
+    "panthenol",
+    "polyquaternium-10",
+    "polyquaternium-7",
+    "glycol distearate",
+    "dicaprylyl ether",
+    "decyl glucoside",
+    "glyceryl oleate",
+    "citric acid",
+    "sodium hydroxide",
+    "sodium salicylate",
+    "sodium benzoate",
+    "trisodium ethylenediamine disuccinate",
+    "isopropanolamine",
+    "parfum/fragrance",
+    "benzoic acid",
+    "benzyl benzoate",
+    "citrus aurantium peel oil",
+    "limonene"
+  ],
+  "inciFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

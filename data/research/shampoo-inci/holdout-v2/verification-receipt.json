@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "shampoo-research-verification-v1",
+  "verifiedAt": "2026-08-27",
+  "branch": "codex/shampoo-inci-research-engine",
+  "head": "4632a38b3841e610c3ebeb48494a9144424fb634",
+  "base": "1261924770d7008c023fbcbb91062aa572504030",
+  "scope": "Current-turn v1.4 policy, local holdout harness, docs and holdout-v2 artifacts only; previous dirty Shampoo stream preserved.",
+  "fingerprint": "09bcad723850fbdcb25d5b758c370207afccf1048aefd1ea7fd5ac6262585aaf",
+  "fingerprintRecipe": "SHA-256 of sorted lines '<file SHA-256>  <repo-relative path>\\n'; this receipt excludes itself.",
+  "manifest": [
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/agreement.json",
+      "sha256": "699b0f5a124754ed077b1a110ec3ae3d5785d4b4dd4d9de7d5874c773efcf9bd"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/evidence-sources.json",
+      "sha256": "c43f5974e7af129ad53bdb2cc5af80fb0049aea1ba254958e2faf4c8954949a0"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/holdout-adjudication.md",
+      "sha256": "473648dc4f60f90ea662ab42df72c6d6a4e666e0dd7bc12826c3281dd1a8222f"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/holdout-manifest.json",
+      "sha256": "db403d44ffa91a8f2743d0b2f2773ac5e810922903b7105b39c1d3fe07b830f0"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/holdout-report.json",
+      "sha256": "c9458dc6dbc51a10ed45f84b1c9624c59e27d23386c8ed4c8ec0e0730c380d63"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/holdout-start-receipt.json",
+      "sha256": "cc11f09b1ac130a337c551c860143f48da24d1e15586c25dd0cdd7462cc19c5d"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/alverde-nutri-care/analysis.json",
+      "sha256": "cdb146708d9781577156d626724737a831fb123432c3feef8a36382f0ae115ab"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/alverde-nutri-care/blind-pass.json",
+      "sha256": "af7d896db72c17783ca7819c99fdedba4e62c2b09f05ad16175bef5593000ef6"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/alverde-nutri-care/formula-source.json",
+      "sha256": "490978457d518b0bd3fa34e655c199f73f7d1a9fd1b04aac5507dd3fa309418a"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/alverde-nutri-care/source-packet.json",
+      "sha256": "9f5d8555f3fb6a95b5d911a2c6dfbfb2c34ded26641339dc8a861b1b3ae5a6d9"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/balea-professional-oil-repair-intensiv/analysis.json",
+      "sha256": "f00dc914b4bc35f80a41d376bf428aa05b1318d19ab50c0d88ebba96d70c8a97"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/balea-professional-oil-repair-intensiv/blind-pass.json",
+      "sha256": "3d2d8a322cb4e79a3c8e054e22a13ead41e1e9e410d0f54afeb3654642ad5ad3"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/balea-professional-oil-repair-intensiv/formula-source.json",
+      "sha256": "63f3fc35aa7485f810ece192508fb141e969975eedcc5c1a43f8ec7fa184c3c9"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/balea-professional-oil-repair-intensiv/source-packet.json",
+      "sha256": "376b8ab9335125797387059af42f0d5916dce7ca5813aa271bf1e44d93af731c"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/garnier-fructis-kraft-glanz/analysis.json",
+      "sha256": "0b429916953b4bbc7ed42c409f5bc4f20dcb262b3f1ca1ea45d395dc3a8ee1db"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/garnier-fructis-kraft-glanz/blind-pass.json",
+      "sha256": "7b4f11778a6dcc8d3da6f572487131294e2da0755b353bfdb628f82c4be0cff5"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/garnier-fructis-kraft-glanz/formula-source.json",
+      "sha256": "19cac2644e3bc2f7d1d5df5b4241549929e84496eb81f9582d21e7a9508d6b4c"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/garnier-fructis-kraft-glanz/source-packet.json",
+      "sha256": "c19bee7142fe02f546ff539a7d449ee96318dc2aa23f25e59c6ea75f7408df5e"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/gliss-scalp-balance-sanft/analysis.json",
+      "sha256": "53ddcdfce88749ba6e824681fd4378fddc3f9cc8e2a408f77d93b544cb7cb061"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/gliss-scalp-balance-sanft/blind-pass.json",
+      "sha256": "8c2de59d10f7c5495a54e67d7e80a697cda1bc64c0e64cac730053d22c8bfc5b"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/gliss-scalp-balance-sanft/formula-source.json",
+      "sha256": "1810ee755e4b46d15d179265a0ce8dcbf0ed02a96a5933844b8db50ed6ccec34"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/gliss-scalp-balance-sanft/source-packet.json",
+      "sha256": "1681780b460816b330d5e9e17eaae287ed5a1f54ecb036ae0e327aa3e738a590"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/guhl-langzeit-volumen/analysis.json",
+      "sha256": "713744c56e81e1e5ced4b51adad45ed5db56767097780b0e64fd95607d13dd08"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/guhl-langzeit-volumen/blind-pass.json",
+      "sha256": "778c1df4c597764b718572e29c0f511cbb636f38c17069c0ac815e2e0b46a05b"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/guhl-langzeit-volumen/formula-source.json",
+      "sha256": "a8be694c34f8562abf7b9d6f580cd87b6712f5f5433d26095189539e44a45505"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/guhl-langzeit-volumen/source-packet.json",
+      "sha256": "906d0a2c82e85c3cf091da31df63c3b90f710543857400a6bf78ea35d82f3970"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/herbal-essences-fiji/analysis.json",
+      "sha256": "8e724998c5756242fbaf4d035e6e00c907bc057b7467e181170984b1b331ba20"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/herbal-essences-fiji/blind-pass.json",
+      "sha256": "3de066708ccb2ea0dcc194b5dffd83572dab64a741dc98b29442507c3b116acf"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/herbal-essences-fiji/formula-source.json",
+      "sha256": "3da86ce72afe54efe26a6b9048722b651435868ac958aff468cce5e4162397a5"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/herbal-essences-fiji/source-packet.json",
+      "sha256": "1c5893a52afb810117a33318bdd176a92c173ffc9e2310f88705b671d9faf1b8"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/analysis.json",
+      "sha256": "58c7146d36c70ad45850ceb4d89d7875ba95ac140b41b8e493d4f8a68dda8bd2"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/blind-pass.json",
+      "sha256": "c1dc3e4339c669612d16f1b4c2cfe01dbf323521b0d5f3a09834cf9543901873"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/formula-source.json",
+      "sha256": "05d7f62096e630241979805f1437c948b08f659dbe1eedc0ea2eb6d16674715e"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/source-packet.json",
+      "sha256": "590f1c5d3590fcd2f6977668bc92b13299bc0ebd97af47fcb6bbe0a907e26067"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/jean-len-repair-dattel-vanille/analysis.json",
+      "sha256": "2ef7f577f5ccd31dbb2529d8ae0ec6f4f2e628c092897cc11e0523c12b017541"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/jean-len-repair-dattel-vanille/blind-pass.json",
+      "sha256": "57e096e71cc78d4763a35bc9dd139caf4c9771a399db777bd95f4399d699b1e3"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/jean-len-repair-dattel-vanille/formula-source.json",
+      "sha256": "3b329b8897adb67350a6ed6d2831599936a65576c44b0e0ddd1385b131bf0f03"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/jean-len-repair-dattel-vanille/source-packet.json",
+      "sha256": "098ee8c62c77f79166bd5ef56c5754b669c2ec87263c728532c6f42d0caad169"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/analysis.json",
+      "sha256": "237ac2296687b46e8596bf67be0052ec62338db08d9977196f51398ba8d8ba9b"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/blind-pass.json",
+      "sha256": "0bf6ec3b88ab1ed131d909c902075fdb14bda7235a7ded5d9f0897c120c6d711"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/formula-source.json",
+      "sha256": "a12b00479153989b56a76b6d9bfdb99392210ad6dbb4efa82450211c91bae128"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-classic-care/source-packet.json",
+      "sha256": "70a18b3d279f639d177d0ca59f2eee5b76bc370259329b4d4e0dd82ce6204b6d"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-men-anti-schuppen/analysis.json",
+      "sha256": "8a3c489223d3876ff7f696a324432083b197772250925468181489d1446a8fd1"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-men-anti-schuppen/blind-pass.json",
+      "sha256": "ccc21d7c7044ad9cc0ef77a5cfd46a307c76908d88f26ec9593acc6c35329c01"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-men-anti-schuppen/formula-source.json",
+      "sha256": "2aaf5268d70d861e2b5f518fc2ed1b9f2f7f6b55276660d7452ad334e9178e3f"
+    },
+    {
+      "path": "data/research/shampoo-inci/holdout-v2/products/nivea-men-anti-schuppen/source-packet.json",
+      "sha256": "b9846698ddd3a6132147c9ecfbf694e6953dfa45a43fb0adc3bfd0e36e2e38f6"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.3/README.md",
+      "sha256": "83e9a7b13b4225efd6a25d1e48f578a5f05899fb56dd80c44c76b37b3c01bb6d"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.3/new-product-research-runbook.md",
+      "sha256": "2ac0e655a2d5445813bce5fa79f803defae1a46c5f2d27902e77a1e10f18e440"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.4-draft/README.md",
+      "sha256": "281511cd01696659831704c57996426d3996f1c99c54c835792482a1b6095368"
+    },
+    {
+      "path": "docs/research/shampoo-inci/v1.4-draft/operational-amendment.md",
+      "sha256": "4f93f1f36d1b9249a4977cc75098d211e6baaa82b14529a2b0d12e67e76e8377"
+    },
+    {
+      "path": "package.json",
+      "sha256": "25e5db7ec257d2078206c6d9745e70e88c341a6021a5252f3a9e1337001592ea"
+    },
+    {
+      "path": "plans/2026-08-26-shampoo-rule-hardening-holdout-v2.md",
+      "sha256": "c994e186016bbdd94128e3d3991a8b880a26284e8c8e2d93c80d1d5d1576c7e8"
+    },
+    {
+      "path": "scripts/shampoo-research/report-holdout.ts",
+      "sha256": "9e2dd8447b4d334a82add3dd4fd448adf27b5ea9d2b510bf17d5f398fcdeab26"
+    },
+    {
+      "path": "scripts/shampoo-research/validate-holdout.ts",
+      "sha256": "aed499dc4c8fbbc591279a575233f7dd4ef8f5918e8834f740b2b96fdce2eea6"
+    },
+    {
+      "path": "src/lib/shampoo-research/holdout.ts",
+      "sha256": "057ab9537be9d066aaa5c069a75f1db4002c553da5fa3610fc08e635df5b0af8"
+    },
+    {
+      "path": "tests/shampoo-research-holdout.test.ts",
+      "sha256": "8dab7d497dc205c592248c3492323bed3ef6002f3e3ed4c9136f10b1c8163f26"
+    }
+  ],
+  "checks": {
+    "shampooTests": 167,
+    "holdoutTests": 19,
+    "typecheck": "passed",
+    "lint": "passed; 4 pre-existing warnings",
+    "build": "passed",
+    "diffCheck": "passed",
+    "v1Validation": "10/10 valid",
+    "v2Validation": "10/10 valid",
+    "blindReceipts": "10/10 unchanged and valid",
+    "blindFormulaMatches": "10/10 match canonical fingerprint",
+    "reportDeterministic": true,
+    "profileReplayCount": 18,
+    "unexpectedAbstentions": 0,
+    "priorCohortsUnchanged": true
+  },
+  "review": {
+    "counterpart": "Read-only Claude code review, high effort, exact current-turn harness scope",
+    "normalLens": "completed; malformed candidate and route handling covered by regression tests",
+    "structuralLens": "completed; canonical protocol map reused; optional future validator decomposition deferred",
+    "findingsDisposition": "Accepted robustness/spec findings fixed and locally reverified; no unresolved blocking code findings. Scientific disagreements remain explicitly preserved.",
+    "dataReview": "Main session inspected all handed-back artifact results and reran full validator plus independent report."
+  },
+  "notPerformed": [
+    "No UI changes or browser journey required for research-only artifacts",
+    "No production database writes or catalog changes",
+    "No user-facing activation",
+    "No commit, push or deployment"
+  ],
+  "artifactDisposition": {
+    "retain": [
+      "Versioned policy and operator documentation",
+      "Harness and tests",
+      "Plan",
+      "Ten-product holdout source, blind, analysis, agreement, report and adjudication files"
+    ],
+    "temporary": "Read-only review output and assembly scratch scripts remain outside the repository; not deliverables",
+    "discarded": "Over-scoped alternative source-worker run and accidental root-checkout file; process deviations recorded in adjudication"
+  },
+  "reportHash": "19a1359a3fb55a4f18c05c21255094342621be3de997d3d1977cb489e90bbe83",
+  "repeatabilityGatePassed": true,
+  "measuredAccuracy": null
+}

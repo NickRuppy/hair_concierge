@@ -1,0 +1,503 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "9d8d4709-4041-495e-98ee-e0261fa30e27:293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Die aktuelle deutsche Hersteller-INCI ist die kanonische Formel und zeigt SLES, CAPB und Piroctone Olamine in den ersten fünf Zutaten.",
+      "Aloe, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, kationisches Guar und hydriertes Rizinusöl bilden die leichte Pflege-/Ablagerungsarchitektur der Herstellerformel.",
+      "Die abweichende dm-DE-INCI bleibt zur GTIN- und Quellenprovenienz dokumentiert, wird aber nicht mit der kanonischen Herstellerformel zusammengeführt."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "bis zu 100% schuppenfreies Haar",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "hydrogenated castor oil",
+      "glyceryl oleate",
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES with CAPB and glucoside in the manufacturer INCI support moderate cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI führt Sodium Laureth Sulfate an zweiter Stelle, ergänzt durch Cocamidopropyl Betaine und Coco-Glucoside.",
+          "inference": "The cleanser is regular-strength rather than a dedicated reset.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Kationisches Guar, hydriertes Rizinusöl, Glyceryl Oleate und Glycol Distearate der Herstellerformel stützen eine moderate, nicht-silikonbasierte Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "Die Herstellerformel enthält kationisches Guar, hydriertes Rizinusöl, Glyceryl Oleate und Glycol Distearate.",
+          "inference": "Moderate Shampoo-Pflege ist auf Formelbasis plausibel.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple light lipid/deposition ingredients create moderate weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Kationisches Guar, hydriertes Rizinusöl, Glyceryl Oleate und Glycol Distearate sind in der Herstellerformel vorhanden.",
+          "inference": "Repeat-use weight may be noticeable for fine hair.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine an fünfter Stelle der aktuellen deutschen Hersteller-INCI etabliert den scalp-active Primary Focus auf Formelebene.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI listet Piroctone Olamine an fünfter Stelle.",
+          "inference": "Der Primary Focus folgt der kanonischen Formelroute; Claim-Evidenz bleibt im Claim Audit und wird hier nicht als Stütze genutzt.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence does not establish a second product direction beyond the primary focus.",
+          "inference": "The secondary-focus value is intentionally empty and complete.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "High-list Piroctone Olamine makes this a scalp-active treatment-style shampoo rather than a purely general cleanser.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI listet Piroctone Olamine an fünfter Stelle innerhalb eines SLES-basierten Shampoo-Chassis.",
+          "inference": "The formula-only usage role is treatment-style scalp care, bounded to cosmetic product classification.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine an fünfter Stelle der aktuellen deutschen Hersteller-INCI stützt eine kosmetische Dandruff-Unterstützung.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI listet Piroctone Olamine an fünfter Stelle.",
+          "inference": "This supports an ingredient-level scalp-active route without turning the claim audit into property evidence.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Für die kanonische Herstellerformel liegt kein öffentliches shampoo-spezifisches Testprotokoll vor.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "schauma-de-anti-schuppen-classic-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The weightBuildup score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The mildnessPotential score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "No dedicated finished-product residue-reset result is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formelbasierte Bewertung der aktuellen deutschen Hersteller-INCI; der abweichende dm-DE-Datensatz bleibt als GTIN-/Quellenprovenienz dokumentiert und wird nicht in die Klassifikation eingerechnet. Es liegt kein shampoo-spezifisches Leistungstestergebnis vor."
+  },
+  "claimAudit": [
+    {
+      "claim": "bis zu 100% schuppenfreies Haar",
+      "verdict": "indeterminate",
+      "support": "Both captured formulas contain high-list Piroctone Olamine and the official page identifies regular-use anti-dandruff intent.",
+      "limitation": "Ein öffentliches shampoo-spezifisches Testprotokoll mit diesem Endpunkt liegt nicht vor.",
+      "sourceIds": [
+        "schauma-de-anti-schuppen-classic-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "schauma-de-anti-schuppen-classic-2026-08-10",
+    "dm-de-schauma-anti-schuppen-classic-1588728-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Visible-dandruff and scalp-comfort positioning is cosmetic scalp care, not disease treatment."
+  }
+}

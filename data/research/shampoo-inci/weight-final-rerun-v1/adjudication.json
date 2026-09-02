@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-weight-adjudication-v1",
+  "decisions": [
+    {
+      "blindId": "W014",
+      "finalWeightPotential": "moderate",
+      "rationale": "Amodimethicone liefert eine klar persistente Route, die schwachen Rückfetter ergänzen eine begrenzte Deposition und das breite milde Tensidsystem sorgt für einen relevanten Reset. Das ungelöste kationische Stärkederivat könnte die Depositionslast erhöhen, darf nach der Methode aber nicht als bestätigte positive Evidenz für high gezählt werden.",
+      "whyThisBand": "Moderate bildet eine Formel mit einer bestätigten persistenten Silikonroute, mehreren leichten Rückfettern und einem relevanten, wenn auch nicht starken, Reset-System am besten ab.",
+      "whyNotNeighborBand": "Low würde die bestätigte Amodimethicone-Route unterschätzen; high ist nicht ausreichend gestützt, weil die weiteren bestätigten Routen schwache Rückfetter sind und das potenziell entscheidende kationische Stärkesignal ungelöst bleibt.",
+      "classificationConfidence": {
+        "value": "low",
+        "limitingFactor": "Das ungelöste kationische Stärkederivat an Position 9 könnte die moderate/high-Grenze plausibel verschieben."
+      }
+    },
+    {
+      "blindId": "W033",
+      "finalWeightPotential": "moderate",
+      "rationale": "Filmbildner, Sheabutter und zwei kationische Polymere schaffen mehrere plausible Depositionsrouten, deshalb ist low nicht glaubwürdig. Sodium C14-16 Olefin Sulfonate an Position 2 liefert zusammen mit Cocamidopropyl Betaine jedoch einen starken Reset; zudem stehen die Polymer-Routen später in der Formel. Das macht spürbare, aber begrenzte Rückstände wahrscheinlicher als eine klar schwere Wirkung.",
+      "whyThisBand": "Moderate berücksichtigt das reale Mehrfach-Depositionspotenzial ebenso wie den prominenten starken Reinigungsgegenpol und den Rinse-off-Kontext.",
+      "whyNotNeighborBand": "Low würde die Konvergenz aus Filmbildner, Lipid und zwei kationischen Polymeren ignorieren; high ist nicht robust, weil das stärkste Reset-Signal prominent ist und eine bestätigte silikonlastige oder anderweitig klar reichhaltige Architektur mit begrenztem Reset fehlt.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Unbekannte Einsatzmengen und die Balance zwischen prominentem Reset-System und späteren Depositionsrouten lassen eine echte moderate/high-Grenze offen."
+      }
+    }
+  ]
+}

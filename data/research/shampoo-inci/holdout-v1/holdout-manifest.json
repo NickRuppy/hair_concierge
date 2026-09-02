@@ -1,0 +1,205 @@
+{
+  "schema_version": "shampoo-research-holdout-v1",
+  "candidates": [
+    {
+      "candidate_id": "alverde-ultra-sensitiv",
+      "research_product_id": "holdout-v1:alverde-ultra-sensitiv",
+      "catalog_product_id": null,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Shampoo Ultra Sensitiv",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": ["4066447919349"],
+      "selection_archetype": "scalp comfort / gentle",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1332317/alverde-naturkosmetik-shampoo-ultra-sensitiv",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current German brand-owner page positions an ultra-sensitive daily shampoo, not an occasional deep-cleansing product."
+      }
+    },
+    {
+      "candidate_id": "isana-med-jeden-tag",
+      "research_product_id": "holdout-v1:isana-med-jeden-tag",
+      "catalog_product_id": null,
+      "brand": "ISANA MED",
+      "name": "Shampoo Jeden Tag",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": ["4305615629216"],
+      "selection_archetype": "sensitive positioning versus stronger chassis",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag/p/4305615629216",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current German brand-owner page positions a daily pH 5.5 shampoo, not a deep-cleansing role."
+      }
+    },
+    {
+      "candidate_id": "ducray-extra-mild",
+      "research_product_id": "holdout-v1:ducray-extra-mild",
+      "catalog_product_id": null,
+      "brand": "Ducray",
+      "name": "Extra Mild Shampoo",
+      "market": "DE",
+      "pack_size": "400 ml",
+      "gtin_aliases": ["3282770148282"],
+      "selection_archetype": "source priority and daily mildness",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "The German manufacturer page confirms the exact product and use role but does not expose the full INCI; exact-GTIN dm Germany supplies the canonical current formula.",
+      "selection_source": "https://www.ducray.com/de-de/f/produkte/extra-mild-normales-bis-empfindliches-haar",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "German manufacturer identity page describes frequent/daily mild cleansing, not periodic deep cleansing."
+      }
+    },
+    {
+      "candidate_id": "john-frieda-volume-lift",
+      "research_product_id": "holdout-v1:john-frieda-volume-lift",
+      "catalog_product_id": null,
+      "brand": "John Frieda",
+      "name": "Volume Lift Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": ["5037156299106"],
+      "selection_archetype": "volume / fine-hair lightness",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "No current German manufacturer page with a complete exact formula was found; exact-GTIN dm Germany supplies the canonical current formula.",
+      "selection_source": "https://www.dm.de/p/d/3123431/john-frieda-shampoo-volume-lift",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current German listing describes an ordinary volume shampoo and normal wash instructions, not reset-only use."
+      }
+    },
+    {
+      "candidate_id": "loreal-elvital-bond-repair-plus",
+      "research_product_id": "holdout-v1:loreal-elvital-bond-repair-plus",
+      "catalog_product_id": null,
+      "brand": "L'Oréal Paris Elvital",
+      "name": "Bond Repair Plus Shampoo",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": ["3600524074654"],
+      "selection_archetype": "repair-claim audit",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.loreal-paris.de/elvital/bond-repair/shampoo",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Manufacturer describes regular/daily use within a repair routine, not a periodic deep-cleansing category."
+      }
+    },
+    {
+      "candidate_id": "kerastase-specifique-bain-divalent",
+      "research_product_id": "holdout-v1:kerastase-specifique-bain-divalent",
+      "catalog_product_id": null,
+      "brand": "Kérastase",
+      "name": "Spécifique Bain Divalent Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": ["3474636954766"],
+      "selection_archetype": "oily-root balancing",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.kerastase.de/produktlinien/produktlinien/specifique/bain-divalent/KER_00086.html",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Manufacturer positions an oil-balancing regular shampoo; it is not sold as an occasional deep-cleansing SKU."
+      }
+    },
+    {
+      "candidate_id": "balea-shampoo-feuchtigkeit",
+      "research_product_id": "holdout-v1:balea-shampoo-feuchtigkeit",
+      "catalog_product_id": null,
+      "brand": "Balea",
+      "name": "Shampoo Feuchtigkeit",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": ["4066447982619"],
+      "selection_archetype": "moisture-claim audit",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1679752/balea-shampoo-feuchtigkeit",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Brand-owner page describes an ordinary moisture shampoo, not occasional residue reset."
+      }
+    },
+    {
+      "candidate_id": "balea-professional-traumlocken",
+      "research_product_id": "holdout-v1:balea-professional-traumlocken",
+      "catalog_product_id": null,
+      "brand": "Balea Professional",
+      "name": "Shampoo Traumlocken",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": ["4070765001082"],
+      "selection_archetype": "curl-positioned conditioning / weight",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1647112/balea-professional-shampoo-traumlocken",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Brand-owner page describes a regular curl shampoo with care positioning, not deep-cleansing use."
+      }
+    },
+    {
+      "candidate_id": "head-shoulders-2in1-classic-clean",
+      "research_product_id": "holdout-v1:head-shoulders-2in1-classic-clean",
+      "catalog_product_id": null,
+      "brand": "Head & Shoulders",
+      "name": "2in1 Classic Clean Shampoo & Pflegespülung",
+      "market": "DE",
+      "pack_size": "225 ml",
+      "gtin_aliases": ["8006530006385"],
+      "selection_archetype": "true dandruff active plus 2-in-1",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/2-in-1/classic-clean/",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Manufacturer presents a regular anti-dandruff 2-in-1, not an occasional deep-cleaning product."
+      }
+    },
+    {
+      "candidate_id": "dove-taegliche-feuchtigkeit-2in1",
+      "research_product_id": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+      "catalog_product_id": null,
+      "brand": "Dove",
+      "name": "Tägliche Feuchtigkeit 2in1 Shampoo & Spülung",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": ["8710908832284"],
+      "selection_archetype": "general conditioning 2-in-1 without dandruff active",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "The German manufacturer page confirms exact identity and use role but does not expose a crawlable complete INCI; GTIN-matched Budni Germany supplies the canonical formula.",
+      "selection_source": "https://www.dove.com/dach/p/taegliche-feuchtigkeit-2in1-shampoo-spuelung.html/08710908832284.html",
+      "selected_at": "2026-08-26T18:00:00+02:00",
+      "catalog_overlap_check": { "normalized_name_match": false, "gtin_match": false },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Manufacturer positions a daily moisture 2-in-1, not a deep-cleansing role."
+      }
+    }
+  ]
+}

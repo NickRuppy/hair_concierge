@@ -1,0 +1,486 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d:0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Hydrogenated Starch Hydrolysate and Glycerin are early humectant/feel components before and after SLES.",
+      "SLES plus Cocamidopropyl Hydroxysultaine and Coco-Glucoside indicates an ordinary cleanser system with amphoteric/nonionic support.",
+      "Allantoin, Bisabolol, Zinc PCA, Panthenol and tea extract are present, but no anti-itch clinical evidence is captured.",
+      "Parfum is present, so sensitive-scalp suitability cannot be upgraded from formula-only evidence."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Sensitive/dry scalp, panthenol, white tea, can reduce itching/tension, no silicones.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-1701109"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl hydroxysultaine",
+      "coco-glucoside",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed keratin"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES is paired with amphoteric/nonionic co-surfactants, supporting ordinary moderate cleansing rather than low cleansing or reset cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "SLES plus Cocamidopropyl Hydroxysultaine, Coco-Glucoside and Cocamidopropyl Betaine",
+          "inference": "regular cleansing architecture",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No active-matter level or shampoo-only cleansing test",
+          "inference": "exact cleansing strength remains uncertain",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Guar cationic polymer and glycol distearate can support light after-feel, but the formula is not a rich conditioning shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Guar Hydroxypropyltrimonium Chloride and Glycol Distearate are present",
+          "inference": "light conditioning/deposition plausibility",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone, fatty alcohol base or finished combing data",
+          "inference": "do not assign medium/high conditioning",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone/heavy oil system is visible; humectant/starch feel components may add slip but not high residue.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone tokens; no oil-rich system",
+          "inference": "low expected weight potential",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "low-residue-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Hydrogenated starch hydrolysate and glycol distearate can influence feel",
+          "inference": "not weight-free for every fine-hair context",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "low-residue-architecture"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Humectants plus allantoin, bisabolol and panthenol support a gentle/sensitive cosmetic product focus; fragrance and absent tolerance data cap fit confidence, not the broad focus classification.",
+      "supportingSignals": [
+        {
+          "observation": "Humectants, Allantoin, Bisabolol and Panthenol align with the pH-skin-neutral sensitive-care positioning.",
+          "inference": "Gentle cosmetic focus is formula-coherent.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "gentle-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum is present and no finished tolerance study is cited.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "gentle-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "scalp_active"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Zinc PCA, allantoin and bisabolol support a cosmetic scalp-care secondary focus without creating medical or dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "Allantoin, Bisabolol and Zinc PCA are listed.",
+          "inference": "A bounded scalp-active secondary focus is formula-coherent.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "scalp-cosmetic-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No medicated active, no recognized anti-dandruff route and no clinical endpoint data are captured.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "scalp-cosmetic-positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The cleanser and light-care architecture fits regular cosmetic washing; no reset or treatment role is supported.",
+      "supportingSignals": [
+        {
+          "observation": "Moderate cleanser with light conditioning and gentle/scalp positioning",
+          "inference": "regular shampoo role",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No individual scalp diagnosis or cadence evidence",
+          "inference": "do not derive user-specific frequency",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets sensitive scalp and the formula contains allantoin, bisabolol and panthenol as a coherent cosmetic comfort route; fragrance remains an exposure heads-up.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets sensitive scalp and the formula contains allantoin, bisabolol and panthenol as a coherent cosmetic comfort route; fragrance remains an exposure heads-up.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "dm-de-1701109"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1701109"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      0,
+      1
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {},
+    "weightDepositionLoad": "Formula-only signals are bounded; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established from the captured formula evidence.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula-only assessment; no shampoo-only performance outcome is established."
+  },
+  "claimAudit": [
+    {
+      "claim": "Sensitive/dry scalp, panthenol, white tea, can reduce itching/tension, no silicones.",
+      "verdict": "indeterminate",
+      "support": "The claim is recorded separately from the formula pass.",
+      "limitation": "Gentle/scalp cosmetic positioning is plausible; itch/tension relief is not converted into a medical or high-confidence sensitive-scalp recommendation.",
+      "sourceIds": [
+        "dm-de-1701109"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-1701109"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The sensitive-scalp and scalp-care positioning is cosmetic; it does not claim to diagnose or treat a scalp disease."
+  }
+}

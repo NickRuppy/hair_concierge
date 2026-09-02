@@ -1,0 +1,567 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1:56ba24475a9535c4713065c524979c927efdffcfebd568acbb6986f05ca0e29b",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES und weitere Co-Tenside stützen starke Reinigung.",
+      "Dimethiconol steht früh; kationischer Guar, Kokosöl, Hydrolyzed Soy Protein und Aminosäuren stützen eine 2-in-1-Pflege-/Repair-Route.",
+      "Sodium Gluconate und Disodium EDTA liefern erkennbare, aber nicht als Reset beworbene Chelator-Cues; Piroctone Olamine/Climbazole fehlen."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "daily moisture 2-in-1; non-weighing-down positioning",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "TEA-Dodecylbenzenesulfonate",
+      "TEA-Sulfate",
+      "Cocamide MEA",
+      "PPG-6"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethiconol"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Cocos Nucifera Oil",
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [
+      "Lysine HCl",
+      "Arginine",
+      "Hydrolyzed Soy Protein",
+      "PEG-45M"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Sodium Gluconate",
+      "Disodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES plus zusätzliche anionische/MEA-Co-Tenside stützen starke Reinigung.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet cleansingStrength=strong.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Frühes Dimethiconol, kationischer Guar, Kokosöl und Protein-/Aminosäure-Cues ergeben hohe Shampoo-Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet conditioningLevel=high.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Deposition ist klar, wird aber durch starke Reinigung und 2-in-1-Rinse-off-Format auf moderat begrenzt.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet weightPotential=moderate.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die stärkste kompakte Richtung ist Repair/Schutz über Silikon-, Guar-, Öl- und Proteinfilm.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet focusPrimary=repair.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die gleiche Glättungsroute kann Shine unterstützen.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet focusSecondary=shine.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Trotz 2-in-1-Pflege wirkt die Formel wie ein reguläres Alltagsprodukt.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet usageRole=regular.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine dedizierte Kopfhautkomfortroute ist sichtbar.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet scalpComfortTarget=not_targeted.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und weitere Co-Tenside stützen starke Reinigung.",
+          "inference": "Diese Formelstütze begründet dandruffSupport=not_supported.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      1,
+      2
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt cleansing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt conditioningDeposition begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt weightBuildup begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "shineS3 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS3 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV3": {
+        "g1FunctionalRelevance": "volumeV3 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV3 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt smoothing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "repairR2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organicClarification ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt organicClarification begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "inorganicChelation": {
+        "g1FunctionalRelevance": "inorganicChelation ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt inorganicChelation begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt mildnessPotential begrenzt und wird nicht auf benachbarte Claims übertragen."
+      }
+    },
+    "weightDepositionLoad": "Hoch: frühes Dimethiconol plus kationischer Guar, Öl und Proteinfilm.",
+    "weightPersistence": "Mittel: Silikon-/Polymerdeposition kann bestehen bleiben.",
+    "weightResetCapacity": "Hoch: starke anionische Reinigung und Chelator-Cues bieten Gegenpol.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond-spezifische Route; Protein/Aminosäure-Signale stützen nur Oberflächenfilm/Schutz.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market INCI plus post-unblinding claim audit; no independently reviewable finished-product shampoo performance dataset is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Daily moisture 2-in-1 without weighing down",
+      "verdict": "plausible",
+      "support": "Die starke Reinigung begrenzt die reichere Dimethiconol/Guar/Öl-Deposition; die 2-in-1-Pflege ist formelplausibel.",
+      "limitation": "Der Nicht-Beschweren-Claim ist ohne Testdaten nicht quantifiziert; bei feinem oder schnell fettendem Haar bleibt moderate Gewichtung relevant.",
+      "sourceIds": [
+        "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Gewöhnliche kosmetische Feuchtigkeits-/2-in-1-Pflegekommunikation ohne medizinischen Kopfhautanspruch."
+  }
+}

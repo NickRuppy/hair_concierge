@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:herbal-essences-fiji",
+  "candidateId": "herbal-essences-fiji",
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "exactIdentity": {
+    "brand": "Herbal Essences",
+    "name": "Haarshampoo Fiji Schwerelose Feuchtigkeit",
+    "market": "DE",
+    "packSize": "350 ml",
+    "gtinAliases": ["8006530290012"]
+  },
+  "selectionArchetype": "lightweight moisture / sulfate-free surfactant architecture",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+  "manufacturerFormulaAvailability": "unavailable",
+  "retailerFallbackReason": "No crawlable German manufacturer PDP with complete INCI was found; dm Germany and Rossmann Germany exact-GTIN PDPs plus Müller Germany exact-variant PDP agree on the same complete INCI.",
+  "sourcePriorityRationale": "Retailer fallback is acceptable after missing manufacturer INCI because two preferred German retailers expose exact GTIN 8006530290012 and the same formula.",
+  "officialClaimSummary": [
+    "Schwerelose Feuchtigkeit / Feuchtigkeitsshampoo.",
+    "Mit Kokosnussextrakt.",
+    "Ohne Silikone, ohne Sulfat; vegan."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Moisture/care positioning is dominant and explicitly lightweight.",
+    "Use instructions are regular rinse-out shampoo instructions, with conditioner suggested after shampoo."
+  ],
+  "corroboratingUrls": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012",
+      "note": "Exact-GTIN German retailer PDP; same formula."
+    },
+    {
+      "url": "https://www.mueller.de/p/herbal-essences-haarshampoo-fiji-PPN3182585/",
+      "note": "German retailer exact variant, same 350 ml formula; GTIN not visible in crawl."
+    }
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "German retailer pages position a lightweight moisture shampoo, not a clarifying or occasional reset SKU."
+  },
+  "notes": "Manufacturer contact is Procter & Gamble Germany; German retailer pages list the manufacturer but not a separate crawlable manufacturer ingredient PDP."
+}

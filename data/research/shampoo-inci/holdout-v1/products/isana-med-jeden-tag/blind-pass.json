@@ -1,0 +1,162 @@
+{
+  "candidate_id": "isana-med-jeden-tag",
+  "blindCode": "B",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Formic Acid, Isopropyl Alcohol",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "Sodium Laureth-8 Sulfate",
+      "Magnesium Laureth Sulfate",
+      "Magnesium Laureth-8 Sulfate",
+      "Sodium Oleth Sulfate",
+      "Magnesium Oleth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Sodium Cocoyl Glutamate",
+      "Disodium Cocoamphodiacetate"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Urea",
+      "Panthenol",
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid",
+      "Formic Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "focusPrimary": "scalp_active",
+    "focusSecondary": [
+      "volume"
+    ],
+    "usageRole": "alternating",
+    "scalpComfortTarget": "targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Mehrere Ether-/Sulfat-Tenside plus Amphoter-/mildere Co-Tenside ergeben ein deutlich reinigungsstarkes System; die Milderung hebt die Reinigung nicht auf.",
+    "conditioningLevel": "Urea und Panthenol stützen Feuchtigkeit/Komfort, aber ohne kationisches Polymer, Silikon oder Lipid-Deposition bleibt die Haarpflege niedrig.",
+    "weightPotential": "Es fehlen persistente Ablagerungssysteme; Glycol Distearate ist eher Pearlizer/leichter Refatting-Hinweis und nicht genug für spürbares Gewicht.",
+    "focusPrimary": "Urea steht sehr früh und Panthenol ergänzt den Komfort-/Feuchtigkeitskontext; das wirkt eher kopfhautaktiv-kosmetisch als rein haarpflegend.",
+    "focusSecondary": "Starke Reinigung bei niedriger Ablagerung kann Ansatz-Leichtigkeit stützen, ohne dass ein eigenständiges Bodying-System vorliegt.",
+    "usageRole": "Die starke Tensidarchitektur spricht eher für abwechselnde Nutzung bei entsprechendem Reinigungsbedarf als für eine universelle tägliche Rolle.",
+    "scalpComfortTarget": "Früh gelistete Urea plus Panthenol bilden eine erkennbare kosmetische Kopfhaut-Komfort-Route; Parfum und starke Reinigung begrenzen die Sicherheitslesart.",
+    "dandruffSupport": "Piroctone Olamine und Climbazole fehlen; Urea oder Panthenol ersetzen diese gesperrte Anti-Schuppen-Route nicht."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-geführtes, mehrfaches Sulfat-/Ether-Sulfat-System mit CAPB, Glutamat und Amphodiacetat als Co-Tenside.",
+    "Urea steht sehr früh; Panthenol unterstützt den Komfort-/Feuchthalte-Kontext.",
+    "Keine kationischen Polymere, Silikone, Proteine oder Chelatoren erkennbar."
+  ],
+  "counterSignals": [
+    "Co-Tenside und Urea können die wahrgenommene Strenge moderieren.",
+    "Parfum und Isopropyl Alcohol sind relevante Expositions-/Komfort-Gegenzeichen.",
+    "Glycol Distearate darf nicht als Haar-Glanzbeweis gezählt werden."
+  ],
+  "payloadHash": "45cd9fc5b43d06afd406ce814f397d71fd96576e48ec8355e80fbdabe1eaf983",
+  "finalDelta": [
+    {
+      "property": "usageRole",
+      "blindValue": "alternating",
+      "finalValue": "regular",
+      "reason": "Die unblindete Rossmann/ISANA-MED-Positionierung nennt ausdrücklich Jeden-Tag/pH-hautneutral/3% Urea. Die starke Tensidarchitektur bleibt bestehen, daher regular statt frequent."
+    }
+  ]
+}

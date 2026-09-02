@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W028",
+  "formula": {
+    "inciFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"cationic_polymer","name":"hydroxypropyl oxidized starch pg-trimonium chloride","position":6},{"family":"cationic_conditioner","name":"hydroxypropyl oxidized starch pg-trimonium chloride","position":6}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"nonionic_surfactant","name":"lauryl glucoside","position":3},{"family":"anionic_surfactant","name":"sodium lauroyl sarcosinate","position":4}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Der einzige Pflegehinweis ist derselbe kationische Stärkebaustein an Position 6; es fehlen Silikone, Lipide, Proteine oder ein reiches Verstärkungssystem."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Eine einzelne kationische Route kann leicht haften, zeigt aber ohne weitere persistente Systeme nur begrenzte Akkumulationsplausibilität."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES plus Sarcosinat und Lauryl Glucoside stehen sehr früh und liefern eine klare Reinigungs-/Reset-Basis."
+  },
+  "competingSignals": [
+    "Der kationische Stärkebaustein ist früh genug, um nicht ignoriert zu werden.",
+    "Die Formel ist ansonsten schlank und stark reinigend."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil eine einzelne kationische Route ohne Verstärker von einer starken Tensidarchitektur eingerahmt wird.",
+  "whyNotNeighborBand": "Moderate wäre erst plausibler, wenn zusätzliche persistente Pflege- oder Lipidsysteme die einzelne Polymerroute stützen würden.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die Konzentration und Depositionseffizienz des kationischen Stärkebausteins bleiben INCI-only unbekannt."
+  }
+}

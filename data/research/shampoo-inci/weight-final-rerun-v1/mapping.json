@@ -1,0 +1,406 @@
+{
+  "schemaVersion": "shampoo-final-weight-mapping-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "products": [
+    {
+      "blindId": "W001",
+      "candidateId": "guhl-kopfhaut-sensitive",
+      "catalogProductId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-kopfhaut-sensitive/formula-source.json",
+      "rawInciSha256": "b59f4b9721207707836af4b6a65467e2c221125dca3d328cffe66b772fe311c9"
+    },
+    {
+      "blindId": "W002",
+      "candidateId": "salthouse-anti-fett",
+      "catalogProductId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/salthouse-anti-fett/formula-source.json",
+      "rawInciSha256": "27f0a8ba56b50f87dcb31b2c16f5e94dccde892f29f4d8c3da32e9d771c4f98e"
+    },
+    {
+      "blindId": "W003",
+      "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "catalogProductId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/formula-source.json",
+      "rawInciSha256": "6fc468996fca7500025a827b7fe7ee0ebdb065266d93f44081912dcdcd2eb128"
+    },
+    {
+      "blindId": "W004",
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "catalogProductId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json",
+      "rawInciSha256": "8512f2847e77492733dfc6b1394fdc3d622faefd140221dc2cddbade93f394c7"
+    },
+    {
+      "blindId": "W005",
+      "candidateId": "langhaarmaedchen-beautiful-curls",
+      "catalogProductId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/formula-source.json",
+      "rawInciSha256": "f70c820a519b06216ddba9605b43897bf43adb856326c40717fd2d70572ef4f0"
+    },
+    {
+      "blindId": "W006",
+      "candidateId": "guhl-hyaluron-plus",
+      "catalogProductId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/formula-source.json",
+      "rawInciSha256": "4efc223d59cb6d05a123e2fa5b82af90bfca8cda42b7ff22e47af7ff8402de8e"
+    },
+    {
+      "blindId": "W007",
+      "candidateId": "hask-argan-oil",
+      "catalogProductId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json",
+      "rawInciSha256": "4629b0461f12ec627af6606b0654797c2073d0cdc11b443132cda63b2ccd84c4"
+    },
+    {
+      "blindId": "W008",
+      "candidateId": "salthouse-anti-juckreiz",
+      "catalogProductId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/salthouse-anti-juckreiz/formula-source.json",
+      "rawInciSha256": "a99b96fd090889d9f98199ce4ae86eb8d3fdd9529992d0024602513d69bd03e4"
+    },
+    {
+      "blindId": "W009",
+      "candidateId": "dejan-garz-shampoo",
+      "catalogProductId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/dejan-garz-shampoo/formula-source.json",
+      "rawInciSha256": "fb4f3ce8359e66b3b534183eb07a59e769e0c1ae1798d2119e118b85cff5d390"
+    },
+    {
+      "blindId": "W010",
+      "candidateId": "salthouse-anti-schuppen",
+      "catalogProductId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/formula-source.json",
+      "rawInciSha256": "aeeeaa2ad45f3e8f613aac0a855fbebdce2f5e6d33ee09be07322717a3d9ea40"
+    },
+    {
+      "blindId": "W011",
+      "candidateId": "ogx-renewing",
+      "catalogProductId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/ogx-renewing/formula-source.json",
+      "rawInciSha256": "c4dec28cf636ebf3ee6cfbf0421e9c8d917f333e39ddd390d2febbed9574a9a5"
+    },
+    {
+      "blindId": "W012",
+      "candidateId": "sebamed-anti-schuppen",
+      "catalogProductId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen/formula-source.json",
+      "rawInciSha256": "c94babe4593bf1db5fe354a9834815f036c3c5739d949b59fac1a23da073f3fa"
+    },
+    {
+      "blindId": "W013",
+      "candidateId": "lavera-basis-sensitiv",
+      "catalogProductId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/lavera-basis-sensitiv/formula-source.json",
+      "rawInciSha256": "59de1a649383fcab894a4432790687ebfde945aa58f0ebb87e69a6e48dee44dd"
+    },
+    {
+      "blindId": "W014",
+      "candidateId": "ogx-biotin-collagen",
+      "catalogProductId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/ogx-biotin-collagen/formula-source.json",
+      "rawInciSha256": "d6af46d93cd050f31a39ef95323f17347d72249947656097ed3190e544522ff2"
+    },
+    {
+      "blindId": "W015",
+      "candidateId": "syoss-intense-curls",
+      "catalogProductId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/syoss-intense-curls/formula-source.json",
+      "rawInciSha256": "edaa5286fa61f1a33f0af9c6acda123b09b5d80ddb624e24d083f77eaf35a3bb"
+    },
+    {
+      "blindId": "W016",
+      "candidateId": "swiss-o-par-teebaumol",
+      "catalogProductId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json",
+      "rawInciSha256": "24a056cb263a5811fbd36a4328ee452b11c7668b51b5f2f56daa1e9aad4bd03b"
+    },
+    {
+      "blindId": "W017",
+      "candidateId": "sebamed-urea-5",
+      "catalogProductId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/formula-source.json",
+      "rawInciSha256": "485d1170c01c83da1b11349459bc0b3a22d8e6efdcc6917ef1045b0a011497b2"
+    },
+    {
+      "blindId": "W018",
+      "candidateId": "sante-glossy-shine",
+      "catalogProductId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sante-glossy-shine/formula-source.json",
+      "rawInciSha256": "c43b250a353e73602785f94d70d0073006c347c79170ebc92ef16e1374bdeec6"
+    },
+    {
+      "blindId": "W019",
+      "candidateId": "pantene-anti-schuppen",
+      "catalogProductId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/pantene-anti-schuppen/formula-source.json",
+      "rawInciSha256": "d59e338bf9791a95d3dc81b813699477d11cc831896186926bb56c294fa8ef4b"
+    },
+    {
+      "blindId": "W020",
+      "candidateId": "neqi-volume-victory",
+      "catalogProductId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/neqi-volume-victory/formula-source.json",
+      "rawInciSha256": "574899d9ee757d05b5fbe5ed60bb21333c3e14f219edac61fdff9465a4d22d21"
+    },
+    {
+      "blindId": "W021",
+      "candidateId": "sante-sensitive-care",
+      "catalogProductId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sante-sensitive-care/formula-source.json",
+      "rawInciSha256": "1ac13a85223fd34ea143de3a05ee1eb56741942bd4e198827dbb1f89d8455edf"
+    },
+    {
+      "blindId": "W022",
+      "candidateId": "monday-volume-kraft-fuelle",
+      "catalogProductId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/formula-source.json",
+      "rawInciSha256": "6a7bfbd8cefd4ed3809599b699dd4fb9a9697304ddf3f31b51cd247b0f29a1bc"
+    },
+    {
+      "blindId": "W023",
+      "candidateId": "pantene-pro-v-volumen-pur",
+      "catalogProductId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/pantene-pro-v-volumen-pur/formula-source.json",
+      "rawInciSha256": "4425e77a3b215ca5dbbbe5edac31f5f5c5dd60b3a20af873eacc151e14ec18d8"
+    },
+    {
+      "blindId": "W024",
+      "candidateId": "head-shoulders-sensitive",
+      "catalogProductId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/head-shoulders-sensitive/formula-source.json",
+      "rawInciSha256": "8b758ab3a2c95dfef5890d6fa573dd38acf044250a1a27bce896bd67f24d7d93"
+    },
+    {
+      "blindId": "W025",
+      "candidateId": "pantene-grow-abundance",
+      "catalogProductId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/pantene-grow-abundance/formula-source.json",
+      "rawInciSha256": "8cc81c0b4f9a59582c186debb136784023b89ac8966e7a1eee8f256f02791cee"
+    },
+    {
+      "blindId": "W026",
+      "candidateId": "guhl-anti-schuppen",
+      "catalogProductId": "744de604-d266-453b-a56b-eea92c5ca565",
+      "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-anti-schuppen/formula-source.json",
+      "rawInciSha256": "03c9202cb074bbd8a746e55e45bafadb0ea170886b191ecf61fc17119cd1f2b4"
+    },
+    {
+      "blindId": "W027",
+      "candidateId": "ogx-rosemary",
+      "catalogProductId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/ogx-rosemary/formula-source.json",
+      "rawInciSha256": "a57458150c0b84d997cd2759daf34f54a4454d459012d72dfbc0d6f39524b345"
+    },
+    {
+      "blindId": "W028",
+      "candidateId": "sebamed-anti-schuppen-plus",
+      "catalogProductId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen-plus/formula-source.json",
+      "rawInciSha256": "2735210628474245dd14fd6315d229e07b1fba615432ce5b3af8a29432849a20"
+    },
+    {
+      "blindId": "W029",
+      "candidateId": "loreal-elvital-glycolic-gloss",
+      "catalogProductId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/formula-source.json",
+      "rawInciSha256": "4e451c092350001d16d482da6d7b0e19024927764a6e964e89fc931829984b94"
+    },
+    {
+      "blindId": "W030",
+      "candidateId": "guhl-kraft-und-fuelle",
+      "catalogProductId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-kraft-und-fuelle/formula-source.json",
+      "rawInciSha256": "04ce0c2d251fbba74cd6883e785ba8ef88f8767ef37177d19c0444fea2d17731"
+    },
+    {
+      "blindId": "W031",
+      "candidateId": "schauma-anti-schuppen",
+      "catalogProductId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/schauma-anti-schuppen/formula-source.json",
+      "rawInciSha256": "06008a64c91a1e746c7321a58d8e27306e5a6d40df76b67a8a3d53ab12d3afc9"
+    },
+    {
+      "blindId": "W032",
+      "candidateId": "hair-biology-revitalize-soothe",
+      "catalogProductId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/formula-source.json",
+      "rawInciSha256": "d6c214a90f008ef27d20cd8f9162c86b4b50370fc163bdedac02baaa76f04169"
+    },
+    {
+      "blindId": "W033",
+      "candidateId": "cantu-locken-pflege",
+      "catalogProductId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/formula-source.json",
+      "rawInciSha256": "f3503c99dd4243458c3fd3c95f9bd19ca6ba1a37895c80fe4d1e3e9bfb93fb76"
+    },
+    {
+      "blindId": "W034",
+      "candidateId": "balea-ultra-sensitive",
+      "catalogProductId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-ultra-sensitive/formula-source.json",
+      "rawInciSha256": "92febfb855eb990370ef47d996ecc8aac56ae50ba9dfcddb048d11406c9f88c8"
+    },
+    {
+      "blindId": "W035",
+      "candidateId": "neqi-moisture-mystery",
+      "catalogProductId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/neqi-moisture-mystery/formula-source.json",
+      "rawInciSha256": "8a15605778c1ba57ebd0d293f09483baceac7c9cb4190c02c2a93e9c13e2b82e"
+    },
+    {
+      "blindId": "W036",
+      "candidateId": "balea-2-in-1-urea-5",
+      "catalogProductId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-2-in-1-urea-5/formula-source.json",
+      "rawInciSha256": "c603dba3f256ae0c5b3403d7a34bbca3da30413b0c81b17adaca93c1ae73d806"
+    },
+    {
+      "blindId": "W037",
+      "candidateId": "syoss-intense-fullness-shampoo",
+      "catalogProductId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/syoss-intense-fullness-shampoo/formula-source.json",
+      "rawInciSha256": "734e55b80ab86eeff34f14da7a875c9df08780e8e0fc2ad1362202ca09583449"
+    },
+    {
+      "blindId": "W038",
+      "candidateId": "ogx-keratin-oil",
+      "catalogProductId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/ogx-keratin-oil/formula-source.json",
+      "rawInciSha256": "e5ea4ccdc602cd65eef66f476795eb9321e3328cff9edd8d678f21510e49e226"
+    },
+    {
+      "blindId": "W039",
+      "candidateId": "hask-curl-care",
+      "catalogProductId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/hask-curl-care/formula-source.json",
+      "rawInciSha256": "23991bfb4ddfee846d1c050377f699813f9fe700d24b3641ba4e8d672e0fad29"
+    },
+    {
+      "blindId": "W040",
+      "candidateId": "guhl-frische-und-leichtigkeit",
+      "catalogProductId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-frische-und-leichtigkeit/formula-source.json",
+      "rawInciSha256": "f92577bae8e5c61175cd602d3bf27354dec67fe2cd3247e8de07e89622fb912f"
+    },
+    {
+      "blindId": "W041",
+      "candidateId": "balea-professional-ultimate-volume",
+      "catalogProductId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-professional-ultimate-volume/formula-source.json",
+      "rawInciSha256": "1bade2a784f13fa6d70a2b76d348f4f2757244783bc62eb116405ab6a43b1309"
+    },
+    {
+      "blindId": "W042",
+      "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "catalogProductId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/formula-source.json",
+      "rawInciSha256": "572edaf1a5dde116d9d239ecd9122d5f3f54f17c0a90fbb58cf0dca5e5627837"
+    },
+    {
+      "blindId": "W043",
+      "candidateId": "langhaarmadchen-lovely-long",
+      "catalogProductId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/langhaarmadchen-lovely-long/formula-source.json",
+      "rawInciSha256": "21fa9d28da06e44527a5c8ac6b1e7741ee8c007eb2fd937f1c0b44f43dad4977"
+    },
+    {
+      "blindId": "W044",
+      "candidateId": "sebamed-every-day-shampoo",
+      "catalogProductId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/formula-source.json",
+      "rawInciSha256": "dd9e8c0bc362a6e2b24b2f024a680e0b33e7ced78971ebfdd811d56b9c3e43e1"
+    },
+    {
+      "blindId": "W045",
+      "candidateId": "balea-aqua-hyaluron",
+      "catalogProductId": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/formula-source.json",
+      "rawInciSha256": "b88c74b5afbd5758115fbf5c79dea65a527e9dc628bf9d6ef3b3aefb20149b6e"
+    },
+    {
+      "blindId": "W046",
+      "candidateId": "balea-kopfhaut-sensitive",
+      "catalogProductId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-kopfhaut-sensitive/formula-source.json",
+      "rawInciSha256": "5ba7d679be537f73a70fd38616fd27b85867324f82560c428d710a6d4979da38"
+    },
+    {
+      "blindId": "W047",
+      "candidateId": "nivea-shampoo-conditioner-2in1",
+      "catalogProductId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/nivea-shampoo-conditioner-2in1/formula-source.json",
+      "rawInciSha256": "ceab2694e1668b3c0706f7124c99b3ca180d914b479aa73ec53f6d1c56e5f5b1"
+    },
+    {
+      "blindId": "W048",
+      "candidateId": "balea-med-anti-schuppen",
+      "catalogProductId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/balea-med-anti-schuppen/formula-source.json",
+      "rawInciSha256": "cccedb619a4dfc631d3563a33615008bbb9e205162c07f65692c354d6f1e9dea"
+    },
+    {
+      "blindId": "W049",
+      "candidateId": "syoss-intense-volume-shampoo",
+      "catalogProductId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/syoss-intense-volume-shampoo/formula-source.json",
+      "rawInciSha256": "684b5eb91114ee1b03d90a9cd7ab66976773dbc47b8885d76861d1944fefe706"
+    },
+    {
+      "blindId": "W050",
+      "candidateId": "pantene-hydra-glow",
+      "catalogProductId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/pantene-hydra-glow/formula-source.json",
+      "rawInciSha256": "8147b42e5449a8a8f2bc2a4732280382b8194c6d3531d356d97f733734122deb"
+    }
+  ]
+}

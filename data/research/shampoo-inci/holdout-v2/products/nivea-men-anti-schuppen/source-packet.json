@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:nivea-men-anti-schuppen",
+  "candidateId": "nivea-men-anti-schuppen",
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "exactIdentity": {
+    "brand": "NIVEA MEN",
+    "name": "Anti Schuppen Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "4006000158464"
+    ]
+  },
+  "selectionArchetype": "problem-led conventional anti-dandruff shampoo",
+  "canonicalFormulaSourceUrl": "https://www.nivea.de/produkte/anti-schuppen-shampoo-40060001584640001.html",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German manufacturer formula is canonical; exact-GTIN dm formula matches.",
+  "officialClaimSummary": [
+    "Anti Schuppen Shampoo",
+    "regelmäßige Anwendung"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Anti-dandruff is the dominant problem-led positioning and Piroctone Olamine is present.",
+    "The manufacturer recommends regular application; the operational treatment role describes the active-led purpose, not a fixed medical dosing schedule."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.de/p/d/1620916/nivea-men-shampoo-anti-schuppen"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+  },
+  "notes": "Current German manufacturer PDP contains full INCI and the exact GTIN in its URL. The official list matches dm's exact-GTIN 250 ml list. Manufacturer hair-root-strength and pH claims are positioning evidence, not proof of hair growth or measured pH.",
+  "officialProductPage": "https://www.nivea.de/produkte/anti-schuppen-shampoo-40060001584640001.html"
+}

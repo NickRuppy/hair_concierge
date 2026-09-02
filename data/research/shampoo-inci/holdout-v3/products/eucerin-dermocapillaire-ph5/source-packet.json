@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+  "candidateId": "eucerin-dermocapillaire-ph5",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Eucerin",
+    "name": "DermoCapillaire pH5 Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "4005800036736"
+    ]
+  },
+  "selectionArchetype": "sensitive-scalp, pH-oriented everyday shampoo",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/3087005/eucerin-eucerin-dermo-capillaire-ph5-shampoo",
+  "manufacturerFormulaAvailability": "unavailable",
+  "retailerFallbackReason": "The German manufacturer page provides positioning but no complete usable INCI in this research packet; dm Germany supplies the exact-GTIN formula.",
+  "sourcePriorityRationale": "No complete manufacturer formula is used for this exact product packet; the selected German retailer formula is canonical.",
+  "officialClaimSummary": [
+    "pH-oriented scalp-care positioning",
+    "mild cleansing direction",
+    "suitable for frequent use direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Sensitive-scalp and pH positioning are permitted later positioning evidence.",
+    "The product page’s everyday-use direction is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://www.eucerin.de/produkte/dermocapillaire/ph5-shampoo",
+    "https://www.shop-apotheke.com/beauty/9508071/eucerin-dermocapillaire-ph5-shampoo.htm"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Formula is retailer-sourced for this packet; manufacturer positioning remains evidence only and does not replace formula provenance. Shop Apotheke’s separate Wirkstoffe/Hilfsstoffe summary mentions Piroctone Olamine, but that conflicts with its own complete Zusammensetzung and dm’s matching complete INCI; the summary is not formula evidence.",
+  "officialProductPage": "https://www.eucerin.de/produkte/dermocapillaire/ph5-shampoo"
+}

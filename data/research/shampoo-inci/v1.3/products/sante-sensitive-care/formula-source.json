@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": null,
+  "formulaCode": "4060901",
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "sante-de-4060901",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.sante.de/sensitive-care-shampoo-probiotika-3-fach-protein-komplex/4060901-M",
+      "rawInci": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin**"
+    }
+  ],
+  "rawInci": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin**",
+  "normalizedInci": [
+    "aqua (water)",
+    "sodium coco-sulfate",
+    "lauryl glucoside",
+    "coco-glucoside",
+    "maris sal (sea salt)",
+    "aloe barbadensis leaf juice*",
+    "citric acid",
+    "disodium cocoyl glutamate",
+    "lactococcus ferment lysate",
+    "arginine",
+    "sodium cocoyl glutamate",
+    "phytic acid",
+    "hydrolyzed corn protein",
+    "hydrolyzed wheat protein",
+    "hydrolyzed soy protein",
+    "leuconostoc/radish root ferment filtrate",
+    "lactic acid",
+    "sodium chloride",
+    "pca ethyl cocoyl arginate",
+    "potassium sorbate",
+    "sodium benzoate",
+    "parfum (fragrance)**",
+    "linalool**",
+    "benzyl salicylate**",
+    "vanillin**"
+  ],
+  "inciFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

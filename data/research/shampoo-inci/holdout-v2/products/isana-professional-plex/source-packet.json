@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:isana-professional-plex",
+  "candidateId": "isana-professional-plex",
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "exactIdentity": {
+    "brand": "ISANA PROFESSIONAL",
+    "name": "Plex Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": ["4305615975917"]
+  },
+  "selectionArchetype": "plex/repair positioning with drugstore own-brand source authority",
+  "canonicalFormulaSourceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Rossmann is the brand owner/manufacturer-distributor for ISANA; its current German PDP is treated as official evidence and exposes exact GTIN via URL plus full INCI.",
+  "officialClaimSummary": [
+    "Plex-Serie stärkt das Haar von innen und außen.",
+    "Rezeptur mit Phytoprotein-Komplex aus Reis, Soja und Weizen.",
+    "Für geschädigte Haarstruktur, Spliss und Haarbruch."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Repair/plex positioning is dominant.",
+    "Use instructions are regular rinse-out shampoo instructions."
+  ],
+  "corroboratingUrls": [
+    {
+      "url": "https://incidecoder.com/products/isana-professional-plex-shampoo",
+      "note": "Secondary/older ingredient database page showed the same core INCI; used only as non-authoritative corroboration, not canonical source."
+    }
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Current official Rossmann page positions a repair/plex shampoo, not a clarifying or occasional reset SKU."
+  },
+  "notes": "Rossmann page does not print GTIN as visible text in the crawl, but the official PDP URL is keyed by 4305615975917."
+}

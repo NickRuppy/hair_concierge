@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:kerastase-specifique-bain-divalent",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "3474636954766",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "kerastase-de-bain-divalent-3474636954766-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.kerastase.de/produktlinien/produktlinien/specifique/bain-divalent/KER_00086.html",
+      "rawInci": "Aqua/Water, Sodium Laureth Sulfate, TEA-Lauryl Sulfate, Cocamide MIPA, Disodium Cocoamphodiacetate, Glycol Distearate, Hexylene Glycol, Sodium Chloride, Citric Acid, Sodium Benzoate, Sodium Hydroxide, Capryloyl Glycine, Polyquaternium-11, Salicylic Acid, Carbomer, Pyridoxine HCl, Menthoxypropanediol, Guar Hydroxypropyltrimonium Chloride, Hexyl Cinnamal, Linalool, Hydroxycitronellal, Citronellol, Benzyl Alcohol, Fumaric Acid, Parfum/Fragrance.",
+      "productMatch": "exact_variant"
+    }
+  ],
+  "rawInci": "Aqua/Water, Sodium Laureth Sulfate, TEA-Lauryl Sulfate, Cocamide MIPA, Disodium Cocoamphodiacetate, Glycol Distearate, Hexylene Glycol, Sodium Chloride, Citric Acid, Sodium Benzoate, Sodium Hydroxide, Capryloyl Glycine, Polyquaternium-11, Salicylic Acid, Carbomer, Pyridoxine HCl, Menthoxypropanediol, Guar Hydroxypropyltrimonium Chloride, Hexyl Cinnamal, Linalool, Hydroxycitronellal, Citronellol, Benzyl Alcohol, Fumaric Acid, Parfum/Fragrance.",
+  "normalizedInci": ["aqua/water", "sodium laureth sulfate", "tea-lauryl sulfate", "cocamide mipa", "disodium cocoamphodiacetate", "glycol distearate", "hexylene glycol", "sodium chloride", "citric acid", "sodium benzoate", "sodium hydroxide", "capryloyl glycine", "polyquaternium-11", "salicylic acid", "carbomer", "pyridoxine hcl", "menthoxypropanediol", "guar hydroxypropyltrimonium chloride", "hexyl cinnamal", "linalool", "hydroxycitronellal", "citronellol", "benzyl alcohol", "fumaric acid", "parfum/fragrance"],
+  "inciFingerprint": "5423d1c0433feea807e9842dce77223f3f920c32e7ce4d03e8c47120777fbaa7",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

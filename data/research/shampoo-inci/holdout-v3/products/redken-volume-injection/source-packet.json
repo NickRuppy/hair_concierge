@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:redken-volume-injection",
+  "candidateId": "redken-volume-injection",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Redken",
+    "name": "Volume Injection Shampoo",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": [
+      "3474636920266"
+    ]
+  },
+  "selectionArchetype": "volume-positioned daily shampoo",
+  "canonicalFormulaSourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/volume-injection/volume-injection-shampoo",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "volume direction",
+    "daily-use direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Volume positioning is permitted later focus evidence.",
+    "Daily-use direction is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://de.lorealpartnershop.com/default/volume-injection-shampoo/DE3474636920266.html"
+  ],
+  "conflictingUrls": [
+    "https://de.lorealpartnershop.com/default/volume-injection-shampoo/DE3474636920266.html"
+  ],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Official German formula is canonical. The professional partner page is preserved as corroboration. A minor ordering/formatting variation reported by corroborating provenance is retained as visibility-only context; the official current German formula remains canonical.",
+  "officialProductPage": "https://www.redken.eu/de-de/produkte/haarpflege/volume-injection/volume-injection-shampoo"
+}

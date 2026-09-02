@@ -1,0 +1,526 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "51a0b647-2794-49a3-96e1-e7695432561e:9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Official sebamed page identifies Anti-Juckreiz Akut Shampoo Urea 5% 200 ml, EAN 4103040048448.",
+      "The official exact-EAN formula is the canonical classification source; a retailer list with a late-list variant is not merged into this formula version.",
+      "Urea is second and Laureth-9/Polidocanol anti-itch positioning makes this a scalp-active boundary case."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Nach 2 Wochen bis zu 63% weniger Trockenheit",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Polidocanol juckreizlindernd",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Disodium Laureth Sulfosuccinate",
+      "Sodium Lauryl Sulfoacetate",
+      "Lauryl Glucoside",
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Laureth-9",
+      "Laureth-2"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "PEG-120 Methyl Glucose Dioleate",
+      "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+      "Helianthus annuus seed oil"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid",
+      "Lactic Acid",
+      "Sodium Citrate"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The mixed sulfosuccinate/sulfoacetate/glucoside/SLES architecture supports moderate cleansing; profile matching should treat the scalp-active dry/itch route separately.",
+      "supportingSignals": [
+        {
+          "observation": "Multiple anionic/nonionic surfactants are present after Urea.",
+          "inference": "Moderate cleansing is plausible.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "mixed-gentle-cleanser-base"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "mixed-gentle-cleanser-base"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Urea/humectant context and cationic starch support scalp/hair feel more than strong hair deposition.",
+      "supportingSignals": [
+        {
+          "observation": "Urea is second, with cationic starch derivative and mild lipid-like thickeners.",
+          "inference": "Low-to-moderate cosmetic conditioning is plausible.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "urea-cationic-starch-care"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "urea-cationic-starch-care"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No rich silicone/oil deposition system is present; weight potential remains low despite cationic starch and lipid-like thickeners.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone system is listed and oils/lipids are late or functional thickeners.",
+          "inference": "High weight is not supported.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "low-weight-care"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "low-weight-care"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The product is acute anti-itch/dry-scalp care with Urea 5% and Laureth-9/Polidocanol positioning, so it is scalp-active product truth for dry/sensitive-flake contexts, not dandruff treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Urea is second and official copy names anti-itch acute scalp care.",
+          "inference": "Primary focus is scalp-active boundary use.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "urea-polidocanol-scalp-active"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "urea-polidocanol-scalp-active"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Gentle remains a distinct secondary route because the exact product combines urea/scalp-comfort positioning with mild frequent-use/pH 5.5 evidence; it is not inferred merely from being scalp-targeted.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence supports a distinct secondary route without double-counting the primary scalp-active target.",
+          "inference": "The secondary-focus value is retained with moderate confidence.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Acute anti-itch/dry-scalp positioning makes this a directed scalp-care role; it should route dry flakes toward dry/sensitive scalp support, not anti-dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "Official product name and copy say Anti-Juckreiz Akut Shampoo Urea 5%.",
+          "inference": "Treatment role is a compact cosmetic scalp-care role and does not imply dandruff or medical suitability.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "acute-scalp-treatment-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "acute-scalp-treatment-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets dry/sensitive scalp, and urea plus pH/gentle-use cues provide a coherent cosmetic comfort route.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets dry/sensitive scalp, and urea plus pH/gentle-use cues provide a coherent cosmetic comfort route.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact official complete INCI does not contain Piroctone Olamine or Climbazole. Dry flakes from dry/sensitive scalp are handled through dry/sensitive scalp support, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The canonical official formula contains Urea and Laureth-9 but no recognized EU/German MVP dandruff-support active.",
+          "inference": "Dandruff support is not supported; the scalp-active route is dry/itch comfort rather than conventional anti-dandruff support.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-active-absence"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The product is scalp-active for dry/itchy scalp.",
+          "inference": "That can be relevant for dry flakes, but it must not be mapped to true dandruff support without Piroctone Olamine or Climbazole.",
+          "sourceIds": [
+            "official-sebamed-urea-5-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-active-absence"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      1
+    ],
+    "repairR1": [
+      1,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Surfactant blend cleanses.",
+        "g2FormulaRelevanceAndDelivery": "Multiple surfactants are present in shampoo context.",
+        "g3EndpointSpecificity": "Endpoint is cleansing strength."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Cationic starch and humectant/lipid context can affect feel.",
+        "g2FormulaRelevanceAndDelivery": "They are present but not a rich hair-deposition system.",
+        "g3EndpointSpecificity": "Endpoint is conditioning potential."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Moderate cleansing with low weight can preserve movement.",
+        "g2FormulaRelevanceAndDelivery": "Formula is low weight and rinse-off.",
+        "g3EndpointSpecificity": "Route is clean/light lift."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Blend and urea/scalp-care context affect tolerance potential.",
+        "g2FormulaRelevanceAndDelivery": "Formula has mixed surfactants but also fragrance and scalp-active route.",
+        "g3EndpointSpecificity": "Endpoint is mildness potential, not medical suitability."
+      }
+    },
+    "weightDepositionLoad": "Low: cationic starch derivative plus limited lipid-like thickeners.",
+    "weightPersistence": "Low: no rich persistent deposition system established.",
+    "weightResetCapacity": "Moderate: mixed cleanser base.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [
+      {
+        "endpoint": "dry scalp reduction claim",
+        "scope": "unclear",
+        "sourceIds": [
+          "official-sebamed-urea-5-2026-08-10"
+        ]
+      }
+    ],
+    "scopeNotes": "Official source provides the canonical formula, EAN and clinical-study copy. The retailer variant remains provenance, but it is not merged into this official formula-version analysis."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti-itch and dry-scalp acute care",
+      "verdict": "indeterminate",
+      "support": "Urea 5% and Laureth-9/Polidocanol positioning are exact-product scalp-active signals.",
+      "limitation": "The public summary does not prove individual tolerance or medical suitability; the compact profile should keep this as dry/sensitive scalp support rather than dandruff support.",
+      "sourceIds": [
+        "official-sebamed-urea-5-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-sebamed-urea-5-2026-08-10",
+    "dm-sebamed-urea-5-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Urea 5%, acute anti-itch, and dry-scalp wording are cosmetic scalp-targeted product truth here; the record supports dry/sensitive scalp review without creating dandruff or medical-treatment suitability."
+  }
+}

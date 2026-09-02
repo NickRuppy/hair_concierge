@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4072600703502",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T00:00:00+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-guhl-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.guhl.com/produkt/kraft-fuelle/kraft-und-fuelle-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes"
+    },
+    {
+      "id": "dm-de-4072600703502-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "coco-glucoside",
+    "lactic acid",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "glyceryl oleate",
+    "sorbitan caprylate",
+    "panthenol",
+    "tetrasodium glutamate diacetate",
+    "menthol",
+    "caffeine",
+    "glycerin",
+    "rosmarinus officinalis leaf extract",
+    "alcohol",
+    "dimethylhydroxy dihydroflavone",
+    "lecithin",
+    "sodium chloride",
+    "citric acid",
+    "leuconostoc/radish root ferment filtrate",
+    "tocopheryl acetate",
+    "biotin",
+    "tocopherol",
+    "sodium benzoate",
+    "parfum",
+    "limonene",
+    "linalool",
+    "tetramethyl acetyloctahydronaphthalenes"
+  ],
+  "inciFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

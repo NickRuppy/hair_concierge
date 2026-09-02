@@ -1,0 +1,530 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:herbal-essences-fiji:3f61f3ba85eaf215b60dffee572dcf0187b73897fb51488e52e99164f028a45d",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Sodium Cocoyl Isethionate and Sodium Lauroyl Sarcosinate are paired with Lauramidopropyl Betaine and Cocamidopropyl Betaine.",
+      "Polyquaternium-10 is the main conditioning/deposition polymer.",
+      "Tetrasodium EDTA and Sodium Citrate are present as chelator/buffer signals.",
+      "Citric Acid appears early but finished pH is unknown.",
+      "Fragrance allergens and Citrus Aurantium Peel Oil are listed.",
+      "Post-unblind score adjustment: volumeV2 [1,2] -> [1,1] because Polyquaternium-10 is an isolated polymer/body signal and v1.4 caps isolated polymer/protein V2 evidence at 1."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Schwerelose Feuchtigkeit / Feuchtigkeitsshampoo; mit Kokosnussextrakt; ohne Silikone, ohne Sulfat, vegan.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Cocoyl Isethionate",
+      "Sodium Lauroyl Sarcosinate"
+    ],
+    "surfactantsSecondary": [
+      "Lauramidopropyl Betaine",
+      "Cocamidopropyl Betaine"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [
+      "Histidine"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Sodium Citrate",
+      "Tetrasodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SCI, Sodium Lauroyl Sarcosinate and two betaines support moderate cleansing with upper-moderate capacity, without a classical sulfate-led strong call.",
+      "supportingSignals": [
+        {
+          "observation": "SCI, Sarcosinate and Betaines create moderate-to-upper-moderate non-classical-sulfate cleansing.",
+          "inference": "SCI, Sodium Lauroyl Sarcosinate and two betaines support moderate cleansing with upper-moderate capacity, without a classical sulfate-led strong call.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Sulfate-free does not automatically mean low cleansing.",
+          "inference": "Sulfate-free does not automatically mean low cleansing.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Polyquaternium-10 provides a substantive cationic polymer route; without silicone, rich lipid or protein system the level remains moderate.",
+      "supportingSignals": [
+        {
+          "observation": "Polyquaternium-10 is one substantive cationic polymer route.",
+          "inference": "Polyquaternium-10 provides a substantive cationic polymer route; without silicone, rich lipid or protein system the level remains moderate.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "PQ-10 alone does not create high conditioning.",
+          "inference": "PQ-10 alone does not create high conditioning.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "One substantive PQ-10 route meets the v1.4 moderate threshold, while the otherwise lightweight architecture prevents high.",
+      "supportingSignals": [
+        {
+          "observation": "One substantive cationic polymer route justifies moderate weight potential.",
+          "inference": "One substantive PQ-10 route meets the v1.4 moderate threshold, while the otherwise lightweight architecture prevents high.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone or substantive lipid route is present.",
+          "inference": "No silicone or substantive lipid route is present.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The revealed “schwerelose Feuchtigkeit” story is compatible with general light care, but moisture is not a focus enum and `gentle` would overstate a scalp/mildness claim.",
+      "supportingSignals": [
+        {
+          "observation": "Lightweight moisture/care does not map cleanly to a non-overreaching focus enum.",
+          "inference": "The revealed “schwerelose Feuchtigkeit” story is compatible with general light care, but moisture is not a focus enum and `gentle` would overstate a scalp/mildness claim.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Sulfate-free and vegan are attribute claims, not focus values.",
+          "inference": "Sulfate-free and vegan are attribute claims, not focus values.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary manufacturer direction with an independent formula route is stronger than the broad lightweight-care story.",
+      "supportingSignals": [
+        {
+          "observation": "No separate focus direction is selected.",
+          "inference": "No distinct secondary manufacturer direction with an independent formula route is stronger than the broad lightweight-care story.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Shine or repair are not separately claimed in the packet.",
+          "inference": "Shine or repair are not separately claimed in the packet.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No explicit frequent non-strong, reset, deep-cleansing or treatment trigger is present; regular remains the default.",
+      "supportingSignals": [
+        {
+          "observation": "Retailer pages describe ordinary shampoo use with conditioner suggested.",
+          "inference": "No explicit frequent non-strong, reset, deep-cleansing or treatment trigger is present; regular remains the default.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Lightweight moisture is not a frequent-use trigger by itself.",
+          "inference": "Lightweight moisture is not a frequent-use trigger by itself.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The unblind source reveals hair-moisture positioning, not cosmetic dry/tight/itchy/sensitive-scalp targeting; this resolves unknown to not_targeted.",
+      "supportingSignals": [
+        {
+          "observation": "The claims target lightweight hair moisture, not sensitive/dry/itchy scalp comfort.",
+          "inference": "The unblind source reveals hair-moisture positioning, not cosmetic dry/tight/itchy/sensitive-scalp targeting; this resolves unknown to not_targeted.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance/citrus exposure limits sensitive confidence, but fragrance is not the reason for not_targeted.",
+          "inference": "Fragrance/citrus exposure limits sensitive confidence, but fragrance is not the reason for not_targeted.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete formula lacks Piroctone Olamine and Climbazole; citrus or light cleansing claims cannot upgrade dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine and Climbazole are absent.",
+          "inference": "The complete formula lacks Piroctone Olamine and Climbazole; citrus or light cleansing claims cannot upgrade dandruff support.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Tetrasodium EDTA/Sodium Citrate are not accepted anti-dandruff actives.",
+          "inference": "Tetrasodium EDTA/Sodium Citrate are not accepted anti-dandruff actives.",
+          "sourceIds": [
+            "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Residue: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Residue: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Beschwerung/Residue: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      }
+    },
+    "weightDepositionLoad": "Die Beschwerung wird qualitativ aus v1.4-Route-Arten abgeleitet; INCI liefert keine exakten Einsatzmengen oder Wiederholungs-/Residue-Daten.",
+    "weightPersistence": "Persistenz bleibt mechanistisch begrenzt, weil keine wiederholten Shampoo-only Ablagerungsdaten im Quellenpaket vorliegen.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Chelator-/Klärungsarchitektur abgeleitet; keine Fertigprodukt-Resetprüfung ist erfasst.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine anerkannte echte Bond-Repair-Route wird aus INCI abgeleitet; Plex/Keratin/Protein-Sprache bleibt kosmetisch und temporär.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and unblinded product/source-packet claim audit only; no public shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Schwerelose Feuchtigkeit mit Kokosnussextrakt, ohne Silikone und ohne Sulfat",
+      "verdict": "plausible",
+      "support": "SCI/Sarcosinate/Betaines plus Polyquaternium-10 support a light-care shampoo without silicone, compatible with lightweight moisture as a broad care story.",
+      "limitation": "Moisture is not a v1.4 focus enum; coconut juice is very late, and sulfate-free alone is not proof of mildness or scalp comfort.",
+      "sourceIds": [
+        "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-herbal-essences-fiji-8006530290012-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Lightweight moisture/sulfate-free positioning is cosmetic hair-care positioning, not medical or scalp-treatment language."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W033",
+  "formula": {
+    "inciFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "film_former",
+        "name": "acrylates copolymer",
+        "position": 6
+      },
+      {
+        "family": "payload_lipid",
+        "name": "butyrospermum parkii (shea) butter",
+        "position": 10
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 15
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "polyquaternium-39",
+        "position": 19
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium c14-16 olefin sulfonate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 13,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Acrylates Copolymer, Shea Butter und zwei kationische Polymere ergeben mehrere Depositionswege, aber kein Silikon und keine frühe Ölphase."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Filmformer und Polyquats können haften; Shea und spätere Polymerpositionen wirken eher begrenzt im Shampoo-Kontext."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "Olefin Sulfonate an Position 2 mit CAPB gibt einen kräftigen Reset-Gegenpol."
+  },
+  "competingSignals": [
+    "Starke Olefin-Sulfonate-Reinigung spricht gegen eine eindeutig schwere Ablagerung.",
+    "Glycol Distearate ist ausgeschlossen und zählt nicht als persistente Route."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil mehrere Depositionssysteme ein spürbares Rückstandsrisiko tragen, der starke Reset aber eine schwere Einordnung bremst.",
+  "whyNotNeighborBand": "Low unterschätzt Filmformer, Shea und zwei Polyquats; High wäre ohne Silikon und trotz kräftigem Olefin-Sulfonate-Reset zu aggressiv.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel und klare Gegenpole, aber retailer-Quelle und unbekannte Einsatzmengen begrenzen die Sicherheit."
+  }
+}

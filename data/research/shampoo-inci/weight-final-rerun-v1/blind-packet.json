@@ -1,0 +1,4212 @@
+{
+  "schemaVersion": "shampoo-final-weight-blind-packet-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "policySha256": "6437326719c66e79900259d7b413436a05ac5d36a792f00526fd4088ac168f78",
+  "products": [
+    {
+      "blindId": "W001",
+      "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "coco-glucoside",
+        "betaine",
+        "glycerin",
+        "panthenol",
+        "lactic acid",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "glyceryl oleate",
+        "sorbitan caprylate",
+        "erythritol",
+        "sodium chloride",
+        "tetrasodium glutamate diacetate",
+        "piroctone olamine",
+        "maltodextrin",
+        "citric acid",
+        "mentha aquatica leaf extract",
+        "tilia cordata flower extract",
+        "sodium benzoate",
+        "parfum",
+        "ci 42090",
+        "caramel"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 9
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 10
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W002",
+      "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Sodium Benzoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Maris Sal (Dead Sea Salt), Butylene Glycol, Citric Acid, Potassium Sorbate, Panthenol, Citrus Aurantium Dulcis (Orange) Peel Oil, Limonene, Menthol, Mentha Arvensis Leaf Oil, Glycerin, Cymbopogon Schoenanthus Leaf Extract, Cimicifuga Racemosa Root Extract, Lepidium Meyenii Root Extract, Silybum Marianum Seed Extract, Urtica Dioica (Nettle) Leaf Extract",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "sodium benzoate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "maris sal (dead sea salt)",
+        "butylene glycol",
+        "citric acid",
+        "potassium sorbate",
+        "panthenol",
+        "citrus aurantium dulcis (orange) peel oil",
+        "limonene",
+        "menthol",
+        "mentha arvensis leaf oil",
+        "glycerin",
+        "cymbopogon schoenanthus leaf extract",
+        "cimicifuga racemosa root extract",
+        "lepidium meyenii root extract",
+        "silybum marianum seed extract",
+        "urtica dioica (nettle) leaf extract"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 6
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium dulcis (orange) peel oil",
+            "position": 12,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "mentha arvensis leaf oil",
+            "position": 15,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W003",
+      "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Sodium Citrate, Dimethiconol, Dimethicone, Piroctone Olamine, Parfum, Citric Acid, Sodium Benzoate, Sodium Salicylate, TEA-Dodecylbenzenesulfonate, Guar Hydroxypropyltrimonium Chloride, Menthol, Tocopheryl Acetate, Trideceth-10, Tetrasodium EDTA, Sodium Hydroxide, Hexyl Cinnamal, Linalool, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Propylene Glycol, Benzyl Alcohol, Triethylene Glycol, Cereus Grandiflorus Flower Extract, Bambusa Vulgaris Leaf/Stemextract",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium lauryl sulfate",
+        "sodium chloride",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "glycol distearate",
+        "sodium citrate",
+        "dimethiconol",
+        "dimethicone",
+        "piroctone olamine",
+        "parfum",
+        "citric acid",
+        "sodium benzoate",
+        "sodium salicylate",
+        "tea-dodecylbenzenesulfonate",
+        "guar hydroxypropyltrimonium chloride",
+        "menthol",
+        "tocopheryl acetate",
+        "trideceth-10",
+        "tetrasodium edta",
+        "sodium hydroxide",
+        "hexyl cinnamal",
+        "linalool",
+        "aloe barbadensis leaf juice",
+        "hydroxycitronellal",
+        "geraniol",
+        "propylene glycol",
+        "benzyl alcohol",
+        "triethylene glycol",
+        "cereus grandiflorus flower extract",
+        "bambusa vulgaris leaf/stemextract"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 9
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 10
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 6
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 7,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W004",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "rawInci": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1)",
+      "normalizedInci": [
+        "aqua/water",
+        "sodium laureth sulfate",
+        "coco-betaine",
+        "glycol distearate",
+        "glycerin",
+        "glycine soja oil/soybean oil",
+        "aloe barbadensis leaf juice",
+        "avena sativa kernel extract/oat kernel extract",
+        "oryza sativa starch/rice starch",
+        "ppg-5-ceteth-20",
+        "peg-55 propylene glycol oleate",
+        "peg-60 hydrogenated castor oil",
+        "dicaprylyl ether",
+        "dilauryl thiodipropionate",
+        "carbomer",
+        "sodium chloride",
+        "sodium hydroxide",
+        "propylene glycol",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "citric acid",
+        "xanthan gum",
+        "polyquaternium-7",
+        "tocopherol",
+        "potassium sorbate",
+        "sodium benzoate",
+        "salicylic acid",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "dicaprylyl ether",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 19
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-7",
+            "position": 22
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 4,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "glycine soja oil/soybean oil",
+            "position": 6,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "peg-60 hydrogenated castor oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W005",
+      "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8",
+      "rawInci": "Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+      "normalizedInci": [
+        "aqua",
+        "cocamidopropyl betaine",
+        "sodium cocoyl isethionate",
+        "sodium chloride",
+        "aloe barbadensis leaf juice powder",
+        "arginine",
+        "serine",
+        "linum usitatissimum seed extract",
+        "parfum",
+        "glycerin",
+        "glyceryl oleate",
+        "pca",
+        "glycine",
+        "histidine",
+        "coconut acid",
+        "glycol distearate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "sodium isethionate",
+        "coco-glucoside",
+        "sodium pca",
+        "glyceryl stearate",
+        "aspartic acid",
+        "alanine",
+        "valine",
+        "isoleucine",
+        "proline",
+        "threonine",
+        "phenylalanine",
+        "phenoxyethanol",
+        "ethylhexylglycerin",
+        "benzoic acid",
+        "citric acid",
+        "sodium lactate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 11
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium cocoyl isethionate",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 19
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 16,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W006",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Coco-Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Hydrogenated Vegetable Oil, Lactic Acid, Glyceryl Oleate, Guar Hydroxypropyltrimonium Chloride, Sorbitan Caprylate, Erythritol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Citric Acid, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 45100, CI 60730",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "coco-glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "hydrogenated vegetable oil",
+        "lactic acid",
+        "glyceryl oleate",
+        "guar hydroxypropyltrimonium chloride",
+        "sorbitan caprylate",
+        "erythritol",
+        "glycerin",
+        "panthenol",
+        "tetrasodium glutamate diacetate",
+        "piroctone olamine",
+        "citric acid",
+        "hydrolyzed hyaluronic acid",
+        "sodium hyaluronate",
+        "sodium benzoate",
+        "parfum",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "ci 45100",
+        "ci 60730"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 8
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 9
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": [
+          {
+            "name": "hydrogenated vegetable oil",
+            "position": 6,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W007",
+      "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+      "rawInci": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium c14-16 olefin sulfonate",
+        "cocamide mipa",
+        "sodium chloride",
+        "cocamidopropyl betaine",
+        "glycerin",
+        "argania spinosa (argan) kernel oil",
+        "panthenol",
+        "polyquaternium-10",
+        "polyquaternium-7",
+        "glycol distearate",
+        "dicaprylyl ether",
+        "decyl glucoside",
+        "glyceryl oleate",
+        "citric acid",
+        "sodium hydroxide",
+        "sodium salicylate",
+        "sodium benzoate",
+        "trisodium ethylenediamine disuccinate",
+        "isopropanolamine",
+        "parfum/fragrance",
+        "benzoic acid",
+        "benzyl benzoate",
+        "citrus aurantium peel oil",
+        "limonene"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "argania spinosa (argan) kernel oil",
+            "position": 7
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-10",
+            "position": 9
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-7",
+            "position": 10
+          },
+          {
+            "family": "payload_lipid",
+            "name": "dicaprylyl ether",
+            "position": 12
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium c14-16 olefin sulfonate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 5
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 13
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 11,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 24,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W008",
+      "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Laureth-9, Sodium Chloride, Cocamidopropyl Betaine, Urea, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Glycerin, Maris Sal (Dead Sea Salt), Citric Acid, Menthol, Potassium Sorbate, Panthenol, Lactic Acid, Mentha Arvensis Leaf Oil",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "laureth-9",
+        "sodium chloride",
+        "cocamidopropyl betaine",
+        "urea",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "sodium benzoate",
+        "glycerin",
+        "maris sal (dead sea salt)",
+        "citric acid",
+        "menthol",
+        "potassium sorbate",
+        "panthenol",
+        "lactic acid",
+        "mentha arvensis leaf oil"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 7
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "mentha arvensis leaf oil",
+            "position": 16,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W009",
+      "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+      "rawInci": "Aqua • Sodium Laureth Sulfate • Cocamidopropyl Betaine • Glycerin • Coco-Glucoside • Panthenol • Salicylic Acid • Glyceryl Oleate • Sodium Hyaluronate • Hydroxypropyl Guar Hydroxypropyltrimonium Chloride • Hydrogenated Palm Glycerides Citrate • Quaternium-80 • Propylene Glycol • Tocopherol • Lecithin • Ascorbyl Palmitate • Citric Acid • Sodium Chloride • Sodium Benzoate • Potassium Sorbate • Parfum • Hexyl Cinnamal • Linalool",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "glycerin",
+        "coco-glucoside",
+        "panthenol",
+        "salicylic acid",
+        "glyceryl oleate",
+        "sodium hyaluronate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "hydrogenated palm glycerides citrate",
+        "quaternium-80",
+        "propylene glycol",
+        "tocopherol",
+        "lecithin",
+        "ascorbyl palmitate",
+        "citric acid",
+        "sodium chloride",
+        "sodium benzoate",
+        "potassium sorbate",
+        "parfum",
+        "hexyl cinnamal",
+        "linalool"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 8
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 11
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 16
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": [
+          {
+            "name": "quaternium-80",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W010",
+      "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citric Acid, Sodium Benzoate, Maris Sal (Dead Sea Salt), Potassium Sorbate, Glycerin, Melaleuca Alternifolia (Tea Tree) Leaf Oil, Limonene, Aloe Barbadensis Leaf Juice Powder, Lactic Acid, Citrus Limon Peel Oil, Citrus Sinensis Peel Oil Expressed, Litsea Cubeba Fruit Oil, Silt",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "piroctone olamine",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "citric acid",
+        "sodium benzoate",
+        "maris sal (dead sea salt)",
+        "potassium sorbate",
+        "glycerin",
+        "melaleuca alternifolia (tea tree) leaf oil",
+        "limonene",
+        "aloe barbadensis leaf juice powder",
+        "lactic acid",
+        "citrus limon peel oil",
+        "citrus sinensis peel oil expressed",
+        "litsea cubeba fruit oil",
+        "silt"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "litsea cubeba fruit oil",
+            "position": 18
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "melaleuca alternifolia (tea tree) leaf oil",
+            "position": 12,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "citrus limon peel oil",
+            "position": 16,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "citrus sinensis peel oil expressed",
+            "position": 17,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W011",
+      "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium methyl cocoyl taurate",
+        "decyl glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "argania spinosa kernel oil",
+        "sodium hydrolyzed potato starch dodecenylsuccinate",
+        "coco-glucoside",
+        "amodimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "hydrogenated castor oil",
+        "coconut acid",
+        "disodium tetrapropenyl succinate",
+        "glycol distearate",
+        "peg-150 distearate",
+        "hexylene glycol",
+        "citric acid",
+        "sodium hydroxide",
+        "sodium benzoate",
+        "benzoic acid",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "argania spinosa kernel oil",
+            "position": 6
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 9
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 10
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 11
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 8
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 14,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W012",
+      "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "lauryl glucoside",
+        "sodium lauroyl sarcosinate",
+        "sodium chloride",
+        "piroctone olamine",
+        "lactic acid",
+        "sodium benzoate",
+        "phenoxyethanol",
+        "sodium lactate",
+        "parfum",
+        "glycol distearate",
+        "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "sodium citrate",
+        "cocamidopropyl betaine",
+        "laureth-4",
+        "citric acid",
+        "pinene",
+        "glycerin"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 13
+          },
+          {
+            "family": "cationic_conditioner",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 13
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauroyl sarcosinate",
+            "position": 4
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 15
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 12,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W013",
+      "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3",
+      "rawInci": "Water (Aqua), Aloe Barbadensis Leaf Juice*, Sodium Coco-Sulfate, Glycerin, Cocamidopropyl Betaine, Lauryl Glucoside, Citric Acid, Cucumis Sativus (Cucumber) Fruit Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Sodium Hyaluronate, Helianthus Annuus (Sunflower) Seed Oil, Tocopherol, Sea Salt (Maris Sal), Levulinic Acid, Cetearyl Alcohol, PCA Glyceryl Oleate, Betaine, Sodium Levulinate, Sodium Cetearyl Sulfate, Sodium Anisate, Guar Hydroxypropyltrimonium Chloride, Arginine, Tridecane, Coco-Glucoside, Undecane, Sodium Sulfate, Sodium Chloride, Fragrance (Parfum)**, Limonene**, Citrus Aurantium Peel Oil**, Linalool**, Citrus Limon (Lemon) Peel Oil**, Linalyl Acetate**, Pinene**, Citronellol**, Citrus Aurantium Bergamia (Bergamot) Peel Oil**, Geraniol**, Citral**, Lavandula Oil/Extract**",
+      "normalizedInci": [
+        "water (aqua)",
+        "aloe barbadensis leaf juice*",
+        "sodium coco-sulfate",
+        "glycerin",
+        "cocamidopropyl betaine",
+        "lauryl glucoside",
+        "citric acid",
+        "cucumis sativus (cucumber) fruit extract*",
+        "melissa officinalis (lemon balm) leaf extract*",
+        "sodium hyaluronate",
+        "helianthus annuus (sunflower) seed oil",
+        "tocopherol",
+        "sea salt (maris sal)",
+        "levulinic acid",
+        "cetearyl alcohol",
+        "pca glyceryl oleate",
+        "betaine",
+        "sodium levulinate",
+        "sodium cetearyl sulfate",
+        "sodium anisate",
+        "guar hydroxypropyltrimonium chloride",
+        "arginine",
+        "tridecane",
+        "coco-glucoside",
+        "undecane",
+        "sodium sulfate",
+        "sodium chloride",
+        "fragrance (parfum)**",
+        "limonene**",
+        "citrus aurantium peel oil**",
+        "linalool**",
+        "citrus limon (lemon) peel oil**",
+        "linalyl acetate**",
+        "pinene**",
+        "citronellol**",
+        "citrus aurantium bergamia (bergamot) peel oil**",
+        "geraniol**",
+        "citral**",
+        "lavandula oil/extract**"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "helianthus annuus (sunflower) seed oil",
+            "position": 11
+          },
+          {
+            "family": "payload_lipid",
+            "name": "cetearyl alcohol",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "pca glyceryl oleate",
+            "position": 16
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 21
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium coco-sulfate",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 5
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 6
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 24
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": [
+          {
+            "name": "citrus aurantium peel oil**",
+            "position": 30,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "citrus limon (lemon) peel oil**",
+            "position": 32,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "citrus aurantium bergamia (bergamot) peel oil**",
+            "position": 36,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          },
+          {
+            "name": "lavandula oil/extract**",
+            "position": 39,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W014",
+      "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium methyl cocoyl taurate",
+        "decyl glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "biotin",
+        "hydrolyzed collagen",
+        "sodium hydrolyzed potato starch dodecenylsuccinate",
+        "starch hydroxypropyltrimonium chloride",
+        "amodimethicone",
+        "coco-glucoside",
+        "glyceryl oleate",
+        "sodium lactate",
+        "lactic acid",
+        "urea",
+        "hydrogenated palm glycerides citrate",
+        "coconut acid",
+        "disodium tetrapropenyl succinate",
+        "lecithin",
+        "peg-150 distearate",
+        "hexylene glycol",
+        "citric acid",
+        "sodium hydroxide",
+        "sodium benzoate",
+        "benzoic acid",
+        "tocopherol",
+        "ascorbyl palmitate",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 12
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 16
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 19
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 27
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 11
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": [
+          {
+            "name": "starch hydroxypropyltrimonium chloride",
+            "position": 9,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W015",
+      "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Panthenol, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate",
+      "normalizedInci": [
+        "aqua (water, eau)",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "peg-7 glyceryl cocoate",
+        "hydrolyzed keratin",
+        "panthenol",
+        "dimethicone",
+        "sodium benzoate",
+        "parfum (fragrance)",
+        "citric acid",
+        "amodimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "peg-40 hydrogenated castor oil",
+        "hydrogenated castor oil",
+        "glycol distearate",
+        "laureth-4",
+        "peg-120 methyl glucose dioleate",
+        "hexyl cinnamal",
+        "laureth-23",
+        "prunus armeniaca (apricot) kernel oil",
+        "trideceth-10",
+        "sodium hydroxide",
+        "citronellol",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "propylene glycol",
+        "limonene",
+        "linalyl acetate",
+        "phenoxyethanol",
+        "linalool",
+        "sodium salicylate",
+        "potassium sorbate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 5
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed keratin",
+            "position": 6
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 8
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 12
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 13
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 15
+          },
+          {
+            "family": "payload_lipid",
+            "name": "prunus armeniaca (apricot) kernel oil",
+            "position": 21
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "peg-40 hydrogenated castor oil",
+            "position": 14,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 16,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 18,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W016",
+      "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "melaleuca alternifolia leaf oil",
+        "sodium chloride",
+        "peg-7 glyceryl cocoate",
+        "coco-betaine",
+        "phenoxyethanol",
+        "benzyl alcohol",
+        "sodium benzoate",
+        "coco glucoside",
+        "citric acid",
+        "glycol distearate",
+        "potassium sorbate",
+        "limonene",
+        "glycerin",
+        "tocopherol"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 6
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 7
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "melaleuca alternifolia leaf oil",
+            "position": 4,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 13,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W017",
+      "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+      "rawInci": "Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Lactic Acid, Tocopherol, Helianthus annuus seed oil",
+      "normalizedInci": [
+        "aqua",
+        "urea",
+        "disodium laureth sulfosuccinate",
+        "sodium lauryl sulfoacetate",
+        "laureth-9",
+        "lauryl glucoside",
+        "sodium laureth sulfate",
+        "parfum",
+        "peg-120 methyl glucose dioleate",
+        "phenoxyethanol",
+        "citric acid",
+        "laureth-2",
+        "peg/ppg-120/10 trimethylolpropane trioleate",
+        "sodium benzoate",
+        "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "sodium citrate",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "sodium chloride",
+        "lactic acid",
+        "tocopherol",
+        "helianthus annuus seed oil"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 15
+          },
+          {
+            "family": "cationic_conditioner",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 15
+          },
+          {
+            "family": "payload_lipid",
+            "name": "helianthus annuus seed oil",
+            "position": 21
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium laureth sulfosuccinate",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 6
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 7
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 9,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W018",
+      "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd",
+      "rawInci": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Glycerin, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Aloe Barbadensis Leaf Juice Powder*, Betula Alba Leaf Extract*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Glyceryl Oleate, Arginine, Betaine, Tocopherol, Alcohol*, PCA Glyceryl Oleate, Citric Acid, Phytic Acid, Hydrogenated Palm Glycerides Citrate, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Levulinic Acid, Sodium Levulinate, Lecithin, Ascorbyl Palmitate, Parfum (Fragrance)**, Vanillin**",
+      "normalizedInci": [
+        "aqua (water)",
+        "sodium coco-sulfate",
+        "lauryl glucoside",
+        "coco-glucoside",
+        "glycerin",
+        "maris sal (sea salt)",
+        "aloe barbadensis leaf juice*",
+        "aloe barbadensis leaf juice powder*",
+        "betula alba leaf extract*",
+        "hydrolyzed corn protein",
+        "hydrolyzed wheat protein",
+        "hydrolyzed soy protein",
+        "leuconostoc/radish root ferment filtrate",
+        "glyceryl oleate",
+        "arginine",
+        "betaine",
+        "tocopherol",
+        "alcohol*",
+        "pca glyceryl oleate",
+        "citric acid",
+        "phytic acid",
+        "hydrogenated palm glycerides citrate",
+        "pca ethyl cocoyl arginate",
+        "potassium sorbate",
+        "levulinic acid",
+        "sodium levulinate",
+        "lecithin",
+        "ascorbyl palmitate",
+        "parfum (fragrance)**",
+        "vanillin**"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed corn protein",
+            "position": 10
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed wheat protein",
+            "position": 11
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed soy protein",
+            "position": 12
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 14
+          },
+          {
+            "family": "weak_refatter",
+            "name": "pca glyceryl oleate",
+            "position": 19
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 22
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 27
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 28
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium coco-sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W019",
+      "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "sodium citrate",
+        "dimethiconol",
+        "parfum",
+        "citric acid",
+        "cocamide mea",
+        "glycol distearate",
+        "dimethicone",
+        "sodium chloride",
+        "guar hydroxypropyltrimonium chloride",
+        "piroctone olamine",
+        "sodium benzoate",
+        "tea-dodecylbenzenesulfonate",
+        "sodium salicylate",
+        "trideceth-10",
+        "tetrasodium edta",
+        "panthenol",
+        "sodium hydroxide",
+        "hexyl cinnamal",
+        "histidine",
+        "triethylene glycol",
+        "propylene glycol",
+        "benzyl alcohol"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 6
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 11
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 13
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 9
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 10,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W020",
+      "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+      "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl hydroxysultaine, Cocamidopropyl betaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Panthenol, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Polyquaternium-11, Cocamide MEA, Laureth-10, Propylene glycol, C13-15 alkanes, Glycerin, Linalyl acetate, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Linalool, Limonene",
+      "normalizedInci": [
+        "aqua [water]",
+        "disodium laureth sulfosuccinate",
+        "cocamidopropyl hydroxysultaine",
+        "cocamidopropyl betaine",
+        "peg-18 glyceryl oleate/cocoate",
+        "parfum [fragrance]",
+        "panthenol",
+        "avena sativa (oat) peptide",
+        "gardenia taitensis flower extract",
+        "lycium barbarum fruit extract",
+        "malva sylvestris (mallow) extract",
+        "juniperus virginiana oil",
+        "citrus aurantium peel oil",
+        "glycol distearate",
+        "citric acid",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "polyquaternium-11",
+        "cocamide mea",
+        "laureth-10",
+        "propylene glycol",
+        "c13-15 alkanes",
+        "glycerin",
+        "linalyl acetate",
+        "methylchloroisothiazolinone",
+        "methylisothiazolinone",
+        "1,2-hexanediol",
+        "caprylyl glycol",
+        "hexyl cinnamal",
+        "linalool",
+        "limonene"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-18 glyceryl oleate/cocoate",
+            "position": 5
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-11",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium laureth sulfosuccinate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 18
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 13,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 14,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "juniperus virginiana oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W021",
+      "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e",
+      "rawInci": "Aqua (Water), Sodium Coco-Sulfate, Lauryl Glucoside, Coco-Glucoside, Maris Sal (Sea Salt), Aloe Barbadensis Leaf Juice*, Citric Acid, Disodium Cocoyl Glutamate, Lactococcus Ferment Lysate, Arginine, Sodium Cocoyl Glutamate, Phytic Acid, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Leuconostoc/Radish Root Ferment Filtrate, Lactic Acid, Sodium Chloride, PCA Ethyl Cocoyl Arginate, Potassium Sorbate, Sodium Benzoate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**, Vanillin**",
+      "normalizedInci": [
+        "aqua (water)",
+        "sodium coco-sulfate",
+        "lauryl glucoside",
+        "coco-glucoside",
+        "maris sal (sea salt)",
+        "aloe barbadensis leaf juice*",
+        "citric acid",
+        "disodium cocoyl glutamate",
+        "lactococcus ferment lysate",
+        "arginine",
+        "sodium cocoyl glutamate",
+        "phytic acid",
+        "hydrolyzed corn protein",
+        "hydrolyzed wheat protein",
+        "hydrolyzed soy protein",
+        "leuconostoc/radish root ferment filtrate",
+        "lactic acid",
+        "sodium chloride",
+        "pca ethyl cocoyl arginate",
+        "potassium sorbate",
+        "sodium benzoate",
+        "parfum (fragrance)**",
+        "linalool**",
+        "benzyl salicylate**",
+        "vanillin**"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed corn protein",
+            "position": 13
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed wheat protein",
+            "position": 14
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed soy protein",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium coco-sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium cocoyl glutamate",
+            "position": 8
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium cocoyl glutamate",
+            "position": 11
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W022",
+      "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+      "rawInci": "AQUA/ WATER/ EAU, COCAMIDOPROPYL BETAINE, DISODIUM LAURETH SULFOSUCCINATE, SODIUM COCOYL ISETHIONATE, SODIUM CHLORIDE, COCAMIDE MIPA, PHENOXYETHANOL, SODIUM CITRATE, SODIUM LAUROYL SARCOSINATE, SODIUM BENZOATE, COCOS NUCIFERA (COCONUT) OIL, PARFUM (FRAGRANCE), POLYQUATERNIUM-10, COCO-GLUCOSIDE, GLYCERYL OLEATE, CITRIC ACID, ACRYLATES COPOLYMER, BENZYL ALCOHOL, ETHYLHEXYLGLYCERIN, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, POLYQUATERNIUM-7, POLYQUATERNIUM-11, HEXYL CINNAMAL, TOCOPHERYL ACETATE, BUTYLENE GLYCOL, GLYCERIN, LINALOOL, ZINGIBER OFFICINALE (GINGER) ROOT EXTRACT, SODIUM ACETATE, 1,2-HEXANEDIOL, ISOPROPYL ALCOHOL, ETHYL HEXANEDIOL, TOCOPHEROL",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "cocamidopropyl betaine",
+        "disodium laureth sulfosuccinate",
+        "sodium cocoyl isethionate",
+        "sodium chloride",
+        "cocamide mipa",
+        "phenoxyethanol",
+        "sodium citrate",
+        "sodium lauroyl sarcosinate",
+        "sodium benzoate",
+        "cocos nucifera (coconut) oil",
+        "parfum (fragrance)",
+        "polyquaternium-10",
+        "coco-glucoside",
+        "glyceryl oleate",
+        "citric acid",
+        "acrylates copolymer",
+        "benzyl alcohol",
+        "ethylhexylglycerin",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "polyquaternium-7",
+        "polyquaternium-11",
+        "hexyl cinnamal",
+        "tocopheryl acetate",
+        "butylene glycol",
+        "glycerin",
+        "linalool",
+        "zingiber officinale (ginger) root extract",
+        "sodium acetate",
+        "1,2-hexanediol",
+        "isopropyl alcohol",
+        "ethyl hexanediol",
+        "tocopherol"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-23T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "cocos nucifera (coconut) oil",
+            "position": 11
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-10",
+            "position": 13
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 15
+          },
+          {
+            "family": "film_former",
+            "name": "acrylates copolymer",
+            "position": 17
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 20
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-7",
+            "position": 21
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-11",
+            "position": 22
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium laureth sulfosuccinate",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium cocoyl isethionate",
+            "position": 4
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauroyl sarcosinate",
+            "position": 9
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 14
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W023",
+      "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium xylenesulfonate",
+        "sodium chloride",
+        "parfum",
+        "citric acid",
+        "sodium benzoate",
+        "sodium citrate",
+        "sodium salicylate",
+        "hydroxypropyl methylcellulose",
+        "sodium hydroxide",
+        "panthenol",
+        "tetrasodium edta",
+        "hexyl cinnamal",
+        "histidine",
+        "glyoxal"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W024",
+      "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Dimethiconol, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Parfum, Dimethicone, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Glycerin, Niacinamide, Linalool, Hexyl Cinnamal, Panthenol, Tocopheryl Acetate, Aloe Barbadensis Leaf Juice, Acetic Acid, Benzyl Alcohol, Triethylene Glycol, Propylene Glycol",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "sodium citrate",
+        "citric acid",
+        "cocamide mea",
+        "glycol distearate",
+        "piroctone olamine",
+        "dimethiconol",
+        "sodium chloride",
+        "guar hydroxypropyltrimonium chloride",
+        "parfum",
+        "dimethicone",
+        "sodium benzoate",
+        "tea-dodecylbenzenesulfonate",
+        "sodium salicylate",
+        "tetrasodium edta",
+        "sodium hydroxide",
+        "trideceth-10",
+        "glycerin",
+        "niacinamide",
+        "linalool",
+        "hexyl cinnamal",
+        "panthenol",
+        "tocopheryl acetate",
+        "aloe barbadensis leaf juice",
+        "acetic acid",
+        "benzyl alcohol",
+        "triethylene glycol",
+        "propylene glycol"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-24T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 10
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 12
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 7
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 8,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W025",
+      "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Parfum, Citric Acid, Sodium Chloride, Dimethiconol, Guar Hydroxypropyltrimonium Chloride, Menthol, Hexamethylindanopyran, Dimethicone, Sodium Salicylate, Sodium Benzoate, Tetrasodium EDTA, TEA-Dodecylbenzenesulfonate, Panthenol, Sodium Hydroxide, Coumarin, Hexyl Cinnamal, Trideceth-10, Citrus Aurantium Peel Oil, Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Benzyl Salicylate, Linalool, Limonene, Niacinamide, Acetic Acid, Benzyl Alcohol, Propylene Glycol, Triethylene Glycol, CI 19140, CI 17200",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "sodium citrate",
+        "piroctone olamine",
+        "parfum",
+        "citric acid",
+        "sodium chloride",
+        "dimethiconol",
+        "guar hydroxypropyltrimonium chloride",
+        "menthol",
+        "hexamethylindanopyran",
+        "dimethicone",
+        "sodium salicylate",
+        "sodium benzoate",
+        "tetrasodium edta",
+        "tea-dodecylbenzenesulfonate",
+        "panthenol",
+        "sodium hydroxide",
+        "coumarin",
+        "hexyl cinnamal",
+        "trideceth-10",
+        "citrus aurantium peel oil",
+        "linalyl acetate",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "benzyl salicylate",
+        "linalool",
+        "limonene",
+        "niacinamide",
+        "acetic acid",
+        "benzyl alcohol",
+        "propylene glycol",
+        "triethylene glycol",
+        "ci 19140",
+        "ci 17200"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 10
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 11
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 24,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W026",
+      "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Piroctone Olamine, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Glycerin, Citric Acid, Malva Sylvestris Flower Extract, Sodium Sulfate, Sodium Benzoate, Parfum, CI 15510, CI 42090",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "coco-glucoside",
+        "lactic acid",
+        "piroctone olamine",
+        "glyceryl oleate",
+        "sorbitan caprylate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "sodium chloride",
+        "zinc pca",
+        "panthenol",
+        "tetrasodium glutamate diacetate",
+        "glycerin",
+        "citric acid",
+        "malva sylvestris flower extract",
+        "sodium sulfate",
+        "sodium benzoate",
+        "parfum",
+        "ci 15510",
+        "ci 42090"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 7
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 9
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W027",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium methyl cocoyl taurate",
+        "decyl glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "rosmarinus officinalis leaf oil",
+        "mentha piperita oil",
+        "menthol",
+        "menthyl lactate",
+        "sodium hydrolyzed potato starch dodecenylsuccinate",
+        "amodimethicone",
+        "coco-glucoside",
+        "coconut acid",
+        "disodium tetrapropenyl succinate",
+        "glyceryl oleate",
+        "lecithin",
+        "starch hydroxypropyltrimonium chloride",
+        "peg-150 distearate",
+        "hexylene glycol",
+        "citric acid",
+        "sodium lactate",
+        "sodium hydroxide",
+        "hydrogenated palm glycerides citrate",
+        "lactic acid",
+        "urea",
+        "sodium benzoate",
+        "benzoic acid",
+        "tocopherol",
+        "ascorbyl palmitate",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "low",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 11
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 16
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 23
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 29
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 12
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "rosmarinus officinalis leaf oil",
+            "position": 6,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "mentha piperita oil",
+            "position": 7,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "starch hydroxypropyltrimonium chloride",
+            "position": 17,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W028",
+      "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "lauryl glucoside",
+        "sodium lauroyl sarcosinate",
+        "sodium chloride",
+        "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "piroctone olamine",
+        "menthol",
+        "parfum",
+        "citric acid",
+        "phenoxyethanol",
+        "sodium benzoate",
+        "ci 42090",
+        "ci 47005"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 6
+          },
+          {
+            "family": "cationic_conditioner",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 6
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauroyl sarcosinate",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W029",
+      "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+      "rawInci": "INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • GLYCOL DISTEARATE • SODIUM CHLORIDE • COCAMIDOPROPYL BETAINE • DIMETHICONE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • COCAMIDE MEA • COCO-BETAINE • SODIUM BENZOATE • SODIUM HYDROXIDE • HYDROXYCITRONELLAL • STEARETH-6 • PHENOXYETHANOL • ACETIC ACID • PEG-100 STEARATE • TRIDECETH-10 • TRIDECETH-3 • SALICYLIC ACID • LIMONENE • FUMARIC ACID • LINALOOL • PINENE • AMODIMETHICONE • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRUS LIMON PEEL OIL • HEXYLENE GLYCOL • HEXYL CINNAMAL • GLYCOLIC ACID • PARFUM / FRAGRANCE",
+      "normalizedInci": [
+        "aqua/water",
+        "sodium laureth sulfate",
+        "glycol distearate",
+        "sodium chloride",
+        "cocamidopropyl betaine",
+        "dimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "cocamide mea",
+        "coco-betaine",
+        "sodium benzoate",
+        "sodium hydroxide",
+        "hydroxycitronellal",
+        "steareth-6",
+        "phenoxyethanol",
+        "acetic acid",
+        "peg-100 stearate",
+        "trideceth-10",
+        "trideceth-3",
+        "salicylic acid",
+        "limonene",
+        "fumaric acid",
+        "linalool",
+        "pinene",
+        "amodimethicone",
+        "carbomer",
+        "carvone",
+        "geranyl acetate",
+        "citric acid",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "citrus limon peel oil",
+        "hexylene glycol",
+        "hexyl cinnamal",
+        "glycolic acid",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 6
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 7
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 24
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 5
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 8
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 9
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 3,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "citrus limon peel oil",
+            "position": 30,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W030",
+      "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Panthenol, Tetrasodium Glutamate Diacetate, Menthol, Caffeine, Glycerin, Rosmarinus Officinalis Leaf Extract, Alcohol, Dimethylhydroxy Dihydroflavone, Lecithin, Sodium Chloride, Citric Acid, Leuconostoc/Radish Root Ferment Filtrate, Tocopheryl Acetate, Biotin, Tocopherol, Sodium Benzoate, Parfum, Limonene, Linalool, Tetramethyl Acetyloctahydronaphthalenes",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "coco-glucoside",
+        "lactic acid",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "glyceryl oleate",
+        "sorbitan caprylate",
+        "panthenol",
+        "tetrasodium glutamate diacetate",
+        "menthol",
+        "caffeine",
+        "glycerin",
+        "rosmarinus officinalis leaf extract",
+        "alcohol",
+        "dimethylhydroxy dihydroflavone",
+        "lecithin",
+        "sodium chloride",
+        "citric acid",
+        "leuconostoc/radish root ferment filtrate",
+        "tocopheryl acetate",
+        "biotin",
+        "tocopherol",
+        "sodium benzoate",
+        "parfum",
+        "limonene",
+        "linalool",
+        "tetramethyl acetyloctahydronaphthalenes"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 6
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 7
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W031",
+      "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Propylene Glycol, Hydrogenated Castor Oil, Sodium Hydroxide, Citric Acid, PEG-7 Glyceryl Cocoate, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "normalizedInci": [
+        "aqua (water, eau)",
+        "sodium laureth sulfate",
+        "sodium chloride",
+        "cocamidopropyl betaine",
+        "piroctone olamine",
+        "aloe barbadensis leaf extract",
+        "coco-glucoside",
+        "glyceryl oleate",
+        "glycol distearate",
+        "laureth-4",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "propylene glycol",
+        "hydrogenated castor oil",
+        "sodium hydroxide",
+        "citric acid",
+        "peg-7 glyceryl cocoate",
+        "parfum (fragrance)",
+        "sodium benzoate",
+        "ci 42053 (green 3)"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 8
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 11
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 13
+          },
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 16
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 7
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 9,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W032",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium lauryl sulfate",
+        "sodium chloride",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "glycol distearate",
+        "citric acid",
+        "sodium citrate",
+        "dimethiconol",
+        "parfum",
+        "piroctone olamine",
+        "dimethicone",
+        "sodium benzoate",
+        "guar hydroxypropyltrimonium chloride",
+        "tea-dodecylbenzenesulfonate",
+        "hexyl cinnamal",
+        "tetrasodium edta",
+        "sodium hydroxide",
+        "trideceth-10",
+        "linalool",
+        "hydroxycitronellal",
+        "geraniol",
+        "panthenol",
+        "panthenyl ethyl ether",
+        "citronellol",
+        "propylene glycol",
+        "magnesium nitrate",
+        "camellia sinensis leaf extract",
+        "niacinamide",
+        "triethylene glycol",
+        "benzyl alcohol",
+        "methylchloroisothiazolinone",
+        "magnesium chloride",
+        "methylisothiazolinone"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "low",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 10
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 6
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 7,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W033",
+      "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+      "rawInci": "AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDE DIPA, GLYCERIN, ACRYLATES COPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN",
+      "normalizedInci": [
+        "aqua (water)",
+        "sodium c14-16 olefin sulfonate",
+        "cocamidopropyl betaine",
+        "cocamide dipa",
+        "glycerin",
+        "acrylates copolymer",
+        "phenoxyethanol",
+        "peg-150 distearate",
+        "parfum (fragrance)",
+        "butyrospermum parkii (shea) butter",
+        "polyester-37",
+        "sodium hydroxide",
+        "glycol distearate",
+        "panthenol (vitamin b5)",
+        "guar hydroxypropyltrimonium chloride",
+        "ethylhexylglycerin",
+        "disodium edta",
+        "steareth-4",
+        "polyquaternium-39",
+        "sodium benzoate",
+        "citric acid",
+        "polysorbate 20",
+        "sodium chloride",
+        "tocopherol (vitamin e)",
+        "benzyl benzoate",
+        "coumarin"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "film_former",
+            "name": "acrylates copolymer",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "butyrospermum parkii (shea) butter",
+            "position": 10
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 15
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-39",
+            "position": 19
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium c14-16 olefin sulfonate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 13,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W034",
+      "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+      "rawInci": "Aqua, Coco-Glucoside, Glycerin, Sodium Coco-Sulfate, Sodium Cocoamphoacetate, Citric Acid, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Sodium Hydroxide",
+      "normalizedInci": [
+        "aqua",
+        "coco-glucoside",
+        "glycerin",
+        "sodium coco-sulfate",
+        "sodium cocoamphoacetate",
+        "citric acid",
+        "panthenol",
+        "niacinamide",
+        "tocopherol",
+        "ascorbyl palmitate",
+        "glyceryl oleate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "hydrogenated palm glycerides citrate",
+        "lecithin",
+        "sodium benzoate",
+        "potassium sorbate",
+        "sodium chloride",
+        "sodium hydroxide"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 11
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 12
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 13
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium coco-sulfate",
+            "position": 4
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "sodium cocoamphoacetate",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W035",
+      "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+      "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl betaine, Cocamidopropyl hydroxysultaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Algin, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Cocamide MEA, Laureth-10, C13-15 alkanes, Propylene glycol, Glycerin, Ethylhexyl methoxycinnamate, Diethylamino hydroxybenzoyl hexyl benzoate, Linalyl acetate, Caramel, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Limonene, Linalool",
+      "normalizedInci": [
+        "aqua [water]",
+        "disodium laureth sulfosuccinate",
+        "cocamidopropyl betaine",
+        "cocamidopropyl hydroxysultaine",
+        "peg-18 glyceryl oleate/cocoate",
+        "parfum [fragrance]",
+        "algin",
+        "avena sativa (oat) peptide",
+        "gardenia taitensis flower extract",
+        "lycium barbarum fruit extract",
+        "malva sylvestris (mallow) extract",
+        "juniperus virginiana oil",
+        "citrus aurantium peel oil",
+        "glycol distearate",
+        "citric acid",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "cocamide mea",
+        "laureth-10",
+        "c13-15 alkanes",
+        "propylene glycol",
+        "glycerin",
+        "ethylhexyl methoxycinnamate",
+        "diethylamino hydroxybenzoyl hexyl benzoate",
+        "linalyl acetate",
+        "caramel",
+        "methylchloroisothiazolinone",
+        "methylisothiazolinone",
+        "1,2-hexanediol",
+        "caprylyl glycol",
+        "hexyl cinnamal",
+        "limonene",
+        "linalool"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-23T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-18 glyceryl oleate/cocoate",
+            "position": 5
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium laureth sulfosuccinate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 17
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 13,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 14,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": [
+          {
+            "name": "juniperus virginiana oil",
+            "position": 12,
+            "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+          }
+        ]
+      }
+    },
+    {
+      "blindId": "W036",
+      "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Cocamidopropyl Betaine, Glycerin, Sodium Chloride, Sodium Lactate, Panthenol, Allantoin, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Phenoxyethanol, Benzyl Alcohol, Piroctone Olamine, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "urea",
+        "cocamidopropyl betaine",
+        "glycerin",
+        "sodium chloride",
+        "sodium lactate",
+        "panthenol",
+        "allantoin",
+        "tocopherol",
+        "ascorbyl palmitate",
+        "parfum",
+        "glyceryl oleate",
+        "coco-glucoside",
+        "glycol distearate",
+        "laureth-4",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "hydrogenated palm glycerides citrate",
+        "lecithin",
+        "phenoxyethanol",
+        "benzyl alcohol",
+        "piroctone olamine",
+        "benzoic acid",
+        "citric acid",
+        "sodium hydroxide"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 11
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 17
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 18
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 19
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 14
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 15,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W037",
+      "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Niacinamide, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate",
+      "normalizedInci": [
+        "aqua (water, eau)",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "peg-7 glyceryl cocoate",
+        "hydrolyzed keratin",
+        "niacinamide",
+        "dimethicone",
+        "sodium benzoate",
+        "parfum (fragrance)",
+        "citric acid",
+        "amodimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "peg-40 hydrogenated castor oil",
+        "hydrogenated castor oil",
+        "glycol distearate",
+        "laureth-4",
+        "peg-120 methyl glucose dioleate",
+        "hexyl cinnamal",
+        "laureth-23",
+        "prunus armeniaca (apricot) kernel oil",
+        "trideceth-10",
+        "sodium hydroxide",
+        "citronellol",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "propylene glycol",
+        "limonene",
+        "linalyl acetate",
+        "phenoxyethanol",
+        "linalool",
+        "sodium salicylate",
+        "potassium sorbate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 5
+          },
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed keratin",
+            "position": 6
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 8
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 12
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 13
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 15
+          },
+          {
+            "family": "payload_lipid",
+            "name": "prunus armeniaca (apricot) kernel oil",
+            "position": 21
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "peg-40 hydrogenated castor oil",
+            "position": 14,
+            "reason": "Solubilisator zählt nicht als persistente Route."
+          },
+          {
+            "name": "glycol distearate",
+            "position": 16,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 18,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W038",
+      "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Hydrolyzed Keratin, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Phenoxyethanol, Potassium Sorbate, Benzoic Acid, Parfum/Fragrance",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium methyl cocoyl taurate",
+        "decyl glucoside",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "hydrolyzed keratin",
+        "argania spinosa kernel oil",
+        "sodium hydrolyzed potato starch dodecenylsuccinate",
+        "coco-glucoside",
+        "amodimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "hydrogenated castor oil",
+        "coconut acid",
+        "disodium tetrapropenyl succinate",
+        "glycol distearate",
+        "peg-150 distearate",
+        "hexylene glycol",
+        "citric acid",
+        "sodium hydroxide",
+        "sodium benzoate",
+        "phenoxyethanol",
+        "potassium sorbate",
+        "benzoic acid",
+        "parfum/fragrance"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed keratin",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "argania spinosa kernel oil",
+            "position": 7
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 10
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 11
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 12
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium methyl cocoyl taurate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 9
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 15,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W039",
+      "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+      "rawInci": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Cocamidopropyl betaine, Glycerin, Sodium chloride, Cocos nucifera (coconut) oil, Argania spinosa (argan) kernel oil, Tocopheryl acetate (vitamin E), Panthenol, Coco-glucoside, Polyimide-1, Polyquaternium-10, Hydrogenated palm glycerides citrate, Polyquaternium-7, Glyceryl oleate, Tocopherol, Guar hydroxypropyltrimonium chloride, Sodium hydroxide, Citric acid, Glycol distearate, Sodium benzoate, Sodium salicylate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Hexyl cinnamal, Tetramethyl acetyloctahydronaphthalenes",
+      "normalizedInci": [
+        "aqua/water/eau",
+        "sodium c14-16 olefin sulfonate",
+        "cocamide mipa",
+        "cocamidopropyl betaine",
+        "glycerin",
+        "sodium chloride",
+        "cocos nucifera (coconut) oil",
+        "argania spinosa (argan) kernel oil",
+        "tocopheryl acetate (vitamin e)",
+        "panthenol",
+        "coco-glucoside",
+        "polyimide-1",
+        "polyquaternium-10",
+        "hydrogenated palm glycerides citrate",
+        "polyquaternium-7",
+        "glyceryl oleate",
+        "tocopherol",
+        "guar hydroxypropyltrimonium chloride",
+        "sodium hydroxide",
+        "citric acid",
+        "glycol distearate",
+        "sodium benzoate",
+        "sodium salicylate",
+        "trisodium ethylenediamine disuccinate",
+        "isopropanolamine",
+        "parfum/fragrance",
+        "hexyl cinnamal",
+        "tetramethyl acetyloctahydronaphthalenes"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "cocos nucifera (coconut) oil",
+            "position": 7
+          },
+          {
+            "family": "payload_lipid",
+            "name": "argania spinosa (argan) kernel oil",
+            "position": 8
+          },
+          {
+            "family": "film_former",
+            "name": "polyimide-1",
+            "position": 12
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-10",
+            "position": 13
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 14
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-7",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 16
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 18
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium c14-16 olefin sulfonate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 11
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 21,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W040",
+      "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Ascorbyl Palmitate, Glycerin, Citrus Limon Fruit Extract, Citric Acid, Melissa Officinalis Leaf Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Citrus Aurantium Peel Oil, Geranyl Acetate, Limonene, Tetramethyl Acetyloctahydronaphthalenes, CI 47005, CI 61570",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "coco-glucoside",
+        "lactic acid",
+        "glyceryl oleate",
+        "sorbitan caprylate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "sodium chloride",
+        "zinc pca",
+        "panthenol",
+        "tetrasodium glutamate diacetate",
+        "piroctone olamine",
+        "ascorbyl palmitate",
+        "glycerin",
+        "citrus limon fruit extract",
+        "citric acid",
+        "melissa officinalis leaf extract",
+        "sodium benzoate",
+        "potassium sorbate",
+        "parfum",
+        "citrus aurantium peel oil",
+        "geranyl acetate",
+        "limonene",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "ci 47005",
+        "ci 61570"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 6
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 8
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 22,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W041",
+      "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Hydrolyzed Wheat Protein, Biotin, Oryza Sativa Extract, Glycerin, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Laureth-2, Parfum, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Hexyl Cinnamal, Linalyl Acetate, Sodium Benzoate",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl hydroxysultaine",
+        "sodium chloride",
+        "coco-glucoside",
+        "hydrolyzed wheat protein",
+        "biotin",
+        "oryza sativa extract",
+        "glycerin",
+        "guar hydroxypropyltrimonium chloride",
+        "citric acid",
+        "laureth-2",
+        "parfum",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "linalool",
+        "hexyl cinnamal",
+        "linalyl acetate",
+        "sodium benzoate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-22T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed wheat protein",
+            "position": 6
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 10
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W042",
+      "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Glycerin, Linalool, Butylene Glycol, Alpha-Isomethyl Ionone, Geraniol, Limonene, Mel Extract, Acetic acid, Oryza Sativa Bran Extract, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol, Potassium Sorbate, Phenoxyethanol",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium xylenesulfonate",
+        "cocamidopropyl betaine",
+        "sodium citrate",
+        "piroctone olamine",
+        "dimethiconol",
+        "parfum",
+        "citric acid",
+        "cocamide mea",
+        "glycol distearate",
+        "sodium chloride",
+        "dimethicone",
+        "guar hydroxypropyltrimonium chloride",
+        "sodium benzoate",
+        "tea-dodecylbenzenesulfonate",
+        "sodium salicylate",
+        "tetrasodium edta",
+        "trideceth-10",
+        "sodium hydroxide",
+        "glycerin",
+        "linalool",
+        "butylene glycol",
+        "alpha-isomethyl ionone",
+        "geraniol",
+        "limonene",
+        "mel extract",
+        "acetic acid",
+        "oryza sativa bran extract",
+        "triethylene glycol",
+        "propylene glycol",
+        "benzyl alcohol",
+        "potassium sorbate",
+        "phenoxyethanol"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 7
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 10
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 11,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W043",
+      "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+      "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | SODIUM CHLORIDE | GLYCERIN | HYDROLYZED WHEAT PROTEIN | ARGANIA SPINOSA KERNEL OIL | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | BIS|(ISOSTEAROYL/OLEOYL ISOPROPYL) DIMONIUM METHOSULFATE | COCO|GLUCOSIDE | PRUNUS AMYGDALUS DULCIS FLOWER EXTRACT | PISUM SATIVUM SPROUT EXTRACT | CITRIC ACID | BENZOIC ACID | GLYCOL DISTEARATE | HYDROGENATED CASTOR OIL | LAURETH|2 | PARFUM | HEXYL CINNAMAL | SODIUM BENZOATE | PHENOXYETHANOL.",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "glycerin",
+        "hydrolyzed wheat protein",
+        "argania spinosa kernel oil",
+        "guar hydroxypropyltrimonium chloride",
+        "bis|(isostearoyl/oleoyl isopropyl) dimonium methosulfate",
+        "coco-glucoside",
+        "prunus amygdalus dulcis flower extract",
+        "pisum sativum sprout extract",
+        "citric acid",
+        "benzoic acid",
+        "glycol distearate",
+        "hydrogenated castor oil",
+        "laureth|2",
+        "parfum",
+        "hexyl cinnamal",
+        "sodium benzoate",
+        "phenoxyethanol"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed wheat protein",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "argania spinosa kernel oil",
+            "position": 7
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 8
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 16
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 10
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 15,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W044",
+      "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+      "rawInci": "Aqua, Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol, Parfum, Phenoxyethanol, Sodium Benzoate, Citric Acid, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Lactic Acid, Sodium Chloride, Sodium Lactate",
+      "normalizedInci": [
+        "aqua",
+        "decyl glucoside",
+        "disodium laureth sulfosuccinate",
+        "sodium lauryl sulfoacetate",
+        "peg-55 propylene glycol oleate",
+        "propylene glycol",
+        "parfum",
+        "phenoxyethanol",
+        "sodium benzoate",
+        "citric acid",
+        "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "lactic acid",
+        "sodium chloride",
+        "sodium lactate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 11
+          },
+          {
+            "family": "cationic_conditioner",
+            "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+            "position": 11
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "disodium laureth sulfosuccinate",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W045",
+      "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+      "rawInci": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, PARFUM, SODIUM BENZOATE, CITRIC ACID, COCO-GLUCOSIDE, GLYCERYL OLEATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, TOCOPHEROL, HYDROGENATED PALM GLYCERIDES CITRATE, LECITHIN, ASCORBYL PALMITATE",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "sodium chloride",
+        "parfum",
+        "sodium benzoate",
+        "citric acid",
+        "coco-glucoside",
+        "glyceryl oleate",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "aloe barbadensis leaf juice powder",
+        "potassium sorbate",
+        "sodium hyaluronate",
+        "tocopherol",
+        "hydrogenated palm glycerides citrate",
+        "lecithin",
+        "ascorbyl palmitate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 9
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 15
+          },
+          {
+            "family": "weak_refatter",
+            "name": "lecithin",
+            "position": 16
+          },
+          {
+            "family": "weak_refatter",
+            "name": "ascorbyl palmitate",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 8
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W046",
+      "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+      "rawInci": "AQUA, HYDROGENATED STARCH HYDROLYSATE, SODIUM LAURETH SULFATE, COCAMIDOPROPYL HYDROXYSULTAINE, GLYCERIN, SODIUM CHLORIDE, COCO-GLUCOSIDE, ALLANTOIN, BISABOLOL, ZINC PCA, PANTHENOL, HYDROLYZED KERATIN, CAMELLIA SINENSIS LEAF EXTRACT, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, GLYCOL DISTEARATE, COCAMIDOPROPYL BETAINE, PARFUM, SODIUM BENZOATE",
+      "normalizedInci": [
+        "aqua",
+        "hydrogenated starch hydrolysate",
+        "sodium laureth sulfate",
+        "cocamidopropyl hydroxysultaine",
+        "glycerin",
+        "sodium chloride",
+        "coco-glucoside",
+        "allantoin",
+        "bisabolol",
+        "zinc pca",
+        "panthenol",
+        "hydrolyzed keratin",
+        "camellia sinensis leaf extract",
+        "guar hydroxypropyltrimonium chloride",
+        "citric acid",
+        "glycol distearate",
+        "cocamidopropyl betaine",
+        "parfum",
+        "sodium benzoate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed keratin",
+            "position": 12
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 7
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 17
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 16,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W047",
+      "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Aloe Barbadensis Leaf Juice Powder, Guar Hydroxypropyltrimonium Chloride, Dicaprylyl Ether, Glyceryl Oleate, Glycerin, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Parfum",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "decyl glucoside",
+        "coco-glucoside",
+        "sodium chloride",
+        "citric acid",
+        "aloe barbadensis leaf juice powder",
+        "guar hydroxypropyltrimonium chloride",
+        "dicaprylyl ether",
+        "glyceryl oleate",
+        "glycerin",
+        "glycol distearate",
+        "hydrogenated castor oil",
+        "sodium benzoate",
+        "benzoic acid",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "parfum"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 9
+          },
+          {
+            "family": "payload_lipid",
+            "name": "dicaprylyl ether",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 11
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 14
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "decyl glucoside",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 5
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 13,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W048",
+      "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+      "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | COCO|GLUCOSIDE | PANTHENOL | BISABOLOL | NIACINAMIDE | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | GLYCERIN | PIROCTONE OLAMINE | TOCOPHEROL | SODIUM CHLORIDE | GLYCERYL OLEATE | LAURETH|2 | HYDROGENATED PALM GLYCERIDES CITRATE | CITRIC ACID | SODIUM BENZOATE.",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "cocamidopropyl betaine",
+        "coco-glucoside",
+        "panthenol",
+        "bisabolol",
+        "niacinamide",
+        "guar hydroxypropyltrimonium chloride",
+        "glycerin",
+        "piroctone olamine",
+        "tocopherol",
+        "sodium chloride",
+        "glyceryl oleate",
+        "laureth|2",
+        "hydrogenated palm glycerides citrate",
+        "citric acid",
+        "sodium benzoate"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 8
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 13
+          },
+          {
+            "family": "weak_refatter",
+            "name": "hydrogenated palm glycerides citrate",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W049",
+      "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Potassium Sorbate, Phenoxyethanol",
+      "normalizedInci": [
+        "aqua (water, eau)",
+        "sodium laureth sulfate",
+        "sodium chloride",
+        "cocamidopropyl betaine",
+        "hydrolyzed keratin",
+        "hydrolyzed collagen",
+        "sodium benzoate",
+        "parfum (fragrance)",
+        "coco-glucoside",
+        "glyceryl oleate",
+        "citric acid",
+        "peg-7 glyceryl cocoate",
+        "glycol distearate",
+        "laureth-4",
+        "peg-120 methyl glucose dioleate",
+        "hydrogenated castor oil",
+        "hexyl cinnamal",
+        "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "citronellol",
+        "tetramethyl acetyloctahydronaphthalenes",
+        "sodium hydroxide",
+        "limonene",
+        "linalyl acetate",
+        "linalool",
+        "propylene glycol",
+        "potassium sorbate",
+        "phenoxyethanol"
+      ],
+      "formulaSourceType": "official",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "protein_film",
+            "name": "hydrolyzed keratin",
+            "position": 5
+          },
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 10
+          },
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 12
+          },
+          {
+            "family": "payload_lipid",
+            "name": "hydrogenated castor oil",
+            "position": 16
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 18
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 9
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 13,
+            "reason": "Zählt nicht als persistente Route."
+          },
+          {
+            "name": "peg-120 methyl glucose dioleate",
+            "position": 15,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      }
+    },
+    {
+      "blindId": "W050",
+      "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+      "normalizedInci": [
+        "aqua",
+        "sodium laureth sulfate",
+        "sodium citrate",
+        "cocamidopropyl betaine",
+        "sodium xylenesulfonate",
+        "stearyl alcohol",
+        "sodium chloride",
+        "parfum",
+        "cetyl alcohol",
+        "citric acid",
+        "sodium benzoate",
+        "glycerin",
+        "sodium salicylate",
+        "polyquaternium-6",
+        "guar hydroxypropyltrimonium chloride",
+        "sodium hydroxide",
+        "trihydroxystearin",
+        "tetrasodium edta",
+        "limonene",
+        "panthenol",
+        "panthenyl ethyl ether",
+        "histidine",
+        "sodium hyaluronate",
+        "phenoxyethanol",
+        "biotin"
+      ],
+      "formulaSourceType": "retailer",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "complete": true,
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "stearyl alcohol",
+            "position": 6
+          },
+          {
+            "family": "payload_lipid",
+            "name": "cetyl alcohol",
+            "position": 9
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-6",
+            "position": 14
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      }
+    }
+  ]
+}

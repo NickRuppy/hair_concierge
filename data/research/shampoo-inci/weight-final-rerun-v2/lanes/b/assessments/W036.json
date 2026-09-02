@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W036",
+  "formula": {
+    "inciFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"weak_refatter","name":"ascorbyl palmitate","position":11},{"family":"weak_refatter","name":"glyceryl oleate","position":13},{"family":"cationic_polymer","name":"hydroxypropyl guar hydroxypropyltrimonium chloride","position":17},{"family":"weak_refatter","name":"hydrogenated palm glycerides citrate","position":18},{"family":"weak_refatter","name":"lecithin","position":19}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4},{"family":"nonionic_surfactant","name":"coco-glucoside","position":14}],"excludedIngredients":[{"name":"glycol distearate","position":15,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Die Refatter sind schwach und überwiegend spät; das kationische Guar steht erst an Position 17."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Ein spätes Polymer plus schwache Refatter stützen keine robuste Akkumulation."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES und Betain stehen früh; Coco-Glucoside ergänzt die Reinigung trotz späterer Position."
+  },
+  "competingSignals": [
+    "Mehrere schwache Refatter sind vorhanden.",
+    "Die späte Polymerposition und starke Tensidbasis sprechen gegen merkliche Beschwerung."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil die Pflegesignale spät und schwach sind und durch eine starke Reinigung begrenzt werden.",
+  "whyNotNeighborBand": "Moderate wäre erst plausibler, wenn das Polymer früher oder ein persistenteres Silikon-/Lipidgerüst vorhanden wäre.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Mehrere schwache Refatter lassen eine low/moderate-Restunsicherheit unter INCI-only bestehen."
+  }
+}

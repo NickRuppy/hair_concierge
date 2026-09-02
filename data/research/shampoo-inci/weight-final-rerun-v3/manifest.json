@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "shampoo-weight-correction-v3-manifest-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "correctionCandidateIds": [
+    "wahre-schatze-sanfte-hafermilch",
+    "guhl-hyaluron-plus",
+    "ogx-rosemary",
+    "hair-biology-revitalize-soothe"
+  ],
+  "v2Lock": {
+    "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+    "files": [
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/manifest.json",
+        "sha256": "bd29d1cd9d482b3e7b5fcfbb3ed8c916ad67a4d88154ebee226573c57b986046"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/mapping.json",
+        "sha256": "ca383eac8ac551c97ade3fac60328cc1c11b152c821440f49296bdb1656e1fe4"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/protocol.json",
+        "sha256": "3027ab21f48d3caf9c4397b4bad84af90e0c9f4360de7925e2ea0d8e146a3aa7"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/report.json",
+        "sha256": "abeb277ef352a951b83e7cbe6ca66410a816f11460918d80563e747b6a3c0c1c"
+      }
+    ]
+  },
+  "sourceOverride": {
+    "path": "data/research/shampoo-inci/weight-final-rerun-v3/source-overrides.json",
+    "sha256": "ba8f82979d8cb4c72e653f4617d714b9800366a1cc128fa84dc582de137559f7"
+  }
+}

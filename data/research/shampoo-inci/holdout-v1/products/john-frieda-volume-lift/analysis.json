@@ -1,0 +1,566 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:john-frieda-volume-lift:6ff60fb8ca80e097be18cbf28e1ca062f781a8da76c89f6ec1b57c531b6b6d44",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES/Coco-Glucoside/CAPB-Basis mit kationischem Guar als plausibles Depositionselement.",
+      "Glyceryl Oleate, Panthenol und drei hydrolysierte Proteine stützen Smoothing, R1 und etwas R2.",
+      "Tetrasodium Glutamate Diacetate ist ein Chelator, aber ohne starke Hartwasser-/Metall-Architektur nur niedrig zu werten.",
+      "Fragrance/Parfum, Citrus Limon Peel Oil und deklarierte Allergene sind sichtbar."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Leichtes, silikonfreies Volumen-Shampoo für feines/plattes Haar und mehr Ansatz-Lift.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Glucoside",
+      "Cocamidopropyl Betaine"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Panthenol",
+      "Glycine"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Vegetable Protein",
+      "Hydrolyzed Rice Bran Protein",
+      "Hydrolyzed Soy Protein"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES führt, wird aber durch Coco-Glucoside und CAPB moderiert; Pflegebestandteile verhindern eine reine Stark-/Reset-Einordnung.",
+      "supportingSignals": [
+        {
+          "observation": "SLES, Coco-Glucoside und CAPB bilden die erkennbare Tensidbasis.",
+          "inference": "Das unterstützt moderate Reinigung.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "SLES kann je nach Aktivgehalt kräftig reinigen.",
+          "inference": "Ohne Reset-Claim und mit Co-Tensiden bleibt stark nicht zwingend.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Kationisches Guar, Glyceryl Oleate, Panthenol und hydrolysierte Proteine bilden ein plausibles leichtes bis moderates Pflege-/Film-System.",
+      "supportingSignals": [
+        {
+          "observation": "Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Panthenol und hydrolysierte Proteine sind vorhanden.",
+          "inference": "Ein moderates Rinse-off-Pflegesystem ist plausibel.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keine Silikone oder reichhaltige Conditionerbasis.",
+          "inference": "Daher nicht high-conditioning.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Guar, Lipid- und Proteinfilm können spürbares Haargefühl erzeugen; Silikonfreiheit und moderate Reinigung begrenzen die Persistenz.",
+      "supportingSignals": [
+        {
+          "observation": "Kationisches Guar plus Lipid-/Proteinfilm-Signale sind vorhanden.",
+          "inference": "Beschwerung ist möglich, aber begrenzt.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "moderate-deposition-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die Quelle nennt lightweight/silikonfrei.",
+          "inference": "Das reduziert, beseitigt aber die Guar-/Proteinfilm-Beschwerung nicht.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "moderate-deposition-architecture"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die genaue Produktpositionierung ist leichtes Volumen für feines/plattes Haar; moderate Reinigung, Silikonfreiheit und filmbildende Proteine/Guar machen diese Route plausibel.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle positioniert das exakte Produkt als leichtes Volumen-Shampoo für feines/plattes Haar.",
+          "inference": "Die Formel ist silikonfrei und nicht reichhaltig, also volumenkohärent.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "volume-lightness-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die Blindanalyse sah Surface-Repair als stärksten INCI-Mechanismus.",
+          "inference": "Unblind Claim und Silikonfreiheit machen Volume aber zur besseren Produktklassifikation.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "volume-lightness-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine",
+        "repair"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Guar, Glyceryl Oleate und Proteine können Glättung/Reflexion und temporäre Oberflächenpflege unterstützen, aber nicht als Hauptfokus über Volumen dominieren.",
+      "supportingSignals": [
+        {
+          "observation": "Guar, Glyceryl Oleate und Proteine unterstützen Smoothing und temporäre Oberflächenpflege.",
+          "inference": "Shine und Repair bleiben sekundäre, nicht dominante Mechanismen.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "surface-care-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Proteine beweisen keine echte Strukturreparatur.",
+          "inference": "Repair ist nur temporäre Oberflächenpflege.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "surface-care-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Moderate Reinigung und moderate Pflege passen zu regulärer Nutzung; es ist weder Reset- noch Treatment-only.",
+      "supportingSignals": [
+        {
+          "observation": "Die Formel ist ein normales Shampoo mit moderater Reinigung/Pflege.",
+          "inference": "Reguläre Nutzung ist die passende Rolle.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Duft, Citrus Peel Oil und Lactic Acid sind Expositionen.",
+          "inference": "Sie beeinflussen Fit, nicht die Rolle.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Panthenol und Säuren sind vorhanden, aber Produktziel und Exposition liegen klar auf Haarvolumen; Duft, Citrus Peel Oil und Allergene sprechen gegen eine Sensitive-Zielroute.",
+      "supportingSignals": [
+        {
+          "observation": "Das Produkt ist nicht als Kopfhautkomfortprodukt positioniert und enthält Duft-/Aromasignale.",
+          "inference": "Kein gezieltes Sensitive- oder Anti-Juckreiz-Ziel.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "not-scalp-targeted"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Panthenol kann Komfort unterstützen.",
+          "inference": "Ohne sensitive Positionierung und mit Duftsignalen reicht das nicht für targeted.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "not-scalp-targeted"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole; Proteine, Algenextrakte und Lactic Acid zählen nicht als Anti-Schuppen-Support.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen.",
+          "inference": "Kein MVP-Anti-Schuppen-Support.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Normale Reinigung kann Schuppen sichtbar reduzieren.",
+          "inference": "Der gesperrte Wirkstoffsupport fehlt dennoch.",
+          "sourceIds": [
+            "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      2
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Aufbau: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Aufbau: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Beschwerung/Aufbau: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "shineS2": {
+        "g1FunctionalRelevance": "Säure-/pH-Glanz S2: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Säure-/pH-Glanz S2: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Säure-/pH-Glanz S2: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "Entfernungsglanz S3: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Entfernungsglanz S3: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Entfernungsglanz S3: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Filmbildungs-/Bodying-Volumen V2: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Filmbildungs-/Bodying-Volumen V2: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Filmbildungs-/Bodying-Volumen V2: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Protein-/Polymerfilm R2: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Protein-/Polymerfilm R2: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Protein-/Polymerfilm R2: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "repairR4": {
+        "g1FunctionalRelevance": "Stressor-Schutz R4: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Stressor-Schutz R4: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Stressor-Schutz R4: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organische Klärung: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "organische Klärung: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "organische Klärung: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die im Audit benannten INCI-Signale sind funktional relevant für diese Route.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale liegen im rinse-off Shampoo in einer plausiblen Formelposition oder als zusammenhängendes System vor.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit oder klinischer Wirkung erweitert."
+      }
+    },
+    "weightDepositionLoad": "Aus der INCI wird nur eine qualitative Deposition-/Beschwerungsbandbreite abgeleitet; keine Einsatzmengen oder Wiederholungsdaten sind öffentlich.",
+    "weightPersistence": "Keine wiederholte Anwendung oder Residue-Messung ist erfasst; Persistenz bleibt mechanistisch begrenzt.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Klärungsarchitektur abgeleitet, nicht aus einem fertigen Produkttest.",
+    "r4TargetStressor": "mechanische/optische Oberflächenrauigkeit und feines Haar mit fehlender Griffigkeit",
+    "r4ProtectiveRoute": "kationisches Guar plus Proteine/Lipide als temporärer Oberflächenfilm",
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Route; Proteine und Guar stützen nur temporäre Oberflächenpflege.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and product-page claim audit only; no shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Leichtes silikonfreies Volumen für feines/plattes Haar",
+      "verdict": "plausible",
+      "support": "Silikonfreiheit, moderate Reinigung und Film-/Protein-Hinweise können Ansatz-Leichtigkeit und temporäres Bodying unterstützen.",
+      "limitation": "Keine shampoo-only Volumenmessung; Guar/Lipid/Protein können bei manchen feinen Haaren auch Gewicht geben.",
+      "sourceIds": [
+        "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Volumen-/Fine-Hair-Positionierung ist ein kosmetischer Haarzielwert ohne medizinische Kopfhautclaim."
+  }
+}

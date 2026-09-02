@@ -1,0 +1,505 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "b000d235-1fc6-434c-9ba1-f1207d36cded:2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES is the lead cleanser, followed by disclosed 5% Urea, CAPB and Glycerin.",
+      "Panthenol and Allantoin appear before fragrance.",
+      "Piroctone Olamine appears late and has no product-specific anti-dandruff claim."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "kann sie vor trockenbedingtem Juckreiz schützen",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glyceryl oleate",
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [
+      "panthenol"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES is moderated by CAPB, glucoside and a 5% urea/humectant care system.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula combines SLES with two co-surfactants and early Urea/Glycerin.",
+          "inference": "The product supports regular moderate cleansing rather than a reset role.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Early Urea/Glycerin plus Glyceryl Oleate, cationic guar and Glycol Distearate support moderate care.",
+      "supportingSignals": [
+        {
+          "observation": "Multiple humectant, refatting and cationic ingredients are disclosed.",
+          "inference": "A meaningful light-care route is present.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Several refatting/deposition ingredients create moderate weight potential without silicone persistence.",
+      "supportingSignals": [
+        {
+          "observation": "Glyceryl Oleate, Glycol Distearate and cationic guar are present.",
+          "inference": "Weight is moderate but not silicone-heavy.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "5% Urea, Allantoin, Panthenol and dry-sensitive positioning establish gentle care as primary.",
+      "supportingSignals": [
+        {
+          "observation": "The concentration claim and support ingredients align with dry, sensitive skin/scalp use.",
+          "inference": "Gentle cosmetic support is the strongest defensible focus.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "scalp_active"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dry-scalp and itch-comfort positioning provides a secondary cosmetic scalp-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The product explicitly includes scalp use and dry-itch positioning.",
+          "inference": "The route is comfort support, not disease treatment.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "2-in-1 daily cleansing and clinical positioning support frequent use, with individual tolerance still variable.",
+      "supportingSignals": [
+        {
+          "observation": "The formula is sold for routine shower and shampoo use.",
+          "inference": "Frequent is a product role, not a required cadence.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only scalp trial details, exact finished pH or active percentage beyond the disclosed 5% Urea are public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets dry/scalp-comfort care and urea provides a coherent cosmetic route; the 2-in-1 role is handled separately in conditioning/weight fit.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets dry/scalp-comfort care and urea provides a coherent cosmetic route; the 2-in-1 role is handled separately in conditioning/weight fit.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula contains Piroctone Olamine, establishing a conventional cosmetic anti-dandruff support route. The undisclosed concentration and lack of a finished-product dandruff endpoint cap confidence and prevent an efficacy promise.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears near the formula tail.",
+          "inference": "The formula has a recognized conventional anti-dandruff support route; late INCI position does not establish an ineffective dose because ingredients at or below 1% may be listed in any order.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only dandruff trial, exact finished pH or Piroctone Olamine percentage is public.",
+          "inference": "Support describes the formula route, not a guaranteed dandruff outcome for an individual user.",
+          "sourceIds": [
+            "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The weightBuildup score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The mildnessPotential score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "No dedicated finished-product residue-reset result is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact current German dm private-label formula, GTIN and explicit 5% urea positioning; no public full clinical protocol."
+  },
+  "claimAudit": [
+    {
+      "claim": "kann sie vor trockenbedingtem Juckreiz schützen",
+      "verdict": "plausible",
+      "support": "The disclosed 5% Urea plus Glycerin, Panthenol and Allantoin creates a coherent dry-skin/scalp support route.",
+      "limitation": "The page does not publish the clinical protocol or isolate scalp outcomes from 2-in-1 body use.",
+      "sourceIds": [
+        "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-balea-med-2in1-urea-1376376-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Dry-sensitive scalp and dry-itch comfort positioning is cosmetic care, not diagnosis or disease treatment."
+  }
+}

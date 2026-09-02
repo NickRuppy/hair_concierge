@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W031",
+  "formula": {
+    "inciFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"weak_refatter","name":"glyceryl oleate","position":8},{"family":"cationic_polymer","name":"hydroxypropyl guar hydroxypropyltrimonium chloride","position":11},{"family":"payload_lipid","name":"hydrogenated castor oil","position":13},{"family":"weak_refatter","name":"peg-7 glyceryl cocoate","position":16}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4},{"family":"nonionic_surfactant","name":"coco-glucoside","position":7}],"excludedIngredients":[{"name":"glycol distearate","position":9,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Glyceryl Oleate, kationisches Guar und Hydrogenated Castor Oil liefern mehrere Pflegehinweise, aber ohne Silikon und ohne sehr frühe schwere Lipidmatrix."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Polymer plus Castor-Oil-Derivat kann haften; die übrigen Refatter sind schwächer und die Formel bleibt rinse-off."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, Betain und Coco-Glucoside stehen früh beziehungsweise im Haupttensidblock und sprechen für gute Reset-Fähigkeit."
+  },
+  "competingSignals": [
+    "Mehrere Pflegerouten sprechen gegen low.",
+    "Starke Tensidbasis und fehlendes Silikon sprechen gegen high."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil mehrere nicht identische Pflegesignale spürbare, aber begrenzte Ablagerung erwarten lassen.",
+  "whyNotNeighborBand": "Low wäre zu leicht für Polymer plus Lipid-/Refatterpaket; high ist wegen starker Reinigung und fehlender Silikon-/Fettalkoholkonvergenz nicht ausreichend gestützt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die tatsächliche Prominenz von Hydrogenated Castor Oil und Polymer bleibt konzentrationsabhängig."
+  }
+}

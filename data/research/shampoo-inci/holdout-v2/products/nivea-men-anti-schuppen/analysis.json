@@ -1,0 +1,537 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:nivea-men-anti-schuppen:cce2372259fe6a7e6fbe027b47514ba6bcf0060500db6a3b9646b192158e6f74",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Breite SLES-geführte Reinigungsbasis mit amphoterem und mehreren nichtionischen Co-Tensiden.",
+      "Piroctone Olamine ist als anerkannter Anti-Schuppen-Wirkstoff enthalten.",
+      "Guar Hydroxypropyltrimonium Chloride liefert eine kationische Polymerroute für leichte bis moderate Deposition.",
+      "Mehrere Lipid-/Emollient-Signale sind vorhanden, liegen aber nach dem Wirkstoff- und Feuchthaltebereich.",
+      "Keine Silikone, keine Proteine und kein erkennbarer Chelator gelistet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Anti Schuppen Shampoo",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Laureth-9",
+      "Decyl Glucoside",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "Glyceryl Oleate",
+      "Dicaprylyl Ether",
+      "Hydrogenated Castor Oil"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid",
+      "Benzoic Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sodium Laureth Sulfate führt die Reinigungsbasis, ergänzt durch Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside und Coco-Glucoside. Das ist ein breites, effizientes System mit starker Reinigungsbandbreite.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate führt die Reinigungsbasis, ergänzt durch Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside und Coco-Glucoside. Das ist ein breites, effizientes System mit starker Reinigungsbandbreite.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nach v1.4 ist cationic_polymer über Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil sowie Glycerin/Propylene Glycol/Butylene Glycol; ohne zweiten klar substantiellen Weg bleibt das Gewicht moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Nach v1.4 ist cationic_polymer über Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil sowie Glycerin/Propylene Glycol/Butylene Glycol; ohne zweiten klar substantiellen Weg bleibt das Gewicht moderat.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Anti-Schuppen ist die dominante Produktrolle und wird durch das enthaltene Piroctone Olamine gestützt. Das ist ein kosmetischer Wirkstoffpfad, keine klinische Wirksamkeitsgarantie.",
+      "supportingSignals": [
+        {
+          "observation": "Anti-Schuppen ist die dominante Produktrolle und wird durch das enthaltene Piroctone Olamine gestützt. Das ist ein kosmetischer Wirkstoffpfad, keine klinische Wirksamkeitsgarantie.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Positionierung ersetzt keinen Beleg für messbare Shampoo-only Leistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sekundärfokus bleibt leer: Ohne Claims gibt es keine eigenständige zweite Produktrolle. Reinigung, Pflege, Gewicht und der Anti-Schuppen-Formelweg werden als separate Eigenschaften statt als Fokuswerte geführt.",
+      "supportingSignals": [
+        {
+          "observation": "Sekundärfokus bleibt leer: Ohne Claims gibt es keine eigenständige zweite Produktrolle. Reinigung, Pflege, Gewicht und der Anti-Schuppen-Formelweg werden als separate Eigenschaften statt als Fokuswerte geführt.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Problembezogene Anti-Schuppen-Positionierung plus Piroctone Olamine erfüllt recognized_active_problem_led. Treatment bezeichnet die Auswahlrolle und keine festgelegte Anwendungshäufigkeit.",
+      "supportingSignals": [
+        {
+          "observation": "Problembezogene Anti-Schuppen-Positionierung plus Piroctone Olamine erfüllt recognized_active_problem_led. Treatment bezeichnet die Auswahlrolle und keine festgelegte Anwendungshäufigkeit.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI zeigt keine exakten Mengen und keine gemessene Fertigproduktleistung.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Formel enthält einen Anti-Schuppen-Aktivweg, aber keinen separat belegten Komfortpfad für trockene, enge, juckende oder empfindliche Kopfhaut. Parfum bleibt ein Expositionshinweis; not_targeted ist kein Unverträglichkeitsurteil.",
+      "supportingSignals": [
+        {
+          "observation": "Die Formel enthält einen Anti-Schuppen-Aktivweg, aber keinen separat belegten Komfortpfad für trockene, enge, juckende oder empfindliche Kopfhaut. Parfum bleibt ein Expositionshinweis; not_targeted ist kein Unverträglichkeitsurteil.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Anti-Schuppen-Präsenz ist kein eigenständiger Beleg für trockene oder sensible Kopfhaut.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine ist in der vollständigen Formel enthalten. Nach Vertrag genügt dieser anerkannte kosmetische Anti-Schuppen-Weg für supported, ohne garantierte fertige Produktwirksamkeit zu behaupten.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine ist in der vollständigen Formel enthalten. Nach Vertrag genügt dieser anerkannte kosmetische Anti-Schuppen-Weg für supported, ohne garantierte fertige Produktwirksamkeit zu behaupten.",
+          "inference": "Plausible qualitative Produktklassifikation aus der dokumentierten Gesamtformel und getrennt geprüfter Positionierung.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Wirkstoffpräsenz belegt keine konkrete Einsatzmenge oder Endproduktwirksamkeit.",
+          "inference": "Die Einstufung bleibt eine dokumentierte Näherung, kein garantiertes Nutzerergebnis.",
+          "sourceIds": [
+            "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+        "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Sodium Laureth Sulfate führt die Reinigungsbasis, ergänzt durch Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside und Coco-Glucoside. Das ist ein breites, effizientes System mit starker Reinigungsbandbreite.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "cleansing: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "conditioningDeposition: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Nach v1.4 ist cationic_polymer über Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil sowie Glycerin/Propylene Glycol/Butylene Glycol; ohne zweiten klar substantiellen Weg bleibt das Gewicht moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "weightBuildup: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "shineS1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Anti-Schuppen ist die dominante Produktrolle und wird durch das enthaltene Piroctone Olamine gestützt. Das ist ein kosmetischer Wirkstoffpfad, keine klinische Wirksamkeitsgarantie.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "volumeV1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "smoothing: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "repairR1: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Guar Hydroxypropyltrimonium Chloride liefert einen plausiblen kationischen Depositionsweg; Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil stützen rückfettende Gleitwirkung. Ohne Silikon oder Conditioner-ähnliche Reichhaltigkeit bleibt die Pflege moderat.",
+        "g2FormulaRelevanceAndDelivery": "Die benannten Tensid-, Guar- und Rückfettungswege stehen in der vollständigen Hersteller-INCI; rinse-off Wirkung wird qualitativ und nicht als Konzentrationsmessung verstanden.",
+        "g3EndpointSpecificity": "mildnessPotential: nur der kosmetische Teilendpunkt; keine klinische Wirkung, echte Faserverdickung oder dauerhafte Bond-Reparatur."
+      }
+    },
+    "weightDepositionLoad": "Nach v1.4 ist cationic_polymer über Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil sowie Glycerin/Propylene Glycol/Butylene Glycol; ohne zweiten klar substantiellen Weg bleibt das Gewicht moderat.",
+    "weightPersistence": "Ein kationischer Polymerweg kann haarsubstantiv sein; keine Wiederholungswäsche- oder Residue-Messung liegt vor.",
+    "weightResetCapacity": "Starke Reinigung ist separat erfasst und hebt den Depositionsweg nicht automatisch auf.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine spezifische echte Bond-Reparatur ist belegt.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Hersteller-INCI mit exakter Händlerkorroboration und separater Claim-Prüfung; keine fertigen Leistungs- oder Verträglichkeitstests erfasst."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti Schuppen Shampoo",
+      "verdict": "plausible",
+      "support": "Anti-Schuppen ist die dominante Produktrolle und wird durch das enthaltene Piroctone Olamine gestützt. Das ist ein kosmetischer Wirkstoffpfad, keine klinische Wirksamkeitsgarantie.",
+      "limitation": "Keine öffentliche Shampoo-only Endpunktprüfung erfasst; Positionierung ist nicht selbst Leistungsnachweis.",
+      "sourceIds": [
+        "nivea-de-men-anti-schuppen-4006000158464-2026-08-27"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+    "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Shampoo-Klassifikation. Wirkstoffpräsenz und Produktrolle werden nicht als Diagnose, Behandlungsempfehlung für Erkrankungen oder Wirksamkeitsgarantie verwendet."
+  }
+}

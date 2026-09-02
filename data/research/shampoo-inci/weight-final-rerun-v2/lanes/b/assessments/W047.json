@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W047",
+  "formula": {
+    "inciFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":9},{"family":"payload_lipid","name":"dicaprylyl ether","position":10},{"family":"weak_refatter","name":"glyceryl oleate","position":11},{"family":"payload_lipid","name":"hydrogenated castor oil","position":14}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":3},{"family":"nonionic_surfactant","name":"decyl glucoside","position":4},{"family":"nonionic_surfactant","name":"coco-glucoside","position":5}],"excludedIngredients":[{"name":"glycol distearate","position":13,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Kationisches Guar, Dicaprylyl Ether, Glyceryl Oleate und Hydrogenated Castor Oil ergeben mehrere Pflegesignale, aber ohne Silikon oder schwere Fettalkoholbasis."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Polymer und Lipidpayloads können haften, wirken durch die Art der Lipide und die starke Reinigung jedoch begrenzt."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, Betain und zwei Glucoside stehen früh und bilden eine breite Reset-Architektur."
+  },
+  "competingSignals": [
+    "Mehrere Lipid-/Refatterhinweise sprechen gegen low.",
+    "Sehr breite frühe Tensidbasis und fehlendes Silikon sprechen gegen high."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil ein mehrgliedriges Pflegepaket merkliche Rückstände plausibel macht, die starke Reinigung aber high begrenzt.",
+  "whyNotNeighborBand": "Low unterschätzt Polymer plus zwei Lipidpayloads; high wäre ohne Silikon, Mehrfachpolymer oder schwächeren Reset zu stark.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die tatsächliche Lipidmenge und der rinse-off Effekt bleiben unbekannt."
+  }
+}

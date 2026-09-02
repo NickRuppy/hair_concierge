@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W034",
+  "formula": {
+    "inciFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"weak_refatter","name":"ascorbyl palmitate","position":10},{"family":"weak_refatter","name":"glyceryl oleate","position":11},{"family":"cationic_polymer","name":"hydroxypropyl guar hydroxypropyltrimonium chloride","position":12},{"family":"weak_refatter","name":"hydrogenated palm glycerides citrate","position":13},{"family":"weak_refatter","name":"lecithin","position":14}],"resetRelevant":[{"family":"nonionic_surfactant","name":"coco-glucoside","position":2},{"family":"anionic_surfactant","name":"sodium coco-sulfate","position":4},{"family":"amphoteric_surfactant","name":"sodium cocoamphoacetate","position":5}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Mehrere schwache Refatter um Position 10-14 plus kationisches Guar ergeben eine gebündelte, aber nicht schwere Pflegefracht."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das Polymer kann haften; die übrigen Refatter sind eher schwach und sprechen für begrenzte Persistenz."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Coco-Glucoside, Sodium Coco-Sulfate und Amphoterikum reinigen solide, aber die Architektur wirkt milder als eine klassische SLES/SLS-Reset-Basis."
+  },
+  "competingSignals": [
+    "Die Refatter sind einzeln schwach.",
+    "Ihre Bündelung mit kationischem Guar spricht gegen eine reine low-Einstufung."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil mehrere leichte Pflegesignale zusammen merkliche, aber bounded Rückstände plausibel machen.",
+  "whyNotNeighborBand": "Low unterschätzt die Bündelung aus Refattern und Polymer; high fehlt ohne Silikon, Fettalkohol- oder reiches Lipidgerüst die Persistenz.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Unbekannte Konzentrationen der schwachen Refatter können die low/moderate-Grenze verschieben."
+  }
+}

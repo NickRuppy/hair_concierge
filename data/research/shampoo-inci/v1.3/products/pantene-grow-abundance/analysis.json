@@ -1,0 +1,524 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18:753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES and Sodium Xylenesulfonate create a strong cleanser architecture.",
+      "Piroctone Olamine appears sixth, before fragrance and the silicone conditioning system.",
+      "The page combines shampoo, conditioner, mask and scalp-serum claim scopes."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Reduziert Haarverlust um bis zu 90 %",
+      "sourceLocation": "product_page",
+      "scope": "routine_test",
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium xylenesulfonate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "tea-dodecylbenzenesulfonate"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethiconol",
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "citrus aurantium peel oil"
+    ],
+    "proteinsFilmFormers": [
+      "panthenol"
+    ],
+    "acids": [
+      "citric acid",
+      "acetic acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES, xylene sulfonate and a secondary anionic cleanser support strong cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Multiple anionic cleansing and hydrotrope signals appear before conditioning materials.",
+          "inference": "The rinse-off system is cleansing-led.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dimethiconol, Dimethicone and cationic guar support meaningful shampoo conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Two silicones and a cationic guar are disclosed.",
+          "inference": "A moderate deposition route is present despite the strong cleanser base.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silicone and cationic deposition create repeat-use weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol, Dimethicone and cationic guar are present.",
+          "inference": "Weight potential is moderate rather than low.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine and the exact product's scalp/root-retention positioning establish scalp-active as the strongest direct focus, without validating hair regrowth.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears sixth in two matching exact-GTIN German retailer formulas, and the exact product is positioned to prepare and support the scalp within the Grow Abundant routine.",
+          "inference": "Scalp-active is the defensible product focus; the rinse-off shampoo must not be described as a proven regrowth treatment.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "volume"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Fuller-looking hair is the secondary cosmetic route; regrowth and treatment efficacy are not inferred.",
+      "supportingSignals": [
+        {
+          "observation": "The product targets fine, weaker-looking hair and fuller appearance in a multi-product regimen.",
+          "inference": "Volume can be recorded as cosmetic appearance support, separate from the primary scalp-active route.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula and regimen marketing support regular shampoo use; Piroctone Olamine creates dandruff-support product truth but does not by itself require a treatment usage role.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula is a cleansing-led rinse-off shampoo with silicone/cationic conditioning and no shampoo-only treatment protocol.",
+          "inference": "Regular use is the compact role; treatment performance remains unproven.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "High-list Piroctone Olamine provides a credible anti-flake route, though the product is not marketed as an anti-dandruff shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears sixth in the exact German GTIN formula.",
+          "inference": "The formula contains a direct dandruff-relevant active route.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact active percentages, shampoo-only hair-loss endpoint or official German formula page was captured.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "present",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The weightBuildup score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to volumeV1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a volumeV1 contribution plausible.",
+        "g3EndpointSpecificity": "The volumeV1 score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a smoothing contribution plausible.",
+        "g3EndpointSpecificity": "The smoothing score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "No dedicated finished-product residue-reset result is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [
+      {
+        "endpoint": "Haarverlust in der Grow-Abundant-Routine",
+        "scope": "routine_test",
+        "sourceIds": [
+          "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+        ]
+      }
+    ],
+    "scopeNotes": "Exact German GTIN retailer formula; the public claim scopes are regimen-level and medically adjacent, so ordinary matching abstains."
+  },
+  "claimAudit": [
+    {
+      "claim": "Reduziert Haarverlust um bis zu 90 %",
+      "verdict": "indeterminate",
+      "support": "The page identifies clinical and styling-damage comparisons within the Grow Abundant regimen.",
+      "limitation": "The cited footnotes rely on mask, conditioner or scalp-serum use and do not isolate this shampoo's contribution.",
+      "sourceIds": [
+        "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-pantene-grow-abundant-3115706-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "medical_claim",
+    "rationale": "Anti-hair-loss, root-retention and clinical-placebo wording is retained as claim-audit context. It cannot create a hair-growth or retention property; formula-only cosmetic classification remains available, while medical profiles abstain at matching time."
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "candidate_id": "balea-professional-traumlocken",
+  "blindCode": "H",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Glycerin, Cocamidopropyl Betaine, Glycol Distearate, PEG-4 Rapeseedamide, Sodium Chloride, Coco-Glucoside, Glyceryl Oleate, Panthenol, Butyrospermum Parkii Butter, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil, Caprylic/Capric Triglyceride, Hydrolyzed Keratin, Guar Hydroxypropyltrimonium Chloride, Cetearyl Nonanoate, Triticum Vulgare Bran Extract, Triticum Vulgare Germ Extract, Citric Acid, Linoleic Acid, Benzoic Acid, Hydrogenated Castor Oil, Disodium EDTA, Tocopheryl Acetate, Tocopherol, Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate, Parfum, Amyl Salicylate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Glycol Distearate",
+      "PEG-4 Rapeseedamide",
+      "Glyceryl Oleate",
+      "Butyrospermum Parkii Butter",
+      "Triticum Vulgare Germ Oil",
+      "Camellia Oleifera Seed Oil",
+      "Caprylic/Capric Triglyceride",
+      "Cetearyl Nonanoate",
+      "Hydrogenated Castor Oil",
+      "Linoleic Acid"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Keratin",
+      "Triticum Vulgare Bran Extract",
+      "Triticum Vulgare Germ Extract"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Benzoic Acid"
+    ],
+    "chelators": [
+      "Disodium EDTA"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      4
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "high",
+    "weightPotential": "moderate",
+    "focusPrimary": "repair",
+    "focusSecondary": [
+      "shine"
+    ],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "dandruff_support": {
+    "value": "not_supported",
+    "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES/CAPB mit Glucosid reicht für moderate Reinigung, wird aber durch die reiche Pflegearchitektur relativiert.",
+    "conditioningLevel": "Mehrere Lipide/Öle/Butter, Glyceryl Oleate, kationischer Guar und Hydrolyzed Keratin ergeben hohe Shampoo-Pflege.",
+    "weightPotential": "Die viele Pflege ist relevant, aber SLES-basierte Reinigung und Rinse-off-Format halten die direkte Eigenschaft bei moderat.",
+    "focusPrimary": "Die stärkste Formelrichtung ist Schutz/Oberflächenpflege für strukturierte oder trockene Längen, also repair.",
+    "focusSecondary": "Die gleiche Glätte-/Lipidroute unterstützt Shine als zweiten Fokus.",
+    "usageRole": "Kein Reset- oder Anti-Schuppen-Wirkstoff; die Pflegearchitektur passt zu regulärer Nutzung.",
+    "scalpComfortTarget": "Keine dedizierte Kopfhautkomfort-Route ist sichtbar.",
+    "dandruffSupport": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+    "Eine breite Lipid-/Öl-/Butterroute plus kationischer Guar und Hydrolyzed Keratin stützt hohe Shampoo-Pflege.",
+    "Disodium EDTA ist vorhanden, aber ohne Reset-/Chelation-Positionierung nur ein schwaches Chelator-Signal."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Einsatzmengen, fertigen pH-Werte oder Depositionsergebnisse.",
+    "Claims, Marke und Produktname wurden in dieser blinden Einstufung nicht verwendet."
+  ],
+  "payloadHash": "0c754aa36f1251140394cf394890ed286220d08cc7d74a80c008bb95b18ceb50",
+  "finalDelta": []
+}

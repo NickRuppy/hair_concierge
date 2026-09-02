@@ -1,0 +1,262 @@
+{
+  "candidate_id": "loreal-elvital-hydra-hyaluronic",
+  "rawInci": "AQUA / WATER • SODIUM LAURETH SULFATE • GLYCOL DISTEARATE • SODIUM CHLORIDE • COCAMIDOPROPYL BETAINE • DIMETHICONE • CI 60730 / EXT. VIOLET 2 • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • COCAMIDE MEA • COCO-BETAINE • SODIUM BENZOATE • SODIUM HYDROXIDE • SODIUM HYALURONATE • STEARETH-6 • PHENOXYETHANOL • ACETIC ACID • PEG-100 STEARATE • TRIDECETH-10 • TRIDECETH-3 • SALICYLIC ACID • LIMONENE • FUMARIC ACID • AMODIMETHICONE • CARBOMER • CITRIC ACID • HEXYLENE GLYCOL • PARFUM / FRAGRANCE (F.I.L. Z70045709/1).",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone",
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "acetic acid",
+      "salicylic acid",
+      "fumaric acid",
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "high",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+      "formula": {
+        "inciFingerprint": "642ab6c23e82d89059519c025b122846d94bae461f76aaf1954d0a636dd0fe7a",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 6
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 8
+          },
+          {
+            "family": "silicone",
+            "name": "amodimethicone",
+            "position": 23
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 5
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 9
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 10
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 3,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "high",
+        "rationale": "Dimethicone, Guar Hydroxypropyltrimonium Chloride und Amodimethicone bilden mehrere persistente Ablagerungswege."
+      },
+      "persistence": {
+        "value": "high",
+        "rationale": "Dimethicone, Guar Hydroxypropyltrimonium Chloride und Amodimethicone bilden mehrere persistente Ablagerungswege."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "high",
+      "whyThisBand": "Dimethicone, Guar Hydroxypropyltrimonium Chloride und Amodimethicone bilden mehrere persistente Ablagerungswege.",
+      "whyNotNeighborBand": "Nicht moderate, weil frühes Silikon und mehrere substanzielle Systeme trotz starkem Reset zusammenwirken.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "high",
+      "confidence": "moderate",
+      "rationale": "Dimethicone, Guar Hydroxypropyltrimonium Chloride und Amodimethicone bilden mehrere persistente Ablagerungswege."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "2f3c5e5d4fcc5e55892f7f2706b473411ff9f51ec86c211194fbcbc95becad5c"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": null,
+      "formulaCompatible": true,
+      "formulaRoute": "Kein engerer Fokuswert wird aus der Positionierung abgeleitet.",
+      "decisionReason": "General bleibt die passende Fokusklasse."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [],
+  "payloadHash": "d99c1dd84b9d0f8401f879bf28f668dd601243b8fe4433ed465c47261e18385e"
+}
