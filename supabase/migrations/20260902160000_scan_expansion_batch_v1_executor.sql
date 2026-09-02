@@ -65,6 +65,15 @@ SECURITY DEFINER
 SET search_path = ''
 AS $function$
 DECLARE
+  -- The FULL whitelist of per-category fact tables. `product_id` is the product
+  -- scope on every one of them, so each can be counted for this product.
+  c_fact_tables constant text[] := ARRAY[
+    'product_shampoo_specs', 'product_conditioner_specs', 'product_conditioner_rerank_specs',
+    'product_mask_specs', 'product_leave_in_specs', 'product_leave_in_fit_specs',
+    'product_leave_in_eligibility', 'product_oil_eligibility', 'product_oil_specs',
+    'product_dry_shampoo_specs', 'product_deep_cleansing_shampoo_specs',
+    'product_bondbuilder_specs', 'product_heat_protectant_specs', 'product_scalp_care_specs'
+  ];
   v_operation jsonb;
   v_row jsonb;
   v_table text;
@@ -77,15 +86,12 @@ BEGIN
   LOOP
     v_table := v_operation->>'table';
     -- Whitelist: the table name reaches dynamic SQL, so it may never come from
-    -- free-form batch text.
-    IF v_table NOT IN (
-      'product_shampoo_specs', 'product_conditioner_specs', 'product_conditioner_rerank_specs',
-      'product_mask_specs', 'product_leave_in_specs', 'product_leave_in_fit_specs',
-      'product_leave_in_eligibility', 'product_oil_eligibility', 'product_oil_specs',
-      'product_dry_shampoo_specs', 'product_deep_cleansing_shampoo_specs',
-      'product_bondbuilder_specs', 'product_heat_protectant_specs', 'product_scalp_care_specs',
-      'product_application_protocols'
-    ) THEN
+    -- free-form batch text. `product_application_protocols` is allowed through
+    -- here but is NOT part of `c_fact_tables`: its row count is owned by
+    -- `scan_expansion_assert_applied_bundle`, which compares it against the
+    -- reviewed protocol rows.
+    IF v_table IS NULL
+       OR NOT (v_table = ANY(c_fact_tables) OR v_table = 'product_application_protocols') THEN
       RAISE EXCEPTION 'scan expansion spec operation table is not allowed: %', COALESCE(v_table, '?');
     END IF;
 
@@ -107,13 +113,37 @@ BEGIN
   -- The loop above is one-way containment: every reviewed row must exist. On its
   -- own that lets an EXTRA row sit alongside the reviewed ones — a stray spec row
   -- written by something else would replay clean forever. Make the comparison
-  -- symmetric by pinning the row count per touched table. Every table here has
-  -- already passed the whitelist above before reaching dynamic SQL.
+  -- symmetric by pinning the row count.
+  --
+  -- Counting only the TOUCHED tables is not enough either: an extra row in a
+  -- whitelisted but untouched table (a `product_conditioner_rerank_specs` row on
+  -- a mask product, say) would never be counted and would replay clean forever
+  -- too. So iterate the FULL fact-table whitelist and require the reviewed count
+  -- for a table the spec touches and ZERO for one it does not. Consequence to
+  -- know when adding a category: whatever the publication boundary writes for a
+  -- product must appear in that product's reviewed `spec_operations`, or this
+  -- assertion fails — which is the intent, since an unreviewed fact row is
+  -- exactly what must not be published silently.
+  --
+  -- The UNION keeps any table the spec does touch in the loop (protocols, when a
+  -- caller passes them in). Every table here has either passed the whitelist
+  -- above or comes from the constant array, before reaching dynamic SQL.
   FOR v_table, v_expected_rows IN
-    SELECT operation.value->>'table',
-           pg_catalog.sum(pg_catalog.jsonb_array_length(operation.value->'rows'))::integer
-    FROM pg_catalog.jsonb_array_elements(COALESCE(p_spec_operations, '[]'::jsonb)) operation(value)
-    GROUP BY operation.value->>'table'
+    SELECT candidate.table_name, COALESCE(spec.row_count, 0)
+    FROM (
+      SELECT pg_catalog.unnest(c_fact_tables) AS table_name
+      UNION
+      SELECT operation.value->>'table'
+      FROM pg_catalog.jsonb_array_elements(COALESCE(p_spec_operations, '[]'::jsonb)) operation(value)
+    ) candidate
+    LEFT JOIN (
+      SELECT operation.value->>'table' AS table_name,
+             pg_catalog.sum(pg_catalog.jsonb_array_length(operation.value->'rows'))::integer
+               AS row_count
+      FROM pg_catalog.jsonb_array_elements(COALESCE(p_spec_operations, '[]'::jsonb)) operation(value)
+      GROUP BY operation.value->>'table'
+    ) spec ON spec.table_name = candidate.table_name
+    ORDER BY candidate.table_name
   LOOP
     EXECUTE pg_catalog.format(
       'SELECT pg_catalog.count(*)::integer FROM public.%I candidate WHERE candidate.product_id = $1',

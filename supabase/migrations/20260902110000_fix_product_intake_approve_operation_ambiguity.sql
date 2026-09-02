@@ -41,30 +41,49 @@
 --   (c) the PRODUCTION out-of-band form of (b), which spells the alias
 --       `) AS spec_operation(value)` — same logic, one extra keyword.
 --
--- The comparison is on the FULL function body, not on markers. Each accepted
--- body is pinned as the sha256 of its whitespace-stripped `prosrc`; whitespace
--- is stripped so re-indentation is tolerated, but every token must match. A
--- landmark/marker check cannot do this job: a body that keeps the markers and
--- changes the logic between them would pass it silently, which is precisely the
--- overwrite this guard exists to prevent. Anything whose digest is not on the
--- list is unknown drift and must be re-reviewed by a human, so the digest it
--- actually has is reported in the exception.
+-- The comparison is on the FULL function body, not on markers, and it is
+-- BYTE-EXACT: each accepted body is pinned as the raw sha256 of `prosrc` with NO
+-- normalization at all. An earlier revision hashed
+-- `regexp_replace(prosrc, '\s+', '', 'g')` so that re-indentation would be
+-- tolerated; that is not safe. Whitespace is not always insignificant in this
+-- body — it also lives INSIDE quoted literals. A body whose guard reads
+-- `= 'product_application_protocols '` (one trailing space) never matches the
+-- protocol operation and therefore rejects EVERY approval, yet it normalizes to
+-- the same digest as the reviewed body and would have been accepted and silently
+-- overwritten. Raw digests close that. A landmark/marker check is weaker still:
+-- a body that keeps the markers and changes the logic between them would pass it
+-- silently, which is precisely the overwrite this guard exists to prevent.
+-- Anything whose digest is not on the list is unknown drift and must be
+-- re-reviewed by a human, so the digest it actually has is reported in the
+-- exception.
 --
--- These three digests are re-derived from the migration files and asserted
--- against the literals below by tests/scan-expansion-batch-postgres.test.ts, so
--- editing the body without re-pinning fails in CI rather than in production.
+-- OPERATOR NOTE — byte-exact matching means a prod apply succeeds only if prod's
+-- live body is byte-identical to (c). It is, as of the reading below. Before
+-- applying this migration to production, re-read the live digest
+--   SELECT encode(sha256(convert_to(prosrc, 'UTF8')), 'hex'), length(prosrc)
+--   FROM pg_proc WHERE proname =
+--     'product_intake_approve_reviewed_product_before_thumbnail_image';
+-- and confirm it is still one of the three below. If it is not, prod drifted
+-- again after 2026-09-02 and the new body needs review, not a re-pin.
+--
+-- Digests (a) and (b) are re-derived from the migration files, and (c) is
+-- re-derived from (b), by tests/scan-expansion-batch-postgres.test.ts and
+-- asserted against the literals below, so editing the body without re-pinning
+-- fails in CI rather than in production.
 DO $assert_pre_state$
 DECLARE
-  -- sha256 of regexp_replace(prosrc, '\s+', '', 'g'):
-  --   (a) 20260814120000 body, ambiguous `) operation` alias
+  -- RAW sha256 of prosrc, byte for byte, no normalization:
+  --   (a) 20260814120000 body, ambiguous `) operation` alias (7198 bytes)
   c_defective constant text :=
-    'f7b9458a71e28759ba8e172d46a4cbb257bb1b0fdd909ce60ce45a8002317a14';
-  --   (b) the body this migration installs, `) spec_operation(value)`
+    '8bdf886b84e0ce848483bf55c824ad65576d4680c431bb78fe6cbf72e1ccddfd';
+  --   (b) the body this migration installs, `) spec_operation(value)` (7243 bytes)
   c_repo_fixed constant text :=
-    '1de749009f7425ecf3245147c4ddc6b1d4898164fd3b75d90df1b419c1529332';
-  --   (c) the production out-of-band body, `) AS spec_operation(value)`
+    'be434f6bba1c2655511d059edf5c317787708d2e366304e00e70d2d4c544960b';
+  --   (c) the production out-of-band body, `) AS spec_operation(value)` (7246
+  --       bytes). Read from LIVE production pg_proc on 2026-09-02; it is (b)
+  --       with the three bytes `AS ` inserted and nothing else.
   c_prod_fixed constant text :=
-    'a50dd87bc5dfac43e77fc70497a3b80209b60158802f9bef271af288ff3dcd68';
+    '81faffc62069a9db57d4fff4f6f04f4c49b4c922fdd54ecab796ccf70c417ee7';
   v_source text;
   v_digest text;
 BEGIN
@@ -79,16 +98,14 @@ BEGIN
   END IF;
 
   v_digest := pg_catalog.encode(
-    pg_catalog.sha256(
-      pg_catalog.convert_to(pg_catalog.regexp_replace(v_source, '\s+', '', 'g'), 'UTF8')
-    ),
+    pg_catalog.sha256(pg_catalog.convert_to(v_source, 'UTF8')),
     'hex'
   );
 
   IF v_digest NOT IN (c_defective, c_repo_fixed, c_prod_fixed) THEN
     RAISE EXCEPTION
-      'product intake approval body matches neither reviewed pre-state (normalized sha256: %); re-review this repair',
-      v_digest;
+      'product intake approval body matches neither reviewed pre-state (raw sha256: %, % bytes); re-review this repair',
+      v_digest, pg_catalog.octet_length(pg_catalog.convert_to(v_source, 'UTF8'));
   END IF;
 END;
 $assert_pre_state$;

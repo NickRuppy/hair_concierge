@@ -579,20 +579,37 @@ test("a drifted body that keeps every landmark but changes behaviour is refused"
   assert.equal(await boundaryBody(pg), seeded, "the drifted body was not overwritten")
 })
 
-test("the repair pins the sha256 of every body it is willing to accept", async () => {
-  const repair = await repairSql()
+/** The `$function$ … $function$` body of one function in a migration file. */
+function functionBody(sql: string, name: string): string {
+  const head = sql.indexOf(`CREATE OR REPLACE FUNCTION public.${name}(`)
+  assert.ok(head >= 0, `function not found: ${name}`)
+  const start = sql.indexOf("AS $function$", head) + "AS $function$".length
+  const end = sql.indexOf("$function$;", start)
+  assert.ok(end > start, `unterminated body: ${name}`)
+  return sql.slice(start, end)
+}
 
-  /** The `$function$ … $function$` body of one function in a migration file. */
-  function functionBody(sql: string, name: string): string {
-    const head = sql.indexOf(`CREATE OR REPLACE FUNCTION public.${name}(`)
-    assert.ok(head >= 0, `function not found: ${name}`)
-    const start = sql.indexOf("AS $function$", head) + "AS $function$".length
-    const end = sql.indexOf("$function$;", start)
-    assert.ok(end > start, `unterminated body: ${name}`)
-    return sql.slice(start, end)
-  }
-  const digest = (body: string) =>
-    createHash("sha256").update(body.replace(/\s+/g, ""), "utf8").digest("hex")
+/**
+ * The digest the repair guard actually computes: RAW sha256 of `prosrc`, byte
+ * for byte, with no normalization. See `normalizedDigest` below for the weaker
+ * form this replaced and the bypass that forced the change.
+ */
+const digest = (body: string) => createHash("sha256").update(body, "utf8").digest("hex")
+
+/** The superseded whitespace-stripping digest, kept only to prove the bypass. */
+const normalizedDigest = (body: string) =>
+  createHash("sha256").update(body.replace(/\s+/g, ""), "utf8").digest("hex")
+
+/**
+ * Read from LIVE production `pg_proc` on 2026-09-02 (7246 bytes). The test below
+ * re-derives it from the repo body, so this literal is an independent
+ * corroboration of that reading, not just a copy of the migration's constant.
+ */
+const PROD_BODY_DIGEST_READ_2026_09_02 =
+  "81faffc62069a9db57d4fff4f6f04f4c49b4c922fdd54ecab796ccf70c417ee7"
+
+test("the repair pins the raw sha256 of every body it is willing to accept", async () => {
+  const repair = await repairSql()
 
   const legacy = await readFile(
     new URL(
@@ -627,12 +644,72 @@ test("the repair pins the sha256 of every body it is willing to accept", async (
   )
   assert.notEqual(prodFixed, repoFixed, "the production form is textually distinct")
 
+  // The production body read on 2026-09-02 is byte-for-byte (b) plus the three
+  // bytes `AS `. Deriving it here is what makes pinning prod's raw digest safe:
+  // a byte-exact guard only lets prod converge if prod really is this body.
+  assert.equal(
+    digest(prodFixed),
+    PROD_BODY_DIGEST_READ_2026_09_02,
+    "the derived production form must reproduce the digest read from live prod",
+  )
+  assert.equal(Buffer.byteLength(prodFixed, "utf8"), 7246, "prod body length as read from prod")
+
   for (const expected of [digest(defective), digest(repoFixed), digest(prodFixed)]) {
+    assert.ok(repair.includes(expected), `the repair migration must pin the raw sha256 ${expected}`)
+  }
+
+  // The superseded digests must be gone: leaving one in place would keep the
+  // whitespace-normalizing guard alive alongside the raw one.
+  for (const superseded of [
+    normalizedDigest(defective),
+    normalizedDigest(repoFixed),
+    normalizedDigest(prodFixed),
+  ]) {
     assert.ok(
-      repair.includes(expected),
-      `the repair migration must pin the normalized sha256 ${expected}`,
+      !repair.includes(superseded),
+      `the repair migration must not still pin the normalized sha256 ${superseded}`,
     )
   }
+})
+
+test("a body that differs only by whitespace INSIDE a quoted literal is refused", async (t) => {
+  const pg = await migratedDatabase(t)
+  const repair = await repairSql()
+  const repoFixed = functionBody(
+    repair,
+    "product_intake_approve_reviewed_product_before_thumbnail_image",
+  )
+
+  // The reviewed body with ONE space added inside a string literal: the
+  // protocol-scope guard now compares against `'product_application_protocols '`
+  // and can never match, so this body rejects EVERY approval. It is a different
+  // program — but whitespace-stripping normalization hashes it identically to
+  // the reviewed body, so the superseded guard would have accepted it as a
+  // reviewed pre-state and overwritten it without a word.
+  const bypass = repoFixed.replace(
+    "WHERE spec_operation.value->>'table' = 'product_application_protocols'",
+    "WHERE spec_operation.value->>'table' = 'product_application_protocols '",
+  )
+  assert.notEqual(bypass, repoFixed, "the literal was actually mutated")
+  assert.equal(
+    normalizedDigest(bypass),
+    normalizedDigest(repoFixed),
+    "this is exactly the normalization bypass: the old digest cannot tell them apart",
+  )
+  assert.notEqual(digest(bypass), digest(repoFixed), "the raw digest can")
+
+  await pg.exec(
+    `CREATE OR REPLACE FUNCTION public.product_intake_approve_reviewed_product_before_thumbnail_image(
+       p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb,
+       p_reviewed_by text, p_reviewed_at timestamptz DEFAULT now(), p_review_notes text DEFAULT NULL
+     ) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
+     AS $bypass$${bypass}$bypass$;`,
+  )
+  const seeded = await boundaryBody(pg)
+  assert.equal(seeded, bypass, "the bypass body is installed byte-exactly")
+
+  await assert.rejects(pg.exec(repair), /matches neither reviewed pre-state/)
+  assert.equal(await boundaryBody(pg), seeded, "the bypass body was not overwritten")
 })
 
 test("preflight parks incomplete products and publishes the rest through the boundary", async (t) => {
@@ -897,6 +974,56 @@ test("replay refuses a bundle that GREW a row nobody reviewed", async (t) => {
     [productId],
   )
   await assert.rejects(applyItem(pg, prepared, item.item_key), /protocol row count drift/)
+
+  await pg.query(
+    "DELETE FROM public.product_application_protocols WHERE guidance_payload_v2->>'applicationFamily' = 'unreviewed_family'",
+  )
+  assert.equal(
+    (await applyItem(pg, prepared, item.item_key)).rows[0]?.outcome,
+    "replayed",
+    "removing the extra protocol row restores a clean replay",
+  )
+})
+
+test("replay refuses a fact row in a whitelisted table the reviewed item never touches", async (t) => {
+  const pg = await migratedDatabase(t)
+  const prepared = await prepareMaskBatch()
+  await approve(pg, prepared)
+
+  const item = prepared.batch.items[0]!
+  const applied = await applyItem(pg, prepared, item.item_key)
+  assert.equal(applied.rows[0]?.outcome, "applied")
+  const productId = applied.rows[0]!.product_id
+
+  // `product_conditioner_rerank_specs` is on the fact-table whitelist but is not
+  // one of THIS mask item's spec_operations, so a per-touched-table count never
+  // looked at it and a row planted here replayed clean forever. The whitelist
+  // sweep asserts zero for it.
+  assert.ok(
+    item.kind === "new_product" &&
+      !item.spec_operations.some(
+        (operation) => operation.table === "product_conditioner_rerank_specs",
+      ),
+    "the reviewed mask item must not touch the rerank table",
+  )
+  await pg.query(
+    `INSERT INTO public.product_conditioner_rerank_specs (product_id, weight, repair_level)
+     VALUES ($1, 'light', 'none')`,
+    [productId],
+  )
+  await assert.rejects(
+    applyItem(pg, prepared, item.item_key),
+    /fact row count drift on product_conditioner_rerank_specs: reviewed 0, stored 1/,
+  )
+
+  await pg.query("DELETE FROM public.product_conditioner_rerank_specs WHERE product_id = $1", [
+    productId,
+  ])
+  assert.equal(
+    (await applyItem(pg, prepared, item.item_key)).rows[0]?.outcome,
+    "replayed",
+    "removing the unreviewed fact row restores a clean replay",
+  )
 })
 
 test("promotion is unreachable: an item that asks for the flag is rejected", async (t) => {
