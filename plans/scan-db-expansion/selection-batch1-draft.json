@@ -146,6 +146,13 @@
      "size": "354 ml",
      "eans": [
       "4895248005872"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005872",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+       "note": "Re-verified 2026-09-02: no labeled GTIN/EAN field on the Rossmann page itself, but the page's own script pushes this exact number to its Syndigo product-content-sync tag (`SYNDI.push('4895248005872')`), matching the product URL. GS1 mod-10 check digit valid. Treated as confirmed (page-embedded identifier used by the retailer's own content pipeline), not a bare URL-pattern guess."
+      }
      ]
     }
    ],
@@ -167,11 +174,21 @@
    "sizes": [
     {
      "size": "200 ml",
-     "eans": []
+     "eans": [
+      "4015100895025"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4015100895025",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+       "note": "Found product page 2026-09-02 via Rossmann site search. No labeled GTIN field visible in the rendered page text, but the page's Syndigo content-sync script pushes `SYNDI.push('4015100895025')`, matching the product URL. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099",
+    "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025"
    ],
    "rationale": "Explicitly tagged \"Neu\" on Rossmann with a dedicated homepage promo banner (\"bis zu 94% weniger Spliss\"); brand-new Gliss sub-line. rossmann_new pick."
   },
@@ -281,13 +298,22 @@
    "sizes": [
     {
      "size": "150 ml",
-     "eans": []
+     "eans": [
+      "3600524074791"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524074791",
+       "url": "https://www.dm.de/p/d/1678576/l-oreal-paris-elvital-conditioner-bond-repair-anti-haarschaeden",
+       "note": "Re-checked 2026-09-02: dm product page shows \"GTIN: 3600524074791\" in full. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
     "https://www.dm.de/p/d/1678576/l-oreal-paris-elvital-conditioner-bond-repair-anti-haarschaeden"
    ],
-   "rationale": "723 dm reviews; bond-repair positioning, distinct from the Glycolic Gloss line. GTIN was on the product page but got cut off during capture - needs a quick re-check."
+   "rationale": "723 dm reviews; bond-repair positioning, distinct from the Glycolic Gloss line."
   },
   {
    "rank": 14,
@@ -301,11 +327,21 @@
    "sizes": [
     {
      "size": "354 ml",
-     "eans": []
+     "eans": [
+      "4895248005926"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005926",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 354 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248005926')` matches the URL. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181",
+    "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926"
    ],
    "rationale": "Companion conditioner to the pilot Being Big Hair Shampoo; same new-brand launch. rossmann_new pick."
   },
@@ -389,13 +425,23 @@
    "sizes": [
     {
      "size": "300 ml",
-     "eans": []
+     "eans": [
+      "8700216212724"
+     ],
+     "ean_sources": [
+      {
+       "ean": "8700216212724",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 300 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('8700216212724')` matches the URL. GS1 check digit valid. Cross-check confidence booster: the same search result also returned the Blütensanft Pflegespülung (conditioner) at EAN 8700216210508, which matches the already dm-confirmed EAN for that pilot conditioner exactly — validates that this Syndigo-tag method reliably yields the real GTIN on this site."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127",
+    "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724"
    ],
-   "rationale": "1211 Rossmann reviews, completes the Herbal Essences Blütensanft shampoo+conditioner already in this pilot. EAN not captured (Rossmann product cards are not directly linkable without extra clicks) - flagged for follow-up."
+   "rationale": "1211 Rossmann reviews, completes the Herbal Essences Blütensanft shampoo+conditioner already in this pilot."
   },
   {
    "rank": 19,
@@ -431,11 +477,21 @@
    "sizes": [
     {
      "size": "250 ml",
-     "eans": []
+     "eans": [
+      "6412600231793"
+     ],
+     "ean_sources": [
+      {
+       "ean": "6412600231793",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 250 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('6412600231793')` matches the URL. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127",
+    "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793"
    ],
    "rationale": "New premium Swedish influencer brand just launched at Rossmann (sponsored placements across shampoo/conditioner/mask, very low review counts consistent with a recent launch). rossmann_new pick."
   },
@@ -503,7 +559,7 @@
    "source_urls": [
     "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry"
    ],
-   "rationale": "959 dm reviews. Note: catalog already has a 'Garnier Hair Food Aloe Vera' leave_in row with no GTIN and no size info - possibly the same product under an older name. Treated as a new candidate rather than existing_product_new_eans because the exact name match could not be confirmed; needs manual reconciliation."
+   "rationale": "959 dm reviews. Note: catalog already has a 'Garnier Hair Food Aloe Vera' leave_in row with no GTIN and no size info - possibly the same product under an older name. Treated as a new candidate rather than existing_product_new_eans because the exact name match could not be confirmed; needs manual reconciliation. FOLLOW-UP 2026-09-02: checked both dm.de and rossmann.de - 'Hair Food Aloe Vera' branding at both retailers is used only for the Haarmaske (mask), Shampoo, and Spülung/Conditioner variants; the leave-in in this same Aloe Vera sub-range is sold under a distinct 'Air Dry' name at both retailers (dm: 'Fructis Hydra Aloe Air-Dry Cream' in the product description; Rossmann: 'Leave-In Creme Hydra Aloe Air-Dry'). No 'Hair Food'-branded leave-in product could be found live at either retailer. This suggests Aloe Air Dry and Hair Food Aloe Vera are two different sub-lines, not the same product under a renamed leave-in SKU - but this is retailer-catalog evidence, not proof about the specific existing DB row's history, so manual reconciliation with Nick is still recommended before merging or dropping either row."
   },
   {
    "rank": 25,
@@ -517,11 +573,21 @@
    "sizes": [
     {
      "size": "227 ml",
-     "eans": []
+     "eans": [
+      "4895248005988"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005988",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 227 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248005988')` matches the URL. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181",
+    "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988"
    ],
    "rationale": "Completes the Being line coverage across shampoo/conditioner/leave-in for this new brand. rossmann_new pick."
   },
@@ -609,13 +675,23 @@
    "sizes": [
     {
      "size": "100 ml",
-     "eans": []
+     "eans": [
+      "4068134024947"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4068134024947",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 100 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4068134024947')` matches the URL. GS1 check digit valid. Note: the same search also surfaced a second URL for the identically-named product at /p/0000042508113 — a short, non-GS1-shaped number (Rossmann's own item number, not a GTIN); not used."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270",
+    "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947"
    ],
-   "rationale": "406 Rossmann reviews - Isana Professional private-label pick for oil (catalog already has the matching conditioner but not the oil). EAN not captured, needs product-page follow-up."
+   "rationale": "406 Rossmann reviews - Isana Professional private-label pick for oil (catalog already has the matching conditioner but not the oil)."
   },
   {
    "rank": 30,
@@ -629,11 +705,21 @@
    "sizes": [
     {
      "size": "89 ml",
-     "eans": []
+     "eans": [
+      "4895248009825"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248009825",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 89 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248009825')` matches the URL. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270",
+    "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825"
    ],
    "rationale": "Explicitly tagged \"Neu\" on Rossmann; Monday Haircare shampoo+conditioner already in catalog, this is a brand-new oil SKU extending that line. rossmann_new pick."
   },
@@ -650,15 +736,35 @@
    "sizes": [
     {
      "size": "1000 ml",
-     "eans": []
+     "eans": [
+      "3600524062637"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524062637",
+       "url": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+       "note": "Found 2026-09-02 via dm.de site search; product page shows \"GTIN: 3600524062637\" in full. GS1 check digit valid. Cross-confirmed independently: Rossmann's own 1.000 ml listing of the same product (\"Nur Online\", momentan nicht verfügbar) lives at URL .../p/3600524062637 — identical number, matching the dm-read GTIN exactly."
+      }
+     ]
     },
     {
      "size": "300 ml (rossmann, \"Dream Length Super Aufbau Shampoo\")",
-     "eans": []
+     "eans": [
+      "3600524138530"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524138530",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524138530",
+       "note": "Found 2026-09-02 via Rossmann site search; page confirms 300 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('3600524138530')` matches the URL. GS1 check digit valid. Note: a differently-named but same-size sibling listing (\"Super Aufbau Dream Length Shampoo\", 400 ml) exists at a different EAN (3600524138660, checksum valid, not verified further) — not the same size, not used here."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.dm.de/search?query=shampoo"
+    "https://www.dm.de/search?query=shampoo",
+    "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524138530"
    ],
    "rationale": "2221 dm reviews - very high popularity, only missed the pilot 8-slot cap.",
    "promoted_note": "promoted to pilot 2026-09-02 (slot freed in shampoo)"
@@ -675,11 +781,21 @@
    "sizes": [
     {
      "size": "150 ml",
-     "eans": []
+     "eans": [
+      "3600524075576"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524075576",
+       "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+       "note": "Found 2026-09-02 (linked from the sibling Bond Repair conditioner's \"Ähnliche Produkte\" panel on dm.de); product page shows \"GTIN: 3600524075576\" in full. GS1 check digit valid."
+      }
+     ]
     }
    ],
    "source_urls": [
-    "https://www.dm.de/search?query=leave-in"
+    "https://www.dm.de/search?query=leave-in",
+    "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden"
    ],
    "rationale": "800 dm reviews - only missed the pilot 5-slot cap for this category.",
    "promoted_note": "promoted to pilot 2026-09-02 (slot freed in leave_in)"
