@@ -12,6 +12,7 @@
     "The frozen 50-product candidate retains eight properties per product, zero low-confidence properties and zero missing rationale references.",
     "The independent 10-product holdout retains its passing gate and 18-profile replay.",
     "The archive validator verifies nine canonical pins, 112 candidate source locks and the complete 519-file archive content fingerprint.",
+    "Immutable research data is excluded from application linting; executable archive validation code is linted explicitly.",
     "No application routes, database migrations, catalog importers, recommendation logic or production activation are included."
   ],
   "verification": [
