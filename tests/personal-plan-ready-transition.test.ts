@@ -104,8 +104,16 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(arrival, /Und das wartet dahinter:/)
   assert.doesNotMatch(arrival, /showStageProgress/)
   assert.doesNotMatch(arrival, /PersonalPlanJourneyOverview/)
-  assert.match(client, /Wir bereiten deinen Haarplan vor\./)
-  assert.match(client, /Haarplan wird geprüft/)
+  // The two-state opening frame (founder sign-off 02.09.2026): loading and
+  // ready are one persistent surface that morphs in place, with a minimum
+  // beat measured from /welcome so the morph never blinks.
+  assert.match(arrival, /Dein Plan wird geöffnet\./)
+  assert.match(arrival, /Zahlung bestätigt/)
+  assert.match(arrival, /Wir verbinden deinen Plan mit deinem Konto/)
+  assert.match(arrival, /data-plan-opening=/)
+  assert.match(client, /readPlanOpeningStart/)
+  assert.match(client, /PLAN_OPENING_BEAT_MS/)
+  assert.match(client, /openingBeatDone/)
   assert.match(client, /<noscript>/)
   assert.doesNotMatch(client, /motion-safe:animate-spin/)
   assert.doesNotMatch(client, /Die Aktivierung dauert gerade etwas länger\. Deine Zahlung/)

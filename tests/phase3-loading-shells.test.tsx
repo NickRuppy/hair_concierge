@@ -11,11 +11,27 @@ import TrackerLoading from "../src/app/tracker/loading"
 
 const shells = [
   ["Planstart", PlanStartLoading, "plan-start-loading-shell", "plan-start"],
-  ["Plan bereit", PlanBereitLoading, "plan-bereit-loading-shell", "plan-bereit"],
   ["Profil", ProfileLoading, "profile-loading-shell", "profile"],
   ["Chat", ChatLoading, "chat-loading-shell", "chat"],
   ["Tracker", TrackerLoading, "tracker-loading-shell", "tracker"],
 ] as const
+
+// /plan-bereit deliberately left the neutral-shell family: its loading shell
+// continues the post-payment opening frame that /welcome already painted
+// (founder sign-off 02.09.2026), so the streaming gap shows identical pixels.
+test("Plan-bereit lädt als Opening-Frame statt als neutrale Schale", () => {
+  const html = renderToStaticMarkup(<PlanBereitLoading />)
+
+  assert.match(html, /aria-label="Plan bereit wird geladen"/)
+  assert.match(html, /aria-live="polite"/)
+  assert.match(html, /data-loading-shell="plan-bereit-loading-shell"/)
+  assert.match(html, /role="status"/)
+  assert.match(html, /data-plan-opening="loading"/)
+  assert.match(html, /Dein Plan wird geöffnet\./)
+  assert.match(html, /Zahlung bestätigt/)
+  // Still inert: the shell may not carry a working link or button.
+  assert.doesNotMatch(html, /<a\b|<button\b|href=/)
+})
 
 test("Phase-3-Routen zeigen neutrale, statische Ladeschalen", () => {
   for (const [name, LoadingShell, marker, route] of shells) {

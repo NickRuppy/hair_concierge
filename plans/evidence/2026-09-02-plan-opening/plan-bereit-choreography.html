@@ -1,0 +1,422 @@
+<title>Plan-Bereit Choreography</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --shell-bg:#eceaf1; --panel:#ffffff; --panel-edge:#dcd8e5;
+    --ink:#262034; --sub:#6a6478; --faint:#8d879c;
+    --plum:#6b50a0; --plum-dark:#3d2a62; --plum-darkest:#2a1845; --plum-ice:#f2eefa;
+    --coral:#d4616a; --coral-dark:#c0555d;
+    --cream:#fdfbf9; --cream-line:#f0ebe4;
+    --p-sub:#6a6560; --p-caption:#736f69;
+    --ok-bg:#edf7ef; --ok-text:#356b45;
+    --bad:#b04a52; --bad-bg:#faeced;
+    --font-display:"Playfair Display",Georgia,"Times New Roman",serif;
+    --font-body:"Plus Jakarta Sans",Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--shell-bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:44px 24px 72px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--plum)}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,4vw,38px);line-height:1.15;margin:8px 0 12px;color:var(--plum-darkest);text-wrap:balance}
+  .lede{max-width:62ch;color:var(--sub);margin:0 0 6px}
+  h2{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--plum-darkest);margin:0 0 6px;text-wrap:balance}
+  section{margin-top:52px}
+  .section-sub{color:var(--sub);max-width:66ch;margin:0 0 22px}
+
+  /* ---- controls ---- */
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:26px 0 22px;padding:12px 16px;background:var(--panel);border:1px solid var(--panel-edge);border-radius:12px}
+  .controls .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .seg{display:inline-flex;background:var(--shell-bg);border-radius:999px;padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;font:inherit;font-size:13px;font-weight:600;color:var(--sub);padding:6px 14px;border-radius:999px;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--plum);color:#fff}
+  .seg button:focus-visible,.btn:focus-visible,.replay:focus-visible{outline:2px solid var(--plum-dark);outline-offset:2px}
+  .btn{border:0;background:var(--plum);color:#fff;font:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:999px;cursor:pointer}
+  .btn:hover{background:var(--plum-dark)}
+  .controls .hint{font-size:12.5px;color:var(--faint);margin-left:auto}
+
+  /* ---- lanes ---- */
+  .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;align-items:start}
+  .lane{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px}
+  .lane-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .lane-head h3{margin:0;font-size:15.5px;font-weight:700}
+  .chip{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .chip.bad{background:var(--bad-bg);color:var(--bad)}
+  .chip.rec{background:var(--plum-ice);color:var(--plum)}
+  .chip.alt{background:var(--shell-bg);color:var(--sub)}
+  .lane .desc{font-size:13px;color:var(--sub);margin:0;min-height:3.2em}
+  .replay{align-self:flex-start;border:1.5px solid var(--plum);background:transparent;color:var(--plum);font:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
+  .replay:hover{background:var(--plum-ice)}
+
+  /* ---- phone ---- */
+  .phone{position:relative;margin:0 auto;width:272px;height:560px;border-radius:30px;background:#17131f;padding:9px;box-shadow:0 18px 40px -24px rgba(42,24,69,.45)}
+  .viewport{position:relative;width:100%;height:100%;border-radius:22px;overflow:hidden;background:var(--cream)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;visibility:hidden}
+  .screen.on{visibility:visible}
+  .screen.fade{transition:opacity .3s ease;opacity:0;visibility:visible;pointer-events:none}
+  .screen.fade.on{opacity:1;pointer-events:auto}
+  .phase{position:absolute;left:0;right:0;bottom:-30px;text-align:center;font-size:11.5px;font-weight:600;color:var(--faint);font-variant-numeric:tabular-nums}
+  .phone-slot{padding-bottom:34px;position:relative}
+
+  /* product surfaces inside the phone */
+  .p-generic{background:#fbfaf8}
+  .p-cream{background:var(--cream)}
+  .p-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 26px;text-align:center}
+  .wordmark{font-family:var(--font-display);font-weight:500;font-size:19px;color:var(--plum-darkest);text-align:center;padding:16px 0 13px;border-bottom:1px solid var(--cream-line)}
+  .circle{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;flex:none}
+  .circle.ok{background:var(--ok-bg);color:var(--ok-text);font-size:21px;font-weight:800}
+  .circle.plumdot{background:var(--plum-ice)}
+  .circle.plumdot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--plum)}
+  .spin{width:22px;height:22px;border-radius:50%;border:2.5px solid rgba(107,80,160,.22);border-top-color:var(--plum);animation:rot 1s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .p-eyebrow{font-size:11.5px;font-weight:600;color:var(--plum);margin:0 0 8px}
+  .p-h{font-family:var(--font-display);font-weight:500;font-size:22px;line-height:1.2;color:var(--plum-darkest);margin:0}
+  .p-sub{font-size:12px;line-height:1.5;color:var(--p-sub);margin:9px 0 0}
+  .p-card{width:100%;margin-top:16px;border:1px solid #e8e2da;background:#fff;border-radius:14px;padding:11px 13px;text-align:left}
+  .p-card b{display:block;font-size:12px;color:var(--ink)}
+  .p-card span{font-size:11.5px;color:var(--p-sub)}
+  .p-list{list-style:none;margin:18px 0 0;padding:0;width:100%;max-width:200px;text-align:left}
+  .p-list li{display:flex;align-items:baseline;gap:7px;padding:7px 0;border-bottom:1px solid var(--cream-line)}
+  .p-list li:last-child{border-bottom:0}
+  .p-list .n{font-family:var(--font-display);font-size:13px;color:var(--plum-darkest);white-space:nowrap}
+  .p-list .d{font-size:10px;color:var(--p-caption)}
+  .p-cta{margin:0 18px 18px;flex:none;background:var(--coral);color:#fff;border-radius:999px;text-align:center;font-size:13.5px;font-weight:700;padding:13px 0}
+  .skel{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 30px}
+  .skel i{display:block;border-radius:7px;background:#eee9e2}
+  .skel .a{height:15px;width:56%;margin:0 auto}
+  .skel .b{height:26px;width:82%;margin:0 auto}
+  .skel .c{height:15px;width:100%}
+  .skel .d{height:15px;width:78%;margin:0 auto}
+  .skel .e{height:78px;border:1px solid #e8e2da;background:#fff;border-radius:14px}
+
+  /* proposed morph screen — choreography: exits ease-in, entrances decelerate,
+     ~100ms stagger, every element keeps its reserved space (no layout shift) */
+  .morph{--enter:cubic-bezier(.16,1,.3,1)}
+  .morph .circle{position:relative;background:var(--plum-ice);transition:background .45s ease}
+  .morph.ready .circle{background:var(--ok-bg)}
+  .morph .ring{position:absolute;inset:0;width:46px;height:46px}
+  .morph .ring .arcwrap{transform-origin:26px 26px;animation:rot 1s linear infinite}
+  .morph .ring .arc{fill:none;stroke:var(--plum);stroke-width:3;stroke-linecap:round;
+    stroke-dasharray:100 38.2;
+    transition:stroke-dasharray .45s ease,stroke .45s ease}
+  .morph.ready .ring .arcwrap{animation-play-state:paused}
+  .morph.ready .ring .arc{stroke-dasharray:138.2 0;stroke:var(--ok-text)}
+  .morph .ring .tick{fill:none;stroke:var(--ok-text);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1;stroke-dashoffset:1;
+    transition:stroke-dashoffset .3s cubic-bezier(.65,0,.45,1) .2s}
+  .morph.ready .ring .tick{stroke-dashoffset:0}
+  .morph .stack{display:grid;width:100%}
+  .morph .stack > *{grid-area:1/1}
+  .morph .stack .l-load{transition:opacity .22s ease-in,transform .22s ease-in}
+  .morph .stack .l-ready{opacity:0;transform:translateY(9px);transition:opacity .4s var(--enter) .15s,transform .4s var(--enter) .15s}
+  .morph.ready .stack .l-load{opacity:0;transform:translateY(-7px)}
+  .morph.ready .stack .l-ready{opacity:1;transform:none}
+  .morph .reveal{opacity:0;transform:translateY(10px);transition:opacity .45s var(--enter),transform .45s var(--enter)}
+  .morph.ready .reveal{opacity:1;transform:none;transition-delay:.25s}
+  .morph.ready .reveal.r2{transition-delay:.35s}
+  .morph.ready .reveal.r3{transition-delay:.45s}
+  .morph .fadeout{transition:opacity .25s ease-in}
+  .morph.ready .fadeout{opacity:0}
+  .morph .slowhint{margin-top:14px;font-size:11.5px;color:var(--p-caption);opacity:0;transition:opacity .5s ease}
+  .morph .slowhint.on{opacity:1}
+  .morph.ready .slowhint{transition:opacity .2s ease-in;opacity:0}
+
+  /* ---- timeline ---- */
+  .tl{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:20px}
+  .tl-row .tl-name{font-size:13px;font-weight:700;margin-bottom:7px}
+  .tl-row .tl-name small{font-weight:600;color:var(--faint);margin-left:6px}
+  .bar{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--panel-edge)}
+  .bar i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10.5px;font-weight:600;padding:0 4px;text-align:center;line-height:1.2;min-width:0;white-space:nowrap;overflow:hidden}
+  .seg-welcome{background:#f5f2ee;color:#7a7469}
+  .seg-skel{background:#e9e4dd;color:#7a7469}
+  .seg-check{background:var(--bad-bg);color:var(--bad)}
+  .seg-shellq{background:#f3f0f8;color:#8a80a3}
+  .seg-load{background:var(--plum-ice);color:var(--plum)}
+  .seg-ready{background:var(--ok-bg);color:var(--ok-text)}
+  .tl-note{font-size:12.5px;color:var(--sub);margin-top:7px}
+  .tl-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;margin-top:4px}
+
+  /* ---- spec table ---- */
+  table.spec{border-collapse:collapse;width:100%;font-size:13px}
+  table.spec th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);text-align:left;padding:0 14px 8px 0;border-bottom:1px solid var(--panel-edge);white-space:nowrap}
+  table.spec td{padding:8px 14px 8px 0;border-bottom:1px solid var(--shell-bg);vertical-align:top;color:var(--sub)}
+  table.spec td:first-child{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink);font-weight:600}
+  table.spec tr:last-child td{border-bottom:0}
+
+  /* ---- research + notes ---- */
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .rule{background:var(--panel);border:1px solid var(--panel-edge);border-radius:14px;padding:16px 18px}
+  .rule b{display:block;font-size:14px;margin-bottom:5px}
+  .rule p{margin:0;font-size:13px;color:var(--sub)}
+  .rule .src{display:block;margin-top:9px;font-size:11.5px}
+  a{color:var(--plum)}
+  .impl{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;padding:20px 22px}
+  .impl ul{margin:10px 0 0;padding-left:20px}
+  .impl li{margin:7px 0;font-size:13.5px;color:var(--sub)}
+  .impl li b{color:var(--ink)}
+  code{font-size:12.5px;background:var(--shell-bg);border-radius:5px;padding:1.5px 5px}
+  @media (prefers-reduced-motion:reduce){
+    .spin,.morph .ring .arcwrap{animation:none}
+    .screen.fade,.morph .reveal,.morph .circle,.morph .ring .arc,.morph .ring .tick,
+    .morph .stack .l-load,.morph .stack .l-ready,.morph .fadeout,.morph .slowhint{transition:none}
+  }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Design evidence · Post-payment handoff · Final version for sign-off</p>
+  <h1>Vom Bezahlen zum Plan, ohne Flackern</h1>
+  <p class="lede">Today the buyer passes four visually unrelated surfaces in under two seconds. The proposal cuts that to exactly <b>two states</b>: one loading frame and one ready frame. The trick is that <code>/welcome</code>, the loading skeleton, and the <code>/plan-bereit</code> checking state all render the <em>identical</em> loading frame &mdash; so the route change and the streaming gap become invisible, and the only transition the eye ever sees is the morph from spinner to checkmark. Press play and compare.</p>
+
+  <div class="controls" role="group" aria-label="Simulation controls">
+    <span class="lbl">Link speed</span>
+    <div class="seg" id="netseg">
+      <button type="button" data-net="fast" aria-pressed="true">Fast &middot; ~300 ms (typical)</button>
+      <button type="button" data-net="slow" aria-pressed="false">Slow &middot; ~3 s</button>
+    </div>
+    <button type="button" class="btn" id="playall">Play all</button>
+    <span class="hint">Timing labels appear under each phone.</span>
+  </div>
+
+  <div class="lanes">
+
+    <!-- ============ VARIANT A ============ -->
+    <div class="lane">
+      <div class="lane-head"><h3>Final &middot; Two states</h3><span class="chip rec">Ships on this branch</span></div>
+      <p class="desc">From the payment return onwards: <b>one</b> loading frame &mdash; shown identically by <code>/welcome</code>, the skeleton, and the checking state, so the route change underneath is invisible &mdash; then the morph to <b>one</b> ready frame. Two images total, zero cuts, at any link speed.</p>
+      <div class="phone-slot">
+        <div class="phone"><div class="viewport" id="vp-a">
+          <div class="screen p-cream on morph" id="morph-a">
+            <div class="wordmark">chaarlie</div>
+            <div class="p-center">
+              <div class="circle">
+                <svg class="ring" viewBox="0 0 52 52" aria-hidden="true">
+                  <g class="arcwrap"><circle class="arc" cx="26" cy="26" r="22" pathLength="138.2"/></g>
+                  <path class="tick" d="M17 27l6.5 6.5L35 21" pathLength="1"/>
+                </svg>
+              </div>
+              <p class="p-eyebrow fadeout">Zahlung best&auml;tigt</p>
+              <div class="stack">
+                <h4 class="p-h l-load">Dein Plan wird ge&ouml;ffnet.</h4>
+                <h4 class="p-h l-ready">Dein Plan ist fertig.</h4>
+              </div>
+              <p class="p-sub reveal">Und das wartet dahinter:</p>
+              <ul class="p-list reveal r2">
+                <li><span class="n">Deine Routine</span><span class="d">Schritt f&uuml;r Schritt.</span></li>
+                <li><span class="n">Deine Anwendung</span><span class="d">So setzt du's um.</span></li>
+                <li><span class="n">Dein Chat</span><span class="d">Fragen? Immer offen.</span></li>
+              </ul>
+              <p class="slowhint" id="a-hint">Wir verbinden deinen Plan mit deinem Konto &ndash; einen Moment.</p>
+            </div>
+            <div class="p-cta reveal r3">Plan ansehen</div>
+          </div>
+        </div></div>
+        <div class="phase" id="ph-a">&nbsp;</div>
+      </div>
+      <button type="button" class="replay" data-play="a">&#9654;&#xFE0E; Play</button>
+    </div>
+    <!-- ============ CURRENT ============ -->
+    <div class="lane">
+      <div class="lane-head"><h3>Current flow</h3><span class="chip bad">4 screen swaps</span></div>
+      <p class="desc">Every state is a separate full screen with its own layout. On a fast link, two of them exist for less than half a second &mdash; the flash you noticed.</p>
+      <div class="phone-slot">
+        <div class="phone"><div class="viewport" id="vp-cur">
+          <div class="screen p-generic" data-s="welcome">
+            <div class="p-center">
+              <div class="circle ok">&#10003;</div>
+              <p class="p-eyebrow">Zahlung erfolgreich</p>
+              <h4 class="p-h">Weiterleitung...</h4>
+            </div>
+          </div>
+          <div class="screen p-cream" data-s="skel">
+            <div class="skel"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><i class="e"></i></div>
+          </div>
+          <div class="screen p-cream" data-s="check">
+            <div class="wordmark">chaarlie</div>
+            <div class="p-center">
+              <div class="circle plumdot"></div>
+              <p class="p-eyebrow">Deine Angaben sind gespeichert</p>
+              <h4 class="p-h">Wir bereiten deinen Haarplan vor.</h4>
+              <p class="p-sub">Du musst nichts tun. Wir pr&uuml;fen gerade, ob dein vollst&auml;ndiges Profil mit deinem Konto verbunden ist.</p>
+              <div class="p-card"><b>Haarplan wird gepr&uuml;ft</b><span>Bitte kurz warten</span></div>
+            </div>
+          </div>
+          <div class="screen p-cream" data-s="arrival">
+            <div class="wordmark">chaarlie</div>
+            <div class="p-center">
+              <div class="circle ok">&#10003;</div>
+              <h4 class="p-h">Dein Plan ist fertig.</h4>
+              <p class="p-sub">Und das wartet dahinter:</p>
+              <ul class="p-list">
+                <li><span class="n">Deine Routine</span><span class="d">Schritt f&uuml;r Schritt.</span></li>
+                <li><span class="n">Deine Anwendung</span><span class="d">So setzt du's um.</span></li>
+                <li><span class="n">Dein Chat</span><span class="d">Fragen? Immer offen.</span></li>
+              </ul>
+            </div>
+            <div class="p-cta">Plan ansehen</div>
+          </div>
+        </div></div>
+        <div class="phase" id="ph-cur">&nbsp;</div>
+      </div>
+      <button type="button" class="replay" data-play="cur">&#9654;&#xFE0E; Play</button>
+    </div>
+
+  </div>
+
+  <!-- ============ TIMELINE ============ -->
+  <section>
+    <h2>What the eye sees, on a timeline</h2>
+    <p class="section-sub">Fast link (~300&nbsp;ms artifact-link round-trip), from the moment the payment provider hands the buyer back. Widths are proportional to duration.</p>
+    <div class="tl">
+      <div class="tl-row">
+        <div class="tl-name">Current <small>4 distinct layouts, 2 of them &lt; 500 ms</small></div>
+        <div class="bar">
+          <i class="seg-welcome" style="flex:900">Weiterleitung&hellip; 0.9 s</i>
+          <i class="seg-skel" style="flex:350">Skeleton 0.35 s</i>
+          <i class="seg-check" style="flex:450">&bdquo;Wir bereiten&hellip;&ldquo; 0.45 s</i>
+          <i class="seg-ready" style="flex:1300">Dein Plan ist fertig.</i>
+        </div>
+        <p class="tl-note">Each boundary is a hard cut between unrelated layouts &mdash; three cuts in ~1.7 s reads as flicker.</p>
+      </div>
+      <div class="tl-row">
+        <div class="tl-name">Proposed <small>2 states, 0 cuts</small></div>
+        <div class="bar">
+          <i class="seg-load" style="flex:1400">State 1 &middot; Loading &ndash; spinner, &bdquo;Dein Plan wird ge&ouml;ffnet.&ldquo; (covers /welcome, route change, skeleton, link)</i>
+          <i class="seg-ready" style="flex:1600">State 2 &middot; Morph &#8594; &bdquo;Dein Plan ist fertig.&ldquo; &middot; CTA</i>
+        </div>
+        <p class="tl-note">The route change from <code>/welcome</code> to <code>/plan-bereit</code> happens <b>inside</b> the loading segment &mdash; both routes render the identical frame, so nothing visibly changes. The loading state has a minimum beat (~1.2 s), so a 300 ms link never causes a blink; a slow link just holds state 1 longer and adds one reassurance line after ~2.5 s.</p>
+      </div>
+      <div class="tl-axis"><span>0 s</span><span>1 s</span><span>2 s</span><span>3 s</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SPEC ============ -->
+  <section>
+    <h2>Shipping spec</h2>
+    <p class="section-sub">The exact values the implementation uses. Locked decisions: loading beat <b>1.2&nbsp;s minimum</b>; copy <b>&bdquo;Zahlung best&auml;tigt&ldquo; / &bdquo;Dein Plan wird ge&ouml;ffnet.&ldquo;</b>; scope <b>payment &#8594; /plan-bereit only</b> (plan&#8594;app and quiz-funnel transitions follow as separate PRs).</p>
+    <div class="tl" style="gap:14px">
+      <div style="overflow-x:auto">
+        <table class="spec">
+          <thead><tr><th>t (after ready + beat)</th><th>Element</th><th>Animation</th><th>Duration / easing</th></tr></thead>
+          <tbody>
+            <tr><td>0 ms</td><td>Spinner-Ring</td><td>Arc closes to full circle, plum &#8594; green; rotation pauses</td><td>450 ms &middot; ease</td></tr>
+            <tr><td>0 ms</td><td>Circle ground</td><td>Plum-Ice &#8594; Status-OK green</td><td>450 ms &middot; ease</td></tr>
+            <tr><td>0 ms</td><td>&bdquo;Zahlung best&auml;tigt&ldquo;</td><td>Fades out (space stays reserved)</td><td>250 ms &middot; ease-in</td></tr>
+            <tr><td>0 ms</td><td>Headline (loading layer)</td><td>Fades up and out, &minus;7 px</td><td>220 ms &middot; ease-in</td></tr>
+            <tr><td>150 ms</td><td>Headline &bdquo;Dein Plan ist fertig.&ldquo;</td><td>Fades in, +9 px &#8594; 0 (same grid cell)</td><td>400 ms &middot; cubic-bezier(.16,1,.3,1)</td></tr>
+            <tr><td>200 ms</td><td>Checkmark</td><td>SVG stroke draw inside the ring</td><td>300 ms &middot; cubic-bezier(.65,0,.45,1)</td></tr>
+            <tr><td>250 / 350 / 450 ms</td><td>Sub-line / Liste / CTA</td><td>Staggered rise-in, +10 px &#8594; 0</td><td>450 ms each &middot; cubic-bezier(.16,1,.3,1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tl-note"><b>Loading state:</b> shown from the first paint on <code>/welcome</code> (redirect branch), identically by <code>plan-bereit/loading.tsx</code> and the <code>checking</code> state; minimum 1.2 s before the morph may start, even when the link resolves faster. Slow link: reassurance line &bdquo;Wir verbinden deinen Plan mit deinem Konto &ndash; einen Moment.&ldquo; fades in after 2.5 s. <b>Unchanged:</b> the replay-safe POST linking, polling (1.5 s &times; 20), and all error / retry / missing-fact / timeout screens, which appear only after the beat. <b>Reduced motion:</b> all transitions become instant switches after the same beat. <b>Out of scope:</b> the password / magic-link setup path for unauthenticated buyers.</p>
+    </div>
+  </section>
+
+  <!-- ============ RESEARCH ============ -->
+  <section>
+    <h2>The patterns behind the proposal</h2>
+    <p class="section-sub">The two-state design is not invented &mdash; it composes four established loading-UX rules:</p>
+    <div class="rules">
+      <div class="rule">
+        <b>Delay + minimum display</b>
+        <p>An indicator that appears and disappears within ~100&ndash;500 ms reads as a glitch. Once shown, progress UI must stay for a minimum beat so it never blinks &mdash; here the loading state holds for at least ~1.2 s even when the link resolves in 300 ms.</p>
+        <a class="src" href="https://www.pencilandpaper.io/articles/ux-pattern-analysis-loading-feedback">Pencil &amp; Paper: Loading feedback</a>
+        <a class="src" href="https://blog.openreplay.com/quick-guide-loading-indicators-web-apps/">OpenReplay: Loading indicators</a>
+      </div>
+      <div class="rule">
+        <b>Morph, don't swap</b>
+        <p>State changes land better when one element transforms than when content is replaced. Here the spinner arc literally <em>becomes</em> the success mark: the ring closes into a full circle, shifts plum &#8594; green, and the check draws itself inside it (SVG stroke-dashoffset). The headline never swaps text &mdash; two layers crossfade in the same reserved space.</p>
+        <a class="src" href="https://medium.com/bridge-collection/improve-the-payment-experience-with-animations-3d1b0a9b810e">Villar: Payment animations</a>
+        <a class="src" href="https://www.nngroup.com/articles/animation-purpose-ux/">NN/g: Purpose of motion</a>
+      </div>
+      <div class="rule">
+        <b>Choreograph, don't fire at once</b>
+        <p>Carbon and Material motion guidance: exits use ease-in, entrances decelerate (<code>cubic-bezier(.16,1,.3,1)</code>), siblings enter staggered rather than simultaneously, and nothing may shift layout &mdash; every element's space is reserved before it fades in. The sequence here: ring closes (450 ms) &#8594; check draws (300 ms) &#8594; headline crossfades &#8594; list and CTA rise in at 100 ms offsets, overlapping, ~700 ms total.</p>
+        <a class="src" href="https://carbondesignsystem.com/elements/motion/choreography/">Carbon: Choreography</a>
+        <a class="src" href="https://material.io/archive/guidelines/motion/choreography.html">Material: Choreography</a>
+        <a class="src" href="https://www.nngroup.com/articles/animation-duration/">NN/g: Animation duration</a>
+      </div>
+      <div class="rule">
+        <b>Say what the wait is for</b>
+        <p>Waits of 1&ndash;3 s deserve words, not bare spinners &mdash; and a moment of visible &ldquo;preparation&rdquo; after a purchase adds perceived value rather than friction. Hence &ldquo;Dein Plan wird ge&ouml;ffnet.&rdquo; instead of silence, and the extra reassurance line only when the wait is genuinely long.</p>
+        <a class="src" href="https://smart-interface-design-patterns.com/articles/designing-better-loading-progress-ux/">Smart Interface Design Patterns</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IMPLEMENTATION ============ -->
+  <section>
+    <h2>What the two-state design touches</h2>
+    <div class="impl">
+      <ul>
+        <li><b>No backend or routing changes.</b> The replay-safe design stays exactly as is: read-only first render, the client <code>POST /plan-bereit/status</code> still does the linking. Only presentation changes.</li>
+        <li><b><code>welcome-client.tsx</code></b> (redirect branch only) &mdash; the &ldquo;Weiterleitung&hellip;&rdquo; view becomes the loading frame: cream shell, wordmark, spinner, &ldquo;Zahlung best&auml;tigt&rdquo;, &ldquo;Dein Plan wird ge&ouml;ffnet.&rdquo; The password/magic-link setup path for unauthenticated buyers is untouched.</li>
+        <li><b><code>plan-bereit/loading.tsx</code></b> &mdash; replaced by the identical loading frame, so the streaming gap shows the same pixels.</li>
+        <li><b><code>personal-plan-ready-client.tsx</code></b> &mdash; the <code>checking</code> state renders the same loading frame; on <code>ready</code> it morphs in place (spinner &#8594; check, headline crossfade, list + CTA staggered reveal) after a minimum beat. Error, retry, missing-fact and timeout states keep their current screens and copy, appearing only after the beat.</li>
+        <li><b><code>plan-ready-arrival.tsx</code></b> &mdash; becomes the ready-state of that layout instead of a separate component swap.</li>
+        <li><b>Reduced motion:</b> with <code>prefers-reduced-motion</code>, morph and reveals become instant switches after the same beat.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var net = "fast";
+  var timers = { cur: [], a: [] };
+  function clearLane(k){ timers[k].forEach(clearTimeout); timers[k] = []; }
+  function at(k, ms, fn){ timers[k].push(setTimeout(fn, ms)); }
+
+  document.querySelectorAll("#netseg button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      net = btn.dataset.net;
+      document.querySelectorAll("#netseg button").forEach(function(b){
+        b.setAttribute("aria-pressed", String(b === btn));
+      });
+    });
+  });
+
+  function show(vp, name, ph, label){
+    vp.querySelectorAll(".screen").forEach(function(s){
+      s.classList.toggle("on", s.dataset.s === name);
+    });
+    if (label !== undefined) ph.textContent = label;
+  }
+
+  function playCurrent(){
+    clearLane("cur");
+    var vp = document.getElementById("vp-cur"), ph = document.getElementById("ph-cur");
+    var checkMs = net === "fast" ? 450 : 3000;
+    show(vp, "welcome", ph, "/welcome · Weiterleitung…");
+    at("cur", 900, function(){ show(vp, "skel", ph, "/plan-bereit · loading skeleton"); });
+    at("cur", 1250, function(){ show(vp, "check", ph, "„Wir bereiten…“ · " + (net==="fast" ? "0.45 s flash" : "3 s wait")); });
+    at("cur", 1250 + checkMs, function(){ show(vp, "arrival", ph, "Arrival · hard cut #3"); });
+  }
+
+  function playA(){
+    clearLane("a");
+    var m = document.getElementById("morph-a"),
+        hint = document.getElementById("a-hint"),
+        ph = document.getElementById("ph-a");
+    m.classList.remove("ready");
+    hint.classList.remove("on");
+    ph.textContent = "State 1 · /welcome renders this frame";
+    at("a", 900, function(){ ph.textContent = "State 1 · route → /plan-bereit (invisible)"; });
+    var beat = net === "fast" ? 1200 : 3400;
+    if (net === "slow") at("a", 2500, function(){ hint.classList.add("on"); ph.textContent = "State 1 · reassurance after 2.5 s"; });
+    at("a", beat, function(){
+      m.classList.add("ready");
+      ph.textContent = "State 2 · ring closes, check draws, text crossfades";
+    });
+  }
+
+  var plays = { cur: playCurrent, a: playA };
+  document.querySelectorAll(".replay").forEach(function(btn){
+    btn.addEventListener("click", function(){ plays[btn.dataset.play](); });
+  });
+  document.getElementById("playall").addEventListener("click", function(){
+    playCurrent(); playA();
+  });
+
+  playCurrent(); playA();
+})();
+</script>

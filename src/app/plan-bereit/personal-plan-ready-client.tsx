@@ -19,6 +19,12 @@ import {
   takePersonalPlanReadyPollRequest,
   type PersonalPlanReadinessPhase,
 } from "./transition"
+import {
+  PLAN_OPENING_BEAT_MS,
+  PLAN_OPENING_SLOW_HINT_AFTER_MS,
+  readPlanOpeningStart,
+  remainingPlanOpeningDelayMs,
+} from "./opening-beat"
 import { PlanBereitArrival } from "./plan-ready-arrival"
 import type {
   PlanBereitInitialAction,
@@ -83,7 +89,35 @@ export function PersonalPlanReadyClient({
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
+  const [openingBeatDone, setOpeningBeatDone] = useState(false)
+  const [openingSlowHint, setOpeningSlowHint] = useState(false)
   const previewWarmupStartedRef = useRef(false)
+
+  // The opening beat is measured from the loading frame's first paint on
+  // /welcome (sessionStorage marker) so the morph never blinks on a fast link
+  // and never doubles the wait after a slow redirect. A manual retry re-arms
+  // the full beat, so its own loading frame cannot blink either.
+  useEffect(() => {
+    const isRetry = retryKey > 0
+    if (isRetry) {
+      setOpeningBeatDone(false)
+      setOpeningSlowHint(false)
+    }
+    const startedAt = isRetry ? null : readPlanOpeningStart()
+    const now = Date.now()
+    const beatTimer = setTimeout(
+      () => setOpeningBeatDone(true),
+      remainingPlanOpeningDelayMs(PLAN_OPENING_BEAT_MS, startedAt, now),
+    )
+    const hintTimer = setTimeout(
+      () => setOpeningSlowHint(true),
+      remainingPlanOpeningDelayMs(PLAN_OPENING_SLOW_HINT_AFTER_MS, startedAt, now),
+    )
+    return () => {
+      clearTimeout(beatTimer)
+      clearTimeout(hintTimer)
+    }
+  }, [retryKey])
 
   const currentLeadId = readiness.leadId ?? leadId
   const missingHairLength =
@@ -214,11 +248,52 @@ export function PersonalPlanReadyClient({
     void warmStage1ProductExampleImages()
   }, [readiness.status])
 
-  if (canContinue) {
+  // The opening frame owns the ready and waiting states; the morph waits for
+  // the minimum beat so it never blinks. Error, retry, missing-fact and support
+  // states that arrive server-first render directly — stable single screens
+  // that must stay reachable without JS. When the session STARTED in the
+  // opening flow, a fast first poll can flip to such a state within the beat,
+  // so those swaps also wait for the beat before replacing the frame.
+  // A manual retry re-enters the opening flow regardless of how the session
+  // started, so its re-armed beat also gates a fast follow-up failure.
+  const startedInOpeningFlow =
+    serverReadiness.status === "checking" ||
+    serverReadiness.status === "source_pending" ||
+    serverReadiness.status === "ready" ||
+    retryKey > 0
+  if (canContinue || showWaiting || (startedInOpeningFlow && !openingBeatDone)) {
     return (
       <PlanBereitArrival
         actionHref={nextHref}
         onAction={() => markPersonalPlanStageNavigation("/plan-start")}
+        phase={canContinue && openingBeatDone ? "ready" : "loading"}
+        interactive={canContinue}
+        slowHint={openingSlowHint}
+        noscriptFallback={
+          canContinue ? undefined : (
+            <noscript>
+              <div className="mt-6 space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
+                <p className="text-sm leading-6 text-[var(--text-sub)]">
+                  Ohne JavaScript aktualisiert sich dieser Status nicht automatisch.
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <a
+                    href={readinessPath}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                  >
+                    Status neu laden
+                  </a>
+                  <a
+                    href="/kontakt"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
+                  >
+                    Support kontaktieren
+                  </a>
+                </div>
+              </div>
+            </noscript>
+          )
+        }
       />
     )
   }
@@ -243,45 +318,6 @@ export function PersonalPlanReadyClient({
             </p>
 
             <div className="w-full space-y-6" aria-live="polite">
-              {showWaiting ? (
-                <>
-                  <div className="space-y-4">
-                    <h1 className="font-header text-4xl leading-tight">
-                      Wir bereiten deinen Haarplan vor.
-                    </h1>
-                    <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                      Du musst nichts tun. Wir prüfen gerade, ob dein vollständiges Profil mit
-                      deinem Konto verbunden ist.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-border bg-card px-4 py-3 text-left">
-                    <p className="text-sm font-semibold text-foreground">Haarplan wird geprüft</p>
-                    <p className="mt-1 text-sm text-[var(--text-sub)]">Bitte kurz warten</p>
-                  </div>
-                  <noscript>
-                    <div className="space-y-3 rounded-2xl border border-border bg-card p-4 text-left">
-                      <p className="text-sm leading-6 text-[var(--text-sub)]">
-                        Ohne JavaScript aktualisiert sich dieser Status nicht automatisch.
-                      </p>
-                      <div className="flex flex-col gap-2 sm:flex-row">
-                        <a
-                          href={readinessPath}
-                          className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
-                        >
-                          Status neu laden
-                        </a>
-                        <a
-                          href="/kontakt"
-                          className="inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 py-2 text-sm font-medium text-foreground"
-                        >
-                          Support kontaktieren
-                        </a>
-                      </div>
-                    </div>
-                  </noscript>
-                </>
-              ) : null}
-
               {showRetry ? (
                 <>
                   <div className="space-y-4">

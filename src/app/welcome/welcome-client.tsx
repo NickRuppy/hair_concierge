@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
+import { markPlanOpeningStart } from "@/app/plan-bereit/opening-beat"
+import { PlanBereitArrival } from "@/app/plan-bereit/plan-ready-arrival"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import { capturePaymentFailure } from "@/lib/observability/payment-client"
@@ -402,6 +404,13 @@ export function WelcomeClient({
   }
 
   if (redirectTo) {
+    // A buyer bound for /plan-bereit continues into the identical frame — this
+    // paint IS the loading state, so the route change stays invisible. Every
+    // other target keeps the generic confirmation screen. That deliberately
+    // includes the activation-ready cohort redirected straight to /plan-start:
+    // bridging that route is Follow-up A of the two-state opening plan
+    // (plans/2026-09-02-plan-opening-two-state.md), not this branch.
+    const opensPersonalPlan = redirectTo.startsWith("/plan-bereit")
     return (
       <>
         <CheckoutReturnAnalytics
@@ -410,15 +419,36 @@ export function WelcomeClient({
           redirectTo={redirectTo}
           sessionId={analyticsId}
         />
-        <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
-          <div className="w-full max-w-md space-y-4 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+        {opensPersonalPlan ? (
+          <>
+            <PlanOpeningStartMarker />
+            <PlanBereitArrival
+              phase="loading"
+              noscriptFallback={
+                <noscript>
+                  <div className="mt-6 text-center">
+                    <a
+                      href={redirectTo}
+                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+                    >
+                      Weiter zu deinem Plan
+                    </a>
+                  </div>
+                </noscript>
+              }
+            />
+          </>
+        ) : (
+          <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+            <div className="w-full max-w-md space-y-4 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+              <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
+              <h1 className="font-header text-3xl">Weiterleitung...</h1>
             </div>
-            <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
-            <h1 className="font-header text-3xl">Weiterleitung...</h1>
-          </div>
-        </main>
+          </main>
+        )}
       </>
     )
   }
@@ -739,6 +769,17 @@ export function WelcomeClient({
       </main>
     </>
   )
+}
+
+/**
+ * Stamps the opening frame's first paint so /plan-bereit can subtract the
+ * redirect time from its minimum beat instead of stacking a second wait.
+ */
+function PlanOpeningStartMarker() {
+  useEffect(() => {
+    markPlanOpeningStart()
+  }, [])
+  return null
 }
 
 function activationRequestBody(

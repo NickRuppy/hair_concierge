@@ -29,14 +29,11 @@ test("server-first pending envelope renders approved static copy and no-JS recov
     }),
   )
 
-  assert.match(html, /Deine Angaben sind gespeichert/)
-  assert.match(html, /Wir bereiten deinen Haarplan vor\./)
-  assert.match(
-    html,
-    /Du musst nichts tun\. Wir prüfen gerade, ob dein vollständiges Profil mit deinem Konto verbunden ist\./,
-  )
-  assert.match(html, /Haarplan wird geprüft/)
-  assert.match(html, /Bitte kurz warten/)
+  // The pending envelope renders the opening frame (two-state arrival,
+  // founder sign-off 02.09.2026): same pixels /welcome already painted.
+  assert.match(html, /data-plan-opening="loading"/)
+  assert.match(html, /Zahlung bestätigt/)
+  assert.match(html, /Dein Plan wird geöffnet\./)
   assert.match(html, /<noscript>/)
   assert.match(html, /href="\/plan-bereit\?lead=lead-legacy"/)
   assert.match(html, /href="\/kontakt"/)
@@ -92,7 +89,13 @@ test("server-first ready envelope renders the signed-off arrival screen (Variant
   assert.doesNotMatch(html, /Haarplan wird geprüft/)
   assert.doesNotMatch(html, /data-personal-plan-ready-preview/)
   assert.doesNotMatch(html, /motion-safe:animate-spin/)
-  assert.doesNotMatch(html, /<noscript>/)
+
+  // Server-known-ready still paints the loading phase first (the client morph
+  // owns the reveal after the minimum beat), with an interactive CTA plus a
+  // no-JS style override so the frame cannot get stuck without JavaScript.
+  assert.match(html, /data-plan-opening="loading"/)
+  assert.match(html, /<noscript>/)
+  assert.doesNotMatch(html, /Status neu laden/)
 })
 
 test("missing source facts ask for the fact without claiming no action is needed", () => {

@@ -1050,6 +1050,125 @@
   box-shadow: 0 16px 36px -32px rgba(var(--brand-plum-rgb), 0.65);
 }
 
+/* Plan-Bereit opening choreography: the post-payment two-state arrival.
+   One persistent frame morphs from loading to ready — exits ease-in,
+   entrances decelerate, staggered reveals, and every element keeps its
+   reserved space so the morph never shifts layout. */
+@keyframes planOpeningSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.plan-opening-circle {
+  background: var(--brand-plum-ice);
+  transition: background-color 450ms ease;
+}
+
+[data-plan-opening="ready"] .plan-opening-circle {
+  background: var(--status-ok-bg);
+}
+
+.plan-opening-arcwrap {
+  animation: planOpeningSpin 1s linear infinite;
+  transform-origin: 26px 26px;
+}
+
+[data-plan-opening="ready"] .plan-opening-arcwrap {
+  animation-play-state: paused;
+}
+
+.plan-opening-arc {
+  fill: none;
+  stroke: var(--brand-plum);
+  stroke-dasharray: 100 38.2;
+  stroke-linecap: round;
+  stroke-width: 3;
+  transition:
+    stroke 450ms ease,
+    stroke-dasharray 450ms ease;
+}
+
+[data-plan-opening="ready"] .plan-opening-arc {
+  stroke: var(--status-ok-text);
+  stroke-dasharray: 138.2 0;
+}
+
+.plan-opening-tick {
+  fill: none;
+  stroke: var(--status-ok-text);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.5;
+  transition: stroke-dashoffset 300ms cubic-bezier(0.65, 0, 0.45, 1) 200ms;
+}
+
+[data-plan-opening="ready"] .plan-opening-tick {
+  stroke-dashoffset: 0;
+}
+
+.plan-opening-exit,
+.plan-opening-exit-soft {
+  transition:
+    opacity 220ms ease-in,
+    transform 220ms ease-in;
+}
+
+[data-plan-opening="ready"] .plan-opening-exit {
+  opacity: 0;
+  transform: translateY(-7px);
+}
+
+[data-plan-opening="ready"] .plan-opening-exit-soft {
+  opacity: 0;
+}
+
+.plan-opening-enter {
+  opacity: 0;
+  transform: translateY(9px);
+  transition:
+    opacity 400ms cubic-bezier(0.16, 1, 0.3, 1) 150ms,
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1) 150ms;
+}
+
+[data-plan-opening="ready"] .plan-opening-enter {
+  opacity: 1;
+  transform: none;
+}
+
+.plan-opening-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-plan-opening="ready"] .plan-opening-reveal {
+  opacity: 1;
+  transform: none;
+  transition-delay: 250ms;
+}
+
+[data-plan-opening="ready"] .plan-opening-reveal-2 {
+  transition-delay: 350ms;
+}
+
+[data-plan-opening="ready"] .plan-opening-reveal-3 {
+  transition-delay: 450ms;
+}
+
+.plan-opening-slow-hint {
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+[data-plan-opening="loading"] .plan-opening-slow-hint[data-plan-opening-slow-hint="on"] {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bottom-sheet-backdrop[data-state="open"],
   .bottom-sheet-panel[data-state="open"] {
@@ -1078,6 +1197,21 @@
   .tracker-day-content,
   .tracker-save-status:not(:empty) {
     animation: none;
+  }
+
+  .plan-opening-arcwrap {
+    animation: none;
+  }
+
+  .plan-opening-circle,
+  .plan-opening-arc,
+  .plan-opening-tick,
+  .plan-opening-exit,
+  .plan-opening-exit-soft,
+  .plan-opening-enter,
+  .plan-opening-reveal,
+  .plan-opening-slow-hint {
+    transition: none;
   }
 
   .tracker-day-tab,
