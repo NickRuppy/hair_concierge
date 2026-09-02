@@ -63,6 +63,7 @@
             "fact_value": "3600524128500",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_text": "GTIN: 3600524128500",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -77,6 +78,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_text": "AQUA / WATER • CETEARYL ALCOHOL • COCAMIDOPROPYL BETAINE • BEHENTRIMONIUM CHLORIDE • PROPYLENE GLYCOL • AMODIMETHICONE • CI 17200 / RED 33 • CI 19140 / YELLOW 5 • COCOS NUCIFERA OIL / COCONUT OIL • SODIUM CHLORIDE • HYDROXYPROPYL GUAR • HYDROXYCITRONELLAL • PHENOXYETHANOL • PPG-1 TRIDECETH-6 • ETHANOLAMINE • TRIDECETH-6 • POLYQUATERNIUM-37",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -85,6 +87,7 @@
             "fact_value": "5 Minuten einwirken lassen und danach gründlich ausspülen.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_text": "Eine großzügige Menge auf das feuchte Haar auftragen, um es vom Ansatz bis in die Spitzen glanzvoll zu versiegeln. 5 Minuten einwirken lassen und danach gründlich ausspülen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -93,6 +96,7 @@
             "fact_value": "Glossing für zu Hause; 19% Gloss-Complex mit Glykolsäure; für stumpfes und poröses Haar; hält bis zu 10 Haarwäschen, ohne zu beschweren; Anwendung: nach der Haarwäsche großzügige Menge auf das feuchte Haar, 5 Minuten, gründlich ausspülen.",
             "source_label": "loreal-paris.de Produktseite",
             "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/5-minuten-haar-laminierung",
+            "source_text": "Dafür enthält die Haar-Laminierung aus der Glycolic Gloss Ultimate-Haarpflegeserie einen 19 % Gloss-Komplex mit Glykolsäure, welcher die Haaroberfläche mit einer intensiven und langanhaltenden Glanzschicht versiegelt. […] Die Haarpflege speziell für stumpfes und poröses Haar hält bis zu zehn Haarwäschen – ohne zu beschweren.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -101,6 +105,7 @@
             "fact_value": 8.95,
             "source_label": "dm.de Produktseite",
             "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_text": "8,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -180,6 +185,7 @@
             "fact_value": "3600542511070",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_text": "GTIN: 3600542511070",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -194,6 +200,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • MUSA PARADISIACA FRUIT JUICE / BANANA FRUIT JUICE • GLYCINE SOJA OIL / SOYBEAN OIL",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -202,6 +209,7 @@
             "fact_value": "Als Maske: Auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_text": "Als Maske: Auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -210,6 +218,7 @@
             "fact_value": "Für trockenes Haar; als Spülung, Maske oder Leave-in anwendbar; Maske: nasses Haar, 3 Minuten, ausspülen; vegan, 98% Inhaltsstoffe natürlichen Ursprungs; leichte Textur, beschwert nicht.",
             "source_label": "garnier.de Produktseite",
             "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-banane",
+            "source_text": "Speziell für trockenes Haar entwickelt, verleiht die mit Banane angereicherte Formel dem Haar mehr Geschmeidigkeit. Dabei lässt sich die cremige 3-in-1 Pflege je nach individuellen Bedürfnissen sowohl als Spülung, Maske oder als Leave-In anwenden – ganz so, wie es das Haar gerade braucht.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -218,6 +227,7 @@
             "fact_value": 5.95,
             "source_label": "dm.de Produktseite",
             "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_text": "5,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -298,6 +308,7 @@
             "fact_value": "8700216212724",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag) und INCI-Beauty-Listing",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_text": "\"name\":\"Haarmaske Blütensanft\",\"sku\":\"8700216212724\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -312,6 +323,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_text": "Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Glutamic Acid, Parfum, Benzyl Alcohol, Sodium Benzoate, Citric Acid, Disodium EDTA, Polysorbate 20, Histidine, Hexyl Cinnamal, CI 17200",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -320,6 +332,7 @@
             "fact_value": "Aufs nasse Haar auftragen, 5 Minuten einwirken lassen und ausspülen.",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_text": "Aufs nasse Haar auftragen, 5 Minuten einwirken lassen und ausspülen, um dein Haar mit intensiver Feuchtigkeit zu versorgen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -328,6 +341,7 @@
             "fact_value": 3.99,
             "source_label": "Rossmann.de Produktseite",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_text": "Artikelpreis 3,99 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -407,6 +421,7 @@
             "fact_value": "4015100813319",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_text": "GTIN: 4015100813319",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -421,6 +436,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_text": "Ingredients: Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua (Water, Eau), Glycerin, Caprylic/Capric Triglyceride, Parfum (Fragrance), Cetrimonium Chloride, PEG-7 Glyceryl Cocoate, Hydroxypropylgluconamide",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -429,6 +445,7 @@
             "fact_value": "Kurz einarbeiten und 7 Sekunden einwirken lassen.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_text": "1) Haare waschen. 2) Gleichmäßig und direkt auf die Haarlängen auftragen. Kurz einarbeiten und 7 Sekunden einwirken lassen. 3) Sorgfältig ausspülen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -437,6 +454,7 @@
             "fact_value": "Nach dem Waschen direkt auf Längen und Spitzen auftragen, einarbeiten bis cremige Textur entsteht, 7 Sekunden einwirken lassen, sorgfältig ausspülen; flüssiges Keratin + HaptIQ-System; für sehr geschädigtes, trockenes Haar; ohne Silikone.",
             "source_label": "schwarzkopf.de Produktseite",
             "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/ultimate-repair/ultimate-repair-7-sec-express-repair-kur.html",
+            "source_text": "Nährende Pflege – Die Gliss 7 Sec Express Kur für sehr geschädigtes, trockenes Haar sorgt in nur 7 Sekunden für glänzendes, repariertes Haar, ohne zu beschweren […] Flüssiges Keratin & HaptIQ System – Die 7 Sec Haarkur von Gliss kreiert Mikro-Bindungen im Haar und versiegelt das Haar mit einer schützenden Schicht gegen zukünftige Schäden",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -445,6 +463,7 @@
             "fact_value": 6.95,
             "source_label": "dm.de Produktseite",
             "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_text": "6,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -524,6 +543,7 @@
             "fact_value": "6412600231793",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag; einzige Quelle, kein unabhängiger Zweitbeleg gefunden)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_text": "\"name\":\"Intense Moisture Hair Mask\",\"sku\":\"6412600231793\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -538,6 +558,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_text": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Butyrospermum Parkii Butter, Passiflora Edulis Seed Oil, Sodium PCA, Guar Hydroxypropyltrimonium Chloride, Glycerin, Lactic Acid",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -546,6 +567,7 @@
             "fact_value": "Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden.",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_text": "Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -554,6 +576,7 @@
             "fact_value": "Herstellerseite (300-ml-Variante): Apply on lengths in freshly washed and towel-dried hair. Leave in for 5-15 minutes, rinse thoroughly. Use 1-2 times a week. Finish with conditioner. Passionsfruchtöl, Sodium PCA, Sheabutter; 100% vegan.",
             "source_label": "idawargbeauty.se Produktseite (Intense Moisture Hair Mask)",
             "source_url": "https://idawargbeauty.se/en/products/intense-moisture-hair-mask",
+            "source_text": "The hair mask is boosted with Coconut Oil and Sodium PCA which together give the hair maximum hydration from the inside out. Also contains Shea butter that softens damaged hair. […] Apply on lengths in freshly washed hair. Leave on for 5-10 minutes and then rinse thoroughly. Follow up with conditioner. […] 100% Vegan",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -562,6 +585,7 @@
             "fact_value": 14.99,
             "source_label": "Rossmann.de Produktseite (250 ml, 1 L = 59,96 EUR)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_text": "Artikelpreis 14,99 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }

@@ -103,6 +103,7 @@
             "fact_value": "4015100813791",
             "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
             "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_text": "GTIN: 4015100813791",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -122,6 +123,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_text": "Ingredients: Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Helianthus Annuus (Sunflower) Seed Oil, Hydroxyoctanone, Argania Spinosa Kernel Oil, Parfum (Fragrance)",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -130,6 +132,7 @@
             "fact_value": "2 Anwendungsmöglichkeiten: nach dem Waschen auf handtuchtrockenem Haar oder auf trockenem Haar als Beauty-Finish; sparsam (1-2 Pumpstöße) auf die mittleren Längen & Spitzen.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_text": "2 ANWENDUNGSMÖGLICHKEITEN: 1. Nach dem Waschen auf handtuchtrockenem Haar für Geschmeidigkeit. 2. Auf trockenem Haar als Beauty- Finish. Sparsam (1-2 Pumpstöße) auf die mittleren Längen & Spitzen geben.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -138,6 +141,7 @@
             "fact_value": "Schwarzkopf-Linienseite (Oil Nutritive Tägliches Öl-Elixier) bestätigt: Zielgruppe sehr geschädigtes Haar, Arganöl + Vitamin E, '+100% stärkeres Haar', Glanz ohne fettige Rückstände.",
             "source_label": "schwarzkopf.de Produktseite (Oil Nutritive Tägliches Öl-Elixier)",
             "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/oil-nutritive/taegliches-oel-elixier.html",
+            "source_text": "Das GLISS Oil Nutritive tägliches Öl Elixier bietet Extrem-Schaden Repair für sehr geschädigtes Haar, damit es wieder gesund und geschmeidig wird […] Das Öl-Elixier nährt, pflegt und veredelt das Haar zugleich – ohne dabei fettige Rückstände zu hinterlassen […] Dank Arganöl und Vitamin E sorgt das Öl-Elixier für Widerstandsfähigkeit und schenkt wunderbar glänzendes Haar: für +100% stärkeres Haar",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -146,6 +150,7 @@
             "fact_value": 5.95,
             "source_label": "dm.de Produktseite (dm-Dauerpreis)",
             "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_text": "5,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -275,6 +280,7 @@
             "fact_value": "3600523734955",
             "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
             "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_text": "GTIN: 3600523734955",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -295,6 +301,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_text": "INGREDIENTS: ISODODECANE • DIMETHICONE • DIMETHICONOL • COCOS NUCIFERA OIL / COCONUT OIL • TOCOPHEROL • POGOSTEMON CABLIN OIL • ANISE ALCOHOL • SCLEROCARYA BIRREA SEED OIL • CAMELLIA JAPONICA SEED OIL",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -303,6 +310,7 @@
             "fact_value": "Täglich als veredelnde Pflege auf trockenem und nassem Haar; während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish; Hitzeschutz bis 230 °C.",
             "source_label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -311,6 +319,7 @@
             "fact_value": "L'Oréal bestätigt: 'Hitzeschutz bis zu 230°', geeignet für alle Haartypen, Anti-Frizz, leichtes Haargefühl; Anwendungsvarianten inkl. 'in die feuchten Haarlängen (ab dem Ohr) einmassieren', Styling-Finish und Over-Night-Kur (Letzteres nur auf der Herstellerseite, nicht auf der dm-Packungsanweisung - nicht encodiert, siehe Notes).",
             "source_label": "loreal-paris.de Produktseite (Elvital Öl Magique Veredelndes Haaröl)",
             "source_url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+            "source_text": "Die leichte Textur verleiht Deinem Haar bis zu 72 Stunden mehr Geschmeidigkeit sowie einen natürlich aussehenden Glow, während es gleichzeitig dank des integrierten Hitzeschutzes bis zu 230° vor den Auswirkungen eines Hitzestylings geschützt wird. […] Geeignet für alle Haartypen und -bedürfnisse",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -319,6 +328,7 @@
             "fact_value": 6.95,
             "source_label": "dm.de Produktseite (dm-Dauerpreis)",
             "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_text": "6,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -449,6 +459,7 @@
             "fact_value": "4068134024947",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag, von mir live reproduziert) + INCI-Beauty-Listing unter derselben EAN",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_text": "\"name\":\"Haaröl Arganöl & Pflege\",\"sku\":\"4068134024947\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -469,6 +480,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_text": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil, Parfum",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -477,6 +489,7 @@
             "fact_value": "Vor der Haarwäsche zur intensiven Pflege, nach der Haarwäsche im feuchten Haar oder im trockenen Haar als Styling Finish; in den Längen und Spitzen verteilen; bei dünnen Haaren sparsam verwenden. Keine Zeitangabe für die Pre-Wash-Anwendung (P8-Regel 15-20 Min greift).",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_text": "Vor der Haarwäsche zur intensiven Pflege, nach der Haarwäsche im feuchten Haar für besonderen Glanz und Geschmeidigkeit oder im trockenen Haar als Styling Finish verwenden. In den Längen und Spitzen verteilen. Bei dünnen Haaren bitte sparsam verwenden.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -485,6 +498,7 @@
             "fact_value": 2.79,
             "source_label": "Rossmann.de Produktseite (100 ml, 1 L = 27,90 EUR)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_text": "Artikelpreis 2,79 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -595,6 +609,7 @@
             "fact_value": "4895248009825",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag, von mir live reproduziert; einzige Quelle, kein unabhängiger Zweitbeleg gefunden)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_text": "\"name\":\"Repair Argan Haaröl\",\"sku\":\"4895248009825\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -613,6 +628,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_text": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, Parfum (Fragrance), Caprylic/Capric Triglyceride, Argania Spinosa Kernel Oil, Tocopheryl Acetate",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -621,6 +637,7 @@
             "fact_value": "Eine kleine Menge zwischen den Händen verreiben, auf mittlere Länge und Spitzen auftragen, mit Fingern oder Kamm verteilen, nicht ausspülen. ACHTUNG: Weder Rossmann noch die Herstellerseiten (mondayhaircare.com, us.mondayhaircare.com) nennen einen Haarzustand (feucht/trocken).",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_text": "Eine kleine Menge zwischen den Hängen verreiben und auf die mittlere Länge und Spitzen des Haares auftragen. Gleichmäßig mit den Fingern oder einem Kamm verteilen und einmassieren. Nicht ausspülen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -629,6 +646,7 @@
             "fact_value": "Herstellerseite bestätigt identische INCI-Spitze (Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate) und Claims: 'Hydrates and seals split ends', 'Leaves a glass-like shine', 'Anti-frizz, lightweight finish', 'Strengthens and softens'. Keine Anwendungsanleitung, kein Hitzeschutz-, kein Pre-Wash-Claim.",
             "source_label": "mondayhaircare.com Produktseite (REPAIR Hair Oil)",
             "source_url": "https://mondayhaircare.com/product/repair-hair-oil/",
+            "source_text": "MONDAY Haircare’s REPAIR Hair Oil is your go-to for all hair types, hydrating and sealing split ends while deeply nourishing and providing anti-frizz action. Hair is left with a glass-like shine.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -637,6 +655,7 @@
             "fact_value": 5.99,
             "source_label": "Rossmann.de Produktseite (89 ml, 1 L = 67,30 EUR)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_text": "Artikelpreis 5,99 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }

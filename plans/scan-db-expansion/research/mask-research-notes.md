@@ -215,3 +215,16 @@ heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visu
 
 Alle drei jetzt über der Qualitätsbar (Retail-Packshot, keine Vorher/Nachher- oder
 Marketing-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).
+
+## Evidence quote backfill 2026-09-02
+
+Alle 24 Evidence-Zeilen tragen jetzt ein wörtliches `source_text`-Zitat, live von der
+jeweiligen `source_url` transkribiert (dm.de/Rossmann: GTIN-Feld bzw. JSON-LD-`sku`,
+INCI-Kopf, Verwendungshinweise, Preisangabe; Herstellerseiten: Claim-Passagen).
+`[…]` markiert Auslassungen zwischen wörtlichen, auf derselben Seite stehenden Passagen.
+Abweichung dokumentiert: Die idawargbeauty.se-Seite (Intense Moisture Hair Mask) zeigt
+heute die 250-ml-Variante mit "Leave on for 5-10 minutes" und "freshly washed hair" —
+die im `fact_value` festgehaltenen Angaben "5-15 minutes" / "towel-dried" / Passionsfruchtöl
+stehen dort nicht mehr (die deutsche Rossmann-Seite bestätigt weiterhin 5-15 Minuten,
+handtuchtrocken und Passiflora Edulis Seed Oil). Zitat entsprechend von der heutigen Seite
+übernommen, nicht rekonstruiert.

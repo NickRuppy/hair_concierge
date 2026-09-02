@@ -366,3 +366,21 @@ Textur-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).
 - Night Elixier: KEEP as regular leave-in (add-on care role, `extension_conditioner`); Anwendung copy = pure standard template, NO bedtime-specific sentence (Nick's ruling). The §6 overnight-copy question is thereby CLOSED.
 - All six uncertainty fields ruled (HE weight medium; HH benefit detangle_smooth; Isana medium+styling-oel; WS repair low; Being 354 ml per manufacturer, physical pack check queued; Bond Repair 9,95 € verified on the dm product page).
 - Pilot data review is COMPLETE — nothing unreviewed remains in this PR.
+
+## Evidence quote backfill 2026-09-02
+
+Alle 37 Evidence-Zeilen tragen jetzt ein wörtliches `source_text`-Zitat, live von der
+jeweiligen `source_url` transkribiert (dm.de/Rossmann: GTIN-Feld bzw. JSON-LD-`sku`,
+INCI-Kopf, Verwendungshinweise, Preisangabe; Herstellerseiten: Claim-Passagen).
+`[…]` markiert Auslassungen zwischen wörtlichen, auf derselben Seite stehenden Passagen.
+Zwei dokumentierte Abweichungen:
+- **Bond Repair:** loreal-paris.de führt das Produkt inzwischen als "Bond Repair Plus";
+  die Zahlen-Claims aus dem `fact_value` (3x weniger Haarbruch, 7x weniger Spliss, 100%
+  wiederhergestellte Stärke, Zitronensäure) stehen auf der heutigen Seite nicht mehr.
+  Zitiert wurde die weiterhin vorhandene 20%-Bond-Repair-Komplex-Passage.
+- **Night Elixier:** die zitierte URL
+  `.../produktlinien/night-elixier/ultimate-repair.html` leitet heute auf die
+  Ultimate-Repair-Linienseite um; dort steht die zitierte 5x-Widerstandsfähigkeits-Passage.
+  Die Overnight-Formulierung ("regeneriert es über Nacht") steht auf der verschobenen
+  Produktseite `.../gliss/ultimate-repair/night-elixier.html`; die Leave-in-Anwendung
+  über Nacht ist über die dm-Verwendungshinweise (eigene Evidence-Zeile) belegt.
