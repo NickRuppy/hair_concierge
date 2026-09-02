@@ -1315,3 +1315,14 @@ Per product, per derived role:
    written, its `applicationFamily` must equal the V1 family (§2.2).
 8. Assert the §2.4 column↔payload invariants before publishing, including the
    `leave_in` no-rinse code.
+
+
+---
+
+## Nick's pilot-review rulings (2026-09-02) — amendments to this file
+
+- **No packaging exceptions (R-C):** packaging can never override Chaarlie's category application guidance. The `deviation` mechanism is reserved for STRUCTURAL mismatches only (product researched into the wrong category, e.g. an overnight leave-on sold as "Haarkur"). Application-style differences on packaging (conditioner-after masks, roots-to-tips instructions) are ignored — the template guidance is stamped unchanged.
+- **Dry-use default (R-D), amends TPL-LEAVEIN-DRYCARE applicability:** a leave-in receives the DRYCARE stamp (in addition to DAMP) by DEFAULT when `format ∈ {spray, serum} ∧ weight ∈ {light, medium}` OR `format = lotion ∧ weight = light`. Creams and any `weight = rich` are damp-only. Explicit dry-use marketing always qualifies regardless of format. Existing rows contradicting this rule join the cleanup list (§5).
+- **EAN validity (R-B):** an EAN is verified when the same digits appear for the same product in ≥2 independent sources (two retailers, or retailer + manufacturer), or after one physical scan. Single-source EANs stay `excluded_from_apply`.
+- **Heat claims (R-E):** a manufacturer or retailer description claim of heat protection is sufficient for `provides_heat_protection`/heat template stamping; packaging-level claims are not required.
+- **Selection categories are provisional (R-A):** shelf placement from dm/Rossmann is a first guess; category is finalized by research.
