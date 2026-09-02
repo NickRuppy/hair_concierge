@@ -1,0 +1,735 @@
+{
+  "batch_id": "scan-db-expansion-pilot-leave-in-2026-09-02",
+  "generated_at": "2026-09-02T15:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Serum Glycolic Gloss",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1772059002/assets/pas/images/92483176-2993-4cd6-a2a2-e117175b7988/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss"
+          },
+          "description": "Anhydroses Glanz-Finish-Serum (2 Tropfen) der Glycolic-Gloss-Routine für stumpfes, frizziges Haar; im feuchten oder trockenen Haar anwendbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524135430",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": ["oil_replacement"],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["shine", "anti_frizz"],
+            "ingredient_flags": ["silicones", "polymers", "humectants"],
+            "application_stage": ["towel_dry", "dry_hair", "pre_heat"],
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+            "functional_benefits": ["shine_support", "smooth_anti_frizz", "heat_protect"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["detangle_smooth", "heat_protect"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" },
+            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "fine", "need_bucket": "heat_protect", "styling_context": "heat_style" },
+            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" },
+            { "thickness": "coarse", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+              "text": "Glycolic Gloss Leave-In Serum. Anwendung als Glanz-Finish der GLYCOLIC GLOSS Routine für intensive Geschmeidigkeit und ultimativen Glanz. Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "loreal-paris.de Produktseite (Glycolic Gloss Ultimate Leave-In Serum)",
+              "url": "https://www.loreal-paris.de/elvital/glycolic-gloss/serum",
+              "text": "Es bietet zuverlässigen Hitzeschutz und sorgt gleichzeitig für ein glänzendes, versiegeltes Finish, sodass das Haar gesund und gepflegt aussieht. Die Formel ist leicht und nicht fettend und eignet sich für die tägliche Anwendung auf feuchtem oder trockenem Haar."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524135430",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": ["silicones", "polymers", "humectants"],
+              "inci_basis": "Isododecane, Aqua, Dipropylene Glycol, Dimethicone, Alcohol Denat., Dimethiconol, Glycerin, PEG-14 Dimethicone, Hydroxyethyl Urea, ..., Polyacrylamide, ..., Glycolic Acid (weit hinten), C13-14 Isoalkane"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Es bietet zuverlässigen Hitzeschutz und sorgt gleichzeitig für ein glänzendes, versiegeltes Finish. Keine Temperaturangabe auf dieser Seite; die dm-Packungsangaben nennen keinen Hitzeschutz.",
+            "source_label": "loreal-paris.de Produktseite (Glycolic Gloss Ultimate Leave-In Serum)",
+            "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/serum",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.gloss_frizz",
+            "fact_value": "-75% Frizz (instrumenteller Test), bis zu +82% Glanz und +54% Geschmeidigkeit; Anwendung wortgleich zur dm-Packung (zwei Tropfen, Längen und Spitzen, feuchtes oder trockenes Haar); tägliche Anwendung geeignet.",
+            "source_label": "loreal-paris.de Produktseite (Glycolic Gloss Ultimate Leave-In Serum)",
+            "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/serum",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Herstellerseite nennt das Produkt 'Glycolic Gloss Ultimate Leave-In Serum' (wortgleiche Anwendung, gleiche Linie).",
+          "category_specs.product_leave_in_specs.format": "serum: anhydrose Tropfen-Dosierung ('zwei Tropfen'), Isododecane-/Silikonbasis; dm-Kategorie Leave-In Serum.",
+          "category_specs.product_leave_in_specs.weight": "light: 2-Tropfen-Dosierung, flüchtige Träger (Isododecane, Alcohol denat.), Herstellerclaim 'leicht und nicht fettend'.",
+          "category_specs.product_leave_in_specs.roles": "oil_replacement: anhydroses Silikon-Glanzserum, das wie ein Finishing-Öl dosiert und verwendet wird; kein Conditioner-Ersatz-/Booster-Anspruch.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true (nur Herstellerclaim): 'zuverlässiger Hitzeschutz' auf loreal-paris.de; dm-Packungstext nennt KEINEN Hitzeschutz, keine Temperaturangabe. Grenzfall, siehe Notes - Nick entscheidet, ob der Claim-Standard reicht.",
+          "category_specs.product_leave_in_specs.heat_protection_max_c": "null: keine Temperatur für DIESE SKU belegt. Achtung: der 230-Grad-Claim in Suchtreffern gehört zum separaten 'Spiegelglanz'-Leave-In-Spray, nicht zu diesem Serum.",
+          "category_specs.product_leave_in_specs.care_benefits": "shine: Kernclaims Glanz/Spiegelglanz (+82% Glanz). anti_frizz: -75% Frizz laut Hersteller.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol, PEG-14 Dimethicone. polymers: Polyacrylamide. humectants: Glycerin, Hydroxyethyl Urea, Propylene Glycol. Keine Öle, keine Proteine in der INCI.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'im feuchten oder trockenen Haar'. pre_heat: wegen Hitzeschutz-Claim des Herstellers.",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (konservativ): reines Glanz-/Versiegelungsprodukt, weder Feuchtigkeits- noch Proteinfokus (deckungsgleich mit der Einstufung der Glycolic-Gloss-Maske im Mask-Batch).",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'regenerierend' ist Glanz-Marketing; keine Protein-/Bond-Aktivstoffe, Glykolsäure weit hinten in der INCI.",
+          "category_specs.product_leave_in_specs.plan_roles": "post_wash_leave_in + pre_heat_application: Standard-Leave-in nach der Wäsche; pre_heat wegen provides_heat_protection=true.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: 2-Tropfen-Glanzserum kann eine Spülung nicht ersetzen; kein Replacement-Claim.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: Glättungs-/Geschmeidigkeitsclaims. heat_protect: Herstellerclaim. (Fit-Enum hat keinen Glanz-Wert.)",
+          "product_leave_in_eligibility": "shine_protect + moisture_anti_frizz (Anti-Frizz-Claim) für alle Stärken bei air_dry; heat_protect nur im heat_style-Kontext. Leichtes 2-Tropfen-Serum ohne Overload-Risiko für feines Haar.",
+          "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum ('ohne zu beschweren'-Logik der Linie).",
+          "concern_eligibility": "frizz: -75%-Frizz-Claim. Glanz/Stumpfheit hat weiterhin keinen sauberen Concern-Code (gleiches Problem wie im Mask-Batch) - bewusst schmal.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'im feuchten oder trockenen Haar' ist eine Entweder-Oder-Erlaubnis, kein Dry-only-Widerspruch; Längen und Spitzen konform.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Hersteller erlaubt explizit Anwendung 'auf feuchtem oder trockenem Haar' (either_state_protection nach P9). Claim-Basis nur Herstellerseite - siehe Notes."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarkur Hydra Hyaluron Aufpolsterndes Feuchtigkeitsserum",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.99,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/160/MAM_16015421/MAM_16015421_SHOP_IMAGE_2.0.png?width=600&height=600&fit=bounds&auto=webp&format=webply&canvas=600,600&quality=80",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865"
+          },
+          "description": "Leave-in-Feuchtigkeitsspray mit Hyaluronsäure für dehydrierte Längen; polstert auf, ohne zu beschweren, auf nassem oder trockenem Haar anwendbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524030865",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+              "https://produkte.globus.de/koerperpflege-kosmetik/haarpflege/shampoo-spuelung-kur/3600524030865/elvital-haarkur-spray-hydra-hyaluronic-serum"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": ["extension_conditioner"],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["moisture", "volume"],
+            "ingredient_flags": ["oils", "polymers", "humectants"],
+            "application_stage": ["towel_dry", "dry_hair"],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in"],
+            "functional_benefits": ["moisture_softness"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["detangle_smooth"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["dryness", "moisture_anti_frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+              "text": "Auf nassem oder trockenem Haar auf die Längen sprühen. Die Haare wie gewohnt stylen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524030865",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag), mod-10-valide; unabhängig bestätigt durch Globus-Produktlisting mit derselben GTIN in der URL",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "spray",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["oils", "polymers", "humectants"],
+              "inci_basis": "Aqua, Quaternium-87, Cocos Nucifera Oil, Sodium Benzoate, Sodium Hyaluronate, Stearyl Alcohol, ..., Behentrimonium Chloride, Polyquaternium-37, Polyquaternium-11, Candelilla Cera, ..., Glycine Soja Oil (silikonfrei, keine Proteine)"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Auf nassem oder trockenem Haar auf die Längen sprühen. Die Haare wie gewohnt stylen.",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.moisture_plumping",
+            "fact_value": "Feuchtigkeitsboost mit Hyaluronsäure für dehydrierte Längen; polstert auf und definiert, ohne Rückstände und ohne zu beschweren; Anwendung in die Längen des nassen oder trockenen Haares; kein Hitzeschutz-Claim.",
+            "source_label": "loreal-paris.de Produktseite (Hydra Hyaluronic Aufpolsterndes Feuchtigkeitsserum)",
+            "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/aufpolsterndes-feuchtigkeitsserum",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.99,
+            "source_label": "Rossmann.de Produktseite (150 ml, 1 L = 46,60 EUR)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite (h1). dm führt dasselbe Produkt als 'Haarserum Hydra Hyaluronic, feuchtigkeitsspendend' (dm 1633046) - Namensvariante, siehe Notes.",
+          "identifiers.ean_capture": "EAN war im Draft offen; hier von der Rossmann-Produktseite erhoben: URL-Nummer = Syndigo-Tag = 3600524030865, GS1-Präfix 360 (L'Oréal-Frankreich-Kreis), mod-10-Prüfziffer valide (Summe 65, Prüfziffer 5). Unabhängiger Zweitbeleg: produkte.globus.de listet dieselbe GTIN in der Produkt-URL. Daher cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "spray: Anwendungstext 'auf die Längen sprühen' - trotz 'Haarkur/Serum' im Namen ein Sprühprodukt.",
+          "category_specs.product_leave_in_specs.weight": "light: Claims 'ohne Rückstände', 'ganz ohne zu Beschweren'; wässrige Spray-Basis ohne Silikone/Butter.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: pflegendes Post-Wash-Leave-in als Zusatzpflege; kein Ersatz-Claim, kein Öl-Analog.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: Kernclaims Feuchtigkeitsboost/dehydrierte Längen. volume: 'aufpolsternd', 'Haar mit Schwung' (abgeleitet).",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Cocos Nucifera Oil (Pos. 3), Glycine Soja Oil. polymers: Polyquaternium-37, Polyquaternium-11. humectants: Sodium Hyaluronate, Propylene Glycol. Keine Silikone, keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'auf nassem oder trockenem Haar'.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: durchgängige Feuchtigkeitsclaims + Humectant-Fokus (Hyaluronat); keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf Rossmann- oder Herstellerseite (explizit geprüft).",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth (erzwungene Wahl): Fit-Enum kennt keinen Feuchtigkeits-/Volumenwert; Conditioning-Spray glättet/entwirrt plausibel, aber nicht explizit beworben - schwächstes Feld dieses Produkts.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als zusätzliches Pflegeserum positioniert, kein Conditioner-Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: leichtes Feuchtigkeitsspray, 'ohne zu beschweren' deckt feines Haar.",
+          "thickness_eligibility": "Alle Stärken: leichtes Spray mit explizitem Nicht-Beschweren-Claim.",
+          "concern_eligibility": "dryness: 'dehydrierte Längen', feuchtigkeitsbedürftiges Haar. moisture_anti_frizz: Leave-in-Feuchtigkeits-Bucket als Feuchtigkeits-Code der Kategorie.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder trocken' ist keine Dry-only-Anweisung; Spray-Format ist laut Template eine Copy-Anpassung ('aufsprühen'), keine echte Abweichung. Platzierung 'auf die Längen' konform."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarserum Bond Repair, Anti-Haarschäden",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1776727949/assets/pas/images/ae24ea14-3c57-4ce7-bc58-b0fc796e3016/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden"
+          },
+          "description": "Anhydroses Leave-in-Serum (2 Tropfen) mit 20% Bond-Repair-Komplex und Zitronensäure als Finish der Bond-Repair-Routine für geschädigtes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524075576",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": ["oil_replacement"],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["repair", "shine"],
+            "ingredient_flags": ["silicones", "polymers", "humectants"],
+            "application_stage": ["towel_dry", "dry_hair"],
+            "care_direction": "balanced",
+            "repair_support_level": "medium",
+            "plan_roles": ["post_wash_leave_in"],
+            "functional_benefits": ["repair_support", "shine_support"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["repair"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "fine", "need_bucket": "repair", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "repair", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "repair", "styling_context": "air_dry" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["hair_damage", "repair", "split_ends", "breakage"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+              "text": "Für das perfekte Finish mit dem Elvital Bond Repair Plus Leave-in Serum von L'Oréal Paris: Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524075576",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "medium",
+              "ingredient_flags": ["silicones", "polymers", "humectants"],
+              "inci_basis": "Isododecane, Dipropylene Glycol, Aqua, Dimethicone, Alcohol Denat., Glycerin, Dimethiconol, PEG-14 Dimethicone, Hydroxyethyl Urea, Parfum, Citric Acid, Sodium Citrate, ..., Polyacrylamide (keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.bond_repair",
+            "fact_value": "20% Bond-Repair-Komplex mit Zitronensäure/Aminosäuren; 100% wiederhergestellte Stärke, 3x weniger Haarbruch beim Kämmen, 7x weniger Spliss; schützt die Haarbindungen und glättet die Haarfaser für mehr Glanz; Anwendung 2 Tropfen in Längen und Spitzen, feucht oder trocken; kein Hitzeschutz-Claim.",
+            "source_label": "loreal-paris.de Produktseite (Bond Repair Leave-in-Serum)",
+            "source_url": "https://www.loreal-paris.de/elvital/bond-repair/leave-in-serum",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "dm.de Produktlisting (Preis 9,95 EUR, Grundpreis 66,33 EUR/l bei 150 ml; auf der dm-Seite des Schwesterprodukts als Panel-Preis erfasst)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Hersteller nennt es 'Bond Repair Plus Leave-in-Serum'.",
+          "category_specs.product_leave_in_specs.format": "serum: anhydrose 2-Tropfen-Dosierung, Isododecane-/Silikonbasis, identische Basis wie das Glycolic-Gloss-Serum.",
+          "category_specs.product_leave_in_specs.weight": "light: 2-Tropfen-Dosierung, flüchtige Träger; kein Butter-/Ölanteil.",
+          "category_specs.product_leave_in_specs.roles": "oil_replacement: anhydroses Finish-Serum, das wie ein Pflegeöl dosiert wird ('perfektes Finish der Routine').",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: Kernclaims (repariert Haarschäden, weniger Spliss/Haarbruch). shine: 'glättet die Haarfaser für mehr Glanz'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol, PEG-14 Dimethicone. polymers: Polyacrylamide. humectants: Glycerin, Hydroxyethyl Urea, Propylene Glycol. Keine Öle, keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'von trockenem oder feuchtem Haar'.",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (konservativ): Repair-Positionierung ohne Protein- oder Feuchtigkeitsfokus in der INCI; Citrat-Chemie ist weder protein noch moisture.",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: dedizierte Bond-Repair-Linie mit beziffertem 20%-Komplex (Zitronensäure/Citrat), aber keine Protein-/belegte Bond-Builder-Chemie in der INCI; unabhängige Evidenz für Citrat-'Haarbrücken-Reparatur' ist schwach - 'high' wäre nicht evidenzgedeckt, 'low' würde die dedizierte Repair-Formulierung unterzeichnen (Spiegelbild der HaptIQ-Einstufung im Mask-Batch).",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf dm- oder Herstellerseite ('schützt die Haarbindungen' ist Bond-, kein Hitze-Claim).",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: explizit als Finish ZUSÄTZLICH zur Bond-Repair-Routine positioniert.",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry: leichtes 2-Tropfen-Serum ohne Overload-Risiko.",
+          "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum.",
+          "concern_eligibility": "hair_damage/repair: Kernclaim 'repariert alle Arten von Haarschäden'. split_ends: '7x weniger Spliss'. breakage: '3x weniger Haarbruch'.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder feucht' ist keine Dry-only-Anweisung; Längen und Spitzen konform.",
+          "product.price_eur": "9,95 EUR laut dm ('Ähnliche Produkte'-Panel mit Grundpreis 66,33 EUR/l, konsistent mit 150 ml); der Einzelseiten-Preisblock wurde im Layout nicht separat erfasst - vor Apply gegenprüfen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Creme Aloe Air Dry",
+          "brand": "Garnier Fructis",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747419385/assets/pas/images/f07891ea-e347-41bb-a0d2-122e9035b567/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry"
+          },
+          "description": "Silikonfreie Leave-in-Creme mit Aloe Vera und Glycerin für Lufttrocknen ohne Föhn; bändigt das Haar mit 24h-Anti-Frizz-Wirkung."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542117593",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "light",
+            "roles": ["extension_conditioner", "styling_prep"],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["moisture", "anti_frizz"],
+            "ingredient_flags": ["polymers", "humectants"],
+            "application_stage": ["towel_dry"],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in"],
+            "functional_benefits": ["smooth_anti_frizz", "moisture_softness"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["detangle_smooth"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["frizz", "moisture_anti_frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+              "text": "Die Garnier Fructis Hydra Aloe Air-Dry Cream auf nassem oder handtuchtrockenem Haar bis in die Spitzen einmassieren. Anschließend das Haar lufttrocknen lassen und ausbürsten, sobald das Haar komplett trocken ist."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542117593",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["polymers", "humectants"],
+              "inci_basis": "Aqua, Propylene Glycol, Glycerin, Aloe Barbadensis Leaf Juice, Sorbitan Oleate, PPG-1 Trideceth-6, PEG-150/Decyl Alcohol/SMDI Copolymer, Sodium Hyaluronate, Propylene Glycol Dicaprylate/Dicaprate, ..., Polyquaternium-37 (ohne Silikone laut Merkmal + INCI; keine Öle/Butter, keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Die Garnier Fructis Hydra Aloe Air-Dry Cream auf nassem oder handtuchtrockenem Haar bis in die Spitzen einmassieren. Anschließend das Haar lufttrocknen lassen und ausbürsten, sobald das Haar komplett trocken ist.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.air_dry_anti_frizz",
+            "fact_value": "Bändigt das Haar und erhöht die Griffigkeit; einfaches Styling ohne Trockenföhnen; 24 Stunden Anti-Frizz; Kombination aus Aloe Vera Gel und pflanzlichem Glycerin; Wirkung laut dm-Merkmalen: Pflege, Styling; Haartyp: normaler/jeder Haartyp.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung + Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 400 ml, 14,88 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite. Produktbeschreibung nennt es 'Fructis Hydra Aloe Air-Dry Cream'; KEIN 'Hair Food'-Branding (siehe Notes zur Katalog-Altzeile).",
+          "category_specs.product_leave_in_specs.format": "cream: 'Leave-In Creme' laut Name und dm-Kategorie.",
+          "category_specs.product_leave_in_specs.weight": "light: wässrige Gel-Creme-Basis ohne Silikone, Öle oder Butter (INCI); Haartyp-Angabe 'jeder Haartyp' stützt das.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner + styling_prep: Pflege-Leave-in nach der Wäsche UND explizite Air-Dry-Styling-Positionierung ('Styling ohne Trockenföhnen', dm-Wirkung 'Pflege, Styling').",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: Hydra-Positionierung, Aloe + Glycerin + Hyaluronat. anti_frizz: '24 Stunden Anti-Frizz'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "polymers: PEG-150/Decyl Alcohol/SMDI Copolymer, Polyquaternium-37. humectants: Glycerin, Propylene Glycol, Aloe, Sodium Hyaluronate. Silikonfrei (Claim + INCI), keine Öle, keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry: 'auf nassem oder handtuchtrockenem Haar' - beides feuchte Zustände; keine Trockenhaar-Anwendung angegeben.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Hydra-Linie, Humectant-Formel, keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: explizites Lufttrocknen-Produkt, kein Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: kein Conditioner-Ersatz-Claim; normale Post-Wash-Zusatzpflege.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: 'bändigt', Anti-Frizz/Glättung; 'ausbürsten' setzt Kämmbarkeit voraus.",
+          "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: leichte silikonfreie Formel, explizite Air-Dry-Positionierung; kein heat_style-Kontext (Produkt ist Anti-Föhn positioniert).",
+          "thickness_eligibility": "Alle Stärken: leichte Wasserbasis ohne Beschwerungsrisiko; dm-Haartyp 'jeder Haartyp'.",
+          "concern_eligibility": "frizz: 24h-Anti-Frizz-Kernclaim. moisture_anti_frizz: Hydra-/Feuchtigkeitspositionierung im Leave-in-Bucket-Code.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder handtuchtrocken' entspricht dem Damp-Template; 'bis in die Spitzen einmassieren' ist keine Ansatz-Anweisung; Lufttrocknen + Ausbürsten sind zusätzliche Styling-Hinweise, kein Widerspruch zu Platzierung/Rinse-Logik."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Major Moisture Leave-In Conditioner",
+          "brand": "Being",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/239/MAM_23934152/MAM_23934152_SHOP_IMAGE_2.0.png?width=600&height=600&fit=bounds&auto=webp&format=webply&canvas=600,600&quality=80",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988"
+          },
+          "description": "Reichhaltiger, silikonfreier Leave-in-Conditioner mit Kakaobutter und Haferextrakt für Locken der Typen 3A-4C; spendet Feuchtigkeit und wird laut Hersteller auch als Hitzeschutz verwendet."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005988",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+              "https://www.ebay.co.uk/itm/226823754631"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "rich",
+            "roles": ["extension_conditioner", "styling_prep"],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["moisture", "curl_definition"],
+            "ingredient_flags": ["oils", "polymers", "humectants"],
+            "application_stage": ["towel_dry", "pre_heat"],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+            "functional_benefits": ["moisture_softness", "curl_shape_support", "heat_protect"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "rich",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["curl_definition", "heat_protect"]
+          },
+          "product_leave_in_eligibility": [
+            { "thickness": "normal", "need_bucket": "curl_definition", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "curl_definition", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
+            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" },
+            { "thickness": "coarse", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+          ]
+        },
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "moisture_anti_frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+              "text": "Nach dem Duschvorgang anwenden. Nachdem Sie das Haar mit dem Being Shampoo und Conditioner gewaschen haben, eine kleine Menge in das feuchte Haar geben, insbesondere auf die Spitzen, und einmassieren. Nicht ausspülen. Anschließend wie gewohnt stylen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Produktbeschreibung, Hitzeschutz-Verwendung)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+              "text": "Die dermatologisch getestete, sulfat- und silikonfreie Formel eignet sich ideal nach dem Waschen, zum Einarbeiten in die Haarspitzen für ein natürliches Styling oder als Hitzeschutz."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": false
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005988",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag), mod-10-valide; unabhängig bestätigt durch internationale Listings mit derselben GTIN (eBay UK, Walmart/Instacart-Treffer)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "rich",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["oils", "polymers", "humectants"],
+              "provides_heat_protection": true,
+              "inci_basis": "Aqua, Cetearyl Alcohol, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Glycerin, Simmondsia Chinensis Seed Oil, Ceteareth-20, Prunus Amygdalus Dulcis Oil, Avena Sativa Extract, Theobroma Cacao Seed Butter, ..., Behentrimonium Methosulfate, Polyquaternium-37, Polyquaternium-10 (silikonfrei)"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Nach dem Duschvorgang anwenden. ... eine kleine Menge in das feuchte Haar geben, insbesondere auf die Spitzen, und einmassieren. Nicht ausspülen. Anschließend wie gewohnt stylen.",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.heat_protection_and_curls",
+            "fact_value": "Manufacturer bestätigt: 'alternatively for use as a heat protectant'; Anwendung 'add a small amount to damp hair, focusing on ends. Do not rinse out. Style as usual.'; für Locken 3A-3C und Coils 4A-4C; Kakaobutter + Haferextrakt; Herstellerseite nennt 12 FL OZ / 354 mL.",
+            "source_label": "beinghaircare.com Produktseite (Major Moisture Leave-In)",
+            "source_url": "https://beinghaircare.com/blog/product/major-moisture-leave-in-moisturizing-leave-in-conditioner/",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "Rossmann.de Produktseite (6,79 EUR; Grundpreis 29,91 EUR/l)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite (h1). Marke laut Rossmann 'Being' (ZURU-Dachmarke, Vertrieb Zuru Germany GmbH).",
+          "product.net_content": "BEWUSST WEGGELASSEN: Rossmann zeigt 227 ml (Grundpreis-Rechnung 6,79 EUR / 29,91 EUR/l = 227 ml), Hersteller und internationale Listings derselben GTIN nennen 354 ml (12 fl oz). Echter Quellenkonflikt - vor Apply klären (siehe Notes).",
+          "category_specs.product_leave_in_specs.format": "cream: Leave-in-Conditioner mit Cetearyl-Alcohol-/Butter-Basis; kein Spray-/Serum-Hinweis. (Tub-/Tiegel-Format laut Herstellerbildern.)",
+          "category_specs.product_leave_in_specs.weight": "rich: Kokosöl Pos. 3, Sheabutter Pos. 4, Kakaobutter - butterreiche Formel für Locken/Coils; Hersteller-Claim 'lightweight' ist Marketing gegen die INCI-Lage, konservativ rich.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: explizit NACH Shampoo und Conditioner anzuwenden. styling_prep: 'für ein natürliches Styling' / 'anschließend wie gewohnt stylen'.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true: expliziter Verwendungs-Claim 'oder als Hitzeschutz' (Rossmann-Produktbeschreibung), vom Hersteller bestätigt ('for use as a heat protectant'). Keine Temperaturangabe, keine unabhängige Wirksamkeitsevidenz - Claim-basiert, siehe Notes.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'Major Moisture', feuchtigkeitsspendende Formel. curl_definition: 'schützt und perfektioniert Locken vom Typ 3A-4C'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Kokos-, Jojoba-, Mandelöl + Shea-/Kakaobutter. humectants: Glycerin. polymers: Polyquaternium-37, Polyquaternium-10, Acrylates-Copolymer. Silikonfrei (Claim + INCI). Haferextrakt ist kein hydrolysiertes Protein - kein proteins-Flag.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry: 'in das feuchte Haar'. pre_heat: Hitzeschutz-Verwendungs-Claim. Keine explizite Trockenhaar-Anwendung.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: durchgängige Feuchtigkeitsclaims, Emollient-/Humectant-Formel, keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe; 'pflegt und schützt' ist generisches Pflege-Marketing.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Anwendung explizit nach Shampoo UND Conditioner.",
+          "product_leave_in_eligibility": "curl_definition + moisture_anti_frizz bei air_dry, heat_protect nur bei heat_style; normal/coarse wegen butterreicher Formel (feines Haar konservativ ausgeschlossen).",
+          "thickness_eligibility": "normal/coarse: butterreiche Rich-Formel mit Beschwerungsrisiko für feines Haar; Zielgruppe Locken/Coils 3A-4C.",
+          "concern_eligibility": "dryness/moisture_anti_frizz: Kernclaims Feuchtigkeit ('Major Moisture', feuchtigkeitsspendend). Locken-Definition hat keinen Concern-Code.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: feuchtes Haar nach der Wäsche, 'insbesondere auf die Spitzen' konform mit lengths_ends, nicht ausspülen.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=false: keine explizite 'nass oder trocken'-Erlaubnis; die Anwendung nennt nur feuchtes Haar - nach P9 damp-only (pre_heat_damp)."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}
