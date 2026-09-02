@@ -157,9 +157,11 @@ function runVisionPadded(input: string, output: string): { ok: boolean; reason: 
 }
 
 function findPython(explicit: string | undefined): string | null {
-  const candidates = [explicit, process.env.PRODUCT_IMAGE_PYTHON, "/tmp/rembg-venv/bin/python3"].filter(
-    (value): value is string => Boolean(value),
-  )
+  const candidates = [
+    explicit,
+    process.env.PRODUCT_IMAGE_PYTHON,
+    "/tmp/rembg-venv/bin/python3",
+  ].filter((value): value is string => Boolean(value))
   for (const candidate of candidates) {
     if (existsSync(candidate)) return candidate
   }
@@ -173,7 +175,10 @@ function runDeshadow(
 ): { ok: boolean; reason: string | null } {
   try {
     execFileSync(python, [DESHADOW_PY, input, output], { encoding: "utf8" })
-    return { ok: existsSync(output), reason: existsSync(output) ? null : "deshadow produced no output" }
+    return {
+      ok: existsSync(output),
+      reason: existsSync(output) ? null : "deshadow produced no output",
+    }
   } catch (error) {
     return { ok: false, reason: errorMessage(error) }
   }
@@ -202,7 +207,12 @@ export function alphaCoverage(data: Buffer, width: number, height: number): numb
  * from every fully-transparent pixel keeps this O(width*height) instead of
  * a naive per-pixel neighborhood scan.
  */
-export function haloScore(data: Buffer, width: number, height: number, radius = BOUNDARY_RADIUS): number {
+export function haloScore(
+  data: Buffer,
+  width: number,
+  height: number,
+  radius = BOUNDARY_RADIUS,
+): number {
   const total = width * height
   if (total === 0) return 0
 
@@ -377,10 +387,15 @@ export async function processItem(
 
   let halo = haloScore(data, width, height)
   let status: ImageResult["status"] = "ok"
-  let reason: string | null = null
+  // Reasons ACCUMULATE. A single `reason` string used to be overwritten by the
+  // halo/deshadow verdict, silently dropping the low-res flag from the contact
+  // sheet for exactly the images with two things wrong with them.
+  const reasons: string[] = []
   if (lowResSource) {
     status = "flagged"
-    reason = `low-res source (${sourceMeta.width}x${sourceMeta.height}, min dim < 800px) - re-source a larger packshot`
+    reasons.push(
+      `low-res source (${sourceMeta.width}x${sourceMeta.height}, min dim < 800px) - re-source a larger packshot`,
+    )
   }
 
   if (halo > HALO_TRIGGER) {
@@ -398,7 +413,9 @@ export async function processItem(
         const rereadCoverage = alphaCoverage(reread.data, reread.width, reread.height)
         if (rereadCoverage < coverage * 0.85) {
           status = "flagged"
-          reason = `deshadow rejected: it removed ${(100 * (1 - rereadCoverage / coverage)).toFixed(0)}% of the product silhouette (warm/translucent product?) - kept the plain cutout`
+          reasons.push(
+            `deshadow rejected: it removed ${(100 * (1 - rereadCoverage / coverage)).toFixed(0)}% of the product silhouette (warm/translucent product?) - kept the plain cutout`,
+          )
         } else if (newHalo < halo) {
           copyFileSync(deshadowed, targetCutout)
           cutoutFile = targetCutout
@@ -409,24 +426,32 @@ export async function processItem(
           halo = newHalo
           if (halo > HALO_FLAG) {
             status = "flagged"
-            reason = `deshadow reduced but did not fully clear the boundary halo score (${halo.toFixed(3)})`
+            reasons.push(
+              `deshadow reduced but did not fully clear the boundary halo score (${halo.toFixed(3)})`,
+            )
           }
         } else {
           status = "flagged"
-          reason = `deshadow attempted but did not reduce the halo score (before ${halo.toFixed(3)}, after ${newHalo.toFixed(3)})`
+          reasons.push(
+            `deshadow attempted but did not reduce the halo score (before ${halo.toFixed(3)}, after ${newHalo.toFixed(3)})`,
+          )
         }
       } else {
         status = "flagged"
-        reason = `possible baked-in shadow (halo_score=${halo.toFixed(3)}); deshadow failed: ${deshadowResult.reason ?? "unknown"}`
+        reasons.push(
+          `possible baked-in shadow (halo_score=${halo.toFixed(3)}); deshadow failed: ${deshadowResult.reason ?? "unknown"}`,
+        )
       }
     } else {
       pathTaken.push("deshadow_skipped")
       status = "flagged"
-      reason = `possible baked-in shadow (halo_score=${halo.toFixed(3)}); deshadow skipped — no python interpreter with numpy/scipy/PIL found (checked --python and /tmp/rembg-venv/bin/python3)`
+      reasons.push(
+        `possible baked-in shadow (halo_score=${halo.toFixed(3)}); deshadow skipped — no python interpreter with numpy/scipy/PIL found (checked --python and /tmp/rembg-venv/bin/python3)`,
+      )
     }
   } else if (halo > HALO_FLAG) {
     status = "flagged"
-    reason = `borderline boundary halo score (${halo.toFixed(3)}) — human review recommended`
+    reasons.push(`borderline boundary halo score (${halo.toFixed(3)}) — human review recommended`)
   }
 
   const qaWhite = join(dirs.qa, `${item.id}-white.webp`)
@@ -438,7 +463,7 @@ export async function processItem(
     id: item.id,
     source: item.source,
     status,
-    reason,
+    reason: reasons.length > 0 ? reasons.join("; ") : null,
     path_taken: pathTaken,
     metrics: { source_had_alpha: sourceHasAlpha, alpha_coverage: coverage, halo_score: halo },
     files: { original: originalFile, cutout: cutoutFile, qa_white: qaWhite, qa_magenta: qaMagenta },
@@ -499,7 +524,10 @@ async function main(): Promise<void> {
     generated_at: new Date().toISOString(),
   }
 
-  writeFileSync(join(resolvedOut, "results.json"), `${JSON.stringify({ summary, results }, null, 2)}\n`)
+  writeFileSync(
+    join(resolvedOut, "results.json"),
+    `${JSON.stringify({ summary, results }, null, 2)}\n`,
+  )
   log(
     `\nDone. ok=${summary.ok} flagged=${summary.flagged} failed=${summary.failed} total=${summary.total_ms}ms avg=${summary.avg_ms_per_image}ms/image`,
   )

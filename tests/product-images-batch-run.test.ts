@@ -1,7 +1,12 @@
 import assert from "node:assert/strict"
+import { mkdtempSync, mkdirSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import test from "node:test"
 
-import { alphaCoverage, haloScore } from "../scripts/product-images/batch-run"
+import sharp from "sharp"
+
+import { alphaCoverage, haloScore, processItem } from "../scripts/product-images/batch-run"
 
 /**
  * Builds a synthetic RGBA raw buffer: a filled square "subject" of `size`
@@ -85,4 +90,65 @@ test("haloScore: a dark but neutral (non-warm) boundary ring does not trigger th
 test("haloScore: empty canvas does not divide by zero", () => {
   const { data, width, height } = buildSquareSubject({ size: 0, margin: 4, fill: () => [0, 0, 0] })
   assert.equal(haloScore(data, width, height), 0)
+})
+
+/** A scratch `Dirs` triple plus a PNG source file `processItem` can resolve. */
+async function scratchRun(params: {
+  size: number
+  margin: number
+  fill: (x: number, y: number) => [number, number, number]
+}) {
+  const root = mkdtempSync(join(tmpdir(), "chaarlie-batch-run-"))
+  const dirs = {
+    sources: join(root, "sources"),
+    cutouts: join(root, "cutouts"),
+    qa: join(root, "qa"),
+  }
+  for (const dir of Object.values(dirs)) mkdirSync(dir, { recursive: true })
+
+  const { data, width, height } = buildSquareSubject(params)
+  const source = join(root, "input.png")
+  await sharp(data, { raw: { width, height, channels: 4 } })
+    .png()
+    .toFile(source)
+  return { dirs, source }
+}
+
+test("a low-res source with a shadow halo reports BOTH reasons, not just the last one", async () => {
+  // 100x100 canvas: under the 800px source-quality floor, and carrying the warm
+  // dark boundary ring that scores above HALO_TRIGGER. With no python
+  // interpreter passed, the deshadow is skipped and its own reason is recorded.
+  // A single overwritten `reason` field would have dropped the low-res flag
+  // here — for exactly the images with two things wrong with them.
+  const { dirs, source } = await scratchRun({
+    size: 80,
+    margin: 10,
+    fill: (x, y) => {
+      const distToEdge = Math.min(x, y, 80 - 1 - x, 80 - 1 - y)
+      return distToEdge < 6 ? [120, 90, 60] : [235, 230, 225]
+    },
+  })
+
+  const result = await processItem({ id: "combined", source }, dirs, null)
+
+  assert.equal(result.status, "flagged")
+  assert.deepEqual(result.path_taken, ["alpha_passthrough", "deshadow_skipped"])
+  assert.ok(result.reason, "a flagged result must say why")
+  assert.match(result.reason, /low-res source \(100x100/)
+  assert.match(result.reason, /possible baked-in shadow/)
+  assert.match(result.reason, /; /, "multiple reasons are joined, not replaced")
+})
+
+test("a clean high-res source is ok with no reason at all", async () => {
+  const { dirs, source } = await scratchRun({
+    size: 900,
+    margin: 20,
+    fill: () => [235, 230, 225],
+  })
+
+  const result = await processItem({ id: "clean", source }, dirs, null)
+
+  assert.equal(result.status, "ok")
+  assert.equal(result.reason, null)
+  assert.deepEqual(result.path_taken, ["alpha_passthrough"])
 })
