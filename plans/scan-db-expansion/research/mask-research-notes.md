@@ -192,3 +192,26 @@ bis Zweitquelle oder physischer Scan) und von R-C unberührt.
 - **Evidenz-Hygiene:** Alle Anwendungstexte sind wörtliche Zitate der Retailer-Produktseiten
   (dm "Verwendungshinweise", Rossmann "Anwendung und Gebrauch"); Manufacturer-Seiten als Korroboration,
   wo vorhanden. Keine Influencer-/Forenquellen verwendet.
+
+## Image re-sourcing 2026-09-02
+
+Qualitätsbar geprüft (Packshot der Verpackung allein, kürzere Achse ≥ 800 px ideal / ≥ 600 px
+Minimum, Hersteller- oder Retailer-Quelle mit Seiten-URL). Jedes Kandidatenbild wurde
+heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visuell geprüft
+(Read-Tool auf das gespeicherte Bild).
+
+- **Elvital Haarkur Glycolic Gloss (5-Minuten-Haar-Laminierung):** zu niedrig aufgelöst
+  (408×1200 px bei `h_1200,w_1200`). dm-static liefert dieselbe Cloudinary-Quelle in höherer
+  Auflösung, wenn man den `h_*,w_*`-Transform-Parameter erhöht (c_fit skaliert proportional
+  hoch, keine andere Bilddatei). Neu: `h_3000,w_3000` → **1021×3000 px**, gleiche Quelle
+  (dm.de-Produktseite), scharf und unverändert im Bildinhalt.
+- **Gliss Haarkur 7sec Express-Repair, Ultimate Repair:** zu niedrig aufgelöst (334×1200 px).
+  Gleicher Trick, `h_3600,w_3600` → **1001×3600 px** (dm.de), scharf, Bildinhalt unverändert.
+- **IDA WARG Beauty Intense Moisture Hair Mask:** falscher Bildinhalt (bisheriges Bild
+  `MAM_56165360` zeigt ein Vorher/Nachher-Haarfoto, kein Packshot). In der Rossmann-Galerie
+  desselben Produkts ist `MAM_56165348` das erste Thumbnail und zeigt den Tiegel frontal ohne
+  Marketing-Overlay. Neu: `MAM_56165348` bei `width=2000&height=2000` → **2000×2000 px**,
+  gleiche Rossmann-Produktseite als Quelle.
+
+Alle drei jetzt über der Qualitätsbar (Retail-Packshot, keine Vorher/Nachher- oder
+Marketing-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).

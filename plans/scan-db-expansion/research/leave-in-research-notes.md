@@ -325,3 +325,37 @@ vs. leave_in; „serum"-Subtyp-Vokabel) sind durch R-A gegenstandslos.
   (dm „Verwendungshinweise", Rossmann „Anwendung und Gebrauch"); Herstellerseiten (loreal-paris.de,
   beinghaircare.com) als Korroboration. Marketplace-Treffer (eBay/Walmart) nur zur EAN-Identität,
   nie für Authority-Felder. Keine Influencer-/Forenquellen verwendet.
+
+## Image re-sourcing 2026-09-02
+
+Qualitätsbar geprüft (Packshot der Verpackung allein, kürzere Achse ≥ 800 px ideal / ≥ 600 px
+Minimum, Hersteller- oder Retailer-Quelle mit Seiten-URL). Jedes Kandidatenbild wurde
+heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visuell geprüft
+(Read-Tool auf das gespeicherte Bild). Betrifft 7 der 7 Produkte dieses Manifests.
+
+- **Elvital Leave-In Serum Glycolic Gloss:** zu niedrig aufgelöst (331×1200 px bei
+  `h_1200,w_1200`). dm-static liefert dieselbe Cloudinary-Quelle in höherer Auflösung über den
+  `h_*,w_*`-Transform-Parameter. Neu: `h_3600,w_3600` → **993×3600 px** (dm.de), scharf,
+  Bildinhalt unverändert.
+- **Elvital Leave-In Haarkur Hydra Hyaluron Aufpolsterndes Feuchtigkeitsserum:** falscher
+  Bildinhalt (bisheriges Bild `MAM_16015421` ist eine Marketing-/Info-Folie, kein Packshot).
+  In der Rossmann-Galerie desselben Produkts ist `MAM_16015375` das erste Thumbnail und zeigt
+  die Sprühflasche frontal ohne Overlay. Neu: `MAM_16015375` bei `width=2000&height=2000` →
+  **2000×2000 px**, gleiche Rossmann-Produktseite als Quelle.
+- **Elvital Leave-In Haarserum Bond Repair, Anti-Haarschäden:** zu niedrig aufgelöst
+  (328×1200 px). Gleicher dm-static-Trick, `h_3600,w_3600` → **984×3600 px**, scharf,
+  Bildinhalt unverändert.
+- **Garnier Fructis Leave-In Creme Aloe Air Dry:** zu niedrig aufgelöst (358×1200 px).
+  `h_3000,w_3000` → **896×3000 px** (dm.de), scharf, Bildinhalt unverändert.
+- **Being Major Moisture Leave-In Conditioner:** falscher Bildinhalt (bisheriges Bild
+  `MAM_23934152` ist eine Textur-Schmier-Aufnahme, kein Packshot). In der Rossmann-Galerie
+  desselben Produkts ist `MAM_23934125` das erste Thumbnail und zeigt den Tiegel frontal ohne
+  Overlay. Neu: `MAM_23934125` bei `width=2000&height=2000` → **2000×2000 px**, gleiche
+  Rossmann-Produktseite als Quelle.
+- **Gliss Haarkur Night Elixier Ultimate Repair:** zu niedrig aufgelöst (407×1200 px).
+  `h_3000,w_3000` → **1017×3000 px** (dm.de), scharf, Bildinhalt unverändert.
+- **Wahre Schätze Haarserum Honig reparierend:** zu niedrig aufgelöst (547×1200 px).
+  `h_3000,w_3000` → **1368×3000 px** (dm.de), scharf, Bildinhalt unverändert.
+
+Alle sieben jetzt über der Qualitätsbar (Retail-Packshot, keine Marketing-Folien oder
+Textur-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).

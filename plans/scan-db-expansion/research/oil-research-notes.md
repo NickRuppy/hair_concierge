@@ -220,3 +220,25 @@ im Manifest wörtlich zitiert.)
 - **Bildkandidaten:** dm: JSON-LD-Produktbild (1200er-Variante). Rossmann: erstes
   Galerie-Bild mit Produkt-Alt-Text; ACHTUNG Isana: das auf der Seite mehrfach eingebundene
   MAM_4038827 ist ein **Siegel-Badge**, nicht der Packshot — verwendet wurde MAM_57247767.
+
+## Image re-sourcing 2026-09-02
+
+Qualitätsbar geprüft (Packshot der Verpackung allein, kürzere Achse ≥ 800 px ideal / ≥ 600 px
+Minimum, Hersteller- oder Retailer-Quelle mit Seiten-URL). Jedes Kandidatenbild wurde
+heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visuell geprüft
+(Read-Tool auf das gespeicherte Bild).
+
+- **Gliss Haaröl Tägliches Öl-Elixier:** zu niedrig aufgelöst (373×1200 px bei
+  `h_1200,w_1200`). dm-static liefert dieselbe Cloudinary-Quelle in höherer Auflösung, wenn man
+  den `h_*,w_*`-Transform-Parameter erhöht. Neu: `h_3000,w_3000` → **932×3000 px** (dm.de),
+  scharf, Bildinhalt unverändert.
+- **Elvital Haaröl Öl Magique:** zu niedrig aufgelöst (421×1200 px). Gleicher Trick,
+  `h_3000,w_3000` → **1052×3000 px** (dm.de), scharf, Bildinhalt unverändert.
+- **Monday Haircare Repair Argan Haaröl:** falscher Bildinhalt (bisheriges Bild
+  `MAM_57218955` ist eine Claims-/Infografik-Kachel, kein Packshot). In der Rossmann-Galerie
+  desselben Produkts ist `MAM_57218952` das erste Thumbnail und zeigt die Sprühflasche frontal
+  ohne Overlay. Neu: `MAM_57218952` bei `width=2000&height=2000` → **2000×2000 px**, gleiche
+  Rossmann-Produktseite als Quelle.
+
+Alle drei jetzt über der Qualitätsbar (Retail-Packshot, keine Infografik-/Claims-Kacheln,
+kürzere Achse ≥ 800 px, Quelle dokumentiert).
