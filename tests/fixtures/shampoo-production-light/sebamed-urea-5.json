@@ -1,0 +1,218 @@
+{
+  "formula": {
+    "canonicalInci": "aqua,urea,disodium laureth sulfosuccinate,sodium lauryl sulfoacetate,laureth-9,lauryl glucoside,sodium laureth sulfate,parfum,peg-120 methyl glucose dioleate,phenoxyethanol,citric acid,laureth-2,peg/ppg-120/10 trimethylolpropane trioleate,sodium benzoate,hydroxypropyl oxidized starch pg-trimonium chloride,sodium citrate,tetramethyl acetyloctahydronaphthalenes,sodium chloride,lactic acid,tocopherol,helianthus annuus seed oil",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/formula-source.json"
+    ],
+    "inciFingerprintSha256": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T12:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/"
+      },
+      {
+        "capturedAt": "2026-08-10T12:00:00+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "200 ml",
+    "exactProductName": "Sebamed Anti-Juckreiz Akut Shampoo Urea 5%",
+    "gtinAliases": [
+      "4103040048448"
+    ],
+    "market": "DE",
+    "productId": "sebamed-urea-5",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T12:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/"
+      },
+      {
+        "capturedAt": "2026-08-10T12:00:00+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "irritationen",
+      "trocken"
+    ],
+    "suitableThicknesses": [
+      "fine"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/0",
+      "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/1"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "The mixed sulfosuccinate/sulfoacetate/glucoside/SLES architecture supports moderate cleansing; profile matching should treat the scalp-active dry/itch route separately.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Urea/humectant context and cationic starch support scalp/hair feel more than strong hair deposition.",
+      "value": "low"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The exact official complete INCI does not contain Piroctone Olamine or Climbazole. Dry flakes from dry/sensitive scalp are handled through dry/sensitive scalp support, not dandruff support.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "The product is acute anti-itch/dry-scalp care with Urea 5% and Laureth-9/Polidocanol positioning, so it is scalp-active product truth for dry/sensitive-flake contexts, not dandruff treatment.",
+      "value": "scalp_active"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Gentle remains a distinct secondary route because the exact product combines urea/scalp-comfort positioning with mild frequent-use/pH 5.5 evidence; it is not inferred merely from being scalp-targeted.",
+      "value": [
+        "gentle"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "Exact product positioning targets dry/sensitive scalp, and urea plus pH/gentle-use cues provide a coherent cosmetic comfort route.",
+      "value": "targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Acute anti-itch/dry-scalp positioning makes this a directed scalp-care role; it should route dry flakes toward dry/sensitive scalp support, not anti-dandruff support.",
+      "value": "treatment"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/classificationConfidence/value"
+      ],
+      "rationale": "Low passt, weil die Pflegehinweise spät und begrenzt sind und von einer starken Reinigungsarchitektur überlagert werden.",
+      "value": "low"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/0",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/1"
+      ],
+      "rationale": "Production-light calibration judgment: Urea 5% and anti-itch/dry-scalp positioning support dry/dry-flake scalp routing, not dandruff.",
+      "target": "dry"
+    },
+    "secondary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/properties/dandruffSupport"
+      ],
+      "independentlySupported": true,
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/0",
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/claims/1"
+      ],
+      "rationale": "Production-light calibration judgment: the same exact anti-itch/sensitive positioning plus pH/gentle-use cues independently support irritated/sensitive routing.",
+      "target": "sensitive"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: low weight and urea-led scalp care make fine hair an ideal fit for dry/itchy scalp needs.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair can use the dry/sensitive scalp route without excessive deposition.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/16/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: scalp benefit can fit, but low conditioning means coarse lengths may need richer follow-up care.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

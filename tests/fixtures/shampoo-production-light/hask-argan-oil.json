@@ -1,0 +1,192 @@
+{
+  "formula": {
+    "canonicalInci": "aqua/water/eau,sodium c14-16 olefin sulfonate,cocamide mipa,sodium chloride,cocamidopropyl betaine,glycerin,argania spinosa (argan) kernel oil,panthenol,polyquaternium-10,polyquaternium-7,glycol distearate,dicaprylyl ether,decyl glucoside,glyceryl oleate,citric acid,sodium hydroxide,sodium salicylate,sodium benzoate,trisodium ethylenediamine disuccinate,isopropanolamine,parfum/fragrance,benzoic acid,benzyl benzoate,citrus aurantium peel oil,limonene",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json"
+    ],
+    "inciFingerprintSha256": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "473 ml",
+    "exactProductName": "Hask Shampoo Repair Argan Oil",
+    "gtinAliases": [
+      "071164341469"
+    ],
+    "market": "DE",
+    "productId": "hask-argan-oil",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "trocken"
+    ],
+    "suitableThicknesses": [
+      "coarse"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/claims/0",
+      "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/claims/1"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "Olefin-sulfonate-led cleanser supports strong cleansing.",
+      "value": "strong"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Oil/emollient/polyquat system supports high conditioning for a shampoo.",
+      "value": "high"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The repair formula contains no captured anti-dandruff active, dandruff positioning or endpoint; strong cleansing alone is not a dandruff-support route.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "Defensible repair focus is protective lubrication and surface damage management.",
+      "value": "repair"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Secondary coherent route is S1 shine from smoothing/deposition.",
+      "value": [
+        "shine"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Regular care shampoo role; not a bond treatment.",
+      "value": "regular"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/classificationConfidence/value"
+      ],
+      "rationale": "High ist gestützt, weil mehrere Lipid- und kationische Polymerrouten im oberen/mittleren INCI-Bereich zusammenlaufen und die Formel dadurch klar über moderate Pflege hinausgeht.",
+      "value": "high"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/claims/0",
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/claims/1"
+      ],
+      "rationale": "Production-light calibration judgment: repair/oil claims target damaged hair lengths, not dry scalp; production-light should not map dry hair to trocken/dry scalp.",
+      "target": "ordinary"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/candidateWeightPotential"
+      ],
+      "fit": "not_suited",
+      "rationale": "Production-light calibration judgment: high conditioning/high weight oil-polyquat repair architecture is too heavy for fine hair.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: damaged normal hair may benefit, but high weight keeps it out of ideal.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/6/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: high conditioning, oil/polyquat deposition and repair/shine positioning make coarse hair ideal.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

@@ -1,0 +1,214 @@
+{
+  "formula": {
+    "canonicalInci": "aqua/water,sodium laureth sulfate,glycol distearate,sodium chloride,cocamidopropyl betaine,dimethicone,guar hydroxypropyltrimonium chloride,cocamide mea,coco-betaine,sodium benzoate,sodium hydroxide,hydroxycitronellal,steareth-6,phenoxyethanol,acetic acid,peg-100 stearate,trideceth-10,trideceth-3,salicylic acid,limonene,fumaric acid,linalool,pinene,amodimethicone,carbomer,carvone,geranyl acetate,citric acid,tetramethyl acetyloctahydronaphthalenes,citrus limon peel oil,hexylene glycol,hexyl cinnamal,glycolic acid,parfum/fragrance",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/formula-source.json"
+    ],
+    "inciFingerprintSha256": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/3138002/l-oreal-paris-elvital-shampoo-glycolic-gloss"
+      },
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://www.loreal-paris.de/elvital/glycolic-gloss-spiegelglanz/shampoo"
+      },
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.budni.de/sortiment/produkte/6764458000"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "300 ml",
+    "exactProductName": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+    "gtinAliases": [
+      "3600524293543"
+    ],
+    "market": "DE",
+    "productId": "loreal-elvital-glycolic-gloss",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/3138002/l-oreal-paris-elvital-shampoo-glycolic-gloss"
+      },
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://www.loreal-paris.de/elvital/glycolic-gloss-spiegelglanz/shampoo"
+      },
+      {
+        "capturedAt": "2026-08-10T00:00:00+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.budni.de/sortiment/produkte/6764458000"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "normal"
+    ],
+    "suitableThicknesses": [
+      "coarse",
+      "fine",
+      "normal"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/claims/0",
+      "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/claims/1"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "SLES-led base supports strong cleansing.",
+      "value": "strong"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Dimethicone, amodimethicone and cationic guar support high deposition for a shampoo.",
+      "value": "high"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "high",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "The strongest coherent route is deposition shine.",
+      "value": "shine"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Temporary lubrication can support damaged-feel care, not bond repair.",
+      "value": [
+        "repair"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Regular cosmetic shine shampoo, not a reset or treatment.",
+      "value": "regular"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/classificationConfidence/value"
+      ],
+      "rationale": "High ist gerechtfertigt, weil frühes Dimethicone und frühes kationisches Guar mit zusätzlichem Amodimethicone mehrere persistente Wege kombinieren.",
+      "value": "high"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/claims/0",
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/claims/1"
+      ],
+      "rationale": "Production-light calibration judgment: shine/repair positioning targets hair finish, not a specialist scalp route.",
+      "target": "ordinary"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: strong cleansing offsets some residue, but high silicone/deposition weight is a fine-hair risk.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair best balances the strong wash and high shine/conditioning system.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/28/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: high conditioning and weight are useful for thicker/coarser hair seeking smooth shine.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

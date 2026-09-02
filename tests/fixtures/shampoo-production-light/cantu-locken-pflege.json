@@ -1,0 +1,198 @@
+{
+  "formula": {
+    "canonicalInci": "aqua (water),sodium c14-16 olefin sulfonate,cocamidopropyl betaine,cocamide dipa,glycerin,acrylates copolymer,phenoxyethanol,peg-150 distearate,parfum (fragrance),butyrospermum parkii (shea) butter,polyester-37,sodium hydroxide,glycol distearate,panthenol (vitamin b5),guar hydroxypropyltrimonium chloride,ethylhexylglycerin,disodium edta,steareth-4,polyquaternium-39,sodium benzoate,citric acid,polysorbate 20,sodium chloride,tocopherol (vitamin e),benzyl benzoate,coumarin",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/formula-source.json"
+    ],
+    "inciFingerprintSha256": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T12:00:00.000+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse"
+      },
+      {
+        "capturedAt": "2026-08-10T12:00:00.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-cantu-sulfate-free-cleansing-cream-shampoo/p/0810006943450"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "400 ml",
+    "exactProductName": "Cantu Sulfate-Free Cleansing Cream Shampoo",
+    "gtinAliases": [
+      "810006945461"
+    ],
+    "market": "DE",
+    "productId": "cantu-locken-pflege",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T12:00:00.000+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse"
+      },
+      {
+        "capturedAt": "2026-08-10T12:00:00.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-cantu-sulfate-free-cleansing-cream-shampoo/p/0810006943450"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "normal"
+    ],
+    "suitableThicknesses": [
+      "coarse"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "Olefin sulfonate leads the cleanser system; sulfate-free marketing does not imply low cleansing.",
+      "value": "strong"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Shea butter plus glycol distearate, cationic guar and Polyquaternium-39 support moderate conditioning/deposition, not high conditioner-like performance.",
+      "value": "moderate"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The formula is a strong buildup-removal shampoo, not a dandruff-support system; no specific anti-flake route or endpoint is present.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "Strong olefin-sulfonate cleanser, EDTA and retailer/official usage text about heavy buildup support a clarifying/residue-removal focus.",
+      "value": "clarifying"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "value": []
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Strong cleansing with residue-removal positioning is better modeled as alternating use than default frequent use without a user profile.",
+      "value": "alternating"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/classificationConfidence/value"
+      ],
+      "rationale": "Moderate berücksichtigt das reale Mehrfach-Depositionspotenzial ebenso wie den prominenten starken Reinigungsgegenpol und den Rinse-off-Kontext.",
+      "value": "moderate"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: this is a curl/clarifying hair-positioned shampoo, not a specialist scalp-condition product.",
+      "target": "ordinary"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/candidateWeightPotential"
+      ],
+      "fit": "not_suited",
+      "rationale": "Production-light calibration judgment: strong clarifying wash plus curl-care context is too much for fine regular shampoo use.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: normal hair may use it occasionally, but strong clarifying positioning keeps it out of ideal regular fit.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/32/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: curl/coarse context plus moderate conditioning and weight make coarse hair the best match.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

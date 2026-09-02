@@ -1,0 +1,200 @@
+{
+  "formula": {
+    "canonicalInci": "aqua/water/eau,sodium methyl cocoyl taurate,decyl glucoside,cocamidopropyl betaine,sodium chloride,rosmarinus officinalis leaf oil,mentha piperita oil,menthol,menthyl lactate,sodium hydrolyzed potato starch dodecenylsuccinate,amodimethicone,coco-glucoside,coconut acid,disodium tetrapropenyl succinate,glyceryl oleate,lecithin,starch hydroxypropyltrimonium chloride,peg-150 distearate,hexylene glycol,citric acid,sodium lactate,sodium hydroxide,hydrogenated palm glycerides citrate,lactic acid,urea,sodium benzoate,benzoic acid,tocopherol,ascorbyl palmitate,parfum/fragrance",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/ogx-rosemary/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/weight-final-rerun-v3/blind-packet.json"
+    ],
+    "inciFingerprintSha256": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+    "sources": [
+      {
+        "capturedAt": "2026-09-01T18:16:12.000+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931"
+      },
+      {
+        "capturedAt": "2026-09-01T18:16:12.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://pepperyspot.com/de/products/ogx-rosemary-mint-shampoo-385-ml"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-09-01T18:16:12.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "385 ml",
+    "exactProductName": "OGX Rosemary Mint Shampoo",
+    "gtinAliases": [
+      "3574661805931"
+    ],
+    "market": "DE",
+    "productId": "ogx-rosemary",
+    "sources": [
+      {
+        "capturedAt": "2026-09-01T18:16:12.000+02:00",
+        "tier": "preferred_retailer_de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931"
+      },
+      {
+        "capturedAt": "2026-09-01T18:16:12.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://pepperyspot.com/de/products/ogx-rosemary-mint-shampoo-385-ml"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "dehydriert-fettig"
+    ],
+    "suitableThicknesses": [
+      "normal"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "A taurate/glucoside/betaine system supports moderate cleansing despite clarifying positioning.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Amodimethicone, cationic starch and Glyceryl Oleate support moderate conditioning.",
+      "value": "moderate"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The product is an oil/residue clarifier without a captured anti-dandruff active or endpoint.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "Oil/residue-removal positioning and the cleanser architecture establish clarifying as primary.",
+      "value": "clarifying"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Rosemary, peppermint, Menthol and Menthyl Lactate create a sensory scalp-active secondary route.",
+      "value": [
+        "scalp_active"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Clarifying use plus silicone deposition is best modeled as alternating use.",
+      "value": "alternating"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/finalWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/laneA/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/classificationConfidence/value"
+      ],
+      "rationale": "weightPotential classified as moderate.",
+      "value": "moderate"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: exact oil/residue/oily-hair positioning supports oily routing; mint/menthol are sensory scalp-active signals, not sensitive-scalp support.",
+      "target": "oily"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/finalWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: oily/clarifying use can help fine roots, but amodimethicone plus cationic starch make repeat-use weight plausible.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/finalWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair is the cleanest fit for alternating oil/residue cleansing with moderate deposition.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/2/finalWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: clarifying use can help buildup, but conditioning is not rich enough to make coarse hair ideal.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

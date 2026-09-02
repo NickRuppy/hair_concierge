@@ -1,0 +1,189 @@
+{
+  "formula": {
+    "canonicalInci": "aqua,sodium laureth sulfate,cocamidopropyl betaine,sodium chloride,piroctone olamine,hydroxypropyl guar hydroxypropyltrimonium chloride,citric acid,sodium benzoate,maris sal (dead sea salt),potassium sorbate,glycerin,melaleuca alternifolia (tea tree) leaf oil,limonene,aloe barbadensis leaf juice powder,lactic acid,citrus limon peel oil,citrus sinensis peel oil expressed,litsea cubeba fruit oil,silt",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/formula-source.json"
+    ],
+    "inciFingerprintSha256": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://salthouse.com/de/produkte/anti-schuppen-shampoo/"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T18:00:00.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "250 ml",
+    "exactProductName": "Salthouse Anti Schuppen Shampoo",
+    "gtinAliases": [
+      "4008890006429"
+    ],
+    "market": "DE",
+    "productId": "salthouse-anti-schuppen",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://salthouse.com/de/produkte/anti-schuppen-shampoo/"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "schuppen"
+    ],
+    "suitableThicknesses": [
+      "fine"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "The disclosed deposition and lipid routes support low conditioning.",
+      "value": "low"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The exact source and formula provide a direct dandruff support route, bounded by rinse-off exposure and missing comparative data.",
+      "value": "supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "The strongest product-specific route is scalp_active.",
+      "value": "scalp_active"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "value": []
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "The source directions and formula support a treatment usage role.",
+      "value": "treatment"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/classificationConfidence/value"
+      ],
+      "rationale": "Low ist am besten gestützt, weil die relevante Pflege im Wesentlichen auf eine Polymerroute begrenzt bleibt und die übrigen Ölhinweise spät oder ausgeschlossen sind.",
+      "value": "low"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "high",
+      "exactAntiDandruffPositioning": true,
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: exact anti-dandruff positioning plus Piroctone Olamine support the dandruff production route.",
+      "target": "dandruff"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: low weight and low conditioning make the anti-dandruff wash suitable for fine hair.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair remains an ideal treatment-route fit because dandruff support is scalp-driven.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/9/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: treatment need can fit, but low conditioning is weak for coarse lengths.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

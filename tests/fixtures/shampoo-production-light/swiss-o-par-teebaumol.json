@@ -1,0 +1,200 @@
+{
+  "formula": {
+    "canonicalInci": "aqua,sodium laureth sulfate,cocamidopropyl betaine,melaleuca alternifolia leaf oil,sodium chloride,peg-7 glyceryl cocoate,coco-betaine,phenoxyethanol,benzyl alcohol,sodium benzoate,coco glucoside,citric acid,glycol distearate,potassium sorbate,limonene,glycerin,tocopherol",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json"
+    ],
+    "inciFingerprintSha256": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://swissopar.de/produkt/teebaumoel-shampoo/"
+      },
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T18:00:00.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "250 ml",
+    "exactProductName": "Swiss-O-Par Teebaumöl Shampoo",
+    "gtinAliases": [
+      "4104260076501"
+    ],
+    "market": "DE",
+    "productId": "swiss-o-par-teebaumol",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://swissopar.de/produkt/teebaumoel-shampoo/"
+      },
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "reputable_german_retailer",
+        "url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "dehydriert-fettig"
+    ],
+    "suitableThicknesses": [
+      "fine"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "A balanced moderate cleanser is plausible. No active-matter or sebum-removal test is public.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Low shampoo conditioning is plausible. No combing or deposition endpoint is captured.",
+      "value": "low"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The complete resolved formula contains neither Piroctone Olamine nor Climbazole, so it does not meet the locked MVP route for dandruff support. Tea tree oil and anti-flake positioning do not upgrade this classification; not_supported means the accepted support route is absent, not that the shampoo is proven ineffective.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "A deliberate cosmetic scalp-active route is present. No dedicated recognized anti-dandruff active or finished-product test is disclosed.",
+      "value": "scalp_active"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "A bounded clarifying role is plausible. No residue-removal or sebum endpoint supports a strong reset.",
+      "value": [
+        "clarifying"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "Exact product positioning targets scalp/dandruff comfort and contains a deliberate tea-tree scalp route. The non-conventional dandruff route remains separate from the comfort target.",
+      "value": "targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "A targeted rinse-off scalp routine is intended. Individual cadence and tolerance were not tested publicly.",
+      "value": "treatment"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/classificationConfidence/value"
+      ],
+      "rationale": "Low ist am besten gestützt, weil die Ablagerungsseite auf einen schwachen Rückfetter begrenzt bleibt und die Reinigungsseite stark ist.",
+      "value": "low"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: exact claim mentions Fett/oily context and the formula is low-weight with regular cleansing; tea tree does not create dandruff support.",
+      "target": "oily"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: low weight plus oily/scalp-active positioning make fine hair an ideal oily-route fit.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair can use the regular oily/scalp-active formula without excessive weight.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/15/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: low conditioning makes coarse-hair care only conditional.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

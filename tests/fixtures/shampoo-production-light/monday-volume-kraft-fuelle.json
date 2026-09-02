@@ -1,0 +1,193 @@
+{
+  "formula": {
+    "canonicalInci": "aqua/water/eau,cocamidopropyl betaine,disodium laureth sulfosuccinate,sodium cocoyl isethionate,sodium chloride,cocamide mipa,phenoxyethanol,sodium citrate,sodium lauroyl sarcosinate,sodium benzoate,cocos nucifera (coconut) oil,parfum (fragrance),polyquaternium-10,coco-glucoside,glyceryl oleate,citric acid,acrylates copolymer,benzyl alcohol,ethylhexylglycerin,hydroxypropyl guar hydroxypropyltrimonium chloride,polyquaternium-7,polyquaternium-11,hexyl cinnamal,tocopheryl acetate,butylene glycol,glycerin,linalool,zingiber officinale (ginger) root extract,sodium acetate,1,2-hexanediol,isopropyl alcohol,ethyl hexanediol,tocopherol",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/formula-source.json"
+    ],
+    "inciFingerprintSha256": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+    "sources": [
+      {
+        "capturedAt": "2026-08-23T00:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://de.mondayhaircare.com/volume-shampoo-conditioner/"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-23T00:00:00+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "350 ml",
+    "exactProductName": "Monday Haircare Volume Kraft & Fülle Shampoo",
+    "gtinAliases": [
+      "4897097266343"
+    ],
+    "market": "DE",
+    "productId": "monday-volume-kraft-fuelle",
+    "sources": [
+      {
+        "capturedAt": "2026-08-23T00:00:00+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://de.mondayhaircare.com/volume-shampoo-conditioner/"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "dehydriert-fettig"
+    ],
+    "suitableThicknesses": [
+      "coarse",
+      "normal"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/claims/0",
+      "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/claims/1"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "Sulfate-free broad surfactant blend supports moderate-to-strong regular cleansing.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "Multiple cationic polymers plus light oils support moderate conditioning/body.",
+      "value": "moderate"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "Volume route is supported by clean-light cleansing and bodying polymers.",
+      "value": "volume"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Light deposition can add smoothing/shine.",
+      "value": [
+        "shine"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "value": "not_targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "Regular volume shampoo, not a reset or treatment.",
+      "value": "regular"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/classificationConfidence/value"
+      ],
+      "rationale": "High ist am besten gestützt, weil viele konvergierende und plausibel persistente Depositionssysteme vorhanden sind, darunter mehrere kationische Polymere und ein Lipid-/Filmanteil.",
+      "value": "high"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "moderate",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/claims/0",
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/claims/1"
+      ],
+      "rationale": "Production-light calibration judgment: exact positioning names oily hair and regular cleansing/bodying architecture supports the oily production route.",
+      "target": "oily"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: fine/thin volume positioning is real, but final high weight from multiple polymer/lipid routes prevents ideal fine eligibility.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: normal hair can benefit from volume/body positioning while tolerating the deposition load.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/21/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: coarse hair tolerates the high weight/conditioning side better while still receiving bodying support.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

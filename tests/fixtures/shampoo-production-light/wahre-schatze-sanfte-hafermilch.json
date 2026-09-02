@@ -1,0 +1,190 @@
+{
+  "formula": {
+    "canonicalInci": "aqua/water,sodium laureth sulfate,coco-betaine,glycol distearate,glycerin,glycine soja oil/soybean oil,aloe barbadensis leaf juice,avena sativa kernel extract/oat kernel extract,oryza sativa starch/rice starch,ppg-5-ceteth-20,peg-55 propylene glycol oleate,peg-60 hydrogenated castor oil,dicaprylyl ether,dilauryl thiodipropionate,carbomer,sodium chloride,sodium hydroxide,propylene glycol,hydroxypropyl guar hydroxypropyltrimonium chloride,citric acid,xanthan gum,polyquaternium-7,tocopherol,potassium sorbate,sodium benzoate,salicylic acid,parfum/fragrance",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/weight-final-rerun-v3/blind-packet.json"
+    ],
+    "inciFingerprintSha256": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/sanfte-hafermilch/beruhigendes-shampoo"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T18:00:00.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "250 ml",
+    "exactProductName": "Garnier Wahre Schätze Sanfte Hafermilch Beruhigendes Shampoo",
+    "gtinAliases": [
+      "3600542461658"
+    ],
+    "market": "DE",
+    "productId": "wahre-schatze-sanfte-hafermilch",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T18:00:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/sanfte-hafermilch/beruhigendes-shampoo"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "trocken"
+    ],
+    "suitableThicknesses": [
+      "normal"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "value": "moderate"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "The disclosed deposition and lipid routes support moderate conditioning.",
+      "value": "moderate"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "The strongest product-specific route is gentle.",
+      "value": "gentle"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Multiple care routes support a bounded shine secondary focus, while sensitive-scalp tolerance remains a separate low-confidence fit question.",
+      "value": [
+        "shine"
+      ]
+    },
+    "scalpComfortTarget": {
+      "confidence": "high",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "Exact German manufacturer positioning targets sensitive or itchy scalp and reports ECARF evidence, establishing a dedicated cosmetic scalp-comfort target.",
+      "value": "targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "The source directions and formula support a regular usage role.",
+      "value": "regular"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/finalWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/laneA/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/classificationConfidence/value"
+      ],
+      "rationale": "weightPotential classified as moderate.",
+      "value": "moderate"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "high",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: ECARF/high-tolerability positioning plus targeted scalp-comfort property supports irritated/sensitive routing.",
+      "target": "sensitive"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/finalWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: moderate v3 weight from lipid/polymer deposition can be too much for fine hair despite gentle positioning.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/finalWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: moderate cleansing/care and sensitive positioning make normal hair the cleanest fit.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v3/report.json#/corrections/0/finalWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: moderate conditioning can help, but not enough evidence for rich coarse-hair care.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}
