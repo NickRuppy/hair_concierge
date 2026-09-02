@@ -320,6 +320,12 @@ export async function processItem(
 
   const sourceMeta = await sharp(originalFile).metadata()
   const sourceHasAlpha = Boolean(sourceMeta.hasAlpha)
+  // Source-quality gate (Nick's review 2026-09-02): a packshot whose shorter
+  // dimension is under 800px upscales visibly soft in the 1200x1200 finalize.
+  // The gate cannot judge CONTENT (marketing shot vs packshot) - that stays a
+  // human call on the contact sheet.
+  const sourceMinDim = Math.min(sourceMeta.width ?? 0, sourceMeta.height ?? 0)
+  const lowResSource = sourceMinDim > 0 && sourceMinDim < 800
   const targetCutout = join(dirs.cutouts, `${item.id}.png`)
   let cutoutFile: string | null = null
 
@@ -372,6 +378,10 @@ export async function processItem(
   let halo = haloScore(data, width, height)
   let status: ImageResult["status"] = "ok"
   let reason: string | null = null
+  if (lowResSource) {
+    status = "flagged"
+    reason = `low-res source (${sourceMeta.width}x${sourceMeta.height}, min dim < 800px) - re-source a larger packshot`
+  }
 
   if (halo > HALO_TRIGGER) {
     if (pythonPath) {
