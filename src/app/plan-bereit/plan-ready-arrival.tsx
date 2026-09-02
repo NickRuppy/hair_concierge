@@ -1,11 +1,24 @@
 "use client"
 
 import Link from "next/link"
-import type { ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+import {
+  PLAN_OPENING_SLOW_HINT_AFTER_MS,
+  readPlanOpeningStart,
+  remainingPlanOpeningDelayMs,
+} from "./opening-beat"
+
+/**
+ * How long after the ready flip the CTA becomes interactive: its reveal starts
+ * after 450 ms and fades over 450 ms, so before this point the control is still
+ * effectively invisible and must not be clickable or focusable.
+ */
+const CTA_REVEAL_USABLE_AFTER_MS = 650
 
 /**
  * What the buyer now owns, in the order the Bottom-Nav will show it. These are
@@ -44,7 +57,7 @@ export function PlanBereitArrival({
   onAction,
   phase = "ready",
   interactive,
-  slowHint = false,
+  slowHint,
   loadingShellId,
   noscriptFallback,
 }: {
@@ -57,6 +70,11 @@ export function PlanBereitArrival({
    * visitor (whose beat timer never fires) still gets a working link.
    */
   interactive?: boolean
+  /**
+   * Slow-wait reassurance line. Omit to let the frame time it itself (from the
+   * cross-route opening marker) — static hosts like /welcome and loading.tsx
+   * need that, since a slow navigation resolves only after they unmount.
+   */
   slowHint?: boolean
   /** Renders the frame as a route loading shell with the matching a11y attributes. */
   loadingShellId?: string
@@ -64,7 +82,39 @@ export function PlanBereitArrival({
 }) {
   const ready = phase === "ready"
   const serverKnowsReady = interactive ?? ready
-  const revealHidden = ready ? undefined : true
+  // Without JS the noscript style already SHOWS the ready content on a
+  // server-known-ready frame, so assistive tech must hear the same state:
+  // expose ready content (and hide the loading line) as soon as the server
+  // knows the plan is ready, not only when the visual morph runs.
+  const exposeReadyToAT = ready || serverKnowsReady
+  const revealHidden = exposeReadyToAT ? undefined : true
+  const loadingHidden = exposeReadyToAT ? true : undefined
+
+  // A frame mounted directly in the ready state shows the CTA immediately; one
+  // that morphs from loading enables it only once the staggered reveal has
+  // actually made it visible.
+  const [mountedInLoading] = useState(!ready)
+  const [revealComplete, setRevealComplete] = useState(false)
+  const ctaUsable = ready && (!mountedInLoading || revealComplete)
+  useEffect(() => {
+    if (!ready || !mountedInLoading) return
+    const timer = setTimeout(() => setRevealComplete(true), CTA_REVEAL_USABLE_AFTER_MS)
+    return () => {
+      clearTimeout(timer)
+      setRevealComplete(false)
+    }
+  }, [mountedInLoading, ready])
+
+  const [autoSlowHint, setAutoSlowHint] = useState(false)
+  useEffect(() => {
+    if (ready || slowHint !== undefined) return
+    const timer = setTimeout(
+      () => setAutoSlowHint(true),
+      remainingPlanOpeningDelayMs(PLAN_OPENING_SLOW_HINT_AFTER_MS, readPlanOpeningStart()),
+    )
+    return () => clearTimeout(timer)
+  }, [ready, slowHint])
+  const effectiveSlowHint = slowHint ?? autoSlowHint
   const ctaBaseClassName = cn(
     buttonVariants({ variant: "funnelCta", size: null }),
     "min-h-[50px] [@media(min-height:731px)]:min-h-[58px]",
@@ -74,7 +124,7 @@ export function PlanBereitArrival({
   const ctaClassName = cn(
     ctaBaseClassName,
     "plan-opening-cta-js plan-opening-reveal plan-opening-reveal-3",
-    !ready && "pointer-events-none",
+    !ctaUsable && "pointer-events-none",
   )
   const headlineClassName =
     "mx-auto max-w-[17ch] text-balance text-center font-header text-[clamp(26px,7.5vw,29px)] leading-[1.16] text-[var(--brand-plum-darkest)] [grid-area:1/1]"
@@ -115,17 +165,14 @@ export function PlanBereitArrival({
           </span>
 
           <p
-            aria-hidden={ready ? true : undefined}
+            aria-hidden={loadingHidden}
             className="plan-opening-exit-soft mb-2 text-center text-[12.5px] font-medium text-[var(--brand-plum)]"
           >
             Zahlung bestätigt
           </p>
 
           <div className="grid">
-            <h1
-              aria-hidden={ready ? true : undefined}
-              className={cn(headlineClassName, "plan-opening-exit")}
-            >
+            <h1 aria-hidden={loadingHidden} className={cn(headlineClassName, "plan-opening-exit")}>
               Dein Plan wird geöffnet.
             </h1>
             <h1 aria-hidden={revealHidden} className={cn(headlineClassName, "plan-opening-enter")}>
@@ -163,9 +210,9 @@ export function PlanBereitArrival({
           </ul>
 
           <p
-            aria-hidden={ready || !slowHint ? true : undefined}
+            aria-hidden={ready || !effectiveSlowHint ? true : undefined}
             className="plan-opening-slow-hint mt-4 text-center text-[12.5px] leading-[1.5] text-[var(--text-caption)]"
-            data-plan-opening-slow-hint={!ready && slowHint ? "on" : "off"}
+            data-plan-opening-slow-hint={!ready && effectiveSlowHint ? "on" : "off"}
           >
             Wir verbinden deinen Plan mit deinem Konto – einen Moment.
           </p>
@@ -202,8 +249,8 @@ export function PlanBereitArrival({
             href={actionHref}
             onClick={onAction}
             prefetch={ready ? undefined : false}
-            aria-hidden={ready ? undefined : true}
-            tabIndex={ready ? undefined : -1}
+            aria-hidden={ctaUsable ? undefined : true}
+            tabIndex={ctaUsable ? undefined : -1}
             className={ctaClassName}
           >
             Plan ansehen

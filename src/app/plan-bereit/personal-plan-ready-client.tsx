@@ -254,10 +254,13 @@ export function PersonalPlanReadyClient({
   // that must stay reachable without JS. When the session STARTED in the
   // opening flow, a fast first poll can flip to such a state within the beat,
   // so those swaps also wait for the beat before replacing the frame.
+  // A manual retry re-enters the opening flow regardless of how the session
+  // started, so its re-armed beat also gates a fast follow-up failure.
   const startedInOpeningFlow =
     serverReadiness.status === "checking" ||
     serverReadiness.status === "source_pending" ||
-    serverReadiness.status === "ready"
+    serverReadiness.status === "ready" ||
+    retryKey > 0
   if (canContinue || showWaiting || (startedInOpeningFlow && !openingBeatDone)) {
     return (
       <PlanBereitArrival
