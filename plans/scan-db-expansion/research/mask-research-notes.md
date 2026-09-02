@@ -3,7 +3,17 @@
 > **STATUS: RESEARCH-ENTWURF zur Review durch Nick — keine freigegebenen Daten.**
 > Erstellt 2026-09-02 vom Research-Agenten. Alle Authority-Felder sind Urteile aus
 > INCI + Claims + Textur-Hinweisen; Konfidenz pro Feld unten ehrlich markiert
-> (solide / abgeleitet / geraten). Manifest: `mask-manifest.json` (Validator: PASS 6/6).
+> (solide / abgeleitet / geraten). Manifest: `mask-manifest.json` (Validator: PASS 5/5
+> nach Anwendung der Pilot-Review-Rulings, s. u.).
+>
+> **UPDATE 2026-09-02 — Nicks Pilot-Review-Rulings angewandt** (Autorität:
+> `plans/scan-db-expansion/protocol-templates.md` §"Nick's pilot-review rulings"):
+>
+> - **R-A:** Night Elixier (Produkt 1) wurde als `leave_in` re-kategorisiert und aus
+>   diesem Manifest **entfernt** → jetzt in `leave-in-manifest.json` (Evidenz übernommen).
+> - **R-C:** Die Verpackungs-Deviations von Glycolic Gloss Kur (Ansatz-bis-Spitzen) und
+>   IDA WARG (Spülung-danach) wurden auf `null` gesetzt — Verpackung überschreibt
+>   Chaarlies Guidance nie; Details in den Produktabschnitten.
 
 Konfidenz-Legende: **solide** = direkt gesourct (Packungstext, GTIN-Feld, INCI),
 **abgeleitet** = Urteil aus INCI/Claims mit klarer Begründung, **geraten** = Setzung
@@ -11,7 +21,15 @@ mangels Evidenz, konservativ gewählt.
 
 ---
 
-## 1. Schwarzkopf Gliss — Haarkur Night Elixier Ultimate Repair (100 ml, EAN 4015100813951)
+## 1. Schwarzkopf Gliss — Haarkur Night Elixier Ultimate Repair (100 ml, EAN 4015100813951) — **ENTFERNT (R-A, 2026-09-02)**
+
+> **RULING ANGEWANDT (R-A, 2026-09-02):** Aus `mask-manifest.json` entfernt und als
+> `leave_in` in `leave-in-manifest.json` neu geführt. Grund: Shelf-Kategorie ist per
+> R-A nur eine erste Vermutung; die Research (Overnight-Leave-on, "Nicht ausspülen",
+> nass ODER trocken, dm-Kategorie Leave-In) finalisiert die Kategorie. Die unten
+> dokumentierte Deviation-Frage ("mask behalten oder leave_in?") ist damit entschieden;
+> INCI, EAN, Preis und Quellen wurden in den Leave-in-Eintrag übernommen. Der
+> historische Research-Abschnitt bleibt unten als Beleg stehen.
 
 **Quellen:** dm.de Produktseite 1681632 (GTIN-Feld, Preis 7,45 €, Verwendungshinweise, INCI),
 schwarzkopf.de Night-Elixier-Linienseite (Manufacturer, Claims), Henkel-Presseseiten (Kontext Overnight-Launch).
@@ -49,10 +67,13 @@ balance_direction balanced abgeleitet (reines Glanz-/Versiegelungsprodukt). repa
 (keine Protein-/Bond-Aktivstoffe; "regeneriert" ist Marketing). benefits shine+smoothing solide (Kernclaims).
 thickness alle abgeleitet.
 
-**Deviation (GENUINE, mild):** Packung: "… um es **vom Ansatz bis in die Spitzen** glanzvoll zu
-versiegeln" — explizite Ansatz-Einbeziehung, widerspricht P5 (lengths_ends, Ansatz aussparen).
-Kein bloßes "ins feuchte Haar" (das wäre laut Ruling keine Abweichung). lengths_ends beibehalten;
-Nick entscheidet, ob die Ansatz-Anweisung für dieses Glossing toleriert/übernommen wird.
+**Deviation — GESTRICHEN per R-C (2026-09-02):** Packung: "… um es **vom Ansatz bis in die
+Spitzen** glanzvoll zu versiegeln" — explizite Ansatz-Einbeziehung, widerspricht P5.
+Ursprünglich als milde Deviation geflaggt; per Ruling R-C (Verpackung überschreibt
+Chaarlies Category-Guidance nie, Deviation nur für strukturelle Mismatches) wird die
+Ansatz-Anweisung **ignoriert**: `deviation: null`, Standard-Platzierung lengths_ends
+("Ansatz aussparen") wird unverändert gestampt. Der Verpackungstext bleibt als
+product_source dokumentiert.
 
 **Offene Frage an Nick:** Glanz/Stumpfheit hat keinen sauberen Concern-Code; `performance`-Semantik
 im Katalog unklar. concern_eligibility bewusst nur `frizz` — zu schmal?
@@ -133,15 +154,20 @@ benefits smoothing abgeleitet (Frizz-Positionierung). thickness normal/coarse ab
 price_eur 14,99 **abgeleitet** aus dem Grundpreis (Seitenlayout gab den Einzelpreis nicht sauber her) —
 vor Apply gegenprüfen.
 
-**Deviation (GENUINE):** "Gründlich ausspülen **und Spülung anwenden**" — explizite
-conditioner_after-Sequenz, vom Hersteller bestätigt ("Finish with conditioner").
-Widerspricht replaces_conditioner (P5). Kandidat für `conditioner_after` nur mit Nicks Freigabe.
-"Handtuchtrockenes Haar" ist per Ruling keine Abweichung (deckt sich mit "sanft ausdrücken").
+**Deviation — GESTRICHEN per R-C (2026-09-02):** "Gründlich ausspülen **und Spülung
+anwenden**" — explizite conditioner_after-Sequenz, vom Hersteller bestätigt ("Finish with
+conditioner"). Ursprünglich als Deviation geflaggt; per Ruling R-C wird die
+Verpackungs-Sequenz **ignoriert**: `deviation: null`, die Standard-Regel
+`replaces_conditioner` (P5) wird unverändert gestampt. Der Verpackungstext bleibt als
+product_source dokumentiert. "Handtuchtrockenes Haar" war ohnehin keine Abweichung.
+**Der EAN-Ausschluss bleibt bestehen** — das ist R-B (einquellige EAN → excluded_from_apply,
+bis Zweitquelle oder physischer Scan) und von R-C unberührt.
 
-**Offene Fragen an Nick:**
-- EAN-Freigabe: reicht ein physischer Scan im Markt oder eine zweite Retailer-Quelle, um
-  excluded_from_apply aufzuheben?
-- conditioner_after übernehmen oder Chaarlie-Regel (replaces_conditioner) durchsetzen?
+**Offene Fragen an Nick (Stand nach Rulings):**
+- ~~conditioner_after übernehmen oder replaces_conditioner durchsetzen?~~ → durch R-C
+  entschieden (replaces_conditioner, Verpackung ignoriert).
+- EAN-Verifikation: per R-B reichen ≥2 unabhängige Quellen ODER ein physischer Scan;
+  beides steht für dieses Produkt noch aus.
 - Herstellerseite nennt Kadenz "1-2x pro Woche" — V1 hat keinen Kadenz-Slot (bekanntes Template-Thema,
   siehe TPL-SHAMPOO-DANDRUFF-Hinweis); nur notiert, nicht encodiert.
 
@@ -149,11 +175,14 @@ Widerspricht replaces_conditioner (P5). Kandidat für `conditioner_after` nur mi
 
 ## Querschnitts-Notizen
 
-- **Validator:** `npm run products:intake:expansion:validate -- --manifest plans/scan-db-expansion/research/mask-manifest.json`
-  → PASS, 6/6 Produkte, 3 deviation-flagged (Night Elixier, Glycolic Gloss, IDA WARG), 1 excluded EAN (IDA WARG), 0 Duplikate.
-- **EAN-Stand:** alle 6 EANs stammen aus `selection-batch1-draft.json` (Stand nach dem parallelen
+- **Validator (nach Rulings 2026-09-02):** `npm run products:intake:expansion:validate -- --manifest plans/scan-db-expansion/research/mask-manifest.json`
+  → PASS, 5/5 Produkte, 0 deviation-flagged, 1 excluded EAN (IDA WARG), 0 Duplikate.
+  (Vor den Rulings: 6/6 mit 3 deviation-flagged — Night Elixier ist jetzt im Leave-in-Manifest,
+  die beiden R-C-Deviations sind gestrichen.)
+- **EAN-Stand:** alle 6 recherchierten EANs stammen aus `selection-batch1-draft.json` (Stand nach dem parallelen
   EAN-Update-Agenten, gelesen 2026-09-02) und wurden hier unabhängig gegen die Live-Retailer-Seiten geprüft.
-  5/6 mehrquellig bestätigt; IDA WARG einquellig (s.o.).
+  5/6 mehrquellig bestätigt; IDA WARG einquellig (s.o.). Nach der R-A-Verschiebung des Night Elixiers
+  trägt dieses Manifest noch 5 davon.
 - **Nicht sourcebar / offen geblieben:**
   - Kein Feld ist komplett ungesourct; die als "geraten" markierten Werte (concentration bei
     Night Elixier/7sec, weight bei Herbal Essences) sind konservative Setzungen mangels Textur-Evidenz.

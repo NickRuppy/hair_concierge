@@ -5,166 +5,6 @@
     {
       "final": {
         "product": {
-          "name": "Haarserum Honig reparierend",
-          "brand": "Wahre Schätze",
-          "category_key": "oil",
-          "origin": "curated",
-          "is_chaarlie_recommended": false,
-          "price_eur": 6.95,
-          "net_content_value": 115,
-          "net_content_unit": "ml",
-          "candidate_image": {
-            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747420591/assets/pas/images/a408169a-0778-4e4c-9b6b-f4a64e3eb11c/wahre-schaetze-haarserum-honig-reparierend",
-            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend"
-          },
-          "description": "Reparierendes Leave-in-Haarserum mit Akazienhonig gegen Spliss und Haarschäden; für feuchtes oder trockenes Haar, mit Hitzeschutz bis 230 °C."
-        },
-        "identifiers": [
-          {
-            "type": "ean",
-            "value": "3600542567329",
-            "cross_source_agreement": true,
-            "source_urls": [
-              "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend"
-            ],
-            "excluded_from_apply": false
-          }
-        ],
-        "category_specs": {
-          "product_oil_specs": {
-            "weight": "light",
-            "role_support": [
-              "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
-          },
-          "product_oil_eligibility": [
-            {
-              "thickness": "fine",
-              "oil_subtype": "styling-oel",
-              "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "humectants", "polymers"]
-            },
-            {
-              "thickness": "normal",
-              "oil_subtype": "styling-oel",
-              "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "humectants", "polymers"]
-            },
-            {
-              "thickness": "coarse",
-              "oil_subtype": "styling-oel",
-              "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "humectants", "polymers"]
-            }
-          ]
-        },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["split_ends", "hair_damage", "repair"],
-        "protocols": [
-          {
-            "template_id": "TPL-OIL-LEAVEON",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise)",
-              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-              "text": "Zunächst sollte das Haar gründlich gewaschen werden, wobei das Haarserum grundsätzlich auf feuchtem oder trockenem Haar anwendbar ist. Die Dosierung richtet sich nach Haarlänge und -dicke. Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült und die Haare nach kurzer Einwirkzeit wie gewohnt frisiert werden."
-            },
-            "deviation": {
-              "reason": "Produkt-Identitäts-Flag, keine Anwendungs-Abweichung: Das Produkt ist kein anhydrisches Öl, sondern eine wasserbasierte Serum-Emulsion (INCI-Positionen 1-2: Propylene Glycol, Aqua; Emulgatoren Trideceth-5/-10, Polyacrylate Crosspolymer-6). Es entspricht dem Format der Elvital-Leave-In-Seren, die der Pilot selbst als leave_in führt. Mögliche Re-Kategorisierung zu leave_in für Nick zu entscheiden; im Pilot als oil gepinnt, daher Stamp mit Flag statt Umkategorisierung. Die Anwendung selbst (Längen und Spitzen, nicht ausspülen) ist template-konform.",
-              "packaging_text": "INGREDIENTS: PROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • PHENYL TRIMETHICONE • GLYCERIN • ISODODECANE • DIMETHICONOL • AMODIMETHICONE • ..."
-            }
-          },
-          {
-            "template_id": "TPL-OIL-DRYFINISH",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise)",
-              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-              "text": "Das Haarserum ist grundsätzlich auf feuchtem oder trockenem Haar anwendbar. Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült werden."
-            },
-            "deviation": {
-              "reason": "Identisches Produkt-Identitäts-Flag wie beim Leave-on-Stamp: wasserbasierte Serum-Emulsion statt anhydrisches Öl; mögliche Re-Kategorisierung zu leave_in für Nick. Anwendung selbst template-konform.",
-              "packaging_text": "INGREDIENTS: PROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • PHENYL TRIMETHICONE • GLYCERIN • ISODODECANE • ..."
-            }
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-              "text": "Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze und sorgt für einen glänzenden, geschmeidigen Look. Das Haarserum ist grundsätzlich auf feuchtem oder trockenem Haar anwendbar."
-            },
-            "deviation": {
-              "reason": "Identisches Produkt-Identitäts-Flag wie bei den anderen Stamps: wasserbasierte Serum-Emulsion statt anhydrisches Öl; mögliche Re-Kategorisierung zu leave_in für Nick. Hitzeschutz-Anwendung selbst template-konform (feucht oder trocken, vor dem Hitzestyling).",
-              "packaging_text": "INGREDIENTS: PROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • PHENYL TRIMETHICONE • GLYCERIN • ISODODECANE • ..."
-            },
-            "usable_on_dry_hair": true
-          }
-        ],
-        "evidence": [
-          {
-            "fact_key": "product.identifiers.ean",
-            "fact_value": "3600542567329",
-            "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
-            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product_oil_specs.authority_facts",
-            "fact_value": {
-              "weight": "light",
-              "role_support": ["leave_on_fibre_conditioning", "dry_finish", "pre_heat_protection"],
-              "ingredient_flags": ["silicones", "humectants", "polymers"],
-              "inci_basis": "Propylene Glycol, Aqua, Dimethicone, Phenyl Trimethicone, Glycerin, Isododecane, Dimethiconol, Amodimethicone, ..., Polyacrylate Crosspolymer-6, ..., Mel/Honey (wasserbasierte Emulsion, keine Pflanzenöle)"
-            },
-            "source_label": "dm.de Produktseite (Inhaltsstoffe + Verwendungshinweise)",
-            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "protocols.oil.application",
-            "fact_value": "Auf feuchtem oder trockenem Haar anwendbar. Gleichmäßig auf den Längen und Spitzen verteilen. Nicht ausspülen. Hitzeschutz bis 230°C beim Föhnen oder Glätten.",
-            "source_label": "dm.de Produktseite (Verwendungshinweise)",
-            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product.claims.manufacturer_corroboration",
-            "fact_value": "Garnier bestätigt: Anwendung auf feuchtem oder trockenem Haar, Längen und Spitzen, insbesondere vor dem Föhnen oder Glätten; Hitzeschutz bis 230 °C; Leave-in ohne Ausspülen; Zielgruppe geschädigte Spitzen und splissiges Haar; identische INCI (Propylene Glycol, Aqua, Dimethicone, ...).",
-            "source_label": "garnier.de Produktseite (Wahre Schätze Haar Honig Reparierendes Haarserum)",
-            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/reparierendes-haarserum",
-            "source_type": "manufacturer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product.price_eur",
-            "fact_value": 6.95,
-            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
-            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          }
-        ],
-        "field_rationales": {
-          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). ACHTUNG: 'Haarserum'-Naming ist hier ehrlich - siehe Deviation-Flag zur Serum-Emulsion.",
-          "category_specs.product_oil_specs.weight": "light: wasserbasierte Serum-Emulsion mit flüchtigem Isododecane, Pumpdosierung, Garnier-Claim 'ohne zu kleben oder zu fetten'; keine Butter/schweren Öle.",
-          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit feuchtes ODER trockenes Haar. pre_heat_protection: expliziter Hitzeschutz-Claim bis 230 °C ('Ob föhnen oder glätten').",
-          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (geraten/konservativ): kein Subtyp passt sauber auf eine wasserbasierte Serum-Emulsion; styling-oel als am wenigsten falscher Wert gewählt (Silikon-Finish mit Hitzestyling-Framing). Hängt an der offenen Re-Kategorisierungsfrage.",
-          "category_specs.product_oil_eligibility.oil_purpose": "styling_finish (abgeleitet): Kern-Anwendung ist das Finish vor/nach dem Hitzestyling ('Ob föhnen oder glätten ... glänzender, geschmeidiger Look').",
-          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Phenyl Trimethicone, Dimethiconol, Amodimethicone. humectants: Propylene Glycol, Glycerin. polymers: Polyacrylate Crosspolymer-6. Keine Pflanzenöle (Honig ist kein Öl), keine Proteine.",
-          "thickness_eligibility": "Alle Stärken: leichtes, wasserbasiertes Serum mit Pumpdosierung; kein Overload-Risiko für feines Haar bei Packungsdosierung.",
-          "concern_eligibility": "split_ends: Kernclaim 'sichtbar weniger Spliss'. hair_damage: 'Haarschäden werden bekämpft'. repair: 'reparierend' als Linien-Positionierung.",
-          "protocols.deviation": "Das Deviation-Flag auf allen drei Stamps ist ein Produkt-Identitäts-Flag (Serum-Emulsion, kein Öl), keine Anwendungs-Abweichung - die Anwendungstexte selbst sind template-konform. Aufgaben-Ruling: ehrlich urteilen, prominent flaggen statt Specs zu erzwingen; Specs sind trotzdem ausgefüllt, weil das Produkt im Pilot als oil gepinnt ist.",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: Packung erlaubt explizit 'auf feuchtem oder trockenem Haar' - either_state laut P9-Mapping."
-        }
-      }
-    },
-    {
-      "final": {
-        "product": {
           "name": "Haaröl Tägliches Öl Elixier",
           "brand": "Schwarzkopf Gliss",
           "category_key": "oil",
@@ -329,11 +169,7 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": [
-              "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+            "role_support": ["leave_on_fibre_conditioning", "dry_finish", "pre_heat_protection"]
           },
           "product_oil_eligibility": [
             {
@@ -552,7 +388,11 @@
             "fact_key": "product_oil_specs.authority_facts",
             "fact_value": {
               "weight": "medium",
-              "role_support": ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+              "role_support": [
+                "pre_wash_fibre_treatment",
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
               "ingredient_flags": ["silicones", "oils"],
               "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil (anhydrisch, volatile-dominant mit Pflanzenölen)"
             },

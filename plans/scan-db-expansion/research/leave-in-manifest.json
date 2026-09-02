@@ -52,15 +52,51 @@
             "care_benefits": ["detangle_smooth", "heat_protect"]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "fine", "need_bucket": "heat_protect", "styling_context": "heat_style" },
-            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" },
-            { "thickness": "coarse", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
           ]
         },
         "thickness_eligibility": ["fine", "normal", "coarse"],
@@ -72,6 +108,15 @@
               "label": "dm.de Produktseite (Verwendungshinweise)",
               "url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
               "text": "Glycolic Gloss Leave-In Serum. Anwendung als Glanz-Finish der GLYCOLIC GLOSS Routine für intensive Geschmeidigkeit und ultimativen Glanz. Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+              "text": "Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten."
             },
             "deviation": null
           },
@@ -162,7 +207,8 @@
           "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum ('ohne zu beschweren'-Logik der Linie).",
           "concern_eligibility": "frizz: -75%-Frizz-Claim. Glanz/Stumpfheit hat weiterhin keinen sauberen Concern-Code (gleiches Problem wie im Mask-Batch) - bewusst schmal.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'im feuchten oder trockenen Haar' ist eine Entweder-Oder-Erlaubnis, kein Dry-only-Widerspruch; Längen und Spitzen konform.",
-          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Hersteller erlaubt explizit Anwendung 'auf feuchtem oder trockenem Haar' (either_state_protection nach P9). Claim-Basis nur Herstellerseite - siehe Notes."
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Hersteller erlaubt explizit Anwendung 'auf feuchtem oder trockenem Haar' (either_state_protection nach P9). Claim-Basis nur Herstellerseite - siehe Notes.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('im feuchten oder trockenen Haar'); Hersteller nennt zusätzlich 'tägliche Anwendung'. Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
         }
       }
     },
@@ -217,9 +263,21 @@
             "care_benefits": ["detangle_smooth"]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            }
           ]
         },
         "thickness_eligibility": ["fine", "normal", "coarse"],
@@ -227,6 +285,15 @@
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+              "text": "Auf nassem oder trockenem Haar auf die Längen sprühen. Die Haare wie gewohnt stylen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
             "product_source": {
               "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
               "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
@@ -301,7 +368,8 @@
           "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: leichtes Feuchtigkeitsspray, 'ohne zu beschweren' deckt feines Haar.",
           "thickness_eligibility": "Alle Stärken: leichtes Spray mit explizitem Nicht-Beschweren-Claim.",
           "concern_eligibility": "dryness: 'dehydrierte Längen', feuchtigkeitsbedürftiges Haar. moisture_anti_frizz: Leave-in-Feuchtigkeits-Bucket als Feuchtigkeits-Code der Kategorie.",
-          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder trocken' ist keine Dry-only-Anweisung; Spray-Format ist laut Template eine Copy-Anpassung ('aufsprühen'), keine echte Abweichung. Platzierung 'auf die Längen' konform."
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder trocken' ist keine Dry-only-Anweisung; Spray-Format ist laut Template eine Copy-Anpassung ('aufsprühen'), keine echte Abweichung. Platzierung 'auf die Längen' konform.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=spray ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('Auf nassem oder trockenem Haar'). Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
         }
       }
     },
@@ -355,9 +423,21 @@
             "care_benefits": ["repair"]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "repair", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            }
           ]
         },
         "thickness_eligibility": ["fine", "normal", "coarse"],
@@ -369,6 +449,15 @@
               "label": "dm.de Produktseite (Verwendungshinweise)",
               "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
               "text": "Für das perfekte Finish mit dem Elvital Bond Repair Plus Leave-in Serum von L'Oréal Paris: Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+              "text": "Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten."
             },
             "deviation": null
           }
@@ -438,7 +527,8 @@
           "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum.",
           "concern_eligibility": "hair_damage/repair: Kernclaim 'repariert alle Arten von Haarschäden'. split_ends: '7x weniger Spliss'. breakage: '3x weniger Haarbruch'.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder feucht' ist keine Dry-only-Anweisung; Längen und Spitzen konform.",
-          "product.price_eur": "9,95 EUR laut dm ('Ähnliche Produkte'-Panel mit Grundpreis 66,33 EUR/l, konsistent mit 150 ml); der Einzelseiten-Preisblock wurde im Layout nicht separat erfasst - vor Apply gegenprüfen."
+          "product.price_eur": "9,95 EUR laut dm ('Ähnliche Produkte'-Panel mit Grundpreis 66,33 EUR/l, konsistent mit 150 ml); der Einzelseiten-Preisblock wurde im Layout nicht separat erfasst - vor Apply gegenprüfen.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('von trockenem oder feuchtem Haar'). Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
         }
       }
     },
@@ -492,9 +582,21 @@
             "care_benefits": ["detangle_smooth"]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            }
           ]
         },
         "thickness_eligibility": ["fine", "normal", "coarse"],
@@ -575,7 +677,8 @@
           "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: leichte silikonfreie Formel, explizite Air-Dry-Positionierung; kein heat_style-Kontext (Produkt ist Anti-Föhn positioniert).",
           "thickness_eligibility": "Alle Stärken: leichte Wasserbasis ohne Beschwerungsrisiko; dm-Haartyp 'jeder Haartyp'.",
           "concern_eligibility": "frizz: 24h-Anti-Frizz-Kernclaim. moisture_anti_frizz: Hydra-/Feuchtigkeitspositionierung im Leave-in-Bucket-Code.",
-          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder handtuchtrocken' entspricht dem Damp-Template; 'bis in die Spitzen einmassieren' ist keine Ansatz-Anweisung; Lufttrocknen + Ausbürsten sind zusätzliche Styling-Hinweise, kein Widerspruch zu Platzierung/Rinse-Logik."
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder handtuchtrocken' entspricht dem Damp-Template; 'bis in die Spitzen einmassieren' ist keine Ansatz-Anweisung; Lufttrocknen + Ausbürsten sind zusätzliche Styling-Hinweise, kein Widerspruch zu Platzierung/Rinse-Logik.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02) geprüft, KEIN DRYCARE-Stamp: format=cream fällt nicht unter den Default (nur spray/serum light/medium bzw. lotion light), und es gibt keine explizite Trockenhaar-/Between-Wash-Vermarktung ('auf nassem oder handtuchtrockenem Haar' sind beides feuchte Zustände)."
         }
       }
     },
@@ -628,12 +731,36 @@
             "care_benefits": ["curl_definition", "heat_protect"]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "normal", "need_bucket": "curl_definition", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "curl_definition", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" },
-            { "thickness": "coarse", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+            {
+              "thickness": "normal",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
           ]
         },
         "thickness_eligibility": ["normal", "coarse"],
@@ -726,7 +853,367 @@
           "thickness_eligibility": "normal/coarse: butterreiche Rich-Formel mit Beschwerungsrisiko für feines Haar; Zielgruppe Locken/Coils 3A-4C.",
           "concern_eligibility": "dryness/moisture_anti_frizz: Kernclaims Feuchtigkeit ('Major Moisture', feuchtigkeitsspendend). Locken-Definition hat keinen Concern-Code.",
           "protocols.tpl_leavein_damp": "Keine Deviation: feuchtes Haar nach der Wäsche, 'insbesondere auf die Spitzen' konform mit lengths_ends, nicht ausspülen.",
-          "protocols.tpl_leavein_heat": "usable_on_dry_hair=false: keine explizite 'nass oder trocken'-Erlaubnis; die Anwendung nennt nur feuchtes Haar - nach P9 damp-only (pre_heat_damp)."
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=false: keine explizite 'nass oder trocken'-Erlaubnis; die Anwendung nennt nur feuchtes Haar - nach P9 damp-only (pre_heat_damp).",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02) geprüft, KEIN DRYCARE-Stamp: reichhaltige Creme (format=cream, weight=rich) ist per Regel damp-only; keine explizite Trockenhaar-Vermarktung."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Night Elixier Ultimate Repair",
+          "brand": "Schwarzkopf Gliss",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 7.45,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781189140/assets/pas/images/1f607947-d67b-4969-9332-d4c2c4e560b5/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
+          },
+          "description": "Overnight-Leave-in-Serum mit HaptIQ-System und Perlen-Extrakt für sehr geschädigtes Haar; wird vor dem Schlafengehen ins nasse oder trockene Haar eingearbeitet und nicht ausgespült."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813951",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": ["extension_conditioner"],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": ["repair", "shine"],
+            "ingredient_flags": ["silicones", "proteins", "humectants"],
+            "application_stage": ["towel_dry", "dry_hair"],
+            "care_direction": "balanced",
+            "repair_support_level": "medium",
+            "plan_roles": ["post_wash_leave_in"],
+            "functional_benefits": ["repair_support", "shine_support"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["repair"]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["hair_damage", "repair"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+              "text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf - einfach durchbürsten und den Tag beginnen! Kann jeden Abend genutzt werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+              "text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf - einfach durchbürsten und den Tag beginnen! Kann jeden Abend genutzt werden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813951",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "medium",
+              "ingredient_flags": ["silicones", "proteins", "humectants"],
+              "inci_basis": "Aqua, Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, ..., Hydrolyzed Pearl, Betaine, ..., Panthenol, ..., Glycerin"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.overnight_leave_in",
+            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült werden muss; Ultimate-Repair-Linie für stark geschädigtes Haar (bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandelt).",
+            "source_label": "schwarzkopf.de Night Elixier Ultimate Repair Produktseite",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/night-elixier/ultimate-repair.html",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 7.45,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix); 'Haarkur' im Handelsnamen bleibt, obwohl das Produkt per Ruling R-A als leave_in kategorisiert ist.",
+          "product.category_key": "leave_in per Ruling R-A (2026-09-02): Shelf-/Draft-Kategorie mask war eine erste Vermutung; die Research (Overnight-Leave-on, 'Nicht ausspülen', nass ODER trocken, dm-Kategorie Leave-In) finalisiert die Kategorie. Aus mask-manifest.json entfernt, Evidenz übernommen.",
+          "category_specs.product_leave_in_specs.format": "serum: Pumpspender mit 2-4 Pumpstößen, Claims 'zieht sofort ein' und 'hinterlässt keine Spuren auf dem Kopfkissen'; dm führt es als Leave-in-Serum-Format. (Emulsionsbasis mit Cetearyl Alcohol, aber Dosierung/Textur/Handel sprechen für serum, nicht cream/lotion.)",
+          "category_specs.product_leave_in_specs.weight": "light: Serum-Format mit Pumpspender, 'zieht sofort ein', keine Butter/schweren Öle in der INCI (aus dem Mask-Research übernommen).",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: zusätzliche Overnight-Pflege nach der normalen Routine; kein Conditioner-Ersatz-Claim, kein anhydroses Öl-Analog (wasserbasierte Emulsion), keine Styling-Positionierung.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf dm- oder schwarzkopf.de-Seite (Herstellerseite 2026-09-02 erneut geprüft: keiner).",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: Ultimate-Repair-Linie, 'Wache mit ... repariertem Haar auf'. shine: Herstellerclaim 'bis zu 5x mehr Glanz'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone an INCI-Position 2. proteins: Hydrolyzed Pearl (Conchiolin-Hydrolysat). humectants: Betaine, Glycerin, Propylene Glycol, Panthenol. (Aus dem Mask-Research übernommen.)",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'in das nasse oder trockene Haar'.",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (konservativ): Hydrolysiertes Protein (Hydrolyzed Pearl) gemischt mit Humectants (Betaine, Glycerin, Panthenol); weder klar Protein- noch klar Feuchtigkeits-dominant (aus dem Mask-Research übernommen).",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: Repair-Positionierung + HaptIQ-Bond-Marketing + hydrolysiertes Protein, aber keine unabhängig belegte Bond-Builder-Chemie; 'high' wäre nicht evidenzgedeckt (aus dem Mask-Research übernommen).",
+          "category_specs.product_leave_in_specs.plan_roles": "post_wash_leave_in: Standard-Leave-in-Rolle; kein pre_heat (kein Hitzeschutz).",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Overnight-Zusatzpflege, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim der Ultimate-Repair-Linie (Fit-Enum hat keinen Glanz-Wert).",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry: leichtes Pump-Serum ohne Overload-Risiko; kein heat_style-Kontext (kein Hitzeschutz).",
+          "thickness_eligibility": "Alle Stärken: leichtes Leave-in-Serum ohne Butter, dosierbar über Pumpstöße; kein Overload-Risiko für feines Haar bei Packungsdosierung.",
+          "concern_eligibility": "hair_damage/repair: Zielgruppe laut Hersteller 'sehr geschädigtes Haar', Kernclaim Reparatur.",
+          "protocols.tpl_leavein_damp": "Strukturell passend: Anwendung ins nasse Haar, Leave-on, nicht ausspülen, Längen-Einarbeitung — alle Mechaniken der Damp-Familie erfüllt. Die Overnight-Timing-Nuance ('Vor dem Schlafengehen') ist im Template-Vokabular nicht kodiert und kein struktureller Widerspruch; für Nick in den Notes dokumentiert.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light; zusätzlich explizite Trockenhaar-Erlaubnis auf der Packung ('in das nasse oder trockene Haar')."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarserum Honig reparierend",
+          "brand": "Wahre Schätze",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 115,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747420591/assets/pas/images/a408169a-0778-4e4c-9b6b-f4a64e3eb11c/wahre-schaetze-haarserum-honig-reparierend",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend"
+          },
+          "description": "Reparierendes Leave-in-Haarserum (wasserbasierte Serum-Emulsion) mit Akazienhonig gegen Spliss und Haarschäden; für feuchtes oder trockenes Haar, mit Hitzeschutz bis 230 °C."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542567329",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": ["oil_replacement"],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": false,
+            "care_benefits": ["repair", "shine"],
+            "ingredient_flags": ["silicones", "polymers", "humectants"],
+            "application_stage": ["towel_dry", "dry_hair", "pre_heat"],
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
+            "functional_benefits": ["repair_support", "shine_support", "heat_protect"]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": ["repair", "heat_protect"]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["split_ends", "hair_damage", "repair"],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+              "text": "Zunächst sollte das Haar gründlich gewaschen werden, wobei das Haarserum grundsätzlich auf feuchtem oder trockenem Haar anwendbar ist. Die Dosierung richtet sich nach Haarlänge und -dicke. Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült und die Haare nach kurzer Einwirkzeit wie gewohnt frisiert werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+              "text": "Das Haarserum ist grundsätzlich auf feuchtem oder trockenem Haar anwendbar. Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+              "text": "Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze und sorgt für einen glänzenden, geschmeidigen Look. Das Haarserum ist grundsätzlich auf feuchtem oder trockenem Haar anwendbar."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542567329",
+            "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "low",
+              "provides_heat_protection": true,
+              "heat_protection_max_c": 230,
+              "ingredient_flags": ["silicones", "humectants", "polymers"],
+              "inci_basis": "Propylene Glycol, Aqua, Dimethicone, Phenyl Trimethicone, Glycerin, Isododecane, Dimethiconol, Amodimethicone, ..., Polyacrylate Crosspolymer-6, ..., Mel/Honey (wasserbasierte Serum-Emulsion, keine Pflanzenöle)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Auf feuchtem oder trockenem Haar anwendbar. Gleichmäßig auf den Längen und Spitzen verteilen. Nicht ausspülen. Hitzeschutz bis 230°C beim Föhnen oder Glätten.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze; von Garnier bestätigt (Anwendung insbesondere vor dem Föhnen oder Glätten, Hitzeschutz bis 230 °C).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung) + garnier.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Garnier bestätigt: Anwendung auf feuchtem oder trockenem Haar, Längen und Spitzen, insbesondere vor dem Föhnen oder Glätten; Hitzeschutz bis 230 °C; Leave-in ohne Ausspülen; Zielgruppe geschädigte Spitzen und splissiges Haar; identische INCI (Propylene Glycol, Aqua, Dimethicone, ...).",
+            "source_label": "garnier.de Produktseite (Wahre Schätze Haar Honig Reparierendes Haarserum)",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/reparierendes-haarserum",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). 'Haarserum'-Naming ist als leave_in jetzt auch kategorial ehrlich.",
+          "product.category_key": "leave_in per Ruling R-A (2026-09-02): Shelf-/Draft-Kategorie oil war eine erste Vermutung; die Research (INCI-Positionen 1-2 Propylene Glycol/Aqua, Emulgatoren, Verdicker-Polymer = wasserbasierte Serum-Emulsion, formatgleich mit den Elvital-Leave-in-Seren) finalisiert die Kategorie. Aus oil-manifest.json entfernt, Evidenz übernommen; das frühere Identitäts-Deviation-Flag ist damit aufgelöst.",
+          "category_specs.product_leave_in_specs.format": "serum: 'Haarserum' laut Name und dm-Kategorie, Pumpdosierung, wasserbasierte Silikon-Serum-Emulsion.",
+          "category_specs.product_leave_in_specs.weight": "light: flüchtiges Isododecane, Pumpdosierung, Garnier-Claim 'ohne zu kleben oder zu fetten'; keine Butter/schweren Öle (aus dem Oil-Research übernommen).",
+          "category_specs.product_leave_in_specs.roles": "oil_replacement: silikon-dominantes Finish-Serum für Längen und Spitzen, das wie ein Pflege-/Glanzöl dosiert und verwendet wird (gleiches Enum-Mapping wie das Elvital Glycolic-Gloss-Serum); kein Conditioner-Ersatz-/Booster-Anspruch.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true: expliziter Claim 'schützt das Haar bis 230°C vor Hitze' auf der dm-Seite, von Garnier bestätigt. Per Ruling R-E reicht ein Beschreibungs-Claim; hier ist er sogar Teil des Verwendungstexts.",
+          "category_specs.product_leave_in_specs.heat_protection_max_c": "230: bezifferter Claim auf dm- und Herstellerseite.",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: 'reparierend', 'Haarschäden werden bekämpft', 'sichtbar weniger Spliss'. shine: 'glänzender, geschmeidiger Look'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Phenyl Trimethicone, Dimethiconol, Amodimethicone. humectants: Propylene Glycol, Glycerin. polymers: Polyacrylate Crosspolymer-6. Keine Öle (Honig ist kein Öl), keine Proteine (aus dem Oil-Research übernommen).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'auf feuchtem oder trockenem Haar'. pre_heat: Hitzeschutz-Claim ('Ob föhnen oder glätten').",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (konservativ): Repair-/Glanz-Positionierung, Humectants vorhanden, aber kein Feuchtigkeits-Kernclaim und keine Proteine in der INCI — weder moisture noch protein sauber belegt.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'reparierend' ist Linien-Marketing über Silikon-Glättung/Honig; keine Protein-/Bond-Aktivstoffe in der INCI (gleiche Messlatte wie beim Glycolic-Gloss-Serum; das Bond-Repair-Serum bekam medium nur wegen der dedizierten, bezifferten Bond-Formulierung).",
+          "category_specs.product_leave_in_specs.plan_roles": "post_wash_leave_in + pre_heat_application: Standard-Leave-in nach der Wäsche; pre_heat wegen provides_heat_protection=true.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Finish-/Zusatzserum, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim. heat_protect: 230°C-Claim. (Fit-Enum hat keinen Glanz-Wert.)",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry, heat_protect nur im heat_style-Kontext; leichtes Pump-Serum ohne Overload-Risiko für feines Haar.",
+          "thickness_eligibility": "Alle Stärken: leichtes, wasserbasiertes Serum mit Pumpdosierung; kein Overload-Risiko bei Packungsdosierung (aus dem Oil-Research übernommen).",
+          "concern_eligibility": "split_ends: Kernclaim 'sichtbar weniger Spliss'. hair_damage: 'Haarschäden werden bekämpft'. repair: 'reparierend' als Linien-Positionierung (aus dem Oil-Research übernommen).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: feuchtes Haar nach der Wäsche, Längen und Spitzen, nicht ausspülen — Damp-Familie strukturell erfüllt.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light; zusätzlich explizite Trockenhaar-Erlaubnis ('grundsätzlich auf feuchtem oder trockenem Haar anwendbar').",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Packung erlaubt explizit 'auf feuchtem oder trockenem Haar' — either_state_protection nach P9. Heat-Claim-Basis genügt R-E (Beschreibungs-Claim, hier mit 230°C beziffert)."
         }
       }
     }

@@ -5,126 +5,6 @@
     {
       "final": {
         "product": {
-          "name": "Haarkur Night Elixier Ultimate Repair",
-          "brand": "Schwarzkopf Gliss",
-          "category_key": "mask",
-          "origin": "curated",
-          "is_chaarlie_recommended": false,
-          "price_eur": 7.45,
-          "net_content_value": 100,
-          "net_content_unit": "ml",
-          "candidate_image": {
-            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781189140/assets/pas/images/1f607947-d67b-4969-9332-d4c2c4e560b5/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
-          },
-          "description": "Overnight-Haarkur mit HaptIQ-System und Perlen-Extrakt für sehr geschädigtes Haar; wird vor dem Schlafengehen aufgetragen und nicht ausgespült."
-        },
-        "identifiers": [
-          {
-            "type": "ean",
-            "value": "4015100813951",
-            "cross_source_agreement": true,
-            "source_urls": [
-              "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
-            ],
-            "excluded_from_apply": false
-          }
-        ],
-        "category_specs": {
-          "product_mask_specs": {
-            "weight": "light",
-            "concentration": "medium",
-            "balance_direction": "balanced",
-            "ingredient_flags": ["silicones", "proteins", "humectants"],
-            "repair_support_level": "medium",
-            "functional_benefits": ["shine"]
-          }
-        },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair"],
-        "protocols": [
-          {
-            "template_id": "TPL-MASK",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise)",
-              "url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-              "text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf - einfach durchbürsten und den Tag beginnen! Kann jeden Abend genutzt werden."
-            },
-            "deviation": {
-              "reason": "Genuine Abweichung: Overnight-Leave-in statt Rinse-out-Maske. Das Produkt wird vor dem Schlafengehen aufgetragen, wirkt über Nacht, wird NICHT ausgespült und darf auch ins trockene Haar. Widerspricht der TPL-MASK-Familie (post_shampoo_rinse_out_mask) in Einwirklogik, Rinse-Verhalten und Haarzustand. dm führt das Produkt in der Kategorie Leave-In; mögliche Re-Kategorisierung zu leave_in für Nick zu entscheiden.",
-              "packaging_text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen."
-            },
-            "contact_time": {
-              "seconds": null,
-              "source_text": "Über Nacht (keine Minutenangabe): \"Vor dem Schlafengehen ... einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf.\""
-            }
-          }
-        ],
-        "evidence": [
-          {
-            "fact_key": "product.identifiers.ean",
-            "fact_value": "4015100813951",
-            "source_label": "dm.de Produktseite (GTIN-Feld)",
-            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product_mask_specs.authority_facts",
-            "fact_value": {
-              "weight": "light",
-              "balance_direction": "balanced",
-              "repair_support_level": "medium",
-              "ingredient_flags": ["silicones", "proteins", "humectants"],
-              "inci_basis": "Aqua, Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, ..., Hydrolyzed Pearl, Betaine, ..., Panthenol, ..., Glycerin"
-            },
-            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
-            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "protocols.tpl_mask.application",
-            "fact_value": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
-            "source_label": "dm.de Produktseite (Verwendungshinweise)",
-            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product.claims.overnight_leave_in",
-            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült werden muss; Ultimate-Repair-Linie für stark geschädigtes Haar (bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandelt).",
-            "source_label": "schwarzkopf.de Night Elixier Ultimate Repair Produktseite",
-            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/night-elixier/ultimate-repair.html",
-            "source_type": "manufacturer",
-            "checked_at": "2026-09-02"
-          },
-          {
-            "fact_key": "product.price_eur",
-            "fact_value": 7.45,
-            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
-            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
-            "source_type": "retailer",
-            "checked_at": "2026-09-02"
-          }
-        ],
-        "field_rationales": {
-          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
-          "category_specs.product_mask_specs.weight": "light: Serum-Format mit Pumpspender, Claims 'zieht sofort ein' und 'hinterlässt keine Spuren auf dem Kopfkissen'; keine Butter/schweren Öle in der INCI.",
-          "category_specs.product_mask_specs.concentration": "medium (konservativ): 'Intensivpflege über Nacht' ist Marketing; keine belegbare Aktivstoff-Konzentration, Dosierung nur 2-4 Pumpstöße.",
-          "category_specs.product_mask_specs.balance_direction": "balanced (konservativ): Formel mischt ein hydrolysiertes Protein (Hydrolyzed Pearl) mit Feuchthaltemitteln (Betaine, Glycerin, Panthenol); weder klar Protein- noch klar Feuchtigkeits-dominant.",
-          "category_specs.product_mask_specs.ingredient_flags": "silicones: Dimethicone an INCI-Position 2. proteins: Hydrolyzed Pearl (Conchiolin-Hydrolysat) - schwaches Signal, aber deklariert. humectants: Betaine, Glycerin, Propylene Glycol, Panthenol.",
-          "category_specs.product_mask_specs.repair_support_level": "medium: Repair-Positionierung + HaptIQ-Bond-Marketing + hydrolysiertes Protein, aber keine unabhängig belegte Bond-Builder-Chemie; 'high' wäre nicht evidenzgedeckt.",
-          "category_specs.product_mask_specs.functional_benefits": "shine: Herstellerclaim 'bis zu 5x mehr Glanz'. Kämmbarkeits-/Entwirrungsclaims nur aus Reviews, daher nicht aufgenommen.",
-          "thickness_eligibility": "Alle Stärken: leichtes Leave-in-Serum ohne Butter, dosierbar über Pumpstöße; kein Overload-Risiko für feines Haar bei Packungsdosierung.",
-          "concern_eligibility": "hair_damage/repair: Zielgruppe laut Hersteller 'sehr geschädigtes Haar', Kernclaim Reparatur.",
-          "protocols.tpl_mask.deviation": "Overnight + Nicht-ausspülen + trockenes Haar erlaubt = dreifacher Widerspruch zur Rinse-out-Maskenfamilie; im Template explizit als 'wrong family, flag' gelistet. Produkt ist im Pilot als mask gepinnt, daher Stamp mit Deviation statt Umkategorisierung."
-        }
-      }
-    },
-    {
-      "final": {
-        "product": {
           "name": "Haarkur Glycolic Gloss, 5 Minuten Haar-Laminierung",
           "brand": "L'Oréal Paris Elvital",
           "category_key": "mask",
@@ -170,10 +50,7 @@
               "url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
               "text": "Eine großzügige Menge auf das feuchte Haar auftragen, um es vom Ansatz bis in die Spitzen glanzvoll zu versiegeln. 5 Minuten einwirken lassen und danach gründlich ausspülen."
             },
-            "deviation": {
-              "reason": "Verpackung weist explizit die Anwendung 'vom Ansatz bis in die Spitzen' an - widerspricht P5 (Längen und Spitzen, Ansatz aussparen). Milde, aber echte Platzierungs-Abweichung (kein bloßes 'ins feuchte Haar'); Template-Platzierung lengths_ends wird beibehalten, Entscheidung für Nick.",
-              "packaging_text": "Eine großzügige Menge auf das feuchte Haar auftragen, um es vom Ansatz bis in die Spitzen glanzvoll zu versiegeln."
-            },
+            "deviation": null,
             "contact_time": {
               "seconds": 300,
               "source_text": "5 Minuten einwirken lassen und danach gründlich ausspülen."
@@ -238,7 +115,7 @@
           "category_specs.product_mask_specs.functional_benefits": "shine: Kernclaim (Glanzschicht, Laminierung). smoothing_frizz_control: 'glättet die Schuppenschicht/Haaroberfläche, reduziert Frizz' laut Hersteller.",
           "thickness_eligibility": "Alle Stärken: Glossing-Produkt für 'stumpfes, poröses Haar' ohne Dickenbeschränkung; weight=medium trägt die Vorsicht für feines Haar bereits im Ranking.",
           "concern_eligibility": "frizz: einziger Claim, der sauber auf einen Concern-Code mappt. Glanz/Stumpfheit hat keinen eigenen Code (performance-Semantik unklar, siehe Notes) - bewusst schmal gehalten.",
-          "protocols.tpl_mask.deviation": "'Vom Ansatz bis in die Spitzen' ist eine explizite Ansatz-Einbeziehung, nicht bloß 'ins feuchte Haar'; laut Template-Regel eine Deviation, lengths_ends bleibt."
+          "protocols.tpl_mask.deviation": "Ruling R-C (2026-09-02): Verpackungs-Anwendungsstil überschreibt Chaarlies Guidance nie. Die Packungsanweisung 'vom Ansatz bis in die Spitzen' wird IGNORIERT; die Template-Platzierung lengths_ends (Ansatz aussparen) wird unverändert gestampt, deviation=null. Der Verpackungstext bleibt als product_source dokumentiert."
         }
       }
     },
@@ -634,10 +511,7 @@
               "url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
               "text": "Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden."
             },
-            "deviation": {
-              "reason": "Explizite Conditioner-nach-Maske-Anweisung ('Gründlich ausspülen und Spülung anwenden'; Herstellerseite: 'Finish with conditioner') - widerspricht der kanonischen replaces_conditioner-Regel (P5). Kandidat für conditioner_after, nur nach Nicks Freigabe.",
-              "packaging_text": "Gründlich ausspülen und Spülung anwenden."
-            },
+            "deviation": null,
             "contact_time": {
               "seconds": null,
               "source_text": "5-15 Minuten einwirken lassen."
@@ -704,7 +578,7 @@
           "thickness_eligibility": "normal/coarse: butterreiche Rich-Formel; für feines Haar konservativ ausgeschlossen (Beschwerungs-Risiko).",
           "concern_eligibility": "dryness/frizz/feuchtigkeit: Kernclaims 'frizziges, trockenes und sprödes Haar' + intensive Feuchtigkeit.",
           "identifiers.cross_source_agreement": "false: EAN stammt ausschließlich aus der Rossmann-Produktseite (URL + Syndigo-Tag); kein unabhängiger Zweitbeleg auffindbar (GS1-Präfix 641 = Finnland passt zur Lumene Group, aber das ist Plausibilität, kein Beleg). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan vorliegt.",
-          "protocols.tpl_mask.deviation": "'Spülung anwenden' nach dem Ausspülen ist eine explizite conditioner_after-Sequenz und laut Aufgabenregel eine echte Deviation; zusätzlich vom Hersteller bestätigt ('Finish with conditioner'). 'Handtuchtrockenes Haar' selbst ist laut Ruling KEINE Abweichung."
+          "protocols.tpl_mask.deviation": "Ruling R-C (2026-09-02): Verpackungs-Anwendungsstil überschreibt Chaarlies Guidance nie. Die Anweisung 'Gründlich ausspülen und Spülung anwenden' (conditioner-after) wird IGNORIERT; die Standard-Regel replaces_conditioner wird unverändert gestampt, deviation=null. Der Verpackungstext bleibt als product_source dokumentiert. EAN-Ausschluss (excluded_from_apply) bleibt bestehen — das ist R-B und unabhängig davon."
         }
       }
     }

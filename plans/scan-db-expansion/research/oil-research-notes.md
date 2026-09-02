@@ -3,7 +3,15 @@
 > **STATUS: RESEARCH-ENTWURF zur Review durch Nick — keine freigegebenen Daten.**
 > Erstellt 2026-09-02 vom Research-Agenten. Alle Authority-Felder sind Urteile aus
 > INCI + Claims + Textur-Hinweisen; Konfidenz pro Feld unten ehrlich markiert
-> (solide / abgeleitet / geraten). Manifest: `oil-manifest.json` (Validator: PASS 5/5).
+> (solide / abgeleitet / geraten). Manifest: `oil-manifest.json` (Validator: PASS 4/4
+> nach Anwendung der Pilot-Review-Rulings, s. u.).
+>
+> **UPDATE 2026-09-02 — Nicks Pilot-Review-Rulings angewandt** (Autorität:
+> `plans/scan-db-expansion/protocol-templates.md` §"Nick's pilot-review rulings"):
+> **R-A:** Wahre Schätze Haarserum Honig (Produkt 1) wurde als `leave_in`
+> re-kategorisiert und aus diesem Manifest **entfernt** → jetzt in
+> `leave-in-manifest.json` (Evidenz übernommen; das dreifache Serum-Emulsions-
+> Identitäts-Flag ist damit aufgelöst).
 
 Konfidenz-Legende: **solide** = direkt gesourct (Packungstext, GTIN-Feld, INCI),
 **abgeleitet** = Urteil aus INCI/Claims mit klarer Begründung, **geraten** = Setzung
@@ -11,7 +19,18 @@ mangels Evidenz, konservativ gewählt.
 
 ---
 
-## 1. Wahre Schätze — Haarserum Honig reparierend (115 ml, EAN 3600542567329, **3× deviation-flagged**)
+## 1. Wahre Schätze — Haarserum Honig reparierend (115 ml, EAN 3600542567329) — **ENTFERNT (R-A, 2026-09-02)**
+
+> **RULING ANGEWANDT (R-A, 2026-09-02):** Aus `oil-manifest.json` entfernt und als
+> `leave_in` in `leave-in-manifest.json` neu geführt. Grund: Shelf-Kategorie ist per
+> R-A nur eine erste Vermutung; die Research (wasserbasierte Serum-Emulsion mit
+> INCI-Positionen 1–2 Propylene Glycol/Aqua, Emulgatoren, Verdicker-Polymer —
+> formatgleich mit den Elvital-Leave-in-Seren) finalisiert die Kategorie. Die drei
+> Identitäts-Deviation-Flags und die beiden offenen Fragen unten sind damit
+> entschieden; INCI, EAN, Preis, 230-°C-Claim und Quellen wurden in den
+> Leave-in-Eintrag übernommen (format=serum, provides_heat_protection=true,
+> heat_protection_max_c=230, Stamps DAMP + DRYCARE per R-D + HEAT either-state).
+> Der historische Research-Abschnitt bleibt unten als Beleg stehen.
 
 **Quellen:** dm.de Produktseite 1324799 (GTIN-Feld + JSON-LD, 6,95 €, Verwendungshinweise, INCI),
 garnier.de Produktseite (Manufacturer: deckungsgleiche Anwendung, 230 °C, identische INCI-Spitze).
@@ -162,14 +181,15 @@ im Manifest wörtlich zitiert.)
 
 ## Querschnitts-Notizen
 
-- **Validator:** `npm run products:intake:expansion:validate -- --manifest plans/scan-db-expansion/research/oil-manifest.json`
-  → PASS, 5/5 Produkte, 1 deviation-flagged (Wahre Schätze, alle 3 Stamps = Identitäts-Flag),
-  1 excluded EAN (Monday), 0 Duplikate.
-- **EAN-Stand:** alle 5 EANs stammen aus `selection-batch1-draft.json` und wurden unabhängig
+- **Validator (nach Rulings 2026-09-02):** `npm run products:intake:expansion:validate -- --manifest plans/scan-db-expansion/research/oil-manifest.json`
+  → PASS, 4/4 Produkte, 0 deviation-flagged, 1 excluded EAN (Monday), 0 Duplikate.
+  (Vor den Rulings: 5/5 mit 1 deviation-flagged — Wahre Schätze ist jetzt im Leave-in-Manifest.)
+- **EAN-Stand:** alle 5 recherchierten EANs stammen aus `selection-batch1-draft.json` und wurden unabhängig
   gegen die Live-Retailer-Seiten geprüft (dm: GTIN-Feld + JSON-LD; Rossmann: Syndigo-Tag live
   reproduziert). 3/5 dm-mehrfachbelegt, Isana mit eingeschränktem Zweitbeleg (s. Abschnitt 4),
-  Monday einquellig → excluded.
-- **Subtyp-Konvention (Frage an Nick):** Alle 5 Produkte tragen `styling-oel`. Das ist kein
+  Monday einquellig → excluded. Nach der R-A-Verschiebung von Wahre Schätze trägt dieses
+  Manifest noch 4 davon.
+- **Subtyp-Konvention (Frage an Nick):** Alle 5 recherchierten Produkte (nach R-A noch 4 im Manifest) tragen `styling-oel`. Das ist kein
   Zufall, sondern ehrliche Chemie: **keines** der 5 Pilot-„Öle" ist ein reines Pflanzenöl
   (`natuerliches-oel`) und keines ist als Trockenöl-Spray vermarktet (`trocken-oel`) — alle sind
   silikon-/volatile-basierte Finishing-Formeln (eines sogar eine Wasser-Emulsion). Angewandte
@@ -181,9 +201,10 @@ im Manifest wörtlich zitiert.)
   abgeleitet/geraten markiert (Elvital ist der einzige wörtliche Treffer: „Styling-Finish").
   Isana bewusst null (Multi-Use). Gleiches Caveat wie beim Subtyp: vor Apply gegen die
   Live-Konvention prüfen.
-- **Heat-Familien (P9):** Beide Heat-Stamps (Wahre Schätze, Elvital) sind explizit
-  „feucht ODER trocken" gesourct → `usable_on_dry_hair: true` / either_state. Kein Produkt
-  brauchte die Damp-only-Lesart.
+- **Heat-Familien (P9):** Beide Heat-Stamps (Wahre Schätze — seit R-A im Leave-in-Manifest —
+  und Elvital) sind explizit „feucht ODER trocken" gesourct → `usable_on_dry_hair: true` /
+  either_state. Kein Produkt brauchte die Damp-only-Lesart. Einziger verbleibender
+  Oil-Heat-Stamp in diesem Manifest: Elvital Öl Magique.
 - **Pre-Wash:** Nur Isana. Keine Zeitangabe auf der Packung → P8-Kanon 15–20 Min greift ohne
   Deviation. Kein Kokosöl-dominantes Produkt im Batch (Protein-Sensitivitäts-Caveat aus dem
   Template nicht einschlägig).
