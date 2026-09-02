@@ -298,7 +298,7 @@ const MIGRATIONS = [
   "supabase/migrations/20260826142100_product_identifier_canonical_gtin_writers.sql",
   "supabase/migrations/20260826142200_product_identifier_canonical_gtin_invariant.sql",
   "supabase/migrations/20260902110000_fix_product_intake_approve_operation_ambiguity.sql",
-  "supabase/migrations/20260902120000_scan_expansion_batch_v1_executor.sql",
+  "supabase/migrations/20260902160000_scan_expansion_batch_v1_executor.sql",
 ] as const
 
 /**
@@ -376,16 +376,20 @@ function supplementFor(
     }
     products[key] = {
       image_url: `${IMAGE_PREFIX}${key}.png`,
-      affiliate_link: (
-        entry.final.product as { candidate_image: { source_url: string } }
-      ).candidate_image.source_url,
+      affiliate_link: (entry.final.product as { candidate_image: { source_url: string } })
+        .candidate_image.source_url,
       purchase_link_status: "available",
       checked_at: "2026-09-02T09:00:00.000Z",
       evidence_source_texts: evidenceSourceTexts,
       mask_wait_copy_de: "7 Sekunden einwirken lassen.",
     }
   }
-  return { batch_id: batchId, operator_profile_id: OPERATOR, reviewed_head: REVIEWED_HEAD, products }
+  return {
+    batch_id: batchId,
+    operator_profile_id: OPERATOR,
+    reviewed_head: REVIEWED_HEAD,
+    products,
+  }
 }
 
 type Prepared = {
@@ -410,12 +414,7 @@ async function approve(pg: PGlite, prepared: Prepared) {
     `INSERT INTO public.scan_expansion_approved_batches
        (batch_id, batch_fingerprint, reviewed_head, reviewed_by, item_count)
      VALUES ($1, $2, $3, 'nick', $4)`,
-    [
-      prepared.batch.batch_id,
-      prepared.fingerprint,
-      REVIEWED_HEAD,
-      prepared.batch.items.length,
-    ],
+    [prepared.batch.batch_id, prepared.fingerprint, REVIEWED_HEAD, prepared.batch.items.length],
   )
 }
 
@@ -446,7 +445,8 @@ async function prepareMaskBatch(): Promise<Prepared> {
 
 // ---------------------------------------------------------------------------
 
-const REPAIR_MIGRATION = "supabase/migrations/20260902110000_fix_product_intake_approve_operation_ambiguity.sql"
+const REPAIR_MIGRATION =
+  "supabase/migrations/20260902110000_fix_product_intake_approve_operation_ambiguity.sql"
 
 async function repairSql(): Promise<string> {
   return readFile(new URL(REPAIR_MIGRATION, ROOT), "utf8")
@@ -500,10 +500,11 @@ test("the boundary repair converges both reviewed pre-states and refuses unknown
   // Pre-state (b), PRODUCTION form: prod was fixed out of band as
   // `AS spec_operation(value)`. Same logic, different text — must be accepted
   // and converged onto the repo body.
-  await pg.exec(repair.slice(repair.indexOf("CREATE OR REPLACE FUNCTION")).replace(
-    ") spec_operation(value)",
-    ") AS spec_operation(value)",
-  ))
+  await pg.exec(
+    repair
+      .slice(repair.indexOf("CREATE OR REPLACE FUNCTION"))
+      .replace(") spec_operation(value)", ") AS spec_operation(value)"),
+  )
   const prodShaped = await boundaryBody(pg)
   assert.ok(prodShaped.includes("AS spec_operation(value)"), "prod-shaped pre-state seeded")
   await pg.exec(repair)
@@ -608,10 +609,7 @@ test("a parked product cannot be applied by naming its item key", async (t) => {
 
   const parkedKey = prepared.parked.find((entry) => entry.item_key)?.item_key
   assert.ok(parkedKey)
-  await assert.rejects(
-    applyItem(pg, prepared, parkedKey),
-    /is not part of batch/,
-  )
+  await assert.rejects(applyItem(pg, prepared, parkedKey), /is not part of batch/)
   const products = await pg.query("SELECT count(*)::int AS count FROM public.products")
   assert.equal((products.rows[0] as { count: number }).count, 0)
 })
@@ -629,10 +627,7 @@ test("a duplicate canonical GTIN is rejected before anything is written", async 
   const prepared = serialize(clash)
   await approve(pg, prepared)
 
-  await assert.rejects(
-    applyItem(pg, prepared, first.item_key),
-    /duplicate canonical GTIN/,
-  )
+  await assert.rejects(applyItem(pg, prepared, first.item_key), /duplicate canonical GTIN/)
   const products = await pg.query("SELECT count(*)::int AS count FROM public.products")
   assert.equal((products.rows[0] as { count: number }).count, 0)
 })
@@ -691,7 +686,9 @@ test("one bad product fails alone; the products around it stay committed", async
 
   const products = await pg.query<{ name: string }>("SELECT name FROM public.products")
   assert.equal(products.rows.length, 2, "only the failing product rolled back")
-  const submissions = await pg.query("SELECT count(*)::int AS count FROM public.product_submissions")
+  const submissions = await pg.query(
+    "SELECT count(*)::int AS count FROM public.product_submissions",
+  )
   assert.equal(
     (submissions.rows[0] as { count: number }).count,
     2,
@@ -711,7 +708,9 @@ test("replay is idempotent and full-bundle readback catches post-apply drift", a
   const replay = await applyItem(pg, prepared, item.item_key)
   assert.equal(replay.rows[0]?.outcome, "replayed")
   assert.equal(replay.rows[0]?.product_id, applied.rows[0]?.product_id)
-  const ledger = await pg.query("SELECT count(*)::int AS count FROM public.catalog_enrichment_applied_items")
+  const ledger = await pg.query(
+    "SELECT count(*)::int AS count FROM public.catalog_enrichment_applied_items",
+  )
   assert.equal((ledger.rows[0] as { count: number }).count, 1)
 
   // F-07: replay compares the FULL bundle, not just the ledger fingerprints.
@@ -847,7 +846,8 @@ test("existing-product update renames and adds an identifier through the same gu
         rename: {
           from: "Ultimate Shampoo",
           to: "Elvital Glycolic Gloss Shampoo",
-          reason: "Katalogname war der Platzhalter der Erstaufnahme; korrekter Handelsname laut dm.de.",
+          reason:
+            "Katalogname war der Platzhalter der Erstaufnahme; korrekter Handelsname laut dm.de.",
         },
         add_identifiers: [
           {
