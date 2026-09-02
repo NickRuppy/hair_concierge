@@ -34,22 +34,45 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "light",
-            "roles": ["oil_replacement"],
+            "roles": [
+              "oil_replacement"
+            ],
             "provides_heat_protection": true,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["shine", "anti_frizz"],
-            "ingredient_flags": ["silicones", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair", "pre_heat"],
+            "care_benefits": [
+              "shine",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
             "care_direction": "balanced",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
-            "functional_benefits": ["shine_support", "smooth_anti_frizz", "heat_protect"]
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "shine_support",
+              "smooth_anti_frizz",
+              "heat_protect"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth", "heat_protect"]
+            "care_benefits": [
+              "detangle_smooth",
+              "heat_protect"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -99,8 +122,14 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["frizz"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -147,7 +176,11 @@
               "weight": "light",
               "care_direction": "balanced",
               "repair_support_level": "low",
-              "ingredient_flags": ["silicones", "polymers", "humectants"],
+              "ingredient_flags": [
+                "silicones",
+                "polymers",
+                "humectants"
+              ],
               "inci_basis": "Isododecane, Aqua, Dipropylene Glycol, Dimethicone, Alcohol Denat., Dimethiconol, Glycerin, PEG-14 Dimethicone, Hydroxyethyl Urea, ..., Polyacrylamide, ..., Glycolic Acid (weit hinten), C13-14 Isoalkane"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
@@ -245,22 +278,40 @@
           "product_leave_in_specs": {
             "format": "spray",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "volume"],
-            "ingredient_flags": ["oils", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "moisture",
+              "volume"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["moisture_softness"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -280,8 +331,15 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "moisture_anti_frizz"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "moisture_anti_frizz"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -318,7 +376,11 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["oils", "polymers", "humectants"],
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Quaternium-87, Cocos Nucifera Oil, Sodium Benzoate, Sodium Hyaluronate, Stearyl Alcohol, ..., Behentrimonium Chloride, Polyquaternium-37, Polyquaternium-11, Candelilla Cera, ..., Glycine Soja Oil (silikonfrei, keine Proteine)"
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
@@ -405,22 +467,41 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "light",
-            "roles": ["oil_replacement"],
+            "roles": [
+              "oil_replacement"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["repair", "shine"],
-            "ingredient_flags": ["silicones", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "repair",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "balanced",
             "repair_support_level": "medium",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["repair_support", "shine_support"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "shine_support"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["repair"]
+            "care_benefits": [
+              "repair"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -440,8 +521,17 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair", "split_ends", "breakage"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends",
+          "breakage"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -478,7 +568,11 @@
               "weight": "light",
               "care_direction": "balanced",
               "repair_support_level": "medium",
-              "ingredient_flags": ["silicones", "polymers", "humectants"],
+              "ingredient_flags": [
+                "silicones",
+                "polymers",
+                "humectants"
+              ],
               "inci_basis": "Isododecane, Dipropylene Glycol, Aqua, Dimethicone, Alcohol Denat., Glycerin, Dimethiconol, PEG-14 Dimethicone, Hydroxyethyl Urea, Parfum, Citric Acid, Sodium Citrate, ..., Polyacrylamide (keine Proteine)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
@@ -527,7 +621,7 @@
           "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum.",
           "concern_eligibility": "hair_damage/repair: Kernclaim 'repariert alle Arten von Haarschäden'. split_ends: '7x weniger Spliss'. breakage: '3x weniger Haarbruch'.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder feucht' ist keine Dry-only-Anweisung; Längen und Spitzen konform.",
-          "product.price_eur": "9,95 EUR laut dm ('Ähnliche Produkte'-Panel mit Grundpreis 66,33 EUR/l, konsistent mit 150 ml); der Einzelseiten-Preisblock wurde im Layout nicht separat erfasst - vor Apply gegenprüfen.",
+          "product.price_eur": "9,95 € verified 2026-09-02 directly on the dm.de product page price block (0,15 l / 66,33 €/l, dm-Dauerpreis seit 12.01.2023, GTIN on page matches); supersedes the earlier Ähnliche-Produkte-panel capture.",
           "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('von trockenem oder feuchtem Haar'). Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
         }
       }
@@ -564,22 +658,40 @@
           "product_leave_in_specs": {
             "format": "cream",
             "weight": "light",
-            "roles": ["extension_conditioner", "styling_prep"],
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "anti_frizz"],
-            "ingredient_flags": ["polymers", "humectants"],
-            "application_stage": ["towel_dry"],
+            "care_benefits": [
+              "moisture",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["smooth_anti_frizz", "moisture_softness"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "smooth_anti_frizz",
+              "moisture_softness"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -599,8 +711,15 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["frizz", "moisture_anti_frizz"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "moisture_anti_frizz"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -628,7 +747,10 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["polymers", "humectants"],
+              "ingredient_flags": [
+                "polymers",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Propylene Glycol, Glycerin, Aloe Barbadensis Leaf Juice, Sorbitan Oleate, PPG-1 Trideceth-6, PEG-150/Decyl Alcohol/SMDI Copolymer, Sodium Hyaluronate, Propylene Glycol Dicaprylate/Dicaprate, ..., Polyquaternium-37 (ohne Silikone laut Merkmal + INCI; keine Öle/Butter, keine Proteine)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
@@ -695,7 +817,9 @@
             "url": "https://www.rossmann.de/media-neu/239/MAM_23934125/MAM_23934125_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988"
           },
-          "description": "Reichhaltiger, silikonfreier Leave-in-Conditioner mit Kakaobutter und Haferextrakt für Locken der Typen 3A-4C; spendet Feuchtigkeit und wird laut Hersteller auch als Hitzeschutz verwendet."
+          "description": "Reichhaltiger, silikonfreier Leave-in-Conditioner mit Kakaobutter und Haferextrakt für Locken der Typen 3A-4C; spendet Feuchtigkeit und wird laut Hersteller auch als Hitzeschutz verwendet.",
+          "net_content_value": 354,
+          "net_content_unit": "ml"
         },
         "identifiers": [
           {
@@ -713,22 +837,45 @@
           "product_leave_in_specs": {
             "format": "cream",
             "weight": "rich",
-            "roles": ["extension_conditioner", "styling_prep"],
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
             "provides_heat_protection": true,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "curl_definition"],
-            "ingredient_flags": ["oils", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "pre_heat"],
+            "care_benefits": [
+              "moisture",
+              "curl_definition"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "pre_heat"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
-            "functional_benefits": ["moisture_softness", "curl_shape_support", "heat_protect"]
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "curl_shape_support",
+              "heat_protect"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "rich",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["curl_definition", "heat_protect"]
+            "care_benefits": [
+              "curl_definition",
+              "heat_protect"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -763,8 +910,14 @@
             }
           ]
         },
-        "thickness_eligibility": ["normal", "coarse"],
-        "concern_eligibility": ["dryness", "moisture_anti_frizz"],
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "moisture_anti_frizz"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -802,7 +955,11 @@
               "weight": "rich",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["oils", "polymers", "humectants"],
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ],
               "provides_heat_protection": true,
               "inci_basis": "Aqua, Cetearyl Alcohol, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Glycerin, Simmondsia Chinensis Seed Oil, Ceteareth-20, Prunus Amygdalus Dulcis Oil, Avena Sativa Extract, Theobroma Cacao Seed Butter, ..., Behentrimonium Methosulfate, Polyquaternium-37, Polyquaternium-10 (silikonfrei)"
             },
@@ -838,7 +995,7 @@
         ],
         "field_rationales": {
           "product.name": "Exakter Name laut Rossmann-Produktseite (h1). Marke laut Rossmann 'Being' (ZURU-Dachmarke, Vertrieb Zuru Germany GmbH).",
-          "product.net_content": "BEWUSST WEGGELASSEN: Rossmann zeigt 227 ml (Grundpreis-Rechnung 6,79 EUR / 29,91 EUR/l = 227 ml), Hersteller und internationale Listings derselben GTIN nennen 354 ml (12 fl oz). Echter Quellenkonflikt - vor Apply klären (siehe Notes).",
+          "product.net_content": "354 ml per manufacturer + international listings of this GTIN (Nick's ruling 2026-09-02 over Rossmann's conflicting 227 ml); physical pack check queued as follow-up.",
           "category_specs.product_leave_in_specs.format": "cream: Leave-in-Conditioner mit Cetearyl-Alcohol-/Butter-Basis; kein Spray-/Serum-Hinweis. (Tub-/Tiegel-Format laut Herstellerbildern.)",
           "category_specs.product_leave_in_specs.weight": "rich: Kokosöl Pos. 3, Sheabutter Pos. 4, Kakaobutter - butterreiche Formel für Locken/Coils; Hersteller-Claim 'lightweight' ist Marketing gegen die INCI-Lage, konservativ rich.",
           "category_specs.product_leave_in_specs.roles": "extension_conditioner: explizit NACH Shampoo und Conditioner anzuwenden. styling_prep: 'für ein natürliches Styling' / 'anschließend wie gewohnt stylen'.",
@@ -890,22 +1047,41 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["repair", "shine"],
-            "ingredient_flags": ["silicones", "proteins", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "repair",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "proteins",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "balanced",
             "repair_support_level": "medium",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["repair_support", "shine_support"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "shine_support"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["repair"]
+            "care_benefits": [
+              "repair"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -925,8 +1101,15 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -963,7 +1146,11 @@
               "weight": "light",
               "care_direction": "balanced",
               "repair_support_level": "medium",
-              "ingredient_flags": ["silicones", "proteins", "humectants"],
+              "ingredient_flags": [
+                "silicones",
+                "proteins",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, ..., Hydrolyzed Pearl, Betaine, ..., Panthenol, ..., Glycerin"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
@@ -1051,22 +1238,45 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "light",
-            "roles": ["oil_replacement"],
+            "roles": [
+              "oil_replacement"
+            ],
             "provides_heat_protection": true,
             "heat_protection_max_c": 230,
             "heat_activation_required": false,
-            "care_benefits": ["repair", "shine"],
-            "ingredient_flags": ["silicones", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair", "pre_heat"],
+            "care_benefits": [
+              "repair",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
             "care_direction": "balanced",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
-            "functional_benefits": ["repair_support", "shine_support", "heat_protect"]
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "shine_support",
+              "heat_protect"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["repair", "heat_protect"]
+            "care_benefits": [
+              "repair",
+              "heat_protect"
+            ]
           },
           "product_leave_in_eligibility": [
             {
@@ -1101,8 +1311,16 @@
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["split_ends", "hair_damage", "repair"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "split_ends",
+          "hair_damage",
+          "repair"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -1151,7 +1369,11 @@
               "repair_support_level": "low",
               "provides_heat_protection": true,
               "heat_protection_max_c": 230,
-              "ingredient_flags": ["silicones", "humectants", "polymers"],
+              "ingredient_flags": [
+                "silicones",
+                "humectants",
+                "polymers"
+              ],
               "inci_basis": "Propylene Glycol, Aqua, Dimethicone, Phenyl Trimethicone, Glycerin, Isododecane, Dimethiconol, Amodimethicone, ..., Polyacrylate Crosspolymer-6, ..., Mel/Honey (wasserbasierte Serum-Emulsion, keine Pflanzenöle)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Verwendungshinweise)",
