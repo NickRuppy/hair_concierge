@@ -1,0 +1,3254 @@
+{
+ "meta": {
+  "generated": "2026-09-02",
+  "status": "PROPOSAL - not yet reviewed by Nick",
+  "method": "dm.de and rossmann.de category/search pages sorted by relevance (review count used as popularity proxy), cross-checked against existing catalog via Supabase SQL. See selection-batch1-draft.md for full method and confidence notes.",
+  "existing_catalog_query": "select p.brand, p.name, p.category_key, gtins from products p left join product_identifiers pi ... where category_key in (shampoo,conditioner,leave_in,oil,mask)"
+ },
+ "pilot": [
+  {
+   "rank": 1,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Shampoo Hydra Hyaluronic, feuchtigkeitsspendend",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "1000 ml",
+     "eans": [
+      "3600524099299"
+     ]
+    },
+    {
+     "size": "250 ml",
+     "eans": []
+    },
+    {
+     "size": "400 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend"
+   ],
+   "rationale": "dm.de #1 by reviews among shampoo search results (3309), major FMCG brand, missing from catalog entirely."
+  },
+  {
+   "rank": 3,
+   "brand": "Wahre Schätze",
+   "name": "Shampoo Honig Schätze",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": [
+      "3600542461030"
+     ]
+    },
+    {
+     "size": "250 ml",
+     "eans": []
+    },
+    {
+     "size": "1000 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze"
+   ],
+   "rationale": "2111 dm reviews; Wahre Schätze already in catalog (Aktivkohle, Hafermilch) but this popular Honig variant is missing."
+  },
+  {
+   "rank": 4,
+   "brand": "Garnier Fructis",
+   "name": "Shampoo Locken Methode Feuchtigkeit",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "3600542571739"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit"
+   ],
+   "rationale": "1982 dm reviews, curl-specific bestseller; whole Locken Methode line (conditioner/mask) included in pilot."
+  },
+  {
+   "rank": 5,
+   "brand": "Syoss",
+   "name": "Shampoo Intense Keratin",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "440 ml",
+     "eans": [
+      "4015100860344"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin"
+   ],
+   "rationale": "1007 dm reviews. Syoss Intense Keratin already in catalog as conditioner+mask but the shampoo SKU is missing."
+  },
+  {
+   "rank": 6,
+   "brand": "Nivea",
+   "name": "Shampoo Power Repair",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "4006000192543"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair"
+   ],
+   "rationale": "892 dm reviews, major FMCG brand explicitly on the priority list; Nivea Power Repair conditioner already in catalog but shampoo is missing."
+  },
+  {
+   "rank": 7,
+   "brand": "Being (by ZURU)",
+   "name": "Big Hair Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": [
+      "4895248005872"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005872",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+       "note": "Re-verified 2026-09-02: no labeled GTIN/EAN field on the Rossmann page itself, but the page's own script pushes this exact number to its Syndigo product-content-sync tag (`SYNDI.push('4895248005872')`), matching the product URL. GS1 mod-10 check digit valid. Treated as confirmed (page-embedded identifier used by the retailer's own content pipeline), not a bare URL-pattern guess."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "Brand-new Rossmann-exclusive haircare line (2026 launch, hairstylist-developed, colourful packaging, strong early ratings 4.1/5, 14 reviews). rossmann_new pick."
+  },
+  {
+   "rank": 8,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Sealing Shampoo Sealing Miracle",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "4015100895025"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4015100895025",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+       "note": "Found product page 2026-09-02 via Rossmann site search. No labeled GTIN field visible in the rendered page text, but the page's Syndigo content-sync script pushes `SYNDI.push('4015100895025')`, matching the product URL. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099",
+    "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025"
+   ],
+   "rationale": "Explicitly tagged \"Neu\" on Rossmann with a dedicated homepage promo banner (\"bis zu 94% weniger Spliss\"); brand-new Gliss sub-line. rossmann_new pick."
+  },
+  {
+   "rank": 9,
+   "brand": "Wahre Schätze",
+   "name": "Conditioner Honig Schätze",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "3600542462150"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1670334/wahre-schaetze-conditioner-honig-schaetze"
+   ],
+   "rationale": "1939 dm reviews, pairs with the pilot Honig Schätze shampoo."
+  },
+  {
+   "rank": 10,
+   "brand": "Herbal Essences",
+   "name": "Conditioner Blütensanft Rosenduft",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "8700216210508"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1409619/herbal-essences-conditioner-bluetensanft-rosenduft"
+   ],
+   "rationale": "1440 dm reviews; Herbal Essences has zero shampoo/conditioner/mask presence in the current catalog despite being a mainstream FMCG line at both retailers."
+  },
+  {
+   "rank": 11,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Conditioner Glycolic Gloss",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": [
+      "3600524144036"
+     ]
+    },
+    {
+     "size": "250 ml (Rossmann, \"Glycolic Gloss Spiegelglanz Spülung\")",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1343859/l-oreal-paris-elvital-conditioner-glycolic-gloss",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "2630 dm reviews, companion to the Glycolic Gloss shampoo/mask/leave-in already in this pilot."
+  },
+  {
+   "rank": 12,
+   "brand": "Wahre Schätze",
+   "name": "Conditioner Traube Hydraboost",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "3600542656320"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3117000/wahre-schaetze-conditioner-traube-hydraboost"
+   ],
+   "rationale": "1295 dm reviews, distinct Wahre Schätze variant not in catalog."
+  },
+  {
+   "rank": 13,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Conditioner Bond Repair Anti-Haarschäden",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": [
+      "3600524074791"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524074791",
+       "url": "https://www.dm.de/p/d/1678576/l-oreal-paris-elvital-conditioner-bond-repair-anti-haarschaeden",
+       "note": "Re-checked 2026-09-02: dm product page shows \"GTIN: 3600524074791\" in full. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1678576/l-oreal-paris-elvital-conditioner-bond-repair-anti-haarschaeden"
+   ],
+   "rationale": "723 dm reviews; bond-repair positioning, distinct from the Glycolic Gloss line."
+  },
+  {
+   "rank": 14,
+   "brand": "Being (by ZURU)",
+   "name": "Big Hair Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": [
+      "4895248005926"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005926",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 354 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248005926')` matches the URL. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181",
+    "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-conditioner/p/4895248005926"
+   ],
+   "rationale": "Companion conditioner to the pilot Being Big Hair Shampoo; same new-brand launch. rossmann_new pick."
+  },
+  {
+   "rank": 15,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Haarkur Night Elixier Ultimate Repair",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": [
+      "4015100813951"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
+   ],
+   "rationale": "1891 dm reviews, dm actively promotes it with a dedicated brand-highlight banner; Gliss only has one mask (Liquid Silk) in the catalog today."
+  },
+  {
+   "rank": 16,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Haarkur Glycolic Gloss, 5 Minuten Haar-Laminierung",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "3600524128500"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung"
+   ],
+   "rationale": "2828 dm reviews - the most-reviewed mask found in this whole research pass; completes the Glycolic Gloss line."
+  },
+  {
+   "rank": 17,
+   "brand": "Garnier Fructis",
+   "name": "Haarkur Banana Hair Food 3in1 Maske",
+   "category_key": "mask",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": [
+      "3600542511070"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "Cross-confirmed popular on both retailers (dm 1290 / rossmann 1127 reviews); catalog already has Fructis Hair Food Aloe Vera + Papaya masks but not Banana."
+  },
+  {
+   "rank": 18,
+   "brand": "Herbal Essences",
+   "name": "Haarmaske Blütensanft",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": [
+      "8700216212724"
+     ],
+     "ean_sources": [
+      {
+       "ean": "8700216212724",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 300 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('8700216212724')` matches the URL. GS1 check digit valid. Cross-check confidence booster: the same search result also returned the Blütensanft Pflegespülung (conditioner) at EAN 8700216210508, which matches the already dm-confirmed EAN for that pilot conditioner exactly — validates that this Syndigo-tag method reliably yields the real GTIN on this site."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127",
+    "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724"
+   ],
+   "rationale": "1211 Rossmann reviews, completes the Herbal Essences Blütensanft shampoo+conditioner already in this pilot."
+  },
+  {
+   "rank": 19,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Haarkur 7sec Express-Repair, Ultimate Repair",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "4015100813319"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair"
+   ],
+   "rationale": "992 dm reviews, fast-format mask (7 second treatment) - different use case from Night Elixier."
+  },
+  {
+   "rank": 20,
+   "brand": "IDA WARG Beauty",
+   "name": "Intense Moisture Hair Mask",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "6412600231793"
+     ],
+     "ean_sources": [
+      {
+       "ean": "6412600231793",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 250 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('6412600231793')` matches the URL. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127",
+    "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793"
+   ],
+   "rationale": "New premium Swedish influencer brand just launched at Rossmann (sponsored placements across shampoo/conditioner/mask, very low review counts consistent with a recent launch). rossmann_new pick."
+  },
+  {
+   "rank": 21,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Leave-In Serum Glycolic Gloss",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": [
+      "3600524135430"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "Cross-confirmed very popular (dm 2613 / rossmann 2482 reviews); completes the Glycolic Gloss line across all 3 wash-out + leave-in formats."
+  },
+  {
+   "rank": 22,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Leave-In Haarkur Hydra Hyaluron, Aufpolsterndes Feuchtigkeitsserum",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "2770 Rossmann reviews - despite the \"Haarkur\" name it's sold/marketed as a leave-in serum; pairs with the pilot Hydra Hyaluronic shampoo. EAN not captured, needs product-page follow-up."
+  },
+  {
+   "rank": 24,
+   "brand": "Garnier Fructis",
+   "name": "Leave-In Creme Aloe Air Dry",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": [
+      "3600542117593"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry"
+   ],
+   "rationale": "959 dm reviews. Note: catalog already has a 'Garnier Hair Food Aloe Vera' leave_in row with no GTIN and no size info - possibly the same product under an older name. Treated as a new candidate rather than existing_product_new_eans because the exact name match could not be confirmed; needs manual reconciliation. FOLLOW-UP 2026-09-02: checked both dm.de and rossmann.de - 'Hair Food Aloe Vera' branding at both retailers is used only for the Haarmaske (mask), Shampoo, and Spülung/Conditioner variants; the leave-in in this same Aloe Vera sub-range is sold under a distinct 'Air Dry' name at both retailers (dm: 'Fructis Hydra Aloe Air-Dry Cream' in the product description; Rossmann: 'Leave-In Creme Hydra Aloe Air-Dry'). No 'Hair Food'-branded leave-in product could be found live at either retailer. This suggests Aloe Air Dry and Hair Food Aloe Vera are two different sub-lines, not the same product under a renamed leave-in SKU - but this is retailer-catalog evidence, not proof about the specific existing DB row's history, so manual reconciliation with Nick is still recommended before merging or dropping either row."
+  },
+  {
+   "rank": 25,
+   "brand": "Being (by ZURU)",
+   "name": "Major Moisture Leave-In Conditioner",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "227 ml",
+     "eans": [
+      "4895248005988"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248005988",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 227 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248005988')` matches the URL. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181",
+    "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988"
+   ],
+   "rationale": "Completes the Being line coverage across shampoo/conditioner/leave-in for this new brand. rossmann_new pick."
+  },
+  {
+   "rank": 26,
+   "brand": "Wahre Schätze",
+   "name": "Haarserum Honig reparierend",
+   "category_key": "oil",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "115 ml",
+     "eans": [
+      "3600542567329"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "By far the most-reviewed oil/serum found (dm 2810 / rossmann 2682 reviews, cross-confirmed) - a clear miss in the current catalog."
+  },
+  {
+   "rank": 27,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Haaröl Tägliches Öl Elixier",
+   "category_key": "oil",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "75 ml",
+     "eans": [
+      "4015100813791"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "Cross-confirmed (dm 153 / rossmann 136 reviews); Gliss has no oil product in the catalog today."
+  },
+  {
+   "rank": 28,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Haaröl Öl Magique, für alle Haartypen",
+   "category_key": "oil",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": [
+      "3600523734955"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "Cross-confirmed (dm 324 / rossmann \"Öl-Kur Haaröl General\" 282 reviews); catalog only has the Jojoba variant of this Elvital oil line, this general one is missing."
+  },
+  {
+   "rank": 29,
+   "brand": "Isana Professional",
+   "name": "Haaröl Arganöl & Pflege",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": [
+      "4068134024947"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4068134024947",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 100 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4068134024947')` matches the URL. GS1 check digit valid. Note: the same search also surfaced a second URL for the identically-named product at /p/0000042508113 — a short, non-GS1-shaped number (Rossmann's own item number, not a GTIN); not used."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270",
+    "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947"
+   ],
+   "rationale": "406 Rossmann reviews - Isana Professional private-label pick for oil (catalog already has the matching conditioner but not the oil)."
+  },
+  {
+   "rank": 30,
+   "brand": "Monday Haircare",
+   "name": "Repair Argan Haaröl",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "89 ml",
+     "eans": [
+      "4895248009825"
+     ],
+     "ean_sources": [
+      {
+       "ean": "4895248009825",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+       "note": "Found product page 2026-09-02 via Rossmann site search; page confirms 89 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('4895248009825')` matches the URL. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270",
+    "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825"
+   ],
+   "rationale": "Explicitly tagged \"Neu\" on Rossmann; Monday Haircare shampoo+conditioner already in catalog, this is a brand-new oil SKU extending that line. rossmann_new pick."
+  },
+  {
+   "rank": 31,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Shampoo Dream Length",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "1000 ml",
+     "eans": [
+      "3600524062637"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524062637",
+       "url": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+       "note": "Found 2026-09-02 via dm.de site search; product page shows \"GTIN: 3600524062637\" in full. GS1 check digit valid. Cross-confirmed independently: Rossmann's own 1.000 ml listing of the same product (\"Nur Online\", momentan nicht verfügbar) lives at URL .../p/3600524062637 — identical number, matching the dm-read GTIN exactly."
+      }
+     ]
+    },
+    {
+     "size": "300 ml (rossmann, \"Dream Length Super Aufbau Shampoo\")",
+     "eans": [
+      "3600524138530"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524138530",
+       "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524138530",
+       "note": "Found 2026-09-02 via Rossmann site search; page confirms 300 ml size. No labeled GTIN field, but Syndigo sync tag `SYNDI.push('3600524138530')` matches the URL. GS1 check digit valid. Note: a differently-named but same-size sibling listing (\"Super Aufbau Dream Length Shampoo\", 400 ml) exists at a different EAN (3600524138660, checksum valid, not verified further) — not the same size, not used here."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo",
+    "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524138530"
+   ],
+   "rationale": "2221 dm reviews - very high popularity, only missed the pilot 8-slot cap.",
+   "promoted_note": "promoted to pilot 2026-09-02 (slot freed in shampoo)"
+  },
+  {
+   "rank": 118,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Leave-In Haarserum Bond Repair, Anti-Haarschäden",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": [
+      "3600524075576"
+     ],
+     "ean_sources": [
+      {
+       "ean": "3600524075576",
+       "url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+       "note": "Found 2026-09-02 (linked from the sibling Bond Repair conditioner's \"Ähnliche Produkte\" panel on dm.de); product page shows \"GTIN: 3600524075576\" in full. GS1 check digit valid."
+      }
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in",
+    "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden"
+   ],
+   "rationale": "800 dm reviews - only missed the pilot 5-slot cap for this category.",
+   "promoted_note": "promoted to pilot 2026-09-02 (slot freed in leave_in)"
+  }
+ ],
+ "backlog": [
+  {
+   "rank": 32,
+   "brand": "Herbal Essences",
+   "name": "Shampoo Blütensanft Rosenduft",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "350 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "1649 dm reviews; pairs with the Blütensanft conditioner+mask already in pilot."
+  },
+  {
+   "rank": 33,
+   "brand": "schauma",
+   "name": "Shampoo Repair & Pflege",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "763 dm reviews, dm-sponsored placement; Schauma only has Anti-Schuppen in the catalog today."
+  },
+  {
+   "rank": 34,
+   "brand": "Garnier Fructis",
+   "name": "Shampoo Coco Water, fettiger Ansatz & trockene Spitzen",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "331 dm reviews."
+  },
+  {
+   "rank": 35,
+   "brand": "Herbal Essences",
+   "name": "Shampoo Fiji",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "350 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "257 dm reviews."
+  },
+  {
+   "rank": 36,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Shampoo Liquid Silk",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "537 dm reviews; catalog has the Liquid Silk conditioner+mask but not this shampoo."
+  },
+  {
+   "rank": 37,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Shampoo Total Repair",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "425 dm reviews."
+  },
+  {
+   "rank": 38,
+   "brand": "Pantene Pro-V",
+   "name": "Shampoo Repair & Care XXL",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "500 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "237 dm reviews."
+  },
+  {
+   "rank": 39,
+   "brand": "head&shoulders",
+   "name": "Shampoo Anti-Schuppen Classic Clean",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "500 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "107 dm reviews, cross-listed at rossmann; catalog has Sensitive + DERMAXPRO variants but not Classic Clean."
+  },
+  {
+   "rank": 40,
+   "brand": "Syoss",
+   "name": "Shampoo Men Intense Power",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "440 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "133 rossmann reviews, men's line extension."
+  },
+  {
+   "rank": 41,
+   "brand": "Syoss",
+   "name": "Shampoo Intense Color",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "440 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "133 rossmann reviews."
+  },
+  {
+   "rank": 42,
+   "brand": "Syoss",
+   "name": "Shampoo Intense Repair",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "440 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "134 rossmann reviews."
+  },
+  {
+   "rank": 43,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Shampoo Color Glanz",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": []
+    },
+    {
+     "size": "1000 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "185 dm reviews."
+  },
+  {
+   "rank": 44,
+   "brand": "Jean&Len",
+   "name": "Shampoo Hydration Pfirsich Chia",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "65 dm reviews; Jean&Len already in catalog for conditioner/mask/oil but not shampoo."
+  },
+  {
+   "rank": 45,
+   "brand": "Isana",
+   "name": "Shampoo Sensitiv",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "365 rossmann reviews; Isana private label has zero shampoo presence in catalog today despite strong reviews across the line."
+  },
+  {
+   "rank": 46,
+   "brand": "Isana",
+   "name": "Shampoo & Spülung 2in1 Volumen",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "507 rossmann reviews."
+  },
+  {
+   "rank": 47,
+   "brand": "Isana",
+   "name": "Shampoo Seidenglanz",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "297 rossmann reviews."
+  },
+  {
+   "rank": 48,
+   "brand": "Isana",
+   "name": "Shampoo Anti-Schuppen Wasserminze & Grüner Tee",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "320 rossmann reviews."
+  },
+  {
+   "rank": 49,
+   "brand": "Isana",
+   "name": "Shampoo Oil Repair Marulaöl",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "178 rossmann reviews."
+  },
+  {
+   "rank": 50,
+   "brand": "Isana MED",
+   "name": "Shampoo Jeden Tag (Ultra Sensitiv)",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "206 rossmann reviews."
+  },
+  {
+   "rank": 51,
+   "brand": "Isana MED",
+   "name": "Shampoo pH 5,5 hautneutral",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "165 rossmann reviews."
+  },
+  {
+   "rank": 52,
+   "brand": "Isana",
+   "name": "Shampoo Feuchtigkeit",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "216 rossmann reviews."
+  },
+  {
+   "rank": 53,
+   "brand": "John Frieda Violet Crush",
+   "name": "Violet Crush Intensiv Silber Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "92 rossmann reviews, purple/toning shampoo niche; catalog only has John Frieda Frizz Ease conditioner."
+  },
+  {
+   "rank": 54,
+   "brand": "Dr. Wolff Plantur",
+   "name": "DMG Clinical Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "73 rossmann reviews; positioned near hair-thinning care alongside Plantur 39, already in catalog - lower priority, keep cosmetic framing distinct from medical hair-loss claims."
+  },
+  {
+   "rank": 55,
+   "brand": "head&shoulders",
+   "name": "Anti-Schuppen Shampoo Apple Fresh",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "500 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "78 dm reviews."
+  },
+  {
+   "rank": 56,
+   "brand": "Being (by ZURU)",
+   "name": "Max Moisture Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension; backlog rossmann_new candidate."
+  },
+  {
+   "rank": 57,
+   "brand": "Being (by ZURU)",
+   "name": "Bye Bye Anti-Frizz Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 58,
+   "brand": "Being (by ZURU)",
+   "name": "Curl Power Locken Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension, curl-specific."
+  },
+  {
+   "rank": 59,
+   "brand": "Being (by ZURU)",
+   "name": "NOURISH + SHINE Daily Clean Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "345 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 60,
+   "brand": "IDA WARG Beauty",
+   "name": "Moisture Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "New premium brand launch at Rossmann."
+  },
+  {
+   "rank": 61,
+   "brand": "Bali Gents",
+   "name": "Coffein Activator Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "Explicitly tagged \"Neu\" on Rossmann, 0 reviews yet - low-confidence pick, lowest priority in the rossmann_new set."
+  },
+  {
+   "rank": 62,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Conditioner Hydra Hyaluronic, feuchtigkeitsversiegelnd",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "248 dm reviews, pairs with the pilot Hydra Hyaluronic shampoo."
+  },
+  {
+   "rank": 63,
+   "brand": "Herbal Essences",
+   "name": "Conditioner Fiji mit Kokosnussextrakt",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "202 dm reviews."
+  },
+  {
+   "rank": 64,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Conditioner Total Repair",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "336 dm reviews."
+  },
+  {
+   "rank": 65,
+   "brand": "Pantene Pro-V",
+   "name": "Conditioner Repair & Care",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "559 dm reviews."
+  },
+  {
+   "rank": 66,
+   "brand": "Garnier Fructis",
+   "name": "Conditioner Locken Methode Feuchtigkeit",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "206 dm reviews, pairs with pilot Locken Methode shampoo."
+  },
+  {
+   "rank": 67,
+   "brand": "Pantene Pro-V",
+   "name": "Conditioner Grow Abundant Anti-Haarverlust",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "510 dm reviews; keep cosmetic framing, avoid medical hair-loss claims in copy."
+  },
+  {
+   "rank": 68,
+   "brand": "Aussie",
+   "name": "Conditioner Bouncy Curls",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "73 dm reviews; Aussie already has a leave-in in catalog but not this conditioner."
+  },
+  {
+   "rank": 69,
+   "brand": "Langhaarmädchen",
+   "name": "Conditioner Intense Repair",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "155 dm reviews; catalog has Beautiful Curls + Lovely Long variants but not Intense Repair."
+  },
+  {
+   "rank": 70,
+   "brand": "Herbal Essences",
+   "name": "Conditioner Limettenduft, Tiefenreinigung & Glanz",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "81 dm reviews."
+  },
+  {
+   "rank": 71,
+   "brand": "Jean&Len",
+   "name": "Conditioner Hydration Pfirsich Chia",
+   "category_key": "conditioner",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=spuelung"
+   ],
+   "rationale": "61 dm reviews."
+  },
+  {
+   "rank": 72,
+   "brand": "Syoss",
+   "name": "Tiefenspülung Intense Repair",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "117 rossmann reviews."
+  },
+  {
+   "rank": 73,
+   "brand": "Nivea",
+   "name": "Hairmilk Shine Glanzspülung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "155 rossmann reviews, distinct Nivea line from Power Repair (pilot)."
+  },
+  {
+   "rank": 74,
+   "brand": "Gliss",
+   "name": "Total Repair Express-Repair-Spülung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "241 rossmann reviews, spray/express format."
+  },
+  {
+   "rank": 75,
+   "brand": "John Frieda Go Blonder",
+   "name": "Go Blonder Aufhellender Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "85 rossmann reviews."
+  },
+  {
+   "rank": 76,
+   "brand": "John Frieda Salon Blonde",
+   "name": "Salon Blonde Champagnerblond Pflegende Farbveredelung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "120 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "104 rossmann reviews, toning conditioner."
+  },
+  {
+   "rank": 77,
+   "brand": "John Frieda Sheer Blonde",
+   "name": "Sheer Blonde Refresh & Shine Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "95 rossmann reviews."
+  },
+  {
+   "rank": 78,
+   "brand": "John Frieda Violet Crush",
+   "name": "Violet Crush Silber Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "Pairs with the Violet Crush shampoo in this backlog."
+  },
+  {
+   "rank": 79,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Dream Length Super Aufbau Spülung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "Pairs with the Dream Length shampoo, rank 31."
+  },
+  {
+   "rank": 80,
+   "brand": "Isana",
+   "name": "Spülung Seidenglanz",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "222 rossmann reviews."
+  },
+  {
+   "rank": 81,
+   "brand": "Isana",
+   "name": "Spülung Feuchtigkeit",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "187 rossmann reviews."
+  },
+  {
+   "rank": 82,
+   "brand": "Isana Professional",
+   "name": "Spülung Keratin & Repair",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "206 rossmann reviews."
+  },
+  {
+   "rank": 83,
+   "brand": "Isana",
+   "name": "Spülung Oil Repair Marulaöl",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "181 rossmann reviews."
+  },
+  {
+   "rank": 84,
+   "brand": "Isana Professional",
+   "name": "Plex Spülung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "147 rossmann reviews."
+  },
+  {
+   "rank": 85,
+   "brand": "Isana Professional",
+   "name": "Spülung Locken Traum",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "211 rossmann reviews."
+  },
+  {
+   "rank": 86,
+   "brand": "Being (by ZURU)",
+   "name": "Max Moisture Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 87,
+   "brand": "Being (by ZURU)",
+   "name": "Bye Bye Frizz Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 88,
+   "brand": "Being (by ZURU)",
+   "name": "Curl Power Locken Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 89,
+   "brand": "Being (by ZURU)",
+   "name": "Nourish + Shine Spülung",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "345 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 90,
+   "brand": "IDA WARG Beauty",
+   "name": "Moisture Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "New premium brand launch at Rossmann."
+  },
+  {
+   "rank": 91,
+   "brand": "IDA WARG Beauty",
+   "name": "Beauty Repair Conditioner",
+   "category_key": "conditioner",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+   ],
+   "rationale": "New premium brand launch at Rossmann."
+  },
+  {
+   "rank": 92,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Haarmaske Hydra Hyaluronic",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=shampoo"
+   ],
+   "rationale": "126 dm reviews, completes the Hydra Hyaluronic line."
+  },
+  {
+   "rank": 93,
+   "brand": "John Frieda Frizz Ease Wunder-Reparatur",
+   "name": "Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "89 rossmann reviews; John Frieda only has a conditioner in the catalog today."
+  },
+  {
+   "rank": 94,
+   "brand": "Pantene Pro-V",
+   "name": "Moisture BOOST Keratin Protect Haarmaske",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "87 rossmann reviews."
+  },
+  {
+   "rank": 95,
+   "brand": "Guhl",
+   "name": "30_sek Intensiv Kur Reparatur",
+   "category_key": "mask",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "101 dm reviews; catalog has the Feuchtigkeit 30-sec variant but not Reparatur."
+  },
+  {
+   "rank": 96,
+   "brand": "Pantene Pro-V",
+   "name": "Haarkur Hydration SOS, Hair Shake",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "101 dm reviews."
+  },
+  {
+   "rank": 97,
+   "brand": "Pantene Pro-V",
+   "name": "Haarkur 1 Minute Wunder-Ampulle Rescue Shots Repair & Care",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "15 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "154 dm reviews, single-use ampoule format."
+  },
+  {
+   "rank": 98,
+   "brand": "Garnier Fructis",
+   "name": "Haarmaske Keratin Sleek, Anti-Frizz Kur",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "370 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "392 dm reviews."
+  },
+  {
+   "rank": 99,
+   "brand": "Wahre Schätze",
+   "name": "Haarkur 1-Minute Traube",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "340 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "1356 dm reviews - very high, only missed pilot due to slot cap."
+  },
+  {
+   "rank": 100,
+   "brand": "Wahre Schätze",
+   "name": "Haarkur 1-Minute Honig Schätze",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "340 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "300 dm reviews."
+  },
+  {
+   "rank": 101,
+   "brand": "John Frieda Frizz Ease Wunder-Reparatur",
+   "name": "Tägliche Wunderkur Sofort Pflegespray",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "84 rossmann reviews, spray-on daily treatment."
+  },
+  {
+   "rank": 102,
+   "brand": "Langhaarmädchen",
+   "name": "Haarkur Intense Repair",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "20 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "70 dm reviews, dm private-label-adjacent brand, small ampoule format."
+  },
+  {
+   "rank": 103,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Haarkur Dream Length Rapid Reviver",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "180 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "389 dm reviews, pairs with Dream Length shampoo."
+  },
+  {
+   "rank": 104,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Haarkur Total Repair 1 Min Express-Kur",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "212 dm reviews."
+  },
+  {
+   "rank": 105,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Haarkur Color Glanz Purple",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "332 dm reviews, purple-toning mask."
+  },
+  {
+   "rank": 106,
+   "brand": "Garnier Fructis",
+   "name": "Haarkur Kakao Butter Hair Food 3in1 Maske, Sehr Trockenes & Lockiges Haar",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "150 rossmann reviews, another Hair Food flavour missing from the catalog's Aloe/Papaya/Banana set."
+  },
+  {
+   "rank": 107,
+   "brand": "Isana Professional",
+   "name": "Haarmaske Arganöl & Pflege",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "214 rossmann reviews, matches catalog's existing Isana Professional conditioner line."
+  },
+  {
+   "rank": 108,
+   "brand": "Isana Professional",
+   "name": "Plex Maske",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "125 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "117 rossmann reviews."
+  },
+  {
+   "rank": 109,
+   "brand": "Isana Professional",
+   "name": "Haarmaske Intensiv & Pflege",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "184 rossmann reviews."
+  },
+  {
+   "rank": 110,
+   "brand": "Isana Professional",
+   "name": "Haarmaske Locken Traum",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "141 rossmann reviews."
+  },
+  {
+   "rank": 111,
+   "brand": "Bali Curls",
+   "name": "Deep Hydration Mask",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "12 rossmann reviews, low priority; Bali Curls already has 3 masks in the catalog."
+  },
+  {
+   "rank": 112,
+   "brand": "Balea",
+   "name": "Haarkur Feuchtigkeit",
+   "category_key": "mask",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "25 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haarkur"
+   ],
+   "rationale": "102 dm reviews, ampoule format, distinct from catalog's 'Balea Haarkur reparierend'."
+  },
+  {
+   "rank": 113,
+   "brand": "Being (by ZURU)",
+   "name": "Mega Anti-Frizz Haarmaske",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 114,
+   "brand": "Being (by ZURU)",
+   "name": "Mega Moisture Haarmaske",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 115,
+   "brand": "Being (by ZURU)",
+   "name": "Mega Shine Haarmaske",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "354 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 116,
+   "brand": "IDA WARG Beauty",
+   "name": "Repair Hair Mask",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "New premium brand launch at Rossmann."
+  },
+  {
+   "rank": 117,
+   "brand": "Dr. Wolff Plantur",
+   "name": "DMG Clinical Haarserum",
+   "category_key": "mask",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "125 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+   ],
+   "rationale": "79 rossmann reviews; positioned near hair-thinning care - keep cosmetic framing distinct from medical claims, lower priority."
+  },
+  {
+   "rank": 119,
+   "brand": "Pantene Pro-V",
+   "name": "Miracles Molecular Bond Repair Wunder Haarcreme, Leave-In",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "90 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "257 dm reviews."
+  },
+  {
+   "rank": 120,
+   "brand": "Garnier Fructis",
+   "name": "Leave-In Creme Locken Methode Air Dry",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "260 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "207 dm reviews, curl-specific."
+  },
+  {
+   "rank": 121,
+   "brand": "Herbal Essences",
+   "name": "Leave-In Spray Kamille",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "145 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "128 dm reviews."
+  },
+  {
+   "rank": 122,
+   "brand": "Herbal Essences",
+   "name": "Leave-In Spray Blütensanft Rosenduft",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "145 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "98 dm reviews, pairs with the Blütensanft shampoo/conditioner/mask."
+  },
+  {
+   "rank": 123,
+   "brand": "Balea Professional",
+   "name": "Leave-In Serum Plex Care",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "228 dm reviews, dm private label."
+  },
+  {
+   "rank": 124,
+   "brand": "Dejan Garz",
+   "name": "Leave-In Cream The Foundation",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "314 dm reviews; Dejan Garz shampoo/conditioner already in catalog."
+  },
+  {
+   "rank": 125,
+   "brand": "Dejan Garz",
+   "name": "Leave-In Serum The Foundation",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "399 dm reviews, distinct format from the Leave-In Cream."
+  },
+  {
+   "rank": 126,
+   "brand": "Balea Professional",
+   "name": "Leave-In Haarmaske Molecular Care",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "110 dm reviews."
+  },
+  {
+   "rank": 127,
+   "brand": "Jean&Len",
+   "name": "Leave-In Haarmaske Peptide Intense Repair",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "97 dm reviews."
+  },
+  {
+   "rank": 128,
+   "brand": "Wahre Schätze",
+   "name": "Leave-In Haarkur Avocado",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "221 dm reviews; Wahre Schätze has no leave-in in the catalog today."
+  },
+  {
+   "rank": 129,
+   "brand": "Wahre Schätze",
+   "name": "Leave-In Haarkur Honig",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "200 dm reviews."
+  },
+  {
+   "rank": 130,
+   "brand": "Afrolocke",
+   "name": "Leave-In Haarkur, für lockiges Haar",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "141 dm reviews, curl-focused niche brand."
+  },
+  {
+   "rank": 131,
+   "brand": "Aussie",
+   "name": "Leave-In Haarserum Oh My Gloss",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "160 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "62 dm reviews."
+  },
+  {
+   "rank": 132,
+   "brand": "Pomélo + Co.",
+   "name": "Haarmaske Molecular Repair Leave-In Mask",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 g",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "82 dm reviews; Pomélo+Co already in catalog for conditioner/mask."
+  },
+  {
+   "rank": 133,
+   "brand": "Pantene Pro-V",
+   "name": "Leave-In Spray Sunkiss Glow",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "66 dm reviews."
+  },
+  {
+   "rank": 134,
+   "brand": "Plantur 39",
+   "name": "Leave-In Sprühkur",
+   "category_key": "leave_in",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "125 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=leave-in"
+   ],
+   "rationale": "87 dm reviews; Plantur 39 shampoo already in catalog."
+  },
+  {
+   "rank": 135,
+   "brand": "Isana Professional",
+   "name": "Plex Leave-in Serum",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "122 rossmann reviews."
+  },
+  {
+   "rank": 136,
+   "brand": "Isana Professional",
+   "name": "Haarfluid Wunder Express",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "218 rossmann reviews."
+  },
+  {
+   "rank": 137,
+   "brand": "Being (by ZURU)",
+   "name": "Major No-Frizz Leave-In Spülung",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": true,
+   "sizes": [
+    {
+     "size": "227 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 138,
+   "brand": "Being (by ZURU)",
+   "name": "Major Shine Leave-In Spülung",
+   "category_key": "leave_in",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "227 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "rationale": "New Being brand line extension."
+  },
+  {
+   "rank": 139,
+   "brand": "Langhaarmädchen",
+   "name": "Haaröl Intense Repair",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "368 dm reviews - high popularity, only missed the pilot 5-slot cap."
+  },
+  {
+   "rank": 140,
+   "brand": "Dejan Garz",
+   "name": "Haaröl Violet Hair Oil The Britney",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "337 dm reviews."
+  },
+  {
+   "rank": 141,
+   "brand": "Herbal Essences",
+   "name": "Haaröl Arganöl Elixir, Tiefenreparatur",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "95 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "98 dm reviews."
+  },
+  {
+   "rank": 142,
+   "brand": "Balea Professional",
+   "name": "Haaröl Plex Care",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "238 dm reviews, dm private label."
+  },
+  {
+   "rank": 143,
+   "brand": "Bali Curls",
+   "name": "Haaröl Bonding Oil",
+   "category_key": "oil",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "30 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "69 dm reviews; Bali Curls has no oil in the catalog today."
+  },
+  {
+   "rank": 144,
+   "brand": "Weleda",
+   "name": "Haaröl Rosmarin",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "78 dm reviews; catalog only has the Weleda Hydra Shine Gloss Drops."
+  },
+  {
+   "rank": 145,
+   "brand": "Pantene Pro-V",
+   "name": "Argan Infused Oil Haaröl",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "137 rossmann reviews, distinct from the Coconut/Keratin Pantene oils already in catalog."
+  },
+  {
+   "rank": 146,
+   "brand": "Gliss",
+   "name": "Hitzeschutz Öl-Spray Oil Nutritive",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "211 rossmann reviews, heat-protectant oil spray."
+  },
+  {
+   "rank": 147,
+   "brand": "Garnier Fructis",
+   "name": "Hitzeschutzspray Anti-Spliss Wunder-Öl, Stark Geschädigtes Haar",
+   "category_key": "oil",
+   "retailers": [
+    "dm",
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "150 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "Cross-confirmed (dm 383 / rossmann 182 reviews), heat-protectant oil spray."
+  },
+  {
+   "rank": 148,
+   "brand": "Pantene Pro-V",
+   "name": "Haarkur Glatt & Seidig Arganöl, Argan Infused Oil",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "245 dm reviews; oil-format product despite the 'Haarkur' name."
+  },
+  {
+   "rank": 149,
+   "brand": "Alterra",
+   "name": "Haar- und Kopfhautöl",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "78 rossmann reviews, Rossmann natural-cosmetics private label."
+  },
+  {
+   "rank": 150,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Öl-Kur Haaröl Trockenes Haar",
+   "category_key": "oil",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+   ],
+   "rationale": "179 rossmann reviews, dry-hair-specific variant distinct from the pilot 'General' Öl Magique."
+  },
+  {
+   "rank": 151,
+   "brand": "Dejan Garz",
+   "name": "Haaröl The Fairy, Light Oil",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "50 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "63 dm reviews."
+  },
+  {
+   "rank": 152,
+   "brand": "Pantene Pro-V",
+   "name": "Haaröl LOVE Edition Repair & Care",
+   "category_key": "oil",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "100 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/search?query=haaroel"
+   ],
+   "rationale": "63 dm reviews, limited edition - lowest priority in this backlog."
+  }
+ ],
+ "existing_product_new_eans": [],
+ "existing_product_corrections": [
+  {
+   "existing_product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+   "existing_name": "Ultimate Shampoo",
+   "brand": "L'Oréal Paris",
+   "issue": "truncated name from 2026-07-03 ingestion; row IS the Glycolic Gloss shampoo (affiliate link + GTIN 3600524128005 confirm)",
+   "proposed_name": "Elvital Glycolic Gloss Shampoo",
+   "note": "also consider adding 300ml Rossmann size EAN later",
+   "decided_by": "nick+claude 2026-09-02"
+  }
+ ],
+ "parked": [
+  {
+   "rank": 23,
+   "brand": "head&shoulders",
+   "name": "Leave-In Serum Derma x Pro, Kopfhaut-Feuchtigkeitspflege",
+   "category_key": "scalp_care",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "145 ml",
+     "eans": [
+      "8700216495981"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege"
+   ],
+   "rationale": "1017 dm reviews; cosmetic scalp-comfort leave-in (not a medical anti-hair-loss claim), head&shoulders already in catalog only for shampoo.",
+   "parked_reason": "Nick 2026-09-02: Kopfhaut-Serum -> scalp_care, outside big-five pilot; revisit in a scalp-care batch"
+  }
+ ]
+}

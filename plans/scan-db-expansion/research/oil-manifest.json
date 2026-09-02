@@ -1,0 +1,660 @@
+{
+  "batch_id": "scan-db-expansion-pilot-oil-2026-09-02",
+  "generated_at": "2026-09-02T16:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Tägliches Öl Elixier",
+          "brand": "Schwarzkopf Gliss",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 75,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1755072009/assets/pas/images/e6f36e32-1285-4954-ad42-04907340468c/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier"
+          },
+          "description": "Tägliches Haaröl mit Arganöl und Vitamin E für extrem geschädigtes Haar; auf handtuchtrockenem Haar nach der Wäsche oder auf trockenem Haar als Finish, ohne fettige Rückstände."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813791",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+              "text": "2 ANWENDUNGSMÖGLICHKEITEN: 1. Nach dem Waschen auf handtuchtrockenem Haar für Geschmeidigkeit. 2. Auf trockenem Haar als Beauty- Finish. Sparsam (1-2 Pumpstöße) auf die mittleren Längen & Spitzen geben."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+              "text": "2 ANWENDUNGSMÖGLICHKEITEN: 1. Nach dem Waschen auf handtuchtrockenem Haar für Geschmeidigkeit. 2. Auf trockenem Haar als Beauty- Finish. Sparsam (1-2 Pumpstöße) auf die mittleren Längen & Spitzen geben."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813791",
+            "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
+            "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Helianthus Annuus Seed Oil, ..., Argania Spinosa Kernel Oil (anhydrisches Silikon-/Trockenöl-Profil)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "2 Anwendungsmöglichkeiten: nach dem Waschen auf handtuchtrockenem Haar oder auf trockenem Haar als Beauty-Finish; sparsam (1-2 Pumpstöße) auf die mittleren Längen & Spitzen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Schwarzkopf-Linienseite (Oil Nutritive Tägliches Öl-Elixier) bestätigt: Zielgruppe sehr geschädigtes Haar, Arganöl + Vitamin E, '+100% stärkeres Haar', Glanz ohne fettige Rückstände.",
+            "source_label": "schwarzkopf.de Produktseite (Oil Nutritive Tägliches Öl-Elixier)",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/oil-nutritive/taegliches-oel-elixier.html",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light: flüchtige Alkane (Undecane, Tridecane) + Silikone als Basis, Herstellerclaim 'Hinterlässt keine fettigen Rückstände', sparsame Pumpdosierung.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung nennt exakt diese 2 Anwendungsmöglichkeiten (handtuchtrocken nach der Wäsche / trocken als Finish). Kein Hitzeschutz-Claim, kein Pre-Wash-Claim - bewusst nicht gestampt.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-dominante INCI mit Pflanzenölen im Mittelfeld; nicht als Trockenöl-Spray vermarktet, kein reines Pflanzenöl. Subtyp-Konvention siehe Notes (Frage an Nick).",
+          "category_specs.product_oil_eligibility.oil_purpose": "light_finish (abgeleitet): 'Beauty-Finish' + 'keine fettigen Rückstände' = leichtes Finish; kein Hitzestyling-Framing.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Sonnenblumenöl, Arganöl (+ Dicaprylyl Ether als Ester-Emollient). Keine Humectants, Proteine, Filmpolymere.",
+          "thickness_eligibility": "Alle Stärken: leichte Formel, explizit sparsame Dosierung; kein Overload-Risiko bei Packungsdosierung.",
+          "concern_eligibility": "hair_damage: 'speziell auf die Bedürfnisse von extrem geschädigtem Haar abgestimmt'. repair: Stärkungs-/Widerstandskraft-Positionierung ('+100% stärkeres Haar'). Trockenheit wird nicht explizit beworben - bewusst nicht aufgenommen.",
+          "protocols": "Keine Deviation: Platzierung 'mittlere Längen & Spitzen' und sparsame Dosierung sind template-konform ('wenige Tropfen'-Stil laut Ruling konsistent, Pumpformat notiert)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Öl Magique, für alle Haartypen",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747414488/assets/pas/images/14573ff0-7a16-4f59-bc69-c9e309fc0edc/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen"
+          },
+          "description": "Veredelndes Haaröl mit sechs Blütenölen für alle Haartypen; täglich auf trockenem oder nassem Haar, wirkt gegen Frizz und bietet Hitzeschutz bis 230 °C."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600523734955",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+              "text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+              "text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+              "text": "Täglich als veredelnde Pflege auf trockenem und nassem Haar verwendbar - vor dem Föhnen oder als glanzvolles Styling-Finish. Bietet Schutz vor hitzebedingten Stylingschäden bis 230° C."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600523734955",
+            "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
+            "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Isododecane, Dimethicone, Dimethiconol, Cocos Nucifera Oil, Tocopherol, ..., Sclerocarya Birrea Seed Oil, Camellia Japonica Seed Oil (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Täglich als veredelnde Pflege auf trockenem und nassem Haar; während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish; Hitzeschutz bis 230 °C.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "L'Oréal bestätigt: 'Hitzeschutz bis zu 230°', geeignet für alle Haartypen, Anti-Frizz, leichtes Haargefühl; Anwendungsvarianten inkl. 'in die feuchten Haarlängen (ab dem Ohr) einmassieren', Styling-Finish und Over-Night-Kur (Letzteres nur auf der Herstellerseite, nicht auf der dm-Packungsanweisung - nicht encodiert, siehe Notes).",
+            "source_label": "loreal-paris.de Produktseite (Elvital Öl Magique Veredelndes Haaröl)",
+            "source_url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light: Isododecane (flüchtig) an INCI-Position 1, Herstellerclaim 'natürlich leichtes Haargefühl'; keine Butter.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit trockenes UND nasses Haar, Styling-Finish. pre_heat_protection: expliziter Claim 'Schutz vor hitzebedingten Stylingschäden bis 230° C' + 'vor dem Föhnen'.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-dominante INCI, Styling-Finish-Positionierung; kein reines Pflanzenöl, nicht als Trockenöl vermarktet. Subtyp-Konvention siehe Notes.",
+          "category_specs.product_oil_eligibility.oil_purpose": "styling_finish (solide): wörtlich 'als glanzvolles Styling-Finish' auf der Packung.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Kokosöl, Marulaöl (Sclerocarya Birrea), Kamelienöl, Caprylic/Capric Triglyceride. Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: explizit 'für alle Haartypen', leichte Formel.",
+          "concern_eligibility": "frizz: 'Wirkt gegen Frizz'. dryness: 'Schützt das Haar vor dem Austrocknen'. Glanz hat keinen sauberen Concern-Code (bekanntes Thema aus dem Mask-Batch).",
+          "protocols": "Keine Deviation: keine Platzierungs-, Rinse- oder Zeitangaben, die den Templates widersprechen. 'Während dem Duschen' ist eine zusätzliche Anwendungsgelegenheit auf nassem Haar, kein Widerspruch. Die Overnight-Anwendung existiert NUR auf der Herstellerseite (1 von 10 Vorschlägen) - nicht encodiert, in den Notes dokumentiert.",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: Packung erlaubt explizit 'auf trockenem und nassem Haar' - either_state laut P9-Mapping."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Arganöl & Pflege",
+          "brand": "Isana Professional",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.79,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/572/MAM_57247767/MAM_57247767_SHOP_IMAGE_1.4.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=80",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947"
+          },
+          "description": "Haaröl mit Argan- und Sonnenblumenöl für extrem strapaziertes, trockenes Haar; vor der Wäsche, im feuchten Haar oder im trockenen Haar als Styling-Finish anwendbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4068134024947",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+              "https://incibeauty.com/en/produit/4068134024947"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "medium",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-PREWASH",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+              "text": "Vor der Haarwäsche zur intensiven Pflege, nach der Haarwäsche im feuchten Haar für besonderen Glanz und Geschmeidigkeit oder im trockenen Haar als Styling Finish verwenden. In den Längen und Spitzen verteilen. Bei dünnen Haaren bitte sparsam verwenden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+              "text": "Nach der Haarwäsche im feuchten Haar für besonderen Glanz und Geschmeidigkeit verwenden. In den Längen und Spitzen verteilen. Bei dünnen Haaren bitte sparsam verwenden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+              "text": "Im trockenen Haar als Styling Finish verwenden. In den Längen und Spitzen verteilen. Bei dünnen Haaren bitte sparsam verwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4068134024947",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag, von mir live reproduziert) + INCI-Beauty-Listing unter derselben EAN",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "role_support": [
+                "pre_wash_fibre_treatment",
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil (anhydrisch, volatile-dominant mit Pflanzenölen)"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Vor der Haarwäsche zur intensiven Pflege, nach der Haarwäsche im feuchten Haar oder im trockenen Haar als Styling Finish; in den Längen und Spitzen verteilen; bei dünnen Haaren sparsam verwenden. Keine Zeitangabe für die Pre-Wash-Anwendung (P8-Regel 15-20 Min greift).",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.79,
+            "source_label": "Rossmann.de Produktseite (100 ml, 1 L = 27,90 EUR)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Name laut Rossmann-Produktseite ('Haaröl Arganöl & Pflege', Marke ISANA PROFESSIONAL).",
+          "category_specs.product_oil_specs.weight": "medium (konservativ, gemischte Evidenz): INCI ist volatile-dominant (spräche für light), aber die Packung warnt selbst 'Bei dünnen Haaren bitte sparsam verwenden' und claimt eine 'reichhaltige Oil Intensiv-Pflegeformel' - Mitte gewählt.",
+          "category_specs.product_oil_specs.role_support": "Packung nennt exakt drei Anwendungen: vor der Haarwäsche (pre_wash_fibre_treatment), im feuchten Haar (leave_on_fibre_conditioning), im trockenen Haar als Styling Finish (dry_finish). Kein Hitzeschutz-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (geraten/konservativ): synthetische Volatiles + Silikon führen die INCI an, Pflanzenöle im Mittelfeld; kein reines Naturöl trotz 'Arganöl'-Naming, nicht als Trockenöl vermarktet. Subtyp-Konvention siehe Notes.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): drei gleichwertige Anwendungen ohne dominante Zweckbindung; ein einzelner Purpose-Wert wäre unbelegte Präzision. Schema erlaubt null explizit.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethiconol, Dimethicone. oils: Sonnenblumenöl (2x), Arganöl. Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: die Packung erlaubt feines Haar ausdrücklich mit Sparsamkeits-Hinweis; die Vorsicht trägt weight=medium im Ranking.",
+          "concern_eligibility": "dryness + hair_damage: Zielgruppe laut Packung 'extrem strapaziertes & trockenes Haar'.",
+          "protocols": "Keine Deviation: Pre-Wash ohne Zeitangabe (Schweigen ändert die P8-Regel 15-20 Min nicht, kein Widerspruch), Platzierung 'Längen und Spitzen' konform, keine Kopfhaut-/Overnight-Anweisung."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Repair Argan Haaröl",
+          "brand": "Monday Haircare",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.99,
+          "net_content_value": 89,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/572/MAM_57218952/MAM_57218952_SHOP_IMAGE_1.4.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825"
+          },
+          "description": "Leichtes Repair-Haaröl mit Arganöl und Squalan für trockenes, strapaziertes Haar; glättet Frizz und Spliss und sorgt für glasartigen Glanz, ohne zu beschweren."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248009825",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "split_ends",
+          "dryness",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+              "text": "Eine kleine Menge zwischen den Hängen verreiben und auf die mittlere Länge und Spitzen des Haares auftragen. Gleichmäßig mit den Fingern oder einem Kamm verteilen und einmassieren. Nicht ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248009825",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag, von mir live reproduziert; einzige Quelle, kein unabhängiger Zweitbeleg gefunden)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, ..., Caprylic/Capric Triglyceride, Argania Spinosa Kernel Oil, ..., Squalane (anhydrisches Silikon-/Ester-Profil)"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Eine kleine Menge zwischen den Händen verreiben, auf mittlere Länge und Spitzen auftragen, mit Fingern oder Kamm verteilen, nicht ausspülen. ACHTUNG: Weder Rossmann noch die Herstellerseiten (mondayhaircare.com, us.mondayhaircare.com) nennen einen Haarzustand (feucht/trocken).",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Herstellerseite bestätigt identische INCI-Spitze (Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate) und Claims: 'Hydrates and seals split ends', 'Leaves a glass-like shine', 'Anti-frizz, lightweight finish', 'Strengthens and softens'. Keine Anwendungsanleitung, kein Hitzeschutz-, kein Pre-Wash-Claim.",
+            "source_label": "mondayhaircare.com Produktseite (REPAIR Hair Oil)",
+            "source_url": "https://mondayhaircare.com/product/repair-hair-oil/",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.99,
+            "source_label": "Rossmann.de Produktseite (89 ml, 1 L = 67,30 EUR)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-argan-haaroel/p/4895248009825",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Name laut Rossmann-Produktseite ('Repair Argan Haaröl', Marke MONDAY Haircare).",
+          "category_specs.product_oil_specs.weight": "light: Herstellerclaims 'lightweight finish' / 'leicht und dennoch hochwirksam', Silikon-/Ester-Basis ohne Butter.",
+          "category_specs.product_oil_specs.role_support": "dry_finish (bewusst schmal): Finish-/Glanz-Positionierung ('glass-like shine', 'Anti-frizz, lightweight finish') trägt die Finish-Rolle; KEINE Quelle nennt eine Anwendung im feuchten Haar, daher leave_on_fibre_conditioning bewusst NICHT gestampt (Template-Regel: die Rolle braucht einen Beleg). Frage an Nick in den Notes.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): Silikon-/Ester-INCI mit Arganöl/Squalan im Mittelfeld, Finish-Positionierung; kein reines Naturöl. Subtyp-Konvention siehe Notes.",
+          "category_specs.product_oil_eligibility.oil_purpose": "light_finish (abgeleitet): 'lightweight finish' ist der wörtliche Kernclaim.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Arganöl, Squalan, Caprylic/Capric Triglyceride, Isopropyl Myristate/C12-15 Alkyl Benzoate (Ester-Emollients). Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: leichte Formel, Herstellerpositionierung 'suitable for all hair types, including fine'.",
+          "concern_eligibility": "frizz + split_ends: 'hilft, Frizz und Spliss zu glätten' / 'seals split ends'. dryness: 'spendet tiefenwirksam Feuchtigkeit', 'trockenes Haar'. hair_damage: 'strapaziertes Haar', Repair-Linie.",
+          "protocols": "Keine Deviation: 'mittlere Länge und Spitzen', Kamm-Verteilung und 'Nicht ausspülen' sind template-konform; der fehlende Haarzustand ist Schweigen, kein Widerspruch ('Hängen' ist ein Rossmann-Tippfehler für 'Händen', wörtlich zitiert).",
+          "identifiers.cross_source_agreement": "false: EAN stammt ausschließlich aus der Rossmann-Produktseite (URL + Syndigo-Tag); kein unabhängiger Zweitbeleg auffindbar - internationale Listings (Ulta/Boots/Amazon) führen die US-UPC 840191616426 bzw. zeigen keine EAN. GS1-Präfix 4895248 gehört demselben Inhaber wie die Being-by-ZURU-EANs im Draft (Monday ist eine ZURU-Marke, Rossmann nennt Zuru Germany GmbH) - Plausibilität, kein Beleg. Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan vorliegt."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

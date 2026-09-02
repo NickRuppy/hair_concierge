@@ -1,0 +1,72 @@
+{
+  "batch_id": "S5-EXP-pilot-2026-09-02-empty-thickness-eligibility",
+  "generated_at": "2026-09-02T09:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Balea Trockenes Haar Shampoo",
+          "brand": "Balea",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "candidate_image": {
+            "url": "https://cdn.dm.de/balea-trockenes-haar-shampoo.jpg",
+            "source_url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4001234567891",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/balea-shampoo-trockenes-haar-p1234"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "thickness": "normal",
+              "shampoo_bucket": "trocken",
+              "scalp_route": "dry",
+              "cleansing_intensity": "gentle"
+            }
+          ],
+          "cleansing_intensity": "gentle"
+        },
+        "thickness_eligibility": [],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234",
+              "text": "Ins nasse Haar einmassieren, aufschaeumen und gruendlich ausspuelen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "shampoo_bucket": "trocken"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/balea-shampoo-trockenes-haar-p1234",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {}
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

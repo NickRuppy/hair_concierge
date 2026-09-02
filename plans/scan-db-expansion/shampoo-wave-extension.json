@@ -1,0 +1,404 @@
+{
+ "meta": {
+  "generated": "2026-09-02",
+  "status": "PROPOSAL - not yet reviewed by Nick",
+  "purpose": "Additional shampoo-only candidates to extend selection-batch1-draft.json's 8 pilot + 31 backlog shampoo entries toward a ~50-SKU shampoo research wave. Companion file: shampoo-wave-extension.md.",
+  "method": "dm.de shampoo search (sorted by Beliebtheit, paged past the first ~30 results already covered in selection-batch1-draft.json via repeated 'Mehr laden' loads) and rossmann.de Shampoo category (pages 1-2), cross-checked by hand against: (a) the existing-catalog brand/variant list supplied in the task brief, (b) selection-batch1-draft.json's own pilot (8) and backlog (31) shampoo entries.",
+  "rank_continuation": "Continues from the highest rank used in selection-batch1-draft.json (152) - new ranks start at 153.",
+  "does_not_modify": "selection-batch1-draft.json and selection-batch1-draft.md were read-only references for this pass; nothing in this file has been merged into them."
+ },
+ "candidates": [
+  {
+   "rank": 153,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Shampoo Full Hair Magic",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "4015100861723"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3047436/schwarzkopf-gliss-shampoo-full-hair-magic"
+   ],
+   "rationale": "1266 dm reviews - the single highest-reviewed new find in this pass. Gliss has no product under this name anywhere in the existing catalog or in selection-batch1-draft.json (which only covers Gliss Sealing Miracle, Liquid Silk, Total Repair); distinct volumizing sub-line."
+  },
+  {
+   "rank": 154,
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Shampoo Bond Repair Anti-Haarschäden",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "3600524074654"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden"
+   ],
+   "rationale": "1131 dm reviews. Completes the Bond Repair line: the matching conditioner (rank 13) and leave-in serum (rank 118) are already in the selection-batch1-draft.json pilot, but the shampoo itself was missing from that pass."
+  },
+  {
+   "rank": 155,
+   "brand": "schauma",
+   "name": "Shampoo For Men",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "400 ml",
+     "eans": [
+      "4015100890792"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men"
+   ],
+   "rationale": "838 dm reviews. schauma only has 'Anti Schuppen' in the existing catalog and 'Repair & Pflege' in the backlog (rank 33) - this men's-targeted variant is a distinct, high-volume SKU neither covers."
+  },
+  {
+   "rank": 156,
+   "brand": "Pantene Pro-V",
+   "name": "Shampoo Grow Abundant Anti-Haarverlust",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "290 ml",
+     "eans": [
+      "8006530060042"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust"
+   ],
+   "rationale": "693 dm reviews. The matching conditioner is already in the backlog (rank 67, 'keep cosmetic framing, avoid medical hair-loss claims in copy') - this is the shampoo half of the same line, missing from that pass. Same framing caution applies: market as cosmetic thickening/fullness support, not a medical anti-hair-loss treatment."
+  },
+  {
+   "rank": 157,
+   "brand": "Schwarzkopf Gliss",
+   "name": "Shampoo scalp balance Tiefenreinigung",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "4015100893007"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung"
+   ],
+   "rationale": "568 dm reviews. Scalp-focused deep-cleanse shampoo (cosmetic, not medical - same category precedent as the existing catalog's Balea Kopfhaut Sensitive shampoo); distinct sub-line from the three other Gliss shampoos already covered."
+  },
+  {
+   "rank": 158,
+   "brand": "Plantur 21",
+   "name": "Shampoo Nutri-Coffein #langehaare",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "4008666755520"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare"
+   ],
+   "rationale": "450 dm reviews. Plantur 21 is a distinct Dr. Wolff sub-brand from 'Plantur 39 Coffein' already in the existing catalog (21 = long-hair/growth-support positioning vs. 39 = post-menopausal thinning) and from 'Dr. Wolff Plantur DMG Clinical' in the backlog (rank 54). Same cosmetic-framing caution as those two: caffeine/hair-growth marketing claims, keep language cosmetic not medical."
+  },
+  {
+   "rank": 159,
+   "brand": "Garnier Fructis",
+   "name": "Shampoo Keratin Sleek",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": [
+      "3600542638777"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3042319/garnier-fructis-shampoo-keratin-sleek"
+   ],
+   "rationale": "444 dm reviews. Distinct Fructis sub-line from Locken Methode (pilot) and Coco Water (backlog rank 34); anti-frizz/keratin positioning not otherwise covered."
+  },
+  {
+   "rank": 160,
+   "brand": "Isana MED",
+   "name": "Shampoo Totes Meer",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "200 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "405 rossmann reviews - highest-reviewed Isana find in this pass. Isana MED already has 'Jeden Tag (Ultra Sensitiv)' and 'pH 5,5 hautneutral' in the backlog (ranks 50-51); this Dead-Sea-minerals variant is a third, distinct Isana MED SKU. EAN not captured - Rossmann's listing cards did not expose a GTIN field in this pass (same limitation noted in selection-batch1-draft.md)."
+  },
+  {
+   "rank": 161,
+   "brand": "Balea PROFESSIONAL",
+   "name": "Shampoo Plex Care",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "4070765006285"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care"
+   ],
+   "rationale": "314 dm reviews. 'Balea PROFESSIONAL' is a distinct dm private-label sub-brand from plain 'Balea'/'Balea med' (which covers the existing catalog's 2in1 Urea/Aqua Hyaluron/Kopfhaut Sensitive/Ultimate Volume/Ultra Sensitive/Med Anti Schuppen variants) - none of those are Balea PROFESSIONAL SKUs. Weighted here per the brief's private-label priority; two sibling Balea PROFESSIONAL shampoos (Silberglanz, Wachstum + Stärke) were also seen on dm but not pursued further to keep this wave focused."
+  },
+  {
+   "rank": 162,
+   "brand": "Isana PROFESSIONAL",
+   "name": "Shampoo Keratin & Repair",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "195 rossmann reviews. Isana PROFESSIONAL only has an oil (rank 29) and a conditioner (rank 82/84/85) in selection-batch1-draft.json - this is the first Isana PROFESSIONAL shampoo in the ledger, private-label priority. EAN not captured (Rossmann listing limitation)."
+  },
+  {
+   "rank": 163,
+   "brand": "Isana PROFESSIONAL",
+   "name": "Plex Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "166 rossmann reviews. Second Isana PROFESSIONAL shampoo variant (bond/plex positioning, mirrors the Balea PROFESSIONAL Plex Care pick above at the other retailer's private label). EAN not captured."
+  },
+  {
+   "rank": 164,
+   "brand": "Isana MEN",
+   "name": "Shampoo Energy Effect",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "162 rossmann reviews. 'Isana MEN' is a men's-targeted Isana sub-brand not otherwise represented anywhere in the catalog or selection-batch1-draft.json (a sibling SKU, 'Fresh Power', 139 reviews, was also seen but not pursued to keep the wave focused). EAN not captured."
+  },
+  {
+   "rank": 165,
+   "brand": "Garnier Wahre Schätze",
+   "name": "Shampoo Kokosmilch & Macadamia Normales & Trockenes Haar",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": []
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft/haarpflege/shampoo/c/olcat3_4133099"
+   ],
+   "rationale": "160 rossmann reviews. Wahre Schätze already appears twice in the existing catalog (Aktivkohle, Hafermilch) and once in the pilot (Honig Schätze); this Kokosmilch & Macadamia variant is a distinct third/fourth formulation, not a duplicate of any of those. A second Wahre Schätze variant ('Sanfte Tonerde & Zitrone', 86 reviews) was also seen but not pursued to keep the wave focused."
+  },
+  {
+   "rank": 166,
+   "brand": "John Frieda Sheer Blonde",
+   "name": "Sheer Blonde Refresh & Shine Shampoo",
+   "category_key": "shampoo",
+   "retailers": [
+    "rossmann"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "250 ml",
+     "eans": [
+      "5037156296105"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-john-frieda-sheer-blonde-sheer-blonde-refresh-und-shine-shampoo/p/5037156296105"
+   ],
+   "rationale": "94 rossmann reviews. selection-batch1-draft.json's backlog has the Sheer Blonde CONDITIONER (rank 77) and the Violet Crush Intensiv Silber SHAMPOO (rank 53), but not this Sheer Blonde shampoo - completes the pairing. EAN is derived from the numeric segment of the product-page URL (same pattern/confidence level the original draft used for 'Being Big Hair Shampoo'): passes EAN-13 checksum validation but was not read from an explicit GTIN field on the page (Rossmann did not expose one here), so treat as moderate-confidence/unverified, not a guess."
+  },
+  {
+   "rank": 167,
+   "brand": "AUSSIE",
+   "name": "Shampoo Bouncy Curls",
+   "category_key": "shampoo",
+   "retailers": [
+    "dm"
+   ],
+   "rossmann_new": false,
+   "sizes": [
+    {
+     "size": "300 ml",
+     "eans": [
+      "8006530325530"
+     ]
+    }
+   ],
+   "source_urls": [
+    "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls"
+   ],
+   "rationale": "88 dm reviews - lowest-reviewed pick in this wave, included for category completion rather than pure popularity: Aussie has a leave-in in the existing catalog and a conditioner in the backlog (rank 68, same 'Bouncy Curls' line) but no shampoo anywhere in the ledger yet."
+  }
+ ],
+ "considered_and_rejected": [
+  {
+   "brand": "Balea med",
+   "name": "Shampoo Ultra Sensitive / Duschgel & Shampoo 5% Urea 2in1 / Shampoo Anti-Schuppen Ultra Sensitive / Shampoo Totes Meer Ultra Sensitive",
+   "reason": "near-duplicate of existing catalog 'Balea 2in1 Urea' and 'Balea ... Ultra Sensitive' / 'Balea Med Anti Schuppen' entries by name."
+  },
+  {
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Shampoo Glycolic Gloss, 200 ml (dm) / Glycolic Gloss Spiegelglanz Shampoo, 300 ml (rossmann)",
+   "reason": "already in the existing catalog under the truncated name 'Ultimate Shampoo' per selection-batch1-draft.md's Corrections section (GTIN 3600524128005 confirmed)."
+  },
+  {
+   "brand": "Herbal Essences",
+   "name": "Shampoo Limettenduft, Tiefenreinigung & Glanz",
+   "reason": "judgment call: name pattern strongly suggests this is the existing catalog's 'Herbal Essences Tiefenreinigung' entry, not a new formulation - excluded rather than risk a silent duplicate."
+  },
+  {
+   "brand": "Herbal Essences",
+   "name": "Shampoo Blütensanft Rosenduft / Fiji / Dolce Vita / Feuchtigkeit Aloe Vera / Repair Arganöl",
+   "reason": "Blütensanft and Fiji are already selection-batch1-draft.json backlog ranks 32/35. Dolce Vita (294 rev), Feuchtigkeit Aloe Vera (115 rev) and Repair Arganöl (76 rev) are genuinely new and not duplicates, but were left out to keep this wave's per-brand spread reasonable given three other Herbal Essences shampoos are already in the ledger - good next candidates if Nick wants a second top-up wave."
+  },
+  {
+   "brand": "sebamed",
+   "name": "Shampoo Every-Day (400/200 ml) / Anti-Schuppen / Anti-Schuppen Plus",
+   "reason": "duplicate risk against existing catalog 'Sebamed 4x' - brief gives no variant names to disambiguate against, so treated as too risky rather than guessed."
+  },
+  {
+   "brand": "Salthouse",
+   "name": "Shampoo Totes Meer Therapie Anti-Juckreiz / Anti-Schuppen Totes Meer",
+   "reason": "duplicate risk against existing catalog 'Salthouse 3x' - same reasoning as sebamed above."
+  },
+  {
+   "brand": "head&shoulders",
+   "name": "Shampoo Derma x Pro Beruhigende Pflege (250/400 ml) / Anti-Schuppen Citrus Fresh / Anti-Schuppen bei juckender Kopfhaut",
+   "reason": "Derma x Pro is the same product line Nick already parked as scalp_care in selection-batch1-draft.md's Corrections #2 (the matching Derma x Pro leave-in serum) - kept out of the shampoo/haircare wave for consistency. Citrus Fresh / juckende Kopfhaut carry duplicate risk against existing catalog 'Head&Shoulders 4x' and had low review counts (56/59)."
+  },
+  {
+   "brand": "OGX",
+   "name": "Shampoo ProGrowth + Peptide",
+   "reason": "duplicate risk against existing catalog 'OGX 4x' - no variant names given to disambiguate."
+  },
+  {
+   "brand": "Guhl",
+   "name": "Shampoo Frische & Leichtigkeit Anti Fett (cross-confirmed dm 273 / rossmann 36 reviews) / Silber Glanz & Pflege / Reparatur & Aufbau / Kraft + Fülle / Anti-Schuppen",
+   "reason": "duplicate risk against existing catalog 'Guhl 5x' - no variant names given to disambiguate; Frische & Leichtigkeit Anti Fett is the strongest of these (273 dm reviews, cross-confirmed) and worth a manual catalog check if Nick wants to free it up."
+  },
+  {
+   "brand": "NIVEA",
+   "name": "Shampoo & Conditioner Express 2in1 (dm, 142 rev) / 2in1 Express Shampoo & Spülung (rossmann, 31 rev, same product)",
+   "reason": "near-duplicate of existing catalog 'Nivea 2in1'."
+  },
+  {
+   "brand": "Plantur",
+   "name": "Shampoo DMG Clinical",
+   "reason": "already in selection-batch1-draft.json backlog as 'Dr. Wolff Plantur DMG Clinical' (rank 54) - same product, dm listing just drops the 'Dr. Wolff' prefix."
+  },
+  {
+   "brand": "LANGHAARMÄDCHEN",
+   "name": "Shampoo Lovely Long (165 rev) / Hydrate & Shine (22 rev)",
+   "reason": "selection-batch1-draft.md's own conditioner notes (rank 69) name 'Lovely Long' as one of the two existing-catalog Langhaarmädchen variants ('Beautiful Curls + Lovely Long') - too high a duplicate risk to include without a category/product-type check. Hydrate & Shine had too few reviews (22) to be worth the same risk."
+  },
+  {
+   "brand": "John Frieda",
+   "name": "Go Blonder Aufhellendes Shampoo",
+   "reason": "genuinely new (88 rossmann reviews, not a duplicate of anything in the ledger) but dropped in favor of the higher-reviewed Sheer Blonde pick to keep the John Frieda share of this wave to one item; good next candidate for a follow-up wave."
+  },
+  {
+   "brand": "PANTENE PRO-V",
+   "name": "Shampoo & Conditioner & Haarkur 3in1 Repair & Care / Shampoo Locken Pur",
+   "reason": "3in1 format (271 rev) and Locken Pur (173 rev) are not obvious duplicates of anything named in the existing catalog's 'Pantene 5x' or elsewhere in the ledger, but were left out in favor of the stronger Grow Abundant pick to avoid over-weighting one brand and because 'Pantene 5x' already has unknown variant overlap risk."
+  }
+ ]
+}
