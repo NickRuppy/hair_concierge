@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import {
+  PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS,
   PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS,
   buildPersonalPlanResultRevealCompletion,
   buildPersonalPlanResultRevealMessages,
@@ -13,6 +14,7 @@ import {
   schedulePersonalPlanResultReveal,
 } from "@/lib/quiz/personal-plan-result-reveal"
 import { requestPersonalPlanResultArtifactEmail } from "@/lib/personal-plan-quiz/result-email-client"
+import { RevealOpeningDots } from "@/components/quiz/reveal-opening-dots"
 
 export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string; leadId: string }) {
   const router = useRouter()
@@ -22,7 +24,14 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
   const trackedStepsRef = useRef(new Set<number>())
   const completedRef = useRef(false)
   const revealStartedAtRef = useRef<number | null>(null)
+  const exitHoldTimerRef = useRef<number | null>(null)
   const resultPath = `/result/${leadId}?entry=quiz_completion`
+
+  useEffect(() => {
+    return () => {
+      if (exitHoldTimerRef.current !== null) window.clearTimeout(exitHoldTimerRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     void requestPersonalPlanResultArtifactEmail(leadId).catch((error) => {
@@ -46,12 +55,25 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
           visibleStep,
         }),
       )
-      window.requestAnimationFrame(() => router.replace(resultPath))
+      // The exit line is HELD as a real state instead of flashing for one
+      // frame; the /result loading shell then shows the identical line, so
+      // the route change underneath stays invisible (Follow-up B,
+      // plans/2026-09-02-follow-up-transitions.md). Prefetching during the
+      // hold overlaps the offer's server render with the beat, so the total
+      // wait approaches max(beat, latency) instead of their sum.
+      router.prefetch(resultPath)
+      exitHoldTimerRef.current = window.setTimeout(
+        () => router.replace(resultPath),
+        PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS,
+      )
     },
     [leadId, messages.length, resultPath, router],
   )
 
   useEffect(() => {
+    // The exit hold keeps the component mounted for a second after completion;
+    // steps advancing under the held line were never seen and must not track.
+    if (completedRef.current) return
     if (trackedStepsRef.current.has(storyIndex)) return
     trackedStepsRef.current.add(storyIndex)
     revealStartedAtRef.current ??= performance.now()
@@ -66,7 +88,9 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
     return schedulePersonalPlanResultReveal({
       messageCount: messages.length,
       onComplete: () => openResult("timer", messages.length),
-      onStep: setStoryIndex,
+      onStep: (index) => {
+        if (!completedRef.current) setStoryIndex(index)
+      },
       timer: {
         cancel: (handle) => window.clearTimeout(handle),
         schedule: (callback, delayMs) => window.setTimeout(callback, delayMs),
@@ -80,13 +104,18 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(var(--brand-plum-rgb),0.09),transparent_42%)]"
       />
-      <button
-        className="absolute right-5 top-5 z-10 rounded-full px-3 py-2 text-sm font-semibold text-[rgba(var(--brand-plum-rgb),0.70)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
-        onClick={() => openResult("skip_button", storyIndex + 1)}
-        type="button"
-      >
-        Überspringen
-      </button>
+      {/* During the exit hold the claim guard makes skipping a no-op, and the
+          loading shell that follows has no button — so it leaves with the
+          reveal instead of lingering as a dead control. */}
+      {navigating ? null : (
+        <button
+          className="absolute right-5 top-5 z-10 rounded-full px-3 py-2 text-sm font-semibold text-[rgba(var(--brand-plum-rgb),0.70)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
+          onClick={() => openResult("skip_button", storyIndex + 1)}
+          type="button"
+        >
+          Überspringen
+        </button>
+      )}
       <section
         aria-atomic="true"
         aria-live="polite"
@@ -97,7 +126,9 @@ export function PersonalPlanResultReveal({ dateKey, leadId }: { dateKey: string;
           key={navigating ? "navigating" : storyIndex}
         >
           {navigating ? (
-            "Deine Auswertung wird geöffnet …"
+            <>
+              Deine Auswertung wird geöffnet <RevealOpeningDots />
+            </>
           ) : (
             <>
               {messages[storyIndex].before}

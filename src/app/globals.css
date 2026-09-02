@@ -1160,6 +1160,57 @@
   transition-delay: 450ms;
 }
 
+/* Reveal → offer choreography (Follow-up B): the held exit line's animated
+   ellipsis, shared by the reveal client and the /result loading shell, and
+   the offer's crossfade-in. */
+@keyframes personalPlanRevealDots {
+  0%,
+  24% {
+    content: "";
+  }
+  25%,
+  49% {
+    content: ".";
+  }
+  50%,
+  74% {
+    content: "..";
+  }
+  75%,
+  100% {
+    content: "…";
+  }
+}
+
+/* Reserved width + left alignment: a centered headline must not re-center as
+   the dots cycle, and the final "…" is both the resting glyph and the
+   reduced-motion fallback. */
+.personal-plan-reveal-dots {
+  display: inline-block;
+  min-width: 1.1em;
+  text-align: left;
+  white-space: pre;
+}
+
+.personal-plan-reveal-dots::after {
+  animation: personalPlanRevealDots 1.4s linear infinite;
+  animation-delay: var(--personal-plan-reveal-dots-delay, 0ms);
+  content: "…";
+}
+
+@keyframes personalPlanResultEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.personal-plan-result-enter {
+  animation: personalPlanResultEnter 300ms ease-out both;
+}
+
 .plan-opening-slow-hint {
   opacity: 0;
   transition: opacity 500ms ease;
@@ -1199,7 +1250,9 @@
     animation: none;
   }
 
-  .plan-opening-arcwrap {
+  .plan-opening-arcwrap,
+  .personal-plan-reveal-dots::after,
+  .personal-plan-result-enter {
     animation: none;
   }
 

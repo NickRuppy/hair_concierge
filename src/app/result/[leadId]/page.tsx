@@ -459,48 +459,53 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
 
   return (
-    <ResultPageClient
-      leadId={lead.id}
-      name={lead.name}
-      personalPlanOffer={personalPlanOffer as PersonalPlanOfferModel | null}
-      personalPlanFocusTarget={personalPlanFocusTarget}
-      quizAnswers={quizAnswers}
-      quizKind={lead.quiz_kind}
-      entryContext={entryContext}
-      focusRoutine={focusRoutine}
-      focusTarget={focusTarget}
-      hasAccess={hasAccess}
-      fieldTest={Boolean(fieldTestAuthorization)}
-      moderatorTest={moderatorTest}
-      fieldTestUnavailable={fieldTestUnavailable}
-      isInternalTest={personalPlanSession?.isInternalTest ?? false}
-      regularFieldTest={
-        moderatorTest
-          ? {
-              accessDurationHours: 2160,
-              activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic",
-              identityMode: "email_bound",
-            }
-          : regularFieldTestState.authorization
+    // Crossfade-in from the result loading shell (Follow-up B): the shell holds
+    // the reveal's exit line on the same cream ground, so the offer fades in
+    // instead of popping after a hard swap.
+    <div className="personal-plan-result-enter">
+      <ResultPageClient
+        leadId={lead.id}
+        name={lead.name}
+        personalPlanOffer={personalPlanOffer as PersonalPlanOfferModel | null}
+        personalPlanFocusTarget={personalPlanFocusTarget}
+        quizAnswers={quizAnswers}
+        quizKind={lead.quiz_kind}
+        entryContext={entryContext}
+        focusRoutine={focusRoutine}
+        focusTarget={focusTarget}
+        hasAccess={hasAccess}
+        fieldTest={Boolean(fieldTestAuthorization)}
+        moderatorTest={moderatorTest}
+        fieldTestUnavailable={fieldTestUnavailable}
+        isInternalTest={personalPlanSession?.isInternalTest ?? false}
+        regularFieldTest={
+          moderatorTest
             ? {
-                accessDurationHours: regularFieldTestState.authorization.accessDurationHours,
-                identityMode: "guest",
+                accessDurationHours: 2160,
+                activationApiPath: "/api/personal-plan/field-test/moderator/activate-organic",
+                identityMode: "email_bound",
               }
-            : null
-      }
-      regularFieldTestUnavailable={regularFieldTestState.unavailable}
-      partnerAccess={
-        partnerAuthorization ? { activationApiPath: "/api/partner-access/activate" } : null
-      }
-      partnerAccessUnavailable={partnerAccessUnavailable}
-      returnTo={returnTo}
-      offerTracking={offerTracking}
-      offerVariant={offerVariant}
-      pricingCatalog={pricingCatalog}
-      showQuizRestart={
-        lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()
-      }
-    />
+            : regularFieldTestState.authorization
+              ? {
+                  accessDurationHours: regularFieldTestState.authorization.accessDurationHours,
+                  identityMode: "guest",
+                }
+              : null
+        }
+        regularFieldTestUnavailable={regularFieldTestState.unavailable}
+        partnerAccess={
+          partnerAuthorization ? { activationApiPath: "/api/partner-access/activate" } : null
+        }
+        partnerAccessUnavailable={partnerAccessUnavailable}
+        returnTo={returnTo}
+        offerTracking={offerTracking}
+        offerVariant={offerVariant}
+        pricingCatalog={pricingCatalog}
+        showQuizRestart={
+          lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()
+        }
+      />
+    </div>
   )
 }
 

@@ -40,7 +40,24 @@ recommendation"). Follow-up A ships first; Follow-up B is its own later PR.
   staggered rise maps onto the existing 200 ms stage-entrance.
 - Stage-3 preparation/recovery panels and their copy are out of scope.
 
-## Follow-up B — queued (separate PR)
+## Follow-up B — scope of the second PR
 
-Reveal exit state + `/result/[leadId]` loading shell (decision 4), plus the
-skeleton dialect unification (decision 5). Same evidence file governs.
+- `src/lib/quiz/personal-plan-result-reveal.ts`: `PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS`
+  (1 s) — the exit line is held as a real state; the offer route is prefetched
+  during the hold so the wait approaches max(beat, latency).
+- `src/app/result/[leadId]/reveal/personal-plan-result-reveal.tsx`: held exit
+  beat with the shared animated ellipsis; step timers stop tracking after
+  completion; the Überspringen button leaves with the reveal.
+- `src/app/result/[leadId]/loading.tsx` (new): the identical exit line on the
+  identical cream ground — covers reveal→offer, quiz→reveal, and the other
+  /result entries (pricing, quiz_return email links) with one journey screen.
+- `src/components/quiz/reveal-opening-dots.tsx` (new): wall-clock-anchored
+  ellipsis shared by the reveal, the shell, and the legacy quiz overlay.
+- `src/components/quiz/quiz-results.tsx`: the legacy overlay's copy aligned to
+  "…deine Auswertung wird geöffnet …", so the overlay and the shell read as one
+  continuing state instead of two different transition screens.
+- `src/app/result/[leadId]/page.tsx`: the offer crossfades in
+  (`personal-plan-result-enter`).
+- Decision 5: `src/app/routine/loading.tsx` and `src/app/anwendung/loading.tsx`
+  converted to the neutral static dialect and added to the phase-3 shell
+  contract with full a11y attributes.

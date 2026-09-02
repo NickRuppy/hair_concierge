@@ -15,6 +15,13 @@ const GERMAN_MONTHS = [
 
 export const PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS = 2_040
 export const PERSONAL_PLAN_RESULT_REVEAL_TOTAL_MS = PERSONAL_PLAN_RESULT_REVEAL_MESSAGE_MS * 3
+/**
+ * How long "Deine Auswertung wird geöffnet …" is held before the route change
+ * (Follow-up B, founder sign-off 02.09.2026): previously it rendered for a
+ * single frame, which read as a flash. The /result loading shell shows the
+ * identical line, so a slow offer render simply extends the same state.
+ */
+export const PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS = 1_000
 
 export type PersonalPlanResultRevealCompletionTrigger = "skip_button" | "timer"
 
