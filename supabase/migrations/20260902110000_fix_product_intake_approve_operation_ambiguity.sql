@@ -33,19 +33,40 @@
 -- `spec_operation(value)`; nothing else changes — same guards, same order, same
 -- writes.
 --
--- The guard below accepts EXACTLY TWO pre-states and hard-fails on anything else:
---   (a) the defective body (fresh replay)  → replaced;
---   (b) a body already carrying the alias fix (prod) → re-created idempotently,
---       which is a behavioural no-op and puts the text under version control.
--- Any third body means drift beyond this alias, which must be reviewed rather
--- than silently overwritten — the landmark checks below are what distinguish
--- "same logic, fixed alias" from "something else happened here".
+-- The guard below accepts EXACTLY THREE reviewed pre-state BODIES — two logical
+-- states, one of them in two textual forms — and hard-fails on anything else:
+--   (a) the defective body verbatim from 20260814120000 (fresh replay) → replaced;
+--   (b) the fixed body this migration installs (a replay of this migration)
+--       → re-created idempotently, a behavioural no-op;
+--   (c) the PRODUCTION out-of-band form of (b), which spells the alias
+--       `) AS spec_operation(value)` — same logic, one extra keyword.
+--
+-- The comparison is on the FULL function body, not on markers. Each accepted
+-- body is pinned as the sha256 of its whitespace-stripped `prosrc`; whitespace
+-- is stripped so re-indentation is tolerated, but every token must match. A
+-- landmark/marker check cannot do this job: a body that keeps the markers and
+-- changes the logic between them would pass it silently, which is precisely the
+-- overwrite this guard exists to prevent. Anything whose digest is not on the
+-- list is unknown drift and must be re-reviewed by a human, so the digest it
+-- actually has is reported in the exception.
+--
+-- These three digests are re-derived from the migration files and asserted
+-- against the literals below by tests/scan-expansion-batch-postgres.test.ts, so
+-- editing the body without re-pinning fails in CI rather than in production.
 DO $assert_pre_state$
 DECLARE
+  -- sha256 of regexp_replace(prosrc, '\s+', '', 'g'):
+  --   (a) 20260814120000 body, ambiguous `) operation` alias
+  c_defective constant text :=
+    'f7b9458a71e28759ba8e172d46a4cbb257bb1b0fdd909ce60ce45a8002317a14';
+  --   (b) the body this migration installs, `) spec_operation(value)`
+  c_repo_fixed constant text :=
+    '1de749009f7425ecf3245147c4ddc6b1d4898164fd3b75d90df1b419c1529332';
+  --   (c) the production out-of-band body, `) AS spec_operation(value)`
+  c_prod_fixed constant text :=
+    'a50dd87bc5dfac43e77fc70497a3b80209b60158802f9bef271af288ff3dcd68';
   v_source text;
-  v_defective boolean;
-  v_already_fixed boolean;
-  v_missing text;
+  v_digest text;
 BEGIN
   SELECT prosrc INTO v_source
   FROM pg_catalog.pg_proc proc
@@ -57,34 +78,17 @@ BEGIN
     RAISE EXCEPTION 'product intake approval chain does not match the reviewed pre-state: function is missing';
   END IF;
 
-  v_defective := pg_catalog.strpos(v_source, '''[]''::jsonb)) operation') > 0;
-  v_already_fixed := pg_catalog.strpos(v_source, 'spec_operation(value)') > 0;
+  v_digest := pg_catalog.encode(
+    pg_catalog.sha256(
+      pg_catalog.convert_to(pg_catalog.regexp_replace(v_source, '\s+', '', 'g'), 'UTF8')
+    ),
+    'hex'
+  );
 
-  IF v_defective = v_already_fixed THEN
+  IF v_digest NOT IN (c_defective, c_repo_fixed, c_prod_fixed) THEN
     RAISE EXCEPTION
-      'product intake approval body matches neither reviewed pre-state (defective alias: %, spec_operation fix: %); re-review this repair',
-      v_defective, v_already_fixed;
-  END IF;
-
-  -- Both accepted pre-states must still be the SAME reviewed logic. Anything
-  -- that lost one of these landmarks is a third, unknown body.
-  SELECT pg_catalog.string_agg(landmark, ', ' ORDER BY landmark)
-  INTO v_missing
-  FROM (VALUES
-    ('canonical V1/V2 protocol scope is required'),
-    ('canonical V1/V2 protocol scope and application family must match the approved product operation'),
-    ('product_intake_approve_reviewed_product_without_canonical_guidance'),
-    ('ON CONFLICT (product_id, category, role, application_family)'),
-    ('public.product_mask_specs'),
-    ('public.product_leave_in_specs'),
-    ('public.product_oil_specs')
-  ) AS landmarks(landmark)
-  WHERE pg_catalog.strpos(v_source, landmarks.landmark) = 0;
-
-  IF v_missing IS NOT NULL THEN
-    RAISE EXCEPTION
-      'product intake approval body has drifted beyond the alias fix (missing: %); re-review this repair',
-      v_missing;
+      'product intake approval body matches neither reviewed pre-state (normalized sha256: %); re-review this repair',
+      v_digest;
   END IF;
 END;
 $assert_pre_state$;

@@ -510,13 +510,106 @@ test("the boundary repair converges both reviewed pre-states and refuses unknown
   await pg.exec(repair)
   assert.equal(await boundaryBody(pg), repaired, "prod-shaped body converges onto the repo body")
 
-  // Third body, neither marker → hard fail, nothing overwritten.
+  // Unknown body, nothing in common with the reviewed ones → hard fail.
   await forceBoundaryBody(pg, "RAISE NOTICE 'unrelated body';")
   await assert.rejects(pg.exec(repair), /matches neither reviewed pre-state/)
 
-  // Third body, carries the fix marker but has lost the reviewed logic → hard fail.
+  // Unknown body that carries the fix marker but has lost the reviewed logic.
   await forceBoundaryBody(pg, "-- spec_operation(value)\n      RAISE NOTICE 'gutted body';")
-  await assert.rejects(pg.exec(repair), /drifted beyond the alias fix/)
+  await assert.rejects(pg.exec(repair), /matches neither reviewed pre-state/)
+})
+
+test("a drifted body that keeps every landmark but changes behaviour is refused", async (t) => {
+  const pg = await migratedDatabase(t)
+  const repair = await repairSql()
+
+  // The reviewed body with ONE token changed: the protocol-scope guard now
+  // accepts an empty `rows` array. Every marker the old landmark guard looked
+  // for is still present — the fixed alias, both RAISE messages, the delegate
+  // call, the ON CONFLICT target and all three spec tables — so a marker-based
+  // guard would have overwritten this silently. Only a full-body comparison
+  // catches it.
+  const drifted = repair
+    .slice(repair.indexOf("CREATE OR REPLACE FUNCTION"))
+    .replace(
+      "pg_catalog.jsonb_array_length(spec_operation.value->'rows') > 0",
+      "pg_catalog.jsonb_array_length(spec_operation.value->'rows') >= 0",
+    )
+  assert.ok(drifted.includes(">= 0"), "the behavioural mutation was applied")
+  await pg.exec(drifted)
+
+  const seeded = await boundaryBody(pg)
+  for (const landmark of [
+    "spec_operation(value)",
+    "canonical V1/V2 protocol scope is required",
+    "canonical V1/V2 protocol scope and application family must match the approved product operation",
+    "product_intake_approve_reviewed_product_without_canonical_guidance",
+    "ON CONFLICT (product_id, category, role, application_family)",
+    "public.product_mask_specs",
+    "public.product_leave_in_specs",
+    "public.product_oil_specs",
+  ]) {
+    assert.ok(seeded.includes(landmark), `landmark still present: ${landmark}`)
+  }
+
+  await assert.rejects(pg.exec(repair), /matches neither reviewed pre-state/)
+  assert.equal(await boundaryBody(pg), seeded, "the drifted body was not overwritten")
+})
+
+test("the repair pins the sha256 of every body it is willing to accept", async () => {
+  const repair = await repairSql()
+
+  /** The `$function$ … $function$` body of one function in a migration file. */
+  function functionBody(sql: string, name: string): string {
+    const head = sql.indexOf(`CREATE OR REPLACE FUNCTION public.${name}(`)
+    assert.ok(head >= 0, `function not found: ${name}`)
+    const start = sql.indexOf("AS $function$", head) + "AS $function$".length
+    const end = sql.indexOf("$function$;", start)
+    assert.ok(end > start, `unterminated body: ${name}`)
+    return sql.slice(start, end)
+  }
+  const digest = (body: string) =>
+    createHash("sha256").update(body.replace(/\s+/g, ""), "utf8").digest("hex")
+
+  const legacy = await readFile(
+    new URL(
+      "supabase/migrations/20260814120000_personal_plan_application_use_case_variants.sql",
+      ROOT,
+    ),
+    "utf8",
+  )
+  const defective = functionBody(legacy, "product_intake_approve_reviewed_product")
+  const repoFixed = functionBody(
+    repair,
+    "product_intake_approve_reviewed_product_before_thumbnail_image",
+  )
+  const prodFixed = repoFixed.replace(") spec_operation(value)", ") AS spec_operation(value)")
+
+  // The two logical pre-states really are the same reviewed logic: rewriting
+  // only the four ambiguous alias references turns one into the other. That is
+  // what makes converging them a behavioural no-op — and it is an assertion,
+  // not a comment, so a future edit to either body has to face it.
+  assert.notEqual(defective, repoFixed)
+  assert.equal(
+    defective
+      .replace("'[]'::jsonb)) operation\n", "'[]'::jsonb)) spec_operation(value)\n")
+      .replace("WHERE operation->>'table'", "WHERE spec_operation.value->>'table'")
+      .replace("jsonb_typeof(operation->'rows')", "jsonb_typeof(spec_operation.value->'rows')")
+      .replace(
+        "jsonb_array_length(operation->'rows')",
+        "jsonb_array_length(spec_operation.value->'rows')",
+      ),
+    repoFixed,
+    "the repair must change the alias and nothing else",
+  )
+  assert.notEqual(prodFixed, repoFixed, "the production form is textually distinct")
+
+  for (const expected of [digest(defective), digest(repoFixed), digest(prodFixed)]) {
+    assert.ok(
+      repair.includes(expected),
+      `the repair migration must pin the normalized sha256 ${expected}`,
+    )
+  }
 })
 
 test("preflight parks incomplete products and publishes the rest through the boundary", async (t) => {
