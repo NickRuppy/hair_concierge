@@ -604,11 +604,20 @@
           },
           {
             "fact_key": "product.claims.bond_repair",
-            "fact_value": "20% Bond-Repair-Komplex mit Zitronensäure/Aminosäuren; 100% wiederhergestellte Stärke, 3x weniger Haarbruch beim Kämmen, 7x weniger Spliss; schützt die Haarbindungen und glättet die Haarfaser für mehr Glanz; Anwendung 2 Tropfen in Längen und Spitzen, feucht oder trocken; kein Hitzeschutz-Claim.",
-            "source_label": "loreal-paris.de Produktseite (Bond Repair Leave-in-Serum)",
+            "fact_value": "Formel mit 20% Bond-Repair-Komplex und Aminosäuren; wirkt tief im Inneren der Haarfaser, baut gebrochene Haarbrücken wieder auf und festigt Keratin-Mikrofibrillen.",
+            "source_label": "loreal-paris.de Produktseite (Bond Repair Plus Leave-in-Serum)",
             "source_url": "https://www.loreal-paris.de/elvital/bond-repair/leave-in-serum",
             "source_text": "Die Formel des Bond Repair Leave-in Serums mit 20 % Bond Repair-Komplex und Aminosäuren wirkt tief im Inneren der Haarfaser, wo es gebrochene Haarbrücken wieder aufbaut und Keratin-Mikrofibrillen festigt.",
             "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.damage_repair",
+            "fact_value": "20% Bond-Repair-Komplex mit Zitronensäure; repariert alle Arten von Haarschäden; schützt Haarbrücken für mehr Geschmeidigkeit und Glanz; stärkeres Haar, weniger Spliss (unbeziffert — die früheren 100%-/3x-/7x-Claims stehen auf keiner aktuellen Quelle mehr).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung, Bullet-Claims)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "20 % Bond-Repair-Komplex mit Zitronensäure […] Repariert alle Arten von Haarschäden […] Schützt Haarbrücken für mehr Geschmeidigkeit & Glanz […] Stärkeres Haar […] Weniger Spliss",
+            "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
           {
@@ -635,7 +644,7 @@
           "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: explizit als Finish ZUSÄTZLICH zur Bond-Repair-Routine positioniert.",
           "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry: leichtes 2-Tropfen-Serum ohne Overload-Risiko.",
           "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum.",
-          "concern_eligibility": "hair_damage/repair: Kernclaim 'repariert alle Arten von Haarschäden'. split_ends: '7x weniger Spliss'. breakage: '3x weniger Haarbruch'.",
+          "concern_eligibility": "hair_damage/repair: Kernclaim 'Repariert alle Arten von Haarschäden' (dm). split_ends: 'Weniger Spliss' (dm, unbeziffert; der frühere 7x-Claim steht auf keiner aktuellen Seite mehr). breakage: 'Stärkeres Haar' + Bond-Repair-Positionierung (schwächer belegt; der frühere 3x-Haarbruch-Claim steht auf keiner aktuellen Seite mehr).",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder feucht' ist keine Dry-only-Anweisung; Längen und Spitzen konform.",
           "product.price_eur": "9,95 € verified 2026-09-02 directly on the dm.de product page price block (0,15 l / 66,33 €/l, dm-Dauerpreis seit 12.01.2023, GTIN on page matches); supersedes the earlier Ähnliche-Produkte-panel capture.",
           "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('von trockenem oder feuchtem Haar'). Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
@@ -1197,10 +1206,19 @@
           },
           {
             "fact_key": "product.claims.overnight_leave_in",
-            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült werden muss; Ultimate-Repair-Linie für stark geschädigtes Haar (bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandelt).",
-            "source_label": "schwarzkopf.de Night Elixier Ultimate Repair Produktseite",
-            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/night-elixier/ultimate-repair.html",
-            "source_text": "Die Ultimate Repair Serie mit flüssigem Keratin + Schwarzperlenextrakt rekonstruiert die Haarstruktur und verleiht bis zu 5-mal mehr Widerstandsfähigkeit* und Glanz.",
+            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült wird: regeneriert sehr geschädigtes Haar über Nacht, zieht sofort ein und hinterlässt keine Spuren auf dem Kopfkissen.",
+            "source_label": "schwarzkopf.de Gliss Night Elixier Ultimate Repair Produktseite (Beschreibung + Anwendung)",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair/night-elixier.html",
+            "source_text": "Ultimate Repair Night Elixier – Die Haarpflege für geschädigtes Haar mit HaptIQ System und Perlen-Extrakt verwandelt sehr geschädigtes Haar und regeneriert es über Nacht […] Sorglos über Nacht – Die tiefenwirksame Formel der Haarkur mit entspannendem Duft zieht sofort ein und hinterlässt keine Spuren auf dem Kopfkissen […] Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.line_resilience_shine",
+            "fact_value": "Ultimate-Repair-Linie für stark geschädigtes Haar: bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandeltes Haar (Linien-Claim, nicht produktspezifisch belegt).",
+            "source_label": "schwarzkopf.de Gliss Ultimate Repair Linienseite",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair.html",
+            "source_text": "Um stark geschädigtes und trockenes Haar zu revitalisieren, ist angemessene Pflege erforderlich. Die Ultimate Repair Serie mit flüssigem Keratin + Schwarzperlenextrakt rekonstruiert die Haarstruktur und verleiht bis zu 5-mal mehr Widerstandsfähigkeit* und Glanz. *im Vergleich zu unbehandeltem Haar.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },

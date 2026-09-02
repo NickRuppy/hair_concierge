@@ -384,3 +384,46 @@ Zwei dokumentierte Abweichungen:
   Die Overnight-Formulierung ("regeneriert es über Nacht") steht auf der verschobenen
   Produktseite `.../gliss/ultimate-repair/night-elixier.html`; die Leave-in-Anwendung
   über Nacht ist über die dm-Verwendungshinweise (eigene Evidence-Zeile) belegt.
+
+## F1 reconciliation 2026-09-02
+
+**Elvital Bond Repair — Zeile `product.claims.bond_repair` getrimmt und gesplittet
+(Codex-Review F1: fact_value trug 100%-/3x-/7x-Claims, die keine aktuelle Quelle mehr
+nennt).** Live geprüft 2026-09-02:
+
+- loreal-paris.de führt das Produkt als "Bond Repair Plus Leave-in-Serum"; die
+  20%-Komplex-Passage steht dort weiterhin wörtlich. `bond_repair`-fact_value auf genau
+  diesen Umfang getrimmt (20% Bond-Repair-Komplex + Aminosäuren, baut Haarbrücken wieder
+  auf, festigt Keratin-Mikrofibrillen); Anwendungs- und Hitzeschutz-Nebensätze entfernt
+  (Anwendung ist über die dm-Protokoll-Zeile separat belegt).
+- Neue Zeile `product.claims.damage_repair` (dm.de, retailer): dm nennt weiterhin
+  wörtlich "20 % Bond-Repair-Komplex mit Zitronensäure", "Repariert alle Arten von
+  Haarschäden", "Schützt Haarbrücken für mehr Geschmeidigkeit & Glanz", "Stärkeres Haar",
+  "Weniger Spliss" — alles unbeziffert. Die früheren Zahlen (100% wiederhergestellte
+  Stärke, 3x weniger Haarbruch, 7x weniger Spliss) stehen weder auf dm noch auf
+  loreal-paris.de und wurden vollständig entfernt, nicht umformuliert.
+- **Sanity-Check repair_support_level=medium: hält.** Die Einstufung stützte sich auf
+  den bezifferten 20%-Komplex mit Zitronensäure (weiterhin von dm UND Hersteller belegt)
+  bei fehlender Protein-/Bond-Builder-INCI — nicht auf die 3x/7x-Zahlen. Kein Downgrade
+  nötig. concern_eligibility-Rationale aktualisiert: split_ends jetzt über das
+  unbezifferte "Weniger Spliss" (dm), breakage über "Stärkeres Haar" +
+  Repair-Positionierung (als schwächer belegt markiert); die Eligibility-Werte selbst
+  bleiben unverändert.
+
+**Gliss Night Elixier — Zeile `product.claims.overnight_leave_in` umgesourct und
+gesplittet (Codex-Review F1: Overnight-Fakt war gegen die Linienseite zitiert, die nur
+den 5x-Claim trägt).** Live geprüft 2026-09-02:
+
+- Die Produktseite liegt heute unter
+  `https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair/night-elixier.html`
+  (der im Task genannte Kurzpfad `/gliss/ultimate-repair/night-elixier.html` ist 404;
+  die alte `produktlinien`-URL leitet auf die Linienseite
+  `/marken/haarpflege/gliss/ultimate-repair.html` um). Die Produktseite trägt die
+  Overnight-Formulierung wörtlich ("verwandelt sehr geschädigtes Haar und regeneriert es
+  über Nacht", "hinterlässt keine Spuren auf dem Kopfkissen") und im Anwendungs-Accordion
+  exakt den dm-Text ("... Nicht ausspülen. ..."). Zeile auf diese URL umgestellt,
+  fact_value auf den Overnight-/No-rinse-Umfang getrimmt (5x-Anteil entfernt).
+- Neue Zeile `product.claims.line_resilience_shine` (Linienseite): trägt den
+  5x-Widerstandsfähigkeits-/Glanz-Claim mit passendem Wortlaut-Zitat und ist im
+  fact_value explizit als Linien-Claim (nicht produktspezifisch) markiert; sie stützt
+  die shine-Rationale in care_benefits.

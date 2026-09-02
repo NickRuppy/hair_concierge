@@ -573,11 +573,11 @@
           },
           {
             "fact_key": "product.claims.usage_corroboration",
-            "fact_value": "Herstellerseite (300-ml-Variante): Apply on lengths in freshly washed and towel-dried hair. Leave in for 5-15 minutes, rinse thoroughly. Use 1-2 times a week. Finish with conditioner. Passionsfruchtöl, Sodium PCA, Sheabutter; 100% vegan.",
-            "source_label": "idawargbeauty.se Produktseite (Intense Moisture Hair Mask)",
-            "source_url": "https://idawargbeauty.se/en/products/intense-moisture-hair-mask",
-            "source_text": "The hair mask is boosted with Coconut Oil and Sodium PCA which together give the hair maximum hydration from the inside out. Also contains Shea butter that softens damaged hair. […] Apply on lengths in freshly washed hair. Leave on for 5-10 minutes and then rinse thoroughly. Follow up with conditioner. […] 100% Vegan",
-            "source_type": "manufacturer",
+            "fact_value": "Anwendung auf gewaschenem, handtuchtrockenem Haar mit 5-15 Minuten Einwirkzeit; angereichert mit Maracujaöl (Passionsfruchtöl), Sodium PCA und Sheabutter; 100% vegan.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung + Anwendung und Gebrauch; idawargbeauty.se als Zweitquelle entfallen — Seite zeigt heute 5-10 Minuten / freshly washed / Coconut Oil)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_text": "Diese Haarkur ist angereichert mit Maracujaöl und Sodium PCA mit intensiv feuchtigkeitsspendender Wirkung und enthält außerdem Sheabutter, die geschädigtes Haar nachhaltig stärkt. Mit einem süßen Duft nach Fudge und Vanille. 100% vegan! […] Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden.",
+            "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
           {
