@@ -750,14 +750,29 @@ const REQUIRED_PROTOCOL_ROLES_BY_CATEGORY = {
   ],
 } as const satisfies Record<ProductIntakeReviewCategoryKey, readonly string[]>
 
+// The indexed protocol columns hold machine enum codes (e.g. "wet_cleanse",
+// "all_hair", "rinse_out"); user-facing prose belongs in guidance_payload copy.
+// Mirrors the product_application_protocols_*_code_format_check DB constraints.
+const nullableProtocolIndexCode = z.preprocess(
+  (value) => {
+    if (typeof value !== "string") return value
+    const trimmed = value.trim()
+    return trimmed.length > 0 ? trimmed : null
+  },
+  z
+    .string()
+    .regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/)
+    .nullable(),
+)
+
 const applicationProtocolBaseSchema = z
   .object({
     cadence: z.record(z.string(), z.unknown()).nullable(),
-    application_stage: nullableTrimmedString,
+    application_stage: nullableProtocolIndexCode,
     application_state: z.enum(["damp", "dry", "either"]).nullable(),
-    placement: nullableTrimmedString,
+    placement: nullableProtocolIndexCode,
     contact_time_seconds: z.number().int().nonnegative().nullable(),
-    rinse_action: nullableTrimmedString,
+    rinse_action: nullableProtocolIndexCode,
     reapplication: z.enum(["required", "optional", "not_stated"]).nullable(),
     instruction_modifiers: z.array(trimmedString).default([]),
     source_label: nullableTrimmedString,
@@ -776,9 +791,15 @@ const heatProtectantProtocolSchema = applicationProtocolBaseSchema
   })
   .strict()
 
+// The launch-v1 cohort manifests are fingerprint-frozen history and predate the
+// snake_case rule for indexed protocol columns; only the legacy profile keeps
+// accepting their prose values.
 const legacyHeatProtectantProtocolSchema = applicationProtocolBaseSchema
   .omit({ guidance_payload: true })
   .extend({
+    application_stage: nullableTrimmedString,
+    placement: nullableTrimmedString,
+    rinse_action: nullableTrimmedString,
     category: z.literal("heat_protectant"),
     role: z.literal("pre_heat_protection"),
     application_state: z.enum(["damp", "dry", "either"]),
@@ -827,6 +848,9 @@ const scalpCareProtocolSchema = applicationProtocolBaseSchema
 const legacyScalpCareProtocolSchema = applicationProtocolBaseSchema
   .omit({ guidance_payload: true })
   .extend({
+    application_stage: nullableTrimmedString,
+    placement: nullableTrimmedString,
+    rinse_action: nullableTrimmedString,
     category: z.literal("scalp_care"),
     role: scalpCareRoleSchema,
   })

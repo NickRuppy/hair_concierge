@@ -472,6 +472,31 @@ test("Shampoo rejects an extra protocol for a role unsupported by its reviewed b
   }
 })
 
+test("exact protocol indexed columns reject prose and require snake_case codes", () => {
+  const specs = validCategorySpecs("shampoo")
+  const protocols = specs.product_application_protocols as Array<Record<string, unknown>>
+  protocols[0] = {
+    ...protocols[0],
+    application_stage: "Haarwäsche",
+    placement: "Haar",
+    rinse_action: "Ausspülen",
+  }
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("shampoo", specs))
+
+  assert.equal(result.ok, false)
+  if (!result.ok) {
+    for (const field of ["application_stage", "placement", "rinse_action"]) {
+      assert.ok(
+        result.missingFields.includes(
+          `final.category_specs.product_application_protocols.0.${field}`,
+        ),
+        `expected prose rejection for ${field}, got: ${result.missingFields.join(", ")}`,
+      )
+    }
+  }
+})
+
 test("Mask and Leave-in emit every canonical v3 fact", () => {
   for (const category of ["mask", "leave_in"] as const) {
     const result = validateProductIntakeApprovalPayload(
