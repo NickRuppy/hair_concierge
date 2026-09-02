@@ -15,6 +15,7 @@ import {
 
 const REVIEWED_HEAD = "b".repeat(40)
 const names = {
+  "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf": "OGX Argan Oil",
   "29e36443-93ff-4b62-9cf0-55ad9f89f530": "BioGourmet Distelöl",
   "3eb198a5-9aab-4f28-9df1-c4869c6a12db": "KoRo MCT Öl",
   "517dca50-5d55-4038-ba1d-f9b745708327": "Allgäuer Ölmühle Bio Traubenkernöl",
@@ -216,6 +217,12 @@ async function database(
       "utf8",
     ),
   )
+  await pg.exec(
+    await readFile(
+      "supabase/migrations/20260902090000_personal_plan_product_search_disposition_reversal_ogx_identity.sql",
+      "utf8",
+    ),
+  )
   await pg.exec("BEGIN")
   for (const productId of productIds) {
     const contract =
@@ -358,7 +365,7 @@ test("exact oil reversal applies atomically and exact replay is read-only", asyn
   assert.ok(replay.rows.every(({ removed, replay: replayed }) => !removed && replayed))
 })
 
-test("E18 oil reversal extends total ready cohort to 13 without deleting unrelated dispositions", async (t) => {
+test("oil reversals extend the exact ready cohort to 14 without deleting unrelated dispositions", async (t) => {
   const allOilIds = Object.values(PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS).flat()
   const pg = await database(true, allOilIds, true)
   t.after(async () => pg.close())
@@ -368,6 +375,9 @@ test("E18 oil reversal extends total ready cohort to 13 without deleting unrelat
   const second = await apply(pg, manifest("S5R-03-e18-oil-reentry"))
   assert.equal(second.rows.length, 6)
   assert.ok(second.rows.every(({ removed, replay }) => removed && !replay))
+  const third = await apply(pg, manifest("S5R-04-ogx-identity-resolution"))
+  assert.equal(third.rows.length, 1)
+  assert.ok(third.rows.every(({ removed, replay }) => removed && !replay))
 
   const counts = await pg.query<{
     dispositions: number
@@ -382,10 +392,10 @@ test("E18 oil reversal extends total ready cohort to 13 without deleting unrelat
       (SELECT count(*)::integer FROM public.personal_plan_product_search_dispositions
        WHERE product_id = '00000000-0000-4000-8000-000000000001') AS unrelated
   `)
-  assert.deepEqual(counts.rows[0], { dispositions: 1, batches: 2, items: 13, unrelated: 1 })
+  assert.deepEqual(counts.rows[0], { dispositions: 1, batches: 3, items: 14, unrelated: 1 })
 
-  const replay = await apply(pg, manifest("S5R-03-e18-oil-reentry"))
-  assert.equal(replay.rows.length, 6)
+  const replay = await apply(pg, manifest("S5R-04-ogx-identity-resolution"))
+  assert.equal(replay.rows.length, 1)
   assert.ok(replay.rows.every(({ removed, replay: replayed }) => !removed && replayed))
 })
 

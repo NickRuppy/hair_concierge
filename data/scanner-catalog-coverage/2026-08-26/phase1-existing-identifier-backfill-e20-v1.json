@@ -1,0 +1,40 @@
+{
+  "batch": "E20",
+  "batch_id": "scanner-existing-identifiers-e20-ogx-v1",
+  "schema_version": "scanner-existing-identifier-backfill-v1",
+  "source_lineage": {
+    "production_identity_checked_at": "2026-09-02T00:00:00.000Z",
+    "source_refresh_receipt": "E20 resolves the existing OGX catalog row to the regular Moroccan Argan Penetrating Oil 100 ml using its stored dm purchase page and exact package EAN. The distinct Extra Penetrating Oil remains a separate finished product."
+  },
+  "items": [
+    {
+      "item_key": "ogx-moroccan-argan-penetrating-oil-100ml",
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "expected_product": {
+        "name": "OGX Argan Oil",
+        "brand": "OGX",
+        "category_key": "oil",
+        "is_active": true,
+        "lifecycle_status": "active"
+      },
+      "identifiers": [
+        {
+          "type": "ean",
+          "value": "3574661563312",
+          "raw_gtin": "3574661563312",
+          "canonical_gtin14": "03574661563312",
+          "size": "100 ml",
+          "market_scope": "DE",
+          "source_url": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+          "source_urls": [
+            "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-penetrating-oil"
+          ],
+          "source_checked_at": "2026-09-02T00:00:00.000Z",
+          "evidence_note": "The existing dm purchase page identifies the regular OGX Moroccan Argan Penetrating Oil 100 ml and embeds the exact EAN; OGX confirms the finished-product name."
+        }
+      ],
+      "content_fingerprint": "6e64d68c940530dda0a3cee8a5ed82829c247e9b72f3c37eaee9e3fcd8fa1b6f"
+    }
+  ]
+}

@@ -29,6 +29,8 @@ export const SCANNER_IDENTIFIER_BACKFILL_E16_MIGRATION = "20260901120358" as con
 export const SCANNER_IDENTIFIER_BACKFILL_E17_MIGRATION = "20260901143000" as const
 export const SCANNER_IDENTIFIER_BACKFILL_E18_MIGRATION = "20260901150000" as const
 export const SCANNER_IDENTIFIER_BACKFILL_E19_MIGRATION = "20260901153000" as const
+export const SCANNER_IDENTIFIER_BACKFILL_E20_MIGRATION = "20260902091000" as const
+export const SCANNER_IDENTIFIER_BACKFILL_E20_BRANCH = "codex/ogx-gtin-resolution" as const
 
 export type ScannerIdentifierBackfillBatch =
   | "E1"
@@ -50,6 +52,7 @@ export type ScannerIdentifierBackfillBatch =
   | "E17"
   | "E18"
   | "E19"
+  | "E20"
 export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
   E2: "aa3c2a026c1a372e963f47d47e9c611d1b8dd8ca9edf0c334390a56443fda147",
@@ -70,6 +73,7 @@ export const SCANNER_IDENTIFIER_BACKFILL_APPROVED_FINGERPRINTS = {
   E17: "6b259ee2ceff31116e92d04a5a2c627379eb4b88e8cde3c51ae026860243f5ce",
   E18: "1b59aefef8ba0a5ae217c16d49a37b2b1e2e118157855a68b7c2e2931d3d5643",
   E19: "5f062d6932340d504ffd796985f25e03464ada0f32c119e07572c4c8543b47b8",
+  E20: "043fae1462b038c8babbfafc3559aac64894852f5e571f3b8d7b44123556d034",
 } as const satisfies Record<ScannerIdentifierBackfillBatch, string | null>
 
 export type ScannerIdentifierType = "ean" | "gtin" | "barcode"
@@ -188,6 +192,7 @@ const EXPECTED_SHAPES = {
   E17: { products: 1, gtins: 1 },
   E18: { products: 14, gtins: 14 },
   E19: { products: 1, gtins: 3 },
+  E20: { products: 1, gtins: 1 },
 } as const
 
 function record(value: unknown, label: string): Record<string, unknown> {
@@ -242,10 +247,11 @@ export function parseScannerIdentifierBackfillManifest(
         "E17",
         "E18",
         "E19",
+        "E20",
       ] as const
     ).includes(root.batch as ScannerIdentifierBackfillBatch)
   )
-    throw new Error("scanner identifier manifest batch must be E1 through E19")
+    throw new Error("scanner identifier manifest batch must be E1 through E20")
   const batch = root.batch as ScannerIdentifierBackfillBatch
   const batchId = requiredString(root.batch_id, "manifest.batch_id")
   if (!SAFE_KEY.test(batchId)) throw new Error("manifest.batch_id must be a safe key")
@@ -570,6 +576,25 @@ function requiredScannerIdentifierBackfillMigrations(
         SCANNER_IDENTIFIER_BACKFILL_E18_MIGRATION,
         SCANNER_IDENTIFIER_BACKFILL_E19_MIGRATION,
       ]
+    case "E20":
+      return [
+        ...SCANNER_IDENTIFIER_BACKFILL_MIGRATIONS,
+        SCANNER_IDENTIFIER_BACKFILL_E3_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E4_E7_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E8_E9_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E10_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_K18_READINESS_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E11_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E12_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E13_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E14_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E15_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E16_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E17_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E18_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E19_MIGRATION,
+        SCANNER_IDENTIFIER_BACKFILL_E20_MIGRATION,
+      ]
     default:
       throw new Error(`unknown scanner identifier backfill batch: ${batch}`)
   }
@@ -594,8 +619,11 @@ export async function preflightScannerIdentifierBackfill(input: {
     blockers.push(`Supabase project must be ${SCANNER_IDENTIFIER_BACKFILL_PROJECT_ID}`)
   const git = await input.gitState()
   if (!git.clean) blockers.push("git worktree must be clean")
-  if (git.branch !== SCANNER_IDENTIFIER_BACKFILL_BRANCH)
-    blockers.push(`git branch must be exactly ${SCANNER_IDENTIFIER_BACKFILL_BRANCH}`)
+  const expectedBranch =
+    manifest.batch === "E20"
+      ? SCANNER_IDENTIFIER_BACKFILL_E20_BRANCH
+      : SCANNER_IDENTIFIER_BACKFILL_BRANCH
+  if (git.branch !== expectedBranch) blockers.push(`git branch must be exactly ${expectedBranch}`)
   if (!args.reviewed_head || git.head !== args.reviewed_head)
     blockers.push("git HEAD must equal --reviewed-head")
   let missingMigration = false
