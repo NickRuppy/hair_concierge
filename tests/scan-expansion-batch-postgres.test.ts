@@ -358,6 +358,28 @@ async function maskManifest(): Promise<Record<string, unknown>> {
   ) as Record<string, unknown>
 }
 
+type MaskProtocol = {
+  template_id: string
+  contact_time?: { seconds: number | null; source_text: string }
+}
+
+/**
+ * The reviewed German wait-step copy for ONE mask product.
+ *
+ * A single shared string cannot be right here: TPL-MASK's copy has to name this
+ * product's own sourced window (§2.5), and for a null/range window it must be a
+ * range or maximum form. Whole-minute windows are left to the builder's own
+ * derivation; everything else reuses the manifest's own sourced wait sentence.
+ */
+function maskWaitCopyDe(entry: { final: Record<string, unknown> }): string | undefined {
+  const protocol = (entry.final.protocols as MaskProtocol[] | undefined)?.find(
+    (candidate) => candidate.template_id === "TPL-MASK",
+  )
+  const seconds = protocol?.contact_time?.seconds ?? null
+  if (seconds !== null && seconds % 60 === 0) return undefined
+  return protocol?.contact_time?.source_text
+}
+
 function supplementFor(
   manifest: Record<string, unknown>,
   batchId = "scan-expansion-pilot-mask",
@@ -374,6 +396,7 @@ function supplementFor(
       evidenceSourceTexts[`${evidence.fact_key}|${evidence.source_url}`] =
         `Belegtext von ${evidence.source_url}`
     }
+    const waitCopyDe = maskWaitCopyDe(entry)
     products[key] = {
       image_url: `${IMAGE_PREFIX}${key}.png`,
       affiliate_link: (entry.final.product as { candidate_image: { source_url: string } })
@@ -381,7 +404,7 @@ function supplementFor(
       purchase_link_status: "available",
       checked_at: "2026-09-02T09:00:00.000Z",
       evidence_source_texts: evidenceSourceTexts,
-      mask_wait_copy_de: "7 Sekunden einwirken lassen.",
+      ...(waitCopyDe ? { mask_wait_copy_de: waitCopyDe } : {}),
     }
   }
   return {
@@ -617,14 +640,15 @@ test("preflight parks incomplete products and publishes the rest through the bou
   const prepared = await prepareMaskBatch()
   await approve(pg, prepared)
 
-  // Three of the six reviewed mask products carry a genuine deviation (and one of
-  // those also has an excluded EAN) — they are parked, never sent (F-04).
-  assert.equal(prepared.batch.items.length, 3)
-  assert.equal(prepared.parked.length, 3)
+  // Ruling R-C cleared every deviation from the reviewed mask manifest, so the
+  // only parked product left is the one whose single EAN failed the two-source
+  // rule and is marked `excluded_from_apply` — it has no applicable identifier
+  // and is never sent (F-04).
+  assert.equal(prepared.batch.items.length, 4)
+  assert.equal(prepared.parked.length, 1)
   assert.ok(
-    prepared.parked.every((entry) =>
-      entry.gaps.some((gap) => gap.startsWith("deviation_requires_review")),
-    ),
+    prepared.parked.every((entry) => entry.gaps.includes("no_applicable_identifier")),
+    JSON.stringify(prepared.parked),
   )
 
   for (const item of prepared.batch.items) {
@@ -643,7 +667,7 @@ test("preflight parks incomplete products and publishes the rest through the bou
     `SELECT id, origin, is_chaarlie_recommended, lifecycle_status, suitable_thicknesses, image_url
      FROM public.products ORDER BY name`,
   )
-  assert.equal(products.rows.length, 3)
+  assert.equal(products.rows.length, 4)
   for (const row of products.rows) {
     assert.equal(row.origin, "curated")
     assert.equal(row.is_chaarlie_recommended, false, "R3: scannable-only")
@@ -664,7 +688,7 @@ test("preflight parks incomplete products and publishes the rest through the bou
     `SELECT role, application_family, guidance_payload, guidance_payload_v2, source_url, source_text
      FROM public.product_application_protocols`,
   )
-  assert.equal(protocols.rows.length, 3)
+  assert.equal(protocols.rows.length, 4)
   for (const row of protocols.rows) {
     assert.equal(row.role, "intensive_conditioning_mask")
     assert.equal(row.application_family, "post_shampoo_rinse_out_mask")
@@ -682,7 +706,7 @@ test("preflight parks incomplete products and publishes the rest through the bou
   const ledger = await pg.query<{ product_key: string; reviewed_by: string }>(
     "SELECT product_key, reviewed_by FROM public.catalog_enrichment_applied_items",
   )
-  assert.equal(ledger.rows.length, 3)
+  assert.equal(ledger.rows.length, 4)
   assert.ok(ledger.rows.every((row) => row.reviewed_by === "nick"))
 
   // The adapter mints exactly one operator-owned submission per product and the
@@ -690,7 +714,7 @@ test("preflight parks incomplete products and publishes the rest through the bou
   const submissions = await pg.query<{ source: string; status: string }>(
     "SELECT source, status FROM public.product_submissions",
   )
-  assert.equal(submissions.rows.length, 3)
+  assert.equal(submissions.rows.length, 4)
   assert.ok(submissions.rows.every((row) => row.source === "catalog_expansion"))
   assert.ok(submissions.rows.every((row) => row.status === "approved"))
 })
@@ -824,6 +848,57 @@ test("replay is idempotent and full-bundle readback catches post-apply drift", a
   await assert.rejects(applyItem(pg, prepared, item.item_key), /lifecycle\/presentation drift/)
 })
 
+test("replay refuses a bundle that GREW a row nobody reviewed", async (t) => {
+  const pg = await migratedDatabase(t)
+  const prepared = await prepareMaskBatch()
+  await approve(pg, prepared)
+
+  const item = prepared.batch.items[0]!
+  const applied = await applyItem(pg, prepared, item.item_key)
+  assert.equal(applied.rows[0]?.outcome, "applied")
+  const productId = applied.rows[0]!.product_id
+
+  // One-way containment would accept both mutations below: every reviewed row is
+  // still present and unchanged. Only a symmetric comparison sees the addition.
+  await pg.query(
+    `INSERT INTO public.personal_plan_catalog_fact_evidence
+       (product_id, fact_key, fact_value, source_label, source_url, source_text,
+        source_type, checked_at, batch_id, batch_fingerprint, content_fingerprint)
+     VALUES ($1, 'unreviewed_fact', '"ja"'::jsonb, 'Fremdquelle',
+             'https://example.invalid/unreviewed', 'Diesen Beleg hat niemand geprüft.',
+             'retailer', '2026-09-02', 'fremd-batch', $2, $2)`,
+    [productId, "f".repeat(64)],
+  )
+  await assert.rejects(applyItem(pg, prepared, item.item_key), /fact evidence row count drift/)
+
+  await pg.query(
+    "DELETE FROM public.personal_plan_catalog_fact_evidence WHERE fact_key = 'unreviewed_fact'",
+  )
+  assert.equal(
+    (await applyItem(pg, prepared, item.item_key)).rows[0]?.outcome,
+    "replayed",
+    "removing the extra row restores a clean replay",
+  )
+
+  // A protocol row that reuses a REVIEWED role under a different application
+  // family is invisible to the role-set comparison — the row count is what
+  // catches it.
+  await pg.query(
+    `INSERT INTO public.product_application_protocols
+       (product_id, category, role, cadence, application_stage, application_state, placement,
+        contact_time_seconds, rinse_action, reapplication, instruction_modifiers,
+        source_label, source_url, source_text, guidance_payload, guidance_payload_v2)
+     SELECT product_id, category, role, cadence, application_stage, application_state, placement,
+            contact_time_seconds, rinse_action, reapplication, instruction_modifiers,
+            source_label, source_url, source_text, guidance_payload,
+            pg_catalog.jsonb_set(guidance_payload_v2, '{applicationFamily}', '"unreviewed_family"')
+     FROM public.product_application_protocols
+     WHERE product_id = $1`,
+    [productId],
+  )
+  await assert.rejects(applyItem(pg, prepared, item.item_key), /protocol row count drift/)
+})
+
 test("promotion is unreachable: an item that asks for the flag is rejected", async (t) => {
   const pg = await migratedDatabase(t)
   const base = await prepareMaskBatch()
@@ -888,12 +963,14 @@ test("kill switch, reviewer, head and approval binding all fail closed", async (
   assert.equal((products.rows[0] as { count: number }).count, 0)
 })
 
-test("existing-product update renames and adds an identifier through the same guards", async (t) => {
-  const pg = await migratedDatabase(t)
-  const productId = "22222222-2222-4222-8222-222222222222"
-  // A real rename target is a complete curated product, so seed the whole
-  // publication bundle in ONE transaction — the gate's constraint triggers are
-  // DEFERRABLE INITIALLY DEFERRED and would otherwise reject a bare product row.
+const EXISTING_PRODUCT_ID = "22222222-2222-4222-8222-222222222222"
+
+/**
+ * A real rename target is a complete curated product, so seed the whole
+ * publication bundle in ONE transaction — the gate's constraint triggers are
+ * DEFERRABLE INITIALLY DEFERRED and would otherwise reject a bare product row.
+ */
+async function seedExistingCuratedShampoo(pg: PGlite, productId = EXISTING_PRODUCT_ID) {
   const seedSource = "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital"
   const seedProtocol = buildExpansionProtocolRow("TPL-SHAMPOO-STD", {
     productId,
@@ -928,8 +1005,11 @@ test("existing-product update renames and adds an identifier through the same gu
             ${quote(JSON.stringify(seedProtocol.guidance_payload))}::jsonb,
             ${quote(JSON.stringify(seedV2))}::jsonb);
   `)
+}
 
-  const manifest = {
+/** The reviewed rename + new-EAN update for the product seeded above. */
+function existingUpdateManifest(productId = EXISTING_PRODUCT_ID) {
+  return {
     batch_id: "scan-expansion-existing",
     generated_at: "2026-09-02T09:00:00.000Z",
     products: [],
@@ -954,26 +1034,43 @@ test("existing-product update renames and adds an identifier through the same gu
       },
     ],
   }
+}
+
+function existingProductSnapshot(productId = EXISTING_PRODUCT_ID) {
+  return [
+    {
+      id: productId,
+      name: "Ultimate Shampoo",
+      brand: "L'Oréal Paris Elvital",
+      category_key: "shampoo",
+      is_active: true,
+      lifecycle_status: "active",
+      is_chaarlie_recommended: false,
+    },
+  ]
+}
+
+async function seedDisposition(pg: PGlite, productId = EXISTING_PRODUCT_ID) {
+  await pg.query(
+    "INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)",
+    [productId],
+  )
+}
+
+test("existing-product update renames and adds an identifier through the same guards", async (t) => {
+  const pg = await migratedDatabase(t)
+  const productId = EXISTING_PRODUCT_ID
+  await seedExistingCuratedShampoo(pg, productId)
 
   const built = buildExpansionApplyBatch({
-    manifest,
+    manifest: existingUpdateManifest(productId),
     supplement: {
       batch_id: "scan-expansion-existing",
       operator_profile_id: OPERATOR,
       reviewed_head: REVIEWED_HEAD,
       products: {},
     },
-    existingProducts: [
-      {
-        id: productId,
-        name: "Ultimate Shampoo",
-        brand: "L'Oréal Paris Elvital",
-        category_key: "shampoo",
-        is_active: true,
-        lifecycle_status: "active",
-        is_chaarlie_recommended: false,
-      },
-    ],
+    existingProducts: existingProductSnapshot(productId),
   })
   assert.equal(built.parked.length, 0, JSON.stringify(built.parked))
   const prepared = serialize(built.batch)
@@ -1006,6 +1103,68 @@ test("existing-product update renames and adds an identifier through the same gu
     applyItem(pg, prepared, `existing:${productId}`),
     /identity\/lifecycle drift/,
   )
+})
+
+test("the preflight parks an existing-product update whose target is quarantined", async () => {
+  const productId = EXISTING_PRODUCT_ID
+  const built = buildExpansionApplyBatch({
+    manifest: existingUpdateManifest(productId),
+    supplement: {
+      batch_id: "scan-expansion-existing",
+      operator_profile_id: OPERATOR,
+      reviewed_head: REVIEWED_HEAD,
+      products: {},
+    },
+    existingProducts: existingProductSnapshot(productId),
+    dispositionProductIds: [productId],
+  })
+
+  assert.equal(built.batch.items.length, 0, "a quarantined target is never sent")
+  assert.equal(built.parked.length, 1)
+  assert.ok(
+    built.parked[0]!.gaps.some((gap) => gap.startsWith("existing_product_has_disposition")),
+    JSON.stringify(built.parked),
+  )
+})
+
+test("the executor refuses a quarantined existing-product update on its own", async (t) => {
+  const pg = await migratedDatabase(t)
+  const productId = EXISTING_PRODUCT_ID
+  await seedExistingCuratedShampoo(pg, productId)
+
+  // Built WITHOUT the disposition in the snapshot — this is the direct-RPC /
+  // stale-snapshot case, where the CLI preflight never saw the quarantine. The
+  // DB must refuse it anyway.
+  const built = buildExpansionApplyBatch({
+    manifest: existingUpdateManifest(productId),
+    supplement: {
+      batch_id: "scan-expansion-existing",
+      operator_profile_id: OPERATOR,
+      reviewed_head: REVIEWED_HEAD,
+      products: {},
+    },
+    existingProducts: existingProductSnapshot(productId),
+  })
+  assert.equal(built.batch.items.length, 1)
+  const prepared = serialize(built.batch)
+  await approve(pg, prepared)
+  await seedDisposition(pg, productId)
+
+  await assert.rejects(
+    applyItem(pg, prepared, `existing:${productId}`),
+    /may not update a product with a search disposition/,
+  )
+
+  const untouched = await pg.query<{ name: string }>(
+    "SELECT name FROM public.products WHERE id = $1",
+    [productId],
+  )
+  assert.equal(untouched.rows[0]?.name, "Ultimate Shampoo", "the rename never fired")
+  const identifiers = await pg.query(
+    "SELECT count(*)::int AS count FROM public.product_identifiers WHERE product_id = $1",
+    [productId],
+  )
+  assert.equal((identifiers.rows[0] as { count: number }).count, 0)
 })
 
 test("an open unresolved submission on the same GTIN blocks the apply", async (t) => {
