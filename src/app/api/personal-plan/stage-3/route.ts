@@ -26,6 +26,10 @@ import {
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { composeStage3BootstrapResponse } from "@/lib/personal-plan/products/stage3-bootstrap-response-server"
 import {
+  STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION,
+  Stage3BootstrapReviewContractError,
+} from "@/lib/personal-plan/products/stage3-bootstrap-review-contract"
+import {
   createSupabaseStage3RoutineAuthorityRepairService,
   type Stage3RoutineAuthorityRepairService,
 } from "@/lib/personal-plan/products/stage3-routine-authority-repair-service"
@@ -365,13 +369,23 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         if (repairRequirements) loaded.requirements = repairRequirements
         const bootstrap = await composeStage3BootstrapResponse({
           loaded,
-          evaluateDecisions: gateway.evaluateDecisions?.bind(gateway),
-          reviewDecisionBundles: gateway.reviewDecisionBundles?.bind(gateway),
+          reviewDecisionBundles: gateway.reviewDecisionBundles.bind(gateway),
         })
         return response(bootstrap, 200, {
           "Server-Timing": serverTiming(auth.phases),
         })
       } catch (error) {
+        if (error instanceof Stage3BootstrapReviewContractError) {
+          log("conflict", started, STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION)
+          return response(
+            {
+              error: "stage3_bootstrap_contract_violation",
+              violation: STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION,
+            },
+            409,
+            { "Server-Timing": serverTiming(auth.phases) },
+          )
+        }
         if (error instanceof Stage3AuthoritySnapshotError) {
           log("conflict", started, error.code)
           return response({ error: error.code }, 409, {
@@ -508,10 +522,11 @@ function requireInventoryDispositionGateway(gateway: Stage3RouteGateway): {
 }
 
 type Stage3RouteGateway = Stage3ProductsGateway &
+  Pick<Stage3AuthorityProductionGateway, "reviewDecisionBundles"> &
   Partial<
     Pick<
       Stage3AuthorityProductionGateway,
-      "evaluateDecisions" | "reviewDecisionBundles" | "resolveDecision" | "resolveDecisions"
+      "evaluateDecisions" | "resolveDecision" | "resolveDecisions"
     >
   >
 

@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
+import { Stage3BootstrapContractError } from "../src/lib/personal-plan/products/bootstrap-response"
 import { Stage3ProductsGatewayError } from "../src/lib/personal-plan/products/gateway"
 import {
   createHttpStage3ProductsGateway,
@@ -104,6 +105,30 @@ test("the HTTP gateway preserves a stale refined source conflict", async () => {
       }),
     (error: unknown) =>
       error instanceof Stage3ProductsGatewayError && error.code === "stale_refined_source",
+  )
+})
+
+test("the HTTP bootstrap gateway preserves an explicit server contract violation", async () => {
+  const subject = createHttpStage3ProductsGateway({
+    fetch: async () =>
+      new Response(
+        JSON.stringify({
+          error: "stage3_bootstrap_contract_violation",
+          violation: "incomplete_decision_reviews",
+        }),
+        { status: 409, headers: { "Content-Type": "application/json" } },
+      ),
+  })
+
+  await assert.rejects(
+    () =>
+      subject.openOptionalInventory!({
+        personalPlanId: "plan-1",
+        refinedVersionId: "refined-1",
+      }),
+    (error: unknown) =>
+      error instanceof Stage3BootstrapContractError &&
+      error.violation === "incomplete_decision_reviews",
   )
 })
 

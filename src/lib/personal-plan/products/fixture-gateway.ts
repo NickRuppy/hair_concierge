@@ -31,6 +31,7 @@ import {
 } from "./contracts"
 import { createProposedProductPortfolio } from "./portfolio"
 import { stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
+import { stage3ReviewDecisionSubjects } from "./stage3-bootstrap-review-contract"
 import {
   addCapturedProduct,
   assignProductRoles,
@@ -354,7 +355,7 @@ export function createFixtureStage3Gateway(
   }): Promise<Stage3AuthorityEvaluation[]> {
     const draft = requireDraft(drafts, input.draftId)
     if (draft.status !== "active") return []
-    return deriveStage3DecisionSubjects(draft).map((subject) =>
+    return stage3ReviewDecisionSubjects(draft).map((subject) =>
       evaluateFixtureDecision(draft, subject),
     )
   }
@@ -364,7 +365,7 @@ export function createFixtureStage3Gateway(
   }): Promise<FixtureStage3DecisionReviewBundle[]> {
     const draft = requireDraft(drafts, input.draftId)
     if (draft.status !== "active") return []
-    return deriveStage3DecisionSubjects(draft).map((subject) => {
+    return stage3ReviewDecisionSubjects(draft).map((subject) => {
       const authorityEvaluation = evaluateFixtureDecision(draft, subject)
       return {
         authorityEvaluation,

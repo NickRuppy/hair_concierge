@@ -12,6 +12,11 @@ import type {
   AnyProposedProductPortfolio,
 } from "./contracts"
 import { deriveStage3DecisionSubjects } from "./contracts"
+import {
+  stage3ReviewDecisionSubjects,
+  type Stage3DecisionReviewBundle,
+} from "./stage3-bootstrap-review-contract"
+export type { Stage3DecisionReviewBundle } from "./stage3-bootstrap-review-contract"
 import type {
   Stage3CompletionReceiptResponse,
   Stage3CompleteResponse,
@@ -71,11 +76,7 @@ import {
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { expectedShampooBucket, expectedShampooSpecTarget } from "./authority/categories/shampoo"
 import { classifyStage3DesiredState, stage3DraftsSemanticallyEqual } from "./recovery-desired-state"
-import {
-  buildStage3FitComparison,
-  type Stage3FitComparison,
-  type Stage3SelectedComparisonCandidate,
-} from "./fit-comparison"
+import { buildStage3FitComparison, type Stage3SelectedComparisonCandidate } from "./fit-comparison"
 
 export type Stage3AssessmentSearchContext = {
   hairThickness: "fine" | "normal" | "coarse"
@@ -220,6 +221,8 @@ export type Stage3ProductionGatewayOptions = {
 }
 
 export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
+  /** Repair and cache a draft produced by a separate owner-scoped entry RPC. */
+  prepareLoadedDraft(input: Stage3DraftResponse): Promise<Stage3DraftResponse>
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
   reviewDecisionBundles(input: { draftId: string }): Promise<Stage3DecisionReviewBundle[]>
   resolveDecision(input: {
@@ -243,11 +246,6 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
     expectedRevision: number
     dispositionKey: string
   }): Promise<Stage3MutationResponse>
-}
-
-export type Stage3DecisionReviewBundle = {
-  authorityEvaluation: Stage3AuthorityEvaluation
-  fitComparison: Stage3FitComparison
 }
 
 export function createProductionStage3ProductsGateway(
@@ -482,12 +480,7 @@ export function createProductionStage3ProductsGateway(
   }
 
   function authorityDecisionSubjects(draft: Stage3ProductDraft) {
-    // Inventory-only dispositions are deliberately outside the final refined
-    // plan. They have a server-owned acknowledgement transition, but no fit
-    // authority, recommendation, or executable alternative to evaluate.
-    return deriveStage3DecisionSubjects(draft).filter(
-      (subject) => subject.subjectKind !== "inventory_disposition",
-    )
+    return stage3ReviewDecisionSubjects(draft)
   }
 
   async function authoritativeEvaluation(
@@ -714,6 +707,21 @@ export function createProductionStage3ProductsGateway(
         input.action === "accept" ? acceptedContext!.orderedCategories : loaded.requirements
       cached = { draft: persisted.draft, requirements }
       return { status: "saved", draft: persisted.draft }
+    },
+    async prepareLoadedDraft(input): Promise<Stage3DraftResponse> {
+      if (input.draft.userId !== options.userId) throw new Error("stage3_draft_not_found")
+      const loaded = await repairLoadedDraft({
+        draft: input.draft,
+        requirements: input.requirements,
+      })
+      cached = loaded
+      return {
+        ...input,
+        status: loaded.draft.status,
+        draft: loaded.draft,
+        requirements: loaded.requirements,
+        catalogThumbnails: await loadCatalogThumbnails(loaded.draft),
+      }
     },
     async loadOrCreate(input): Promise<Stage3DraftResponse> {
       const loaded = await repairLoadedDraft(await loadOrCreateOnCurrentRefinedVersion(input))

@@ -123,7 +123,7 @@ const draftEnvelopeSchema = z
       .array(z.enum(PERSONAL_PLAN_QUIZ_SCREEN_IDS))
       .max(PERSONAL_PLAN_QUIZ_SCREEN_IDS.length),
     answers: partialDurableAnswersSchema,
-    expectedRevision: z.number().int().positive().optional(),
+    expectedRevision: z.number().int().positive().max(2_147_483_647).optional(),
     allowRevisionCatchup: z.literal(true).optional(),
   })
   .strict()

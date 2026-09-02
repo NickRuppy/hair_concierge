@@ -4,6 +4,7 @@ import type { Stage3AuthorityEvaluation } from "./authority/contracts"
 import { stage3CategoryRequirementSchema, stage3ProductDraftSchema } from "./contracts"
 import type { Stage3FitComparison } from "./fit-comparison"
 import type { Stage3BootstrapResponse } from "./gateway"
+import { hasCompleteStage3DecisionReviews } from "./stage3-bootstrap-review-contract"
 
 export const STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS = [
   "invalid_envelope",
@@ -16,9 +17,19 @@ export const STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS = [
   "plan_mismatch",
   "refined_version_mismatch",
   "missing_authority_snapshot",
+  "incomplete_decision_reviews",
 ] as const
 
 export type Stage3BootstrapContractViolation = (typeof STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS)[number]
+
+export function isStage3BootstrapContractViolation(
+  value: unknown,
+): value is Stage3BootstrapContractViolation {
+  return (
+    typeof value === "string" &&
+    STAGE3_BOOTSTRAP_CONTRACT_VIOLATIONS.includes(value as Stage3BootstrapContractViolation)
+  )
+}
 
 export class Stage3BootstrapContractError extends Error {
   constructor(public readonly violation: Stage3BootstrapContractViolation) {
@@ -67,6 +78,15 @@ export function parseStage3BootstrapResponse(
   }
   if (!draft.data.authoritySnapshot) {
     throw new Stage3BootstrapContractError("missing_authority_snapshot")
+  }
+  if (
+    !hasCompleteStage3DecisionReviews({
+      draft: draft.data,
+      authorityEvaluations: candidate.authorityEvaluations as Stage3AuthorityEvaluation[],
+      fitComparisons: candidate.fitComparisons as Stage3FitComparison[],
+    })
+  ) {
+    throw new Stage3BootstrapContractError("incomplete_decision_reviews")
   }
 
   return {

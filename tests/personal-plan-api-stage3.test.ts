@@ -176,6 +176,7 @@ function deps(overrides: Partial<Stage3RouteDeps> = {}): Stage3RouteDeps {
         requestToken: 1,
         result: { query: "ab", category: "shampoo", candidates: [], totalCapped: false },
       }),
+      reviewDecisionBundles: async () => [],
       invalidateForRefinedVersion: async () => ({ status: "active", draft, requirements }),
       complete: async () => {
         throw new Error("not used")
@@ -828,7 +829,7 @@ test("Stage 3 GET returns stale source when Routine repair source is not owner-c
   )
 })
 
-test("Stage 3 GET exposes server authority projections after capture", async () => {
+test("Stage 3 GET exposes server decision review projections after capture", async () => {
   let evaluatedDraftId = ""
   const response = await createStage3RouteHandlers(
     deps({
@@ -836,20 +837,41 @@ test("Stage 3 GET exposes server authority projections after capture", async () 
         ...deps().gatewayFor(userId),
         loadOrCreate: async () => ({
           status: "active",
-          draft: { ...draft, pass: "product_decisions" as const },
+          draft: {
+            ...draft,
+            pass: "product_decisions" as const,
+            uncoveredRoles: [
+              { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+            ],
+          },
           requirements,
         }),
-        evaluateDecisions: async ({ draftId }) => {
+        reviewDecisionBundles: async ({ draftId }) => {
           evaluatedDraftId = draftId
+          const authorityEvaluation = {
+            status: "unknown" as const,
+            category: "shampoo" as const,
+            subjectKey: "decision:shampoo:shampoo_everyday:gap",
+            missingFacts: ["verified_protocol"],
+            criteria: [],
+            allowedActions: ["leave_uncovered" as const],
+            coverageRuleIds: [],
+          }
           return [
             {
-              status: "unknown" as const,
-              category: "shampoo" as const,
-              subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
-              missingFacts: ["verified_protocol"],
-              criteria: [],
-              allowedActions: ["leave_uncovered" as const],
-              coverageRuleIds: [],
+              authorityEvaluation,
+              fitComparison: {
+                schemaVersion: 1,
+                mode: "unavailable",
+                category: "shampoo",
+                role: "shampoo_everyday",
+                subjectKey: authorityEvaluation.subjectKey,
+                sourceIdentity: null,
+                products: [],
+                alternatives: [],
+                dimensions: [],
+                reason: "no_exact_product",
+              },
             },
           ]
         },
@@ -866,12 +888,49 @@ test("Stage 3 GET exposes server authority projections after capture", async () 
   assert.equal(body.authorityEvaluations[0]?.status, "unknown")
 })
 
+test("Stage 3 GET exposes incomplete decision reviews as a typed bootstrap contract conflict", async () => {
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) => ({
+        ...deps().gatewayFor(userId),
+        loadOrCreate: async () => ({
+          status: "active",
+          draft: {
+            ...draft,
+            pass: "product_decisions" as const,
+            uncoveredRoles: [
+              { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+            ],
+          },
+          requirements,
+        }),
+        reviewDecisionBundles: async () => [],
+      }),
+    }),
+  ).GET(
+    new Request(
+      `http://test/api/personal-plan/stage-3?personalPlanId=${draft.personalPlanId}&refinedVersionId=${draft.refinedVersionId}`,
+    ),
+  )
+
+  assert.deepEqual(
+    [response!.status, await response!.json()],
+    [
+      409,
+      {
+        error: "stage3_bootstrap_contract_violation",
+        violation: "incomplete_decision_reviews",
+      },
+    ],
+  )
+})
+
 test("Stage 3 GET transports aligned fit reviews without evaluating authority twice", async () => {
   let fallbackEvaluations = 0
   const authorityEvaluation = {
     status: "unknown" as const,
     category: "shampoo" as const,
-    subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+    subjectKey: "decision:shampoo:shampoo_everyday:gap",
     missingFacts: ["verified_protocol"],
     criteria: [],
     allowedActions: ["leave_uncovered" as const],
@@ -912,7 +971,13 @@ test("Stage 3 GET transports aligned fit reviews without evaluating authority tw
         ...deps().gatewayFor(userId),
         loadOrCreate: async () => ({
           status: "active",
-          draft: { ...draft, pass: "product_decisions" as const },
+          draft: {
+            ...draft,
+            pass: "product_decisions" as const,
+            uncoveredRoles: [
+              { category: "shampoo", role: "shampoo_everyday", reason: "no_product_owned" },
+            ],
+          },
           requirements,
         }),
         evaluateDecisions: async () => {
@@ -947,7 +1012,7 @@ test("Stage 3 GET preserves stale refined authority as a recoverable conflict", 
           draft: { ...draft, pass: "product_decisions" as const },
           requirements,
         }),
-        evaluateDecisions: async () => {
+        reviewDecisionBundles: async () => {
           throw new Stage3AuthoritySnapshotError("stale_refined_source")
         },
       }),
