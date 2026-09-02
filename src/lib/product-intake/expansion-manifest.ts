@@ -299,6 +299,11 @@ export const expansionEvidenceRowSchema = z
     source_label: trimmedNonEmptyString,
     source_url: urlString,
     source_type: z.enum(["manufacturer", "retailer", "professional_authority"]),
+    // Verbatim quote from the source backing this fact. Optional in the manifest
+    // (the apply builder can derive it from a protocol source on the same URL),
+    // but personal_plan_catalog_fact_evidence.source_text is NOT NULL, so a
+    // product with neither a quote nor a derivable fallback is parked at preflight.
+    source_text: trimmedNonEmptyString.optional(),
     checked_at: isoDateOnlyString,
   })
   .strict()
