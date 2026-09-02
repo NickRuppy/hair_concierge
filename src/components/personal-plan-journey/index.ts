@@ -25,3 +25,4 @@ export {
   type PersonalPlanTransitionVariant,
 } from "./view-transition"
 export { PersonalPlanStageEntrance } from "./stage-entrance"
+export { PlanOpeningRing } from "./plan-opening-ring"

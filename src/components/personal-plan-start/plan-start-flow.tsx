@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Info, Loader2, RotateCcw } from "lucide-react"
+import { Info, RotateCcw } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
@@ -76,11 +76,11 @@ import { isNeedCardGroup } from "./need-card"
 import {
   NeedPlanScreen,
   PlanStartHeader,
-  Progress,
   type NeedPlanScreenNextIntent,
   type NeedPlanScreenNextStatus,
   type NeedPlanScreenViewModel,
 } from "./need-plan-screen"
+import { PlanStartOpening } from "./plan-start-opening"
 import {
   adaptInitialNeedSnapshotToPlanStartViewModel,
   applyStage1ProductExamplePreviews,
@@ -1442,19 +1442,14 @@ export function PlanStartFlow(
   )
 }
 
+/**
+ * Renders the shared opening shell — the identical layout the route's
+ * loading.tsx shows — so bootstrap phases can never swap loading layouts.
+ * The old StateShell variant carried a determinate bar stuck at 50 %, a
+ * made-up number the founder retired with the opening choreography.
+ */
 export function PlanStartLoading() {
-  return (
-    <StateShell
-      title="Dein Plan entsteht"
-      lead="Wir bereiten die Empfehlungen aus deiner Haaranalyse vor."
-      icon={<Loader2 className="h-7 w-7 animate-spin" aria-hidden="true" />}
-      dataState="loading"
-    >
-      <div className="mx-auto mt-4 w-full max-w-[270px]">
-        <Progress value={50} label="Plan wird vorbereitet" />
-      </div>
-    </StateShell>
-  )
+  return <PlanStartOpening />
 }
 
 export function PlanStartRetryableError({ onRetry }: { onRetry?: () => void }) {

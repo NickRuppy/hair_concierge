@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useEffect, useState, type ReactNode } from "react"
 
-import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
+import { PersonalPlanJourneyHeader, PlanOpeningRing } from "@/components/personal-plan-journey"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -31,16 +31,6 @@ const ARRIVAL_HIGHLIGHTS = [
   { name: "Deine Anwendung", detail: "So setzt du's um." },
   { name: "Dein Chat", detail: "Fragen? Immer offen." },
 ] as const
-
-/**
- * Anchors the spinner's rotation phase to the wall clock: every frame handoff
- * (welcome → loading shell → readiness client) creates fresh DOM, and without
- * this the arc would snap back to 0° at each boundary. A ref callback keeps the
- * impure Date.now() out of render.
- */
-function anchorSpinPhase(node: SVGGElement | null) {
-  node?.style.setProperty("animation-delay", `-${Date.now() % 1000}ms`)
-}
 
 /**
  * The post-payment arrival, as one persistent two-state frame. /welcome (redirect
@@ -152,17 +142,7 @@ export function PlanBereitArrival({
           aria-live={loadingShellId ? undefined : "polite"}
           className="flex flex-1 flex-col justify-center py-8"
         >
-          <span
-            aria-hidden="true"
-            className="plan-opening-circle mx-auto mb-[18px] grid h-[52px] w-[52px] place-items-center rounded-full"
-          >
-            <svg className="h-[52px] w-[52px]" viewBox="0 0 52 52">
-              <g className="plan-opening-arcwrap" ref={anchorSpinPhase}>
-                <circle className="plan-opening-arc" cx="26" cy="26" r="22" pathLength="138.2" />
-              </g>
-              <path className="plan-opening-tick" d="M17 27l6.5 6.5L35 21" pathLength="1" />
-            </svg>
-          </span>
+          <PlanOpeningRing />
 
           <p
             aria-hidden={loadingHidden}

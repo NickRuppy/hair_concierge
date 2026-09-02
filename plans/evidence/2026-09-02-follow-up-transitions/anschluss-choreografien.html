@@ -1,0 +1,408 @@
+<title>Anschluss-Choreografien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --shell-bg:#eceaf1; --panel:#ffffff; --panel-edge:#dcd8e5;
+    --ink:#262034; --sub:#6a6478; --faint:#8d879c;
+    --plum:#6b50a0; --plum-dark:#3d2a62; --plum-darkest:#2a1845; --plum-ice:#f2eefa;
+    --coral:#d4616a; --coral-deep:#aa464e;
+    --cream:#fdfbf9; --cream2:#fcfaf7; --cream-line:#f0ebe4;
+    --p-sub:#6a6560; --p-caption:#736f69;
+    --ok-bg:#edf7ef; --ok-text:#356b45;
+    --bad:#b04a52; --bad-bg:#faeced;
+    --font-display:"Playfair Display",Georgia,"Times New Roman",serif;
+    --font-body:"Plus Jakarta Sans",Arial,Helvetica,sans-serif;
+    --enter:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--shell-bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:44px 24px 72px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--plum)}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(28px,4vw,38px);line-height:1.15;margin:8px 0 12px;color:var(--plum-darkest);text-wrap:balance}
+  h2{font-family:var(--font-display);font-weight:600;font-size:24px;color:var(--plum-darkest);margin:0 0 6px;text-wrap:balance}
+  .lede,.section-sub{max-width:64ch;color:var(--sub)}
+  .lede{margin:0 0 6px}
+  .section-sub{margin:0 0 22px}
+  section{margin-top:56px}
+  .decisions{margin:10px 0 20px;display:flex;flex-wrap:wrap;gap:8px}
+  .decision{font-size:12.5px;font-weight:600;background:var(--plum-ice);color:var(--plum);border-radius:999px;padding:5px 13px}
+
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:0 0 22px;padding:12px 16px;background:var(--panel);border:1px solid var(--panel-edge);border-radius:12px}
+  .btn{border:0;background:var(--plum);color:#fff;font:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:999px;cursor:pointer}
+  .btn:hover{background:var(--plum-dark)}
+  .btn:focus-visible,.replay:focus-visible{outline:2px solid var(--plum-dark);outline-offset:2px}
+  .controls .hint{font-size:12.5px;color:var(--faint)}
+
+  .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;align-items:start}
+  .lane{background:var(--panel);border:1px solid var(--panel-edge);border-radius:16px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px}
+  .lane-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .lane-head h3{margin:0;font-size:15.5px;font-weight:700}
+  .chip{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .chip.bad{background:var(--bad-bg);color:var(--bad)}
+  .chip.rec{background:var(--plum-ice);color:var(--plum)}
+  .lane .desc{font-size:13px;color:var(--sub);margin:0;min-height:4.6em}
+  .replay{align-self:flex-start;border:1.5px solid var(--plum);background:transparent;color:var(--plum);font:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:999px;cursor:pointer}
+  .replay:hover{background:var(--plum-ice)}
+
+  .phone{position:relative;margin:0 auto;width:272px;height:560px;border-radius:30px;background:#17131f;padding:9px;box-shadow:0 18px 40px -24px rgba(42,24,69,.45)}
+  .viewport{position:relative;width:100%;height:100%;border-radius:22px;overflow:hidden;background:var(--cream)}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;visibility:hidden}
+  .screen.on{visibility:visible}
+  .screen.fade{transition:opacity .3s ease;opacity:0;visibility:visible;pointer-events:none}
+  .screen.fade.on{opacity:1;pointer-events:auto}
+  .phase{position:absolute;left:0;right:0;bottom:-30px;text-align:center;font-size:11.5px;font-weight:600;color:var(--faint)}
+  .phone-slot{padding-bottom:34px;position:relative}
+
+  /* shared product bits */
+  .wordmark{font-family:var(--font-display);font-weight:500;font-size:19px;color:var(--plum-darkest);text-align:center;padding:14px 0 11px;border-bottom:1px solid var(--cream-line);flex:none}
+  .stage-header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--cream-line);flex:none}
+  .stage-header .back{width:30px;height:30px;border-radius:9px;background:var(--plum-ice);color:var(--plum);display:grid;place-items:center;font-size:15px}
+  .stage-header .wm{font-family:var(--font-display);font-size:17px;text-align:center;color:var(--plum-darkest)}
+  .stage-header .lbl{font-size:9px;font-weight:800;color:var(--plum);text-align:right}
+  .p-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;text-align:center}
+  .overline{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--plum)}
+  .p-h{font-family:var(--font-display);font-weight:500;font-size:21px;line-height:1.18;color:#291a43;margin:6px 0 0}
+  .p-sub{font-size:11.5px;line-height:1.5;color:var(--p-sub);margin:8px 0 0}
+  .spin{width:22px;height:22px;border-radius:50%;border:2.5px solid rgba(107,80,160,.22);border-top-color:var(--plum);animation:rot 1s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .icontile{width:44px;height:44px;border-radius:13px;background:var(--plum-ice);display:grid;place-items:center;margin:0 auto 12px}
+  .meter{width:170px;margin:14px auto 0}
+  .meter .bar{height:5px;border-radius:99px;background:#e6dff2;overflow:hidden}
+  .meter .bar i{display:block;height:100%;width:50%;background:var(--plum);border-radius:99px}
+  .meter span{display:block;margin-top:5px;font-size:9.5px;font-weight:700;color:var(--plum)}
+
+  .cards{padding:0 14px;overflow:hidden}
+  .card{border:1px solid #eee7de;background:#fff;border-radius:13px;padding:9px 11px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+  .card b{font-size:11.5px;color:#291a43}
+  .card span{font-size:9.5px;color:var(--p-caption)}
+  .pill{font-size:8.5px;font-weight:800;background:var(--plum-ice);color:var(--plum);border-radius:99px;padding:2px 7px}
+  .cta{margin:12px 14px 14px;background:var(--coral);color:#fff;border-radius:999px;text-align:center;font-size:12.5px;font-weight:700;padding:11px 0;flex:none}
+
+  .skelwide{flex:1;padding:22px 18px;display:flex;flex-direction:column;gap:10px}
+  .skelwide i{display:block;border-radius:6px;background:#eee9e2}
+  .skelwide .a{height:11px;width:34%}
+  .skelwide .b{height:22px;width:70%}
+  .skelwide .c{height:12px;width:95%}
+  .skelwide .box{height:120px;border:1px solid #e8e2da;background:#fff;border-radius:12px;margin-top:8px}
+  .skelwide .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .skelwide .grid i{height:44px;border-radius:9px;background:#f0ebe4}
+
+  /* proposed A morph */
+  .morphA .fadeblock{transition:opacity .25s ease-in}
+  .morphA[data-ph="load"] .arrival-content,.morphA[data-ph="plan"] .arrival-content{opacity:0}
+  .morphA .loadblock{opacity:0;transition:opacity .35s var(--enter)}
+  .morphA[data-ph="load"] .loadblock{opacity:1}
+  .morphA[data-ph="plan"] .loadblock{opacity:0;transition:opacity .22s ease-in}
+  .morphA .planblock{opacity:0;transition:opacity .4s var(--enter)}
+  .morphA[data-ph="plan"] .planblock{opacity:1}
+  .morphA .planblock .rise{opacity:0;transform:translateY(10px);transition:opacity .45s var(--enter),transform .45s var(--enter)}
+  .morphA[data-ph="plan"] .planblock .rise{opacity:1;transform:none}
+  .morphA[data-ph="plan"] .planblock .rise.r2{transition-delay:.1s}
+  .morphA[data-ph="plan"] .planblock .rise.r3{transition-delay:.2s}
+  .morphA[data-ph="plan"] .planblock .rise.r4{transition-delay:.3s}
+  .morphA .stack{display:grid}
+  .morphA .stack>*{grid-area:1/1}
+
+  /* reveal screens */
+  .reveal{background:var(--cream2);position:relative}
+  .reveal .halo{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(107,80,160,.09),transparent 42%)}
+  .reveal .skip{position:absolute;right:12px;top:10px;font-size:10.5px;font-weight:700;color:rgba(107,80,160,.7)}
+  .reveal .line{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 22px;position:relative}
+  .reveal h4{font-family:var(--font-display);font-weight:500;font-size:24px;line-height:1.12;letter-spacing:-.02em;color:var(--plum-darkest);margin:0}
+  .reveal .hl{color:var(--coral-deep);background:linear-gradient(to bottom,transparent 72%,rgba(212,97,106,.16) 72%);white-space:nowrap}
+  .reveal .fadeup{animation:fadeup .6s ease-out both}
+  @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .reveal .dots::after{content:"…";animation:dots 1.4s steps(3) infinite}
+  @keyframes dots{0%{content:""}33%{content:"."}66%{content:".."}100%{content:"…"}}
+  .offer-sil{flex:1;padding:20px 16px;display:flex;flex-direction:column;gap:10px}
+  .offer-sil .tag{align-self:center;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border:1px dashed var(--panel-edge);border-radius:99px;padding:3px 10px}
+  .offer-sil i{display:block;border-radius:7px;background:#eee9e2}
+  .offer-sil .a{height:22px;width:75%;margin:8px auto 0}
+  .offer-sil .b{height:12px;width:90%;margin:0 auto}
+  .offer-sil .box{height:150px;border:1px solid #e8e2da;background:#fff;border-radius:14px}
+  .offer-sil .price{height:44px;border-radius:999px;background:rgba(212,97,106,.25);margin-top:auto}
+  .blank{background:#ffffff}
+
+  /* skeleton dialect swatches */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;max-width:760px}
+  .swatch{background:var(--panel);border:1px solid var(--panel-edge);border-radius:14px;padding:16px}
+  .swatch h4{margin:0 0 4px;font-size:14px}
+  .swatch p{margin:0 0 12px;font-size:12.5px;color:var(--sub)}
+  .swatch .demo{background:var(--cream);border:1px solid var(--cream-line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .swatch .demo i{display:block;border-radius:6px;background:#e8e2d9;height:12px}
+  .swatch .demo i.w60{width:60%}
+  .swatch .demo i.w85{width:85%}
+  .swatch.pulse .demo i{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  .swatch .verdict{margin-top:10px;font-size:11px;font-weight:700}
+  .swatch .verdict.ok{color:var(--ok-text)}
+  .swatch .verdict.no{color:var(--bad)}
+
+  .note{background:var(--panel);border:1px solid var(--panel-edge);border-radius:14px;padding:16px 20px;font-size:13.5px;color:var(--sub);max-width:760px}
+  .note b{color:var(--ink)}
+  a{color:var(--plum)}
+  @media (prefers-reduced-motion:reduce){
+    .spin,.reveal .dots::after,.swatch.pulse .demo i{animation:none}
+    .screen.fade,.morphA .loadblock,.morphA .planblock,.morphA .planblock .rise,.morphA .fadeblock{transition:none}
+  }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Design evidence · Follow-ups A &amp; B</p>
+  <h1>Die nächsten zwei Übergänge</h1>
+  <p class="lede">Same principle as the shipped payment→plan choreography: one persistent surface, a held loading state, a morph instead of a swap. Two follow-ups, each shown as today vs. proposed — press play and compare. All product copy is the real copy from the components.</p>
+
+  <div class="controls">
+    <button type="button" class="btn" id="playall">Play all</button>
+    <span class="hint">Each phone can also be replayed individually. Timing labels under each phone.</span>
+  </div>
+
+  <!-- ================= FOLLOW-UP A ================= -->
+  <section>
+    <h2>A · „Plan ansehen“ → dein Plan</h2>
+    <p class="section-sub">The tap on the arrival CTA leads into <code>/plan-start</code>. Today that means three unrelated loading layouts inside ~2 s. Proposed: the arrival's cream shell simply stays, one loading beat, then the plan rises in.</p>
+    <div class="decisions">
+      <span class="decision">Entscheidung 1 · one loading layout</span>
+      <span class="decision">Entscheidung 2 · no fake 50 % bar</span>
+      <span class="decision">Entscheidung 3 · same bridge for the /welcome→/plan-start cohort</span>
+    </div>
+
+    <div class="lanes">
+      <div class="lane">
+        <div class="lane-head"><h3>Today</h3><span class="chip bad">3 layouts · 3 cuts</span></div>
+        <p class="desc">Arrival → wide grey route skeleton (different width, left-aligned) → “Dein Plan entsteht” with spinner tile and a progress bar stuck at 50 % → hard cut into the plan. Even the container width jumps.</p>
+        <div class="phone-slot">
+          <div class="phone"><div class="viewport" id="vp-a-cur">
+            <div class="screen" data-s="arrival">
+              <div class="wordmark">chaarlie</div>
+              <div class="p-center">
+                <div style="width:44px;height:44px;border-radius:50%;background:var(--ok-bg);color:var(--ok-text);display:grid;place-items:center;font-weight:800;font-size:19px;margin-bottom:12px">✓</div>
+                <h4 class="p-h" style="font-size:23px">Dein Plan ist fertig.</h4>
+                <p class="p-sub">Und das wartet dahinter:</p>
+              </div>
+              <div class="cta">Plan ansehen</div>
+            </div>
+            <div class="screen" data-s="skel" style="background:#fbfaf8">
+              <div class="skelwide"><i class="a"></i><i class="b"></i><i class="c"></i><div class="box"></div><div class="grid"><i></i><i></i><i></i><i></i></div></div>
+            </div>
+            <div class="screen" data-s="entsteht">
+              <div class="stage-header"><span class="back">‹</span><span class="wm">chaarlie</span><span class="lbl">PLAN</span></div>
+              <div class="p-center">
+                <div class="icontile"><span class="spin"></span></div>
+                <span class="overline">Dein persönlicher Plan</span>
+                <h4 class="p-h">Dein Plan entsteht</h4>
+                <p class="p-sub">Wir bereiten die Empfehlungen aus deiner Haaranalyse vor.</p>
+                <div class="meter"><div class="bar"><i></i></div><span>Plan wird vorbereitet</span></div>
+              </div>
+            </div>
+            <div class="screen" data-s="plan">
+              <div class="stage-header"><span class="back">‹</span><span class="wm">chaarlie</span><span class="lbl">PLAN</span></div>
+              <div style="padding:14px 14px 4px">
+                <span class="overline">Dein persönlicher Plan</span>
+                <h4 class="p-h">Deine Basis</h4>
+                <p class="p-sub">Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.</p>
+              </div>
+              <div class="cards">
+                <div class="card"><div><b>Shampoo</b><br><span>Sanfte Reinigung</span></div><span class="pill">Empfohlen</span></div>
+                <div class="card"><div><b>Conditioner</b><br><span>Feuchtigkeit &amp; Kämmbarkeit</span></div><span class="pill">Empfohlen</span></div>
+                <div class="card"><div><b>Leave-in</b><br><span>Schutz im Alltag</span></div><span class="pill">Empfohlen</span></div>
+              </div>
+              <div class="cta" style="margin-top:auto">Weiter</div>
+            </div>
+          </div></div>
+          <div class="phase" id="ph-a-cur">&nbsp;</div>
+        </div>
+        <button type="button" class="replay" data-play="acur">▶︎ Play</button>
+      </div>
+
+      <div class="lane">
+        <div class="lane-head"><h3>Proposed</h3><span class="chip rec">1 surface · 0 cuts</span></div>
+        <p class="desc">The tap dims the arrival content on the same cream shell, the familiar ring plus „Dein Plan wird geöffnet.“ holds a short beat (skeleton and in-page loader render this identically — one layout), then header label, headline and cards rise in staggered. No progress bar.</p>
+        <div class="phone-slot">
+          <div class="phone"><div class="viewport">
+            <div class="screen on morphA" id="morph-a" data-ph="arrival">
+              <div class="wordmark">chaarlie</div>
+              <div class="stack" style="flex:1;min-height:0">
+                <div class="arrival-content p-center fadeblock">
+                  <div style="width:44px;height:44px;border-radius:50%;background:var(--ok-bg);color:var(--ok-text);display:grid;place-items:center;font-weight:800;font-size:19px;margin-bottom:12px">✓</div>
+                  <h4 class="p-h" style="font-size:23px">Dein Plan ist fertig.</h4>
+                  <p class="p-sub">Und das wartet dahinter:</p>
+                </div>
+                <div class="loadblock p-center">
+                  <div class="icontile" style="border-radius:50%;background:var(--plum-ice)"><span class="spin"></span></div>
+                  <span class="overline">Dein persönlicher Plan</span>
+                  <h4 class="p-h">Dein Plan wird geöffnet.</h4>
+                </div>
+                <div class="planblock" style="display:flex;flex-direction:column;min-height:0">
+                  <div style="padding:10px 14px 4px" class="rise">
+                    <span class="overline">Dein persönlicher Plan</span>
+                    <h4 class="p-h">Deine Basis</h4>
+                    <p class="p-sub">Basierend auf deiner Haaranalyse sind das die Grundlagen für deine Routine.</p>
+                  </div>
+                  <div class="cards rise r2">
+                    <div class="card"><div><b>Shampoo</b><br><span>Sanfte Reinigung</span></div><span class="pill">Empfohlen</span></div>
+                    <div class="card"><div><b>Conditioner</b><br><span>Feuchtigkeit &amp; Kämmbarkeit</span></div><span class="pill">Empfohlen</span></div>
+                    <div class="card"><div><b>Leave-in</b><br><span>Schutz im Alltag</span></div><span class="pill">Empfohlen</span></div>
+                  </div>
+                  <div class="cta rise r4" style="margin-top:auto">Weiter</div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+          <div class="phase" id="ph-a-pro">&nbsp;</div>
+        </div>
+        <button type="button" class="replay" data-play="apro">▶︎ Play</button>
+      </div>
+    </div>
+    <p class="note" style="margin-top:18px"><b>Entscheidung 3 in context:</b> buyers whose plan is already activation-ready are redirected from <code>/welcome</code> straight to <code>/plan-start</code>, skipping the arrival — today they still get the old „Weiterleitung…“ flash. Proposed: they enter through the exact loading frame shown above (ring + „Dein Plan wird geöffnet.“), so both cohorts share one choreography.</p>
+  </section>
+
+  <!-- ================= FOLLOW-UP B ================= -->
+  <section>
+    <h2>B · Quiz-Auswertung → Angebot</h2>
+    <p class="section-sub">After the quiz, three serif reveal sentences play. Today the exit line „Deine Auswertung wird geöffnet …“ exists for exactly one frame before a hard swap into the server-heavy offer page with no loading shell — a white gap on slow connections.</p>
+    <div class="decisions">
+      <span class="decision">Entscheidung 4 · held exit beat + matching loading shell</span>
+    </div>
+
+    <div class="lanes">
+      <div class="lane">
+        <div class="lane-head"><h3>Today</h3><span class="chip bad">1-frame flash + blank gap</span></div>
+        <p class="desc">Last reveal sentence → „…wird geöffnet“ flashes for one frame → route swap with no shell (white on slow links) → offer pops in fully formed.</p>
+        <div class="phone-slot">
+          <div class="phone"><div class="viewport" id="vp-b-cur">
+            <div class="screen reveal" data-s="r3">
+              <div class="halo"></div><span class="skip">Überspringen</span>
+              <div class="line"><h4 class="fadeup">Bis <span class="hl">30. September</span> wird dein Haar gesünder und schöner aussehen.</h4></div>
+            </div>
+            <div class="screen reveal" data-s="exit">
+              <div class="halo"></div><span class="skip">Überspringen</span>
+              <div class="line"><h4>Deine Auswertung wird geöffnet …</h4></div>
+            </div>
+            <div class="screen blank" data-s="blank"></div>
+            <div class="screen" data-s="offer">
+              <div class="wordmark">chaarlie</div>
+              <div class="offer-sil">
+                <span class="tag">Angebotsseite · vereinfacht</span>
+                <i class="a"></i><i class="b"></i>
+                <div class="box"></div>
+                <div class="price"></div>
+              </div>
+            </div>
+          </div></div>
+          <div class="phase" id="ph-b-cur">&nbsp;</div>
+        </div>
+        <button type="button" class="replay" data-play="bcur">▶︎ Play</button>
+      </div>
+
+      <div class="lane">
+        <div class="lane-head"><h3>Proposed</h3><span class="chip rec">Held beat · crossfade</span></div>
+        <p class="desc">„Deine Auswertung wird geöffnet …“ becomes a real state in the same serif style (animated ellipsis, minimum ~1 s, held longer if the offer page is slow) — and the offer route gets a loading shell in the same cream, so the offer fades in instead of popping.</p>
+        <div class="phone-slot">
+          <div class="phone"><div class="viewport" id="vp-b-pro">
+            <div class="screen reveal" data-s="r3">
+              <div class="halo"></div><span class="skip">Überspringen</span>
+              <div class="line"><h4 class="fadeup">Bis <span class="hl">30. September</span> wird dein Haar gesünder und schöner aussehen.</h4></div>
+            </div>
+            <div class="screen reveal fade" data-s="exit">
+              <div class="halo"></div>
+              <div class="line"><h4>Deine Auswertung wird ge&ouml;ffnet<span class="dots"></span></h4></div>
+            </div>
+            <div class="screen fade" data-s="offer" style="background:var(--cream2)">
+              <div class="wordmark">chaarlie</div>
+              <div class="offer-sil">
+                <span class="tag">Angebotsseite · vereinfacht</span>
+                <i class="a"></i><i class="b"></i>
+                <div class="box"></div>
+                <div class="price"></div>
+              </div>
+            </div>
+          </div></div>
+          <div class="phase" id="ph-b-pro">&nbsp;</div>
+        </div>
+        <button type="button" class="replay" data-play="bpro">▶︎ Play</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DECISION 5 ================= -->
+  <section>
+    <h2>Skelett-Dialekte vereinheitlichen</h2>
+    <p class="section-sub">Two skeleton styles coexist across the app today — some routes pulse (Routine, Anwendung), others are static grey (Chat, Tracker, Profil). Navigating between them reads as a stutter. One dialect should win.</p>
+    <div class="decisions"><span class="decision">Entscheidung 5 · which dialect?</span></div>
+    <div class="swatches">
+      <div class="swatch">
+        <h4>Static grey</h4>
+        <p>The documented “neutral shell” contract. Calm, no motion competing with content, cheapest to render.</p>
+        <div class="demo"><i class="w60"></i><i class="w85"></i><i></i></div>
+        <p class="verdict ok">Recommended app-wide — animated loading stays reserved for journey moments (the opening frames above).</p>
+      </div>
+      <div class="swatch pulse">
+        <h4>Pulsing</h4>
+        <p>Signals liveliness, but adds motion everywhere and currently exists on only two routes.</p>
+        <div class="demo"><i class="w60"></i><i class="w85"></i><i></i></div>
+        <p class="verdict no">Only if you prefer it — then it must be applied everywhere for consistency.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="note" style="margin-top:44px"><b>Scope note:</b> Follow-up A reuses the shipped <code>plan-opening</code> CSS plus the existing <code>PersonalPlanStageEntrance</code>/<code>PersonalPlanViewTransition</code> machinery — no backend changes. Follow-up B touches the reveal component and adds a loading shell for <code>/result/[leadId]</code>; the fixed 3-sentence timing of the reveal itself stays untouched.</p>
+</div>
+
+<script>
+(function(){
+  var timers = { acur: [], apro: [], bcur: [], bpro: [] };
+  function clearLane(k){ timers[k].forEach(clearTimeout); timers[k] = []; }
+  function at(k, ms, fn){ timers[k].push(setTimeout(fn, ms)); }
+  function show(vp, name, ph, label){
+    vp.querySelectorAll(".screen").forEach(function(s){
+      s.classList.toggle("on", s.dataset.s === name);
+    });
+    if (label !== undefined) ph.textContent = label;
+  }
+
+  function playACur(){
+    clearLane("acur");
+    var vp = document.getElementById("vp-a-cur"), ph = document.getElementById("ph-a-cur");
+    show(vp, "arrival", ph, "Arrival · tap on „Plan ansehen“");
+    at("acur", 900, function(){ show(vp, "skel", ph, "Route skeleton · other width, cut #1"); });
+    at("acur", 1300, function(){ show(vp, "entsteht", ph, "„Dein Plan entsteht“ + 50 % bar · cut #2"); });
+    at("acur", 2400, function(){ show(vp, "plan", ph, "Plan · cut #3"); });
+  }
+
+  function playAPro(){
+    clearLane("apro");
+    var m = document.getElementById("morph-a"), ph = document.getElementById("ph-a-pro");
+    m.dataset.ph = "arrival";
+    ph.textContent = "Arrival · tap on „Plan ansehen“";
+    at("apro", 900, function(){ m.dataset.ph = "load"; ph.textContent = "Same shell · „Dein Plan wird geöffnet.“"; });
+    at("apro", 1900, function(){ m.dataset.ph = "plan"; ph.textContent = "Plan rises in · no cut"; });
+  }
+
+  function playBCur(){
+    clearLane("bcur");
+    var vp = document.getElementById("vp-b-cur"), ph = document.getElementById("ph-b-cur");
+    show(vp, "r3", ph, "Last reveal sentence (2 s)");
+    at("bcur", 1600, function(){ show(vp, "exit", ph, "„…wird geöffnet“ · one frame"); });
+    at("bcur", 1680, function(){ show(vp, "blank", ph, "No loading shell · white gap"); });
+    at("bcur", 2280, function(){ show(vp, "offer", ph, "Offer pops in · hard cut"); });
+  }
+
+  function playBPro(){
+    clearLane("bpro");
+    var vp = document.getElementById("vp-b-pro"), ph = document.getElementById("ph-b-pro");
+    show(vp, "r3", ph, "Last reveal sentence (2 s)");
+    at("bpro", 1600, function(){ show(vp, "exit", ph, "Held exit beat · min 1 s, animated ellipsis"); });
+    at("bpro", 2800, function(){ show(vp, "offer", ph, "Offer crossfades in · same cream"); });
+  }
+
+  var plays = { acur: playACur, apro: playAPro, bcur: playBCur, bpro: playBPro };
+  document.querySelectorAll(".replay").forEach(function(btn){
+    btn.addEventListener("click", function(){ plays[btn.dataset.play](); });
+  });
+  document.getElementById("playall").addEventListener("click", function(){
+    playACur(); playAPro(); playBCur(); playBPro();
+  });
+  playACur(); playAPro(); playBCur(); playBPro();
+})();
+</script>

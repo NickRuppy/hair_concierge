@@ -10,15 +10,15 @@ import ProfileLoading from "../src/app/profile/loading"
 import TrackerLoading from "../src/app/tracker/loading"
 
 const shells = [
-  ["Planstart", PlanStartLoading, "plan-start-loading-shell", "plan-start"],
   ["Profil", ProfileLoading, "profile-loading-shell", "profile"],
   ["Chat", ChatLoading, "chat-loading-shell", "chat"],
   ["Tracker", TrackerLoading, "tracker-loading-shell", "tracker"],
 ] as const
 
-// /plan-bereit deliberately left the neutral-shell family: its loading shell
-// continues the post-payment opening frame that /welcome already painted
-// (founder sign-off 02.09.2026), so the streaming gap shows identical pixels.
+// /plan-bereit and /plan-start deliberately left the neutral-shell family:
+// their loading shells continue the opening choreography (founder sign-offs
+// 02.09.2026), so the streaming gaps show the same pixels as the frames
+// around them instead of an unrelated skeleton.
 test("Plan-bereit lädt als Opening-Frame statt als neutrale Schale", () => {
   const html = renderToStaticMarkup(<PlanBereitLoading />)
 
@@ -30,6 +30,21 @@ test("Plan-bereit lädt als Opening-Frame statt als neutrale Schale", () => {
   assert.match(html, /Dein Plan wird geöffnet\./)
   assert.match(html, /Zahlung bestätigt/)
   // Still inert: the shell may not carry a working link or button.
+  assert.doesNotMatch(html, /<a\b|<button\b|href=/)
+})
+
+test("Plan-start lädt als geteilte Opening-Schale statt als neutrale Schale", () => {
+  const html = renderToStaticMarkup(<PlanStartLoading />)
+
+  assert.match(html, /aria-label="Planstart wird geladen"/)
+  assert.match(html, /aria-live="polite"/)
+  assert.match(html, /data-loading-shell="plan-start-loading-shell"/)
+  assert.match(html, /role="status"/)
+  assert.match(html, /plan-opening-arc/)
+  assert.match(html, /Dein Plan wird geöffnet\./)
+  assert.match(html, /Dein persönlicher Plan/)
+  // One loading layout: no determinate bar, and still no link or button.
+  assert.doesNotMatch(html, /role="progressbar"/)
   assert.doesNotMatch(html, /<a\b|<button\b|href=/)
 })
 
