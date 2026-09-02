@@ -43,6 +43,15 @@ BEGIN
       RAISE EXCEPTION 'Herbal Essences protocol enum repair receipt conflicts with current state';
     END IF;
   ELSE
+    -- Fresh or preview databases never contain this user-submitted product;
+    -- there is nothing to repair there, so the correction is a clean no-op.
+    IF NOT EXISTS (SELECT 1 FROM public.products WHERE id = v_product_id)
+       AND NOT EXISTS (
+         SELECT 1 FROM public.product_application_protocols WHERE id = v_protocol_id
+       ) THEN
+      RETURN;
+    END IF;
+
     IF NOT EXISTS (
       SELECT 1
       FROM public.products
@@ -86,11 +95,23 @@ BEGIN
       RAISE EXCEPTION 'Herbal Essences protocol enum repair protocol preimage changed';
     END IF;
 
+    -- Repeat the mutable preimage predicates so a concurrent write between the
+    -- guard and this statement fails the repair instead of being overwritten.
     UPDATE public.product_application_protocols
     SET application_stage = 'wet_cleanse',
         placement = 'all_hair',
         rinse_action = 'rinse_out'
-    WHERE id = v_protocol_id;
+    WHERE id = v_protocol_id
+      AND product_id = v_product_id
+      AND category = 'shampoo'
+      AND role = 'shampoo_everyday'
+      AND application_stage = 'Haarwäsche'
+      AND placement = 'Haar'
+      AND rinse_action = 'Ausspülen';
+
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'Herbal Essences protocol enum repair preimage drifted during apply';
+    END IF;
 
     IF NOT EXISTS (
       SELECT 1
