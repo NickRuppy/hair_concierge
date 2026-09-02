@@ -7,7 +7,10 @@
  * dots visibly jump backwards. Ref callback keeps Date.now() out of render.
  */
 function anchorDotsPhase(node: HTMLSpanElement | null) {
-  node?.style.setProperty("animation-delay", `-${Date.now() % 1400}ms`)
+  // The animation runs on ::after, which does not inherit animation-delay from
+  // the span — but it does inherit custom properties, so the offset travels
+  // through one (consumed in globals.css).
+  node?.style.setProperty("--personal-plan-reveal-dots-delay", `-${Date.now() % 1400}ms`)
 }
 
 /**

@@ -1194,6 +1194,7 @@
 
 .personal-plan-reveal-dots::after {
   animation: personalPlanRevealDots 1.4s linear infinite;
+  animation-delay: var(--personal-plan-reveal-dots-delay, 0ms);
   content: "…";
 }
 
