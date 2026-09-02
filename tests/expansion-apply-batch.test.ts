@@ -177,15 +177,23 @@ test("a product with no operator supplement is parked with a named gap", async (
 })
 
 test("evidence with no quote anywhere is parked — a source text is never invented", async () => {
-  const manifest = await maskManifest()
+  // The shipped manifests now carry a verbatim quote on every evidence row, so
+  // the quoteless state has to be constructed: strip the researcher quotes and
+  // point one row at a URL no protocol or supplement covers.
+  const manifest = structuredClone(await maskManifest())
+  for (const entry of manifest.products) {
+    for (const evidence of entry.final.evidence as Array<Record<string, unknown>>) {
+      delete evidence.source_text
+    }
+    ;(entry.final.evidence as Array<Record<string, unknown>>)[0].source_url =
+      "https://www.example-manufacturer.test/no-protocol-covers-this"
+  }
   const supplement = supplementFor(manifest, (_key, entry) => ({
     ...entry,
     evidence_source_texts: {},
   }))
   const result = buildExpansionApplyBatch({ manifest, supplement })
 
-  // The mask manifest's manufacturer-claim evidence rows carry no `source_text`
-  // and point at a URL no protocol source covers, so no quote can be derived.
   const withGap = result.parked.filter((parked) =>
     parked.gaps.some((gap) => gap.startsWith("evidence_source_text_missing")),
   )
