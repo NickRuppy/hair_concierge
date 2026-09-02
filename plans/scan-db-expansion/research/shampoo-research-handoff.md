@@ -35,7 +35,7 @@ Take names, sizes, EANs, and source URLs from those files as the starting point.
   - `TPL-SHAMPOO-DANDRUFF` for anti-dandruff products (cosmetic framing ONLY — never paraphrase medical language like "Pilzinfektion"/"ärztlicher Rat" into copy; flag such products in the notes instead).
   - Each stamp needs `product_source` (packaging text or manufacturer URL quote confirming the usage fits). Genuine deviations (e.g. explicit leave-in shampoo, prescribed longer contact time) → `deviation: {reason, packaging_text}`. Normal "ins nasse Haar, aufschäumen, ausspülen" packaging is NOT a deviation.
 - `candidate_image`: best official packshot URL + source page (finalized images are produced later by the image pipeline — do not edit images).
-- `evidence[]`: one row per authority fact — `fact_key`, `fact_value`, `source_label`, `source_url`, `source_type` (`manufacturer` | `retailer` | `professional_authority`), `checked_at`.
+- `evidence[]`: one row per authority fact — `fact_key`, `fact_value`, `source_label`, `source_url`, `source_type` (`manufacturer` | `retailer` | `professional_authority`), `checked_at`, and **`source_text` (strongly preferred: the verbatim quote backing the fact)** — schema-optional, but products whose evidence has no quote and no derivable fallback are parked at apply time.
 - `price_eur` + `net_content_value/unit` where the retailer shows them.
 - Missing EANs (several Rossmann-only items): try the product page's Syndigo content-sync tag / URL number (mod-10 validate, record source) — the method is documented in the selection ledger's EAN notes.
 
