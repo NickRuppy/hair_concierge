@@ -1,5 +1,9 @@
+import { execFile } from "node:child_process"
 import { createHash } from "node:crypto"
 import { readFile } from "node:fs/promises"
+import { resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+import { promisify } from "node:util"
 
 import { createSupabaseClientFromEnv, flag, flagBool, parseArgs } from "../cli"
 
@@ -12,9 +16,12 @@ import { createSupabaseClientFromEnv, flag, flagBool, parseArgs } from "../cli"
  * what makes "a failing product fails alone" true (F-04).
  *
  * Usage:
+ *   SCAN_EXPANSION_EXECUTION_ENABLED=true \
  *   npm run products:intake:expansion:apply -- \
  *     --batch <path> --reviewed-by nick --reviewed-head <40-hex sha> --confirm
  */
+
+const EXECUTION_ENV = "SCAN_EXPANSION_EXECUTION_ENABLED"
 
 type BatchItem = { item_key: string; kind: string }
 type RpcRow = {
@@ -22,6 +29,53 @@ type RpcRow = {
   product_id: string
   outcome: string
   identifier_count: number
+}
+
+export type ScanExpansionExecutionGate = {
+  reviewedHead: string
+  executionEnabled: string | undefined
+  git: { head: string; clean: boolean }
+}
+
+/**
+ * Everything that must be true before this script is allowed to write.
+ *
+ * `--confirm` alone is not enough. `--reviewed-head` is the sha a human
+ * actually reviewed, so it has to be the sha this checkout is sitting on —
+ * a well-formed but stale (or simply invented) 40-hex string would otherwise
+ * let the RPC's head binding pass while the code and manifests on disk are
+ * something else entirely. The environment switch is deliberately independent
+ * of the CLI flags, mirroring the inherited backfill/reversal executors
+ * (src/lib/product-intake/catalog-enrichment/scanner-identifier-backfill.ts):
+ * an operator who mistypes a command still cannot execute without having
+ * separately armed the run.
+ *
+ * Returns the blockers; an empty array means execution is allowed.
+ */
+export function scanExpansionExecutionBlockers(gate: ScanExpansionExecutionGate): string[] {
+  const blockers: string[] = []
+  if (gate.executionEnabled !== "true") {
+    blockers.push(`scan expansion kill switch is disabled (set ${EXECUTION_ENV}=true)`)
+  }
+  if (!gate.git.clean) {
+    blockers.push("git worktree must be clean (including untracked files)")
+  }
+  if (gate.git.head !== gate.reviewedHead) {
+    blockers.push(
+      `git HEAD must equal --reviewed-head (HEAD ${gate.git.head || "<unknown>"}, reviewed ${gate.reviewedHead})`,
+    )
+  }
+  return blockers
+}
+
+const execFileAsync = promisify(execFile)
+
+async function gitState(): Promise<{ head: string; clean: boolean }> {
+  const [head, status] = await Promise.all([
+    execFileAsync("git", ["rev-parse", "HEAD"]),
+    execFileAsync("git", ["status", "--porcelain", "--untracked-files=all"]),
+  ])
+  return { head: head.stdout.trim(), clean: status.stdout.trim().length === 0 }
 }
 
 async function main() {
@@ -61,7 +115,18 @@ async function main() {
   process.stdout.write(`Items to apply: ${items.length}\n\n`)
 
   if (!flagBool(args, "confirm")) {
-    process.stdout.write("Dry run — re-run with --confirm to execute.\n")
+    process.stdout.write(`Dry run — re-run with --confirm and ${EXECUTION_ENV}=true to execute.\n`)
+    return
+  }
+
+  const blockers = scanExpansionExecutionBlockers({
+    reviewedHead,
+    executionEnabled: process.env[EXECUTION_ENV],
+    git: await gitState(),
+  })
+  if (blockers.length > 0) {
+    process.stderr.write(`Refusing to apply:\n${blockers.map((b) => `  - ${b}\n`).join("")}`)
+    process.exitCode = 1
     return
   }
 
@@ -105,7 +170,9 @@ async function main() {
   }
 }
 
-void main().catch((error) => {
-  process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
-  process.exitCode = 1
-})
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  void main().catch((error) => {
+    process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
+    process.exitCode = 1
+  })
+}

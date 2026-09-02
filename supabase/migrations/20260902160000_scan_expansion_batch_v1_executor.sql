@@ -69,6 +69,8 @@ DECLARE
   v_row jsonb;
   v_table text;
   v_found boolean;
+  v_expected_rows integer;
+  v_actual_rows integer;
 BEGIN
   FOR v_operation IN
     SELECT value FROM pg_catalog.jsonb_array_elements(COALESCE(p_spec_operations, '[]'::jsonb))
@@ -100,6 +102,31 @@ BEGIN
         RAISE EXCEPTION 'scan expansion fact readback mismatch on %: %', v_table, v_row;
       END IF;
     END LOOP;
+  END LOOP;
+
+  -- The loop above is one-way containment: every reviewed row must exist. On its
+  -- own that lets an EXTRA row sit alongside the reviewed ones — a stray spec row
+  -- written by something else would replay clean forever. Make the comparison
+  -- symmetric by pinning the row count per touched table. Every table here has
+  -- already passed the whitelist above before reaching dynamic SQL.
+  FOR v_table, v_expected_rows IN
+    SELECT operation.value->>'table',
+           pg_catalog.sum(pg_catalog.jsonb_array_length(operation.value->'rows'))::integer
+    FROM pg_catalog.jsonb_array_elements(COALESCE(p_spec_operations, '[]'::jsonb)) operation(value)
+    GROUP BY operation.value->>'table'
+  LOOP
+    EXECUTE pg_catalog.format(
+      'SELECT pg_catalog.count(*)::integer FROM public.%I candidate WHERE candidate.product_id = $1',
+      v_table
+    )
+    INTO v_actual_rows
+    USING p_product_id;
+
+    IF v_actual_rows IS DISTINCT FROM v_expected_rows THEN
+      RAISE EXCEPTION
+        'scan expansion fact row count drift on %: reviewed %, stored %',
+        v_table, v_expected_rows, v_actual_rows;
+    END IF;
   END LOOP;
 END;
 $function$;
@@ -344,6 +371,19 @@ BEGIN
        OR v_product.is_active IS DISTINCT FROM (v_item->'expected_product'->>'is_active')::boolean
        OR v_product.lifecycle_status IS DISTINCT FROM v_item->'expected_product'->>'lifecycle_status' THEN
       RAISE EXCEPTION 'scan expansion existing product identity/lifecycle drift: %', p_item_key;
+    END IF;
+
+    -- A product with a live search disposition is quarantined out of the
+    -- Personal-Plan search on purpose. Renaming it, or attaching a barcode that
+    -- makes it scannable, is a catalog-authority change on a quarantined row.
+    -- The CLI preflight parks these too; this check is INDEPENDENT of it, so a
+    -- direct RPC call or a stale preflight snapshot cannot get one through.
+    IF EXISTS (
+      SELECT 1 FROM public.personal_plan_product_search_dispositions disposition
+      WHERE disposition.product_id = v_product_id
+    ) THEN
+      RAISE EXCEPTION
+        'scan expansion may not update a product with a search disposition: %', p_item_key;
     END IF;
 
     IF pg_catalog.jsonb_typeof(v_item->'rename') = 'object' THEN
@@ -596,6 +636,9 @@ DECLARE
   v_protocol jsonb;
   v_expected_roles text[];
   v_actual_roles text[];
+  v_expected_protocols integer;
+  v_actual_protocols integer;
+  v_actual_evidence integer;
 BEGIN
   SELECT product.* INTO v_product FROM public.products product WHERE product.id = p_product_id;
   IF NOT FOUND THEN
@@ -630,6 +673,10 @@ BEGIN
     RETURN;
   END IF;
 
+  -- Every field the apply path writes on `products` is read back, including
+  -- `suitable_concerns` (always written, possibly empty) and `description`
+  -- (only when the reviewed item supplied one — otherwise the boundary's own
+  -- value stands and there is nothing of ours to compare).
   IF v_product.origin IS DISTINCT FROM 'curated'
      OR v_product.is_active IS DISTINCT FROM true
      OR v_product.lifecycle_status IS DISTINCT FROM 'active'
@@ -638,7 +685,16 @@ BEGIN
      OR v_product.image_url IS DISTINCT FROM p_item#>>'{final_payload,product,image_url}'
      OR v_product.suitable_thicknesses IS DISTINCT FROM ARRAY(
           SELECT pg_catalog.jsonb_array_elements_text(p_item#>'{product_updates,suitable_thicknesses}')
-        ) THEN
+        )
+     OR v_product.suitable_concerns IS DISTINCT FROM ARRAY(
+          SELECT pg_catalog.jsonb_array_elements_text(
+            COALESCE(p_item#>'{product_updates,suitable_concerns}', '[]'::jsonb)
+          )
+        )
+     OR (
+       COALESCE(p_item#>>'{product_updates,description}', '') <> ''
+       AND v_product.description IS DISTINCT FROM p_item#>>'{product_updates,description}'
+     ) THEN
     RAISE EXCEPTION 'scan expansion readback: product lifecycle/presentation drift on %', p_product_id;
   END IF;
 
@@ -705,6 +761,23 @@ BEGIN
     END IF;
   END LOOP;
 
+  -- The loop above proves every reviewed protocol is stored; the role-set
+  -- comparison proves no unreviewed ROLE appeared. Neither catches an extra row
+  -- that reuses a reviewed role under a different application family, so pin the
+  -- count as well — the stored set must be exactly the reviewed set.
+  SELECT pg_catalog.count(*)::integer INTO v_expected_protocols
+  FROM pg_catalog.jsonb_array_elements(p_item->'spec_operations') operation(value),
+       pg_catalog.jsonb_array_elements(operation.value->'rows') protocol(value)
+  WHERE operation.value->>'table' = 'product_application_protocols';
+  SELECT pg_catalog.count(*)::integer INTO v_actual_protocols
+  FROM public.product_application_protocols stored
+  WHERE stored.product_id = p_product_id;
+  IF v_actual_protocols IS DISTINCT FROM v_expected_protocols THEN
+    RAISE EXCEPTION
+      'scan expansion readback: protocol row count drift on % (reviewed %, stored %)',
+      p_product_id, v_expected_protocols, v_actual_protocols;
+  END IF;
+
   IF EXISTS (
     SELECT 1
     FROM pg_catalog.jsonb_array_elements(p_item->'evidence') evidence(value)
@@ -721,6 +794,19 @@ BEGIN
     )
   ) THEN
     RAISE EXCEPTION 'scan expansion readback: fact evidence drift on %', p_product_id;
+  END IF;
+
+  -- Same asymmetry: containment alone would let an extra evidence row (a fact
+  -- nobody reviewed, cited to a source nobody checked) sit on the product and
+  -- replay clean. This product is created by this batch, so its evidence set is
+  -- exactly the reviewed one.
+  SELECT pg_catalog.count(*)::integer INTO v_actual_evidence
+  FROM public.personal_plan_catalog_fact_evidence stored
+  WHERE stored.product_id = p_product_id;
+  IF v_actual_evidence IS DISTINCT FROM pg_catalog.jsonb_array_length(p_item->'evidence') THEN
+    RAISE EXCEPTION
+      'scan expansion readback: fact evidence row count drift on % (reviewed %, stored %)',
+      p_product_id, pg_catalog.jsonb_array_length(p_item->'evidence'), v_actual_evidence;
   END IF;
 END;
 $function$;

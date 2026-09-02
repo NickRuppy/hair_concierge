@@ -41,8 +41,9 @@ import {
  *  - `image_url` is produced by the T4b image pipeline (finalized own-bucket asset).
  *  - `affiliate_link` / `purchase_link_status` / `checked_at` come from the
  *    purchase-link check that runs immediately before an apply.
- *  - `evidence_source_texts` is the T2 contract gap documented in
- *    `EXPANSION_APPLY_KNOWN_CONTRACT_GAPS` below.
+ *  - `evidence_source_texts` is the last-resort fallback in
+ *    `resolveEvidenceSourceText` below, for manifests written before
+ *    `evidence[].source_text` existed in the T2 contract.
  */
 export type ExpansionApplySupplementEntry = {
   image_url: string
@@ -64,17 +65,25 @@ export type ExpansionApplySupplement = {
 }
 
 /**
- * Contract gaps found while building the adapter. Surfaced deliberately instead
- * of being papered over — each one parks the affected product in preflight.
+ * The quoted text for one evidence row, in descending order of authority:
+ *
+ *  1. the manifest's own `evidence[].source_text` — the researcher read this
+ *     exact source for this exact fact, so nothing downstream may override it;
+ *  2. a protocol source on the same URL — the same page, quoted by the same
+ *     research pass for the protocol;
+ *  3. the operator supplement — a manual fill-in for pre-`source_text` manifests.
+ *
+ * `undefined` means no quote exists anywhere and the product must be parked:
+ * `personal_plan_catalog_fact_evidence.source_text` is NOT NULL and a quote is
+ * never invented here.
  */
-export const EXPANSION_APPLY_KNOWN_CONTRACT_GAPS = [
-  // `personal_plan_catalog_fact_evidence.source_text` is NOT NULL
-  // (supabase/migrations/20260811214000_personal_plan_exact_catalog_bundle_v1.sql:9)
-  // but `expansionEvidenceRowSchema` (src/lib/product-intake/expansion-manifest.ts)
-  // is `.strict()` with no `source_text` field. Until T2 is amended, the quoted
-  // text is taken from a matching protocol source or from the operator supplement.
-  "evidence_source_text_not_in_manifest_contract",
-] as const
+export function resolveEvidenceSourceText(input: {
+  manifestSourceText?: string
+  protocolSourceText?: string
+  operatorSourceText?: string
+}): string | undefined {
+  return input.manifestSourceText ?? input.protocolSourceText ?? input.operatorSourceText
+}
 
 // ---------------------------------------------------------------------------
 // Output contract
@@ -374,7 +383,10 @@ export function buildExpansionApplyBatch(
       let waitCopyDe = supplement.mask_wait_copy_de
       const contactTimeSeconds = manifestProtocol.contact_time?.seconds ?? null
       if (manifestProtocol.template_id === "TPL-MASK" && !waitCopyDe) {
-        waitCopyDe = contactTimeSeconds === null ? undefined : (waitCopyForSeconds(contactTimeSeconds) ?? undefined)
+        waitCopyDe =
+          contactTimeSeconds === null
+            ? undefined
+            : (waitCopyForSeconds(contactTimeSeconds) ?? undefined)
       }
       try {
         const row = buildExpansionProtocolRow(manifestProtocol.template_id, {
@@ -406,9 +418,10 @@ export function buildExpansionApplyBatch(
       if (!stampedRoles.has(role)) gaps.push(`missing_protocol_for_derived_role: ${role}`)
     }
 
-    // Evidence rows: `source_text` is NOT NULL in the DB but absent from the T2
-    // contract. Take the quoted text from a protocol source on the same URL, or
-    // from the operator supplement. Never invent one.
+    // Evidence rows: `source_text` is NOT NULL in the DB. The manifest's own
+    // quote wins; a protocol source on the same URL and the operator supplement
+    // are fallbacks for manifests written before the field existed. Never
+    // invent one — a row with no quote anywhere parks the product.
     const evidenceRows: ExpansionApplyItem["evidence"] = []
     for (const evidence of (final.evidence ?? []) as Array<{
       fact_key: string
@@ -416,17 +429,19 @@ export function buildExpansionApplyBatch(
       source_label: string
       source_url: string
       source_type: string
+      source_text?: string
       checked_at: string
     }>) {
-      const supplied = supplement.evidence_source_texts?.[`${evidence.fact_key}|${evidence.source_url}`]
-      const fromProtocol = manifestProtocols.find(
-        (protocol) => protocol.product_source.url === evidence.source_url,
-      )?.product_source.text
-      const sourceText = supplied ?? fromProtocol
+      const sourceText = resolveEvidenceSourceText({
+        manifestSourceText: evidence.source_text,
+        protocolSourceText: manifestProtocols.find(
+          (protocol) => protocol.product_source.url === evidence.source_url,
+        )?.product_source.text,
+        operatorSourceText:
+          supplement.evidence_source_texts?.[`${evidence.fact_key}|${evidence.source_url}`],
+      })
       if (!sourceText) {
-        gaps.push(
-          `evidence_source_text_missing: ${evidence.fact_key} @ ${evidence.source_url} (T2 contract gap)`,
-        )
+        gaps.push(`evidence_source_text_missing: ${evidence.fact_key} @ ${evidence.source_url}`)
         continue
       }
       evidenceRows.push({
@@ -523,7 +538,6 @@ export function buildExpansionApplyBatch(
       blockers: [],
     })
   })
-
   ;(manifest.existing_product_updates ?? []).forEach((rawUpdate, index) => {
     const report = validation.existingProductUpdates[index]
     const label = report?.label ?? `existing_product_updates[${index}]`
@@ -554,6 +568,14 @@ export function buildExpansionApplyBatch(
     if (!live) gaps.push("existing_product_not_found_in_snapshot")
     if (live && update.rename && live.name !== update.rename.from) {
       gaps.push(`rename_precondition_failed: live name is "${live.name}"`)
+    }
+    // A product carrying a live search disposition has been taken OUT of the
+    // Personal-Plan search on purpose (quarantine, wrong category, ambiguous
+    // identity). Renaming it or attaching a barcode to it is a catalog-authority
+    // change on a quarantined row, so it is parked for Nick rather than applied.
+    // The executor refuses it independently; this is the readable half.
+    if (dispositions.has(update.product_id)) {
+      gaps.push(`existing_product_has_disposition: ${update.product_id}`)
     }
 
     const identifiers: ExpansionApplyExistingItem["identifiers"] = []
@@ -613,15 +635,6 @@ export function buildExpansionApplyBatch(
     items.push(item)
   })
 
-  // Products carrying a live search disposition can never reach strict readiness.
-  for (const prediction of readinessPrediction) {
-    const item = items.find((candidate) => candidate.item_key === prediction.item_key)
-    if (item && item.kind === "existing_product_update" && dispositions.has(item.product_id)) {
-      prediction.predicted = "blocked"
-      prediction.blockers.push("has_disposition")
-    }
-  }
-
   const batch: ExpansionApplyBatch = {
     schema_version: "scan-db-expansion-batch-v1",
     batch_id: input.supplement.batch_id,
@@ -655,7 +668,8 @@ function buildFieldRationales(
     manifestRationales["product.name"] ?? "Produktname laut Herstellerseite/Handelsseite."
   rationales["product.category_key"] =
     manifestRationales["product.category_key"] ?? "Kategorie laut Produktart und Anwendungshinweis."
-  rationales["product.affiliate_link"] = "Händler-Produktseite aus dem Purchase-Link-Check vor dem Apply."
+  rationales["product.affiliate_link"] =
+    "Händler-Produktseite aus dem Purchase-Link-Check vor dem Apply."
   rationales["product.image_url"] = "Finalisiertes Chaarlie-Packshot aus der Bildpipeline (T4b)."
   rationales["product.price_eur"] =
     manifestRationales["product.price_eur"] ?? "Preis laut Händler-Produktseite zum Prüfzeitpunkt."
