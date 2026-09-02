@@ -33,31 +33,50 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": ["leave_on_fibre_conditioning", "dry_finish"]
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
           },
           "product_oil_eligibility": [
             {
               "thickness": "fine",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "normal",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "coarse",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
         "protocols": [
           {
             "template_id": "TPL-OIL-LEAVEON",
@@ -91,8 +110,14 @@
             "fact_key": "product_oil_specs.authority_facts",
             "fact_value": {
               "weight": "light",
-              "role_support": ["leave_on_fibre_conditioning", "dry_finish"],
-              "ingredient_flags": ["silicones", "oils"],
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
               "inci_basis": "Dimethicone, Dimethiconol, Undecane, Dicaprylyl Ether, Tridecane, Helianthus Annuus Seed Oil, ..., Argania Spinosa Kernel Oil (anhydrisches Silikon-/Trockenöl-Profil)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
@@ -169,31 +194,51 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": ["leave_on_fibre_conditioning", "dry_finish", "pre_heat_protection"]
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
           },
           "product_oil_eligibility": [
             {
               "thickness": "fine",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "normal",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "coarse",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["frizz", "dryness"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "dryness"
+        ],
         "protocols": [
           {
             "template_id": "TPL-OIL-LEAVEON",
@@ -237,8 +282,15 @@
             "fact_key": "product_oil_specs.authority_facts",
             "fact_value": {
               "weight": "light",
-              "role_support": ["leave_on_fibre_conditioning", "dry_finish", "pre_heat_protection"],
-              "ingredient_flags": ["silicones", "oils"],
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
               "inci_basis": "Isododecane, Dimethicone, Dimethiconol, Cocos Nucifera Oil, Tocopherol, ..., Sclerocarya Birrea Seed Oil, Camellia Japonica Seed Oil (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
@@ -297,7 +349,7 @@
           "net_content_value": 100,
           "net_content_unit": "ml",
           "candidate_image": {
-            "url": "https://www.rossmann.de/media-neu/572/MAM_57247767/MAM_57247767_SHOP_IMAGE_1.4.png?width=600&height=600&fit=bounds&auto=webp&format=webply&canvas=600,600&quality=80",
+            "url": "https://www.rossmann.de/media-neu/572/MAM_57247767/MAM_57247767_SHOP_IMAGE_1.4.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=80",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947"
           },
           "description": "Haaröl mit Argan- und Sonnenblumenöl für extrem strapaziertes, trockenes Haar; vor der Wäsche, im feuchten Haar oder im trockenen Haar als Styling-Finish anwendbar."
@@ -328,24 +380,40 @@
               "thickness": "fine",
               "oil_subtype": "styling-oel",
               "oil_purpose": null,
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "normal",
               "oil_subtype": "styling-oel",
               "oil_purpose": null,
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "coarse",
               "oil_subtype": "styling-oel",
               "oil_purpose": null,
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "hair_damage"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "hair_damage"
+        ],
         "protocols": [
           {
             "template_id": "TPL-OIL-PREWASH",
@@ -393,7 +461,10 @@
                 "leave_on_fibre_conditioning",
                 "dry_finish"
               ],
-              "ingredient_flags": ["silicones", "oils"],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
               "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Argania Spinosa Kernel Oil (anhydrisch, volatile-dominant mit Pflanzenölen)"
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
@@ -462,31 +533,51 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": ["dry_finish"]
+            "role_support": [
+              "dry_finish"
+            ]
           },
           "product_oil_eligibility": [
             {
               "thickness": "fine",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "normal",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             },
             {
               "thickness": "coarse",
               "oil_subtype": "styling-oel",
               "oil_purpose": "light_finish",
-              "ingredient_flags": ["silicones", "oils"]
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["frizz", "split_ends", "dryness", "hair_damage"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "split_ends",
+          "dryness",
+          "hair_damage"
+        ],
         "protocols": [
           {
             "template_id": "TPL-OIL-DRYFINISH",
@@ -511,8 +602,13 @@
             "fact_key": "product_oil_specs.authority_facts",
             "fact_value": {
               "weight": "light",
-              "role_support": ["dry_finish"],
-              "ingredient_flags": ["silicones", "oils"],
+              "role_support": [
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
               "inci_basis": "Dimethicone, Isopropyl Myristate, Dimethiconol, C12-15 Alkyl Benzoate, ..., Caprylic/Capric Triglyceride, Argania Spinosa Kernel Oil, ..., Squalane (anhydrisches Silikon-/Ester-Profil)"
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",

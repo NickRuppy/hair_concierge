@@ -391,7 +391,15 @@ export async function processItem(
       if (deshadowResult.ok) {
         const reread = await readRgba(deshadowed)
         const newHalo = haloScore(reread.data, reread.width, reread.height)
-        if (newHalo < halo) {
+        // Warm/amber/translucent products read as "shadow" to the heuristic and
+        // get eaten wholesale (2026-09-02: three pilot products lost 37-81% of
+        // silhouette). A halo improvement bought by deleting the product is not
+        // an improvement - reject the deshadow when coverage collapses.
+        const rereadCoverage = alphaCoverage(reread.data, reread.width, reread.height)
+        if (rereadCoverage < coverage * 0.85) {
+          status = "flagged"
+          reason = `deshadow rejected: it removed ${(100 * (1 - rereadCoverage / coverage)).toFixed(0)}% of the product silhouette (warm/translucent product?) - kept the plain cutout`
+        } else if (newHalo < halo) {
           copyFileSync(deshadowed, targetCutout)
           cutoutFile = targetCutout
           data = reread.data
