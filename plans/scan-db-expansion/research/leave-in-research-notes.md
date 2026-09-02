@@ -359,3 +359,10 @@ heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visu
 
 Alle sieben jetzt über der Qualitätsbar (Retail-Packshot, keine Marketing-Folien oder
 Textur-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).
+
+
+## Final review closure (Nick, 2026-09-02)
+
+- Night Elixier: KEEP as regular leave-in (add-on care role, `extension_conditioner`); Anwendung copy = pure standard template, NO bedtime-specific sentence (Nick's ruling). The §6 overnight-copy question is thereby CLOSED.
+- All six uncertainty fields ruled (HE weight medium; HH benefit detangle_smooth; Isana medium+styling-oel; WS repair low; Being 354 ml per manufacturer, physical pack check queued; Bond Repair 9,95 € verified on the dm product page).
+- Pilot data review is COMPLETE — nothing unreviewed remains in this PR.
