@@ -1,0 +1,713 @@
+{
+  "batch_id": "scan-db-expansion-pilot-mask-2026-09-02",
+  "generated_at": "2026-09-02T12:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Night Elixier Ultimate Repair",
+          "brand": "Schwarzkopf Gliss",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 7.45,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781189140/assets/pas/images/1f607947-d67b-4969-9332-d4c2c4e560b5/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
+          },
+          "description": "Overnight-Haarkur mit HaptIQ-System und Perlen-Extrakt für sehr geschädigtes Haar; wird vor dem Schlafengehen aufgetragen und nicht ausgespült."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813951",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "balanced",
+            "ingredient_flags": ["silicones", "proteins", "humectants"],
+            "repair_support_level": "medium",
+            "functional_benefits": ["shine"]
+          }
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["hair_damage", "repair"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+              "text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf - einfach durchbürsten und den Tag beginnen! Kann jeden Abend genutzt werden."
+            },
+            "deviation": {
+              "reason": "Genuine Abweichung: Overnight-Leave-in statt Rinse-out-Maske. Das Produkt wird vor dem Schlafengehen aufgetragen, wirkt über Nacht, wird NICHT ausgespült und darf auch ins trockene Haar. Widerspricht der TPL-MASK-Familie (post_shampoo_rinse_out_mask) in Einwirklogik, Rinse-Verhalten und Haarzustand. dm führt das Produkt in der Kategorie Leave-In; mögliche Re-Kategorisierung zu leave_in für Nick zu entscheiden.",
+              "packaging_text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen."
+            },
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Über Nacht (keine Minutenangabe): \"Vor dem Schlafengehen ... einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf.\""
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813951",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "balanced",
+              "repair_support_level": "medium",
+              "ingredient_flags": ["silicones", "proteins", "humectants"],
+              "inci_basis": "Aqua, Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, ..., Hydrolyzed Pearl, Betaine, ..., Panthenol, ..., Glycerin"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.application",
+            "fact_value": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.overnight_leave_in",
+            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült werden muss; Ultimate-Repair-Linie für stark geschädigtes Haar (bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandelt).",
+            "source_label": "schwarzkopf.de Night Elixier Ultimate Repair Produktseite",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/night-elixier/ultimate-repair.html",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 7.45,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_mask_specs.weight": "light: Serum-Format mit Pumpspender, Claims 'zieht sofort ein' und 'hinterlässt keine Spuren auf dem Kopfkissen'; keine Butter/schweren Öle in der INCI.",
+          "category_specs.product_mask_specs.concentration": "medium (konservativ): 'Intensivpflege über Nacht' ist Marketing; keine belegbare Aktivstoff-Konzentration, Dosierung nur 2-4 Pumpstöße.",
+          "category_specs.product_mask_specs.balance_direction": "balanced (konservativ): Formel mischt ein hydrolysiertes Protein (Hydrolyzed Pearl) mit Feuchthaltemitteln (Betaine, Glycerin, Panthenol); weder klar Protein- noch klar Feuchtigkeits-dominant.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Dimethicone an INCI-Position 2. proteins: Hydrolyzed Pearl (Conchiolin-Hydrolysat) - schwaches Signal, aber deklariert. humectants: Betaine, Glycerin, Propylene Glycol, Panthenol.",
+          "category_specs.product_mask_specs.repair_support_level": "medium: Repair-Positionierung + HaptIQ-Bond-Marketing + hydrolysiertes Protein, aber keine unabhängig belegte Bond-Builder-Chemie; 'high' wäre nicht evidenzgedeckt.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: Herstellerclaim 'bis zu 5x mehr Glanz'. Kämmbarkeits-/Entwirrungsclaims nur aus Reviews, daher nicht aufgenommen.",
+          "thickness_eligibility": "Alle Stärken: leichtes Leave-in-Serum ohne Butter, dosierbar über Pumpstöße; kein Overload-Risiko für feines Haar bei Packungsdosierung.",
+          "concern_eligibility": "hair_damage/repair: Zielgruppe laut Hersteller 'sehr geschädigtes Haar', Kernclaim Reparatur.",
+          "protocols.tpl_mask.deviation": "Overnight + Nicht-ausspülen + trockenes Haar erlaubt = dreifacher Widerspruch zur Rinse-out-Maskenfamilie; im Template explizit als 'wrong family, flag' gelistet. Produkt ist im Pilot als mask gepinnt, daher Stamp mit Deviation statt Umkategorisierung."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Glycolic Gloss, 5 Minuten Haar-Laminierung",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 8.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1773354360/assets/pas/images/c556baad-1bce-4a54-8d7a-71d8074e64f3/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung"
+          },
+          "description": "Rinse-out Glossing-Kur mit Glykolsäure für stumpfes, poröses Haar; versiegelt die Haaroberfläche für Glanz, hält laut Hersteller bis zu 10 Haarwäschen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524128500",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "high",
+            "balance_direction": "balanced",
+            "ingredient_flags": ["silicones", "polymers", "oils", "humectants"],
+            "repair_support_level": "low",
+            "functional_benefits": ["shine", "smoothing_frizz_control"]
+          }
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["frizz"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+              "text": "Eine großzügige Menge auf das feuchte Haar auftragen, um es vom Ansatz bis in die Spitzen glanzvoll zu versiegeln. 5 Minuten einwirken lassen und danach gründlich ausspülen."
+            },
+            "deviation": {
+              "reason": "Verpackung weist explizit die Anwendung 'vom Ansatz bis in die Spitzen' an - widerspricht P5 (Längen und Spitzen, Ansatz aussparen). Milde, aber echte Platzierungs-Abweichung (kein bloßes 'ins feuchte Haar'); Template-Platzierung lengths_ends wird beibehalten, Entscheidung für Nick.",
+              "packaging_text": "Eine großzügige Menge auf das feuchte Haar auftragen, um es vom Ansatz bis in die Spitzen glanzvoll zu versiegeln."
+            },
+            "contact_time": {
+              "seconds": 300,
+              "source_text": "5 Minuten einwirken lassen und danach gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524128500",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": ["silicones", "polymers", "oils", "humectants"],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Cocamidopropyl Betaine, Behentrimonium Chloride, Propylene Glycol, Amodimethicone, ..., Cocos Nucifera Oil, Hydroxypropyl Guar, ..., Polyquaternium-37, ..., Acrylates/Stearyl Methacrylate Copolymer"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "5 Minuten einwirken lassen und danach gründlich ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.gloss_lamination",
+            "fact_value": "Glossing für zu Hause; 19% Gloss-Complex mit Glykolsäure; für stumpfes und poröses Haar; hält bis zu 10 Haarwäschen, ohne zu beschweren; Anwendung: nach der Haarwäsche großzügige Menge auf das feuchte Haar, 5 Minuten, gründlich ausspülen.",
+            "source_label": "loreal-paris.de Produktseite",
+            "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/5-minuten-haar-laminierung",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 8.95,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): Hersteller claimt 'ohne zu beschweren', aber Amodimethicone + kationische Polymere bauen bei feinem Haar über Anwendungen auf; Evidenz gemischt, daher Mitte statt light.",
+          "category_specs.product_mask_specs.concentration": "high: als intensives Treatment positioniert (herstellerseitig bezifferter 19% Gloss-Complex, semi-permanenter Effekt über bis zu 10 Wäschen).",
+          "category_specs.product_mask_specs.balance_direction": "balanced: Oberflächen-Versiegelung/Glanz, weder Protein- noch Feuchtigkeitsfokus; keine Proteine in der INCI, Feuchtigkeit nicht beworben.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Amodimethicone. polymers: Hydroxypropyl Guar, Polyquaternium-37, Acrylates-Copolymer. oils: Cocos Nucifera Oil. humectants: Propylene Glycol.",
+          "category_specs.product_mask_specs.repair_support_level": "low: 'regeneriert die Haarfaser' ist Glanz-Marketing; keine Protein-/Bond-Aktivstoffe in der INCI; ehrlich bleibt es ein Versiegelungs-/Glanzprodukt.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: Kernclaim (Glanzschicht, Laminierung). smoothing_frizz_control: 'glättet die Schuppenschicht/Haaroberfläche, reduziert Frizz' laut Hersteller.",
+          "thickness_eligibility": "Alle Stärken: Glossing-Produkt für 'stumpfes, poröses Haar' ohne Dickenbeschränkung; weight=medium trägt die Vorsicht für feines Haar bereits im Ranking.",
+          "concern_eligibility": "frizz: einziger Claim, der sauber auf einen Concern-Code mappt. Glanz/Stumpfheit hat keinen eigenen Code (performance-Semantik unklar, siehe Notes) - bewusst schmal gehalten.",
+          "protocols.tpl_mask.deviation": "'Vom Ansatz bis in die Spitzen' ist eine explizite Ansatz-Einbeziehung, nicht bloß 'ins feuchte Haar'; laut Template-Regel eine Deviation, lengths_ends bleibt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Banana Hair Food 3in1 Maske",
+          "brand": "Garnier Fructis",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747420463/assets/pas/images/f625e528-eb32-4597-a82a-0411eafd44a3/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske"
+          },
+          "description": "Vegane, silikonfreie 3in1-Pflege (Spülung, Maske oder Leave-in) für trockenes Haar mit Lipidkomplex und Banane."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542511070",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["oils", "humectants"],
+            "repair_support_level": "low",
+            "functional_benefits": ["smoothing_frizz_control", "detangling_slip"]
+          }
+        },
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "feuchtigkeit"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise, Masken-Anwendung)",
+              "url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+              "text": "Als Maske: Auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. Trockenes Haar wird intensiv gepflegt."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 180,
+              "source_text": "Als Maske: Auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542511070",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["oils", "humectants"],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, Isopropyl Myristate, Cetyl Esters, Sunflower Seed Oil, Banana Fruit Juice, Soybean Oil, Shea Butter, Glycerin, ... (silikonfrei)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "Als Maske: Auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.3in1_dry_hair",
+            "fact_value": "Für trockenes Haar; als Spülung, Maske oder Leave-in anwendbar; Maske: nasses Haar, 3 Minuten, ausspülen; vegan, 98% Inhaltsstoffe natürlichen Ursprungs; leichte Textur, beschwert nicht.",
+            "source_label": "garnier.de Produktseite",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-banane",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_mask_specs.weight": "medium: Öle/Sheabutter im INCI-Mittelfeld sprechen gegen light, Herstellerclaim 'leichte Textur, beschwert nicht' gegen rich; Evidenz gemischt, daher Mitte.",
+          "category_specs.product_mask_specs.concentration": "medium: 3-Minuten-Schnellmaske und 3in1-Allrounder, kein hochkonzentriertes Intensiv-Treatment.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: reine Emollient-/Feuchtigkeitsformel (Öle, Sheabutter, Glycerin) für trockenes Haar; keinerlei Proteine.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sonnenblumen-, Soja-, Kokos-, Avocadoöl + Sheabutter. humectants: Glycerin. Silikonfrei laut Hersteller und INCI; keine Proteine, keine synthetischen Filmpolymere.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe; Zielrichtung ist Pflege/Geschmeidigkeit bei Trockenheit.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: Kernclaim Geschmeidigkeit. detangling_slip: Herstellertext 'sofort entwirren' (bei der Spülungs-Anwendung derselben Formel).",
+          "thickness_eligibility": "normal/coarse: Emollient-Last (Öle + Butter) und Trockenhaar-Positionierung; für feines Haar konservativ ausgeschlossen (bekanntes Beschwerungs-Risiko der Hair-Food-Texturen).",
+          "concern_eligibility": "dryness/feuchtigkeit: explizit 'speziell für trockenes Haar entwickelt', Feuchtigkeits-/Pflegeclaims.",
+          "protocols.tpl_mask": "Keine Deviation: 'nasses Haar' ist laut Ruling keine Abweichung; keine Ansatz-Anweisung, kein Conditioner-danach, keine Wärme. Die Leave-in-Zweitverwendung ist eine separate Produktfähigkeit, kein Widerspruch zur Masken-Anwendung."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarmaske Blütensanft",
+          "brand": "Herbal Essences",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.99,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/127/MAM_12711136/MAM_12711136_SHOP_IMAGE_2.0.png?width=600&height=600&fit=bounds&auto=webp&format=webply&canvas=600,600&quality=80",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724"
+          },
+          "description": "Vegane Feuchtigkeits-Haarmaske mit Rosenduft für trockenes Haar aus der Blütensanft-Kollektion."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216212724",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+              "https://incibeauty.com/en/produit/8700216212724"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["silicones"],
+            "repair_support_level": "low",
+            "functional_benefits": ["smoothing_frizz_control"]
+          }
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["dryness", "feuchtigkeit"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+              "text": "Aufs nasse Haar auftragen, 5 Minuten einwirken lassen und ausspülen, um dein Haar mit intensiver Feuchtigkeit zu versorgen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 300,
+              "source_text": "Aufs nasse Haar auftragen, 5 Minuten einwirken lassen und ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216212724",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag) und INCI-Beauty-Listing",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["silicones"],
+              "inci_basis": "Aqua, Cetyl Alcohol, Stearamidopropyl Dimethylamine, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Glutamic Acid, ..., Histidine (keine Öle/Butter, kein Glycerin)"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "Aufs nasse Haar auftragen, 5 Minuten einwirken lassen und ausspülen.",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.99,
+            "source_label": "Rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Name laut Rossmann-Produktseite ('Haarmaske Blütensanft'); dm führt dieselbe Maske als 'Haarmaske Blütensanft Rosenduft'.",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): INCI ist eine leichte kationische Basis ohne Öle/Butter (spräche für light), aber Bis-Aminopropyl Dimethicone ist ein stärker deponierendes Amino-Silikon und der Claim lautet 'intensiv nährend'; gemischte Evidenz, daher Mitte.",
+          "category_specs.product_mask_specs.concentration": "medium: klassische 5-Minuten-Drogeriemaske, kein Intensiv-Treatment-Anspruch über die Feuchtigkeitsclaims hinaus.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: durchgängige Feuchtigkeitsclaims ('intensive Feuchtigkeit', 'durstige Strähnen'); keine Proteine in der INCI (Glutamic Acid/Histidine sind Einzel-Aminosäuren, kein Protein-Flag).",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Bis-Aminopropyl Dimethicone. Bewusst keine weiteren Flags: keine Öle/Butter, kein Glycerin/klassische Humectants in der INCI.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'verwandelt trockenes Haar in seidiges Haar' (Geschmeidigkeit/Glättung); Glanz und Entwirren werden nicht beworben.",
+          "thickness_eligibility": "Alle Stärken: leichte Basis ohne Butter/Öle; kein spezifisches Overload-Risiko für feines Haar erkennbar.",
+          "concern_eligibility": "dryness/feuchtigkeit: Kernclaims Feuchtigkeit für trockenes Haar.",
+          "protocols.tpl_mask": "Keine Deviation: 'nasses Haar' laut Ruling keine Abweichung; keine Ansatz-Anweisung, kein Conditioner-danach, keine Wärme, exakte 5-Minuten-Angabe."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 7sec Express-Repair, Ultimate Repair",
+          "brand": "Schwarzkopf Gliss",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1784417667/assets/pas/images/be03ed67-d08c-4fc5-b9fd-ea4e08985b11/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair"
+          },
+          "description": "Silikonfreie Express-Repair-Kur mit flüssigem Keratin und HaptIQ-System für sehr geschädigtes, trockenes Haar; wirkt in 7 Sekunden."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813319",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": ["proteins", "humectants", "oils"],
+            "repair_support_level": "medium",
+            "functional_benefits": ["shine"]
+          }
+        },
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["hair_damage", "repair", "dryness"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+              "text": "1) Haare waschen. 2) Gleichmäßig und direkt auf die Haarlängen auftragen. Kurz einarbeiten und 7 Sekunden einwirken lassen. 3) Sorgfältig ausspülen. Vor Gebrauch schütteln."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 7,
+              "source_text": "Kurz einarbeiten und 7 Sekunden einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813319",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": ["proteins", "humectants", "oils"],
+              "inci_basis": "Propylene Glycol, Alcohol denat., Myristyl Alcohol, Dicaprylyl Carbonate, Aqua, Glycerin, Caprylic/Capric Triglyceride, ..., Hydrolyzed Keratin (silikonfrei)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "Kurz einarbeiten und 7 Sekunden einwirken lassen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.express_repair",
+            "fact_value": "Nach dem Waschen direkt auf Längen und Spitzen auftragen, einarbeiten bis cremige Textur entsteht, 7 Sekunden einwirken lassen, sorgfältig ausspülen; flüssiges Keratin + HaptIQ-System; für sehr geschädigtes, trockenes Haar; ohne Silikone.",
+            "source_label": "schwarzkopf.de Produktseite",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/ultimate-repair/ultimate-repair-7-sec-express-repair-kur.html",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.95,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_mask_specs.weight": "light: Herstellerclaim 'ohne zu beschweren', silikonfrei, leichte Ester-/Alkohol-Basis ohne Butter.",
+          "category_specs.product_mask_specs.concentration": "medium (konservativ): 'so effektiv wie eine 5-Minuten-Kur' ist unbelegtes Marketing; Express-Format spricht nicht für ein hochkonzentriertes Intensiv-Treatment.",
+          "category_specs.product_mask_specs.balance_direction": "protein: Hydrolyzed Keratin in der INCI plus durchgängige Repair-/Stärkungs-Positionierung der Ultimate-Repair-Linie.",
+          "category_specs.product_mask_specs.ingredient_flags": "proteins: Hydrolyzed Keratin. humectants: Propylene Glycol, Glycerin. oils: Caprylic/Capric Triglyceride und Dicaprylyl Carbonate (Öl-/Ester-Emollients).",
+          "category_specs.product_mask_specs.repair_support_level": "medium: hydrolysiertes Protein + Bond-Marketing (HaptIQ, '100% stärkeres Haar' vs. unbehandelt), aber keine unabhängig belegte Bond-Builder-Chemie; 'high' wäre nicht evidenzgedeckt.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: Herstellerclaim 'glänzendes, repariertes Haar'. Entwirren/Glättung nicht beworben.",
+          "thickness_eligibility": "Alle Stärken: leichte, silikonfreie Formel mit 'beschwert nicht'-Claim; kein Overload-Risiko für feines Haar.",
+          "concern_eligibility": "hair_damage/repair: Zielgruppe 'sehr geschädigtes Haar', Kernclaim Reparatur. dryness: Hersteller nennt explizit 'trockenes Haar'.",
+          "protocols.tpl_mask": "Keine Deviation: Platzierung 'direkt auf die Haarlängen' entspricht P5; exakte 7-Sekunden-Angabe wird als contact_time übernommen (ungewöhnlich kurz, aber eine gesourcte exakte Zeit, kein Regelwiderspruch)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Intense Moisture Hair Mask",
+          "brand": "IDA WARG Beauty",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 14.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/561/MAM_56165360/MAM_56165360_SHOP_IMAGE_1.4.png?width=600&height=600&fit=bounds&auto=webp&format=webply&canvas=600,600&quality=80",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793"
+          },
+          "description": "Intensiv feuchtigkeitsspendende, vegane Haarkur mit Maracujaöl, Sodium PCA und Sheabutter für frizziges, trockenes und sprödes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "6412600231793",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": ["oils", "humectants", "polymers"],
+            "repair_support_level": "low",
+            "functional_benefits": ["smoothing_frizz_control"]
+          }
+        },
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "frizz", "feuchtigkeit"],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+              "text": "Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden."
+            },
+            "deviation": {
+              "reason": "Explizite Conditioner-nach-Maske-Anweisung ('Gründlich ausspülen und Spülung anwenden'; Herstellerseite: 'Finish with conditioner') - widerspricht der kanonischen replaces_conditioner-Regel (P5). Kandidat für conditioner_after, nur nach Nicks Freigabe.",
+              "packaging_text": "Gründlich ausspülen und Spülung anwenden."
+            },
+            "contact_time": {
+              "seconds": null,
+              "source_text": "5-15 Minuten einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "6412600231793",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag; einzige Quelle, kein unabhängiger Zweitbeleg gefunden)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": ["oils", "humectants", "polymers"],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Butyrospermum Parkii Butter, Passiflora Edulis Seed Oil, Sodium PCA, Guar Hydroxypropyltrimonium Chloride, Glycerin, ..."
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.application",
+            "fact_value": "Auf dem gewaschenen, handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen. Gründlich ausspülen und Spülung anwenden.",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.usage_corroboration",
+            "fact_value": "Herstellerseite (300-ml-Variante): Apply on lengths in freshly washed and towel-dried hair. Leave in for 5-15 minutes, rinse thoroughly. Use 1-2 times a week. Finish with conditioner. Passionsfruchtöl, Sodium PCA, Sheabutter; 100% vegan.",
+            "source_label": "idawargbeauty.se Produktseite (Intense Moisture Hair Mask)",
+            "source_url": "https://idawargbeauty.se/en/products/intense-moisture-hair-mask",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 14.99,
+            "source_label": "Rossmann.de Produktseite (250 ml, 1 L = 59,96 EUR)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-intense-moisture-hair-mask/p/6412600231793",
+            "source_type": "retailer",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite.",
+          "product.price_eur": "Aus dem Rossmann-Grundpreis abgeleitet (1 L = 59,96 EUR bei 250 ml = 14,99 EUR); der Seitenpreis selbst wurde im Layout nicht direkt als Einzelwert erfasst - vor Apply gegenprüfen.",
+          "category_specs.product_mask_specs.weight": "rich: Sheabutter auf INCI-Position 5, 'nährstoffreich'-Positionierung, Premium-Intensivmaske.",
+          "category_specs.product_mask_specs.concentration": "high: 5-15 Minuten Einwirkzeit, 1-2x/Woche-Kadenz laut Hersteller, klassisches Intensiv-Treatment-Profil.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Sodium PCA + Glycerin + durchgängige Feuchtigkeitsclaims; keine Proteine in der INCI.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sheabutter, Passionsfruchtöl (Maracuja). humectants: Sodium PCA, Glycerin. polymers: Guar Hydroxypropyltrimonium Chloride (kationisches Conditioning-Polymer). Keine Silikone, keine Proteine.",
+          "category_specs.product_mask_specs.repair_support_level": "low: 'stärkt geschädigtes Haar' läuft über Sheabutter-Pflege, keine Protein-/Bond-Aktivstoffe; Moisture-Produkt, kein Repair-Produkt.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: explizit für frizziges Haar positioniert. Glanz/Entwirren nicht beworben.",
+          "thickness_eligibility": "normal/coarse: butterreiche Rich-Formel; für feines Haar konservativ ausgeschlossen (Beschwerungs-Risiko).",
+          "concern_eligibility": "dryness/frizz/feuchtigkeit: Kernclaims 'frizziges, trockenes und sprödes Haar' + intensive Feuchtigkeit.",
+          "identifiers.cross_source_agreement": "false: EAN stammt ausschließlich aus der Rossmann-Produktseite (URL + Syndigo-Tag); kein unabhängiger Zweitbeleg auffindbar (GS1-Präfix 641 = Finnland passt zur Lumene Group, aber das ist Plausibilität, kein Beleg). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan vorliegt.",
+          "protocols.tpl_mask.deviation": "'Spülung anwenden' nach dem Ausspülen ist eine explizite conditioner_after-Sequenz und laut Aufgabenregel eine echte Deviation; zusätzlich vom Hersteller bestätigt ('Finish with conditioner'). 'Handtuchtrockenes Haar' selbst ist laut Ruling KEINE Abweichung."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}
