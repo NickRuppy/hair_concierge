@@ -175,3 +175,37 @@ test("result reveal does not emit a generic page view before the actual offer", 
   )
   assert.equal(shouldTrackAnalyticsPageView("/result/11111111-1111-4111-8111-111111111111"), true)
 })
+
+test("the exit line is held as a real state and the result shell continues it (Follow-up B)", async () => {
+  const { readFileSync } = await import("node:fs")
+  const { PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS } =
+    await import("../src/lib/quiz/personal-plan-result-reveal")
+  const revealSource = readFileSync(
+    new URL("../src/app/result/[leadId]/reveal/personal-plan-result-reveal.tsx", import.meta.url),
+    "utf8",
+  )
+  const shellSource = readFileSync(
+    new URL("../src/app/result/[leadId]/loading.tsx", import.meta.url),
+    "utf8",
+  )
+  const offerPageSource = readFileSync(
+    new URL("../src/app/result/[leadId]/page.tsx", import.meta.url),
+    "utf8",
+  )
+
+  // Minimum-beat rule: an exit line that lives for one frame reads as a flash.
+  assert.ok(PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS >= 1_000)
+  assert.match(revealSource, /PERSONAL_PLAN_RESULT_REVEAL_EXIT_HOLD_MS/)
+  assert.doesNotMatch(revealSource, /requestAnimationFrame\(\(\) => router\.replace/)
+
+  // The route's loading shell shows the identical line on the identical cream
+  // ground, so the route change under the held beat stays invisible.
+  assert.match(shellSource, /Deine Auswertung wird geöffnet/)
+  assert.match(shellSource, /RevealOpeningDots/)
+  assert.match(shellSource, /bg-\[#fcfaf7\]/)
+  assert.doesNotMatch(shellSource, /<a\b|<button\b|href=/)
+  assert.match(revealSource, /bg-\[#fcfaf7\]/)
+
+  // And the offer crossfades in instead of popping.
+  assert.match(offerPageSource, /personal-plan-result-enter/)
+})

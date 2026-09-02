@@ -10,6 +10,7 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
 import { QuizResultsView } from "./quiz-results-view"
+import { RevealOpeningDots } from "./reveal-opening-dots"
 
 interface ResultArtifactEmailTriggerState {
   leadId: string | null
@@ -63,10 +64,19 @@ function LegacyQuizResultLoading({ name }: { name: string }) {
         aria-hidden="true"
         className="h-7 w-7 animate-spin text-[var(--brand-plum)] motion-reduce:animate-none"
       />
+      {/* Same words as the /result loading shell that follows this screen, so
+          the two read as one continuing state instead of two different
+          transition screens (Follow-up B, founder sign-off 02.09.2026). */}
       <p className="mt-4 font-header text-[26px] text-[var(--brand-plum-darkest)]">
-        {normalizedName
-          ? `${normalizedName}, deine Haaranalyse wird geöffnet.`
-          : "Deine Haaranalyse wird geöffnet."}
+        {normalizedName ? (
+          <>
+            {normalizedName}, deine Auswertung wird geöffnet <RevealOpeningDots />
+          </>
+        ) : (
+          <>
+            Deine Auswertung wird geöffnet <RevealOpeningDots />
+          </>
+        )}
       </p>
     </div>
   )

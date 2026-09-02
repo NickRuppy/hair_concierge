@@ -3,7 +3,9 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import AnwendungLoading from "../src/app/anwendung/loading"
 import ChatLoading from "../src/app/chat/loading"
+import RoutineLoading from "../src/app/routine/loading"
 import PlanBereitLoading from "../src/app/plan-bereit/loading"
 import PlanStartLoading from "../src/app/plan-start/loading"
 import ProfileLoading from "../src/app/profile/loading"
@@ -13,6 +15,11 @@ const shells = [
   ["Profil", ProfileLoading, "profile-loading-shell", "profile"],
   ["Chat", ChatLoading, "chat-loading-shell", "chat"],
   ["Tracker", TrackerLoading, "tracker-loading-shell", "tracker"],
+  // Routine and Anwendung joined the neutral static dialect with Follow-up B
+  // (founder sign-off 02.09.2026): one skeleton language app-wide, animated
+  // loading reserved for the journey opening frames.
+  ["Routine", RoutineLoading, "routine-loading-shell", "routine"],
+  ["Anwendung", AnwendungLoading, "anwendung-loading-shell", "anwendung"],
 ] as const
 
 // /plan-bereit and /plan-start deliberately left the neutral-shell family:
