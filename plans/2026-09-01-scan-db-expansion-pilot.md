@@ -65,7 +65,8 @@ As Rev 1, plus the F-09 identity rule: candidate list distinguishes "new identif
 Original task description (for context):
 ≤15 German templates for the big five's (role × application-family) combinations, each defining the V1 `guidance_payload` content (stage, state, placement, contact time, rinse action, reapplication). Explicit note in the artifact: templates are content references; each stamped row still requires product-specific source evidence (F-06). Completion: **Nick verifies each template**; stable IDs referenced by T2.
 
-**T4 — Pilot research run (engine-side, repo validates).**
+**T4 — Pilot research run — SPLIT (Nick 2026-09-02):** Nick's research engine covers shampoo (+conditioner in progress) → engine lane researches the 14 shampoo/conditioner pilot products. The 16 mask/leave-in/oil products are researched by the Claude lane against the SAME T2 contract (mask first as calibration, output reviewed before leave-in/oil fan-out; drafts in plans/scan-db-expansion/research/, all subject to Nick's review and the same validator). Both lanes' manifests flow through identical validation and apply steps.
+Original task description:
 Engine researches the approved 30 against T2. Deliverables: validation report; deviation list; per-product protocol source evidence present for all; candidate manufacturer packshot per product; EANs failing cross-source agreement marked `unverified` and excluded. Additionally (F-06): a **blinded re-check of 5 randomly chosen "no deviation" products** against their packaging to measure deviation false negatives — result recorded for the retro. Completion: all 30 pass validation or are explicitly parked with reasons.
 
 **T4b — Batch image pipeline + pilot finalization (R5; automation pulled forward by Nick 2026-09-01).**
