@@ -315,6 +315,13 @@ Shampoo-specific rule:
   - `schuppen` -> `dandruff` or `dry_flakes`
   - `irritationen` -> `irritated`
 
+For new regular Shampoo property research where the operator wants the full
+ingredient methodology but only the current production Shampoo fields as output,
+use [Shampoo Production Light v1](./product-intake-shampoo-production-light.md).
+That workflow keeps Shampoo v1.4 as the complete research authority and projects
+only the reviewed property lane. Its `property_lane_ready` status is not catalog
+intake readiness, global recommendation readiness, or publish approval.
+
 Manual addition checklist:
 
 1. Resolve canonical identity and brand review first.

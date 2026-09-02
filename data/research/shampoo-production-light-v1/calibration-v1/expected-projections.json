@@ -1,0 +1,646 @@
+{
+  "products": [
+    {
+      "catalogProductId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "exactProductName": "Sebamed Every-Day Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "gentle",
+          "shampoo_bucket": "irritationen",
+          "thickness": "fine"
+        },
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "gentle",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "irritationen"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "irritated",
+            "shampoo_bucket": "irritationen",
+            "thickness": "fine"
+          }
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "suitableThicknesses": [
+          "fine"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "gentle",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "gentle",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "sebamed-every-day-shampoo",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Low-cleansing sensitive-scalp calibration case with low conditioning and low weight.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "fine",
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "exactProductName": "Garnier Wahre Schätze Sanfte Hafermilch Beruhigendes Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "trocken"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "dry",
+            "shampoo_bucket": "trocken",
+            "thickness": "normal"
+          }
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "suitableThicknesses": [
+          "normal"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "wahre-schatze-sanfte-hafermilch",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Sensitive/gentle calibration case with moderate conditioning and v3-resolved moderate weight.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "exactProductName": "Sebamed Anti-Juckreiz Akut Shampoo Urea 5%",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "irritationen",
+          "thickness": "fine"
+        },
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        },
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "trocken",
+          "thickness": "fine"
+        },
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "trocken",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "irritationen",
+          "trocken"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "irritated",
+            "shampoo_bucket": "irritationen",
+            "thickness": "fine"
+          },
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "dry",
+            "shampoo_bucket": "trocken",
+            "thickness": "fine"
+          }
+        ],
+        "scalpRoutes": [
+          "dry",
+          "irritated"
+        ],
+        "suitableThicknesses": [
+          "fine"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dry",
+          "shampoo_bucket": "trocken",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dry",
+          "shampoo_bucket": "trocken",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "sebamed-urea-5",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Dry-scalp plus sensitive dual-target calibration case; dry flakes are not dandruff.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "fine",
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "exactProductName": "Salthouse Anti Schuppen Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "schuppen",
+          "thickness": "fine"
+        },
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "schuppen",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "schuppen"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "dandruff",
+            "shampoo_bucket": "schuppen",
+            "thickness": "fine"
+          }
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "suitableThicknesses": [
+          "fine"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dandruff",
+          "shampoo_bucket": "schuppen",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dandruff",
+          "shampoo_bucket": "schuppen",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "salthouse-anti-schuppen",
+      "required_protocol_roles": [
+        "shampoo_dandruff"
+      ],
+      "selectionNotes": "True anti-dandruff calibration case with supported active and exact positioning.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "fine",
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "exactProductName": "Swiss-O-Par Teebaumöl Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "fine"
+        },
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "dehydriert-fettig"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "thickness": "fine"
+          }
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "suitableThicknesses": [
+          "fine"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "swiss-o-par-teebaumol",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Tea-tree/oily scalp-active case that must not become dandruff support without accepted actives.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "fine",
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "exactProductName": "OGX Rosemary Mint Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "dehydriert-fettig"
+        ],
+        "cleansingIntensities": [
+          "clarifying"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "clarifying",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "thickness": "normal"
+          }
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "suitableThicknesses": [
+          "normal"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        }
+      ],
+      "productId": "ogx-rosemary",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Alternating clarifying oily-hair boundary with moderate cleansing and v3-resolved moderate weight.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "normal"
+      ]
+    },
+    {
+      "catalogProductId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "exactProductName": "Cantu Sulfate-Free Cleansing Cream Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "supportive",
+          "observedIntensity": "clarifying",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "normal"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "thickness": "coarse"
+          }
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "suitableThicknesses": [
+          "coarse"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "clarifying",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "productId": "cantu-locken-pflege",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Strong clarifying alternating boundary that remains regular Shampoo unless explicit reset routing is present.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "coarse"
+      ]
+    },
+    {
+      "catalogProductId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "exactProductName": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "normal"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "thickness": "coarse"
+          },
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "thickness": "fine"
+          },
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "thickness": "normal"
+          }
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "suitableThicknesses": [
+          "coarse",
+          "fine",
+          "normal"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "productId": "loreal-elvital-glycolic-gloss",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Strong, high-conditioning/high-weight shine case with fine-hair conditional risk.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "normal",
+        "coarse"
+      ]
+    },
+    {
+      "catalogProductId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "exactProductName": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        },
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "coarse"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "dehydriert-fettig"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "thickness": "coarse"
+          },
+          {
+            "cleansing_intensity": "regular",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "thickness": "normal"
+          }
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "suitableThicknesses": [
+          "coarse",
+          "normal"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "coarse"
+        }
+      ],
+      "productId": "monday-volume-kraft-fuelle",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Volume/oily case where final high weight tempers fine-hair eligibility.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "normal",
+        "coarse"
+      ]
+    },
+    {
+      "catalogProductId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "exactProductName": "Hask Shampoo Repair Argan Oil",
+      "expectedFitSemantics": [
+        {
+          "expectedFitSemantics": "ideal",
+          "observedIntensity": "regular",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "legacyComparison": {
+        "buckets": [
+          "trocken"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ],
+        "rows": [
+          {
+            "cleansing_intensity": "gentle",
+            "scalp_route": "dry",
+            "shampoo_bucket": "trocken",
+            "thickness": "coarse"
+          }
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "suitableThicknesses": [
+          "coarse"
+        ]
+      },
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ],
+      "productId": "hask-argan-oil",
+      "required_protocol_roles": [
+        "shampoo_everyday"
+      ],
+      "selectionNotes": "Repair/oil high-conditioning/high-weight coarse-hair case; dry hair must not become dry scalp.",
+      "status": "property_lane_ready",
+      "suitable_thicknesses": [
+        "coarse"
+      ]
+    }
+  ],
+  "schemaVersion": "shampoo-production-light-calibration-expected-v1"
+}

@@ -1,0 +1,188 @@
+{
+  "formula": {
+    "canonicalInci": "aqua,decyl glucoside,disodium laureth sulfosuccinate,sodium lauryl sulfoacetate,peg-55 propylene glycol oleate,propylene glycol,parfum,phenoxyethanol,sodium benzoate,citric acid,hydroxypropyl oxidized starch pg-trimonium chloride,lactic acid,sodium chloride,sodium lactate",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/formula-source.json#/normalizedInci",
+      "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/formula-source.json"
+    ],
+    "inciFingerprintSha256": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T22:15:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://sebamed.de/de/p/every-day-shampoo/"
+      }
+    ],
+    "status": "canonical"
+  },
+  "identity": {
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "confidence": "moderate",
+    "conflictStatus": "none",
+    "exactPackSize": "200 ml",
+    "exactProductName": "Sebamed Every-Day Shampoo",
+    "gtinAliases": [
+      "4103040051752"
+    ],
+    "market": "DE",
+    "productId": "sebamed-every-day-shampoo",
+    "sources": [
+      {
+        "capturedAt": "2026-08-10T22:15:00.000+02:00",
+        "tier": "manufacturer_de",
+        "url": "https://sebamed.de/de/p/every-day-shampoo/"
+      }
+    ]
+  },
+  "legacyComparison": {
+    "buckets": [
+      "irritationen"
+    ],
+    "suitableThicknesses": [
+      "fine"
+    ]
+  },
+  "positioning": {
+    "evidenceRefs": [
+      "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/claims/0"
+    ],
+    "explicitResetPositioning": false
+  },
+  "properties": {
+    "cleansingStrength": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/cleansingStrength",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/cleansingStrength/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/cleansingStrength/confidence"
+      ],
+      "rationale": "The disclosed surfactant architecture supports low cleansing strength.",
+      "value": "low"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/conditioningLevel",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/conditioningLevel/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/conditioningLevel/confidence"
+      ],
+      "rationale": "The disclosed deposition and lipid routes support low conditioning.",
+      "value": "low"
+    },
+    "dandruffSupport": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/dandruffSupport",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/dandruffSupport/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/dandruffSupport/confidence"
+      ],
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "value": "not_supported"
+    },
+    "focusPrimary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/focusPrimary",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/focusPrimary/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/focusPrimary/confidence"
+      ],
+      "rationale": "The strongest product-specific route is gentle.",
+      "value": "gentle"
+    },
+    "focusSecondary": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/focusSecondary",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/focusSecondary/rationale",
+        "docs/research/shampoo-inci/v1.4/classification-standard.md#section-8-secondary-focus"
+      ],
+      "rationale": "Production-light fixture normalizes archived empty/general secondary focus to [] because secondary focus is optional and general is not an independently evidenced secondary route.",
+      "value": []
+    },
+    "scalpComfortTarget": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/scalpComfortTarget/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/scalpComfortTarget/confidence"
+      ],
+      "rationale": "Exact product positioning targets sensitive scalp and frequent washing, with pH/gentle-use formula cues providing a coherent cosmetic comfort route.",
+      "value": "targeted"
+    },
+    "usageRole": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/usageRole",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/usageRole/rationale",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/usageRole/confidence"
+      ],
+      "rationale": "The source directions and formula support a frequent usage role.",
+      "value": "frequent"
+    },
+    "weightPotential": {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/candidateWeightPotential",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/whyThisBand",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/classificationConfidence/value"
+      ],
+      "rationale": "Low passt, weil die Formel trotz kationischem Stärkesignal schlank bleibt und keine deutliche Mehrfachdeposition zeigt.",
+      "value": "low"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "shampoo-inci-v1.4",
+    "policyId": "shampoo-classification-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "scalpTargets": {
+    "primary": {
+      "confidence": "high",
+      "formulaEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/scalpComfortTarget",
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/properties/dandruffSupport"
+      ],
+      "positioningEvidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/claims/0"
+      ],
+      "rationale": "Production-light calibration judgment: exact sensitive-scalp positioning and low-cleansing pH-style formula evidence support the sensitive/irritated production route.",
+      "target": "sensitive"
+    }
+  },
+  "thicknesses": [
+    {
+      "confidence": "high",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: low cleansing, low weight and explicit extra-gentle sensitive-scalp positioning make fine hair an ideal fit.",
+      "thickness": "fine"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/candidateWeightPotential"
+      ],
+      "fit": "ideal",
+      "rationale": "Production-light calibration judgment: the same low-weight gentle architecture remains suitable for normal hair needing scalp comfort.",
+      "thickness": "normal"
+    },
+    {
+      "confidence": "moderate",
+      "evidenceRefs": [
+        "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json#/formulaArchitecture",
+        "data/research/shampoo-inci/weight-final-rerun-v2/report.json#/rows/43/candidateWeightPotential"
+      ],
+      "fit": "conditional",
+      "rationale": "Production-light calibration judgment: scalp comfort can fit, but low conditioning is likely insufficient as the main care wash for coarse hair.",
+      "thickness": "coarse"
+    }
+  ],
+  "version": "shampoo-production-light-v1"
+}

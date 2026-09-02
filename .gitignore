@@ -201,6 +201,13 @@ test-screenshots*/
 # Reviewed Personal Plan Heat evidence only.
 !/data/
 /data/*
+!/data/research/
+/data/research/*
+!/data/research/shampoo-production-light-v1/
+/data/research/shampoo-production-light-v1/*
+!/data/research/shampoo-production-light-v1/calibration-v1/
+!/data/research/shampoo-production-light-v1/calibration-v1/expected-projections.json
+!/data/research/shampoo-production-light-v1/calibration-v1/report.md
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
 !/data/catalog-enrichment/oil-authority-enrichment-v1/
