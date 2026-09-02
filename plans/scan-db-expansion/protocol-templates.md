@@ -1,10 +1,11 @@
 # Protocol Content Templates — Scan DB Expansion (T3)
 
-> **DRAFT — NOT VERIFIED. Requires Nick's per-template verification before T4/T5 use.**
-> Produced 2026-09-02 by grounding every field in the 220 live
-> `product_application_protocols` rows for the big five categories
-> (project `pqdkhefxsxkyeqelqegq`). Nothing here has been reviewed by a human yet.
-> Open decisions are collected in §6 — several of them change template values.
+> **Rev 2 — normative, from Nick's rulings 2026-09-02 (P1–P9); pending Nick's final copy check.**
+> These templates encode **Chaarlie's rules** for how a product category is used.
+> They are not averages of the existing catalog. Where an existing live row
+> disagrees with a template below, the live row is wrong — see §5.
+> Nick has ruled the structure and the behaviour; the German wording still needs
+> one copy pass before T4/T5 stamping begins.
 
 Task: T3 of `plans/2026-09-01-scan-db-expansion-pilot.md`. Fulfils R4/F-06.
 
@@ -32,6 +33,12 @@ A template is **never** evidence that a product _has_ this role. Role
 applicability is derived from the reviewed category facts
 (`deriveShampooProtocolRoles`, `product_oil_specs.role_support`,
 `product_leave_in_specs.provides_heat_protection`, …), never from this document.
+
+**Rule vs. fact.** A template constant is Chaarlie's rule and does not need a
+per-product source (placement, sequencing, the conditioner relationship, the
+heat-reapplication rule). A `⟨…⟩` slot is a product fact and always needs one.
+A source that contradicts a **rule** is a deviation for Nick; a source that is
+merely silent about a rule changes nothing.
 
 ---
 
@@ -66,33 +73,50 @@ generated column will not match the V1 template you verified. The V1 fallback al
 silently rewrites out-of-set families: `post_wash_leave_in` → `post_wash_damp_conditioning`,
 `pre_heat_protection` → `pre_heat_damp`.
 
-### 2.3 Constants shared by all 15 templates
+### 2.3 Constants shared by all 12 templates
 
-| Field                                   | Value                                                                                                                                                                      |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `schemaVersion`                         | `1`                                                                                                                                                                        |
-| `protocolVersion`                       | `1`                                                                                                                                                                        |
-| `locale`                                | `"de"`                                                                                                                                                                     |
-| `exactGuidanceRequired`                 | `true` (220/220 live rows)                                                                                                                                                 |
+| Field                                   | Value                                                                                                                                                                     |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `schemaVersion`                         | `1`                                                                                                                                                                       |
+| `protocolVersion`                       | `1`                                                                                                                                                                       |
+| `locale`                                | `"de"`                                                                                                                                                                    |
+| `exactGuidanceRequired`                 | `true`                                                                                                                                                                    |
 | `scope`                                 | `{ "kind": "product", "category": <category>, "productId": <this product's uuid> }`                                                                                        |
-| `protocolFacts.cautions`                | `[]` (V1 folds safety copy into the step copy; the schema hard-caps this at length 0)                                                                                      |
-| `protocolFacts.conditionerRelationship` | `"not_applicable"` for every template except Mask                                                                                                                          |
+| `protocolFacts.cautions`                | `[]` (V1 folds safety copy into the step copy; the schema hard-caps this at length 0)                                                                                     |
+| `protocolFacts.conditionerRelationship` | `"not_applicable"` for every template except Mask                                                                                                                         |
 | `evidence`                              | ≥1 `{sourceUrl, sourceType, checkedAt}`; `sourceType` `"retailer"` for dm/Rossmann pages, `"manufacturer"` for brand pages; `checkedAt` = `YYYY-MM-DD` of the research run |
-| `requirements`                          | `{ "requiredCatalogFacts": [], "requiredProfileFacts": [], "requiredProtocolFacts": [] }` — see §6 D-1                                                                     |
-| `protocolFacts.workflowId`              | omit (only for the 4 hard-coded exact workflows)                                                                                                                           |
-| `protocolFacts.cautionCodes`            | omit unless the source carries a real caution                                                                                                                              |
+| `requirements`                          | `{ "requiredCatalogFacts": [], "requiredProfileFacts": [], "requiredProtocolFacts": [] }`                                                                                  |
+| `protocolFacts.workflowId`              | omit (only for the 4 hard-coded exact workflows)                                                                                                                          |
+| `protocolFacts.cautionCodes`            | omit unless the source carries a real caution                                                                                                                             |
+
+`requirements` is `[]` everywhere on purpose. `guidance-resolver.ts:105-108` looks
+each entry up as a **flat key** in `item.catalogFacts`, which
+`application-adapter.ts:83-131` populates from the raw spec row (`weight`,
+`role_support`, `roles`, …). The dotted keys some live rows carry
+(`leave_in.v3.plan_roles`, `oil.v2.weight`) cannot resolve and would return
+`missing_catalog_fact:<key>`. `[]` is the only shape that cannot fail under either
+the V1 or the V2 contract.
 
 ### 2.4 Column ↔ payload invariants
-
-Live data holds these with **zero exceptions across all 220 rows**, so the pipeline
-should assert them:
 
 - `contact_time_seconds` (column) `===` `guidance_payload.protocolFacts.contactTimeSeconds`.
 - `placement` (column) `===` `protocolFacts.applicationArea` (same vocabulary:
   `scalp_roots` | `all_hair` | `lengths_ends` | `ends`).
-- `rinse_action` (column) is a _superset_ vocabulary of `protocolFacts.rinse`
-  (`rinse_out` | `leave_in`): the column additionally uses `shampoo_out` and
-  `do_not_rinse`. Per-template canonical column values are given below.
+- `rinse_action` (column) uses the payload's `protocolFacts.rinse` value
+  (`rinse_out` | `leave_in`) **with exactly one legitimate exception**: the pre-wash
+  oil column carries `shampoo_out` while the payload carries `rinse_out`, because the
+  product is washed out with shampoo rather than rinsed with water.
+
+**No-rinse code — standardized on `leave_in`.** Rev 1 split leave-in and oil rows
+between `do_not_rinse` and `leave_in`. `do_not_rinse` is not a real code:
+`applicationGuidanceProtocolSchema` only offers `rinse_out | leave_in`
+(`contracts.ts:265`), the current authority validator only accepts
+`shampoo_out | leave_in` (`catalog-authority/oil-repair.ts:72`), and the
+canonicalization migration writes the column straight from the payload
+(`20260811215000_…_stage5_legacy_protocol_canonicalization.sql:135`:
+`rinse_action = v_payload#>>'{protocolFacts,rinse}'`). Every template below uses
+`leave_in` in both column and payload. The 18 live `do_not_rinse` rows are a
+cleanup item (§5).
 
 ### 2.5 Contact time is not free text — the V2 builder parses the German copy
 
@@ -107,35 +131,68 @@ should assert them:
   `range_seconds`.
 - Source states a **maximum** → `"Bis zu 10 Minuten einwirken lassen."` → `maximum_seconds`.
 - Source states **no time** → `"Kurz einwirken lassen."`, `contactTimeSeconds: null`.
-  For `targeted_treatment_shampoo` this falls through to `label_directed`, which is
-  intended. For other families it yields `null`.
 - Never spell numbers out when `contactTimeSeconds` is `null` — `"Zehn Minuten"`
   does not parse. (Spelled-out forms are only safe when the integer is also set.)
 
-This rule matches the live data exactly: every row with a stated range or a vague
-wait has `contactTimeSeconds: null`; every row with an exact stated time has the
-integer set.
+Every ruled contact window below (shampoo 2–3 min, conditioner 1–3 min, pre-wash oil
+15–20 min) is a **range**, so those templates carry `contactTimeSeconds: null` and
+the range copy form. That is correct, not a gap.
+
+### 2.6 Stable-ID convention
+
+`guidanceKey` = `product-<category token>-⟨productId⟩[-<role suffix>]`, matching the
+dominant live convention:
+
+| Template            | `guidanceKey`                            |
+| ------------------- | ---------------------------------------- |
+| SHAMPOO-STD         | `product-shampoo-everyday-⟨productId⟩`   |
+| SHAMPOO-TARGETED    | `product-shampoo-everyday-⟨productId⟩`   |
+| SHAMPOO-DANDRUFF    | `product-shampoo-dandruff-⟨productId⟩`   |
+| CONDITIONER         | `product-conditioner-⟨productId⟩`        |
+| MASK                | `product-mask-⟨productId⟩`               |
+| LEAVEIN-DAMP        | `product-leave-in-⟨productId⟩-post-wash` |
+| LEAVEIN-DRYCARE     | `product-leave-in-⟨productId⟩-dry-care`  |
+| LEAVEIN-HEAT        | `product-leave-in-⟨productId⟩-pre-heat`  |
+| OIL-DRYFINISH       | `product-oil-⟨productId⟩-dry`            |
+| OIL-LEAVEON         | `product-oil-⟨productId⟩-leave-on`       |
+| OIL-HEAT            | `product-oil-⟨productId⟩-heat`           |
+| OIL-PREWASH         | `product-oil-⟨productId⟩-pre-wash`       |
+
+STD and TARGETED share a key because a shampoo is one or the other, never both.
+`stepKey` values are the ones written in each template; keep them stable so
+diffs across research runs stay readable.
 
 ---
 
-## 3. The 15 templates
+## 3. The 12 templates
 
-Notation: `⟨…⟩` marks a **product-specific slot** the research engine must fill from
-that product's own source. Everything else is the template constant.
+Notation:
+
+- `⟨…⟩` — a **product-specific slot** the research engine fills from that product's
+  own source.
+- `⟨REQUIRED: …⟩` — a slot the engine **must** fill. A stamp that leaves it empty is
+  invalid and must not be published.
+
+Everything else is a Chaarlie rule and is not negotiable per product without a
+deviation record.
 
 ---
 
-### TPL-SHAMPOO-EVERYDAY-STD
+### TPL-SHAMPOO-STD
 
-**Key:** `shampoo` × `shampoo_everyday` × `standard_rinse_out_cleanse` (35 live rows)
-**Applies when:** the reviewed shampoo buckets contain at least one non-`schuppen`
-bucket and the product is an ordinary cleansing shampoo with no timed treatment step.
+**Key:** `shampoo` × `shampoo_everyday` × `standard_rinse_out_cleanse`
+**Applies when:** any generic cleansing shampoo, **regardless of its marketing claim**.
+Repair, Volumen, Feuchtigkeit, Curl, Farbschutz, Glanz → all STD (P3).
+
+**Rule (P1).** Shampoo is a scalp product. It is placed on scalp and roots; the
+lengths are cleaned by the runoff on the way out. A standard shampoo has **no wait
+step** — massage in, rinse out (P1, P4).
 
 | Column                 | Value         |
 | ---------------------- | ------------- |
 | `application_stage`    | `wet_cleanse` |
 | `application_state`    | `null`        |
-| `placement`            | `all_hair`    |
+| `placement`            | `scalp_roots` |
 | `contact_time_seconds` | `null`        |
 | `rinse_action`         | `rinse_out`   |
 | `reapplication`        | `not_stated`  |
@@ -163,7 +220,7 @@ bucket and the product is an ordinary cleansing shampoo with no timed treatment 
     "requiredProfileFacts": []
   },
   "protocolFacts": {
-    "applicationArea": "all_hair",
+    "applicationArea": "scalp_roots",
     "rinse": "rinse_out",
     "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
@@ -175,40 +232,57 @@ bucket and the product is an ordinary cleansing shampoo with no timed treatment 
     {
       "stepKey": "apply-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "In das nasse Haar einmassieren und aufschäumen."
+      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
     },
-    { "stepKey": "rinse-shampoo", "action": "rinse", "copyTemplateDe": "Gründlich ausspülen." }
+    {
+      "stepKey": "rinse-shampoo",
+      "action": "rinse",
+      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
+    }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
 
-**Schema constraint:** this family allows **exactly one** `apply_product` step. A
-"bei Bedarf wiederholen" second pass is not expressible here — treat it as a deviation.
+**Schema constraint:** this family allows **exactly one** `apply_product` step
+(`contracts.ts:339-349`). A "bei Bedarf wiederholen" second pass is not expressible
+here — treat it as a deviation.
 
 **Typical deviations to watch for**
 
-- Scalp-only instruction ("nur in die Kopfhaut") → `placement`/`applicationArea` `scalp_roots` (5 live rows do this).
-- A stated wait time → add a `wait` step; this is unusual for a standard cleanse.
+- **A scalp-condition claim** (Urea, empfindliche Kopfhaut, fettige Kopfhaut) →
+  wrong template, use TPL-SHAMPOO-TARGETED.
+- **A Schuppen claim** → wrong template, use TPL-SHAMPOO-DANDRUFF.
+- **A stated wait time.** The rule is no wait for STD. Do not add a `wait` step to
+  satisfy a package; record the deviation and let Nick decide whether the product
+  is really TARGETED.
+- **A "nur in die Längen" instruction** — contradicts P1. Deviation, not a silent
+  `lengths_ends` override.
 - "2× waschen" / repeat pass → cannot be modelled here; flag for Nick.
-- Tiefenreinigung/Anti-Schuppen claims → wrong template (see the two below).
 
 ---
 
-### TPL-SHAMPOO-EVERYDAY-TARGETED
+### TPL-SHAMPOO-TARGETED
 
-**Key:** `shampoo` × `shampoo_everyday` × `targeted_treatment_shampoo` (8 live rows)
-**Applies when:** a non-`schuppen` bucket applies **and** the source prescribes a
-scalp-targeted or timed treatment step (e.g. Kopfhaut-Kur, Tiefenreinigung, Tonic-Shampoo).
+**Key:** `shampoo` × `shampoo_everyday` × `targeted_treatment_shampoo`
+**Applies when (P3, narrow):** the product carries a **scalp-condition** claim —
+Urea, empfindliche/gereizte Kopfhaut, fettige Kopfhaut, and equivalents. Marketing
+claims about the hair fibre (Repair, Volumen, Feuchtigkeit, Curl) are **not**
+targeted; those are STD.
 
-| Column                 | Value                                                                                                                                        |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `wet_cleanse`                                                                                                                                |
-| `application_state`    | `null`                                                                                                                                       |
-| `placement`            | **variance — 4× `scalp_roots` / 4× `all_hair`.** Template default `scalp_roots`; the V2 builder forces `scalp_roots` for shampoo regardless. |
-| `contact_time_seconds` | `null` unless an exact time is stated                                                                                                        |
-| `rinse_action`         | `rinse_out`                                                                                                                                  |
-| `reapplication`        | `not_stated`                                                                                                                                 |
+**Rule (P4).** A targeted shampoo gets a contact window before rinsing:
+**2–3 Minuten einwirken lassen.** This is cosmetic framing only — the copy never
+names a condition, a diagnosis, or a therapeutic effect (repo rule: cosmetic
+guidance stays separate from medically adjacent scalp guidance).
+
+| Column                 | Value                                             |
+| ---------------------- | ------------------------------------------------- |
+| `application_stage`    | `wet_cleanse`                                     |
+| `application_state`    | `null`                                            |
+| `placement`            | `scalp_roots`                                     |
+| `contact_time_seconds` | `null` (2–3 min is a range — §2.5)                |
+| `rinse_action`         | `rinse_out`                                       |
+| `reapplication`        | `not_stated`                                      |
 
 ```json
 {
@@ -245,10 +319,18 @@ scalp-targeted or timed treatment step (e.g. Kopfhaut-Kur, Tiefenreinigung, Toni
     {
       "stepKey": "apply-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "In die Kopfhaut einmassieren und aufschäumen."
+      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
     },
-    { "stepKey": "wait-shampoo", "action": "wait", "copyTemplateDe": "Kurz einwirken lassen." },
-    { "stepKey": "rinse-shampoo", "action": "rinse", "copyTemplateDe": "Gründlich ausspülen." }
+    {
+      "stepKey": "wait-shampoo",
+      "action": "wait",
+      "copyTemplateDe": "2–3 Minuten einwirken lassen."
+    },
+    {
+      "stepKey": "rinse-shampoo",
+      "action": "rinse",
+      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
+    }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
@@ -256,27 +338,36 @@ scalp-targeted or timed treatment step (e.g. Kopfhaut-Kur, Tiefenreinigung, Toni
 
 **Typical deviations to watch for**
 
-- Exact stated time (2 live rows: 120 s, 180 s) → set both column and payload, use the digit copy.
-- Instruction covering the whole hair, not just scalp → `all_hair` (half the live rows).
-- Two-pass rituals → these become `workflowId` products; out of scope for a drugstore pilot stamp.
+- **A longer stated time** (5 or 10 Minuten) → set both column and payload to the
+  exact integer and use the digit copy. A shorter or longer window from the source
+  overrides the 2–3 min default; the default exists for sources that state nothing.
+- **Medical framing** (Pilz, Ekzem, Psoriasis, ärztlicher Rat) → do not paraphrase
+  into cosmetic copy. Flag for Nick.
+- **Fibre-claim products that arrived here** → move to STD.
+- Two-pass rituals → these become `workflowId` products; out of scope for a
+  drugstore pilot stamp.
 
 ---
 
 ### TPL-SHAMPOO-DANDRUFF
 
-**Key:** `shampoo` × `shampoo_dandruff` × `targeted_treatment_shampoo` (8 live rows, fully homogeneous)
-**Applies when:** a reviewed `schuppen` bucket exists. A treatment-only dandruff
-shampoo is complete **without** `shampoo_everyday` — do not add the everyday row to
-"complete the payload" (`docs/product-intake-research-ops.md`, Shampoo rule).
+**Key:** `shampoo` × `shampoo_dandruff` × `targeted_treatment_shampoo`
+**Applies when (P3):** the reviewed shampoo buckets contain `schuppen`. A
+treatment-only dandruff shampoo is complete **without** a `shampoo_everyday` row —
+do not add one to "complete the payload"
+(`docs/product-intake-research-ops.md`, Shampoo rule).
 
-| Column                 | Value         |
-| ---------------------- | ------------- |
-| `application_stage`    | `wet_cleanse` |
-| `application_state`    | `null`        |
-| `placement`            | `scalp_roots` |
-| `contact_time_seconds` | `null`        |
-| `rinse_action`         | `rinse_out`   |
-| `reapplication`        | `not_stated`  |
+**Rule (P4).** Same contact window as TARGETED: **2–3 Minuten einwirken lassen**,
+cosmetic framing only.
+
+| Column                 | Value                              |
+| ---------------------- | ---------------------------------- |
+| `application_stage`    | `wet_cleanse`                      |
+| `application_state`    | `null`                             |
+| `placement`            | `scalp_roots`                      |
+| `contact_time_seconds` | `null` (2–3 min is a range — §2.5) |
+| `rinse_action`         | `rinse_out`                        |
+| `reapplication`        | `not_stated`                       |
 
 ```json
 {
@@ -313,17 +404,17 @@ shampoo is complete **without** `shampoo_everyday` — do not add the everyday r
     {
       "stepKey": "apply-dandruff-shampoo",
       "action": "apply_product",
-      "copyTemplateDe": "In die nasse Kopfhaut einmassieren und aufschäumen."
+      "copyTemplateDe": "Ins nasse Haar geben und auf der Kopfhaut aufschäumen und einmassieren."
     },
     {
       "stepKey": "wait-dandruff-shampoo",
       "action": "wait",
-      "copyTemplateDe": "Kurz einwirken lassen."
+      "copyTemplateDe": "2–3 Minuten einwirken lassen."
     },
     {
       "stepKey": "rinse-dandruff-shampoo",
       "action": "rinse",
-      "copyTemplateDe": "Gründlich ausspülen."
+      "copyTemplateDe": "Gründlich ausspülen – die Längen werden dabei mitgereinigt."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
@@ -332,28 +423,34 @@ shampoo is complete **without** `shampoo_everyday` — do not add the everyday r
 
 **Typical deviations to watch for**
 
-- An exact stated contact time (common on Ketoconazol/Selendisulfid products) → set it.
-- A stated **frequency limit** ("2× wöchentlich, max. 4 Wochen"). V1 has no cadence
-  slot in the payload; the `cadence` column exists but 0/8 live rows use it. Flag rather than drop.
-- Anything that reads as medical (Pilzinfektion, ärztlicher Rat) → do not paraphrase into
-  cosmetic copy; flag for Nick (repo rule: scalp/medical guidance stays separated).
+- **An exact stated contact time** (common on Ketoconazol/Selendisulfid products) →
+  set the integer in both column and payload and use the digit copy.
+- **A stated frequency limit** ("2× wöchentlich, max. 4 Wochen"). V1 has no cadence
+  slot in the payload; the `cadence` column exists but no live row uses it. Flag
+  rather than drop.
+- **Anything that reads as medical** (Pilzinfektion, ärztlicher Rat) → do not
+  paraphrase into cosmetic copy; flag for Nick.
 - 2 applications ("zweimal shampoonieren") → deviation.
 
 ---
 
-### TPL-CONDITIONER-RINSEOUT
+### TPL-CONDITIONER
 
-**Key:** `conditioner` × `conditioner_rinse_out` × `standard_rinse_out_conditioning` (43 live rows)
-**Applies when:** any rinse-out conditioner/spülung.
+**Key:** `conditioner` × `conditioner_rinse_out` × `standard_rinse_out_conditioning`
+**Applies when:** any rinse-out conditioner/Spülung.
 
-| Column                 | Value                                                                                                                            |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `post_cleanse_rinse_off`                                                                                                         |
-| `application_state`    | `null`                                                                                                                           |
-| `placement`            | **variance — 22× `lengths_ends` / 19× `all_hair`.** Template default `lengths_ends`; decide per product from the source wording. |
-| `contact_time_seconds` | `null` unless an exact time is stated (39/43 are `null`)                                                                         |
-| `rinse_action`         | `rinse_out`                                                                                                                      |
-| `reapplication`        | `not_stated`                                                                                                                     |
+**Rule (P2).** Conditioner goes on **Längen und Spitzen**, and the copy must say
+**"Ansatz aussparen"** (or a natural equivalent) explicitly. Contact time is
+**1–3 Minuten**. `all_hair` is not a valid conditioner placement.
+
+| Column                 | Value                              |
+| ---------------------- | ---------------------------------- |
+| `application_stage`    | `post_cleanse_rinse_off`           |
+| `application_state`    | `null`                             |
+| `placement`            | `lengths_ends`                     |
+| `contact_time_seconds` | `null` (1–3 min is a range — §2.5) |
+| `rinse_action`         | `rinse_out`                        |
+| `reapplication`        | `not_stated`                       |
 
 ```json
 {
@@ -381,6 +478,7 @@ shampoo is complete **without** `shampoo_everyday` — do not add the everyday r
     "applicationArea": "lengths_ends",
     "rinse": "rinse_out",
     "contactTimeSeconds": null,
+    "sharedTemplateContactTime": "include",
     "conditionerRelationship": "not_applicable",
     "reapplication": "none",
     "amount": null,
@@ -390,44 +488,61 @@ shampoo is complete **without** `shampoo_everyday` — do not add the everyday r
     {
       "stepKey": "apply-conditioner",
       "action": "apply_product",
-      "copyTemplateDe": "Nach der Haarwäsche in die Haarlängen einmassieren."
+      "copyTemplateDe": "Nach der Haarwäsche in Längen und Spitzen verteilen und den Ansatz aussparen."
     },
-    { "stepKey": "wait-conditioner", "action": "wait", "copyTemplateDe": "Kurz einwirken lassen." },
+    {
+      "stepKey": "wait-conditioner",
+      "action": "wait",
+      "copyTemplateDe": "1–3 Minuten einwirken lassen."
+    },
     { "stepKey": "rinse-conditioner", "action": "rinse", "copyTemplateDe": "Gründlich ausspülen." }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
 
-**Note on `sharedTemplateContactTime`.** The V2 builder suppresses conditioner contact
-time entirely unless `protocolFacts.sharedTemplateContactTime === "include"`
-(`stage5-v2-builder.ts:204-209`). Only 3/43 live rows set it. **Template omits it** —
-i.e. imported conditioners will show no contact time in the V2 Anwendung view even
-when the wait copy names one. See §6 D-2.
+**`sharedTemplateContactTime: "include"` is deliberate.** The V2 builder suppresses
+conditioner contact time entirely unless this is set
+(`stage5-v2-builder.ts:204-209`). Since 1–3 Minuten is now a rule and not incidental
+copy, it has to reach the Anwendung view. This is the one encoding choice Rev 2 made
+that is not literally in the rulings — confirm at the copy check.
 
 **Typical deviations to watch for**
 
-- Stated range ("2–3 Minuten", 6 live rows) → keep `contactTimeSeconds: null`, write the range copy.
-- Explicit "auch auf die Kopfhaut" or "im ganzen Haar" → `all_hair`.
-- Leave-in-capable products ("kann auch im Haar bleiben") → this is a **leave_in** product,
-  not a conditioner deviation. Flag for re-categorisation.
+- **A stated exact time** ("2 Minuten") → set the integer in both column and payload
+  and switch to the digit copy. A stated longer window ("bis zu 5 Minuten") →
+  maximum copy form, integer stays `null`.
+- **"Auch auf die Kopfhaut" / "im ganzen Haar"** → contradicts P2. Deviation, not a
+  silent `all_hair` override.
+- **Leave-in-capable products** ("kann auch im Haar bleiben") → this is a
+  **leave_in** product, not a conditioner deviation. Flag for re-categorisation.
 - Colour-refreshing conditioners with a timing/gloves warning → flag.
 
 ---
 
-### TPL-MASK-INTENSIVE
+### TPL-MASK
 
-**Key:** `mask` × `intensive_conditioning_mask` × `post_shampoo_rinse_out_mask` (35 live rows)
+**Key:** `mask` × `intensive_conditioning_mask` × `post_shampoo_rinse_out_mask`
 **Applies when:** any rinse-out Haarkur/Maske.
 
-| Column                 | Value                                                                                                 |
-| ---------------------- | ----------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `post_cleanse_rinse_off`                                                                              |
-| `application_state`    | `null`                                                                                                |
-| `placement`            | **variance — 18× `lengths_ends` / 14× `all_hair`.** Template default `lengths_ends`.                  |
-| `contact_time_seconds` | **product-specific and required whenever the source states one exact time** (live: 30/60/120/180/300) |
-| `rinse_action`         | `rinse_out`                                                                                           |
-| `reapplication`        | `not_stated`                                                                                          |
+**Rule (P5).** Mask goes on **Längen und Spitzen**, Ansatz aussparen. Its canonical
+relationship to conditioner is **`replaces_conditioner`** — on a mask day the mask
+takes the conditioner's place. `conditioner_after` is not the default and needs an
+explicit sourced sequence.
+
+**Contact time is a required per-product slot (P5).** Unlike every other timed
+template, the mask has no default window: it comes from the packaging, with a
+source. A stamp with no sourced contact time is **invalid** and must not be
+published.
+
+| Column                 | Value                                                                    |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `application_stage`    | `post_cleanse_rinse_off`                                                 |
+| `application_state`    | `null`                                                                   |
+| `placement`            | `lengths_ends`                                                           |
+| `contact_time_seconds` | `⟨REQUIRED: from packaging, with source⟩` — integer, or `null` for a range/maximum (§2.5) |
+| `rinse_action`         | `rinse_out`                                                              |
+| `reapplication`        | `not_stated`                                                             |
 
 ```json
 {
@@ -454,7 +569,7 @@ when the wait copy names one. See §6 D-2.
   "protocolFacts": {
     "applicationArea": "lengths_ends",
     "rinse": "rinse_out",
-    "contactTimeSeconds": "⟨seconds | null⟩",
+    "contactTimeSeconds": "⟨REQUIRED: from packaging, with source — integer for one exact time, null when the source states a range or a maximum⟩",
     "conditionerRelationship": "replaces_conditioner",
     "reapplication": "none",
     "amount": null,
@@ -464,12 +579,12 @@ when the wait copy names one. See §6 D-2.
     {
       "stepKey": "apply-mask",
       "action": "apply_product",
-      "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben und in Längen und Spitzen verteilen."
+      "copyTemplateDe": "Nach der Haarwäsche ins nasse Haar geben, in Längen und Spitzen verteilen und den Ansatz aussparen."
     },
     {
       "stepKey": "wait-mask",
       "action": "wait",
-      "copyTemplateDe": "⟨3 Minuten | 2–3 Minuten | …⟩ einwirken lassen."
+      "copyTemplateDe": "⟨REQUIRED: \"3 Minuten einwirken lassen.\" | \"5–10 Minuten einwirken lassen.\" | \"Bis zu 10 Minuten einwirken lassen.\"⟩"
     },
     { "stepKey": "rinse-mask", "action": "rinse", "copyTemplateDe": "Gründlich ausspülen." }
   ],
@@ -477,37 +592,38 @@ when the wait copy names one. See §6 D-2.
 }
 ```
 
-`conditionerRelationship` is the one field where Mask differs from every other
-template: 29/35 live rows use `replaces_conditioner`, 3 use `conditioner_after`,
-and 1 uses `no_conditioner`. Template default `replaces_conditioner`; switch to
-`conditioner_after` only when the source explicitly sequences a conditioner after the mask.
+**Validity check for the stamp:** the `wait-mask` step must name a time, the copy
+form must match §2.5, and the column and `contactTimeSeconds` must agree.
+`"Kurz einwirken lassen."` is **not** an acceptable fill for a mask — if the source
+truly states no time, the product is not stampable and goes to Nick.
 
 **Typical deviations to watch for**
 
-- **Long contact times (>5 min)** — 10–20 min and "bis zu 10 Minuten" both exist live.
-  Use the range/maximum copy forms so the V2 parser picks them up.
+- **`conditioner_after`** — only when the source explicitly sequences a conditioner
+  after the mask. Otherwise the rule stands.
+- **Long contact times (>5 min)** — 10–20 min and "bis zu 10 Minuten" are normal on
+  masks. Use the range/maximum copy forms so the V2 parser picks them up.
 - **Heat activation** ("unter der Haube", "mit Handtuch warm einwickeln") — not
   representable in this template; deviation.
 - **Overnight masks** — wrong family entirely; flag as out of scope for the pilot.
-- "Nicht auf die Kopfhaut" → keep `lengths_ends` and say so in the apply copy.
-- 1-minute express masks → normal, just set 60 s.
+- **"Im ganzen Haar verteilen"** → contradicts P5. Deviation, keep `lengths_ends`.
 
 ---
 
-### TPL-LEAVEIN-POSTWASH-DAMP
+### TPL-LEAVEIN-DAMP
 
-**Key:** `leave_in` × `post_wash_leave_in` × `post_wash_damp_conditioning` (42 live rows)
-**Applies when:** the leave-in is applied to towel-dried/damp hair after washing —
-the default leave-in shape.
+**Key:** `leave_in` × `post_wash_leave_in` × `post_wash_damp_conditioning`
+**Applies when (P6):** **the default for all leave-ins.** Unless the product is
+explicitly marketed for dry-hair/between-wash use, it gets this template.
 
-| Column                 | Value                                      |
-| ---------------------- | ------------------------------------------ |
-| `application_stage`    | `damp_leave_on` (36/42; 5 use `towel_dry`) |
-| `application_state`    | `null` (34/42)                             |
-| `placement`            | `lengths_ends` (34/42)                     |
-| `contact_time_seconds` | `null`                                     |
-| `rinse_action`         | `leave_in`                                 |
-| `reapplication`        | `not_stated`                               |
+| Column                 | Value           |
+| ---------------------- | --------------- |
+| `application_stage`    | `damp_leave_on` |
+| `application_state`    | `null`          |
+| `placement`            | `lengths_ends`  |
+| `contact_time_seconds` | `null`          |
+| `rinse_action`         | `leave_in`      |
+| `reapplication`        | `not_stated`    |
 
 ```json
 {
@@ -549,7 +665,7 @@ the default leave-in shape.
     {
       "stepKey": "apply",
       "action": "apply_product",
-      "copyTemplateDe": "Eine kleine Menge in Längen und Spitzen verteilen. Nicht ausspülen."
+      "copyTemplateDe": "Eine kleine Menge in Längen und Spitzen verteilen, den Ansatz aussparen. Nicht ausspülen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
@@ -558,29 +674,37 @@ the default leave-in shape.
 
 **Typical deviations to watch for**
 
-- Spray formats → apply copy becomes "…gleichmäßig aufsprühen"; add
-  `amount: {"kind":"qualitative","copyDe":"Gleichmäßig sprühen."}` (7 live rows do).
-- "Durchkämmen" as an explicit step → add a `section` step; common and harmless.
-- A stated leave-on time (1 live row: 240 s) → deviation, set the integer.
-- Products claiming heat protection → they additionally need a
-  `pre_heat_protection` row (TPL-LEAVEIN-PREHEAT-\*), which is a **separate** protocol row.
+- **Spray formats** → apply copy becomes "…gleichmäßig aufsprühen"; add
+  `amount: {"kind":"qualitative","copyDe":"Gleichmäßig sprühen."}`.
+- **"Durchkämmen" as an explicit step** → add a `section` step; common and harmless.
+- **A stated leave-on time** → deviation, set the integer.
+- **Products that also claim heat protection** → they additionally need a
+  TPL-LEAVEIN-HEAT row. That is a **separate** protocol row, not a change to this one.
+- **Products explicitly marketed for dry hair between washes** → they get
+  TPL-LEAVEIN-DRYCARE **instead of** or **in addition to** this row, depending on
+  what the source positions (see below).
+- **`post_style_finish` products** (positioned as an after-styling finish) → the
+  family is **parked** (P6). No template exists. Flag the product to Nick
+  individually; do not force it into this template.
 
 ---
 
 ### TPL-LEAVEIN-DRYCARE
 
-**Key:** `leave_in` × `post_wash_leave_in` × `between_wash_dry_care` (12 live rows)
-**Applies when:** the source positions the product for dry hair between washes
-(Auffrischen, Spitzenpflege, tägliche Pflege im trockenen Haar).
+**Key:** `leave_in` × `post_wash_leave_in` × `between_wash_dry_care`
+**Applies when (P6, narrow):** the product is **explicitly marketed for dry-hair or
+between-wash use** — Auffrischen zwischen den Wäschen, Spitzenpflege im trockenen
+Haar, tägliche Pflege ohne Waschen. A leave-in that merely _tolerates_ dry hair is
+still TPL-LEAVEIN-DAMP.
 
-| Column                 | Value                                                                                                                                               |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `dry_hair` (8/12)                                                                                                                                   |
-| `application_state`    | `dry` (8/12)                                                                                                                                        |
-| `placement`            | `lengths_ends` (11/12)                                                                                                                              |
-| `contact_time_seconds` | `null`                                                                                                                                              |
-| `rinse_action`         | **variance — 8× `do_not_rinse` / 4× `leave_in`.** Template default `do_not_rinse` (it pairs with `application_state: dry` in the majority cluster). |
-| `reapplication`        | `not_stated`                                                                                                                                        |
+| Column                 | Value          |
+| ---------------------- | -------------- |
+| `application_stage`    | `dry_hair`     |
+| `application_state`    | `dry`          |
+| `placement`            | `lengths_ends` |
+| `contact_time_seconds` | `null`         |
+| `rinse_action`         | `leave_in`     |
+| `reapplication`        | `not_stated`   |
 
 ```json
 {
@@ -612,101 +736,51 @@ the default leave-in shape.
     {
       "stepKey": "dry-care",
       "action": "apply_product",
-      "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
+      "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen. Den Ansatz aussparen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
 
-Note the column/payload asymmetry: the column vocabulary uses `do_not_rinse` while
-the payload enum only offers `leave_in`. Both are correct; they are different vocabularies (§2.4).
-
 **Typical deviations to watch for**
 
-- Products that are _also_ the post-wash leave-in → they get **both** this and
-  TPL-LEAVEIN-POSTWASH-DAMP, as separate rows (uniqueness is per family).
+- **Products that are _also_ the post-wash leave-in** → they get **both** this and
+  TPL-LEAVEIN-DAMP, as separate rows (uniqueness is per family).
+- **A product with no explicit dry-hair positioning that landed here** → move it back
+  to TPL-LEAVEIN-DAMP. The dry-care template is the exception, not a coin flip.
 - "Täglich anwendbar" → fine, no field changes; do not invent a cadence.
-- Root-avoidance instructions → keep `lengths_ends` or drop to `ends`.
+- Root-avoidance instructions → already in the copy; keep `lengths_ends`, or drop to
+  `ends` when the source is explicitly ends-only.
 
 ---
 
-### TPL-LEAVEIN-POSTSTYLE
+### TPL-LEAVEIN-HEAT
 
-**Key:** `leave_in` × `post_wash_leave_in` × `post_style_finish` (3 live rows, fully homogeneous)
-**Applies when:** the source positions the product **after** styling as a finishing step.
+**Key:** `leave_in` × `pre_heat_protection` × `⟨pre_heat_damp | either_state_protection⟩`
+**Applies when:** `product_leave_in_specs.provides_heat_protection = true`.
 
-| Column                 | Value          |
-| ---------------------- | -------------- |
-| `application_stage`    | `post_style`   |
-| `application_state`    | `dry`          |
-| `placement`            | `lengths_ends` |
-| `contact_time_seconds` | `null`         |
-| `rinse_action`         | `do_not_rinse` |
-| `reapplication`        | `not_stated`   |
+**Rule (P7).** Heat protection must be **reapplied before every separate heat
+session**. This is canonical for leave-ins and oils alike and does not depend on
+whether the packaging says so.
 
-```json
-{
-  "schemaVersion": 1,
-  "protocolVersion": 1,
-  "locale": "de",
-  "guidanceKey": "product-leave-in-⟨productId⟩-post-style",
-  "scope": { "kind": "product", "category": "leave_in", "productId": "⟨productId⟩" },
-  "role": "leave_in",
-  "applicationFamily": "post_style_finish",
-  "compatibleDayTypes": ["styling_day"],
-  "exactGuidanceRequired": true,
-  "sequence": { "anchor": "dry_finish", "before": [], "after": [], "conflictsWith": [] },
-  "requirements": {
-    "requiredCatalogFacts": [],
-    "requiredProtocolFacts": [],
-    "requiredProfileFacts": []
-  },
-  "protocolFacts": {
-    "applicationArea": "lengths_ends",
-    "rinse": "leave_in",
-    "contactTimeSeconds": null,
-    "conditionerRelationship": "not_applicable",
-    "reapplication": "none",
-    "amount": null,
-    "cautions": []
-  },
-  "steps": [
-    {
-      "stepKey": "post-style-finish",
-      "action": "apply_product",
-      "copyTemplateDe": "Mit einer sehr kleinen Menge beginnen und nach dem Styling sparsam über Längen und Spitzen geben."
-    }
-  ],
-  "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
-}
-```
+**Rule (P9).** There is **one** heat-protection template per category. Whether the
+product may also be applied on **dry** hair is a **researched per-product fact**, not
+a separate template. That fact drives the family slot:
 
-**Confidence: low — only 3 live rows.** All three came from one enrichment batch, so
-this is one author's convention rather than an established consensus. Nick should
-look at this one closely.
+| Researched fact                                  | `applicationFamily`       | `application_stage` | `application_state` | `sequence.anchor` |
+| ------------------------------------------------ | ------------------------- | ------------------- | ------------------- | ----------------- |
+| Damp hair only (default when the source names one state) | `pre_heat_damp`           | `damp_leave_on`     | `damp`              | `damp_leave_on`   |
+| Source explicitly permits damp **or** dry        | `either_state_protection` | `dry_pre_heat`      | `either`            | `dry_pre_heat`    |
 
-**Typical deviations to watch for**
-
-- Products that are really styling products (Wachs, Creme, Gel) → wrong category.
-- Anything that also claims heat protection → needs a separate pre-heat row.
-
----
-
-### TPL-LEAVEIN-PREHEAT-DAMP
-
-**Key:** `leave_in` × `pre_heat_protection` × `pre_heat_damp` (16 live rows)
-**Applies when:** `product_leave_in_specs.provides_heat_protection = true` and the
-source specifies **damp/towel-dried hair** for the heat-protection application.
-
-| Column                 | Value                                                                                                     |
-| ---------------------- | --------------------------------------------------------------------------------------------------------- |
-| `application_stage`    | **variance — 10× `damp_leave_on` / 5× `dry_pre_heat` / 1× `pre_heat`.** Template default `damp_leave_on`. |
-| `application_state`    | `damp` (16/16)                                                                                            |
-| `placement`            | `lengths_ends` (10/16; 5× `all_hair`)                                                                     |
-| `contact_time_seconds` | `null`                                                                                                    |
-| `rinse_action`         | `leave_in`                                                                                                |
-| `reapplication`        | `not_stated` (15/16) — **see §6 D-3, this disagrees with the oil pre-heat templates**                     |
+| Column                 | Value                             |
+| ---------------------- | --------------------------------- |
+| `application_stage`    | from the table above              |
+| `application_state`    | from the table above              |
+| `placement`            | `lengths_ends`                    |
+| `contact_time_seconds` | `null`                            |
+| `rinse_action`         | `leave_in`                        |
+| `reapplication`        | `required` (P7 — never `not_stated`) |
 
 ```json
 {
@@ -716,11 +790,11 @@ source specifies **damp/towel-dried hair** for the heat-protection application.
   "guidanceKey": "product-leave-in-⟨productId⟩-pre-heat",
   "scope": { "kind": "product", "category": "leave_in", "productId": "⟨productId⟩" },
   "role": "heat_protection",
-  "applicationFamily": "pre_heat_damp",
+  "applicationFamily": "⟨pre_heat_damp | either_state_protection⟩",
   "compatibleDayTypes": ["styling_day"],
   "exactGuidanceRequired": true,
   "sequence": {
-    "anchor": "damp_leave_on",
+    "anchor": "⟨damp_leave_on | dry_pre_heat⟩",
     "before": ["heat_tool"],
     "after": [],
     "conflictsWith": []
@@ -735,7 +809,7 @@ source specifies **damp/towel-dried hair** for the heat-protection application.
     "rinse": "leave_in",
     "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
-    "reapplication": "none",
+    "reapplication": "each_separate_heat_event",
     "amount": null,
     "cautions": []
   },
@@ -743,96 +817,49 @@ source specifies **damp/towel-dried hair** for the heat-protection application.
     {
       "stepKey": "apply-pre-heat",
       "action": "apply_product",
-      "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben und in Längen und Spitzen verteilen."
+      "copyTemplateDe": "⟨damp: \"Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar geben und in Längen und Spitzen verteilen.\" | either: \"Vor dem Hitzestyling gleichmäßig ins feuchte oder trockene Haar geben und in Längen und Spitzen verteilen.\"⟩"
     },
     {
       "stepKey": "tool-pre-heat",
       "action": "tool",
-      "copyTemplateDe": "Danach wie geplant mit Wärme stylen."
+      "copyTemplateDe": "Danach wie geplant mit Wärme stylen. Vor jedem weiteren Hitzestyling erneut auftragen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
 
-**Typical deviations to watch for**
-
-- **A stated max temperature** ("Schutz bis 230 °C"). Live rows append it to the
-  `tool` step copy ("…; Quelle nennt Schutz bis 230 °C") — the numeric value belongs in
-  `product_leave_in_specs.heat_protection_max_c`, and only the sourced sentence goes in the copy.
-- **Heat activation required** (`heat_activation_required = true`) → the copy must not
-  imply the product works without heat; flag.
-- "Vor dem Glätteisen antrocknen lassen" → add a `wait` step (1 live row does).
-- Spray formats → add `amount: {"kind":"qualitative","copyDe":"Gleichmäßig sprühen."}`.
-
----
-
-### TPL-LEAVEIN-PREHEAT-EITHER
-
-**Key:** `leave_in` × `pre_heat_protection` × `either_state_protection` (6 live rows)
-**Applies when:** heat protection is claimed and the source explicitly permits **damp
-or dry** hair ("auf nasses oder trockenes Haar").
-
-| Column                 | Value                         |
-| ---------------------- | ----------------------------- |
-| `application_stage`    | `dry_pre_heat` (5/6)          |
-| `application_state`    | `either` (6/6)                |
-| `placement`            | `lengths_ends` (4/6)          |
-| `contact_time_seconds` | `null`                        |
-| `rinse_action`         | `leave_in` (5/6)              |
-| `reapplication`        | `not_stated` — **see §6 D-3** |
-
-Payload is identical to TPL-LEAVEIN-PREHEAT-DAMP except:
-
-```json
-{
-  "guidanceKey": "product-leave-in-⟨productId⟩-pre-heat",
-  "applicationFamily": "either_state_protection",
-  "sequence": {
-    "anchor": "dry_pre_heat",
-    "before": ["heat_tool"],
-    "after": [],
-    "conflictsWith": []
-  },
-  "steps": [
-    {
-      "stepKey": "apply-pre-heat",
-      "action": "apply_product",
-      "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins feuchte oder trockene Haar geben und in Längen und Spitzen verteilen."
-    },
-    {
-      "stepKey": "tool-pre-heat",
-      "action": "tool",
-      "copyTemplateDe": "Danach wie geplant mit Wärme stylen."
-    }
-  ]
-}
-```
-
-**Choose this family only on an explicit "nass oder trocken" source statement.** If
-the source names one state, use TPL-LEAVEIN-PREHEAT-DAMP (or flag a `pre_heat_dry`
-need — no live leave-in row uses `pre_heat_dry`, so it is not templated here).
+**Choose `either_state_protection` only on an explicit "nass oder trocken" source
+statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-state
+— use `pre_heat_damp`.
 
 **Typical deviations to watch for**
 
-- Same as the damp variant, plus: sources that say "am besten auf handtuchtrockenem Haar"
-  are **not** either-state — that is a preference, use the damp family.
+- **A stated max temperature** ("Schutz bis 230 °C"). The numeric value belongs in
+  `product_leave_in_specs.heat_protection_max_c`; only the sourced sentence may be
+  appended to the `tool` step copy.
+- **Heat activation required** (`heat_activation_required = true`) → the copy must
+  not imply the product works without heat; flag.
+- **"Vor dem Glätteisen antrocknen lassen"** → add a `wait` step.
+- **Spray formats** → add `amount: {"kind":"qualitative","copyDe":"Gleichmäßig sprühen."}`.
+- **A source that says one application lasts the day** → contradicts P7. The rule
+  stands; record the deviation.
 
 ---
 
 ### TPL-OIL-DRYFINISH
 
-**Key:** `oil` × `dry_finish` × `dry_finish` (24 live rows)
+**Key:** `oil` × `dry_finish` × `dry_finish`
 **Applies when:** `product_oil_specs.role_support` contains `dry_finish`.
 
-| Column                 | Value                                                                                                         |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `dry_finish` (22/24)                                                                                          |
-| `application_state`    | `null` (22/24)                                                                                                |
-| `placement`            | `lengths_ends` (15/24; 7× `ends`, 2× `all_hair`) — **product-dependent: rich oils on fine hair go to `ends`** |
-| `contact_time_seconds` | `null`                                                                                                        |
-| `rinse_action`         | `leave_in`                                                                                                    |
-| `reapplication`        | `not_stated` (22/24)                                                                                          |
+| Column                 | Value                                                                |
+| ---------------------- | -------------------------------------------------------------------- |
+| `application_stage`    | `dry_finish`                                                         |
+| `application_state`    | `null`                                                               |
+| `placement`            | `lengths_ends` (`ends` for rich/heavy oils — a researched oil-weight fact) |
+| `contact_time_seconds` | `null`                                                               |
+| `rinse_action`         | `leave_in`                                                           |
+| `reapplication`        | `not_stated`                                                         |
 
 ```json
 {
@@ -852,7 +879,7 @@ need — no live leave-in row uses `pre_heat_dry`, so it is not templated here).
     "requiredProfileFacts": []
   },
   "protocolFacts": {
-    "applicationArea": "lengths_ends",
+    "applicationArea": "⟨lengths_ends | ends⟩",
     "rinse": "leave_in",
     "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
@@ -876,34 +903,34 @@ need — no live leave-in row uses `pre_heat_dry`, so it is not templated here).
 }
 ```
 
-**Amount matters for V2.** `stage5-v2-builder.ts:245-250` maps oil `amount.copyDe` to a
-V2 enum by regex: `"1 Tropfen"` → `one_drop`, `"wenige"`/`"ein paar Tropfen"` →
+**Amount matters for V2.** `stage5-v2-builder.ts:245-250` maps oil `amount.copyDe` to
+a V2 enum by regex: `"1 Tropfen"` → `one_drop`, `"wenige"`/`"ein paar Tropfen"` →
 `few_drops`. Keep the template phrase or a listed synonym; free-form dosing copy
 silently yields no V2 amount.
 
 **Typical deviations to watch for**
 
-- Spray oils ("Trocken-Öl-Spray") → apply copy becomes "aufsprühen"; `amount` copy should
-  say "Sparsam aufsprühen." (yields no V2 drop count — acceptable).
-- Rich/heavy oils → drop `placement`/`applicationArea` to `ends`.
-- "Auch ins feuchte Haar" → the product also needs TPL-OIL-LEAVEON-DAMP, if
+- **Spray oils** ("Trocken-Öl-Spray") → apply copy becomes "aufsprühen"; `amount` copy
+  should say "Sparsam aufsprühen." (yields no V2 drop count — acceptable).
+- **Rich/heavy oils** → `ends` in both column and payload.
+- **"Auch ins feuchte Haar"** → the product also needs TPL-OIL-LEAVEON, if
   `role_support` declares `leave_on_fibre_conditioning`.
 
 ---
 
-### TPL-OIL-LEAVEON-DAMP
+### TPL-OIL-LEAVEON
 
-**Key:** `oil` × `leave_on_fibre_conditioning` × `post_wash_damp_conditioning` (22 live rows)
+**Key:** `oil` × `leave_on_fibre_conditioning` × `post_wash_damp_conditioning`
 **Applies when:** `role_support` contains `leave_on_fibre_conditioning`.
 
-| Column                 | Value                             |
-| ---------------------- | --------------------------------- |
-| `application_stage`    | `damp_leave_on` (21/22)           |
-| `application_state`    | `null` (21/22)                    |
-| `placement`            | `lengths_ends` (17/22; 4× `ends`) |
-| `contact_time_seconds` | `null`                            |
-| `rinse_action`         | `leave_in`                        |
-| `reapplication`        | `not_stated`                      |
+| Column                 | Value                                          |
+| ---------------------- | ---------------------------------------------- |
+| `application_stage`    | `damp_leave_on`                                |
+| `application_state`    | `null`                                         |
+| `placement`            | `lengths_ends` (`ends` for rich/heavy oils)    |
+| `contact_time_seconds` | `null`                                         |
+| `rinse_action`         | `leave_in`                                     |
+| `reapplication`        | `not_stated`                                   |
 
 ```json
 {
@@ -928,7 +955,7 @@ silently yields no V2 amount.
     "requiredProfileFacts": []
   },
   "protocolFacts": {
-    "applicationArea": "lengths_ends",
+    "applicationArea": "⟨lengths_ends | ends⟩",
     "rinse": "leave_in",
     "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
@@ -945,7 +972,7 @@ silently yields no V2 amount.
     {
       "stepKey": "apply-damp",
       "action": "apply_product",
-      "copyTemplateDe": "In die handtuchtrockenen Längen und Spitzen geben; nicht ausspülen."
+      "copyTemplateDe": "In die handtuchtrockenen Längen und Spitzen geben; den Ansatz aussparen und nicht ausspülen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
@@ -954,26 +981,38 @@ silently yields no V2 amount.
 
 **Typical deviations to watch for**
 
-- Sources that only ever say "ins trockene Haar" → the product does not have this role;
-  the fact, not the protocol, is wrong. Send back to fact research.
-- Curly-hair "einkneten" wording → fine, adjust the apply copy.
-- Rich oils → `ends`.
+- **Sources that only ever say "ins trockene Haar"** → the product does not have this
+  role; the fact, not the protocol, is wrong. Send back to fact research.
+- **Curly-hair "einkneten" wording** → fine, adjust the apply copy.
+- **Rich oils** → `ends`.
 
 ---
 
-### TPL-OIL-PREHEAT-DAMP
+### TPL-OIL-HEAT
 
-**Key:** `oil` × `pre_heat_protection` × `pre_heat_damp` (**only 2 live rows**)
-**Applies when:** `role_support` contains `pre_heat_protection` and the source names damp hair.
+**Key:** `oil` × `pre_heat_protection` × `⟨pre_heat_damp | either_state_protection⟩`
+**Applies when:** `role_support` contains `pre_heat_protection`.
 
-| Column                 | Value                                                                                              |
-| ---------------------- | -------------------------------------------------------------------------------------------------- |
-| `application_stage`    | `pre_heat` (2/2) — note this differs from the leave-in damp template's `damp_leave_on`; see §6 D-4 |
-| `application_state`    | `damp`                                                                                             |
-| `placement`            | `lengths_ends`                                                                                     |
-| `contact_time_seconds` | `null`                                                                                             |
-| `rinse_action`         | `leave_in`                                                                                         |
-| `reapplication`        | `required`                                                                                         |
+**Rule (P7).** Reapplication before every separate heat session, same as the
+leave-in heat template.
+
+**Rule (P9).** One heat template for the oil category; the damp/either family value
+comes from the researched per-product fact, using the same mapping as
+TPL-LEAVEIN-HEAT:
+
+| Researched fact                           | `applicationFamily`       | `application_stage` | `application_state` | `sequence.anchor` |
+| ----------------------------------------- | ------------------------- | ------------------- | ------------------- | ----------------- |
+| Damp hair only                            | `pre_heat_damp`           | `damp_leave_on`     | `damp`              | `damp_leave_on`   |
+| Source explicitly permits damp **or** dry | `either_state_protection` | `dry_pre_heat`      | `either`            | `dry_pre_heat`    |
+
+| Column                 | Value                                |
+| ---------------------- | ------------------------------------ |
+| `application_stage`    | from the table above                 |
+| `application_state`    | from the table above                 |
+| `placement`            | `lengths_ends` (`ends` for rich oils) |
+| `contact_time_seconds` | `null`                               |
+| `rinse_action`         | `leave_in`                           |
+| `reapplication`        | `required`                           |
 
 ```json
 {
@@ -983,13 +1022,13 @@ silently yields no V2 amount.
   "guidanceKey": "product-oil-⟨productId⟩-heat",
   "scope": { "kind": "product", "category": "oil", "productId": "⟨productId⟩" },
   "role": "heat_protection",
-  "applicationFamily": "pre_heat_damp",
+  "applicationFamily": "⟨pre_heat_damp | either_state_protection⟩",
   "compatibleDayTypes": ["styling_day"],
   "exactGuidanceRequired": true,
   "sequence": {
-    "anchor": "damp_leave_on",
+    "anchor": "⟨damp_leave_on | dry_pre_heat⟩",
     "before": ["heat_tool"],
-    "after": ["post_rinse_towel_dry"],
+    "after": [],
     "conflictsWith": []
   },
   "requirements": {
@@ -998,7 +1037,7 @@ silently yields no V2 amount.
     "requiredProfileFacts": []
   },
   "protocolFacts": {
-    "applicationArea": "lengths_ends",
+    "applicationArea": "⟨lengths_ends | ends⟩",
     "rinse": "leave_in",
     "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
@@ -1015,95 +1054,47 @@ silently yields no V2 amount.
     {
       "stepKey": "apply-heat",
       "action": "apply_product",
-      "copyTemplateDe": "In die handtuchtrockenen Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz."
+      "copyTemplateDe": "⟨damp: \"In die handtuchtrockenen Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz.\" | either: \"In handtuchtrockene oder trockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz.\"⟩"
     },
     {
       "stepKey": "tool-heat",
       "action": "tool",
-      "copyTemplateDe": "Danach mit Wärme stylen; vor jedem weiteren separaten Hitzevorgang erneut anwenden."
+      "copyTemplateDe": "Danach mit Wärme stylen. Vor jedem weiteren Hitzestyling erneut auftragen."
     }
   ],
   "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
 }
 ```
 
-**Confidence: low — 2 live rows.** Both are internally consistent and consistent with
-the either-state oil template, so the shape is probably right, but the sample is thin.
-
 **Typical deviations to watch for**
 
-- Oils claiming heat protection **without** a stated temperature — keep the copy free of
-  any implied °C limit.
-- Fine-hair root-avoidance is already in the template copy; keep it.
-
----
-
-### TPL-OIL-PREHEAT-EITHER
-
-**Key:** `oil` × `pre_heat_protection` × `either_state_protection` (6 live rows)
-**Applies when:** heat-protection role support and the source permits damp **or** dry hair.
-
-| Column                 | Value                |
-| ---------------------- | -------------------- |
-| `application_stage`    | `dry_pre_heat` (6/6) |
-| `application_state`    | `either` (6/6)       |
-| `placement`            | `lengths_ends` (5/6) |
-| `contact_time_seconds` | `null`               |
-| `rinse_action`         | `leave_in`           |
-| `reapplication`        | `required` (6/6)     |
-
-Payload identical to TPL-OIL-PREHEAT-DAMP except:
-
-```json
-{
-  "applicationFamily": "either_state_protection",
-  "sequence": {
-    "anchor": "dry_pre_heat",
-    "before": ["heat_tool"],
-    "after": [],
-    "conflictsWith": []
-  },
-  "steps": [
-    {
-      "stepKey": "dose-heat",
-      "action": "apply_product",
-      "copyTemplateDe": "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verteilen."
-    },
-    {
-      "stepKey": "apply-heat",
-      "action": "apply_product",
-      "copyTemplateDe": "In handtuchtrockene oder trockene Längen und Spitzen einarbeiten; bei feinem Haar nur die Spitzen und nie den Ansatz."
-    },
-    {
-      "stepKey": "tool-heat",
-      "action": "tool",
-      "copyTemplateDe": "Danach mit Wärme stylen; vor jedem weiteren separaten Hitzevorgang erneut anwenden."
-    }
-  ]
-}
-```
-
-**Typical deviations to watch for**
-
-- Same as the damp variant. Note the V2 builder maps `applicationArea: "all_hair"` +
-  `role: "heat_protection"` to `root_to_tip_hair`, which is rarely what an oil source means —
-  prefer `lengths_ends`.
+- **Oils claiming heat protection without a stated temperature** — keep the copy free
+  of any implied °C limit.
+- **Fine-hair root-avoidance** is already in the template copy; keep it.
+- The V2 builder maps `applicationArea: "all_hair"` + `role: "heat_protection"` to
+  `root_to_tip_hair`, which is never what an oil source means — `all_hair` is not a
+  valid choice here.
 
 ---
 
 ### TPL-OIL-PREWASH
 
-**Key:** `oil` × `pre_wash_fibre_treatment` × `pre_wash_lengths_treatment` (17 live rows)
+**Key:** `oil` × `pre_wash_fibre_treatment` × `pre_wash_lengths_treatment`
 **Applies when:** `role_support` contains `pre_wash_fibre_treatment`.
 
-| Column                 | Value                                 |
-| ---------------------- | ------------------------------------- |
-| `application_stage`    | `pre_wash` (17/17)                    |
-| `application_state`    | `dry` (13/17; 4× `null`)              |
-| `placement`            | `lengths_ends` (14/17)                |
-| `contact_time_seconds` | `600` (13/17; also 900 and 3600 live) |
-| `rinse_action`         | `shampoo_out` (13/17; 4× `rinse_out`) |
-| `reapplication`        | `not_stated`                          |
+**Rule (P8).** Canonical pre-wash contact time is **15–20 Minuten** before
+shampooing. This is Chaarlie's rule, not a manufacturer claim; a source that states
+nothing about timing does not change it. Because it is a range,
+`contactTimeSeconds` stays `null` and the range copy form carries it (§2.5).
+
+| Column                 | Value                                   |
+| ---------------------- | --------------------------------------- |
+| `application_stage`    | `pre_wash`                              |
+| `application_state`    | `dry`                                   |
+| `placement`            | `lengths_ends`                          |
+| `contact_time_seconds` | `null` (15–20 min is a range — §2.5)    |
+| `rinse_action`         | `shampoo_out` (the §2.4 exception)      |
+| `reapplication`        | `not_stated`                            |
 
 ```json
 {
@@ -1125,7 +1116,7 @@ Payload identical to TPL-OIL-PREHEAT-DAMP except:
   "protocolFacts": {
     "applicationArea": "lengths_ends",
     "rinse": "rinse_out",
-    "contactTimeSeconds": 600,
+    "contactTimeSeconds": null,
     "conditionerRelationship": "not_applicable",
     "reapplication": "none",
     "amount": {
@@ -1148,7 +1139,7 @@ Payload identical to TPL-OIL-PREHEAT-DAMP except:
     {
       "stepKey": "wait-pre-wash",
       "action": "wait",
-      "copyTemplateDe": "Zehn Minuten einwirken lassen."
+      "copyTemplateDe": "15–20 Minuten einwirken lassen."
     },
     {
       "stepKey": "rinse-pre-wash",
@@ -1160,127 +1151,100 @@ Payload identical to TPL-OIL-PREHEAT-DAMP except:
 }
 ```
 
-The 600 s default is Chaarlie's own conservative pre-wash convention, not a
-manufacturer claim — 13/17 live rows use it regardless of brand. The spelled-out
-"Zehn Minuten" is safe **only because** `contactTimeSeconds: 600` is set (§2.5).
-For rich oils the live rows swap the dosing line to
+For rich oils, swap the dosing line (both `amount.copyDe` and the `dose-pre-wash`
+step) to:
 `"Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."`
 
 **Typical deviations to watch for**
 
-- **Overnight oiling** ("über Nacht einwirken") — 1 live row uses 3600 s. Anything
-  beyond ~1 h is a deviation; do not stamp a longer time without Nick's sign-off.
-- Sources that say "auch auf die Kopfhaut" → this crosses into scalp guidance; flag
-  rather than paraphrase (repo rule: scalp guidance stays separated).
-- Coconut-oil-type products with protein-sensitivity caveats → flag for the domain reviewer.
+- **Overnight oiling** ("über Nacht einwirken") → contradicts P8. Do not stamp a
+  longer time without Nick's sign-off; record the deviation.
+- **A source that states a shorter window** (e.g. "5 Minuten") → deviation, not a
+  silent override. P8 is the rule.
+- **Sources that say "auch auf die Kopfhaut"** → this crosses into scalp guidance;
+  flag rather than paraphrase (repo rule: scalp guidance stays separated).
+- **Coconut-oil-type products with protein-sensitivity caveats** → flag for the
+  domain reviewer.
 
 ---
 
-## 4. Combination coverage check
+## 4. Template index
 
-Live data contains **exactly these 15** `(category, role, application_family)`
-combinations for the big five, and every template above maps 1:1 to one of them.
-No live combination is left untemplated, and no template invents a combination
-that does not exist in production.
+| #   | Template ID      | Category    | Role                        | Family                                    | Timed?                     |
+| --- | ---------------- | ----------- | --------------------------- | ----------------------------------------- | -------------------------- |
+| 1   | TPL-SHAMPOO-STD      | shampoo     | shampoo_everyday            | standard_rinse_out_cleanse                | no (P1/P4)                 |
+| 2   | TPL-SHAMPOO-TARGETED | shampoo     | shampoo_everyday            | targeted_treatment_shampoo                | 2–3 min (P4)               |
+| 3   | TPL-SHAMPOO-DANDRUFF | shampoo     | shampoo_dandruff            | targeted_treatment_shampoo                | 2–3 min (P4)               |
+| 4   | TPL-CONDITIONER      | conditioner | conditioner_rinse_out       | standard_rinse_out_conditioning           | 1–3 min (P2)               |
+| 5   | TPL-MASK             | mask        | intensive_conditioning_mask | post_shampoo_rinse_out_mask               | **required per product** (P5) |
+| 6   | TPL-LEAVEIN-DAMP     | leave_in    | post_wash_leave_in          | post_wash_damp_conditioning               | no                         |
+| 7   | TPL-LEAVEIN-DRYCARE  | leave_in    | post_wash_leave_in          | between_wash_dry_care                     | no                         |
+| 8   | TPL-LEAVEIN-HEAT     | leave_in    | pre_heat_protection         | pre_heat_damp \| either_state_protection  | no                         |
+| 9   | TPL-OIL-DRYFINISH    | oil         | dry_finish                  | dry_finish                                | no                         |
+| 10  | TPL-OIL-LEAVEON      | oil         | leave_on_fibre_conditioning | post_wash_damp_conditioning               | no                         |
+| 11  | TPL-OIL-HEAT         | oil         | pre_heat_protection         | pre_heat_damp \| either_state_protection  | no                         |
+| 12  | TPL-OIL-PREWASH      | oil         | pre_wash_fibre_treatment    | pre_wash_lengths_treatment                | 15–20 min (P8)             |
 
-| #   | Template ID                   | Category    | Role                        | Family                          | Live rows |
-| --- | ----------------------------- | ----------- | --------------------------- | ------------------------------- | --------- |
-| 1   | TPL-SHAMPOO-EVERYDAY-STD      | shampoo     | shampoo_everyday            | standard_rinse_out_cleanse      | 35        |
-| 2   | TPL-SHAMPOO-EVERYDAY-TARGETED | shampoo     | shampoo_everyday            | targeted_treatment_shampoo      | 8         |
-| 3   | TPL-SHAMPOO-DANDRUFF          | shampoo     | shampoo_dandruff            | targeted_treatment_shampoo      | 8         |
-| 4   | TPL-CONDITIONER-RINSEOUT      | conditioner | conditioner_rinse_out       | standard_rinse_out_conditioning | 43        |
-| 5   | TPL-MASK-INTENSIVE            | mask        | intensive_conditioning_mask | post_shampoo_rinse_out_mask     | 35        |
-| 6   | TPL-LEAVEIN-POSTWASH-DAMP     | leave_in    | post_wash_leave_in          | post_wash_damp_conditioning     | 42        |
-| 7   | TPL-LEAVEIN-DRYCARE           | leave_in    | post_wash_leave_in          | between_wash_dry_care           | 12        |
-| 8   | TPL-LEAVEIN-POSTSTYLE         | leave_in    | post_wash_leave_in          | post_style_finish               | 3         |
-| 9   | TPL-LEAVEIN-PREHEAT-DAMP      | leave_in    | pre_heat_protection         | pre_heat_damp                   | 16        |
-| 10  | TPL-LEAVEIN-PREHEAT-EITHER    | leave_in    | pre_heat_protection         | either_state_protection         | 6         |
-| 11  | TPL-OIL-DRYFINISH             | oil         | dry_finish                  | dry_finish                      | 24        |
-| 12  | TPL-OIL-LEAVEON-DAMP          | oil         | leave_on_fibre_conditioning | post_wash_damp_conditioning     | 22        |
-| 13  | TPL-OIL-PREHEAT-DAMP          | oil         | pre_heat_protection         | pre_heat_damp                   | 2         |
-| 14  | TPL-OIL-PREHEAT-EITHER        | oil         | pre_heat_protection         | either_state_protection         | 6         |
-| 15  | TPL-OIL-PREWASH               | oil         | pre_wash_fibre_treatment    | pre_wash_lengths_treatment      | 17        |
+**Parked — no template (P6):** `leave_in` × `post_wash_leave_in` × `post_style_finish`.
+Products the research positions as an after-styling finish must be **flagged to Nick
+individually** and left unstamped until he rules on the family.
 
-Deliberately **not** templated: `pre_heat_dry` (no live big-five row uses it) and
-every family belonging to the other five categories (`dry_shampoo`,
-`deep_cleansing_shampoo`, `bondbuilder`, `heat_protectant`, `scalp_care`) — out of
-scope for the pilot.
+**Dissolved in Rev 2:** the separate damp/either heat templates
+(`TPL-LEAVEIN-PREHEAT-DAMP` / `-EITHER`, `TPL-OIL-PREHEAT-DAMP` / `-EITHER`) are now
+one template per category with a family slot (P9).
 
----
-
-## 5. Where the live data genuinely disagrees
-
-Ranked by how much a wrong choice would hurt. Nick should look hardest at the top three.
-
-| Rank | Combination                 | Disagreement                                                                                                                                                                               | Template choice                                                                       |
-| ---- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| 1    | Mask                        | `placement` 18 `lengths_ends` / 14 `all_hair` (near-tie); `conditionerRelationship` 29 `replaces_conditioner` / 3 `conditioner_after` / 1 `no_conditioner`; contact time spans 30 s–20 min | `lengths_ends` + `replaces_conditioner`; both overridden per product                  |
-| 2    | Conditioner                 | `placement` 22 `lengths_ends` / 19 `all_hair` (near-tie)                                                                                                                                   | `lengths_ends`                                                                        |
-| 3    | Shampoo everyday × targeted | `placement` **4/4 tie** between `scalp_roots` and `all_hair`                                                                                                                               | `scalp_roots` (V2 forces it anyway)                                                   |
-| 4    | Leave-in pre-heat damp      | `application_stage` 10 `damp_leave_on` / 5 `dry_pre_heat` / 1 `pre_heat`; sequence anchor splits the same way                                                                              | `damp_leave_on`                                                                       |
-| 5    | Leave-in dry care           | `rinse_action` 8 `do_not_rinse` / 4 `leave_in`; `application_stage` 8 `dry_hair` / 3 `dry_finish` / 1 `damp_leave_on`                                                                      | `do_not_rinse` + `dry_hair`                                                           |
-| 6    | Leave-in post-wash damp     | `compatibleDayTypes` 32/42 on one value but 5 distinct sets exist; `sequence.after` splits `post_rinse_towel_dry` (20) vs `post_cleanse_rinse_off` (17) vs `[]` (5)                        | `["wash_day","intensive_care_day","styling_day"]` + `after: ["post_rinse_towel_dry"]` |
-| 7    | Oil dry finish / leave-on   | `placement` `lengths_ends` vs `ends` tracks oil weight, not author preference                                                                                                              | `lengths_ends`, override to `ends` for rich oils                                      |
-| 8    | Oil pre-wash                | `rinse_action` 13 `shampoo_out` / 4 `rinse_out`; contact time 600/900/3600                                                                                                                 | `shampoo_out` + 600 s                                                                 |
-
-**One data defect found while sampling, unrelated to templates:** one
-`shampoo_everyday` × `standard_rinse_out_cleanse` row carries German prose in the
-enum columns — `application_stage: "Haarwäsche"`, `placement: "Haar"`,
-`rinse_action: "Ausspülen"`. Worth a cleanup ticket; it is not a template question.
+**Out of scope for the pilot:** `pre_heat_dry`, and every family belonging to the
+other five categories (`dry_shampoo`, `deep_cleansing_shampoo`, `bondbuilder`,
+`heat_protectant`, `scalp_care`).
 
 ---
 
-## 6. Open decisions for Nick (these change template values)
+## 5. Cleanup implications
 
-**D-1 — `requiredCatalogFacts`: template uses `[]`. Confirm.**
-Live rows are split: shampoo/conditioner/mask always `[]`; leave-in uses
-`["leave_in.plan_roles"]` (32) or `["leave_in.v3.plan_roles"]` (29); oil uses
-`["oil.v2.weight","oil.v2.role_support"]` (33) or `["oil.v2.role_support"]` (19).
-`guidance-resolver.ts:105-108` looks each entry up as a **flat key** in
-`item.catalogFacts`, which `application-adapter.ts:83-131` populates from the raw
-spec row (`weight`, `role_support`, `roles`, …). Dotted keys therefore cannot
-resolve and would return `missing_catalog_fact:<key>` — they appear inert today only
-because the V1 resolver is bypassed under the V2 contract. `[]` is the shape that
-cannot fail under either contract, so the templates use it. If you want the
-requirement expressed, the correct keys are the undotted spec column names.
+These are existing-row conventions that now contradict a ruling. Factual inventory
+only — no tasks assigned, no migration proposed here. Counts taken 2026-09-02 from
+`product_application_protocols` (project `pqdkhefxsxkyeqelqegq`).
 
-**D-2 — Conditioner contact time will not surface in V2. Confirm.**
-`sharedTemplateContactTime` is omitted by the template (matching 40/43 live rows), so
-the V2 builder returns `null` contact time for every imported conditioner even when the
-wait copy names a range. Set it to `"include"` in the template if imported
-conditioners should show a time.
-
-**D-3 — Pre-heat `reapplication` is inconsistent across categories.**
-All 8 oil pre-heat rows use column `required` / payload `each_separate_heat_event`;
-15/16 leave-in pre-heat rows use `not_stated` / `none`. The templates preserve the
-existing split rather than harmonising it. If reapplying before each separate heat
-event is the product rule, the leave-in templates should change too — that is a
-product decision, not a data one.
-
-**D-4 — Oil pre-heat damp uses `application_stage: "pre_heat"`, leave-in pre-heat damp
-uses `"damp_leave_on"`,** for the same role and family. Two rows on one side, ten on the
-other; both templates follow their own category's majority. Worth one ruling.
-
-**D-5 — TPL-LEAVEIN-POSTSTYLE rests on 3 rows and TPL-OIL-PREHEAT-DAMP on 2.**
-Both are internally consistent, but the sample is too thin to call them consensus.
-Either accept them as provisional (and re-check after the pilot) or park those two
-combinations and route matching products to Nick individually.
+| Ruling | Contradicting convention in live data | Rows |
+| ------ | -------------------------------------- | ---- |
+| P1 | Standard shampoos placed `all_hair` instead of `scalp_roots` | 29 of 35 |
+| P1/P4 | Standard shampoos carrying a `wait` step | 3 |
+| P2 | Rinse-out conditioners placed `all_hair` instead of `lengths_ends` | 20 of 43 |
+| P2 | Conditioner copy that never says "Ansatz aussparen" | most rows; the phrase is essentially absent today |
+| P2 | Conditioners with no stated contact window ("Kurz einwirken lassen." / "Einige Minuten") | 39 of 43 have `contactTimeSeconds: null` and no ruled range |
+| P2 | `sharedTemplateContactTime` omitted, so no conditioner shows a time in V2 | 40 of 43 |
+| P3 | Shampoos stamped `targeted_treatment_shampoo` without a scalp-condition claim — clear cases are a Curl shampoo and a "feines, brüchiges Haar" shampoo; all 8 targeted rows need re-checking against the narrowed P3 definition | ≥2 of 8 |
+| P5 | Masks with `conditionerRelationship: conditioner_after` | 3 |
+| P5 | Masks with `conditionerRelationship: no_conditioner` | 1 |
+| P5 | Masks with **no** contact time — would be invalid stamps under Rev 2 | 18 of 35 |
+| P6 | `post_style_finish` rows stamped while the family is parked | 3 |
+| P7 | Leave-in heat-protection rows with `reapplication` other than `required` (silent heat reapplication) | 21 of 22 |
+| P8 | Pre-wash oil rows outside the 15–20 min window (600 s convention, plus 900 s and one 3600 s) | 16 of 17 |
+| §2.4 | `rinse_action: do_not_rinse` — a code no validator accepts | 18 |
+| — | One shampoo row carries German prose in the enum columns (`application_stage: "Haarwäsche"`, `placement: "Haar"`, `rinse_action: "Ausspülen"`) | 1 |
+| §2.6 | Non-conforming `guidanceKey` shapes: 4 slug-based keys with no product uuid, plus 18 carrying the `leave-in-use-case-2026-08-14-…` batch prefix | 22 |
+| §2.6 | Keys with a product uuid but a suffix §2.6 does not declare canonical: leave-in heat rows on `-heat` instead of `-pre-heat` (11), oil leave-on rows on `-damp` instead of `-leave-on` (13), and `between_wash_dry_care` rows on `-post-wash` instead of `-dry-care` (4) | 28 |
 
 ---
 
-## 7. Stamping checklist (for T2/T4/T5)
+## 6. Stamping checklist (for T2/T4/T5)
 
 Per product, per derived role:
 
-1. Pick the template by `(category, derived role, family the source implies)`.
+1. Pick the template by `(category, derived role)`. For the two heat templates, pick
+   the family from the researched damp/either fact (§3, P9 mapping tables).
 2. Replace every `⟨…⟩` slot. `productId` **must** be the real product uuid, or the
    readiness oracle downgrades the row to `verified_incomplete` (§2.1).
-3. Set `contact_time_seconds` and `protocolFacts.contactTimeSeconds` to the same value,
-   and make the wait copy consistent with §2.5.
-4. Attach the product's own `source_label` / `source_url` / `source_text` and at least
-   one `evidence[]` entry.
-5. Emit `deviation: null` only if the source contradicts nothing in the template. Any
-   contradiction becomes `{reason, packaging_text}` and goes to Nick.
-6. Never write `application_family` or `category_key`. If a V2 pointer is also written,
-   its `applicationFamily` must equal the V1 family (§2.2).
-7. Assert the §2.4 column↔payload invariants before publishing.
+3. Every `⟨REQUIRED: …⟩` slot must be filled from a source. A mask with no sourced
+   contact time is not stampable (P5).
+4. Set `contact_time_seconds` and `protocolFacts.contactTimeSeconds` to the same
+   value, and make the wait copy consistent with §2.5.
+5. Attach the product's own `source_label` / `source_url` / `source_text` and at
+   least one `evidence[]` entry.
+6. Emit `deviation: null` only if the source contradicts nothing in the template.
+   Any contradiction — including a source that disagrees with a **rule** — becomes
+   `{reason, packaging_text}` and goes to Nick.
+7. Never write `application_family` or `category_key`. If a V2 pointer is also
+   written, its `applicationFamily` must equal the V1 family (§2.2).
+8. Assert the §2.4 column↔payload invariants before publishing, including the
+   `leave_in` no-rinse code.
