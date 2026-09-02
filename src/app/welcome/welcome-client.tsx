@@ -11,6 +11,8 @@ import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { markPlanOpeningStart } from "@/app/plan-bereit/opening-beat"
 import { PlanBereitArrival } from "@/app/plan-bereit/plan-ready-arrival"
+import { PlanStartOpening } from "@/components/personal-plan-start/plan-start-opening"
+import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import { capturePaymentFailure } from "@/lib/observability/payment-client"
@@ -404,13 +406,27 @@ export function WelcomeClient({
   }
 
   if (redirectTo) {
-    // A buyer bound for /plan-bereit continues into the identical frame — this
-    // paint IS the loading state, so the route change stays invisible. Every
-    // other target keeps the generic confirmation screen. That deliberately
-    // includes the activation-ready cohort redirected straight to /plan-start:
-    // bridging that route is Follow-up A of the two-state opening plan
-    // (plans/2026-09-02-plan-opening-two-state.md), not this branch.
-    const opensPersonalPlan = redirectTo.startsWith("/plan-bereit")
+    // A buyer bound for /plan-bereit or /plan-start continues into the
+    // DESTINATION'S own loading frame — this paint IS the loading state, so the
+    // route change stays invisible (Follow-up A, founder sign-off 02.09.2026:
+    // the activation-ready cohort skips the arrival but shares the
+    // choreography). Every other target (onboarding, reactivation) keeps the
+    // generic confirmation screen.
+    const opensPlanBereit = redirectTo.startsWith("/plan-bereit")
+    const opensPlanStart = redirectTo === "/plan-start"
+    const opensPersonalPlan = opensPlanBereit || opensPlanStart
+    const planNoscriptFallback = (
+      <noscript>
+        <div className="mt-6 text-center">
+          <a
+            href={redirectTo}
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
+          >
+            Weiter zu deinem Plan
+          </a>
+        </div>
+      </noscript>
+    )
     return (
       <>
         <CheckoutReturnAnalytics
@@ -419,24 +435,15 @@ export function WelcomeClient({
           redirectTo={redirectTo}
           sessionId={analyticsId}
         />
-        {opensPersonalPlan ? (
+        {opensPlanStart ? (
+          <>
+            <PlanStartEntranceMarker />
+            <PlanStartOpening noscriptFallback={planNoscriptFallback} />
+          </>
+        ) : opensPersonalPlan ? (
           <>
             <PlanOpeningStartMarker />
-            <PlanBereitArrival
-              phase="loading"
-              noscriptFallback={
-                <noscript>
-                  <div className="mt-6 text-center">
-                    <a
-                      href={redirectTo}
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary bg-transparent px-5 py-2 text-sm font-medium text-primary"
-                    >
-                      Weiter zu deinem Plan
-                    </a>
-                  </div>
-                </noscript>
-              }
-            />
+            <PlanBereitArrival phase="loading" noscriptFallback={planNoscriptFallback} />
           </>
         ) : (
           <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
@@ -778,6 +785,18 @@ export function WelcomeClient({
 function PlanOpeningStartMarker() {
   useEffect(() => {
     markPlanOpeningStart()
+  }, [])
+  return null
+}
+
+/**
+ * Arms the /plan-start stage entrance (the same sessionStorage intent the
+ * arrival CTA writes), so the activation-ready cohort's plan rises in with the
+ * 200 ms entrance instead of hard-cutting after the loading frame.
+ */
+function PlanStartEntranceMarker() {
+  useEffect(() => {
+    markPersonalPlanStageNavigation("/plan-start")
   }, [])
   return null
 }

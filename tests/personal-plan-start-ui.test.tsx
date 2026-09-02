@@ -1545,7 +1545,13 @@ test("renders loading and retry states without questions or legacy destinations"
   const loading = renderToStaticMarkup(<PlanStartLoading />)
   const retry = renderToStaticMarkup(<PlanStartRetryableError />)
 
-  assert.match(loading, /Dein Plan entsteht/)
+  // The loading state is the shared opening shell (founder sign-off
+  // 02.09.2026): identical to plan-start/loading.tsx, ring instead of a
+  // determinate bar stuck at a made-up 50 %.
+  assert.match(loading, /Dein Plan wird geöffnet\./)
+  assert.match(loading, /Dein persönlicher Plan/)
+  assert.match(loading, /plan-opening-arc/)
+  assert.doesNotMatch(loading, /Plan wird vorbereitet|role="progressbar"/)
   assert.match(retry, /Dein Plan lädt gerade nicht/)
   assert.match(retry, /Erneut versuchen/)
   assert.doesNotMatch(`${loading}${retry}`, /Quiz starten|href="\/chat"|href="\/routine"/)
