@@ -1,0 +1,163 @@
+{
+  "candidate_id": "head-shoulders-2in1-classic-clean",
+  "blindCode": "I",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Sodium Salicylate, Linalool, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexamethylindanopyran, Linalyl Acetate, Histidine, Tetramethyl Acetyloctahydronaphthalenes, Acetic Acid, Benzyl Alcohol, Propylene Glycol, Triethylene Glycol, CI 42090, CI 17200.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "Sodium Xylenesulfonate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Cocamide MEA",
+      "TEA-Dodecylbenzenesulfonate",
+      "Trideceth-10"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethiconol",
+      "Dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [
+      "Histidine"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Acetic Acid"
+    ],
+    "chelators": [
+      "Tetrasodium EDTA"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "moderate",
+    "focusPrimary": "scalp_active",
+    "focusSecondary": [
+      "shine",
+      "repair"
+    ],
+    "usageRole": "treatment",
+    "scalpComfortTarget": "targeted",
+    "dandruffSupport": "supported"
+  },
+  "dandruff_support": {
+    "value": "supported",
+    "rationale": "Piroctone Olamine ist enthalten und erfüllt die gesperrte Support-Regel."
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES, Sodium Xylenesulfonate und weitere Co-Tenside stützen starke Reinigung.",
+    "conditioningLevel": "Dimethiconol, Dimethicone, kationischer Guar und Glycol Distearate ergeben hohe 2-in-1-Pflege.",
+    "weightPotential": "Silikon-/Guar-Deposition ist relevant, aber starke Reinigung hält den Netto-Wert bei moderat.",
+    "focusPrimary": "Piroctone Olamine ist ein gesperrt anerkannter scalp-active Anti-Schuppen-Wirkstoff.",
+    "focusSecondary": "Silikon/Guar stützen Shine und bounded Repair/Schutz als Nebenschwerpunkte.",
+    "usageRole": "Piroctone Olamine macht die Rolle treatment.",
+    "scalpComfortTarget": "Piroctone Olamine plus Anti-Schuppen-/Kopfhautroute zielt auf Kopfhautkontext.",
+    "dandruffSupport": "Piroctone Olamine ist enthalten und erfüllt die gesperrte Support-Regel."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "moderate"
+  },
+  "formulaObservations": [
+    "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+    "Piroctone Olamine ist in beiden erfassten Quellen enthalten.",
+    "Dimethiconol, Dimethicone und kationischer Guar bilden die 2-in-1-Pflege-/Glanzroute."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Einsatzmengen, fertigen pH-Werte oder Depositionsergebnisse.",
+    "Claims, Marke und Produktname wurden in dieser blinden Einstufung nicht verwendet."
+  ],
+  "payloadHash": "e05b55d9efec6382fee9bc2a0b71392eb96268f0ca595406d32ea4d3ea72afb2",
+  "finalDelta": []
+}

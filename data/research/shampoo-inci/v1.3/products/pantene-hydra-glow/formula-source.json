@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "8700216170345",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-pantene-hydra-glow-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+      "rawInci": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+      "productMatch": "exact_gtin"
+    },
+    {
+      "id": "mueller-pantene-hydra-glow-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.mueller.de/p/pantene-pro-v-miracles-hydra-glow-shampoo-IPN2992239/",
+      "rawInci": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+      "productMatch": "exact_gtin"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Stearyl Alcohol, Sodium Chloride, Parfum, Cetyl Alcohol, Citric Acid, Sodium Benzoate, Glycerin, Sodium Salicylate, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Sodium Hydroxide, Trihydroxystearin, Tetrasodium EDTA, Limonene, Panthenol, Panthenyl Ethyl Ether, Histidine, Sodium Hyaluronate, Phenoxyethanol, Biotin",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "sodium citrate",
+    "cocamidopropyl betaine",
+    "sodium xylenesulfonate",
+    "stearyl alcohol",
+    "sodium chloride",
+    "parfum",
+    "cetyl alcohol",
+    "citric acid",
+    "sodium benzoate",
+    "glycerin",
+    "sodium salicylate",
+    "polyquaternium-6",
+    "guar hydroxypropyltrimonium chloride",
+    "sodium hydroxide",
+    "trihydroxystearin",
+    "tetrasodium edta",
+    "limonene",
+    "panthenol",
+    "panthenyl ethyl ether",
+    "histidine",
+    "sodium hyaluronate",
+    "phenoxyethanol",
+    "biotin"
+  ],
+  "inciFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

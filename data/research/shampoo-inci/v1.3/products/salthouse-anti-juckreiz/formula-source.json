@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4008890006405",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "salthouse-de-anti-juckreiz-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://salthouse.com/de/produkte/anti-juckreiz-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Laureth-9, Sodium Chloride, Cocamidopropyl Betaine, Urea, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Glycerin, Maris Sal (Dead Sea Salt), Citric Acid, Menthol, Potassium Sorbate, Panthenol, Lactic Acid, Mentha Arvensis Leaf Oil"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Laureth-9, Sodium Chloride, Cocamidopropyl Betaine, Urea, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Glycerin, Maris Sal (Dead Sea Salt), Citric Acid, Menthol, Potassium Sorbate, Panthenol, Lactic Acid, Mentha Arvensis Leaf Oil",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "laureth-9",
+    "sodium chloride",
+    "cocamidopropyl betaine",
+    "urea",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "sodium benzoate",
+    "glycerin",
+    "maris sal (dead sea salt)",
+    "citric acid",
+    "menthol",
+    "potassium sorbate",
+    "panthenol",
+    "lactic acid",
+    "mentha arvensis leaf oil"
+  ],
+  "inciFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

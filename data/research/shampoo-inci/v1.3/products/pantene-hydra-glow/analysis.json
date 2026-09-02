@@ -1,0 +1,541 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "fcbc469f-93c8-4be5-85db-e789b09189c7:f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "GTIN 8700216170345 is corroborated by dm and Mueller for Pantene Pro-V Miracles Hydra Glow Shampoo 250 ml.",
+      "Sodium Laureth Sulfate, Sodium Citrate, Cocamidopropyl Betaine, and Sodium Xylenesulfonate create the main cleanser/base system.",
+      "Stearyl Alcohol, Cetyl Alcohol, Polyquaternium-6, Guar Hydroxypropyltrimonium Chloride, Trihydroxystearin, Panthenol, Sodium Hyaluronate, and Biotin form the care/shine claim context."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Intensive Feuchtigkeit",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Ohne Silikone",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "Cocamidopropyl Betaine"
+    ],
+    "surfactantsSecondary": [
+      "Sodium Xylenesulfonate"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-6",
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Stearyl Alcohol",
+      "Cetyl Alcohol",
+      "Trihydroxystearin"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Panthenyl Ethyl Ether"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Sodium Citrate"
+    ],
+    "chelators": [
+      "Tetrasodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES with xylene sulfonate and CAPB supports a stronger regular cleanser profile, though not a dedicated reset shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate appears early with Sodium Xylenesulfonate and Cocamidopropyl Betaine.",
+          "inference": "Efficient regular cleansing is plausible.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "sles-xylene-amphoteric-cleansing"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "sles-xylene-amphoteric-cleansing"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Fatty alcohols plus cationic polymers support moderate conditioning, while no silicone/oil-rich system is present.",
+      "supportingSignals": [
+        {
+          "observation": "Stearyl Alcohol, Cetyl Alcohol, Polyquaternium-6, and cationic guar are present.",
+          "inference": "Slip and soft feel are plausible.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "fatty-alcohol-cationic-conditioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "fatty-alcohol-cationic-conditioning"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone/oil-rich system is present and strong cleansing offsets the moderate fatty-alcohol/polymer deposition signal.",
+      "supportingSignals": [
+        {
+          "observation": "The formula contains cationic polymers/fatty alcohols but no listed silicones.",
+          "inference": "Weight potential is lower than rich depositing shampoos.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "low-to-moderate-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "low-to-moderate-deposition"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula and claims lean hydration/shine; in the v1.3 compact vocabulary shine is the closest supported focus.",
+      "supportingSignals": [
+        {
+          "observation": "Fatty alcohols, cationic polymers, panthenol, and sodium hyaluronate support surface feel and gloss context.",
+          "inference": "A shine/care focus is plausible.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "care-shine-surface-conditioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "care-shine-surface-conditioning"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Secondary focus is broad daily care rather than repair, volume, or scalp-active use.",
+      "supportingSignals": [
+        {
+          "observation": "The claim set is moisture/shine/care rather than treatment-specific.",
+          "inference": "General care is a conservative secondary focus.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "general-care"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "general-care"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Retailer copy says daily washing is suitable and the formula is an ordinary rinse-out shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Mueller describes the product as suitable for daily hair washing.",
+          "inference": "Frequent use role is plausible, subject to user tolerance.",
+          "sourceIds": [
+            "mueller-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "frequent-rinse-out-use"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "mueller-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "mueller-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "frequent-rinse-out-use"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "dm-pantene-hydra-glow-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Early surfactants cleanse.",
+        "g2FormulaRelevanceAndDelivery": "SLES/CAPB/xylene sulfonate occur early.",
+        "g3EndpointSpecificity": "Endpoint is cleansing strength."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Fatty alcohols/cationic polymers can condition.",
+        "g2FormulaRelevanceAndDelivery": "They are present in a rinse-off formula.",
+        "g3EndpointSpecificity": "Endpoint is deposition/conditioning."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Polymers/fatty alcohols can leave residue.",
+        "g2FormulaRelevanceAndDelivery": "The signal is modest and countered by cleansing.",
+        "g3EndpointSpecificity": "Endpoint is weight potential."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Conditioning films can support gloss.",
+        "g2FormulaRelevanceAndDelivery": "Cationic polymer and fatty alcohol context is present.",
+        "g3EndpointSpecificity": "Route is deposition shine."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Strong cleansing and lower heavy deposition can support root lift.",
+        "g2FormulaRelevanceAndDelivery": "Formula has efficient cleansing and no confirmed silicone/oil-rich system.",
+        "g3EndpointSpecificity": "Route is clean/light root lift."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Fatty alcohols/cationic polymers can reduce friction.",
+        "g2FormulaRelevanceAndDelivery": "Multiple such ingredients are present.",
+        "g3EndpointSpecificity": "Endpoint is smoothing feel."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lubrication can reduce grooming friction.",
+        "g2FormulaRelevanceAndDelivery": "Fatty alcohol/cationic polymer system is plausible.",
+        "g3EndpointSpecificity": "This is protective conditioning."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Blend architecture affects mildness potential.",
+        "g2FormulaRelevanceAndDelivery": "CAPB and fatty alcohols moderate an SLES-led formula.",
+        "g3EndpointSpecificity": "Endpoint is mildness potential only."
+      }
+    },
+    "weightDepositionLoad": "Low to moderate: fatty alcohols and cationic polymers, no confirmed silicone/oil-rich system.",
+    "weightPersistence": "Low to moderate: polymers can persist but cleansing is strong.",
+    "weightResetCapacity": "Moderate to strong: SLES-led system supports residue removal.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Panthenol/biotin are not bond-specific repair signals.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": true,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact DE formula verified by dm and Mueller. Public claims are cosmetic moisture/shine claims without disclosed shampoo-only performance protocol."
+  },
+  "claimAudit": [
+    {
+      "claim": "Moisture/shine without weighing down",
+      "verdict": "plausible",
+      "support": "Cationic polymers, fatty alcohols, panthenol, and humectant signals support cosmetic care/shine while no rich silicone/oil system is listed.",
+      "limitation": "No public shampoo-only hydration or weight test protocol is available.",
+      "sourceIds": [
+        "dm-pantene-hydra-glow-2026-08-10",
+        "mueller-pantene-hydra-glow-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-pantene-hydra-glow-2026-08-10",
+    "mueller-pantene-hydra-glow-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Cosmetic moisture/shine shampoo; no medical or scalp-active route is created."
+  }
+}

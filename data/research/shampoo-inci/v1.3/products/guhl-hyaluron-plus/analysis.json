@@ -1,0 +1,554 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03:e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Die aktuelle deutsche Guhl-Hersteller-INCI ist die kanonische Formel: SLES wird von Coco-Glucoside und CAPB begleitet.",
+      "Hydrogenated Vegetable Oil, Glyceryl Oleate, kationisches Guar, Erythritol, Glycerin, Panthenol und Hyaluronmaterialien bilden die Pflegearchitektur der Herstellerformel.",
+      "Rossmann und dm-AT bleiben mit GTIN 4072600720219 als Produktidentitäts- und Quellenprovenienz dokumentiert; ihre abweichende INCI wird nicht mit der kanonischen Herstellerformel zusammengeführt."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "rehydriert dein Haar sofort und füllt es nachhaltig mit Feuchtigkeit auf",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Für fühlbar hydratisiertes und natürlich glänzendes Haar, ohne zu beschweren",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-at-4072600720219-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Hydrogenated Vegetable Oil",
+      "Glyceryl Oleate"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Hydrolyzed Hyaluronic Acid",
+      "Sodium Hyaluronate"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Lactic Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES-led cleansing is moderated by refatting/moisturising architecture.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI führt Sodium Laureth Sulfate an zweiter Stelle, ergänzt durch Coco-Glucoside, Cocamidopropyl Betaine sowie spätere Rückfettungs- und Feuchthaltesignale.",
+          "inference": "SLES-led cleansing is moderated by refatting/moisturising architecture.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic guar, Hydrogenated Vegetable Oil und Glyceryl Oleate stützen moderate, nicht-silikonbasierte Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI enthält Hydrogenated Vegetable Oil, Glyceryl Oleate, Guar Hydroxypropyltrimonium Chloride, Panthenol und Hyaluron-Salze.",
+          "inference": "Cationic guar, Hydrogenated Vegetable Oil und Glyceryl Oleate stützen moderate, nicht-silikonbasierte Pflege.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Pearlizer/refatting/cationic guar create moderate weight potential without silicone-heavy persistence.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI kombiniert Hydrogenated Vegetable Oil, Glyceryl Oleate und kationisches Guar, ohne Silikone zu listen.",
+          "inference": "Pearlizer/refatting/cationic guar create moderate weight potential without silicone-heavy persistence.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest direct route is smoothing/conditioned shine, not measured hydration.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI enthält ein nicht-silikonbasiertes Glättungs-/Pflegesystem aus kationischem Guar, Glyceryl Oleate, Hydrogenated Vegetable Oil und späteren Hyaluron-Signalen.",
+          "inference": "The strongest direct route is smoothing/conditioned shine, not measured hydration.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "shine-smoothing-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "shine-smoothing-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Secondary role remains an ordinary conditioning-care shampoo route on formula architecture.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI zeigt ein reguläres SLES-/Co-Surfactant-Chassis mit Pflege- und Feuchthaltesignalen, aber kein dominantes Reset-Chassis.",
+          "inference": "Secondary role remains ordinary conditioning-care shampoo.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular shampoo role from a standard cleansing-care chassis; no reset-dominant formula route.",
+      "supportingSignals": [
+        {
+          "observation": "Die Hersteller-INCI kombiniert SLES, Coco-Glucoside, Cocamidopropyl Betaine und leichte Pflegesignale; Piroctone Olamine erscheint erst im mittleren/späten Bereich.",
+          "inference": "The formula reads as regular use rather than reset- or treatment-dominant.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public product-specific shampoo-only test protocol was found.",
+          "inference": "Confidence remains capped at formula-only mechanism level.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine der kanonischen Herstellerformel bildet eine konventionelle kosmetische Anti-Schuppen-Route. Nicht offengelegte Konzentration und fehlender shampoo-spezifischer Dandruff-Endpunkt begrenzen die Sicherheit und verhindern ein Wirksamkeitsversprechen.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears in the official manufacturer INCI after Tetrasodium Glutamate Diacetate and before Citric Acid.",
+          "inference": "A recognized conventional anti-dandruff ingredient route is present, but it is not a primary formula signal.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ],
+          "mechanismIds": [
+            "piroctone-olamine-dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Konzentration von Piroctone Olamine und shampoo-spezifischer Dandruff-Endpunkt sind nicht veröffentlicht.",
+          "inference": "Die Unterstützung beschreibt nur die kosmetische Formelroute und verspricht kein Dandruff-Ergebnis.",
+          "sourceIds": [
+            "official-guhl-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "piroctone-olamine-dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      1
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Ordinary cleansing is relevant to a moisturising shampoo.",
+        "g2FormulaRelevanceAndDelivery": "SLES appears second but is moderated by co-surfactants/refatting.",
+        "g3EndpointSpecificity": "Regular cleansing, not clarification."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Smoothing/refatting can improve dry-hair feel.",
+        "g2FormulaRelevanceAndDelivery": "Cationic guar plus Hydrogenated Vegetable Oil und Glyceryl Oleate bilden ein kohärentes Rinse-off-System.",
+        "g3EndpointSpecificity": "Moderate conditioning, not proven hydration replenishment."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Deposition/refatting can affect movement.",
+        "g2FormulaRelevanceAndDelivery": "Multiple feel modifiers are present but no silicone/oil-heavy system.",
+        "g3EndpointSpecificity": "Trade-off dimension, not quality."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Smoothing deposition can improve apparent shine.",
+        "g2FormulaRelevanceAndDelivery": "Guar/refatting/pearlizer combination supports S1.",
+        "g3EndpointSpecificity": "Not acid-pH shine."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Lubrication can reduce friction.",
+        "g2FormulaRelevanceAndDelivery": "Die kanonische Herstellerformel enthält passende Pflege- und Ablagerungssignale.",
+        "g3EndpointSpecificity": "No durable anti-frizz duration inferred."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lower friction can reduce mechanical stress.",
+        "g2FormulaRelevanceAndDelivery": "Cationic guar/refatting support protective lubrication.",
+        "g3EndpointSpecificity": "Damage management, not bond repair."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Dry-hair positioning makes tolerance relevant.",
+        "g2FormulaRelevanceAndDelivery": "Co-surfactants/refatting moderate SLES.",
+        "g3EndpointSpecificity": "Parfum and no pH/tolerance data cap confidence."
+      }
+    },
+    "weightDepositionLoad": "moderate non-silicone deposition/refatting",
+    "weightPersistence": "low to moderate persistence; no silicone but several feel modifiers",
+    "weightResetCapacity": "moderate through SLES-led cleansing",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Hyaluron/panthenol are not bond-targeting signals.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formelbasierte Bewertung der aktuellen deutschen Guhl-Hersteller-INCI; Rossmann/dm-AT bleiben als GTIN-/Quellenprovenienz dokumentiert und werden nicht in die Klassifikation eingerechnet. Es liegt kein shampoo-spezifisches Leistungstestergebnis vor."
+  },
+  "claimAudit": [
+    {
+      "claim": "rehydriert sofort und füllt nachhaltig Feuchtigkeit auf",
+      "verdict": "weak",
+      "support": "Humectants and conditioning system can create moisturised feel.",
+      "limitation": "Exact hydration magnitude and sustained filling are not public shampoo-only evidence.",
+      "sourceIds": [
+        "official-guhl-2026-08-10"
+      ]
+    },
+    {
+      "claim": "glänzend, ohne zu beschweren",
+      "verdict": "plausible",
+      "support": "S1 smoothing and no silicone support shine with moderate weight.",
+      "limitation": "Hydrogenated Vegetable Oil, Glyceryl Oleate und kationisches Guar können feine Ansätze dennoch beschweren.",
+      "sourceIds": [
+        "dm-at-4072600720219-2026-08-10"
+      ]
+    },
+    {
+      "claim": "product identity via retailer GTIN",
+      "verdict": "indeterminate",
+      "support": "Rossmann und dm-AT dokumentieren GTIN 4072600720219 für dieselbe Produktfamilie.",
+      "limitation": "Die abweichenden Händler-INCI werden als Provenienz geführt und nicht zur Klassifikation genutzt.",
+      "sourceIds": [
+        "official-guhl-2026-08-10",
+        "rossmann-4072600720219-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-guhl-2026-08-10",
+    "rossmann-4072600720219-2026-08-10",
+    "dm-at-4072600720219-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Moisture- und Shine-Claims bleiben kosmetisch; die Klassifikation nutzt die kanonische deutsche Herstellerformel."
+  }
+}

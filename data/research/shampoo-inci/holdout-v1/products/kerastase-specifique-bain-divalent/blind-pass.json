@@ -1,0 +1,166 @@
+{
+  "candidate_id": "kerastase-specifique-bain-divalent",
+  "blindCode": "F",
+  "rawInci": "Aqua/Water, Sodium Laureth Sulfate, TEA-Lauryl Sulfate, Cocamide MIPA, Disodium Cocoamphodiacetate, Glycol Distearate, Hexylene Glycol, Sodium Chloride, Citric Acid, Sodium Benzoate, Sodium Hydroxide, Capryloyl Glycine, Polyquaternium-11, Salicylic Acid, Carbomer, Pyridoxine HCl, Menthoxypropanediol, Guar Hydroxypropyltrimonium Chloride, Hexyl Cinnamal, Linalool, Hydroxycitronellal, Citronellol, Benzyl Alcohol, Fumaric Acid, Parfum/Fragrance.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "TEA-Lauryl Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MIPA",
+      "Disodium Cocoamphodiacetate"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-11",
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "Capryloyl Glycine"
+    ],
+    "proteinsFilmFormers": [
+      "Polyquaternium-11"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Salicylic Acid",
+      "Fumaric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      2,
+      3
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      2,
+      3
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "scalp_active",
+    "focusSecondary": [
+      "clarifying",
+      "volume"
+    ],
+    "usageRole": "treatment",
+    "scalpComfortTarget": "targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "dandruff_support": {
+    "value": "not_supported",
+    "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES plus TEA-Lauryl Sulfate und Cocamide MIPA bilden eine starke anionische Reinigungsbasis.",
+    "conditioningLevel": "Polyquaternium-11, kationischer Guar und Glycol Distearate liefern eine moderate Pflegearchitektur.",
+    "weightPotential": "Mehrere filmbildende/kationische Signale können Gewicht erzeugen; starke Reinigung begrenzt den Wert auf moderat.",
+    "focusPrimary": "Salicylic Acid, Capryloyl Glycine und Kopfhaut-Cues machen scalp_active zum stärksten Schwerpunkt.",
+    "focusSecondary": "Starke Reinigung und niedrige Silikon-/Öllast unterstützen Clarifying und Volumen als Nebenschwerpunkte.",
+    "usageRole": "Ohne Claims wirkt die scalp-active Architektur eher wie ein gezielt eingesetztes Treatment-Shampoo.",
+    "scalpComfortTarget": "Salicylic Acid/Capryloyl Glycine adressieren Kopfhautkomfort; das ist keine Verträglichkeitsgarantie.",
+    "dandruffSupport": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+    "Polyquaternium-11 und Guar Hydroxypropyltrimonium Chloride bilden eine plausible leichte bis moderate Deposition-/Filmroute.",
+    "Salicylic Acid, Capryloyl Glycine, Pyridoxine HCl und Menthoxypropanediol liefern gezielte Kopfhaut-/Balance-Cues; Piroctone Olamine und Climbazole fehlen."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Einsatzmengen, fertigen pH-Werte oder Depositionsergebnisse.",
+    "Claims, Marke und Produktname wurden in dieser blinden Einstufung nicht verwendet."
+  ],
+  "payloadHash": "d77b8aa6d2ff20e47d8eaa227228db61a0a972d31a5d0eb486c15895304ba2cb",
+  "finalDelta": [
+    {
+      "property": "usageRole",
+      "blindValue": "treatment",
+      "finalValue": "regular",
+      "reason": "Offizielle Positionierung als ausgleichendes Shampoo für fettigen Ansatz und trockene/sensibilisierte Längen spricht für regelmäßige Nutzung; die Formel bleibt scalp-active, aber ohne anerkannten Anti-Schuppen-Wirkstoff."
+    }
+  ]
+}

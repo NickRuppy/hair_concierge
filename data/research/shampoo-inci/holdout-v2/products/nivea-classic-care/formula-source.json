@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:nivea-classic-care",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4006000192345",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T21:30:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "nivea-de-classic-care-mildes-shampoo-4006000192345-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T21:30:00.000+02:00",
+      "locator": "https://www.nivea.de/produkte/classic-care-mildes-shampoo-250ml-40060001923450001.html",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Gossypium Hirsutum Seed Oil, Guar Hydroxypropyltrimonium Chloride, Glycerin, Dicaprylyl Ether, Glyceryl Oleate, Glycol Distearate, Hydrogenated Castor Oil, Sodium Chloride, Citric Acid, Sodium Benzoate, Benzoic Acid, Parfum",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4006000192345"
+    },
+    {
+      "id": "dm-de-nivea-classic-care-4006000192345-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T21:30:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1620923/nivea-shampoo-classic-care",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Gossypium Hirsutum Seed Oil, Guar Hydroxypropyltrimonium Chloride, Glycerin, Dicaprylyl Ether, Glyceryl Oleate, Glycol Distearate, Hydrogenated Castor Oil, Sodium Chloride, Citric Acid, Sodium Benzoate, Benzoic Acid, Parfum",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4006000192345"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Gossypium Hirsutum Seed Oil, Guar Hydroxypropyltrimonium Chloride, Glycerin, Dicaprylyl Ether, Glyceryl Oleate, Glycol Distearate, Hydrogenated Castor Oil, Sodium Chloride, Citric Acid, Sodium Benzoate, Benzoic Acid, Parfum",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "decyl glucoside",
+    "coco-glucoside",
+    "gossypium hirsutum seed oil",
+    "guar hydroxypropyltrimonium chloride",
+    "glycerin",
+    "dicaprylyl ether",
+    "glyceryl oleate",
+    "glycol distearate",
+    "hydrogenated castor oil",
+    "sodium chloride",
+    "citric acid",
+    "sodium benzoate",
+    "benzoic acid",
+    "parfum"
+  ],
+  "inciFingerprint": "53a18adf83c0dfb43dc15b59a24d8ca2769753881f1a98660a1ad25489e55eb6",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

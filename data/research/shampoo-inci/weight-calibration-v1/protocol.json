@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "shampoo-weight-protocol-v1",
+  "policyVersion": "shampoo-weight-v1",
+  "policyPath": "docs/research/shampoo-inci/v1.4-draft/weight-potential-calibration.md",
+  "policySha256": "5b865a37c289ddffdd6121ae2e08def028b47b7bbb095ddc2905df34da60a8d0",
+  "packetSha256": "0c69fc6588a9bacad973ba5c999d47d8f5c8a0d61c0c7682a8f3cce387b1f697",
+  "candidateCount": 10,
+  "targetProperty": "weightPotential",
+  "labelerTasks": ["weight_rater_a", "weight_rater_b"],
+  "independence": "Two fresh no-context labelers received only the written policy and anonymized INCI packet, not old labels, evaluator code or each other's output.",
+  "limitations": [
+    "Shared source packet and model lineage; not independent source discovery or empirical accuracy.",
+    "Same known ten-product cohort; paired calibration rather than a new holdout.",
+    "No desired agreement or product-confidence target; preserve disagreement without tuning."
+  ],
+  "writeBoundary": "Only sibling weight-calibration-v1 reports; no previous audits, approvals or database changes."
+}

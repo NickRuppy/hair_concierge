@@ -1,0 +1,527 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "744de604-d266-453b-a56b-eea92c5ca565:e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES is paired with CAPB and Coco-Glucoside.",
+      "Piroctone Olamine appears sixth and Zinc PCA appears before Panthenol.",
+      "Cationic guar and Glyceryl Oleate provide light conditioning."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "befreit effektiv von Schuppen und einer juckenden, spannenden Kopfhaut",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glyceryl oleate"
+    ],
+    "proteinsFilmFormers": [
+      "panthenol"
+    ],
+    "acids": [
+      "lactic acid",
+      "citric acid"
+    ],
+    "chelators": [
+      "tetrasodium glutamate diacetate"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES with amphoteric and nonionic support indicates moderate treatment cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "SLES is followed by CAPB and Coco-Glucoside.",
+          "inference": "The architecture balances cleansing with an anti-dandruff use case.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glyceryl Oleate and cationic guar provide light-to-moderate shampoo conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Refatting and cationic ingredients appear in the upper-middle formula.",
+          "inference": "A meaningful but not rich care route is present.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No silicone or heavy lipid system is disclosed.",
+      "supportingSignals": [
+        {
+          "observation": "One light refatting ingredient and one cationic polymer accompany the cleanser.",
+          "inference": "Weight potential remains low.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine, Zinc PCA and anti-dandruff positioning establish a scalp-active primary focus.",
+      "supportingSignals": [
+        {
+          "observation": "The formula and both exact sources align on dandruff and itchy-scalp use.",
+          "inference": "This is a cosmetic scalp-active shampoo.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sensitive positioning and co-surfactants support gentle as a bounded secondary focus.",
+      "supportingSignals": [
+        {
+          "observation": "The dm page calls the recipe sensitive and the formula includes CAPB/Coco-Glucoside.",
+          "inference": "Gentle positioning is plausible but fragrance and no comparative mildness data cap it.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Anti-dandruff use is best represented as a cosmetic treatment role.",
+      "supportingSignals": [
+        {
+          "observation": "The product is explicitly designed for repeated anti-dandruff use.",
+          "inference": "Treatment distinguishes it from ordinary general shampoo.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets scalp comfort in an anti-dandruff context with a recognized scalp-active route; dandruff support remains separately stored.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets scalp comfort in an anti-dandruff context with a recognized scalp-active route; dandruff support remains separately stored.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine, Zinc PCA and explicit anti-dandruff intent provide direct dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The active appears sixth and exact sources identify anti-dandruff use.",
+          "inference": "Formula and positioning agree on dandruff support.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active concentration, finished pH and full product-specific study protocol are not public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "guhl-de-anti-schuppen-2026-08-10",
+            "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10",
+        "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The mildnessPotential score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "No dedicated finished-product residue-reset result is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Matching current official and exact-GTIN German retailer formulas; no public full clinical protocol."
+  },
+  "claimAudit": [
+    {
+      "claim": "befreit effektiv von Schuppen und einer juckenden, spannenden Kopfhaut",
+      "verdict": "plausible",
+      "support": "Piroctone Olamine and Zinc PCA align with the anti-dandruff formula focus.",
+      "limitation": "The public page does not provide the full study protocol, active percentage or comparative result.",
+      "sourceIds": [
+        "guhl-de-anti-schuppen-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "guhl-de-anti-schuppen-2026-08-10",
+    "dm-de-guhl-anti-schuppen-1446893-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Dandruff and mild itch positioning is cosmetic scalp care; no disease diagnosis or prescription-treatment claim is made."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W043",
+  "formula": {
+    "inciFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "protein_film",
+        "name": "hydrolyzed wheat protein",
+        "position": 6
+      },
+      {
+        "family": "payload_lipid",
+        "name": "argania spinosa kernel oil",
+        "position": 7
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 8
+      },
+      {
+        "family": "payload_lipid",
+        "name": "hydrogenated castor oil",
+        "position": 16
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 10
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 15,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Protein, Arganöl und kationisches Guar liegen früh, Hydrogenated Castor Oil später; das ist deutlich, aber nicht silikonreich."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Guar, Proteinfilm und Lipide können haften, wirken aber durch Shampoo-Reset und fehlendes Silikon eher bounded."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES, CAPB und Coco-Glucoside geben eine solide, nicht schwache Reinigung."
+  },
+  "competingSignals": [
+    "Keine Silikone und nur ein kationisches Polymer.",
+    "Breite Tensidbasis begrenzt die reichere Öl-/Proteinseite."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil mehrere Depositionswege spürbare Rückstände plausibel machen, ohne die High-Schwelle klar zu erreichen.",
+  "whyNotNeighborBand": "Low unterschätzt die frühe Protein-/Öl-/Guar-Kombination; High wäre ohne Silikon oder mehrere Polymere und bei solider Reinigung zu stark.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unbekannte Dosierung der frühen Payloads."
+  }
+}

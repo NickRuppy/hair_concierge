@@ -1,0 +1,543 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "5effc311-25d7-44dd-8c16-b93c182068d3:7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "SLES, Cocamidopropyl Betaine and TEA-Dodecylbenzenesulfonate form the cleanser system.",
+      "Dimethiconol, Dimethicone and cationic guar form a meaningful deposition cluster.",
+      "Piroctone Olamine appears after the main silicone/cationic system and before the preservative tail.",
+      "The exact 300 ml GTIN and formula are grounded by two matching current German exact-GTIN retailer records; no current official German ingredient page was located."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Reduktion sichtbarer Schuppen bei regelmäßiger Anwendung",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl betaine",
+      "tea-dodecylbenzenesulfonate"
+    ],
+    "surfactantsSecondary": [
+      "sodium xylenesulfonate",
+      "cocamide mea",
+      "trideceth-10"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethiconol",
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A regular effective cleanser is plausible from the exact-GTIN major-retailer formula; active-matter levels remain unknown.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and betaine are joined by TEA-Dodecylbenzenesulfonate and a hydrotrope.",
+          "inference": "A regular effective cleanser is plausible.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The formula is exact-GTIN retailer evidence, but active-matter levels are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Moderate shampoo conditioning and slip are plausible. No shampoo-only combing or deposition test is captured.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol, Dimethicone and cationic guar are all present.",
+          "inference": "Moderate shampoo conditioning and slip are plausible.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only combing or deposition test is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Moderate weight potential is plausible, especially for fine hair. Concentrations and repeat-use persistence are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "Two silicones and cationic guar create multiple deposition cues.",
+          "inference": "Moderate weight potential is plausible, especially for fine hair.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Concentrations and repeat-use persistence are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A dedicated cosmetic dandruff route is supported by the exact-GTIN formula. No public finished-product protocol is captured.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is present in both agreeing exact-GTIN German retailer formulas.",
+          "inference": "A dedicated cosmetic dandruff route is supported.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public finished-product protocol is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A general care role accompanies the scalp-active focus. No isolated shine or strengthening endpoint is available.",
+      "supportingSignals": [
+        {
+          "observation": "Regular cleanser and deposition systems coexist.",
+          "inference": "A general care role accompanies the scalp-active focus.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No isolated shine or strengthening endpoint is available.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A targeted cosmetic scalp routine is intended. Individual cadence, recurrence and diagnosis are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine supplies a dedicated scalp-active route; the captured use directions position the shampoo for repeated targeted use.",
+          "inference": "A targeted cosmetic scalp routine is intended.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Individual cadence, recurrence and diagnosis are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A deliberate cosmetic anti-dandruff route is supported by the exact-GTIN formula. No public finished-product protocol is captured.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is present in both agreeing complete exact-GTIN formulas.",
+          "inference": "A deliberate cosmetic anti-dandruff route is supported.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No public finished-product protocol is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "dm-de-1561902",
+            "rossmann-de-8700216558037-2026-08-23"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent conditioningDeposition cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent weightBuildup cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent shineS1 cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent smoothing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Two current German exact-GTIN retailer records show the same complete formula. Official/package confirmation and a finished-product test remain absent."
+  },
+  "claimAudit": [
+    {
+      "claim": "Reduktion sichtbarer Schuppen bei regelmäßiger Anwendung",
+      "verdict": "plausible",
+      "support": "The matching exact-GTIN retailer records target visible flakes and the formula contains Piroctone Olamine.",
+      "limitation": "No public product-specific protocol is captured; the formula conclusion remains ingredient-level support, not guaranteed individual efficacy.",
+      "sourceIds": [
+        "dm-de-1561902",
+        "rossmann-de-8700216558037-2026-08-23"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-1561902",
+    "rossmann-de-8700216558037-2026-08-23"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The product addresses cosmetic visible flakes; persistent or inflamed symptoms are outside this matching record."
+  }
+}

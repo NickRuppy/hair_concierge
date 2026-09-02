@@ -1,0 +1,522 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9:0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "SLES, SLS, xylene sulfonate and a secondary anionic cleanser form a strong cleanser system.",
+      "Dimethiconol, Dimethicone and cationic guar create substantial deposition.",
+      "Piroctone Olamine is present, but fragrance plus MCI/MI preservatives create sensitive-scalp caution."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "beruhigt die aus dem Gleichgewicht geratene Kopfhaut",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium lauryl sulfate",
+      "sodium xylenesulfonate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "tea-dodecylbenzenesulfonate"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethiconol",
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [
+      "panthenol",
+      "panthenyl ethyl ether"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple anionic cleanser and hydrotrope signals support strong cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "SLES, SLS and Sodium Xylenesulfonate appear before CAPB.",
+          "inference": "The cleanser system is materially stronger than gentle-positioned formulas.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Two silicones, cationic guar and pearlizing lipids provide high shampoo conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol and Dimethicone appear before the cationic polymer.",
+          "inference": "A substantial deposition system is present.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple silicones and cationic deposition create high weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol, Dimethicone and cationic guar coexist.",
+          "inference": "Fine hair may experience persistent weight.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine and dry-scalp soothing positioning create a scalp-active primary focus.",
+      "supportingSignals": [
+        {
+          "observation": "The formula contains a dandruff-relevant active and the page targets dry scalp.",
+          "inference": "Scalp-active is more defensible than a hydration-treatment claim.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "volume"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Fuller-looking, thinning-hair positioning is a secondary cosmetic focus.",
+      "supportingSignals": [
+        {
+          "observation": "The page targets thinner-looking hair in menopause.",
+          "inference": "Only cosmetic volume is inferred; hair regrowth is not.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The page permits daily use, but the strong cleanser and deposition system argue for ordinary regular rather than frequent universal use.",
+      "supportingSignals": [
+        {
+          "observation": "Daily-use directions coexist with a strong surfactant base.",
+          "inference": "Regular is the bounded role.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact retailer evidence targets dry-scalp soothing and contains a recognized scalp-active route. Strong cleansing and MCI/MI/fragrance remain explanation and fit heads-ups, not target blockers.",
+      "supportingSignals": [
+        {
+          "observation": "Exact retailer evidence targets dry-scalp soothing and contains a recognized scalp-active route. Strong cleansing and MCI/MI/fragrance remain explanation and fit heads-ups, not target blockers.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine provides a direct anti-flake route despite the absence of explicit anti-dandruff marketing.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is disclosed before the second silicone and cationic guar.",
+          "inference": "A dandruff-relevant ingredient route is present, with concentration unknown.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, official German formula source or shampoo-only scalp tolerance endpoint is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The weightBuildup score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a shineS1 contribution plausible.",
+        "g3EndpointSpecificity": "The shineS1 score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to volumeV1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a volumeV1 contribution plausible.",
+        "g3EndpointSpecificity": "The volumeV1 score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a smoothing contribution plausible.",
+        "g3EndpointSpecificity": "The smoothing score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "No dedicated finished-product residue-reset result is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact German GTIN retailer formula; no current official German formula page or product-specific soothing study captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "beruhigt die aus dem Gleichgewicht geratene Kopfhaut",
+      "verdict": "weak",
+      "support": "Piroctone Olamine and conditioning ingredients create plausible scalp and dry-hair support routes.",
+      "limitation": "Strong cleansing, fragrance, MCI/MI and no public tolerance endpoint make broad soothing language uncertain.",
+      "sourceIds": [
+        "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-hair-biology-revitalize-soothe-1588828-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Menopause, dry-scalp soothing and fuller-looking hair positioning is cosmetic; no disease diagnosis or regrowth treatment is inferred."
+  }
+}

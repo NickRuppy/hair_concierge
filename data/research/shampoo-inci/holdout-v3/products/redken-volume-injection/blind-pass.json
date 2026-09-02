@@ -1,0 +1,265 @@
+{
+  "candidate_id": "redken-volume-injection",
+  "rawInci": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • SODIUM LAURYL SULFATE • SODIUM CHLORIDE • GLYCOL DISTEARATE • HEXYLENE GLYCOL • PARFUM / FRAGRANCE • CITRIC ACID • AMINOPROPYL TRIETHOXYSILANE • SODIUM BENZOATE • SODIUM HYDROXIDE • ACRYLATES COPOLYMER • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • ALCOHOL DENAT. • POLYQUATERNIUM-30 • SALICYLIC ACID • BENZYL ALCOHOL • LINALOOL • HEXYL CINNAMAL • ALPHA-ISOMETHYL IONONE • LIMONENE (F.I.L. Z287065/1).",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium lauryl sulfate"
+    ],
+    "surfactantsSecondary": [
+      "coco-betaine"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride",
+      "polyquaternium-30"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "alcohol denat.",
+      "benzyl alcohol"
+    ],
+    "proteinsFilmFormers": [
+      "acrylates copolymer"
+    ],
+    "acids": [
+      "citric acid",
+      "salicylic acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:redken-volume-injection",
+      "formula": {
+        "inciFingerprint": "80cfb9d27d631ee32d498d326f073463f55b43c93622eabb0c0cd5836d607817",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "film_former",
+            "name": "acrylates copolymer",
+            "position": 13
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+            "position": 14
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "polyquaternium-30",
+            "position": 16
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "coco-betaine",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 4
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 6,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Acrylates Copolymer, kationisches Guar und Polyquaternium-30 liefern mehrere späte Film-/Polymerwege."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Acrylates Copolymer, kationisches Guar und Polyquaternium-30 liefern mehrere späte Film-/Polymerwege."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "moderate",
+      "whyThisBand": "Acrylates Copolymer, kationisches Guar und Polyquaternium-30 liefern mehrere späte Film-/Polymerwege.",
+      "whyNotNeighborBand": "Nicht low, weil mehrere Polymer-/Filmwege sichtbar sind; nicht high wegen starkem Reset und fehlender Silikon- oder Lipidarchitektur.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "moderate",
+      "confidence": "moderate",
+      "rationale": "Acrylates Copolymer, kationisches Guar und Polyquaternium-30 liefern mehrere späte Film-/Polymerwege."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "c9d0ff6d4f732d6c747813a3bfcbfe40b9be86294cd576a07234dad42f014c52"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "volume",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "volume",
+      "reason": "Die nach der Blindphase geprüfte Volumenpositionierung ist mit der starken, vergleichsweise leichten Reinigungsarchitektur kompatibel."
+    }
+  ],
+  "payloadHash": "683f50c854e7db1871a40b56b7459b30c4775d4b7c466874d35e6d7ac5d982ef"
+}

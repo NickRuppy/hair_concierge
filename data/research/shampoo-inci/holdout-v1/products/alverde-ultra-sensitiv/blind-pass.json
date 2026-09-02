@@ -1,0 +1,140 @@
+{
+  "candidate_id": "alverde-ultra-sensitiv",
+  "blindCode": "A",
+  "rawInci": "Aqua, Glycerin, Coco-Glucoside, Betaine, Xanthan Gum, Pentylene Glycol, Citric Acid, Caprylhydroxamic Acid.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Coco-Glucoside"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "low",
+    "conditioningLevel": "low",
+    "weightPotential": "low",
+    "focusPrimary": "gentle",
+    "focusSecondary": [
+      "general"
+    ],
+    "usageRole": "frequent",
+    "scalpComfortTarget": "targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Coco-Glucoside ist der einzige klar erkennbare Tensidträger; ohne anionische Haupttenside wirkt die Reinigung eher niedrig bis höchstens mild-moderat.",
+    "conditioningLevel": "Glycerin und Betaine können das Haut-/Haargefühl unterstützen, aber es fehlt ein plausibles Deposition-System wie kationische Polymere, Silikone oder Lipide.",
+    "weightPotential": "Es gibt kaum haar-substantive Ablagerungssignale; Xanthan Gum zählt hier primär als Rheologie-Hinweis, nicht als belegter Haarfilm.",
+    "focusPrimary": "Die minimalistische, duftfreie Glucosid-Architektur mit Feuchthalte-Komponenten spricht eher für sanfte Nutzung als für Volumen, Repair oder Klärung.",
+    "focusSecondary": "Neben dem sanften Profil bleibt nur ein allgemeiner Basis-Shampoo-Nutzen; kein zweiter starker Spezialmechanismus ist erkennbar.",
+    "usageRole": "Niedrige Reinigung, niedrige Ablagerung und keine starken Expositionssignale passen eher zu häufiger Nutzung als zu Reset- oder Kur-Einsatz.",
+    "scalpComfortTarget": "Duftfreiheit, niedrige Tensidstärke und Feuchthalte-Komponenten bilden eine plausible kosmetische Komfort-Route; Verträglichkeit ist daraus nicht bewiesen.",
+    "dandruffSupport": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole; nach der gesperrten Regel liegt keine unterstützte Anti-Schuppen-Route vor."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Sehr kurze, duftfreie Formel mit Coco-Glucoside als einzigem erkennbaren Tensid.",
+    "Glycerin, Betaine und Pentylene Glycol sind Feuchthalte-/Formelhilfen, aber keine starke Haar-Deposition.",
+    "Citric Acid ist ohne pH-Daten nur ein schwaches Säure-Signal."
+  ],
+  "counterSignals": [
+    "Coco-Glucoside kann je nach Einsatzmenge stärker reinigen als der Name allein vermuten lässt.",
+    "Ohne fertigen pH, Einsatzmengen und Anwendungshinweise bleibt die Komfort-Einstufung nur formelbasiert."
+  ],
+  "payloadHash": "57ef32030dd5de46f048d032c0db32428bb7ead85ca5f6901158ee7473893f38",
+  "finalDelta": []
+}

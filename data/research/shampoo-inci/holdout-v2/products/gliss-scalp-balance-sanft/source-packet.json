@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:gliss-scalp-balance-sanft",
+  "candidateId": "gliss-scalp-balance-sanft",
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "exactIdentity": {
+    "brand": "Schwarzkopf GLISS",
+    "name": "Scalp Balance Sanftes Shampoo",
+    "market": "DE",
+    "packSize": "200 ml",
+    "gtinAliases": [
+      "4015100893021"
+    ]
+  },
+  "selectionArchetype": "gentle scalp-comfort positioning",
+  "canonicalFormulaSourceUrl": "https://dm.henkel-dam.com/is/image/henkel/4015100893021_C7N1_S01_V01_GLISS_SHP_Scalp_Balance_Sanft_200ml_GSSS0_3066112_back-DE",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Exact German back-pack image hosted by the manufacturer wins for the exact GTIN; current dm corroboration matches.",
+  "officialClaimSummary": [
+    "Sanftes Shampoo",
+    "Feuchtigkeit & Glanz",
+    "Regelmäßig anwenden."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Primary positioning is gentle cleansing and cosmetic scalp moisture; light shine is a separate stated benefit.",
+    "Exact German back-pack directions say regular use, not specifically daily use; the retailer daily-use wording is not the authoritative cadence."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.de/p/d/3119263/schwarzkopf-gliss-shampoo-scalp-balance-sanft"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+  },
+  "notes": "Manufacturer HTML lazy-loads its ingredient panel, but the official exact-GTIN German back-pack image exposes a fully legible INCI, barcode and 200 ml size. Package transcription matches dm's exact-GTIN list. The pack image shows reference 3073444 / GSSS0; this is retained as a pack reference, not assumed to be a formula code.",
+  "officialProductPage": "https://www.schwarzkopf.de/marken/haarpflege/gliss/scalp-balance/sanftes--shampoo.html"
+}

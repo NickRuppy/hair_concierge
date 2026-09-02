@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4067796075021",
+  "formulaCode": null,
+  "capturedAt": "2026-08-22T12:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "german-drugstore-de-ultimate-volume",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-22T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Hydrolyzed Wheat Protein, Biotin, Oryza Sativa Extract, Glycerin, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Laureth-2, Parfum, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Hexyl Cinnamal, Linalyl Acetate, Sodium Benzoate.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4067796075021"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Hydrolyzed Wheat Protein, Biotin, Oryza Sativa Extract, Glycerin, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Laureth-2, Parfum, Tetramethyl Acetyloctahydronaphthalenes, Linalool, Hexyl Cinnamal, Linalyl Acetate, Sodium Benzoate",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl hydroxysultaine",
+    "sodium chloride",
+    "coco-glucoside",
+    "hydrolyzed wheat protein",
+    "biotin",
+    "oryza sativa extract",
+    "glycerin",
+    "guar hydroxypropyltrimonium chloride",
+    "citric acid",
+    "laureth-2",
+    "parfum",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "linalool",
+    "hexyl cinnamal",
+    "linalyl acetate",
+    "sodium benzoate"
+  ],
+  "inciFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-weight-correction-v3-mapping-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "products": [
+    {
+      "blindId": "W004",
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "catalogProductId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json",
+      "rawInciSha256": "8512f2847e77492733dfc6b1394fdc3d622faefd140221dc2cddbade93f394c7"
+    },
+    {
+      "blindId": "W006",
+      "candidateId": "guhl-hyaluron-plus",
+      "catalogProductId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/formula-source.json",
+      "rawInciSha256": "4efc223d59cb6d05a123e2fa5b82af90bfca8cda42b7ff22e47af7ff8402de8e"
+    },
+    {
+      "blindId": "W027",
+      "candidateId": "ogx-rosemary",
+      "catalogProductId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/ogx-rosemary/formula-source.json",
+      "rawInciSha256": "a57458150c0b84d997cd2759daf34f54a4454d459012d72dfbc0d6f39524b345"
+    },
+    {
+      "blindId": "W032",
+      "candidateId": "hair-biology-revitalize-soothe",
+      "catalogProductId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "sourcePath": "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/formula-source.json",
+      "rawInciSha256": "d6c214a90f008ef27d20cd8f9162c86b4b50370fc163bdedac02baaa76f04169"
+    }
+  ]
+}

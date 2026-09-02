@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4005800036736",
+  "formulaCode": null,
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.dm.de/p/d/3087005/eucerin-eucerin-dermo-capillaire-ph5-shampoo",
+      "rawInci": "Aqua, Sorbitol, Sodium Myreth Sulfate, Sodium Laureth Sulfate, Sodium Cocoamphoacetate, PEG-120 Methyl Glucose Dioleate, Sodium Chloride, PEG-40 Hydrogenated Castor Oil, Panthenol, Polyquaternium-10, Citric Acid, Anise Alcohol, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, Hexyl Cinnamal, Linalool, Benzyl Salicylate, Parfum.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4005800036736"
+    },
+    {
+      "id": "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-corroborating-2026-09-01",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:27:52+02:00",
+      "locator": "https://www.shop-apotheke.com/beauty/9508071/eucerin-dermocapillaire-ph5-shampoo.htm",
+      "rawInci": "Aqua, Sorbitol, Sodium Myreth Sulfate, Sodium Laureth Sulfate, Sodium Cocoamphoacetate, PEG-120 Methyl Glucose Dioleate, Sodium Chloride, PEG-40 Hydrogenated Castor Oil, Panthenol, Polyquaternium-10, Citric Acid, Anise Alcohol, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, Hexyl Cinnamal, Linalool, Benzyl Salicylate, Parfum.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4005800036736"
+    }
+  ],
+  "rawInci": "Aqua, Sorbitol, Sodium Myreth Sulfate, Sodium Laureth Sulfate, Sodium Cocoamphoacetate, PEG-120 Methyl Glucose Dioleate, Sodium Chloride, PEG-40 Hydrogenated Castor Oil, Panthenol, Polyquaternium-10, Citric Acid, Anise Alcohol, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, Hexyl Cinnamal, Linalool, Benzyl Salicylate, Parfum.",
+  "normalizedInci": [
+    "aqua",
+    "sorbitol",
+    "sodium myreth sulfate",
+    "sodium laureth sulfate",
+    "sodium cocoamphoacetate",
+    "peg-120 methyl glucose dioleate",
+    "sodium chloride",
+    "peg-40 hydrogenated castor oil",
+    "panthenol",
+    "polyquaternium-10",
+    "citric acid",
+    "anise alcohol",
+    "hydroxyisohexyl 3-cyclohexene carboxaldehyde",
+    "hexyl cinnamal",
+    "linalool",
+    "benzyl salicylate",
+    "parfum"
+  ],
+  "inciFingerprint": "e414eaec790404e800d55eb57761815fc5e0cf648b627cd36bd88265668e1148",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

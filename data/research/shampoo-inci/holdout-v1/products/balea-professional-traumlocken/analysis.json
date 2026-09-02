@@ -1,0 +1,544 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:balea-professional-traumlocken:2c81ceef174f7a336e145f7fe5b68dba839a1524ba080ea4ec9b9f6ba2a064d8",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+      "Eine breite Lipid-/Öl-/Butterroute plus kationischer Guar und Hydrolyzed Keratin stützt hohe Shampoo-Pflege.",
+      "Disodium EDTA ist vorhanden, aber ohne Reset-/Chelation-Positionierung nur ein schwaches Chelator-Signal."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Traumlocken / Lockenpflege",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Glycol Distearate",
+      "PEG-4 Rapeseedamide",
+      "Glyceryl Oleate",
+      "Butyrospermum Parkii Butter",
+      "Triticum Vulgare Germ Oil",
+      "Camellia Oleifera Seed Oil",
+      "Caprylic/Capric Triglyceride",
+      "Cetearyl Nonanoate",
+      "Hydrogenated Castor Oil",
+      "Linoleic Acid"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Keratin",
+      "Triticum Vulgare Bran Extract",
+      "Triticum Vulgare Germ Extract"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Benzoic Acid"
+    ],
+    "chelators": [
+      "Disodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES/CAPB mit Glucosid reicht für moderate Reinigung, wird aber durch die reiche Pflegearchitektur relativiert.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet cleansingStrength=moderate.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Mehrere Lipide/Öle/Butter, Glyceryl Oleate, kationischer Guar und Hydrolyzed Keratin ergeben hohe Shampoo-Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet conditioningLevel=high.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die viele Pflege ist relevant, aber SLES-basierte Reinigung und Rinse-off-Format halten die direkte Eigenschaft bei moderat.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet weightPotential=moderate.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die stärkste Formelrichtung ist Schutz/Oberflächenpflege für strukturierte oder trockene Längen, also repair.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet focusPrimary=repair.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die gleiche Glätte-/Lipidroute unterstützt Shine als zweiten Fokus.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet focusSecondary=shine.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Kein Reset- oder Anti-Schuppen-Wirkstoff; die Pflegearchitektur passt zu regulärer Nutzung.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet usageRole=regular.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine dedizierte Kopfhautkomfort-Route ist sichtbar.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet scalpComfortTarget=not_targeted.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside liefern moderate Reinigung.",
+          "inference": "Diese Formelstütze begründet dandruffSupport=not_supported.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      4
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt cleansing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt conditioningDeposition begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt weightBuildup begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt smoothing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "repairR2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt mildnessPotential begrenzt und wird nicht auf benachbarte Claims übertragen."
+      }
+    },
+    "weightDepositionLoad": "Hoch: mehrere Lipide/Öle/Butter plus kationischer Guar und Proteinfilm.",
+    "weightPersistence": "Mittel: öl-/lipidreiche Pflege kann bei wiederholter Nutzung wahrnehmbar bleiben.",
+    "weightResetCapacity": "Mittel: SLES-basierte Reinigung begrenzt, aber eliminiert Gewicht nicht.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Hydrolyzed Keratin stützt Oberfläche/Film, aber keine bond-spezifische Reparatur.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market INCI plus post-unblinding claim audit; no independently reviewable finished-product shampoo performance dataset is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Curl-care / Traumlocken",
+      "verdict": "plausible",
+      "support": "Die reichere Lipid-, Refatting- und Keratin/Guar-Architektur passt mechanistisch zu Glätte, Bündelung und weniger rauem Griff bei Locken.",
+      "limitation": "Rinse-off-Formel und fehlende Locken-Testdaten begrenzen die Aussage; hohe Pflege kann feines Haar beschweren.",
+      "sourceIds": [
+        "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Locken-/Pflegekommunikation ohne medizinischen Kopfhautanspruch."
+  }
+}

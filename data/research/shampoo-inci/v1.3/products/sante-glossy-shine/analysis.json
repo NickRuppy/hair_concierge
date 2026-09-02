@@ -1,0 +1,531 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb:6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Sodium Coco-Sulfate leads a glucoside-supported cleanser system.",
+      "Three hydrolyzed proteins appear together before the preservative/refatting tail, supporting a deliberate film-forming complex without proving permanent repair.",
+      "Glyceryl Oleate, Betaine, PCA Glyceryl Oleate and lipid derivatives provide light conditioning; no silicone is present.",
+      "Phytic Acid is a chelation cue, but its position and absent removal test keep clarification low."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "glättet die Oberflächenstruktur des Haares für mehr Glanz & Geschmeidigkeit bis in die Spitzen.",
+      "sourceLocation": "product_page",
+      "scope": "multi_product",
+      "sourceIds": [
+        "sante-de-4060702"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium coco-sulfate",
+      "lauryl glucoside",
+      "coco-glucoside"
+    ],
+    "surfactantsSecondary": [
+      "pca ethyl cocoyl arginate"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glyceryl oleate",
+      "betaine",
+      "pca glyceryl oleate",
+      "hydrogenated palm glycerides citrate",
+      "lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed corn protein",
+      "hydrolyzed wheat protein",
+      "hydrolyzed soy protein"
+    ],
+    "acids": [
+      "citric acid",
+      "phytic acid",
+      "levulinic acid"
+    ],
+    "chelators": [
+      "phytic acid"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A regular moderate cleanser is plausible. No active-matter or comparative cleansing result is public.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Coco-Sulfate is supported by Lauryl and Coco Glucoside.",
+          "inference": "A regular moderate cleanser is plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No active-matter or comparative cleansing result is public.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Temporary film and light slip are plausible. No silicone, cationic polymer or shampoo-only combing test is captured.",
+      "supportingSignals": [
+        {
+          "observation": "Three hydrolyzed proteins plus glyceryl/PCA glyceryl oleate and lipid derivatives are present.",
+          "inference": "Temporary film and light slip are plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone, cationic polymer or shampoo-only combing test is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Low expected weight is plausible. Protein/lipid concentrations and repeat-use persistence are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "Deposition cues are proteins and light lipid derivatives rather than heavy coaters.",
+          "inference": "Low expected weight is plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Protein/lipid concentrations and repeat-use persistence are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Temporary surface shine positioning is plausible. The disclosed expert test combines shampoo and conditioner.",
+      "supportingSignals": [
+        {
+          "observation": "Three hydrolyzed proteins and refatting ingredients form a coherent surface route.",
+          "inference": "Temporary surface shine positioning is plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The disclosed expert test combines shampoo and conditioner.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "repair"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Temporary surface reinforcement is plausible. No shampoo-only breakage or structural-repair endpoint is captured.",
+      "supportingSignals": [
+        {
+          "observation": "Hydrolyzed corn, wheat and soy proteins form a deliberate complex.",
+          "inference": "Temporary surface reinforcement is plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No shampoo-only breakage or structural-repair endpoint is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A regular wash role is plausible. Repeat-use protein feel and individual cadence are untested.",
+      "supportingSignals": [
+        {
+          "observation": "Moderate cleansing is balanced by light film/refatting cues.",
+          "inference": "A regular wash role is plausible.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Repeat-use protein feel and individual cadence are untested.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "sante-de-4060702"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "sante-de-4060702",
+            "dm-de-1334046"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent shineS1 cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E4",
+    "tests": [
+      {
+        "endpoint": "Expert-assessed performance for the Shampoo + Conditioner system; standalone shampoo result unavailable.",
+        "scope": "multi_product",
+        "sourceIds": [
+          "sante-de-4060702"
+        ]
+      }
+    ],
+    "scopeNotes": "The expert test is routine-level; direct shampoo properties remain formula-bounded."
+  },
+  "claimAudit": [
+    {
+      "claim": "glättet die Oberflächenstruktur des Haares für mehr Glanz & Geschmeidigkeit bis in die Spitzen.",
+      "verdict": "plausible",
+      "support": "The exact formula has protein film-formers and light refatting agents consistent with temporary surface smoothing.",
+      "limitation": "The disclosed expert test is Shampoo + Conditioner, so shampoo-only gloss, combing and smoothing effects cannot be isolated.",
+      "sourceIds": [
+        "sante-de-4060702",
+        "dm-de-1334046"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "sante-de-4060702",
+    "dm-de-1334046"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The product makes cosmetic shine, smoothness and strength-positioning claims without a medical claim."
+  }
+}

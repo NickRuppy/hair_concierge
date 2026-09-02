@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:nivea-classic-care",
+  "candidateId": "nivea-classic-care",
+  "capturedAt": "2026-08-26T21:30:00.000+02:00",
+  "exactIdentity": {
+    "brand": "NIVEA",
+    "name": "Classic Care Mildes Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": ["4006000192345"]
+  },
+  "selectionArchetype": "classic mild daily care with shine claim",
+  "canonicalFormulaSourceUrl": "https://www.nivea.de/produkte/classic-care-mildes-shampoo-250ml-40060001923450001.html",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "The current German NIVEA manufacturer page exposes exact GTIN, 250 ml pack size and complete INCI, so it is canonical. The exact-GTIN dm page corroborates the same INCI.",
+  "officialClaimSummary": [
+    "Classic Care Mildes Shampoo for healthy shine.",
+    "Milde, pH-optimierte Reinigung with Baumwollsamen-Öl for scalp and hair.",
+    "Silicone-free, microplastic-free formula under UNEP definition and without animal-derived ingredients according to NIVEA."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Claim direction is gentle/general classic care with shine support.",
+    "No deep-cleansing, reset-only or treatment-only usage language."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.de/p/d/1620923/nivea-shampoo-classic-care"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "NIVEA and dm position this as a classic mild care shampoo, not as Tiefenreinigung or occasional reset."
+  },
+  "notes": "Manifest should be corrected from manufacturer_formula_status unavailable to available."
+}

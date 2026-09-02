@@ -1,0 +1,530 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:alverde-nutri-care:05bbbca8881b1ffa973aa86ef21db280a455796ccd8577fffc251c155b1365ab",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Lauryl Glucoside and Coco-Glucoside precede Sodium Coco-Sulfate.",
+      "Sucrose, Glycerin and Sorbitol create a notable humectant/sugar matrix.",
+      "Glyceryl Oleate, lecithin and hydrogenated palm glycerides citrate provide refatting or lipid-like support.",
+      "Hydrolyzed Wheat Protein and Inulin provide weak film/body support.",
+      "No cationic polymer, silicone, chelator or recognized anti-dandruff active is listed."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Pflegendes Shampoo für strapaziertes Haar; mit Bio-Mandel-Extrakt und Arginin; zertifizierte Naturkosmetik, vegan, ohne Silikone.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Lauryl Glucoside",
+      "Coco-Glucoside",
+      "Sodium Coco-Sulfate"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Wheat Protein",
+      "Inulin"
+    ],
+    "acids": [
+      "Levulinic Acid",
+      "p-Anisic Acid",
+      "Benzoic Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Lauryl/Coco-Glucoside führen, Sodium Coco-Sulfate ergänzt effizient; das spricht für moderate Reinigung mit oberer Bandbreite, aber nicht für Reset/Clarifying.",
+      "supportingSignals": [
+        {
+          "observation": "Glucoside führen die Tensidbasis, Sodium Coco-Sulfate liefert zusätzliche anionische Reinigungsleistung.",
+          "inference": "Lauryl/Coco-Glucoside führen, Sodium Coco-Sulfate ergänzt effizient; das spricht für moderate Reinigung mit oberer Bandbreite, aber nicht für Reset/Clarifying.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Sodium Coco-Sulfate verhindert eine sichere low/mild-Reinigungsklasse.",
+          "inference": "Sodium Coco-Sulfate verhindert eine sichere low/mild-Reinigungsklasse.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glyceryl Oleate, Lecithin, Hydrogenated Palm Glycerides Citrate, Inulin und Hydrolyzed Wheat Protein liefern moderate leichte Pflege, ohne starke kationische oder silikonische Deposition.",
+      "supportingSignals": [
+        {
+          "observation": "Glyceryl Oleate, Lecithin und Hydrolyzed Wheat Protein stützen leichte bis moderate Pflege ohne kationische Bridge.",
+          "inference": "Glyceryl Oleate, Lecithin, Hydrogenated Palm Glycerides Citrate, Inulin und Hydrolyzed Wheat Protein liefern moderate leichte Pflege, ohne starke kationische oder silikonische Deposition.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ohne cationic polymer oder Silikon bleibt die Deposition nicht hoch.",
+          "inference": "Ohne cationic polymer oder Silikon bleibt die Deposition nicht hoch.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es gibt keine substantive Polymer- oder Silikonroute; mehrere schwache Refatting-, Humectant- und Film-Signale reichen nach v1.4 für moderates, nicht hohes Gewicht.",
+      "supportingSignals": [
+        {
+          "observation": "Mehrere schwache Refatting-/Film-/Humectant-Routen können leichten Rückstand erzeugen.",
+          "inference": "Es gibt keine substantive Polymer- oder Silikonroute; mehrere schwache Refatting-, Humectant- und Film-Signale reichen nach v1.4 für moderates, nicht hohes Gewicht.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Glyceryl Oleate und Protein sind eher spät/leicht und nicht mit einer starken Depositionstechnologie gekoppelt.",
+          "inference": "Glyceryl Oleate und Protein sind eher spät/leicht und nicht mit einer starken Depositionstechnologie gekoppelt.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nutri-Care und strapaziertes Haar wählen Repair/Pflege als Fokus; die Formel stützt das nur als temporäre kosmetische Oberfläche über Protein und Refatting.",
+      "supportingSignals": [
+        {
+          "observation": "Strapaziertes-Haar-/Nutri-Care-Positionierung passt zu temporärer Repair-/Pflegeunterstützung.",
+          "inference": "Nutri-Care und strapaziertes Haar wählen Repair/Pflege als Fokus; die Formel stützt das nur als temporäre kosmetische Oberfläche über Protein und Refatting.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Der Arginin-Claim ist in der erfassten INCI nicht als freies Arginin sichtbar, daher wird Repair nicht hoch belegt.",
+          "inference": "Der Arginin-Claim ist in der erfassten INCI nicht als freies Arginin sichtbar, daher wird Repair nicht hoch belegt.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Naturkosmetik/vegan/silikonfrei sind keine eigenständigen Fokuswerte, und Glanz/Volumen/Scalp sind nicht separat belegt; secondary bleibt leer.",
+      "supportingSignals": [
+        {
+          "observation": "Kein separater zweiter Claim erfüllt die v1.4-Drei-Bedingungen.",
+          "inference": "Naturkosmetik/vegan/silikonfrei sind keine eigenständigen Fokuswerte, und Glanz/Volumen/Scalp sind nicht separat belegt; secondary bleibt leer.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Mandel-Extrakt ist ein Hero-/Botanical-Signal, aber keine unabhängige Fokusroute.",
+          "inference": "Mandel-Extrakt ist ein Hero-/Botanical-Signal, aber keine unabhängige Fokusroute.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine Quelle nennt tägliche Pflichtnutzung, Reset, Tiefenreinigung oder einen anerkannten Wirkstoff-Problemfall; regular bleibt default.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle zeigt eine normale Rinse-off-Shampoo-Rolle.",
+          "inference": "Keine Quelle nennt tägliche Pflichtnutzung, Reset, Tiefenreinigung oder einen anerkannten Wirkstoff-Problemfall; regular bleibt default.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Moderate Mildness-Signale allein sind kein frequent-use Trigger.",
+          "inference": "Moderate Mildness-Signale allein sind kein frequent-use Trigger.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die unblindeten Claims nennen strapaziertes Haar, nicht Kopfhautkomfort; deshalb wird das vorherige unknown zu not_targeted, ohne eine Ungeeignetheit abzuleiten.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle positioniert Haarpflege, nicht trockene, juckende oder sensitive Kopfhaut.",
+          "inference": "Die unblindeten Claims nennen strapaziertes Haar, nicht Kopfhautkomfort; deshalb wird das vorherige unknown zu not_targeted, ohne eine Ungeeignetheit abzuleiten.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum ist vorhanden, aber fragrance allein begründet keine Ungeeignetheit und auch kein Komforttarget.",
+          "inference": "Parfum ist vorhanden, aber fragrance allein begründet keine Ungeeignetheit und auch kein Komforttarget.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die komplette Formel enthält weder Piroctone Olamine noch Climbazole; Naturkosmetik- oder Pflegeclaims ändern diese Formelregel nicht.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen in der vollständigen INCI.",
+          "inference": "Die komplette Formel enthält weder Piroctone Olamine noch Climbazole; Naturkosmetik- oder Pflegeclaims ändern diese Formelregel nicht.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Lose trockene Schuppen wären ein Fit-Thema, kein Anti-Schuppen-Support.",
+          "inference": "Lose trockene Schuppen wären ein Fit-Thema, kein Anti-Schuppen-Support.",
+          "sourceIds": [
+            "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Residue: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Residue: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Beschwerung/Residue: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      }
+    },
+    "weightDepositionLoad": "Die Beschwerung wird qualitativ aus v1.4-Route-Arten abgeleitet; INCI liefert keine exakten Einsatzmengen oder Wiederholungs-/Residue-Daten.",
+    "weightPersistence": "Persistenz bleibt mechanistisch begrenzt, weil keine wiederholten Shampoo-only Ablagerungsdaten im Quellenpaket vorliegen.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Chelator-/Klärungsarchitektur abgeleitet; keine Fertigprodukt-Resetprüfung ist erfasst.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine anerkannte echte Bond-Repair-Route wird aus INCI abgeleitet; Plex/Keratin/Protein-Sprache bleibt kosmetisch und temporär.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and unblinded product/source-packet claim audit only; no public shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Pflege für strapaziertes Haar mit Bio-Mandel-Extrakt und Arginin",
+      "verdict": "weak",
+      "support": "Die Formel enthält Hydrolyzed Wheat Protein, Glyceryl Oleate, Inulin und Lipid-/Lecithin-Signale, die leichte temporäre Pflege für strapaziertes Haar plausibel machen.",
+      "limitation": "Die erfasste INCI zeigt kein freies Arginin; ohne kationische Polymer-/Silikonroute bleibt der Repair-Claim kosmetisch schwach bis plausibel, nicht stark belegt.",
+      "sourceIds": [
+        "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-alverde-nutri-care-4066447975284-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Damaged-hair/nutri-care positioning is cosmetic hair care and does not claim scalp disease treatment."
+  }
+}

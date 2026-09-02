@@ -1,0 +1,2043 @@
+{
+  "schemaVersion": "shampoo-catalog-spec-snapshot-v1",
+  "sourceProjectId": "pqdkhefxsxkyeqelqegq",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "cohortHash": "b6849896d32c9973c97fa12f3ef91f6fe916d092dfd86c77d5141fc72e5c3141",
+  "products": [
+    {
+      "catalogProductId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "candidateId": "guhl-kopfhaut-sensitive",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Guhl Kopfhaut Sensitive",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 193
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "candidateId": "salthouse-anti-fett",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Salthouse Anti Fett",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 182
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "clarifying"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "clarifying"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse",
+          "fine"
+        ],
+        "sortOrder": 168
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "gentle"
+        },
+        {
+          "thickness": "fine",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse",
+          "fine"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Wahre Schätze Sanfte Hafermilch",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 204
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "candidateId": "langhaarmaedchen-beautiful-curls",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Langhaarmädchen Beautiful Curls Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 213
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "candidateId": "guhl-hyaluron-plus",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Guhl Hyaluron+",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 180
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "candidateId": "hask-argan-oil",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Hask Shampoo Argan Oil",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 215
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "candidateId": "salthouse-anti-juckreiz",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Salthouse Anti Juckreiz",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 170
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "candidateId": "dejan-garz-shampoo",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Dejan Garz Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 181
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "candidateId": "salthouse-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Salthouse Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 165
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "candidateId": "ogx-renewing",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 196
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "candidateId": "sebamed-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sebamed Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 166
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "candidateId": "lavera-basis-sensitiv",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Lavera Basis Sensitiv",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 194
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "candidateId": "ogx-biotin-collagen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Biotin & Collagen Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 175
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "candidateId": "syoss-intense-curls",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Syoss Intense Curls",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 212
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "candidateId": "swiss-o-par-teebaumol",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Swiss-O-Par Teebaumöl",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 184
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "candidateId": "sebamed-urea-5",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sebamed Urea 5%",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 171
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        },
+        {
+          "thickness": "fine",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "irritationen",
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry",
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "candidateId": "sante-glossy-shine",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sante Glossy Shine",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 197
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "candidateId": "pantene-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Pantene Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 189
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "candidateId": "neqi-volume-victory",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Neqi Volume Victory",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 176
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "candidateId": "sante-sensitive-care",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sante Sensitive Care",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 209
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "candidateId": "monday-volume-kraft-fuelle",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse",
+          "normal"
+        ],
+        "sortOrder": 201
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        },
+        {
+          "thickness": "normal",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse",
+          "normal"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "candidateId": "pantene-pro-v-volumen-pur",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Pantene Pro-V Volumen Pur",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 183
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "candidateId": "head-shoulders-sensitive",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Head & Shoulders Anti Schuppen Sensitive",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 206
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "candidateId": "pantene-grow-abundance",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Pantene Grow Abundance",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 174
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "744de604-d266-453b-a56b-eea92c5ca565",
+      "candidateId": "guhl-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Guhl Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 191
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "candidateId": "ogx-rosemary",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Rosemary Mint Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 202
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "clarifying"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "clarifying"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "candidateId": "sebamed-anti-schuppen-plus",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sebamed Anti Schuppen Plus",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 185
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "candidateId": "loreal-elvital-glycolic-gloss",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Ultimate Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": false,
+        "suitableThicknesses": [
+          "coarse",
+          "fine",
+          "normal"
+        ],
+        "sortOrder": 0
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        },
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        },
+        {
+          "thickness": "normal",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse",
+          "fine",
+          "normal"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "candidateId": "guhl-kraft-und-fuelle",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Guhl Kraft & Fülle",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 200
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "candidateId": "schauma-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Schauma Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 190
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "candidateId": "hair-biology-revitalize-soothe",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Hair Biology Revitalize & Soothe",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 205
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "candidateId": "cantu-locken-pflege",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Cantu Shampoo Locken Pflege",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 210
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "candidateId": "balea-ultra-sensitive",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea Ultra Sensitive",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 173
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "candidateId": "neqi-moisture-mystery",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Neqi Moisture Mystery",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine",
+          "normal"
+        ],
+        "sortOrder": 187
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        },
+        {
+          "thickness": "normal",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine",
+          "normal"
+        ],
+        "shampooBuckets": [
+          "normal",
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "balanced",
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "candidateId": "balea-2-in-1-urea-5",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea 2 in 1 Urea 5%",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 188
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "candidateId": "syoss-intense-fullness-shampoo",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Syoss Intense Fullness Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": false,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 0
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "candidateId": "ogx-keratin-oil",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Keratin Oil Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 214
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "candidateId": "hask-curl-care",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Hask Curl Care Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 211
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "candidateId": "guhl-frische-und-leichtigkeit",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Guhl Frische und Leichtigkeit",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 199
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "dehydriert-fettig",
+          "scalpRoute": "oily",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "dehydriert-fettig"
+        ],
+        "scalpRoutes": [
+          "oily"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "candidateId": "balea-professional-ultimate-volume",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea Professional Ultimate Volume",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 179
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "coarse"
+        ],
+        "sortOrder": 208
+      },
+      "specRows": [
+        {
+          "thickness": "coarse",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "coarse"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "candidateId": "langhaarmadchen-lovely-long",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Langhaarmädchen Lovely Long",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 195
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "candidateId": "sebamed-every-day-shampoo",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Sebamed Every-Day Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 172
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "candidateId": "balea-aqua-hyaluron",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea Aqua Hyaluron",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 178
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "candidateId": "balea-kopfhaut-sensitive",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea Kopfhaut Sensitive Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 192
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "irritationen",
+          "scalpRoute": "irritated",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "irritationen"
+        ],
+        "scalpRoutes": [
+          "irritated"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "candidateId": "nivea-shampoo-conditioner-2in1",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Nivea Shampoo&Conditioner 2in1",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "normal"
+        ],
+        "sortOrder": 203
+      },
+      "specRows": [
+        {
+          "thickness": "normal",
+          "shampooBucket": "trocken",
+          "scalpRoute": "dry",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "normal"
+        ],
+        "shampooBuckets": [
+          "trocken"
+        ],
+        "scalpRoutes": [
+          "dry"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "candidateId": "balea-med-anti-schuppen",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Balea Med Anti Schuppen",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 167
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "schuppen",
+          "scalpRoute": "dandruff",
+          "cleansingIntensity": "regular"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "schuppen"
+        ],
+        "scalpRoutes": [
+          "dandruff"
+        ],
+        "cleansingIntensities": [
+          "regular"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+      "candidateId": "ogx-renewing-argan-oil-of-morocco-renewing-argan-oil-of-morocco-shampoo",
+      "releaseOutcome": "blocked",
+      "baselineState": "blocked_release_member",
+      "product": {
+        "name": "OGX Renewing Argan Oil of Morocco Renewing Argan Oil of Morocco Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": false,
+        "lifecycleStatus": "discontinued",
+        "isChaarlieRecommended": false,
+        "suitableThicknesses": [
+          "coarse",
+          "fine",
+          "normal"
+        ],
+        "sortOrder": 0
+      },
+      "specRows": [],
+      "currentValues": {
+        "thicknesses": [],
+        "shampooBuckets": [],
+        "scalpRoutes": [],
+        "cleansingIntensities": []
+      }
+    },
+    {
+      "catalogProductId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "candidateId": "syoss-intense-volume-shampoo",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Syoss Intense Volume Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": false,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 0
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    },
+    {
+      "catalogProductId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "candidateId": "pantene-hydra-glow",
+      "releaseOutcome": "approved",
+      "baselineState": "available",
+      "product": {
+        "name": "Pantene Hydra Glow Shampoo",
+        "categoryKey": "shampoo",
+        "isActive": true,
+        "lifecycleStatus": "active",
+        "isChaarlieRecommended": true,
+        "suitableThicknesses": [
+          "fine"
+        ],
+        "sortOrder": 177
+      },
+      "specRows": [
+        {
+          "thickness": "fine",
+          "shampooBucket": "normal",
+          "scalpRoute": "balanced",
+          "cleansingIntensity": "gentle"
+        }
+      ],
+      "currentValues": {
+        "thicknesses": [
+          "fine"
+        ],
+        "shampooBuckets": [
+          "normal"
+        ],
+        "scalpRoutes": [
+          "balanced"
+        ],
+        "cleansingIntensities": [
+          "gentle"
+        ]
+      }
+    }
+  ],
+  "diagnostics": {
+    "missingProductIds": [],
+    "missingSpecProductIds": [],
+    "blockedWithoutSpecs": [
+      "f41badc9-16e3-41c1-ab6c-23541fffade0"
+    ]
+  },
+  "capturedAt": "2026-08-26T14:39:35.396Z",
+  "snapshotHash": "0683ba88d0b2ff26968eca6a0da7ceb7f56e4b2e1e60f9f6c828880a3ed17b6a"
+}

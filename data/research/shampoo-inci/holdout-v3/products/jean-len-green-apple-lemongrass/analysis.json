@@ -1,0 +1,490 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4",
+  "formulaVersionId": "holdout-v3:jean-len-green-apple-lemongrass:8755309ec6151b02543c86892ca6fefa8ec7fc7d121c36fd7218d30a207a86f8",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "quick-oily-hair direction; fresh/clarifying direction",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-claim-de-jean-len-green-apple-lemongrass-2026-09-01"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "dicaprylyl ether",
+      "lauryl alcohol",
+      "citrus aurantium peel oil"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES und CAPB bilden eine gewöhnliche bis frisch wirkende, nicht breit stark-resetende Reinigungsbasis.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "SLES und CAPB bilden eine gewöhnliche bis frisch wirkende, nicht breit stark-resetende Reinigungsbasis.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Panthenol, PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar stützen moderate Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Panthenol, PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar stützen moderate Pflege.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Leichte späte Ablagerungswege und adäquater Reset lassen low erwarten.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Leichte späte Ablagerungswege und adäquater Reset lassen low erwarten.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "weightPotential-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die nach der Blindphase geprüfte Schnell-fettend-/Fresh-Positionierung ist mit leichter SLES/CAPB-Architektur als clarifying kompatibel, ohne Tiefenreinigung zu behaupten.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die nach der Blindphase geprüfte Schnell-fettend-/Fresh-Positionierung ist mit leichter SLES/CAPB-Architektur als clarifying kompatibel, ohne Tiefenreinigung zu behaupten.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusPrimary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusSecondary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Oily/Fresh-Positionierung löst ohne starke Reinigung oder Periodic-Reset-Intent keinen Alternating-Trigger aus.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Oily/Fresh-Positionierung löst ohne starke Reinigung oder Periodic-Reset-Intent keinen Alternating-Trigger aus.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "usageRole-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine gezielte kosmetische Kopfhautkomfort-Positionierung ist vorhanden; Duft- und ätherische Öl-Exposition sind Gegenzeichen.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Keine gezielte kosmetische Kopfhautkomfort-Positionierung ist vorhanden; Duft- und ätherische Öl-Exposition sind Gegenzeichen.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      }
+    },
+    "weightDepositionLoad": "Qualitative whole-formula Einordnung ohne Konzentrations- oder Wiederholungsdaten.",
+    "weightPersistence": "Persistenz wird mechanistisch aus der Gesamtarchitektur, nicht aus Routenzählung abgeleitet.",
+    "weightResetCapacity": "Reset-Kapazität wird qualitativ aus der Tensidarchitektur abgeleitet.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Leistung wird aus INCI abgeleitet.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exaktmarktformel und getrennte Quellenpaket-Reconciliation; keine shampoo-only Leistungsprüfung."
+  },
+  "claimAudit": [
+    {
+      "claim": "quick-oily-hair direction; fresh/clarifying direction",
+      "verdict": "plausible",
+      "support": "Die Positionierung wurde erst nach der Formelpass-Reconciliation berücksichtigt.",
+      "limitation": "INCI liefert keine Konzentrationen oder garantierte Endproduktwirkung.",
+      "sourceIds": [
+        "official-claim-de-jean-len-green-apple-lemongrass-2026-09-01"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-de-jean-len-green-apple-lemongrass-4262401738944-2026-09-01",
+    "official-claim-de-jean-len-green-apple-lemongrass-2026-09-01"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Haarpflege ohne medizinische Diagnose- oder Therapiezusage."
+  }
+}

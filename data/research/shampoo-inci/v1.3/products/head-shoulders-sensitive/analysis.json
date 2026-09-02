@@ -1,0 +1,553 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f:048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "The current German Head & Shoulders manufacturer page is treated as the canonical INCI source for this exact Sensitive Kopfhaut variant; the older dm exact-GTIN INCI is retained as provenance/discrepancy context only.",
+      "The canonical formula contains Piroctone Olamine, so dandruff support and treatment usage role are formula-supported.",
+      "Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, and Cocamide MEA create an efficient cleansing base, while Dimethiconol, Dimethicone, cationic guar, and Glycol Distearate add a visible conditioning/deposition route."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Pirocton-Olamin wirkt gezielt gegen Schuppen, Fettigkeit und schuppenbedingten Juckreiz",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-head-shoulders-sensitive-2026-08-10"
+      ]
+    },
+    {
+      "textVerbatim": "Alle Head & Shoulders Shampoos enthalten Pirocton-Olamin",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "official-head-shoulders-ingredients-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "Sodium Xylenesulfonate",
+      "Cocamidopropyl Betaine"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MEA"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethiconol",
+      "Dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Acetic Acid",
+      "Sodium Citrate"
+    ],
+    "chelators": [
+      "Tetrasodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The current manufacturer INCI uses an early SLES/xylene sulfonate/CAPB/Cocamide MEA architecture, so strong regular cleansing is the pragmatic database call.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, and Cocamide MEA appear in the first part of the canonical manufacturer INCI.",
+          "inference": "Efficient cleansing is plausible and should drive the direct product property.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "sles-xylene-cleansing"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, deposition level, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no treatment performance is inferred.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "sles-xylene-cleansing"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dimethiconol and Dimethicone, plus cationic guar and Glycol Distearate, move the product from light to moderate conditioning for a shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol and Dimethicone are present in the canonical INCI alongside Guar Hydroxypropyltrimonium Chloride and Glycol Distearate.",
+          "inference": "A moderate slip/deposition route is plausible, though this is still a shampoo rather than a conditioner.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "silicone-conditioning",
+            "light-conditioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The cleansing base remains strong and the public INCI does not provide exact deposition level or finished-product test data.",
+          "inference": "Conditioning should not be classified as high.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "silicone-conditioning",
+        "light-conditioning"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The silicone/cationic deposition route creates real weight potential, but the strong cleanser base and shampoo format keep it below high.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol, Dimethicone, cationic guar, and Glycol Distearate are present.",
+          "inference": "Some buildup or heavier feel is plausible, especially for fine hair or frequent use.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "silicone-deposition",
+            "moderate-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The formula also has a strong SLES/xylene sulfonate cleanser base.",
+          "inference": "The cleanser base gives reset capacity, so weight potential should not be treated as high.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "silicone-deposition",
+        "moderate-deposition"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine provides a direct scalp-active formula route; anti-dandruff marketing is kept as context, not as the primary evidence.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is present in the canonical manufacturer INCI.",
+          "inference": "Primary focus is scalp-active; medical profile handling remains a separate matching safeguard.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "piroctone-olamine-scalp-active"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentration and finished-product treatment performance are not public.",
+          "inference": "The product property is scalp-active, not a medical efficacy statement.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "piroctone-olamine-scalp-active"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary focus is needed beyond scalp-active; sensitive-scalp targeting is captured by scalpComfortTarget and conditioning is captured separately.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence establishes scalp-active as the main direction and does not require a second focus tag for the same evidence.",
+          "inference": "The secondary-focus value is intentionally empty and complete.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine supports a treatment usage role; this remains a cosmetic product classification for healthy/scalp-concern profiles.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is explicit in the canonical manufacturer INCI and the product is positioned as anti-dandruff.",
+          "inference": "The conventional active route supports a treatment usage role.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24",
+            "dm-head-shoulders-sensitive-2026-08-10"
+          ],
+          "mechanismIds": [
+            "anti-dandruff-treatment-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact concentrations, finished pH, and shampoo-only performance tests are not public.",
+          "inference": "Formula-only confidence remains capped and no medical treatment performance is inferred.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24",
+        "dm-head-shoulders-sensitive-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "anti-dandruff-treatment-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact product is positioned for sensitive scalp and includes scalp-care/support ingredients such as Piroctone Olamine, Niacinamide, Panthenol, Aloe, and Glycerin. Strong cleansing affects profile fit, but does not erase the target.",
+      "supportingSignals": [
+        {
+          "observation": "The canonical manufacturer INCI includes Piroctone Olamine, Niacinamide, Panthenol, Aloe Barbadensis Leaf Juice, and Glycerin in a product variant named Sensitive Kopfhaut.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The cleanser architecture is still strong and the INCI includes fragrance allergens.",
+          "inference": "Dry-sensitive profile fit should remain conditional, but the product can still be classified as targeting sensitive scalp.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine in the canonical manufacturer INCI establishes a conventional dandruff-support route; dry flakes remain a separate dry/sensitive-scalp matching problem.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears ninth in the canonical manufacturer INCI.",
+          "inference": "The formula contains a conventional dandruff-support active route.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ],
+          "mechanismIds": [
+            "scalp-support-product-signal"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product clinical performance, exact active concentration, and user-specific scalp tolerance are not established by this artifact.",
+          "inference": "The direct formula route does not establish individual medical treatment suitability.",
+          "sourceIds": [
+            "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24"
+      ],
+      "sharedMechanismIds": [
+        "scalp-support-product-signal"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      1,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Early surfactants cleanse.",
+        "g2FormulaRelevanceAndDelivery": "SLES/xylene sulfonate/CAPB lead the formula.",
+        "g3EndpointSpecificity": "Endpoint is cleansing strength."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Silicones, cationic guar and glycol distearate can condition/deposit.",
+        "g2FormulaRelevanceAndDelivery": "They are explicit in the canonical manufacturer formula.",
+        "g3EndpointSpecificity": "Endpoint is shampoo conditioning/deposition."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "Smoother deposited film can reduce rough optical scatter.",
+        "g2FormulaRelevanceAndDelivery": "Silicones and cationic guar are present.",
+        "g3EndpointSpecificity": "Endpoint is formula-supported shine/smoothing, not damage repair."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Dimethiconol, Dimethicone and cationic guar can deposit from shampoo and affect residue/weight feel.",
+        "g2FormulaRelevanceAndDelivery": "The deposition signals are explicit in the canonical manufacturer formula, while the strong cleanser base limits the upper bound.",
+        "g3EndpointSpecificity": "Endpoint is rinse-off weight/buildup potential, not conditioning benefit."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Efficient cleansing can support root lightness by removing sebum and residue.",
+        "g2FormulaRelevanceAndDelivery": "SLES, Sodium Xylenesulfonate, CAPB and Cocamide MEA lead the formula, though silicones/cationic guar temper the upper bound.",
+        "g3EndpointSpecificity": "Endpoint is cleansing-driven root lightness, not a styling volume claim."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Silicones and cationic polymers can support smoother hair feel.",
+        "g2FormulaRelevanceAndDelivery": "Dimethiconol, Dimethicone and cationic guar are explicit.",
+        "g3EndpointSpecificity": "Endpoint is smoothing/feel."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Blend and product positioning affect tolerance potential.",
+        "g2FormulaRelevanceAndDelivery": "Formula has amphoteric support and scalp-care ingredients but also strong cleansing and fragrance.",
+        "g3EndpointSpecificity": "Endpoint is only mildness potential, not suitability."
+      }
+    },
+    "weightDepositionLoad": "Medium: Dimethiconol/Dimethicone plus cationic guar and Glycol Distearate.",
+    "weightPersistence": "Medium: silicone deposition may persist for some users, especially fine hair.",
+    "weightResetCapacity": "Moderate to high: SLES/xylene sulfonate cleanser base.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Panthenol is present but no bond-specific route.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula classification follows the current German manufacturer INCI for the Sensitive Kopfhaut variant. dm remains useful exact-GTIN provenance but is treated as older/retailer discrepancy context where it differs from the current manufacturer formula."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti-dandruff and dandruff-related itch reduction",
+      "verdict": "indeterminate",
+      "support": "Piroctone Olamine is present in the current manufacturer INCI and Head & Shoulders/dm claim copy describes the anti-dandruff active route.",
+      "limitation": "The exact active route does not establish individual treatment performance, dandruff cause or medical suitability.",
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24",
+        "dm-head-shoulders-sensitive-2026-08-10",
+        "official-head-shoulders-ingredients-2026-08-10"
+      ]
+    },
+    {
+      "claim": "Silikonfrei / 0% Silikone",
+      "verdict": "source_conflict",
+      "support": "The current manufacturer INCI lists Dimethiconol and Dimethicone, so ingredient-level classification marks silicones as present.",
+      "limitation": "The older dm exact-GTIN formula/prose is retained as discrepancy provenance, but it does not override the current manufacturer INCI.",
+      "sourceIds": [
+        "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24",
+        "dm-head-shoulders-sensitive-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-de-head-shoulders-sensitive-kopfhaut-2026-08-24",
+    "dm-head-shoulders-sensitive-2026-08-10",
+    "official-head-shoulders-ingredients-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Anti-dandruff and sensitive-scalp wording is cosmetic scalp-targeted claim context. The current manufacturer INCI contains Piroctone Olamine and silicones; those formula facts support cosmetic classification but never medical treatment suitability."
+  }
+}

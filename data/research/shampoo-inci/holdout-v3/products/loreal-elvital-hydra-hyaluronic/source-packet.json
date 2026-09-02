@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+  "candidateId": "loreal-elvital-hydra-hyaluronic",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "L'Oréal Paris Elvital",
+    "name": "Hydra Hyaluronic Feuchtigkeit Auffüllendes Shampoo",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": [
+      "3600524137465"
+    ]
+  },
+  "selectionArchetype": "moisture-positioned ordinary shampoo",
+  "canonicalFormulaSourceUrl": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-300ml",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "moisture for dry lengths",
+    "shine and suppleness direction",
+    "volume-without-weight direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Moisture and dry-length positioning are permitted later focus evidence.",
+    "The ordinary-use product framing is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-hydra-hyaluronic-72h-feuchtigkeits-auffuellendes-shampoo/p/3600524137465"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Official German formula is canonical; Rossmann is corroborating exact-GTIN provenance.",
+  "officialProductPage": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-300ml"
+}

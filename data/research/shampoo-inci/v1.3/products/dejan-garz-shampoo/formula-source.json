@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "4270004570106",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dejan-garz-de-foundation-shampoo-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.dejangarz.com/products/shampoo",
+      "rawInci": "Aqua • Sodium Laureth Sulfate • Cocamidopropyl Betaine • Glycerin • Coco-Glucoside • Panthenol • Salicylic Acid • Glyceryl Oleate • Sodium Hyaluronate • Hydroxypropyl Guar Hydroxypropyltrimonium Chloride • Hydrogenated Palm Glycerides Citrate • Quaternium-80 • Propylene Glycol • Tocopherol • Lecithin • Ascorbyl Palmitate • Citric Acid • Sodium Chloride • Sodium Benzoate • Potassium Sorbate • Parfum • Hexyl Cinnamal • Linalool"
+    }
+  ],
+  "rawInci": "Aqua • Sodium Laureth Sulfate • Cocamidopropyl Betaine • Glycerin • Coco-Glucoside • Panthenol • Salicylic Acid • Glyceryl Oleate • Sodium Hyaluronate • Hydroxypropyl Guar Hydroxypropyltrimonium Chloride • Hydrogenated Palm Glycerides Citrate • Quaternium-80 • Propylene Glycol • Tocopherol • Lecithin • Ascorbyl Palmitate • Citric Acid • Sodium Chloride • Sodium Benzoate • Potassium Sorbate • Parfum • Hexyl Cinnamal • Linalool",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "glycerin",
+    "coco-glucoside",
+    "panthenol",
+    "salicylic acid",
+    "glyceryl oleate",
+    "sodium hyaluronate",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "hydrogenated palm glycerides citrate",
+    "quaternium-80",
+    "propylene glycol",
+    "tocopherol",
+    "lecithin",
+    "ascorbyl palmitate",
+    "citric acid",
+    "sodium chloride",
+    "sodium benzoate",
+    "potassium sorbate",
+    "parfum",
+    "hexyl cinnamal",
+    "linalool"
+  ],
+  "inciFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

@@ -1,0 +1,509 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73:100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES and two betaines form the main cleanser architecture, with Coco Glucoside support.",
+      "Tea tree leaf oil appears fourth but its exact percentage is undisclosed.",
+      "No silicone or cationic polymer is present; conditioning cues are light.",
+      "The derived fragrance-exposure flag is present because tea tree oil and Limonene are declared, even though no Parfum token appears."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Effektiv gegen Schuppen, Reizungen und Fett – ohne Silikone.",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "swissopar-de-teebaumoel"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl betaine",
+      "coco-betaine",
+      "coco glucoside"
+    ],
+    "surfactantsSecondary": [
+      "peg-7 glyceryl cocoate"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "melaleuca alternifolia leaf oil",
+      "peg-7 glyceryl cocoate",
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A balanced moderate cleanser is plausible. No active-matter or sebum-removal test is public.",
+      "supportingSignals": [
+        {
+          "observation": "SLES is supported by two betaines and Coco Glucoside.",
+          "inference": "A balanced moderate cleanser is plausible.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No active-matter or sebum-removal test is public.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Low shampoo conditioning is plausible. No combing or deposition endpoint is captured.",
+      "supportingSignals": [
+        {
+          "observation": "PEG-7 Glyceryl Cocoate and Glycol Distearate are present without silicone or cationic polymer.",
+          "inference": "Low shampoo conditioning is plausible.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No combing or deposition endpoint is captured.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Low residue or weight is plausible. Tea-tree-oil concentration and repeat-use feel are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "Only light rinse-off lipid/refatting cues are visible.",
+          "inference": "Low residue or weight is plausible.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Tea-tree-oil concentration and repeat-use feel are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A deliberate cosmetic scalp-active route is present. No dedicated recognized anti-dandruff active or finished-product test is disclosed.",
+      "supportingSignals": [
+        {
+          "observation": "Tea tree leaf oil is fourth and the official page targets flakes, irritation and oiliness.",
+          "inference": "A deliberate cosmetic scalp-active route is present.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No dedicated recognized anti-dandruff active or finished-product test is disclosed.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A bounded clarifying role is plausible. No residue-removal or sebum endpoint supports a strong reset.",
+      "supportingSignals": [
+        {
+          "observation": "Moderate cleansing, low deposition and oily-hair positioning align.",
+          "inference": "A bounded clarifying role is plausible.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No residue-removal or sebum endpoint supports a strong reset.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A targeted rinse-off scalp routine is intended. Individual cadence and tolerance were not tested publicly.",
+      "supportingSignals": [
+        {
+          "observation": "Directions specify a second wash with three-minute contact.",
+          "inference": "A targeted rinse-off scalp routine is intended.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Individual cadence and tolerance were not tested publicly.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets scalp/dandruff comfort and contains a deliberate tea-tree scalp route. The non-conventional dandruff route remains separate from the comfort target.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets scalp/dandruff comfort and contains a deliberate tea-tree scalp route. The non-conventional dandruff route remains separate from the comfort target.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete resolved formula contains neither Piroctone Olamine nor Climbazole, so it does not meet the locked MVP route for dandruff support. Tea tree oil and anti-flake positioning do not upgrade this classification; not_supported means the accepted support route is absent, not that the shampoo is proven ineffective.",
+      "supportingSignals": [
+        {
+          "observation": "The complete canonical INCI contains neither Piroctone Olamine nor Climbazole.",
+          "inference": "No accepted conventional dandruff-support route is present in the resolved formula.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The official product targets flakes and lists tea tree oil fourth, but discloses neither an evidence-matching concentration nor a finished-product dandruff endpoint.",
+          "inference": "This is relevant product context but cannot replace the accepted ingredient route or make dandruff support supported.",
+          "sourceIds": [
+            "swissopar-de-teebaumoel",
+            "dm-de-1028618"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Official and exact-GTIN retailer sources corroborate the formula; scalp outcomes remain untested marketing positioning."
+  },
+  "claimAudit": [
+    {
+      "claim": "Effektiv gegen Schuppen, Reizungen und Fett – ohne Silikone.",
+      "verdict": "weak",
+      "support": "The exact official formula contains tea tree leaf oil high in the list and the page targets flakes, irritation and oiliness.",
+      "limitation": "No finished-product dandruff, irritation or sebum test is disclosed; tea tree oil and Limonene may not suit reactive scalps.",
+      "sourceIds": [
+        "swissopar-de-teebaumoel",
+        "dm-de-1028618"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "swissopar-de-teebaumoel",
+    "dm-de-1028618"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The product targets cosmetic flakes, oiliness and irritation, not a diagnosed scalp disorder."
+  }
+}

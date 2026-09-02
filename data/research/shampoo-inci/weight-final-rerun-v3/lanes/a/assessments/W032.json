@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W032",
+  "formula": { "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595", "sourceTier": "retailer", "capturedAt": "2026-08-10T20:30:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "silicone", "name": "dimethiconol", "position": 10 }, { "family": "silicone", "name": "dimethicone", "position": 13 }, { "family": "cationic_polymer", "name": "guar hydroxypropyltrimonium chloride", "position": 15 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "anionic_surfactant", "name": "sodium lauryl sulfate", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 6 }], "excludedIngredients": [{ "name": "glycol distearate", "position": 7, "reason": "Zählt nicht als persistente Route." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "high", "rationale": "Dimethiconol und Dimethicone liegen als zwei getrennte Silikonsignale vor; das kationische Guar ergänzt eine anhaftende Route." },
+  "persistence": { "value": "high", "rationale": "Die duale Silikonarchitektur wird durch kationisches Guar gestützt; trotz Ausspülen spricht diese konvergierende Stack-Struktur für eine hohe verbleibende Pflegewirkung." },
+  "resetCapacity": { "value": "strong", "rationale": "Frühes SLES und SLS mit CAPB bilden eine ungewöhnlich starke Rücksetzseite." },
+  "competingSignals": ["Die frühe SLES/SLS/CAPB-Basis spricht klar für starkes Reset.", "Zwei Silikone plus kationisches Guar ergeben trotzdem mehrere konvergierende Persistenzsignale."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "Die doppelte Silikonroute und das kationische Polymer sind als persistente Seite stark genug, dass die Formel trotz starker Waschbasis als high eingeordnet wird.",
+  "whyNotNeighborBand": "Moderate würde die konvergierende Dual-Silikon-/Polymerpersistenz unterschätzen. Low ist mit zwei Silikonen und einer kationischen Ablagerungsroute nicht vertretbar.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "Die Formel ist durch aktuelle deutsche Quellen konsistent, aber INCI allein quantifiziert weder Silikondosis noch Nettoablagerung nach dem Ausspülen." }
+}

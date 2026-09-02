@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "shampoo-final-weight-verification-receipt-v1",
+  "verifiedAt": "2026-08-31T22:07:33+02:00",
+  "branch": "codex/shampoo-inci-research-engine",
+  "base": {
+    "ref": "origin/main",
+    "mergeBase": "1261924770d7008c023fbcbb91062aa572504030"
+  },
+  "contentFingerprint": {
+    "algorithm": "sha256",
+    "value": "3c5e5adc41ce63108fe2dbe2d5ad4db7a08c3d3ed551dff274ff27c1589bd6b8",
+    "files": 127,
+    "note": "Sorted path-plus-content-hash manifest over the final weight plan, normative docs, implementation, tests and 110 pre-receipt rerun artifacts. This receipt is excluded from its own fingerprint."
+  },
+  "outcomes": {
+    "canonicalFormulaReuse": "passed",
+    "blindIndependentAssessment": "passed_50_per_lane",
+    "explicitDisagreementAdjudication": "passed_2_of_2",
+    "frozenEvidenceIntegrity": "passed",
+    "approvedBaselineIsolation": "passed",
+    "derivedFitReplay": "passed_18_profiles",
+    "directionalShiftSharedPatternAudit": "passed_no_automatic_polymer_shortcut",
+    "nonMutationOfApprovedAndProductionData": "passed"
+  },
+  "checks": [
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research-weight-assessment.test.ts tests/shampoo-research-weight-calibration.test.ts tests/shampoo-research-final-weight-run.test.ts tests/shampoo-research-final-weight-replay.test.ts",
+      "result": "passed_21_of_21"
+    },
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research-weight-report.test.ts",
+      "result": "passed_3_of_3"
+    },
+    {
+      "command": "npx tsc --noEmit --pretty false",
+      "result": "passed"
+    },
+    {
+      "command": "npx eslint <changed source files>",
+      "result": "passed_sources; scripts_and_tests_are_repository_ignored"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "run-final-weight-research.ts freeze && report",
+      "result": "passed_50_candidates_1_blocked_18_profile_replay"
+    },
+    {
+      "command": "Claude Code read-only scoped code review plus local finding verification",
+      "result": "no_blocking_findings; release_content_pin_shift_warning_and_adjudication_edge_hardened"
+    }
+  ],
+  "manualEvidence": {
+    "browser": "skipped_research_only_no_user_interface_changed",
+    "reportInspection": "passed_distribution_transitions_confidence_adjudications_and_fit_replay"
+  },
+  "artifacts": {
+    "commit": [
+      "plans/2026-08-31-shampoo-weight-finalization.md",
+      "docs/research/shampoo-inci/v1.3 and v1.4-draft weight-method guidance",
+      "weight evidence, assessment, calibration and replay implementation",
+      "focused deterministic tests",
+      "data/research/shampoo-inci/weight-final-rerun-v1"
+    ],
+    "archive": [],
+    "discard": [
+      "/tmp/final-weight-report-cli.json",
+      "transient Claude review files under /tmp"
+    ]
+  },
+  "skipped": [
+    "Production build: no production route, page, migration or runtime activation was changed by this finalization slice.",
+    "Browser QA: the output is a research-only artifact and no Lab UI change is part of this slice.",
+    "Production or catalog write: explicitly outside authorization."
+  ],
+  "residualRisk": [
+    "INCI does not reveal exact concentration, finished-product deposition or consumer-perceived heaviness.",
+    "Eight candidate classifications remain low confidence and require visible limiting-factor review before any future activation.",
+    "The 23-upward versus 2-downward directional shift passed the shared-pattern method audit but remains an explicit manual activation gate.",
+    "One legacy duplicate OGX release member remains blocked pending catalog-authority resolution."
+  ]
+}

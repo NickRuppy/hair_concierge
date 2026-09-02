@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+  "candidateId": "vichy-dercos-anti-schuppen-sensitiv",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Vichy",
+    "name": "Dercos Anti-Schuppen Sensitiv Shampoo",
+    "market": "DE",
+    "packSize": "200 ml",
+    "gtinAliases": [
+      "3337871323394"
+    ]
+  },
+  "selectionArchetype": "sensitive-scalp anti-flake active shampoo",
+  "canonicalFormulaSourceUrl": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-sensitiv-shampoo",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "sensitive-scalp direction",
+    "anti-flake active positioning",
+    "itch-comfort direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "The active-led and sensitive-scalp claims are permitted later positioning evidence.",
+    "The product page’s short contact-time direction is preserved without creating medical dosing advice."
+  ],
+  "corroboratingUrls": [
+    "https://www.shop-apotheke.com/beauty/359988/vichy-dercos-anti-schuppen-sensitiv-shampoo.htm"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Official formula is canonical; Shop Apotheke is corroborating German retailer provenance.",
+  "officialProductPage": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-sensitiv-shampoo"
+}

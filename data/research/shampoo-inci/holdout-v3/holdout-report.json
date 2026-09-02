@@ -1,0 +1,1367 @@
+{
+  "schemaVersion": "shampoo-research-holdout-report-v3",
+  "status": "internal_research_only",
+  "repeatabilityGatePassed": true,
+  "candidateState": "validator_passed_preview",
+  "approvalStateMode": "validator_preview_forced_approved",
+  "legacyState": "new_product_no_legacy_baseline",
+  "candidates": [
+    {
+      "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:redken-volume-injection",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:syoss-intense-repair",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:pantene-3in1-repair-care",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:wella-invigo-nutri-enrich",
+      "analysisStatus": "validator_passed_preview"
+    },
+    {
+      "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+      "analysisStatus": "validator_passed_preview"
+    }
+  ],
+  "process": {
+    "blindPasses": 10,
+    "productsWithFinalDelta": 7,
+    "finalDeltaCount": 11,
+    "formulaSourceTypes": {
+      "official": 7,
+      "retailer": 3
+    },
+    "rows": [
+      {
+        "candidateId": "eucerin-dermocapillaire-ph5",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "loreal-elvital-hydra-hyaluronic",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "redken-volume-injection",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "vichy-dercos-anti-schuppen-sensitiv",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 3
+      },
+      {
+        "candidateId": "urtekram-fragrance-free-sensitive-scalp",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 2
+      },
+      {
+        "candidateId": "kerastase-nutritive-bain-satin-riche",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "syoss-intense-repair",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "pantene-3in1-repair-care",
+        "formulaSourceType": "retailer",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      },
+      {
+        "candidateId": "wella-invigo-nutri-enrich",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 0
+      },
+      {
+        "candidateId": "jean-len-green-apple-lemongrass",
+        "formulaSourceType": "official",
+        "identityConfidence": "moderate",
+        "finalDeltaCount": 1
+      }
+    ]
+  },
+  "classifications": {
+    "byProperty": {
+      "cleansingStrength": {
+        "moderate": 4,
+        "strong": 6
+      },
+      "conditioningLevel": {
+        "high": 4,
+        "moderate": 6
+      },
+      "weightPotential": {
+        "high": 4,
+        "low": 4,
+        "moderate": 2
+      },
+      "focusPrimary": {
+        "clarifying": 1,
+        "general": 3,
+        "gentle": 2,
+        "repair": 2,
+        "scalp_active": 1,
+        "volume": 1
+      },
+      "focusSecondary": {
+        "[]": 10
+      },
+      "usageRole": {
+        "regular": 9,
+        "treatment": 1
+      },
+      "scalpComfortTarget": {
+        "not_targeted": 7,
+        "targeted": 3
+      },
+      "dandruffSupport": {
+        "not_supported": 9,
+        "supported": 1
+      }
+    },
+    "identityConfidence": {
+      "moderate": 10
+    },
+    "conflictStatus": {
+      "none": 10
+    },
+    "rows": [
+      {
+        "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "low",
+          "focusPrimary": "gentle",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "general",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:redken-volume-injection",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "volume",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "low",
+          "focusPrimary": "scalp_active",
+          "focusSecondary": [],
+          "usageRole": "treatment",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "low",
+          "focusPrimary": "gentle",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "general",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:syoss-intense-repair",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:pantene-3in1-repair-care",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "high",
+          "weightPotential": "high",
+          "focusPrimary": "repair",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:wella-invigo-nutri-enrich",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "strong",
+          "conditioningLevel": "moderate",
+          "weightPotential": "moderate",
+          "focusPrimary": "general",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      },
+      {
+        "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+        "identityConfidence": "moderate",
+        "conflictStatus": "none",
+        "properties": {
+          "cleansingStrength": "moderate",
+          "conditioningLevel": "moderate",
+          "weightPotential": "low",
+          "focusPrimary": "clarifying",
+          "focusSecondary": [],
+          "usageRole": "regular",
+          "scalpComfortTarget": "not_targeted",
+          "dandruffSupport": "not_supported"
+        }
+      }
+    ]
+  },
+  "profiles": [
+    {
+      "profileKey": "fixture-fine-low-density-oily-volume",
+      "rankingHash": "d7f5a67b3863b2643797c4d9889eac574bdfd16de520263d95de72f1c140186e",
+      "ranked": [
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-treated-balanced-shine",
+      "rankingHash": "4dcdf13e4f682f6536d7ff6e5fb2adac06fc5a1245bc827e772bc0e7a45f4cf7",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-fine-dry-scalp-frizz",
+      "rankingHash": "c7710e622a35cf7e4fb62239be4b0b1f2e8c498e461ba0e3f022eebf5268bb0c",
+      "ranked": [
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-balanced-general",
+      "rankingHash": "6554831109aba1cf0637aed374a91e390ff92ba47cbf34813859d486cd150fba",
+      "ranked": [
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-oily-high-load",
+      "rankingHash": "802a2d4b5fd85958c137b87c0f646be6a39513517cda6ab8ca8eca84e569e205",
+      "ranked": [
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-normal-low-volume-frequent-wash",
+      "rankingHash": "9c88f6b18ee269029caed0a5225cbcf743d3c78d61cc37f6e7dbb4d07d096af1",
+      "ranked": [
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-dry-damaged-smoothing",
+      "rankingHash": "4458e87de2e764d4769f825767688823baa484c50e9fd9b98fd44008a20af1be",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coarse-curly-frizz-definition",
+      "rankingHash": "478d5c1f08bee1cad30eaf962428b5d0f04e100ebb4fdb1a737dcf35fd56810a",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-treated-breakage-repair",
+      "rankingHash": "7b2d13e6a2dc1f831cc6c15c706e1c162cf93fba366b2d7c85829b712d6521a2",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-itch",
+      "rankingHash": "3eb4ab009a5d00e776d2590575f63e0b05b792fd0e61e8244c512da85eb98fe7",
+      "ranked": [
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-oily-dandruff",
+      "rankingHash": "5a79dc8321bba6e62f900b92a40840458e1dcd7bf94b6022cce0e84e60b33301",
+      "ranked": [
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-dry-flakes",
+      "rankingHash": "3eb4ab009a5d00e776d2590575f63e0b05b792fd0e61e8244c512da85eb98fe7",
+      "ranked": [
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-oily",
+      "rankingHash": "38f00296d8d688662936ad82d84dbdbf5b2385a64f3e280829d1e79381c9031d",
+      "ranked": [
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-mild-sensitive-balanced",
+      "rankingHash": "4605da42b91c482a0a8242faa931338ad87a24a3b2e1dd7a638e350bc5329498",
+      "ranked": [
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-medical-boundary",
+      "rankingHash": "9f5484fa64bf99063ae2464497351060f4224489542ad8a4e7dabbca372d218d",
+      "ranked": [],
+      "abstentions": [
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "guardrails": [
+            "profile_medical_boundary"
+          ]
+        }
+      ]
+    },
+    {
+      "profileKey": "fixture-research-only-fragrance-avoidance",
+      "rankingHash": "d3f7dc6cb433ee4c6be5d5ee7f402af0c1987227b6fdbdc89a717f5a8c80c100",
+      "ranked": [
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-straight-balanced-low-shine",
+      "rankingHash": "db738dcb1b2310b41609fb5e3272eca2056baa3b86d83a1d3afbf93f6ad9a690",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "conditional"
+        }
+      ],
+      "abstentions": []
+    },
+    {
+      "profileKey": "fixture-coily-dry-definition",
+      "rankingHash": "4b6e9514b4d7c3782acae5dd116e244c3e8d73105f69530c68d0a393ba7a7609",
+      "ranked": [
+        {
+          "productId": "holdout-v3:syoss-intense-repair",
+          "overall": "recommended"
+        },
+        {
+          "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+          "overall": "conditional"
+        },
+        {
+          "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:pantene-3in1-repair-care",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:eucerin-dermocapillaire-ph5",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:redken-volume-injection",
+          "overall": "caution"
+        },
+        {
+          "productId": "holdout-v3:wella-invigo-nutri-enrich",
+          "overall": "caution"
+        }
+      ],
+      "abstentions": []
+    }
+  ],
+  "agreement": {
+    "judgedDecisions": 70,
+    "exactAgreement": 0.8571428571428571,
+    "byProperty": {
+      "cleansingStrength": 0.8,
+      "conditioningLevel": 0.9,
+      "weightPotential": 0.9,
+      "focusPrimary": 0.7,
+      "focusSecondary": 0.8,
+      "usageRole": 0.9,
+      "scalpComfortTarget": 1
+    },
+    "dandruffMechanicalAgreement": 1,
+    "disagreements": [
+      {
+        "candidateId": "eucerin-dermocapillaire-ph5",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "eucerin-dermocapillaire-ph5",
+        "property": "usageRole"
+      },
+      {
+        "candidateId": "loreal-elvital-hydra-hyaluronic",
+        "property": "cleansingStrength"
+      },
+      {
+        "candidateId": "loreal-elvital-hydra-hyaluronic",
+        "property": "weightPotential"
+      },
+      {
+        "candidateId": "loreal-elvital-hydra-hyaluronic",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "loreal-elvital-hydra-hyaluronic",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "vichy-dercos-anti-schuppen-sensitiv",
+        "property": "focusSecondary"
+      },
+      {
+        "candidateId": "kerastase-nutritive-bain-satin-riche",
+        "property": "focusPrimary"
+      },
+      {
+        "candidateId": "wella-invigo-nutri-enrich",
+        "property": "conditioningLevel"
+      },
+      {
+        "candidateId": "wella-invigo-nutri-enrich",
+        "property": "focusPrimary"
+      }
+    ],
+    "repeatabilityGate": {
+      "overallMinimum": 0.75,
+      "perPropertyMinimum": 0.6,
+      "overallPassed": true,
+      "failedProperties": [],
+      "passed": true
+    },
+    "defaults": {
+      "cleansingStrength": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "moderate": 4,
+          "strong": 6
+        },
+        "secondLabelDistribution": {
+          "moderate": 6,
+          "strong": 4
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.8
+      },
+      "conditioningLevel": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "high": 4,
+          "moderate": 6
+        },
+        "secondLabelDistribution": {
+          "high": 5,
+          "moderate": 5
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.9
+      },
+      "weightPotential": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "high": 4,
+          "low": 4,
+          "moderate": 2
+        },
+        "secondLabelDistribution": {
+          "high": 3,
+          "low": 4,
+          "moderate": 3
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.9
+      },
+      "focusPrimary": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "clarifying": 1,
+          "general": 3,
+          "gentle": 2,
+          "repair": 2,
+          "scalp_active": 1,
+          "volume": 1
+        },
+        "secondLabelDistribution": {
+          "clarifying": 1,
+          "gentle": 2,
+          "repair": 5,
+          "scalp_active": 1,
+          "volume": 1
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 0.7
+      },
+      "focusSecondary": {
+        "defaultValue": [],
+        "firstLabelDistribution": {
+          "[]": 10
+        },
+        "secondLabelDistribution": {
+          "[\"gentle\"]": 1,
+          "[\"shine\"]": 1,
+          "[]": 8
+        },
+        "nonDefaultDecisions": 2,
+        "conditionalNonDefaultAgreement": 0
+      },
+      "usageRole": {
+        "defaultValue": "regular",
+        "firstLabelDistribution": {
+          "regular": 9,
+          "treatment": 1
+        },
+        "secondLabelDistribution": {
+          "frequent": 1,
+          "regular": 8,
+          "treatment": 1
+        },
+        "nonDefaultDecisions": 2,
+        "conditionalNonDefaultAgreement": 0.5
+      },
+      "scalpComfortTarget": {
+        "defaultValue": null,
+        "firstLabelDistribution": {
+          "not_targeted": 7,
+          "targeted": 3
+        },
+        "secondLabelDistribution": {
+          "not_targeted": 7,
+          "targeted": 3
+        },
+        "nonDefaultDecisions": 10,
+        "conditionalNonDefaultAgreement": 1
+      }
+    },
+    "cohensKappaByProperty": {
+      "cleansingStrength": 0.6153846153846155,
+      "conditioningLevel": 0.8,
+      "weightPotential": 0.8484848484848486,
+      "focusPrimary": 0.6385542168674698,
+      "focusSecondary": 0,
+      "usageRole": 0.6296296296296295,
+      "scalpComfortTarget": 1
+    }
+  },
+  "unexpectedAbstentions": [],
+  "validationGatePassed": true,
+  "allEightPropertiesModerateOrBetter": true,
+  "dandruffMechanicalAgreementPassed": true,
+  "reportHash": "f2760e0d43096db4ca2d51af5270ff8d363cc93eecc3ae852bb7aab340afa3fc"
+}

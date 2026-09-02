@@ -1,0 +1,201 @@
+{
+  "candidate_id": "herbal-essences-fiji",
+  "blindCode": "D",
+  "rawInci": "Ingredients: Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Cocoyl Isethionate",
+      "Sodium Lauroyl Sarcosinate"
+    ],
+    "surfactantsSecondary": [
+      "Lauramidopropyl Betaine",
+      "Cocamidopropyl Betaine"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [
+      "Histidine"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Sodium Citrate",
+      "Tetrasodium EDTA"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      1
+    ],
+    "mildnessPotential": [
+      2,
+      3
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "unknown",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SCI, sarcosinate and two betaines form a moderate-to-upper-moderate cleansing system without a classical sulfate lead.",
+    "conditioningLevel": "Polyquaternium-10 provides a substantive cationic polymer route, but there are no silicones, rich lipids or strong protein films.",
+    "weightPotential": "One substantive cationic polymer route justifies moderate weight potential under v1.4, while the otherwise light architecture prevents a high call.",
+    "focusPrimary": "The formula has mildness-leaning and light conditioning signals, but without positioning they do not clearly establish a single dominant focus.",
+    "focusSecondary": "No secondary focus is assigned because the blind pass has no distinct manufacturer/product-positioning signal.",
+    "usageRole": "No reset, frequent-use or treatment trigger is present, so regular is the v1.4 default.",
+    "scalpComfortTarget": "The surfactant blend is comfort-leaning, but fragrance allergens and citrus peel oil mean scalp-comfort targeting remains unknown without positioning or tolerance evidence.",
+    "dandruffSupport": "The complete formula does not list Piroctone Olamine or Climbazole."
+  },
+  "formulaObservations": [
+    "Sodium Cocoyl Isethionate and Sodium Lauroyl Sarcosinate are paired with Lauramidopropyl Betaine and Cocamidopropyl Betaine.",
+    "Polyquaternium-10 is the main conditioning/deposition polymer.",
+    "Tetrasodium EDTA and Sodium Citrate are present as chelator/buffer signals.",
+    "Citric Acid appears early but finished pH is unknown.",
+    "Fragrance allergens and Citrus Aurantium Peel Oil are listed."
+  ],
+  "counterSignals": [
+    "Citric Acid alone is capped as weak acidic-shine evidence without finished pH.",
+    "Tetrasodium EDTA may be formula-stability support rather than a meaningful hard-water hair treatment.",
+    "Polyquaternium-10 alone does not create high conditioning or high buildup.",
+    "Fragrance and essential-oil exposure limit sensitive-scalp confidence."
+  ],
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "low",
+    "dandruffSupport": "high"
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "72220ae0ff1fb9737d9bbfa52d25f6718286f0bd4ef8690abe797edf9e768941"
+  },
+  "payloadHash": "531a8ae82e96d3ad0d1a1e3903514c5d7ea05dce12121ae6a6e426295a1e6803",
+  "finalDelta": [
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "unknown",
+      "finalValue": "not_targeted",
+      "reason": "The unblind source reveals hair-moisture positioning, not cosmetic dry/tight/itchy/sensitive-scalp targeting; this resolves unknown to not_targeted."
+    }
+  ],
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": null,
+      "formulaCompatible": true,
+      "formulaRoute": "Lightweight moisture is compatible with moderate cleansing plus PQ-10 light care, but does not map cleanly to volume/shine/repair/clarifying/scalp_active/gentle.",
+      "decisionReason": "Avoided stretching moisture/sulfate-free into gentle; final primary stays general."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Ordinary rinse-out shampoo role; no exact non-default trigger evidence."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "mid",
+          "evidence": "Polyquaternium-10 provides one cationic polymer deposition route."
+        }
+      ],
+      "competingSignals": [
+        "No silicone, rich lipid, or multi-protein system; formula is positioned as lightweight."
+      ],
+      "confidenceLimit": "formula_identity"
+    }
+  }
+}

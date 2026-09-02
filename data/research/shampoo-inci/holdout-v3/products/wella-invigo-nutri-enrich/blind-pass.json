@@ -1,0 +1,261 @@
+{
+  "candidate_id": "wella-invigo-nutri-enrich",
+  "rawInci": "Aqua/Water/Eau, Sodium Lauryl Sulfate, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycol Distearate, Dimethicone, Cocamide MEA, Parfum/Fragrance, Sodium Benzoate, Panthenol, Citric Acid, Sodium Chloride, Salicylic Acid, Glycerin, Glycerin, Tetrasodium EDTA, Trisodium Ethylenediamine Disuccinate, Methylparaben, Guar Hydroxypropyltrimonium Chloride, Limonene, Sodium Hydroxide, Benzyl Salicylate, Hexyl Cinnamal, Hydrochloric Acid, Linalool, Lycium Barbarum Fruit Extract, Oleic Acid, Lactic Acid, Potassium Sorbate, Magnesium Nitrate, Methylchloroisothiazolinone, Magnesium Chloride, Sodium Citrate, Methylisothiazolinone, Sodium Xylenesulfonate.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium lauryl sulfate",
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "trisodium ethylenediamine disuccinate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid",
+      "salicylic acid",
+      "hydrochloric acid",
+      "oleic acid",
+      "lactic acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "high",
+    "usageRole": "high",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:wella-invigo-nutri-enrich",
+      "formula": {
+        "inciFingerprint": "a2f681b73c078edeb5e8d6a703a2509cfd24ff27c0195a92a52a85daff6544b9",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 6
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 19
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 2
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 3
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "cocamide mea",
+            "position": 7
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 5,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Frühes Dimethicone und spätes Guar liefern klare, aber begrenzte persistente Wege."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Frühes Dimethicone und spätes Guar liefern klare, aber begrenzte persistente Wege."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "moderate",
+      "whyThisBand": "Frühes Dimethicone und spätes Guar liefern klare, aber begrenzte persistente Wege.",
+      "whyNotNeighborBand": "Nicht low wegen frühem Dimethicone; nicht high wegen begrenzter Wege und starker SLS/SLES/CAPB-Resetseite.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "moderate",
+      "confidence": "moderate",
+      "rationale": "Frühes Dimethicone und spätes Guar liefern klare, aber begrenzte persistente Wege."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "70d3000a807e98e316678da326fea8fff1843a4c253dbe3752b66f977cd9c2e0"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": null,
+      "formulaCompatible": true,
+      "formulaRoute": "Kein engerer Fokuswert wird aus der Positionierung abgeleitet.",
+      "decisionReason": "General bleibt die passende Fokusklasse."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [],
+  "payloadHash": "e45adfb56d91b721ff16b2a21296940ac7c84a698e3357a0b7003cd2dbeda1c8"
+}

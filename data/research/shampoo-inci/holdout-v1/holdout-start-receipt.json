@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-research-holdout-start-receipt-v1",
+  "capturedAt": "2026-08-26T18:00:00+02:00",
+  "v13AndGeneratedIndexHash": "d4aa21113485e89833e2595b023ba1a34a27c46c3177e0e334b3ca14974edfc7",
+  "liveCatalogRead": {
+    "projectId": "pqdkhefxsxkyeqelqegq",
+    "regularShampooRows": 54,
+    "nullKeyDeepCleansingRows": 0,
+    "contentHash": "e024ccfe955ac1ff48d2c9e18778a775508fc37e52809117e1fec229c4cbb1fa",
+    "writesPerformed": false,
+    "nonCohortRows": [
+      {
+        "productId": "41b99629-5a1c-402f-a486-d41780e89e66",
+        "reasonExcluded": "Explicit Tiefenreinigung product outside the regular-shampoo holdout scope."
+      },
+      {
+        "productId": "0d341836-96b3-4364-9319-a7f0884b3da9",
+        "reasonExcluded": "Plantur 39 caffeine/hair-loss positioning is medically adjacent and outside the healthy cosmetic MVP scope."
+      }
+    ]
+  },
+  "gtinOverlapCheck": {
+    "originalFormulaGtins": 48,
+    "selectedGtins": 10,
+    "overlaps": []
+  }
+}

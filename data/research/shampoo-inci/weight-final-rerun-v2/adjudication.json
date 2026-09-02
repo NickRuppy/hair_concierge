@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-weight-adjudication-v1",
+  "decisions": [
+    {
+      "blindId": "W014",
+      "finalWeightPotential": "moderate",
+      "rationale": "Starch Hydroxypropyltrimonium Chloride und Amodimethicone liefern zwei bestätigte Pflegerouten, die schwachen Rückfetter ergänzen eine begrenzte Deposition. Die breite vierteilige Tensidbasis schafft jedoch einen relevanten Reset, und eine frühe reiche Lipid- oder Fettalkoholarchitektur fehlt.",
+      "whyThisBand": "Moderate bildet zwei bestätigte persistente Pflegerouten, mehrere leichte Rückfetter und den relevanten breiten Reset am besten gemeinsam ab.",
+      "whyNotNeighborBand": "Low würde kationische Stärke plus Amodimethicone unterschätzen; high ist trotz dieser Konvergenz nicht robust, weil die übrigen Routen leicht sind und die breite Tensidbasis gegen eine klar schwere Architektur spricht.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Die Rollen sind aufgelöst, aber Retailer-Identität und unbekannte Einsatzmengen lassen eine moderate/high-Restgrenze offen."
+      }
+    },
+    {
+      "blindId": "W033",
+      "finalWeightPotential": "moderate",
+      "rationale": "Filmbildner, Sheabutter und zwei kationische Polymere schaffen mehrere plausible Depositionsrouten, deshalb ist low nicht glaubwürdig. Sodium C14-16 Olefin Sulfonate an Position 2 liefert zusammen mit Cocamidopropyl Betaine jedoch einen starken Reset; zudem stehen die Polymer-Routen später in der Formel. Das macht spürbare, aber begrenzte Rückstände wahrscheinlicher als eine klar schwere Wirkung.",
+      "whyThisBand": "Moderate berücksichtigt das reale Mehrfach-Depositionspotenzial ebenso wie den prominenten starken Reinigungsgegenpol und den Rinse-off-Kontext.",
+      "whyNotNeighborBand": "Low würde die Konvergenz aus Filmbildner, Lipid und zwei kationischen Polymeren ignorieren; high ist nicht robust, weil das stärkste Reset-Signal prominent ist und eine bestätigte silikonlastige oder anderweitig klar reichhaltige Architektur mit begrenztem Reset fehlt.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Unbekannte Einsatzmengen und die Balance zwischen prominentem Reset-System und späteren Depositionsrouten lassen eine echte moderate/high-Grenze offen."
+      }
+    }
+  ]
+}

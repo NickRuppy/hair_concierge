@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "3337871323394",
+  "formulaCode": null,
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-sensitiv-shampoo",
+      "rawInci": "AQUA / WATER • SODIUM METHYL COCOYL TAURATE • LAURETH-5 CARBOXYLIC ACID • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • BISABOLOL • FARNESOL • HEXYLENE GLYCOL • LACTIC ACID • PEG-150 DISTEARATE • PEG-55 PROPYLENE GLYCOL OLEATE • PIROCTONE OLAMINE • POLYQUATERNIUM-10 • PROPYLENE GLYCOL • SALICYLIC ACID • SODIUM BENZOATE • SODIUM HYDROXIDE • SODIUM LAUROYL GLUTAMATE • PARFUM / FRAGRANCE.",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "retailer-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.shop-apotheke.com/beauty/359988/vichy-dercos-anti-schuppen-sensitiv-shampoo.htm",
+      "rawInci": "AQUA / WATER • SODIUM METHYL COCOYL TAURATE • LAURETH-5 CARBOXYLIC ACID • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • BISABOLOL • FARNESOL • HEXYLENE GLYCOL • LACTIC ACID • PEG-150 DISTEARATE • PEG-55 PROPYLENE GLYCOL OLEATE • PIROCTONE OLAMINE • POLYQUATERNIUM-10 • PROPYLENE GLYCOL • SALICYLIC ACID • SODIUM BENZOATE • SODIUM HYDROXIDE • SODIUM LAUROYL GLUTAMATE • PARFUM / FRAGRANCE.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "3337871323394"
+    }
+  ],
+  "rawInci": "AQUA / WATER • SODIUM METHYL COCOYL TAURATE • LAURETH-5 CARBOXYLIC ACID • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • BISABOLOL • FARNESOL • HEXYLENE GLYCOL • LACTIC ACID • PEG-150 DISTEARATE • PEG-55 PROPYLENE GLYCOL OLEATE • PIROCTONE OLAMINE • POLYQUATERNIUM-10 • PROPYLENE GLYCOL • SALICYLIC ACID • SODIUM BENZOATE • SODIUM HYDROXIDE • SODIUM LAUROYL GLUTAMATE • PARFUM / FRAGRANCE.",
+  "normalizedInci": [
+    "aqua/water",
+    "sodium methyl cocoyl taurate",
+    "laureth-5 carboxylic acid",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "bisabolol",
+    "farnesol",
+    "hexylene glycol",
+    "lactic acid",
+    "peg-150 distearate",
+    "peg-55 propylene glycol oleate",
+    "piroctone olamine",
+    "polyquaternium-10",
+    "propylene glycol",
+    "salicylic acid",
+    "sodium benzoate",
+    "sodium hydroxide",
+    "sodium lauroyl glutamate",
+    "parfum/fragrance"
+  ],
+  "inciFingerprint": "7e128d54a4405651c6a358a01bd789d7182ababcb08593b37413a3839ae9d6bf",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

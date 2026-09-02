@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "shampoo-final-weight-verification-receipt-v1",
+  "verifiedAt": "2026-09-01T17:23:21+02:00",
+  "branch": "codex/shampoo-inci-research-engine",
+  "base": {
+    "ref": "origin/main",
+    "mergeBase": "1261924770d7008c023fbcbb91062aa572504030"
+  },
+  "contentFingerprint": {
+    "algorithm": "sha256",
+    "value": "011e6e14335070faac66ce10a0459ef8c62cebb2264a8bca23c8b5e2b14b91a6",
+    "files": 137,
+    "note": "Sorted relative-path NUL content-SHA256 LF manifest over the final weight plan and mockup, normative guidance, implementation, tests, canonical release/audit references, historical v1 comparison inputs and all 111 pre-receipt v2 artifacts. This receipt is excluded from its own fingerprint."
+  },
+  "outcomes": {
+    "reviewedIngredientRoleCorrections": "passed_quaternium80_cationic_conditioner_starch_hydroxypropyltrimonium_chloride_cationic_polymer_juniperus_essential_oil_exclusion",
+    "correctionScope": "passed_exactly_5_affected_formulas",
+    "canonicalFormulaReuse": "passed_50_unchanged_formula_fingerprints",
+    "blindAssessmentEvidenceIntegrity": "passed_100_of_100_records",
+    "candidateBandStability": "passed_50_of_50_unchanged_vs_v1",
+    "confidenceReconciliation": "passed_4_low_to_moderate_46_moderate_4_low",
+    "derivedFitReconciliation": "passed_zero_direct_fit_label_changes_rankings_refreshed",
+    "directionalShiftSharedPatternAudit": "passed_no_automatic_polymer_shortcut",
+    "approvedBaselineIsolation": "passed",
+    "nonMutationOfApprovedAndProductionData": "passed"
+  },
+  "checks": [
+    {
+      "command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/shampoo-research-weight-assessment.test.ts tests/shampoo-research-weight-calibration.test.ts tests/shampoo-research-final-weight-run.test.ts tests/shampoo-research-final-weight-replay.test.ts tests/shampoo-research-weight-report.test.ts tests/shampoo-research-final-weight-correction.test.ts",
+      "result": "passed_27_of_27"
+    },
+    {
+      "command": "node --import tsx scripts/shampoo-research/run-final-weight-research.ts report",
+      "result": "passed_50_candidates_1_blocked_18_profile_replay"
+    },
+    {
+      "command": "npx tsc --noEmit --pretty false",
+      "result": "passed"
+    },
+    {
+      "command": "npx eslint --no-ignore <changed correction source, scripts and tests>",
+      "result": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "Claude Code high-effort read-only correction-delta review plus local verification and regression coverage",
+      "result": "no_blocking_findings_release_provenance_and_v1_static_history_documented"
+    }
+  ],
+  "review": {
+    "scope": "Uncommitted final-weight correction implementation, tests, normative documentation and complete v2 research artifacts, compared with immutable v1 inputs.",
+    "normalLens": "passed_correctness_data_integrity_regression_and_test_coverage",
+    "structuralLens": "not_separately_required_localized_evidence_lexicon_and_research_artifact_correction_without_architecture_or_runtime_dataflow_change",
+    "supportedFindingsResolved": [
+      "Documented canonical release counts.profiles provenance and the historical v1 manifest boundary.",
+      "Documented v1 as static history that must not be re-reported under the newer exact-evidence lexicon.",
+      "Reconciled the plan with four confidence upgrades across five evidence-affected products.",
+      "Added real-cohort v1-to-v2 evidence, band, confidence and direct-fit regression coverage.",
+      "Issued this required v2 verification receipt."
+    ]
+  },
+  "manualEvidence": {
+    "browser": "skipped_research_only_no_user_interface_changed",
+    "reportInspection": "passed_distribution_transitions_confidence_low_confidence_limiters_and_fit_replay",
+    "historicalComparison": "passed_v1_membership_formula_fingerprints_candidate_bands_and_direct_fit_labels"
+  },
+  "artifacts": {
+    "commit": [
+      "plans/2026-08-31-shampoo-weight-finalization.md",
+      "docs/research/shampoo-inci/v1.4-draft weight-method guidance",
+      "weight evidence extractor, rerun versioning and focused deterministic tests",
+      "data/research/shampoo-inci/weight-final-rerun-v2"
+    ],
+    "archive": [
+      "data/research/shampoo-inci/weight-final-rerun-v1 as immutable review history"
+    ],
+    "discard": [
+      "/tmp/shampoo-weight-v2-report.json",
+      "/tmp/shampoo-weight-v2-fingerprint.json",
+      "/tmp/claude-code-review-shampoo-weight-v2.md"
+    ]
+  },
+  "skipped": [
+    "Production build: no production route, page, migration or runtime activation changed in this correction slice.",
+    "Browser QA: the output is a research-only artifact and no Lab UI change is part of this slice.",
+    "Production or catalog write: explicitly outside authorization."
+  ],
+  "residualRisk": [
+    "INCI does not reveal exact concentration, finished-product deposition or consumer-perceived heaviness.",
+    "Four candidate classifications remain low confidence: two due unresolved weight-relevant ingredients and two due low formula identity.",
+    "The 23-upward versus 2-downward directional shift passed the method audit but remains an explicit manual activation gate.",
+    "Historical v1 lane records intentionally preserve the older unresolved evidence and cannot be revalidated with the stricter current extractor; use their frozen report for comparison only.",
+    "One legacy duplicate OGX release member remains blocked pending catalog-authority resolution."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4103040051752",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T22:15:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "sebamed-de-every-day-4103040051752-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "locator": "https://sebamed.de/de/p/every-day-shampoo/",
+      "rawInci": "Aqua, Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol, Parfum, Phenoxyethanol, Sodium Benzoate, Citric Acid, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Lactic Acid, Sodium Chloride, Sodium Lactate"
+    }
+  ],
+  "rawInci": "Aqua, Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol, Parfum, Phenoxyethanol, Sodium Benzoate, Citric Acid, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Lactic Acid, Sodium Chloride, Sodium Lactate",
+  "normalizedInci": [
+    "aqua",
+    "decyl glucoside",
+    "disodium laureth sulfosuccinate",
+    "sodium lauryl sulfoacetate",
+    "peg-55 propylene glycol oleate",
+    "propylene glycol",
+    "parfum",
+    "phenoxyethanol",
+    "sodium benzoate",
+    "citric acid",
+    "hydroxypropyl oxidized starch pg-trimonium chloride",
+    "lactic acid",
+    "sodium chloride",
+    "sodium lactate"
+  ],
+  "inciFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

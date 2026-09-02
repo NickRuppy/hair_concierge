@@ -1,0 +1,504 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "303b4c0c-53a4-46de-883d-c29e448ee590:f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES leads a mixed anionic/nonionic/amphoteric cleanser system.",
+      "Piroctone Olamine appears sixth, supporting deliberate cosmetic anti-dandruff inclusion without revealing its percentage.",
+      "Cationic starch and glycol distearate provide light deposition cues; no silicone or rich oil phase is present.",
+      "Lactic Acid triggers the derived exposure flag but does not by name or position establish exfoliating action."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Nach 4 Wochen bis zu 95% weniger Schuppen*",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "lauryl glucoside",
+      "sodium lauroyl sarcosinate",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [
+      "laureth-4"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl oxidized starch pg-trimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "lactic acid",
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A balanced but effective regular cleanser architecture is likely. Active-matter levels and comparative cleansing data are not disclosed.",
+      "supportingSignals": [
+        {
+          "observation": "SLES leads a four-part surfactant system with glucoside, sarcosinate and betaine support.",
+          "inference": "A balanced but effective regular cleanser architecture is likely.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Active-matter levels and comparative cleansing data are not disclosed.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Light deposition and slip are plausible. No combing or deposition test is public.",
+      "supportingSignals": [
+        {
+          "observation": "Cationic starch and glycol distearate are present without silicone or a rich lipid base.",
+          "inference": "Light deposition and slip are plausible.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No combing or deposition test is public.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Low expected weight is plausible. Cationic-starch concentration and persistence are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone or heavy oil phase is listed; a single cationic polymer is the main deposition cue.",
+          "inference": "Low expected weight is plausible.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Cationic-starch concentration and persistence are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A deliberate cosmetic anti-dandruff route is present. The active percentage and full trial report are unavailable.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears before the preservative/fragrance region and the official page targets flakes.",
+          "inference": "A deliberate cosmetic anti-dandruff route is present.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The active percentage and full trial report are unavailable.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Gentle cosmetic positioning is plausible. Parfum and Pinene remain tolerance counter-signals.",
+      "supportingSignals": [
+        {
+          "observation": "The official page discloses pH 5.5 and sensitive-scalp positioning.",
+          "inference": "Gentle cosmetic positioning is plausible.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum and Pinene remain tolerance counter-signals.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A cosmetic anti-dandruff treatment role is intended. Individual cadence and diagnosis are not established.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine and daily or 2–3 times weekly directions define targeted repeat use.",
+          "inference": "A cosmetic anti-dandruff treatment role is intended.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Individual cadence and diagnosis are not established.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning and a recognized anti-dandruff/scalp-care route establish a cosmetic scalp-comfort target separate from dry-flake fit.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning and a recognized anti-dandruff/scalp-care route establish a cosmetic scalp-comfort target separate from dry-flake fit.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A cosmetic dandruff-support route is directly supported. The public page omits sample, comparator, protocol and full results.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is present and the manufacturer cites a four-week exact-product study.",
+          "inference": "A cosmetic dandruff-support route is directly supported.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The public page omits sample, comparator, protocol and full results.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "sebamed-de-antischuppen-200"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent mildnessPotential cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [
+      {
+        "endpoint": "Manufacturer-reported dandruff reduction after four weeks; full protocol unavailable.",
+        "scope": "shampoo_only",
+        "sourceIds": [
+          "sebamed-de-antischuppen-200"
+        ]
+      }
+    ],
+    "scopeNotes": "Exact formula and product-specific study summary are captured; missing protocol detail keeps evidence at E2."
+  },
+  "claimAudit": [
+    {
+      "claim": "Nach 4 Wochen bis zu 95% weniger Schuppen*",
+      "verdict": "plausible",
+      "support": "The official exact-product page cites a four-week anti-dandruff study and the formula contains Piroctone Olamine.",
+      "limitation": "Sample, comparator, protocol and the full report are not public, so the percentage is not independently verified.",
+      "sourceIds": [
+        "sebamed-de-antischuppen-200"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "sebamed-de-antischuppen-200"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The product targets cosmetic flaking and sensitive-scalp comfort, not a diagnosed scalp condition."
+  }
+}

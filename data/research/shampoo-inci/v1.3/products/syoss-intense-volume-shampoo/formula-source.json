@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+  "market": "DE",
+  "packSize": "440 ml",
+  "gtinEan": "4015100860481",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T22:15:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "syoss-de-intense-volume-4015100860481-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "locator": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-volume-leichtes-shampoo.html",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Potassium Sorbate, Phenoxyethanol"
+    }
+  ],
+  "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Potassium Sorbate, Phenoxyethanol",
+  "normalizedInci": [
+    "aqua (water, eau)",
+    "sodium laureth sulfate",
+    "sodium chloride",
+    "cocamidopropyl betaine",
+    "hydrolyzed keratin",
+    "hydrolyzed collagen",
+    "sodium benzoate",
+    "parfum (fragrance)",
+    "coco-glucoside",
+    "glyceryl oleate",
+    "citric acid",
+    "peg-7 glyceryl cocoate",
+    "glycol distearate",
+    "laureth-4",
+    "peg-120 methyl glucose dioleate",
+    "hydrogenated castor oil",
+    "hexyl cinnamal",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "citronellol",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "sodium hydroxide",
+    "limonene",
+    "linalyl acetate",
+    "linalool",
+    "propylene glycol",
+    "potassium sorbate",
+    "phenoxyethanol"
+  ],
+  "inciFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

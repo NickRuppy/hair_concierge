@@ -1,0 +1,162 @@
+{
+  "blindCode": "J",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycol Distearate, Sodium Chloride, PEG-18 Glyceryl Oleate/Cocoate, PEG-40 Hydrogenated Castor Oil, Laureth-2, Panthenol, Coco-Glucoside, Citric Acid, Parfum, Sodium Benzoate, Glycerin, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Laureth-4, Sodium Formate, Prunus Armeniaca Kernel Oil, Alcohol, Glyceryl Oleate, Linalool, Benzyl Alcohol, Lactic Acid, Benzyl Salicylate, Limonene, Tocopherol, Benzoic Acid, Sodium Hydroxide, Vanilla Planifolia Fruit Extract, Phoenix Dactylifera Fruit Extract",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside",
+      "Laureth-2",
+      "Laureth-4"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "PEG-18 Glyceryl Oleate/Cocoate",
+      "PEG-40 Hydrogenated Castor Oil",
+      "Hydrogenated Castor Oil",
+      "Prunus Armeniaca Kernel Oil",
+      "Glyceryl Oleate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid",
+      "Lactic Acid",
+      "Benzoic Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Sodium Laureth Sulfate steht sehr früh und wird durch Cocamidopropyl Betaine sowie weitere nichtionische Co-Tenside ergänzt; das stützt eine starke, aber nicht exakt quantifizierbare Reinigung.",
+    "conditioningLevel": "Frühe Rückfettungs-/Lipidbestandteile, Panthenol und kationisches Guar ergeben eine deutliche nicht-silikonbasierte Pflegearchitektur.",
+    "weightPotential": "Der v1.4-Schwellenwert für hohes Gewicht ist erfüllt, weil ein Lipid-/Rückfettungspfad und ein kationischer Polymerpfad als getrennte substanzielle Routen vorliegen; die Reinigung hebt diese Routen nicht automatisch auf.",
+    "focusPrimary": "Ohne Produktname, Claim oder Anwendungskontext wird keine dominante Spezialrolle abgeleitet; die Formel wird deshalb blind als allgemeines Shampoo eingeordnet.",
+    "focusSecondary": "Es liegt kein eigenständiger sekundärer Claim mit separater Formelroute vor; deshalb bleibt die Liste leer.",
+    "usageRole": "Es gibt keinen Hinweis auf häufige Nutzung, Reset, Tiefenreinigung oder Anti-Schuppen-Behandlung; die Standardrolle ist regulär.",
+    "scalpComfortTarget": "Die Formel enthält zwar mildernde Co-Tensid- und Rückfettungssignale, aber keinen erkennbaren gezielten Kopfhaut-Komfortpfad.",
+    "dandruffSupport": "Die akzeptierten Anti-Schuppen-Aktive Piroctone Olamine und Climbazole fehlen in der vollständigen INCI."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "low",
+    "focusSecondary": "moderate",
+    "usageRole": "high",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-geführtes Tensidsystem mit Cocamidopropyl Betaine, Coco-Glucoside und Laureth-Co-Tensiden/Solubilisatoren.",
+    "Mehrere Rückfettungs- und Lipidbausteine erscheinen früh bis mittel in der INCI, darunter PEG-18 Glyceryl Oleate/Cocoate und PEG-40 Hydrogenated Castor Oil.",
+    "Guar Hydroxypropyltrimonium Chloride ist als kationischer Polymerpfad vorhanden, wenn auch später in der Liste.",
+    "Panthenol, Glycerin und botanische Extrakte unterstützen eher Gefühl/Positionierung als eigenständige Reparatur- oder Volumenbeweise.",
+    "Keine Silikone, keine Proteine, keine erkennbaren Chelatoren und keine Piroctone-Olamine-/Climbazole-Route."
+  ],
+  "counterSignals": [
+    "Glycol Distearate zählt wegen der Pearlizer-False-Friend-Regel nicht allein als Haar-Glanzroute.",
+    "Citric Acid und Lactic Acid sind ohne fertigen pH-Wert oder passende saure Pflegearchitektur nur schwache S2-Hinweise.",
+    "Declared fragrance allergens, Alcohol und Parfum begrenzen eine milde oder sensitive Interpretation aus der Formel allein."
+  ],
+  "ruleApplication": {"policyVersion":"shampoo-classification-v1.4-draft","focusPrimary":{"claimDirection":"repair","formulaCompatible":true,"formulaRoute":"Lipid-/Rückfettungsbausteine und kationisches Guar liefern eine kosmetische Gleit- und Schutzroute (R1).","decisionReason":"Die dominante Positionierung betrifft gestresstes, trockenes Haar und Reparatur; die R1-Pflegearchitektur ist dafür kompatibel."},"focusSecondary":{"defaultEmptyConsidered":true,"selectedValues":[],"claimDirections":[],"independentFormulaRoutes":[],"distinctFromPrimary":true,"exception":"none"},"usageRole":{"defaultRole":"regular","trigger":"none","triggerEvidence":[],"rationale":"Die Repair-Positionierung ist ein normales Rinse-off Shampoo ohne Reset-, Tiefenreinigungs- oder Behandlungstrigger; regular bleibt die Standardrolle."},"weightPotential":{"formulaRoutes":[{"kind":"cationic_polymer","strength":"substantive","ingredientPosition":"late_or_sub1","evidence":"Guar Hydroxypropyltrimonium Chloride bildet einen kationischen Ablagerungspfad."},{"kind":"lipid_butter_oil","strength":"substantive","ingredientPosition":"mid","evidence":"PEG-18 Glyceryl Oleate/Cocoate, PEG-40 Hydrogenated Castor Oil, Öle und Glyceryl Oleate bilden einen Lipid-/Rückfettungspfad."}],"competingSignals":["Die SLES-geführte Reinigung kann die Nettoablagerung begrenzen, hebt zwei substanzielle Routen aber nicht automatisch auf."],"confidenceLimit":"formula_identity"}},
+  "finalDelta": [{"property":"focusPrimary","blindValue":"general","finalValue":"repair","reason":"Die unblinde Positionierung ist klar Repair für trockenes, gestresstes Haar; die kosmetische R1-Pflegearchitektur ist kompatibel."}],
+  "candidate_id": "jean-len-repair-dattel-vanille",
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "7ee95bc89523bb54674291dc0c013b9cc2b755d3331acb7bbb9b0a622ba3744c"
+  },
+  "payloadHash": "1ea0e5b63c3a8cda200605ce78c2bf58e7079957dd87204b673ea29c9c9375e0"
+}

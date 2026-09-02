@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W004",
+  "formula": { "inciFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730", "sourceTier": "official", "capturedAt": "2026-08-10T18:00:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "payload_lipid", "name": "glycine soja oil/soybean oil", "position": 6 }, { "family": "payload_lipid", "name": "dicaprylyl ether", "position": 13 }, { "family": "cationic_polymer", "name": "hydroxypropyl guar hydroxypropyltrimonium chloride", "position": 19 }, { "family": "cationic_polymer", "name": "polyquaternium-7", "position": 22 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "amphoteric_surfactant", "name": "coco-betaine", "position": 3 }], "excludedIngredients": [{ "name": "glycol distearate", "position": 4, "reason": "Zählt nicht als persistente Route." }, { "name": "peg-60 hydrogenated castor oil", "position": 12, "reason": "Solubilisator zählt nicht als persistente Route." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Frühes Sojaöl und Dicaprylyl Ether bilden zusammen mit zwei kationischen Polymeren eine reale, aber nicht reichhaltige Ablagerungslast." },
+  "persistence": { "value": "moderate", "rationale": "Die kationischen Polymere können die Lipid-Payload am Haar halten; die relevanten Materialien stehen jedoch nicht als schwere 2-in-1-Architektur im Vordergrund." },
+  "resetCapacity": { "value": "strong", "rationale": "Sodium Laureth Sulfate an Position zwei mit Coco-Betaine ergibt eine deutlich rücksetzende Waschbasis." },
+  "competingSignals": ["Frühes Sojaöl und zwei Polymere sprechen gegen low.", "Die starke SLES/Coco-Betaine-Basis begrenzt die Persistenz und spricht gegen high."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die ganze Formel verbindet eine sichtbare Lipid- und Polymer-Ablagerungsseite mit einer starken Reset-Basis; daraus ergibt sich moderate statt eine einseitige Einordnung.",
+  "whyNotNeighborBand": "Low würde die frühe Payload plus zwei kationische Polymere ignorieren. High würde eine stärkere oder persistenter konstruierte Pflegearchitektur voraussetzen, als die stark reinigende Basis trägt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "INCI-Reihenfolge zeigt keine exakten Konzentrationen oder reale Ablagerungsmenge." }
+}

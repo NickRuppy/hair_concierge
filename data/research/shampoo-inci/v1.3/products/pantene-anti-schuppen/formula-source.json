@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "8700216558037",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-de-1561902",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+      "productMatch": "exact_gtin"
+    },
+    {
+      "id": "rossmann-de-8700216558037-2026-08-23",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-23T10:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-anti-schuppen-shampoo/p/8700216558037",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+      "productMatch": "exact_gtin"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Dimethicone, Sodium Chloride, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Trideceth-10, Tetrasodium EDTA, Panthenol, Sodium Hydroxide, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "sodium xylenesulfonate",
+    "cocamidopropyl betaine",
+    "sodium citrate",
+    "dimethiconol",
+    "parfum",
+    "citric acid",
+    "cocamide mea",
+    "glycol distearate",
+    "dimethicone",
+    "sodium chloride",
+    "guar hydroxypropyltrimonium chloride",
+    "piroctone olamine",
+    "sodium benzoate",
+    "tea-dodecylbenzenesulfonate",
+    "sodium salicylate",
+    "trideceth-10",
+    "tetrasodium edta",
+    "panthenol",
+    "sodium hydroxide",
+    "hexyl cinnamal",
+    "histidine",
+    "triethylene glycol",
+    "propylene glycol",
+    "benzyl alcohol"
+  ],
+  "inciFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

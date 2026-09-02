@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "shampoo-inci-v1.4-archive-ready-check-v1",
+  "checkedAt": "2026-09-02T11:38:42+02:00",
+  "branch": "codex/shampoo-inci-research-archive",
+  "base": "origin/main",
+  "baseSha": "26518fbac471f9f89ec594e3fe9fbaf0bd41b858",
+  "scope": "Research-only archive of the Shampoo INCI v1.4 methodology, frozen evidence, 50-product candidate, 10-product holdout and integrity validation.",
+  "archiveContentFingerprint": "7b8bf543ad23cbdda10249fe950ddd9217eb03858b39a4116c5c3f1243bd4a55",
+  "archiveContentFiles": 519,
+  "outcomes": [
+    "The v1.4 classification standard and new-product runbook are the supported reusable method.",
+    "The frozen 50-product candidate retains eight properties per product, zero low-confidence properties and zero missing rationale references.",
+    "The independent 10-product holdout retains its passing gate and 18-profile replay.",
+    "The archive validator verifies nine canonical pins, 112 candidate source locks and the complete 519-file archive content fingerprint.",
+    "No application routes, database migrations, catalog importers, recommendation logic or production activation are included."
+  ],
+  "verification": [
+    {
+      "command": "npm run research:shampoo:validate-parked-v14",
+      "result": "passed; 121 pins and 519 archived files verified"
+    },
+    {
+      "command": "node --import tsx --test tests/shampoo-research-parked-package.test.ts",
+      "result": "passed 2/2"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npx eslint --no-ignore scripts/shampoo-research/validate-parked-package.ts tests/shampoo-research-parked-package.test.ts",
+      "result": "passed with zero warnings"
+    },
+    {
+      "command": "find data/research/shampoo-inci -type f -name '*.json' -print0 | xargs -0 -n 50 jq empty",
+      "result": "passed for all archived JSON"
+    },
+    {
+      "command": "git diff --cached --check over non-verbatim archive files",
+      "result": "passed; two preserved historical source artifacts contain intentional trailing-space formatting"
+    }
+  ],
+  "independentReview": {
+    "reviewer": "Claude Code Opus 4.8, high effort, read-only",
+    "verdict": "Safe to commit as a research-only archive; no hard defects.",
+    "findingsAddressed": [
+      "The landing page now states that historical replay scripts are provenance-only because experimental engine code is intentionally excluded.",
+      "Integrity coverage was expanded from the top-level and candidate locks to the complete archive content.",
+      "Candidate source-pin verification no longer depends on a hard-coded slice offset."
+    ]
+  },
+  "residualRisk": "INCI lists do not reveal exact concentrations or finished-product performance. The archive preserves research conclusions and procedure; later production use requires a separate Product Intake and activation plan.",
+  "stopBoundary": "No catalog import, database write, product behavior change, merge, deployment or production activation is authorized by this receipt."
+}

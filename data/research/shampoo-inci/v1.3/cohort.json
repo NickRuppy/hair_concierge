@@ -1,0 +1,628 @@
+{
+  "schema_version": "shampoo-inci-cohort-v1.4",
+  "captured_at": "2026-08-10T15:37:39.146Z",
+  "source_query": {
+    "table": "products",
+    "columns": [
+      "id",
+      "brand",
+      "name",
+      "category",
+      "category_key",
+      "is_active",
+      "lifecycle_status",
+      "is_chaarlie_recommended"
+    ],
+    "candidate_filters": {
+      "is_active": true,
+      "lifecycle_status": "active",
+      "category_key": "shampoo"
+    },
+    "audit_filters": {
+      "is_active": true,
+      "lifecycle_status": "active",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null
+    }
+  },
+  "catalog_counts": {
+    "queried_regular_shampoos": 53,
+    "in_scope_candidates": 51,
+    "recommended": 47,
+    "not_recommended": 4,
+    "explicit_exclusions": 2,
+    "null_key_deep_cleansing": 5
+  },
+  "candidates": [
+    {
+      "candidate_id": "guhl-kopfhaut-sensitive",
+      "product_id": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "brand": "Guhl",
+      "name": "Guhl Kopfhaut Sensitive",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "salthouse-anti-fett",
+      "product_id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "brand": "Salthouse",
+      "name": "Salthouse Anti Fett",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "brand": "Head & Shoulders",
+      "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "wahre-schatze-sanfte-hafermilch",
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "brand": "Wahre Schätze",
+      "name": "Wahre Schätze Sanfte Hafermilch",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "langhaarmaedchen-beautiful-curls",
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "brand": "Langhaarmädchen",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "guhl-hyaluron-plus",
+      "product_id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "brand": "Guhl",
+      "name": "Guhl Hyaluron+",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "hask-argan-oil",
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "brand": "Hask",
+      "name": "Hask Shampoo Argan Oil",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "salthouse-anti-juckreiz",
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "brand": "Salthouse",
+      "name": "Salthouse Anti Juckreiz",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "dejan-garz-shampoo",
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "brand": "Dejan Garz",
+      "name": "Dejan Garz Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "salthouse-anti-schuppen",
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "brand": "Salthouse",
+      "name": "Salthouse Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "ogx-renewing",
+      "product_id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "brand": "OGX",
+      "name": "OGX Renewing",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sebamed-anti-schuppen",
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "brand": "Sebamed",
+      "name": "Sebamed Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "lavera-basis-sensitiv",
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "brand": "Lavera",
+      "name": "Lavera Basis Sensitiv",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "ogx-biotin-collagen",
+      "product_id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "brand": "OGX",
+      "name": "OGX Biotin & Collagen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "syoss-intense-curls",
+      "product_id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "brand": "Syoss",
+      "name": "Syoss Intense Curls",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "swiss-o-par-teebaumol",
+      "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "brand": "Swiss-O-Par",
+      "name": "Swiss-O-Par Teebaumöl",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sebamed-urea-5",
+      "product_id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "brand": "Sebamed",
+      "name": "Sebamed Urea 5%",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sante-glossy-shine",
+      "product_id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "brand": "Sante",
+      "name": "Sante Glossy Shine",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "pantene-anti-schuppen",
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "brand": "Pantene",
+      "name": "Pantene Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "neqi-volume-victory",
+      "product_id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "brand": "Neqi",
+      "name": "Neqi Volume Victory",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sante-sensitive-care",
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "brand": "Sante",
+      "name": "Sante Sensitive Care",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "monday-volume-kraft-fuelle",
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "brand": "Monday Haircare",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "pantene-pro-v-volumen-pur",
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "brand": "Pantene",
+      "name": "Pantene Pro-V Volumen Pur",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "head-shoulders-sensitive",
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "brand": "Head & Shoulders",
+      "name": "Head & Shoulders Anti Schuppen Sensitive",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "pantene-grow-abundance",
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "brand": "Pantene",
+      "name": "Pantene Grow Abundance",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "guhl-anti-schuppen",
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "brand": "Guhl",
+      "name": "Guhl Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "ogx-rosemary",
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "brand": "OGX",
+      "name": "OGX Rosemary",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sebamed-anti-schuppen-plus",
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "brand": "Sebamed",
+      "name": "Sebamed Anti Schuppen Plus",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "loreal-elvital-glycolic-gloss",
+      "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "brand": "L'Oréal Paris",
+      "name": "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": false
+    },
+    {
+      "candidate_id": "guhl-kraft-und-fuelle",
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "brand": "Guhl",
+      "name": "Guhl Kraft & Fülle",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "schauma-anti-schuppen",
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "brand": "Schauma",
+      "name": "Schauma Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "hair-biology-revitalize-soothe",
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "brand": "Hair Biology",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "cantu-locken-pflege",
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "brand": "Cantu",
+      "name": "Cantu Shampoo Locken Pflege",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-ultra-sensitive",
+      "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "brand": "Balea",
+      "name": "Balea Ultra Sensitive",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "neqi-moisture-mystery",
+      "product_id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "brand": "Neqi",
+      "name": "Neqi Moisture Mystery",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-2-in-1-urea-5",
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "brand": "Balea",
+      "name": "Balea 2 in 1 Urea 5%",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "syoss-intense-fullness-shampoo",
+      "product_id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "brand": "Syoss",
+      "name": "Syoss Intense Fullness Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": false
+    },
+    {
+      "candidate_id": "ogx-keratin-oil",
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "brand": "OGX",
+      "name": "OGX Keratin Oil",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "hask-curl-care",
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "brand": "Hask",
+      "name": "Hask Curl Care Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "guhl-frische-und-leichtigkeit",
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "brand": "Guhl",
+      "name": "Guhl Frische und Leichtigkeit",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-professional-ultimate-volume",
+      "product_id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "brand": "Balea",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "brand": "Head & Shoulders",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "langhaarmadchen-lovely-long",
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "brand": "Langhaarmädchen",
+      "name": "Langhaarmädchen Lovely Long",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "sebamed-every-day-shampoo",
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "brand": "Sebamed",
+      "name": "Sebamed Every-Day Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-aqua-hyaluron",
+      "product_id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "brand": "Balea",
+      "name": "Balea Aqua Hyaluron",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-kopfhaut-sensitive",
+      "product_id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "brand": "Balea",
+      "name": "Balea Kopfhaut Sensitive Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "nivea-shampoo-conditioner-2in1",
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "brand": "Nivea",
+      "name": "Nivea Shampoo&Conditioner 2in1",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "balea-med-anti-schuppen",
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "brand": "Balea Med",
+      "name": "Balea Med Anti Schuppen",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    },
+    {
+      "candidate_id": "ogx-renewing-argan-oil-of-morocco-renewing-argan-oil-of-morocco-shampoo",
+      "product_id": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+      "brand": "OGX",
+      "name": "OGX Renewing Argan Oil of Morocco Renewing Argan Oil of Morocco Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": false
+    },
+    {
+      "candidate_id": "syoss-intense-volume-shampoo",
+      "product_id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "brand": "Syoss",
+      "name": "Syoss Intense Volume Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": false
+    },
+    {
+      "candidate_id": "pantene-hydra-glow",
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "brand": "Pantene",
+      "name": "Pantene Hydra Glow Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true
+    }
+  ],
+  "exclusions": [
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "brand": "Gliss",
+      "name": "Tiefenreinigungs-Shampoo",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null,
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "null_category_key_deep_cleansing_display"
+    },
+    {
+      "product_id": "07895098-a301-4137-b5c6-9061589b1800",
+      "brand": "NEQI",
+      "name": "Deep Cleansing Shampoo",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null,
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "null_category_key_deep_cleansing_display"
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "brand": "Balea",
+      "name": "Balea Tiefenreinigung",
+      "category": "Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "known_deep_cleansing_mismatch"
+    },
+    {
+      "product_id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "brand": "Balea",
+      "name": "Shampoo Tiefenreinigung",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null,
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "null_category_key_deep_cleansing_display"
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "brand": "Wahre Schätze",
+      "name": "Wahre Schätze Aktivkohle",
+      "category": "Shampoo",
+      "category_key": "shampoo",
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "known_deep_cleansing_mismatch"
+    },
+    {
+      "product_id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "brand": "Swiss-O-Par",
+      "name": "Tiefenreinigung Shampoo",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null,
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "null_category_key_deep_cleansing_display"
+    },
+    {
+      "product_id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "brand": "ISANA",
+      "name": "Professional Shampoo Tiefenreinigung",
+      "category": "Tiefenreinigungsshampoo",
+      "category_key": null,
+      "lifecycle_status": "active",
+      "is_active": true,
+      "is_chaarlie_recommended": true,
+      "exclusion_reason": "null_category_key_deep_cleansing_display"
+    }
+  ],
+  "snapshot_hash": "b6849896d32c9973c97fa12f3ef91f6fe916d092dfd86c77d5141fc72e5c3141"
+}

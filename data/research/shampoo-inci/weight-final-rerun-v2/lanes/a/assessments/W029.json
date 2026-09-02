@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W029",
+  "formula": {
+    "inciFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "silicone",
+        "name": "dimethicone",
+        "position": 6
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 7
+      },
+      {
+        "family": "silicone",
+        "name": "amodimethicone",
+        "position": 24
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 5
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "cocamide mea",
+        "position": 8
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "coco-betaine",
+        "position": 9
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 3,
+        "reason": "Zählt nicht als persistente Route."
+      },
+      {
+        "name": "citrus limon peel oil",
+        "position": 30,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Dimethicone an Position 6, kationisches Guar an Position 7 und zusätzlich Amodimethicone ergeben eine deutlich konvergierende Depositionsarchitektur."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Silikone plus kationisches Polymer sind plausibel persistent und können bei wiederholter Anwendung kumulieren."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES und amphotere Co-Tenside reinigen solide, aber die frühe Silikon-/Polymerlast wird dadurch nicht aufgehoben."
+  },
+  "competingSignals": [
+    "SLES und mehrere Co-Tenside liefern Gegenreinigung.",
+    "Amodimethicone liegt spät, sodass nicht jede Depositionsroute gleich prominent ist."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist gerechtfertigt, weil frühes Dimethicone und frühes kationisches Guar mit zusätzlichem Amodimethicone mehrere persistente Wege kombinieren.",
+  "whyNotNeighborBand": "Moderate würde die frühe Silikon-Polymer-Kombination unterschätzen; Low ist wegen der persistenten Mehrfachdeposition nicht plausibel.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Formel ist vollständig, aber retailer-basiert und nur moderat identitätssicher; genaue Silikon-/Polymermengen bleiben unbekannt."
+  }
+}

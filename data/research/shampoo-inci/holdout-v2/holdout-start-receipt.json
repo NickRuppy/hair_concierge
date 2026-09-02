@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "shampoo-research-holdout-start-v2",
+  "capturedAt": "2026-08-26T20:30:00+02:00",
+  "policyVersion": "shampoo-classification-v1.4-draft",
+  "baselineHashes": {
+    "v13AndGeneratedIndex": "d4aa21113485e89833e2595b023ba1a34a27c46c3177e0e334b3ca14974edfc7",
+    "holdoutV1Tree": "b6235a95c760f29d945df3e4600dfe811db6ed7d2c058427627523a70bed9489",
+    "holdoutV1ReportBytes": "bf1c141e70b6816abe8400378d2e9c967acb9f99c89257cf1c92d984e4b0c8ee",
+    "holdoutV1InternalReportHash": "2aa5d4510a18d8fe6ecdc48888446d1483a5b19a94e3993f6d0fffc1710aa0ca"
+  },
+  "liveCatalogCheck": {
+    "readOnly": true,
+    "activeShampooRows": 54,
+    "selectedNameMatches": 0,
+    "selectedGtinMatches": 0,
+    "writesPerformed": false
+  },
+  "selectedGtins": [
+    "4066447806786",
+    "4066447975284",
+    "4305615975917",
+    "8006530290012",
+    "3600542040068",
+    "4015100893021",
+    "4006000192345",
+    "4006000158464",
+    "4072600282427",
+    "4260702181865"
+  ],
+  "recoveryNote": "The pre-registered ten-product selection and baseline receipt were restored from the orchestrator's pre-run transcript after an out-of-scope source worker overwrote them. Its alternative labels/analyses/agreement/adjudication were discarded before independent v2 evaluation; the selected products were not substituted."
+}

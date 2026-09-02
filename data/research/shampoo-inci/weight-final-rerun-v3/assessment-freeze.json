@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-correction-v3-freeze-v1",
+  "lanes": {
+    "a": {
+      "records": 4,
+      "sha256": "a83e6d503eeebfcfb1ecabefea69b6d10c5012edc2cf46928618f09aa836f97b"
+    },
+    "b": {
+      "records": 4,
+      "sha256": "f42826059e6ee0ef7fb7582a3896ba7393889f55bf06c1554e1cc479ac00f9e9"
+    }
+  },
+  "disagreements": 1,
+  "adjudicationSha256": "17f33d20b8028aeedcd41706e136c035f71e27c1536d867a6c5322e5db95e0d1"
+}

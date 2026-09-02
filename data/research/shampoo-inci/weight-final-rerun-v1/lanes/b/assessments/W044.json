@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W044",
+  "formula": {
+    "inciFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"cationic_polymer","name":"hydroxypropyl oxidized starch pg-trimonium chloride","position":11},{"family":"cationic_conditioner","name":"hydroxypropyl oxidized starch pg-trimonium chloride","position":11}],"resetRelevant":[{"family":"nonionic_surfactant","name":"decyl glucoside","position":2},{"family":"anionic_surfactant","name":"disodium laureth sulfosuccinate","position":3}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Der einzige Ablagerungshinweis ist derselbe kationische Stärkebaustein an Position 11; Lipide, Silikone und Proteine fehlen."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Eine einzelne, eher spät stehende kationische Route stützt nur leichte Persistenz."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Decyl Glucoside und Sulfosuccinate reinigen mild bis solide; ein weiterer gelisteter starker Reset-Hinweis fehlt."
+  },
+  "competingSignals": [
+    "Der kationische Stärkebaustein kann Pflegeablagerung liefern.",
+    "Die Formel ist sonst sehr schlank und frei von schweren Pflegesystemen."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil nur eine einzelne kationische Route ohne Verstärkung vorliegt.",
+  "whyNotNeighborBand": "Moderate wäre erst besser gestützt, wenn weitere persistente Pflegesysteme oder eine deutlich frühere/reichere Conditionerarchitektur vorhanden wären.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die Einsatzmenge des kationischen Stärkebausteins ist unbekannt."
+  }
+}

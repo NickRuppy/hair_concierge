@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4008890006429",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "salthouse-de-anti-schuppen-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://salthouse.com/de/produkte/anti-schuppen-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citric Acid, Sodium Benzoate, Maris Sal (Dead Sea Salt), Potassium Sorbate, Glycerin, Melaleuca Alternifolia (Tea Tree) Leaf Oil, Limonene, Aloe Barbadensis Leaf Juice Powder, Lactic Acid, Citrus Limon Peel Oil, Citrus Sinensis Peel Oil Expressed, Litsea Cubeba Fruit Oil, Silt"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citric Acid, Sodium Benzoate, Maris Sal (Dead Sea Salt), Potassium Sorbate, Glycerin, Melaleuca Alternifolia (Tea Tree) Leaf Oil, Limonene, Aloe Barbadensis Leaf Juice Powder, Lactic Acid, Citrus Limon Peel Oil, Citrus Sinensis Peel Oil Expressed, Litsea Cubeba Fruit Oil, Silt",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "piroctone olamine",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "citric acid",
+    "sodium benzoate",
+    "maris sal (dead sea salt)",
+    "potassium sorbate",
+    "glycerin",
+    "melaleuca alternifolia (tea tree) leaf oil",
+    "limonene",
+    "aloe barbadensis leaf juice powder",
+    "lactic acid",
+    "citrus limon peel oil",
+    "citrus sinensis peel oil expressed",
+    "litsea cubeba fruit oil",
+    "silt"
+  ],
+  "inciFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

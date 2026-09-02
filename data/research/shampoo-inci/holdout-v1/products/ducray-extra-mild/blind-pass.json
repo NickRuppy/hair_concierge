@@ -1,0 +1,176 @@
+{
+  "candidate_id": "ducray-extra-mild",
+  "blindCode": "C",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Coco-Glucoside, Citric Acid, Parfum, Glyceryl Oleate, Hydrogenated Vegetable Glycerides Citrate, Sodium Benzoate, Tocopherol",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Vegetable Glycerides Citrate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "focusPrimary": "general",
+    "focusSecondary": [
+      "volume"
+    ],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES ist das Haupttensid, wird aber durch CAPB und Coco-Glucoside begleitet; ohne breite Klärungsarchitektur bleibt der Band eher moderat bis moderat-stark.",
+    "conditioningLevel": "Glyceryl Oleate und ein pflanzlicher Glycerid-/Citrat-Lipid-Hinweis stützen leichte Refatting-/Smoothing-Pflege, aber ohne Deposition-Polymer nur moderat.",
+    "weightPotential": "Die Refatting-Signale sind begrenzt und es fehlen persistente Polymere oder Silikone; das SLES-System bietet zugleich Reset-Kapazität.",
+    "focusPrimary": "Die Formel wirkt wie ein balancierter Standardreiniger mit leichter Rückfettung; kein Spezialfokus dominiert klar genug.",
+    "focusSecondary": "Moderate Reinigung bei niedrigem Gewicht kann Leichtigkeit unterstützen, aber ohne spezifischen Bodying-Film nur sekundär.",
+    "usageRole": "Das Verhältnis aus SLES-Reinigung, Co-Tensiden und leichter Rückfettung passt eher zu regulärer Nutzung als zu Reset oder Treatment.",
+    "scalpComfortTarget": "Es gibt keine klare kopfhautkomfort-spezifische Route; Parfum spricht zusätzlich gegen eine sensitive Zielarchitektur.",
+    "dandruffSupport": "Weder Piroctone Olamine noch Climbazole sind enthalten; Citric Acid oder Tocopherol ändern diese Regel nicht."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES + CAPB + Coco-Glucoside bilden eine übliche moderierte Tensidbasis.",
+    "Glyceryl Oleate und Hydrogenated Vegetable Glycerides Citrate geben ein leichtes Lipid-/Rückfettungssignal.",
+    "Keine Silikone, kationischen Polymere, Proteine oder Chelatoren."
+  ],
+  "counterSignals": [
+    "SLES an zweiter Stelle kann je nach Aktivgehalt stärker reinigen.",
+    "Glyceryl Oleate kann in Rinse-off begrenzt deponieren; keine Coacervation ist aus INCI beweisbar.",
+    "Parfum bleibt ein Expositionshinweis für empfindliche Präferenzen."
+  ],
+  "payloadHash": "b577bcd873ddf00a1b90fb5235eeed0fe06c31bf9f016916028053143eb10c3d",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "gentle",
+      "reason": "Die unblindete aktuelle Produktpositionierung ist Extra Mild/hohe Verträglichkeit/ganze Familie; die SLES-Co-Tensid-Formel widerspricht einem sanften Fokus nicht."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [
+        "volume"
+      ],
+      "finalValue": [
+        "general"
+      ],
+      "reason": "Der leichte Volumen-Nebeneffekt ist schwächer als die bestätigte allgemeine Daily-/Family-Shampoo-Rolle."
+    },
+    {
+      "property": "usageRole",
+      "blindValue": "regular",
+      "finalValue": "frequent",
+      "reason": "Current exact-product positioning says daily/frequent use; cleansing remains moderate, not strong reset."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "targeted",
+      "reason": "Post-unblind exact product evidence explicitly targets normal-to-sensitive scalp/hair tolerance and high tolerability."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W042",
+  "formula": {
+    "inciFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"silicone","name":"dimethiconol","position":7},{"family":"silicone","name":"dimethicone","position":13},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":14}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4},{"family":"nonionic_surfactant","name":"cocamide mea","position":10}],"excludedIngredients":[{"name":"glycol distearate","position":11,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Dimethiconol relativ früh, zusätzlich Dimethicone und kationisches Guar ergeben mehrere persistente Ablagerungssignale."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Zwei Silikonformen plus kationisches Polymer sind plausibel haftend und können nach wiederholter Anwendung spürbar bleiben."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES, Betain und Cocamide MEA reinigen solide, erreichen aber keine so starke Gegenevidenz wie ein SLES/SLS-Reset."
+  },
+  "competingSignals": [
+    "SLES-basierte Reinigung begrenzt die Wirkung teilweise.",
+    "Frühes Dimethiconol und weitere Silikon-/Polymerroute sprechen für high."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist gestützt, weil mehrere persistente Systeme zusammenkommen und der Reset diese Konvergenz nicht ausreichend relativiert.",
+  "whyNotNeighborBand": "Moderate würde die frühe Silikonprominenz zusammen mit Dimethicone und Guar zu niedrig ansetzen.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und unbekannte Silikondispersion begrenzen die Sicherheit."
+  }
+}

@@ -1,0 +1,481 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc:8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "SLES and Cocamidopropyl Hydroxysultaine lead the cleanser architecture.",
+      "Coco-Glucoside follows salt and supports a mixed surfactant system.",
+      "Hydrolyzed Wheat Protein, Biotin and Oryza Sativa Extract support the label story but are not proof of hair strengthening.",
+      "Guar Hydroxypropyltrimonium Chloride is present; no silicones or heavy oils are visible."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Volume, biotin, rice extract, low weight, no silicones.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "cocamidopropyl hydroxysultaine",
+      "coco-glucoside"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [
+      "hydrolyzed wheat protein"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact-GTIN dm-DE formula for 250 ml / GTIN 4067796075021 shows an SLES-led mixed surfactant system that supports regular moderate cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "SLES plus Cocamidopropyl Hydroxysultaine and Coco-Glucoside form a standard mixed cleansing system.",
+          "inference": "Moderate regular cleansing is formula-coherent.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The source is an exact-GTIN major retailer listing rather than a package photo, and no finished-product cleansing test is public.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic guar and hydrolyzed wheat protein support light conditioning/body feel, while the formula lacks a rich deposition system.",
+      "supportingSignals": [
+        {
+          "observation": "Guar Hydroxypropyltrimonium Chloride and Hydrolyzed Wheat Protein are present.",
+          "inference": "Low-to-light conditioning support is formula-coherent.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "light-conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone, oil-rich system or finished combing/deposition test is public.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "light-conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E1",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula lacks silicones/heavy oils and is positioned for volume, so low weight is plausible.",
+      "supportingSignals": [
+        {
+          "observation": "No visible silicone or oil system; volume-positioned formula",
+          "inference": "low weight potential",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "low-residue-volume-architecture"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No finished-product residue or volume test",
+          "inference": "weight perception remains formula-only",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "low-residue-volume-architecture"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E1",
+      "evidenceScope": "formula_only",
+      "rationale": "Low-weight cleanser plus protein/rice/biotin story aligns with volume positioning, but not with measured strengthening.",
+      "supportingSignals": [
+        {
+          "observation": "Hydrolyzed Wheat Protein, Biotin and Oryza Sativa Extract are listed in a low-weight shampoo",
+          "inference": "volume/body focus is formula-coherent",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "volume-positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No instrumental volume or fiber-strength test",
+          "inference": "do not treat as proven volume efficacy",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "volume-positioning"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula mainly supports the primary volume story; no separate secondary focus is strong enough for the database value.",
+      "supportingSignals": [
+        {
+          "observation": "Low weight, SLES-led cleansing and light protein/cationic body cues all point back to volume.",
+          "inference": "The secondary-focus value should remain empty.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "focus-limitation"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance allergens are present and no independent gentle, repair or shine endpoint is public.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "focus-limitation"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula reads as a regular volume shampoo, not a clarifying reset or treatment product.",
+      "supportingSignals": [
+        {
+          "observation": "SLES-led regular cleansing is paired with low deposition and volume-positioning cues.",
+          "inference": "Regular shampoo role is formula-coherent.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "regular-shampoo-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The formula source is exact-GTIN retailer evidence and does not include a finished-product cadence study.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "regular-shampoo-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E1",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "german-drugstore-de-ultimate-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      0,
+      1
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {},
+    "weightDepositionLoad": "Formula-only signals are bounded; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established from the captured formula evidence.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E1",
+    "tests": [],
+    "scopeNotes": "Formula-only assessment; no shampoo-only performance outcome is established."
+  },
+  "claimAudit": [
+    {
+      "claim": "Volume, biotin, rice extract, low weight, no silicones.",
+      "verdict": "indeterminate",
+      "support": "The claim is recorded separately from the formula pass.",
+      "limitation": "Volume positioning is formula-coherent, but exact package/GTIN and finished-product volume evidence are missing.",
+      "sourceIds": [
+        "german-drugstore-de-ultimate-volume"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "german-drugstore-de-ultimate-volume"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The record makes no medical diagnosis, treatment, or efficacy claim; any scalp positioning remains cosmetic and non-approved."
+  }
+}

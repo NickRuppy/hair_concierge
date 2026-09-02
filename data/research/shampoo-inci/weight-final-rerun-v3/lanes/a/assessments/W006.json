@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W006",
+  "formula": { "inciFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5", "sourceTier": "official", "capturedAt": "2026-08-10T00:00:00+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "payload_lipid", "name": "hydrogenated vegetable oil", "position": 6 }, { "family": "weak_refatter", "name": "glyceryl oleate", "position": 8 }, { "family": "cationic_polymer", "name": "guar hydroxypropyltrimonium chloride", "position": 9 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 }], "excludedIngredients": [], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Hydrogenated Vegetable Oil an Position sechs, Glyceryl Oleate und kationisches Guar sind eine erkennbare, mittlere Pflege- und Ablagerungsseite." },
+  "persistence": { "value": "moderate", "rationale": "Das kationische Guar kann Öl und Refatter am Haar unterstützen; es fehlt jedoch ein mehrfacher Silikon- oder reichhaltiger Conditioner-Stack." },
+  "resetCapacity": { "value": "strong", "rationale": "Die frühe Kombination aus SLES, Coco-Glucoside und Cocamidopropyl Betaine besitzt eine starke Reset-Kapazität." },
+  "competingSignals": ["Frühes gehärtetes Pflanzenöl spricht klar gegen low.", "Das dreiteilige Tensidsystem begrenzt eine Einordnung als high."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Öl, Refatter und Polymer sind zu substanziell für low, aber die starke Wascharchitektur verhindert, dass high aus der Gesamtformel folgt.",
+  "whyNotNeighborBand": "Low unterschätzt das frühe Pflanzenöl und die konditionierende Route. High wäre ohne persistentere Depositionsarchitektur bei dieser starken Reinigungsbasis zu weitgehend.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "INCI gibt keine Mengen oder Messung der tatsächlichen Ablagerung während des Ausspülens an." }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:balea-professional-traumlocken",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4070765001082",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-balea-professional-traumlocken-4070765001082-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1647112/balea-professional-shampoo-traumlocken",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Glycerin, Cocamidopropyl Betaine, Glycol Distearate, PEG-4 Rapeseedamide, Sodium Chloride, Coco-Glucoside, Glyceryl Oleate, Panthenol, Butyrospermum Parkii Butter, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil, Caprylic/Capric Triglyceride, Hydrolyzed Keratin, Guar Hydroxypropyltrimonium Chloride, Cetearyl Nonanoate, Triticum Vulgare Bran Extract, Triticum Vulgare Germ Extract, Citric Acid, Linoleic Acid, Benzoic Acid, Hydrogenated Castor Oil, Disodium EDTA, Tocopheryl Acetate, Tocopherol, Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate, Parfum, Amyl Salicylate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4070765001082"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Glycerin, Cocamidopropyl Betaine, Glycol Distearate, PEG-4 Rapeseedamide, Sodium Chloride, Coco-Glucoside, Glyceryl Oleate, Panthenol, Butyrospermum Parkii Butter, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil, Caprylic/Capric Triglyceride, Hydrolyzed Keratin, Guar Hydroxypropyltrimonium Chloride, Cetearyl Nonanoate, Triticum Vulgare Bran Extract, Triticum Vulgare Germ Extract, Citric Acid, Linoleic Acid, Benzoic Acid, Hydrogenated Castor Oil, Disodium EDTA, Tocopheryl Acetate, Tocopherol, Octadecyl Di-t-Butyl-4-Hydroxyhydrocinnamate, Parfum, Amyl Salicylate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate.",
+  "normalizedInci": ["aqua", "sodium laureth sulfate", "glycerin", "cocamidopropyl betaine", "glycol distearate", "peg-4 rapeseedamide", "sodium chloride", "coco-glucoside", "glyceryl oleate", "panthenol", "butyrospermum parkii butter", "triticum vulgare germ oil", "camellia oleifera seed oil", "caprylic/capric triglyceride", "hydrolyzed keratin", "guar hydroxypropyltrimonium chloride", "cetearyl nonanoate", "triticum vulgare bran extract", "triticum vulgare germ extract", "citric acid", "linoleic acid", "benzoic acid", "hydrogenated castor oil", "disodium edta", "tocopheryl acetate", "tocopherol", "octadecyl di-t-butyl-4-hydroxyhydrocinnamate", "parfum", "amyl salicylate", "tetramethyl acetyloctahydronaphthalenes", "sodium benzoate"],
+  "inciFingerprint": "2c81ceef174f7a336e145f7fe5b68dba839a1524ba080ea4ec9b9f6ba2a064d8",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

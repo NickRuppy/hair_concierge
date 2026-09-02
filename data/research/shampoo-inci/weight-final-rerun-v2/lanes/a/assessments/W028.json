@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W028",
+  "formula": {
+    "inciFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "position": 6
+      },
+      {
+        "family": "cationic_conditioner",
+        "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "position": 6
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "lauryl glucoside",
+        "position": 3
+      },
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium lauroyl sarcosinate",
+        "position": 4
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Das einzige relevante Signal ist ein kationisches oxidiertes Stärke-Derivat an Position 6; es gibt keine Silikone, Öle oder reichere Rückfetter."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Ein einzelnes kationisches Stärke-/Conditioner-Signal kann haften, wirkt ohne weitere persistente Systeme aber begrenzt."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, Lauryl Glucoside und Sodium Lauroyl Sarcosinate stehen früh und stützen einen starken Reset."
+  },
+  "competingSignals": [
+    "Drei frühe Tenside, davon zwei anionisch, sprechen klar gegen schwere Rückstände.",
+    "Keine Lipid-, Silikon- oder Mehrfachpolymer-Architektur im Paket."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil die Ablagerung trotz eines kationischen Signals leicht bleibt und die Reset-Architektur stark ist.",
+  "whyNotNeighborBand": "Moderate wäre nur plausibel, wenn das Stärke-Derivat deutlich höher/persistenter dosiert wäre; das wird durch die übrige schlanke Formel nicht gestützt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unbekannte Polymerdosierung."
+  }
+}

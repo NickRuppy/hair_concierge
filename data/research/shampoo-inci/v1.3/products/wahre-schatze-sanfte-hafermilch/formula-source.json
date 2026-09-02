@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "3600542461658",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "garnier-de-sanfte-hafermilch-1229017-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/sanfte-hafermilch/beruhigendes-shampoo",
+      "rawInci": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1)"
+    }
+  ],
+  "rawInci": "1229017 - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • GLYCERIN • GLYCINE SOJA OIL / SOYBEAN OIL • ALOE BARBADENSIS LEAF JUICE • AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT • ORYZA SATIVA STARCH / RICE STARCH • PPG-5-CETETH-20 • PEG-55 PROPYLENE GLYCOL OLEATE • PEG-60 HYDROGENATED CASTOR OIL • DICAPRYLYL ETHER • DILAURYL THIODIPROPIONATE • CARBOMER • SODIUM CHLORIDE • SODIUM HYDROXIDE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • XANTHAN GUM • POLYQUATERNIUM-7 • TOCOPHEROL • POTASSIUM SORBATE • SODIUM BENZOATE • SALICYLIC ACID • PARFUM / FRAGRANCE (F.I.L. C253486/1)",
+  "normalizedInci": [
+    "aqua/water",
+    "sodium laureth sulfate",
+    "coco-betaine",
+    "glycol distearate",
+    "glycerin",
+    "glycine soja oil/soybean oil",
+    "aloe barbadensis leaf juice",
+    "avena sativa kernel extract/oat kernel extract",
+    "oryza sativa starch/rice starch",
+    "ppg-5-ceteth-20",
+    "peg-55 propylene glycol oleate",
+    "peg-60 hydrogenated castor oil",
+    "dicaprylyl ether",
+    "dilauryl thiodipropionate",
+    "carbomer",
+    "sodium chloride",
+    "sodium hydroxide",
+    "propylene glycol",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "citric acid",
+    "xanthan gum",
+    "polyquaternium-7",
+    "tocopherol",
+    "potassium sorbate",
+    "sodium benzoate",
+    "salicylic acid",
+    "parfum/fragrance"
+  ],
+  "inciFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

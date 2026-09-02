@@ -1,0 +1,230 @@
+{
+  "blindCode": "F",
+  "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Biotin, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Citric Acid, Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Citrus Limon (Lemon) Peel Oil, Alpha-Isomethyl Ionone, Propylene Glycol",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside",
+      "Laureth-4",
+      "PEG-120 Methyl Glucose Dioleate"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "PEG-7 Glyceryl Cocoate",
+      "Glycol Distearate",
+      "Hydrogenated Castor Oil"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Sodium Laureth Sulfate steht direkt nach Wasser und wird durch Cocamidopropyl Betaine, Coco-Glucoside und weitere nichtionische Lösungsvermittler ergänzt. Das spricht für starke Reinigung, auch wenn Betain und Refatter die Wahrnehmung abmildern können.",
+    "conditioningLevel": "Ein kationisches Guar-Derivat liefert einen plausiblen substantiellen Depositionsweg; Glyceryl Oleate, PEG-7 Glyceryl Cocoate und Hydrogenated Castor Oil stützen schwach bis moderat rückfettende Gleitwirkung. Ohne Silikone oder reiches Conditioner-Gerüst bleibt das Niveau moderat.",
+    "weightPotential": "Nach v1.4 ist ein substantieller Weg erkennbar: cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydrogenated Castor Oil und Panthenol; weil kein zweiter klar substantieller Weg vorliegt, bleibt das Gewicht moderat, nicht hoch.",
+    "focusPrimary": "Ohne sichtbare Claims oder Produktpositionierung soll die Formel keinen erfundenen Nutzenfokus bekommen. Die stärkeren Mechanismen sind Reinigung plus leichte Pflege, daher ist der direkte Fokus general.",
+    "focusSecondary": "Sekundärfokus bleibt leer, weil ohne Claims keine eigenständige zweite Produktrolle belegt ist. Reinigung, Pflegegrad und Gewicht werden separat erfasst und nicht als Fokus dupliziert.",
+    "usageRole": "Kein ohne Claims erkennbarer Trigger für tägliche Spezialnutzung, Reset, Wechselrhythmus oder Behandlung. Trotz starker Reinigung ist allein daraus kein alternating- oder occasional_reset-Rollenwechsel abzuleiten.",
+    "scalpComfortTarget": "Panthenol und rückfettende Stoffe können die Formel abfedern, ergeben aber keinen kohärenten, speziell auf trockene, juckende oder empfindliche Kopfhaut gerichteten Komfortweg. Parfum, Zitronenschalenöl und deklarierter Duftstoff bleiben Expositionshinweise.",
+    "dandruffSupport": "Die vollständige Formel enthält weder Piroctone Olamine noch Climbazole. Damit ist der anerkannte Anti-Schuppen-Formelweg nicht_supported; das sagt nichts über allgemeine Kopfhautverträglichkeit."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-geführte anionische Reinigungsbasis mit amphoterem Cocamidopropyl Betaine und nichtionischen Co-Tensiden.",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride ist als kationischer Polymer-Depositionsweg vorhanden.",
+    "Mehrere rückfettende oder gleitverbessernde Stoffe sind vorhanden, aber überwiegend im mittleren bis späteren INCI-Bereich.",
+    "Citric Acid ist vorhanden; ohne fertigen pH-Wert bleibt der saure Glanzweg schwach.",
+    "Keine Silikone und kein anerkannter Anti-Schuppen-Wirkstoff gelistet."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Konzentrationen oder Coacervationsnachweise.",
+    "Glycol Distearate kann primär die Shampoo-Optik perlmuttartig machen und darf nicht als Haar-Glanzbeweis zählen.",
+    "Biotin und Panthenol belegen keinen Faserverdickungs- oder Bond-Repair-Effekt.",
+    "Parfum, Zitronenschalenöl und Alpha-Isomethyl Ionone sind Expositionshinweise, aber kein automatisches Unverträglichkeitsurteil."
+  ],
+  "candidate_id": "gliss-scalp-balance-sanft",
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "56d4abad616b9d3a382a894d9d537514426373c442b07fffba6544009bc35257"
+  },
+  "payloadHash": "7d35d5063c5effe0339cdcc41e5349447c10efde3fc9f8f04c65465ec221a1e9",
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "gentle",
+      "formulaCompatible": true,
+      "formulaRoute": "Sanftes Shampoo ist die dominante Herstellerpositionierung. Betain, Glucosid und Rückfetter stützen den Komfortweg; starke Reinigung bleibt separat sichtbar.",
+      "decisionReason": "Sanftes Shampoo ist die dominante Herstellerpositionierung. Betain, Glucosid und Rückfetter stützen den Komfortweg; starke Reinigung bleibt separat sichtbar."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [
+        "shine"
+      ],
+      "claimDirections": [
+        "shine"
+      ],
+      "independentFormulaRoutes": [
+        "Feuchtigkeit & Glanz benennt Glanz ausdrücklich neben dem sanften Kopfhautprofil. Kationisches Guar und Rückfetter liefern einen eigenständigen S1-Oberflächenweg."
+      ],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Reguläre Anwendung; starke Reinigung allein ist kein Reset- oder Alternating-Trigger."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "mid",
+          "evidence": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride liefert den substantiellen Polymerweg."
+        },
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Glyceryl Oleate und weitere Rückfetter stützen den Polymerweg, ohne eine zweite klar substanzielle reiche Lipidphase zu belegen."
+        }
+      ],
+      "competingSignals": [
+        "Keine Silikone; INCI erlaubt keine genaue Mengen- oder Persistenzmessung."
+      ],
+      "confidenceLimit": "sub1_uncertainty"
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "gentle",
+      "reason": "Unblind ist „Sanftes Shampoo“ die dominierende Produktrolle. Die Formel ist trotz starker SLES-Reinigung nicht claim-widrig, weil Betain/Glucosid und rückfettende Pflegewege die sanfte Positionierung plausibel abfedern."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "finalValue": [
+        "shine"
+      ],
+      "reason": "„Glanz“ ist als eigenständiger Nebenclaim sichtbar und hat mit kationischem Guar plus Rückfettern einen separaten S1-Glätteweg. Er bleibt sekundär, weil die Hauptpositionierung sanftes Scalp-Balance-Shampoo ist."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "targeted",
+      "reason": "Scalp Balance, sanfte Positionierung und Feuchtigkeitsclaim richten das Produkt kosmetisch auf Kopfhautkomfort. Panthenol, kationisches Guar und Rückfetter liefern eine plausible, aber nicht sensitiv-getestete Komfortroute."
+    }
+  ]
+}

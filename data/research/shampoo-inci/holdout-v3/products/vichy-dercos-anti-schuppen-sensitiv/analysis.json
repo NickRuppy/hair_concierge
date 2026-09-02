@@ -1,0 +1,491 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4",
+  "formulaVersionId": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv:7e128d54a4405651c6a358a01bd789d7182ababcb08593b37413a3839ae9d6bf",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "sensitive-scalp direction; anti-flake active positioning; itch-comfort direction",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-claim-de-vichy-dercos-anti-schuppen-sensitiv-2026-09-01"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium methyl cocoyl taurate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "peg-55 propylene glycol oleate",
+      "piroctone olamine"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "laureth-5 carboxylic acid",
+      "lactic acid",
+      "salicylic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Taurate, Laureth-5 Carboxylic Acid, CAPB und spätes Sodium Lauroyl Glutamate bilden eine moderate, nicht sulfatgetriebene Reinigungsbasis.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Taurate, Laureth-5 Carboxylic Acid, CAPB und spätes Sodium Lauroyl Glutamate bilden eine moderate, nicht sulfatgetriebene Reinigungsbasis.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Polyquaternium-10 und Emollient-/Strukturhelfer stützen moderate Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Polyquaternium-10 und Emollient-/Strukturhelfer stützen moderate Pflege.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Ein einzelner Polymerweg bleibt gegen moderate Reset-Kapazität low.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Ein einzelner Polymerweg bleibt gegen moderate Reset-Kapazität low.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "weightPotential-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die nach der Blindphase geprüfte Anti-Schuppen-Positionierung ist durch Piroctone Olamine als anerkannten kosmetischen Wirkstoffweg kompatibel.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die nach der Blindphase geprüfte Anti-Schuppen-Positionierung ist durch Piroctone Olamine als anerkannten kosmetischen Wirkstoffweg kompatibel.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusPrimary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusSecondary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Problemgeführte Anti-Schuppen-Positionierung plus Piroctone Olamine erfüllt den Treatment-Trigger.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Problemgeführte Anti-Schuppen-Positionierung plus Piroctone Olamine erfüllt den Treatment-Trigger.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "usageRole-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die geprüfte sensible-/Juckreiz-Positionierung adressiert kosmetischen Kopfhautkomfort.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die geprüfte sensible-/Juckreiz-Positionierung adressiert kosmetischen Kopfhautkomfort.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine ist in der vollständigen INCI enthalten.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Piroctone Olamine ist in der vollständigen INCI enthalten.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      }
+    },
+    "weightDepositionLoad": "Qualitative whole-formula Einordnung ohne Konzentrations- oder Wiederholungsdaten.",
+    "weightPersistence": "Persistenz wird mechanistisch aus der Gesamtarchitektur, nicht aus Routenzählung abgeleitet.",
+    "weightResetCapacity": "Reset-Kapazität wird qualitativ aus der Tensidarchitektur abgeleitet.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Leistung wird aus INCI abgeleitet.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exaktmarktformel und getrennte Quellenpaket-Reconciliation; keine shampoo-only Leistungsprüfung."
+  },
+  "claimAudit": [
+    {
+      "claim": "sensitive-scalp direction; anti-flake active positioning; itch-comfort direction",
+      "verdict": "plausible",
+      "support": "Die Positionierung wurde erst nach der Formelpass-Reconciliation berücksichtigt.",
+      "limitation": "INCI liefert keine Konzentrationen oder garantierte Endproduktwirkung.",
+      "sourceIds": [
+        "official-claim-de-vichy-dercos-anti-schuppen-sensitiv-2026-09-01"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-de-vichy-dercos-anti-schuppen-sensitiv-3337871323394-2026-09-01",
+    "official-claim-de-vichy-dercos-anti-schuppen-sensitiv-2026-09-01"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Kosmetische Kopfhautkomfort-Positionierung ohne medizinische Diagnose- oder Therapiezusage."
+  }
+}

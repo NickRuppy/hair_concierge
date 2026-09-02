@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W045",
+  "formula": {
+    "inciFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"weak_refatter","name":"glyceryl oleate","position":9},{"family":"cationic_polymer","name":"hydroxypropyl guar hydroxypropyltrimonium chloride","position":10},{"family":"weak_refatter","name":"hydrogenated palm glycerides citrate","position":15},{"family":"weak_refatter","name":"lecithin","position":16},{"family":"weak_refatter","name":"ascorbyl palmitate","position":17}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":3},{"family":"nonionic_surfactant","name":"coco-glucoside","position":8}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Glyceryl Oleate und kationisches Guar im mittleren Bereich plus mehrere späte schwache Refatter ergeben eine gebündelte, aber nicht schwere Pflegefracht."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das kationische Polymer stützt Haftung; die zusätzlichen Refatter sind spät und schwach."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES und Betain stehen direkt nach Wasser, Coco-Glucoside ergänzt die Tensidbasis."
+  },
+  "competingSignals": [
+    "Starker Reset spricht gegen high.",
+    "Polymer plus mehrere Refatter sprechen gegen low."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil die Formel mehr als eine leichte Einzelroute enthält, aber durch starke Reinigung und schwache Refatter bounded bleibt.",
+  "whyNotNeighborBand": "Low unterschätzt die Bündelung aus Polymer und Refattern; high ist ohne Silikon oder reiches Lipid-/Fettalkoholgerüst nicht tragfähig.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "INCI-only Unsicherheit zu Polymer- und Refatterkonzentrationen."
+  }
+}

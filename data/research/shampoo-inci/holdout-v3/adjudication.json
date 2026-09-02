@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "shampoo-research-holdout-v3-adjudication-v1",
+  "status": "research_only_non_mutating_overlay",
+  "policy": {
+    "version": "shampoo-classification-v1.4",
+    "path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+    "sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24"
+  },
+  "rawAgreement": {
+    "reportPath": "data/research/shampoo-inci/holdout-v3/holdout-report.json",
+    "reportFileSha256": "e372c555a4cec0e7005c5dd647d6b9c0d66783ee327bc2e3ee49316a607b3d4d",
+    "agreementPath": "data/research/shampoo-inci/holdout-v3/agreement.json",
+    "agreementFileSha256": "08ae6b75395d45bee09a3f6dabe268aaa6a46f8a45979b0ff29cf3720e29f6e4",
+    "exactAgreement": 0.8571428571428571,
+    "disagreements": 10
+  },
+  "decisions": [
+    {
+      "candidateId": "eucerin-dermocapillaire-ph5",
+      "property": "cleansingStrength",
+      "laneA": "strong",
+      "laneB": "moderate",
+      "effectiveValue": "moderate",
+      "category": "researcher_process_ambiguity",
+      "rationale": "Die amphotere Sodium-Cocoamphoacetate-Pufferung, Sorbitol und das fehlende Reset-Intent begrenzen die frühe Myreth-/Laureth-Sulfatbasis auf moderate Gesamtreinigung."
+    },
+    {
+      "candidateId": "eucerin-dermocapillaire-ph5",
+      "property": "usageRole",
+      "laneA": "regular",
+      "laneB": "frequent",
+      "effectiveValue": "frequent",
+      "category": "product_correction",
+      "rationale": "Mit moderater Reinigung erfüllt die explizite Frequent-Use-/Mild-Positionierung den dokumentierten Frequent-Trigger."
+    },
+    {
+      "candidateId": "loreal-elvital-hydra-hyaluronic",
+      "property": "cleansingStrength",
+      "laneA": "strong",
+      "laneB": "moderate",
+      "effectiveValue": "moderate",
+      "category": "researcher_process_ambiguity",
+      "rationale": "SLES wird durch CAPB, Coco-Betaine, Cocamide MEA und eine pflegende Alltagsarchitektur ohne Reset-Intent deutlich gepuffert."
+    },
+    {
+      "candidateId": "loreal-elvital-hydra-hyaluronic",
+      "property": "weightPotential",
+      "laneA": "high",
+      "laneB": "moderate",
+      "effectiveValue": "moderate",
+      "category": "product_correction",
+      "rationale": "Dimethicone, kationisches Guar und spätes Amodimethicone machen Rückstand plausibel; die wirksame Tensidbasis und fehlende reichhaltige 2-in-1-Architektur begrenzen ihn jedoch."
+    },
+    {
+      "candidateId": "loreal-elvital-hydra-hyaluronic",
+      "property": "focusPrimary",
+      "laneA": "general",
+      "laneB": "repair",
+      "effectiveValue": "repair",
+      "category": "researcher_process_ambiguity",
+      "rationale": "Innerhalb des bestehenden Fokus-Vokabulars bildet Repair die dominante restorative Feuchtigkeits-/Trockenlängen-Positionierung mit kompatibler Pflegeformel am besten ab."
+    },
+    {
+      "candidateId": "loreal-elvital-hydra-hyaluronic",
+      "property": "focusSecondary",
+      "laneA": [],
+      "laneB": ["shine"],
+      "effectiveValue": [],
+      "category": "researcher_process_ambiguity",
+      "rationale": "Glanz und Geschmeidigkeit nutzen dieselbe Silikon-/Glättungsroute wie der restorative Hauptfokus und bilden keine unabhängige Sekundärroute."
+    },
+    {
+      "candidateId": "vichy-dercos-anti-schuppen-sensitiv",
+      "property": "focusSecondary",
+      "laneA": [],
+      "laneB": ["gentle"],
+      "effectiveValue": ["gentle"],
+      "category": "product_correction",
+      "rationale": "Neben dem Piroctone-basierten Scalp-Active-Hauptfokus stützen Sensitiv-/Juckreiz-Positionierung, Bisabolol und die gepufferte sulfatfreie Tensidroute einen eigenständigen Gentle-Fokus."
+    },
+    {
+      "candidateId": "kerastase-nutritive-bain-satin-riche",
+      "property": "focusPrimary",
+      "laneA": "general",
+      "laneB": "repair",
+      "effectiveValue": "repair",
+      "category": "researcher_process_ambiguity",
+      "rationale": "Die dominante reichhaltige Pflege für sehr trockenes Haar ist eine restorative Rolle und wird durch die starke Silikon-/Konditionierungsarchitektur gestützt."
+    },
+    {
+      "candidateId": "wella-invigo-nutri-enrich",
+      "property": "conditioningLevel",
+      "laneA": "moderate",
+      "laneB": "high",
+      "effectiveValue": "high",
+      "category": "product_correction",
+      "rationale": "Frühes Dimethicone, Glycol Distearate, Panthenol/Glycerin und kationisches Guar ergeben zusammen substantielle Slip-/Softness-Unterstützung; die starke Reinigung wird separat erfasst."
+    },
+    {
+      "candidateId": "wella-invigo-nutri-enrich",
+      "property": "focusPrimary",
+      "laneA": "general",
+      "laneB": "repair",
+      "effectiveValue": "repair",
+      "category": "researcher_process_ambiguity",
+      "rationale": "Deep-Nourishing für trockenes und strapaziertes Haar ist innerhalb des bestehenden Vokabulars am ehesten ein formelkompatibler restaurativer Repair-Fokus."
+    }
+  ],
+  "methodConclusion": {
+    "repeatabilityGatePassed": true,
+    "systematicBlockingRuleGap": false,
+    "fullHoldoutRerunRequired": false,
+    "operatorClarificationRecommended": "Feuchtigkeits- oder Nährpflege für trockene/strapazierte Längen wird als repair geführt, wenn die Positionierung restorativ und die Formel kompatibel ist; reine allgemeine Feuchtigkeit ohne restorative Rolle bleibt general. Ein Glanzclaim ist kein Sekundärfokus, wenn er nur dieselbe Pflegeroute wiederholt."
+  },
+  "activation": {
+    "appliedToLaneAArtifacts": false,
+    "appliedToProfileReplay": false,
+    "reason": "Die unveränderten Lane-A- und Lane-B-Artefakte sowie das rohe Agreement bleiben als Messgrundlage erhalten. Diese Overlay-Entscheidungen sind Forschungsbefund und keine Katalog- oder Produktionsaktivierung."
+  }
+}

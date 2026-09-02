@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4103040051691",
+  "formulaCode": "PZN 07307836",
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "sebamed-de-antischuppen-200",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://sebamed.de/de/p/antischuppen-shampoo-2/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "lauryl glucoside",
+    "sodium lauroyl sarcosinate",
+    "sodium chloride",
+    "piroctone olamine",
+    "lactic acid",
+    "sodium benzoate",
+    "phenoxyethanol",
+    "sodium lactate",
+    "parfum",
+    "glycol distearate",
+    "hydroxypropyl oxidized starch pg-trimonium chloride",
+    "sodium citrate",
+    "cocamidopropyl betaine",
+    "laureth-4",
+    "citric acid",
+    "pinene",
+    "glycerin"
+  ],
+  "inciFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

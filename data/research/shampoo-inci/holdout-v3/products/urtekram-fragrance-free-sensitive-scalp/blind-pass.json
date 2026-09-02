@@ -1,0 +1,248 @@
+{
+  "candidate_id": "urtekram-fragrance-free-sensitive-scalp",
+  "rawInci": "Aqua, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Sodium Coco-Sulfate, Propanediol, Lauryl Glucoside, Glycerin, Glyceryl Caprylate, Lysolecithin, Beta-Sitosterol, Sodium Hyaluronate, Stearyl Glycyrrhetinate, Squalene, Xylitol, Glyceryl Oleate, Sodium Chloride, Tocopherol, Lactic Acid.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium coco-sulfate"
+    ],
+    "surfactantsSecondary": [
+      "coco-glucoside",
+      "lauryl glucoside"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "glyceryl oleate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "lactic acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "high",
+    "focusSecondary": "moderate",
+    "usageRole": "high",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+      "formula": {
+        "inciFingerprint": "439ee37f5822abd5d0fdb41d860d22debb67ac05bb07e24cc3e0e019dc00fdc0",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "glyceryl oleate",
+            "position": 15
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "nonionic_surfactant",
+            "name": "coco-glucoside",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium coco-sulfate",
+            "position": 4
+          },
+          {
+            "family": "nonionic_surfactant",
+            "name": "lauryl glucoside",
+            "position": 6
+          }
+        ],
+        "excludedIngredients": [],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Glyceryl Oleate ist ein später schwacher Rückfettungsweg; Glucoside und Sodium Coco-Sulfate stützen die Reset-Seite."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Glyceryl Oleate ist ein später schwacher Rückfettungsweg; Glucoside und Sodium Coco-Sulfate stützen die Reset-Seite."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "low",
+      "whyThisBand": "Glyceryl Oleate ist ein später schwacher Rückfettungsweg; Glucoside und Sodium Coco-Sulfate stützen die Reset-Seite.",
+      "whyNotNeighborBand": "Nicht moderate, weil nur ein später, schwacher Rückfettungsweg ohne Silikon oder Polymerarchitektur vorliegt.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "low",
+      "confidence": "moderate",
+      "rationale": "Glyceryl Oleate ist ein später schwacher Rückfettungsweg; Glucoside und Sodium Coco-Sulfate stützen die Reset-Seite."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "103ac5ca4232dc02661c82c2faa318b44776c7ce480a4cebb4bf79815e329818"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "gentle",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "gentle",
+      "reason": "Die nach der Blindphase geprüfte parfumfreie Sensitive-Scalp-Positionierung ist gentle-kompatibel."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "targeted",
+      "reason": "Die geprüfte Sensitive-Scalp-Positionierung adressiert kosmetischen Kopfhautkomfort."
+    }
+  ],
+  "payloadHash": "72c0ada4a4309cf75327db608df6c365946a27e9389e165b7987c6c10b184780"
+}

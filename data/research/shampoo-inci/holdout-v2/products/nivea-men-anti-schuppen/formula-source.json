@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:nivea-men-anti-schuppen",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4006000158464",
+  "formulaCode": null,
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "nivea-de-men-anti-schuppen-4006000158464-2026-08-27",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://www.nivea.de/produkte/anti-schuppen-shampoo-40060001584640001.html",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Piroctone Olamine, Bambusa Vulgaris Shoot Extract, Glycerin, Propylene Glycol, Butylene Glycol, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Parfum",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4006000158464"
+    },
+    {
+      "id": "dm-de-nivea-men-anti-schuppen-4006000158464-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-27T07:03:46Z",
+      "locator": "https://www.dm.de/p/d/1620916/nivea-men-shampoo-anti-schuppen",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Piroctone Olamine, Bambusa Vulgaris Shoot Extract, Glycerin, Propylene Glycol, Butylene Glycol, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Parfum",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4006000158464"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Laureth-9, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Piroctone Olamine, Bambusa Vulgaris Shoot Extract, Glycerin, Propylene Glycol, Butylene Glycol, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Glyceryl Oleate, Dicaprylyl Ether, Hydrogenated Castor Oil, Sodium Benzoate, Benzoic Acid, Parfum",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "laureth-9",
+    "decyl glucoside",
+    "coco-glucoside",
+    "sodium chloride",
+    "citric acid",
+    "piroctone olamine",
+    "bambusa vulgaris shoot extract",
+    "glycerin",
+    "propylene glycol",
+    "butylene glycol",
+    "guar hydroxypropyltrimonium chloride",
+    "glycol distearate",
+    "glyceryl oleate",
+    "dicaprylyl ether",
+    "hydrogenated castor oil",
+    "sodium benzoate",
+    "benzoic acid",
+    "parfum"
+  ],
+  "inciFingerprint": "cce2372259fe6a7e6fbe027b47514ba6bcf0060500db6a3b9646b192158e6f74",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "Current German manufacturer PDP contains full INCI and the exact GTIN in its URL. The official list matches dm's exact-GTIN 250 ml list. Manufacturer hair-root-strength and pH claims are positioning evidence, not proof of hair growth or measured pH."
+}

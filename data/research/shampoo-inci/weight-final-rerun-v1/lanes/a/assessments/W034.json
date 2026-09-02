@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W034",
+  "formula": {
+    "inciFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "weak_refatter",
+        "name": "ascorbyl palmitate",
+        "position": 10
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 11
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 12
+      },
+      {
+        "family": "weak_refatter",
+        "name": "hydrogenated palm glycerides citrate",
+        "position": 13
+      },
+      {
+        "family": "weak_refatter",
+        "name": "lecithin",
+        "position": 14
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 2
+      },
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium coco-sulfate",
+        "position": 4
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "sodium cocoamphoacetate",
+        "position": 5
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Mehrere schwache Rückfetter plus kationisches Guar im mittleren INCI-Bereich ergeben eine gebündelte, aber nicht schwere Depositionslast."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das Guar kann haften; Rückfetter wie Glyceryl Oleate, Lecithin und Hydrogenated Palm Glycerides Citrate bleiben eher leicht bis mittel persistent."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Coco-Glucoside, Sodium Coco-Sulfate und Sodium Cocoamphoacetate liefern gute, aber eher ausgewogene Reinigung."
+  },
+  "competingSignals": [
+    "Keine Silikone, keine schweren Öle und keine frühe cationic-polymer Dominanz.",
+    "Anionische Reinigung ist vorhanden und begrenzt die Rückstände."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist plausibel, weil mehrere leichte Routen gemeinsam spürbare Konditionierungsreste ergeben können.",
+  "whyNotNeighborBand": "Low wäre für die gebündelte Rückfetter-/Guar-Kombination zu niedrig; High fehlt eine reich persistente oder reset-arme Architektur.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unklare Dosierung der mittleren Rückfettergruppe."
+  }
+}

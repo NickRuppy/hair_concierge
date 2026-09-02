@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:guhl-langzeit-volumen",
+  "candidateId": "guhl-langzeit-volumen",
+  "capturedAt": "2026-08-27T07:03:46Z",
+  "exactIdentity": {
+    "brand": "GUHL",
+    "name": "Langzeit Volumen Kräftigendes Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "4072600282427"
+    ]
+  },
+  "selectionArchetype": "volume positioning with incidental conventional anti-dandruff active",
+  "canonicalFormulaSourceUrl": "https://www.guhl.com/produkt/langzeit-volumen/langzeit-volumen-shampoo/",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German manufacturer formula is canonical; exact-GTIN dm formula matches.",
+  "officialClaimSummary": [
+    "Mehr Volumen für feines, kraftloses oder plattes Haar",
+    "ohne Silikone"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Volume is the dominant positioned role; Piroctone Olamine does not change the primary focus into anti-dandruff.",
+    "Manufacturer FAQ explicitly permits daily washing; frequent is eligible only if the final formula classification is not strong.",
+    "Heat protection belongs to the companion styling spray, not this shampoo."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.de/p/d/1446992/guhl-shampoo-langzeit-volumen"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+  },
+  "notes": "Current German manufacturer INCI matches dm's exact-GTIN 250 ml list. The official page was updated 2026-08-22 and includes a daily-washing FAQ. The manufacturer ingredient list contains Piroctone Olamine despite volume positioning.",
+  "officialProductPage": "https://www.guhl.com/produkt/langzeit-volumen/langzeit-volumen-shampoo/"
+}

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "shampoo-weight-correction-v3-source-overrides-v1",
+  "overrides": [
+    {
+      "candidateId": "ogx-rosemary",
+      "sourceTier": "retailer",
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [
+        {
+          "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+          "normalizedInci": ["aqua/water/eau", "sodium methyl cocoyl taurate", "decyl glucoside", "cocamidopropyl betaine", "sodium chloride", "rosmarinus officinalis leaf oil", "mentha piperita oil", "menthol", "menthyl lactate", "sodium hydrolyzed potato starch dodecenylsuccinate", "amodimethicone", "coco-glucoside", "coconut acid", "disodium tetrapropenyl succinate", "glyceryl oleate", "lecithin", "starch hydroxypropyltrimonium chloride", "peg-150 distearate", "hexylene glycol", "citric acid", "sodium lactate", "sodium hydroxide", "hydrogenated palm glycerides citrate", "lactic acid", "urea", "sodium benzoate", "benzoic acid", "tocopherol", "ascorbyl palmitate", "parfum/fragrance"],
+          "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+          "materialFormulaConflict": false
+        },
+        {
+          "sourceUrl": "https://pepperyspot.com/de/products/ogx-rosemary-mint-shampoo-385-ml",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Rosmarinus Officinalis Leaf Oil, Mentha Piperita Oil, Menthol, Menthyl Lactate, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Amodimethicone, Coco-Glucoside, Coconut Acid, Disodium Tetrapropenyl Succinate, Glyceryl Oleate, Lecithin, Starch Hydroxypropyltrimonium Chloride, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Lactate, Sodium Hydroxide, Hydrogenated Palm Glycerides Citrate, Lactic acid, Urea, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+          "normalizedInci": ["aqua/water/eau", "sodium methyl cocoyl taurate", "decyl glucoside", "cocamidopropyl betaine", "sodium chloride", "rosmarinus officinalis leaf oil", "mentha piperita oil", "menthol", "menthyl lactate", "sodium hydrolyzed potato starch dodecenylsuccinate", "amodimethicone", "coco-glucoside", "coconut acid", "disodium tetrapropenyl succinate", "glyceryl oleate", "lecithin", "starch hydroxypropyltrimonium chloride", "peg-150 distearate", "hexylene glycol", "citric acid", "sodium lactate", "sodium hydroxide", "hydrogenated palm glycerides citrate", "lactic acid", "urea", "sodium benzoate", "benzoic acid", "tocopherol", "ascorbyl palmitate", "parfum/fragrance"],
+          "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+          "materialFormulaConflict": false
+        }
+      ]
+    },
+    {
+      "candidateId": "hair-biology-revitalize-soothe",
+      "sourceTier": "retailer",
+      "identityConfidence": "moderate",
+      "conflictStatus": "none",
+      "sourceRecords": [
+        {
+          "sourceUrl": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+          "normalizedInci": ["aqua", "sodium laureth sulfate", "sodium lauryl sulfate", "sodium chloride", "sodium xylenesulfonate", "cocamidopropyl betaine", "glycol distearate", "citric acid", "sodium citrate", "dimethiconol", "parfum", "piroctone olamine", "dimethicone", "sodium benzoate", "guar hydroxypropyltrimonium chloride", "tea-dodecylbenzenesulfonate", "hexyl cinnamal", "tetrasodium edta", "sodium hydroxide", "trideceth-10", "linalool", "hydroxycitronellal", "geraniol", "panthenol", "panthenyl ethyl ether", "citronellol", "propylene glycol", "magnesium nitrate", "camellia sinensis leaf extract", "niacinamide", "triethylene glycol", "benzyl alcohol", "methylchloroisothiazolinone", "magnesium chloride", "methylisothiazolinone"],
+          "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+          "materialFormulaConflict": false
+        },
+        {
+          "sourceUrl": "https://www.shop-apotheke.com/beauty/upmYKEFMP/hair-biology-shampoo-revitalize-soothe.htm",
+          "sourceTier": "retailer",
+          "country": "DE",
+          "exactProduct": true,
+          "current": true,
+          "capturedAt": "2026-09-01T18:16:12.000+02:00",
+          "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Citric Acid, Sodium Citrate, Dimethiconol, Parfum, Piroctone Olamine, Dimethicone, Sodium Benzoate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Tetrasodium EDTA, Sodium Hydroxide, Trideceth-10, Linalool, Hydroxycitronellal, Geraniol, Panthenol, Panthenyl Ethyl Ether, Citronellol, Propylene Glycol, Magnesium Nitrate, Camellia Sinensis Leaf Extract, Niacinamide, Triethylene Glycol, Benzyl Alcohol, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+          "normalizedInci": ["aqua", "sodium laureth sulfate", "sodium lauryl sulfate", "sodium chloride", "sodium xylenesulfonate", "cocamidopropyl betaine", "glycol distearate", "citric acid", "sodium citrate", "dimethiconol", "parfum", "piroctone olamine", "dimethicone", "sodium benzoate", "guar hydroxypropyltrimonium chloride", "tea-dodecylbenzenesulfonate", "hexyl cinnamal", "tetrasodium edta", "sodium hydroxide", "trideceth-10", "linalool", "hydroxycitronellal", "geraniol", "panthenol", "panthenyl ethyl ether", "citronellol", "propylene glycol", "magnesium nitrate", "camellia sinensis leaf extract", "niacinamide", "triethylene glycol", "benzyl alcohol", "methylchloroisothiazolinone", "magnesium chloride", "methylisothiazolinone"],
+          "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+          "materialFormulaConflict": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W035",
+  "formula": {
+    "inciFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-23T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"weak_refatter","name":"peg-18 glyceryl oleate/cocoate","position":5}],"resetRelevant":[{"family":"anionic_surfactant","name":"disodium laureth sulfosuccinate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":3},{"family":"nonionic_surfactant","name":"cocamide mea","position":17}],"excludedIngredients":[{"name":"citrus aurantium peel oil","position":13,"reason":"Ätherisches Duftöl ist kein Lipid-Payload."},{"name":"glycol distearate","position":14,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[{"name":"juniperus virginiana oil","position":12,"reason":"Potentiell gewichtsrelevante Funktion ist nicht gelistet."}]},
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "PEG-18 Glyceryl Oleate/Cocoate ist der einzige gelistete Pflegeträger; er wirkt eher refattend als schwer beschichtend."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Ohne kationisches Polymer, Silikon oder klaren Lipidpayload ist anhaltende Ablagerung wenig gestützt."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Sulfosuccinate und Betain stehen früh und reinigen solide, aber nicht maximal aggressiv."
+  },
+  "competingSignals": [
+    "Früher schwacher Refatter kann leichte Pflege liefern.",
+    "Es fehlt ein persistentes System, das moderate klar tragen würde."
+  ],
+  "unresolvedFacts": [
+    "juniperus virginiana oil an Position 12 ist als mögliche gewichtrelevante Funktion ungeklärt."
+  ],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low ist am besten gestützt, weil die bekannte Pflegeroute leicht ist und kein persistentes Verstärkungssystem vorliegt.",
+  "whyNotNeighborBand": "Moderate wäre nur belastbarer, wenn der ungeklärte Juniperus-Bestandteil als relevanter Lipidpayload oder die Refattermenge deutlich höher wäre.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Der ungeklärte Juniperus-Bestandteil kann die low/moderate-Grenze nicht vollständig ausschließen."
+  }
+}

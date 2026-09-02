@@ -1,0 +1,1206 @@
+{
+  "schemaVersion": "shampoo-inci-lab-review-state-v1",
+  "updatedAt": "2026-08-26T13:16:06.309Z",
+  "products": [
+    {
+      "productId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0",
+      "auditFingerprint": "69a714e015b013d70b1da3f659e78cd696987fbc47335a2114121f5354e20da3",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-25T08:59:09.000Z"
+        }
+      ]
+    },
+    {
+      "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+      "auditFingerprint": "bd5cc833406a270ecacdc6b8b07961d41341b6a94165015e942d1c3c5d3ecac2",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-25T09:03:19.665Z"
+        }
+      ]
+    },
+    {
+      "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b",
+      "auditFingerprint": "de27b0c8631caa17f5bf49033b0cd68dd2e54683a6531acb72f0e21243b4acc9",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T08:17:37.992Z"
+        }
+      ]
+    },
+    {
+      "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730",
+      "auditFingerprint": "895ab4a151753723459fe228e004dc0cf77dc08aca68dacb895e390ea5399d88",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T08:18:07.826Z"
+        }
+      ]
+    },
+    {
+      "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8",
+      "auditFingerprint": "5ce5486b8b0e5d2202152e4840bdfd9dcddc3cfbcd20f356a4063b951dd2a96c",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:10:08.258Z"
+        }
+      ]
+    },
+    {
+      "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+      "auditFingerprint": "a8695c88d4e461d203c7cead06444f722faebd3f2878d37280945f2c673c2367",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:10:59.195Z"
+        }
+      ]
+    },
+    {
+      "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481",
+      "auditFingerprint": "0c1d3656b8b0a7be8d8688cb484dc72218679df17506837b73a82e56d22e6a89",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:11:46.925Z"
+        }
+      ]
+    },
+    {
+      "productId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b",
+      "auditFingerprint": "bae8d763f3269dfdd181e26c850b91ea4cceef7cb6c0af7def1a426cfd279263",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:12:08.699Z"
+        }
+      ]
+    },
+    {
+      "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+      "auditFingerprint": "9d98c149693582e7d6d97fce23e117ad2f0fa5f6606d731c8f0dfb5a23b943ff",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:12:27.119Z"
+        }
+      ]
+    },
+    {
+      "productId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+      "auditFingerprint": "b75133f039296ab3316663f44b9f4564793854c6bd52c671a75f5ac4fb38eeaa",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:12:45.309Z"
+        }
+      ]
+    },
+    {
+      "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+      "auditFingerprint": "616856f9fd9ea650baaf6c9942850a9eef9c7c3a8645f6d7e048320183f133b7",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:13:02.117Z"
+        }
+      ]
+    },
+    {
+      "productId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865",
+      "auditFingerprint": "0de6ed8660ced254d6c56761cc90d2aa448a96e03279533df888e7973eea19cd",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:14:05.360Z"
+        }
+      ]
+    },
+    {
+      "productId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3",
+      "auditFingerprint": "9567242f18e29b58e3dca48047d5f210731611ff63bc157acee4113212f9f958",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:15:43.612Z"
+        }
+      ]
+    },
+    {
+      "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+      "auditFingerprint": "067beec0cdeb4f152b44298b9f620ec1817ae90f3f9c7e0d69f22751e3f72e02",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:16:24.617Z"
+        }
+      ]
+    },
+    {
+      "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae",
+      "auditFingerprint": "7cff1a2d4a833fe56b21442ebed51c17ca35ae09480edc9fc677b596d9882a7b",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:17:05.412Z"
+        }
+      ]
+    },
+    {
+      "productId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c",
+      "auditFingerprint": "336f0fbd2ddf3ba8976164a229b63a045c073727fb431dc04a2efff33df6a007",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T13:15:05.542Z"
+        }
+      ]
+    },
+    {
+      "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121",
+      "auditFingerprint": "890db6d47ab7a9fb8e5952252bd7b05108e64bf74f187ab69768e287984b2a6f",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:17:36.612Z"
+        }
+      ]
+    },
+    {
+      "productId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd",
+      "auditFingerprint": "14345ffdf77b9d058d75a678b0f09b6cf83543d560922d5ea3da12f6f5f19e76",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:23:19.491Z"
+        }
+      ]
+    },
+    {
+      "productId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88",
+      "auditFingerprint": "d0c97c7c3bd5c63ba7a8c702e6e25254f3ae968b066ce4a14d6b60a0cb0bff68",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:23:45.471Z"
+        }
+      ]
+    },
+    {
+      "productId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+      "auditFingerprint": "8ea1cc6118464a0f1cfa046316922d4c45b84507c251018fc166a7e88b6ee142",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:24:54.206Z"
+        }
+      ]
+    },
+    {
+      "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e",
+      "auditFingerprint": "4c712bd355e7645fd45c6830440718f8b5618cfa6fd3d2d9c7d8552c3e0b5146",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:25:28.946Z"
+        }
+      ]
+    },
+    {
+      "productId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+      "auditFingerprint": "93de1cf1ac6b99392ee09fa8ef7d116357f425d69d26b243436b0e8efdaabf4b",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:25:48.267Z"
+        }
+      ]
+    },
+    {
+      "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+      "auditFingerprint": "fb15f6c63ebe7995104838aad2f30b86d74c56de6dfe852f257e98afb2685dc7",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:26:14.543Z"
+        }
+      ]
+    },
+    {
+      "productId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02",
+      "auditFingerprint": "77307eb61ca9c04b902c4453fb0086db1569d3f6f4e274646581611745da468c",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:27:00.297Z"
+        }
+      ]
+    },
+    {
+      "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d",
+      "auditFingerprint": "0c818ae48cefd1e33127df89578cc4083a031f856ea3ad4e5cbbf87a2455f69b",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T13:15:35.731Z"
+        }
+      ]
+    },
+    {
+      "productId": "744de604-d266-453b-a56b-eea92c5ca565",
+      "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+      "auditFingerprint": "cb0585199270e30e6e37787ccc198d0ea820b8f5be704d909b1dc3d8dd0e818a",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:28:13.101Z"
+        }
+      ]
+    },
+    {
+      "productId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+      "auditFingerprint": "11032ef43bed7408db513db80ccd7f08c23c7eea6b295b0e1ea25db3f222c14f",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T13:15:17.451Z"
+        }
+      ]
+    },
+    {
+      "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+      "auditFingerprint": "277a4a769284c9d1ba7767bddb7c9203c9548b2e6e4e80e2965196e51c6be20f",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:28:42.740Z"
+        }
+      ]
+    },
+    {
+      "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c",
+      "auditFingerprint": "0c576cf18e161247843116dfc98cf1374983270d8b4594410d77fc9e2bb2e9ad",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:29:11.307Z"
+        }
+      ]
+    },
+    {
+      "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3",
+      "auditFingerprint": "36de03908c06c21ed7a5ad9bd875ffcc30804cf17b549db2da87b7e4182fd92d",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:35:14.894Z"
+        }
+      ]
+    },
+    {
+      "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+      "auditFingerprint": "48c890b32caaa40e261d0e0770b12ae0f2e4e699396ca10ec46a2a7b4693fabe",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:36:21.894Z"
+        }
+      ]
+    },
+    {
+      "productId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+      "auditFingerprint": "df33851729b61f78ce222346718b1ae0aebce3edfef3c6c23dd314ab89a8b974",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T13:15:45.957Z"
+        }
+      ]
+    },
+    {
+      "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+      "auditFingerprint": "a6b80751a81ffadf486a48fd50dfb7f7e1eeb64235b6f901f308f98c51a325e6",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:38:19.494Z"
+        }
+      ]
+    },
+    {
+      "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+      "auditFingerprint": "f4fbfff9a0bc4187d7cae323af2b6aa5c2afe86917217969d6a2fc6c3c725717",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:39:22.540Z"
+        }
+      ]
+    },
+    {
+      "productId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+      "auditFingerprint": "c5177144d70fc901d2170f5fd85ba49e4d3e1861fd35aec3b3779f3597773438",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:40:27.396Z"
+        }
+      ]
+    },
+    {
+      "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab",
+      "auditFingerprint": "dd114c967033d7b2f9088eb147183775b33ffbbb283932d06cf6b584b58c84e8",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:40:45.848Z"
+        }
+      ]
+    },
+    {
+      "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d",
+      "auditFingerprint": "b543fe2a894688c1ee05b84dbfea2b47a59de046ddb54d6c72bdcab9e63a779f",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:41:21.216Z"
+        }
+      ]
+    },
+    {
+      "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+      "auditFingerprint": "88b614cffc68b74c5c528400cc799ddb5e80e7ebe002a0a06e66e993c59fd0b9",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:41:41.816Z"
+        }
+      ]
+    },
+    {
+      "productId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+      "auditFingerprint": "08766a2f6503cb44b5a818eb3b60a3136499aa0ec3c814f240179a856bf124d9",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T13:16:06.309Z"
+        }
+      ]
+    },
+    {
+      "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240",
+      "auditFingerprint": "bfe8f8a1c02d6da130154fb2aa552a56167aa171a5afdc69d07bea73aa2f36cc",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:42:19.569Z"
+        }
+      ]
+    },
+    {
+      "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+      "auditFingerprint": "1ed33bda78f7bb155ed39d2d12b2356a60ed1998413aa772861b2f728a19159f",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:43:15.259Z"
+        }
+      ]
+    },
+    {
+      "productId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+      "auditFingerprint": "6ddc8cec66c6ca56b0498d266ddb0ee8eb82dbf5a418e681f3d079118e32c7c6",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:49:56.778Z"
+        }
+      ]
+    },
+    {
+      "productId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+      "auditFingerprint": "88550cd2c0ac467a0f515a0785d0c03891f450a836e4ca7e24befb141864bec7",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:50:15.764Z"
+        }
+      ]
+    },
+    {
+      "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+      "auditFingerprint": "400db86353f49634e63d52a2123c582a39116b45831847a49f8fee1e2980ace8",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:50:39.299Z"
+        }
+      ]
+    },
+    {
+      "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816",
+      "auditFingerprint": "a22f818a3bb755d51260856ee954dce810e8775f2e0e9753e0f2320be6fd5a67",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:51:40.298Z"
+        }
+      ]
+    },
+    {
+      "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+      "auditFingerprint": "9803f4da121520dcc2826c0ecf584cac1630cf68f33b1727748e93429b94f3a2",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:52:09.270Z"
+        }
+      ]
+    },
+    {
+      "productId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be",
+      "auditFingerprint": "46e042e999e60976ec1ad47e84f4b600c0d283b8dea80c14f8bf5fc26d409711",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:52:33.675Z"
+        }
+      ]
+    },
+    {
+      "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+      "auditFingerprint": "bc006cb7e9a5d4ec6d6c4e324f2f6c82f7bda6f8733e5c2e3ba945a20956836e",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:52:59.133Z"
+        }
+      ]
+    },
+    {
+      "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+      "auditFingerprint": "e46d7574103b4974810456ea46b4a988825e3f4545507c5cace4c74b01a968e5",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:53:19.217Z"
+        }
+      ]
+    },
+    {
+      "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+      "auditFingerprint": "2dbc9672efdef6cbece80d8b2aa494ac6f51e8b4d95103545e4f7466c4a41f79",
+      "reviewStatus": "approved",
+      "propertyStatuses": {
+        "cleansingStrength": "approved",
+        "conditioningLevel": "approved",
+        "weightPotential": "approved",
+        "focusPrimary": "approved",
+        "focusSecondary": "approved",
+        "usageRole": "approved",
+        "scalpComfortTarget": "approved",
+        "dandruffSupport": "approved"
+      },
+      "decisions": [
+        {
+          "action": "approve_product",
+          "propertyPath": null,
+          "comment": null,
+          "savedAt": "2026-08-26T09:53:55.502Z"
+        }
+      ]
+    }
+  ]
+}

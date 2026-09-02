@@ -1,0 +1,499 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4",
+  "formulaVersionId": "holdout-v3:redken-volume-injection:80cfb9d27d631ee32d498d326f073463f55b43c93622eabb0c0cd5836d607817",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "volume direction; daily-use direction",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-claim-de-redken-volume-injection-2026-09-01"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium lauryl sulfate"
+    ],
+    "surfactantsSecondary": [
+      "coco-betaine"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride",
+      "polyquaternium-30"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "alcohol denat.",
+      "benzyl alcohol"
+    ],
+    "proteinsFilmFormers": [
+      "acrylates copolymer"
+    ],
+    "acids": [
+      "citric acid",
+      "salicylic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES, Coco-Betaine und zusätzlich Sodium Lauryl Sulfate bilden eine starke Reinigungsbasis.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "SLES, Coco-Betaine und zusätzlich Sodium Lauryl Sulfate bilden eine starke Reinigungsbasis.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Mehrere Polymer- und Filmwege stützen spürbaren Griff, aber keine reiche 2-in-1-Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Mehrere Polymer- und Filmwege stützen spürbaren Griff, aber keine reiche 2-in-1-Pflege.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Mehrere späte Polymer-/Filmwege halten moderates Gewichtspotenzial über low; starke Reinigung und fehlende reichhaltige Ablagerung begrenzen high.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Mehrere späte Polymer-/Filmwege halten moderates Gewichtspotenzial über low; starke Reinigung und fehlende reichhaltige Ablagerung begrenzen high.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "weightPotential-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die nach der Blindphase geprüfte Volumenpositionierung ist mit der starken, vergleichsweise leichten Reinigungsarchitektur kompatibel.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die nach der Blindphase geprüfte Volumenpositionierung ist mit der starken, vergleichsweise leichten Reinigungsarchitektur kompatibel.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusPrimary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusSecondary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die starke Reinigung blockiert frequent; ein Reset- oder Behandlungstrigger fehlt.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die starke Reinigung blockiert frequent; ein Reset- oder Behandlungstrigger fehlt.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "usageRole-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Positionierung adressiert Volumen, nicht kosmetischen Kopfhautkomfort.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die Positionierung adressiert Volumen, nicht kosmetischen Kopfhautkomfort.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "official-de-redken-volume-injection-3474636920266-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-redken-volume-injection-3474636920266-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      }
+    },
+    "weightDepositionLoad": "Qualitative whole-formula Einordnung ohne Konzentrations- oder Wiederholungsdaten.",
+    "weightPersistence": "Persistenz wird mechanistisch aus der Gesamtarchitektur, nicht aus Routenzählung abgeleitet.",
+    "weightResetCapacity": "Reset-Kapazität wird qualitativ aus der Tensidarchitektur abgeleitet.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Leistung wird aus INCI abgeleitet.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exaktmarktformel und getrennte Quellenpaket-Reconciliation; keine shampoo-only Leistungsprüfung."
+  },
+  "claimAudit": [
+    {
+      "claim": "volume direction; daily-use direction",
+      "verdict": "plausible",
+      "support": "Die Positionierung wurde erst nach der Formelpass-Reconciliation berücksichtigt.",
+      "limitation": "INCI liefert keine Konzentrationen oder garantierte Endproduktwirkung.",
+      "sourceIds": [
+        "official-claim-de-redken-volume-injection-2026-09-01"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-de-redken-volume-injection-3474636920266-2026-09-01",
+    "official-claim-de-redken-volume-injection-2026-09-01"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Haarpflege ohne medizinische Diagnose- oder Therapiezusage."
+  }
+}

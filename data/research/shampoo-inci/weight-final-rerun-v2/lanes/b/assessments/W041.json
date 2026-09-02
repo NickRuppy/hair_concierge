@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W041",
+  "formula": {
+    "inciFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-22T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"protein_film","name":"hydrolyzed wheat protein","position":6},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":10}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"nonionic_surfactant","name":"coco-glucoside","position":5}],"excludedIngredients":[],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Hydrolyzed Wheat Protein an Position 6 und kationisches Guar an Position 10 ergeben zwei unterschiedliche, haarsubstantive Pflegesignale."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Proteinfilm und kationisches Polymer können leicht bis moderat haften, ohne dass Silikon oder Lipidpayload die Persistenz stark erhöht."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES und Coco-Glucoside reinigen solide, aber die Reset-Breite ist kleiner als bei amphoterisch ergänzten Systemen."
+  },
+  "competingSignals": [
+    "Keine Silikone oder Lipidpayloads sprechen gegen high.",
+    "Protein plus kationisches Polymer spricht gegen eine rein leichte Einordnung."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil Proteinfilm und Polymer eine merkliche, aber nicht schwere Rückstandsbildung plausibel machen.",
+  "whyNotNeighborBand": "Low würde die zwei haarsubstantiven Routen unterschätzen; high fehlt ohne Lipid-/Silikonkonvergenz und bei solider Reinigung die Grundlage.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Protein- und Polymerdosierung sind unbekannt, wodurch die low/moderate-Grenze unscharf bleibt."
+  }
+}

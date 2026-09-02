@@ -1,0 +1,489 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4",
+  "formulaVersionId": "holdout-v3:eucerin-dermocapillaire-ph5:e414eaec790404e800d55eb57761815fc5e0cf648b627cd36bd88265668e1148",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "pH-oriented scalp-care positioning; mild cleansing direction; suitable for frequent use direction",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-claim-de-eucerin-dermocapillaire-ph5-2026-09-01"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium myreth sulfate",
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "polyquaternium-10"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "peg-120 methyl glucose dioleate",
+      "peg-40 hydrogenated castor oil",
+      "anise alcohol"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sodium Myreth Sulfate und Sodium Laureth Sulfate führen die anionische Reinigungsbasis; Amphoteres Tensid und Pflegekomponenten heben die starke Chassis-Einstufung nicht auf.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Sodium Myreth Sulfate und Sodium Laureth Sulfate führen die anionische Reinigungsbasis; Amphoteres Tensid und Pflegekomponenten heben die starke Chassis-Einstufung nicht auf.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Panthenol und Polyquaternium-10 stützen leichte bis spürbare Kämmbarkeit, ohne reiches Silikon- oder 2-in-1-System.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Panthenol und Polyquaternium-10 stützen leichte bis spürbare Kämmbarkeit, ohne reiches Silikon- oder 2-in-1-System.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die sichtbare Ablagerung ist leicht: nur ein später Polymerweg steht einer starken Tensid-Reset-Kapazität gegenüber.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die sichtbare Ablagerung ist leicht: nur ein später Polymerweg steht einer starken Tensid-Reset-Kapazität gegenüber.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "weightPotential-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die nach der Blindphase geprüfte pH- und sensible-Kopfhaut-Positionierung ist gentle-kompatibel.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die nach der Blindphase geprüfte pH- und sensible-Kopfhaut-Positionierung ist gentle-kompatibel.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusPrimary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusSecondary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die starke Reinigungsbasis blockiert den Frequent-Trigger; ohne Reset- oder Wirkstoffrolle bleibt regular.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die starke Reinigungsbasis blockiert den Frequent-Trigger; ohne Reset- oder Wirkstoffrolle bleibt regular.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "usageRole-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die geprüfte Positionierung adressiert kosmetischen Kopfhautkomfort; Duftstoffe begrenzen daraus keine Verträglichkeitszusage.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die geprüfte Positionierung adressiert kosmetischen Kopfhautkomfort; Duftstoffe begrenzen daraus keine Verträglichkeitszusage.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      }
+    },
+    "weightDepositionLoad": "Qualitative whole-formula Einordnung ohne Konzentrations- oder Wiederholungsdaten.",
+    "weightPersistence": "Persistenz wird mechanistisch aus der Gesamtarchitektur, nicht aus Routenzählung abgeleitet.",
+    "weightResetCapacity": "Reset-Kapazität wird qualitativ aus der Tensidarchitektur abgeleitet.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Leistung wird aus INCI abgeleitet.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exaktmarktformel und getrennte Quellenpaket-Reconciliation; keine shampoo-only Leistungsprüfung."
+  },
+  "claimAudit": [
+    {
+      "claim": "pH-oriented scalp-care positioning; mild cleansing direction; suitable for frequent use direction",
+      "verdict": "plausible",
+      "support": "Die Positionierung wurde erst nach der Formelpass-Reconciliation berücksichtigt.",
+      "limitation": "INCI liefert keine Konzentrationen oder garantierte Endproduktwirkung.",
+      "sourceIds": [
+        "official-claim-de-eucerin-dermocapillaire-ph5-2026-09-01"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "retailer-de-eucerin-dermocapillaire-ph5-4005800036736-2026-09-01",
+    "official-claim-de-eucerin-dermocapillaire-ph5-2026-09-01"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Kosmetische Kopfhautkomfort-Positionierung ohne medizinische Diagnose- oder Therapiezusage."
+  }
+}

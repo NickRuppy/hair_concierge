@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W026",
+  "formula": {
+    "inciFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 7
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 9
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 4
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Glyceryl Oleate an Position 7 und ein kationisches Guar an Position 9 ergeben eine plausible, aber nicht reiche Ablagerung."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das kationische Polymer kann nach dem Ausspülen haften; die übrige Lipidlast bleibt schwach und begrenzt."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, Cocamidopropyl Betaine und Coco-Glucoside früh im INCI geben eine breite Reinigungsarchitektur."
+  },
+  "competingSignals": [
+    "Frühes SLES-/Amphoter-/Glucosid-System spricht für gute Ausspül- und Reset-Leistung.",
+    "Deposition kommt aus einem kationischen Polymer plus schwachem Rückfetter, nicht aus Silikon oder reicher Ölphase."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist am besten gestützt, weil Polymer und Glyceryl Oleate zusammen spürbare, aber begrenzte Konditionierungsrückstände plausibel machen.",
+  "whyNotNeighborBand": "Low würde das kationische Guar an Position 9 zusammen mit Glyceryl Oleate unterschätzen; High ist wegen starker Reinigung und fehlender reich persistenter Systeme nicht gestützt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Formel ist vollständig, aber die Identität ist nur moderat sicher und INCI-only lässt die tatsächliche Polymer-/Rückfetterdosierung offen."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "shampoo-inci-profile-fixtures-v1.4",
+  "profiles": [
+    { "profile_key": "fixture-fine-low-density-oily-volume", "label": "Fein · geringe Dichte · fettige Kopfhaut · Volumen", "input_hash": "a74356d121cddcbdf029d5cebce48a0766129b4fb5fde85a5706ddaeff1562f6" },
+    { "profile_key": "fixture-fine-treated-balanced-shine", "label": "Fein · behandelt · ausgeglichene Kopfhaut · Glanz", "input_hash": "e1be162a64a9023988d3ffee3b45df8c906e90004520dd663ecf1a91b78f55ed" },
+    { "profile_key": "fixture-fine-dry-scalp-frizz", "label": "Fein · trockenes Kopfhautgefühl · Frizz", "input_hash": "66cd77b24c7d8cadea2783bce8ca4f868a42c193fe5f48cea1d8c31ba1ea2ce3" },
+    { "profile_key": "fixture-normal-balanced-general", "label": "Normal · ausgeglichene Kopfhaut · allgemein", "input_hash": "649a6e59ea881e5b0cb35a66be44e30a64127daa22eef491faa8b2b500f65c22" },
+    { "profile_key": "fixture-normal-oily-high-load", "label": "Normal · fettige Kopfhaut · hohe Produktlast", "input_hash": "c588a27b7c82eb6043ac74d6263b7de996d25bf7bdaf6d421a11341a5cf2867e" },
+    { "profile_key": "fixture-normal-low-volume-frequent-wash", "label": "Normal · wenig Volumen · häufiges Waschen", "input_hash": "3c956ae8e719d48b4cadc2451dc9d56edd322b12869fd1cca07f854ad316bb1d" },
+    { "profile_key": "fixture-coarse-dry-damaged-smoothing", "label": "Grob · trocken · geschädigt · Glättung", "input_hash": "7871ddb14d75796f9fc317223a235eaced1cedcca8b5660b7a312dfdd0a27fad" },
+    { "profile_key": "fixture-coarse-curly-frizz-definition", "label": "Grob · lockig · Frizz · Definition", "input_hash": "1d8fd7790be9cb4118c1d372f5dd37af300c5356ae67656494365ace4b64592a" },
+    { "profile_key": "fixture-treated-breakage-repair", "label": "Behandelt · Haarbruch · Reparatur", "input_hash": "679e5b2a5168a88a00670a2f0288a4d629b44bb4e2a43c99cf9f9e780ec1e485" },
+    { "profile_key": "fixture-mild-sensitive-itch", "label": "Leicht empfindlich · Juckreiz", "input_hash": "868e9c942fe8fcaddb273dd92ff8d9ccee757896f4f552366e5c0145f0ea3e7a" },
+    { "profile_key": "fixture-oily-dandruff", "label": "Fettige Kopfhaut · fettige Schuppen", "input_hash": "344312ad65866dc2f1a030712032702e110b521ec2844d45856b4632bbfc33a2" },
+    { "profile_key": "fixture-dry-flakes", "label": "Trockene Kopfhaut · trockene Schüppchen", "input_hash": "63e1525cae9444ae4a9f60f54dccac368ed2b8eac1ecd6043ecdbea2b3dbcec2" },
+    { "profile_key": "fixture-mild-sensitive-oily", "label": "Ölige Kopfhaut · leicht empfindlich", "input_hash": "14209372bbce6e2eb5890ac33212e1f5364c3dc85bcecca05d9a06a3d58359d5" },
+    { "profile_key": "fixture-mild-sensitive-balanced", "label": "Ausgeglichen · leicht empfindlich", "input_hash": "d25dceec411d186adb52f0dcd56cb8c9b079d037636924a5cdc08d9d84518c79" },
+    { "profile_key": "fixture-medical-boundary", "label": "Medizinische Grenze", "input_hash": "bdc62bb6c4510f058cef3a273ceb86b9fb4fc1a117a9fe92613a74a3fa7a2bc8" },
+    { "profile_key": "fixture-research-only-fragrance-avoidance", "label": "Forschungsprofil · Duftstoffe vermeiden", "input_hash": "140163f26d9e9bb3f35b13472fe423f8161a2cea3d1133a6906f3a03d3b57d79" },
+    { "profile_key": "fixture-straight-balanced-low-shine", "label": "Glatt · ausgeglichen · wenig Glanz", "input_hash": "e63f547694db8dfa1eb92d7bff95ea606596e0af6f4ed7b51c73bda82a92a0b5" },
+    { "profile_key": "fixture-coily-dry-definition", "label": "Kraus · trocken · Definition", "input_hash": "f9deefa8fe711508a1953496d5371761920793c8e3d5d1c5943236c27e3caa51" }
+  ]
+}

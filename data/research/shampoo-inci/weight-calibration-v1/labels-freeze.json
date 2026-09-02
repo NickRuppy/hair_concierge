@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "shampoo-weight-label-freeze-v1",
+  "a": "caaf2b6cdba8e25fc01f70a6466fb4819dcd662f4fc59879b0da5d7f7d8e3f2e",
+  "b": "f2328315229a9175f563a1efcd20dd8c63fdbfe4c3a9da200f58617eec342e67",
+  "sequenceNote": "Both hashes were recorded in the tool transcript before the first comparison invocation. This receipt was materialized after that invocation; it is not an independent timestamp proof."
+}

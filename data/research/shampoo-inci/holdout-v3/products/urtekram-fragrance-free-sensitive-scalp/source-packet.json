@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+  "candidateId": "urtekram-fragrance-free-sensitive-scalp",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Urtekram",
+    "name": "Fragrance Free Sensitive Scalp Shampoo",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "5701058011608"
+    ]
+  },
+  "selectionArchetype": "fragrance-free sensitive-scalp moisture shampoo",
+  "canonicalFormulaSourceUrl": "https://www.urtekram.de/produkte/fragrance-free-sensitive-scalp-shampoo",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "fragrance-free positioning",
+    "sensitive-scalp direction",
+    "moisture direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Fragrance-free and sensitive-scalp positioning are permitted later positioning evidence.",
+    "The regular shampoo framing is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://www.ecco-verde.de/urtekram/fragrance-free-sensitive-scalp-shampoo?sai=48979"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Asterisks on the source list are organic-origin markers, not part of INCI ingredient names. Official formula is canonical.",
+  "officialProductPage": "https://www.urtekram.de/produkte/fragrance-free-sensitive-scalp-shampoo"
+}

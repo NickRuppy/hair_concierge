@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+  "market": "DE",
+  "packSize": "330 ml",
+  "gtinEan": "4063528078377",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T00:00:00+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "neqi-official-en",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://en.neqi-hair.com/products/volume-victory-shampoo",
+      "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl hydroxysultaine, Cocamidopropyl betaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Panthenol, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Polyquaternium-11, Cocamide MEA, Laureth-10, Propylene glycol, C13-15 alkanes, Glycerin, Linalyl acetate, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Linalool, Limonene"
+    },
+    {
+      "id": "notino-de-neq02466",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.notino.de/neqi/volume-victory-shampoo-fuer-feines-und-schlaffes-haar/",
+      "rawInci": "AQUA [WATER], DISODIUM LAURETH SULFOSUCCINATE, COCAMIDOPROPYL HYDROXYSULTAINE, COCAMIDOPROPYL BETAINE, PEG-18 GLYCERYL OLEATE/COCOATE, PARFUM [FRAGRANCE], PANTHENOL, AVENA SATIVA (OAT) PEPTIDE, GARDENIA TAITENSIS FLOWER EXTRACT, LYCIUM BARBARUM FRUIT EXTRACT, MALVA SYLVESTRIS (MALLOW) EXTRACT, JUNIPERUS VIRGINIANA OIL, CITRUS AURANTIUM PEEL OIL, GLYCOL DISTEARATE, CITRIC ACID, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, POLYQUATERNIUM-11, COCAMIDE MEA, LAURETH-10, PROPYLENE GLYCOL, C13-15 ALKANE, GLYCERIN, LINALYL ACETATE, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, 1,2-HEXANEDIOL, CAPRYLYL GLYCOL, HEXYL CINNAMAL, LINALOOL, LIMONENE."
+    },
+    {
+      "id": "newflagpro-cz-ean",
+      "type": "other",
+      "market": "CZ",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.newflagpro.cz/neqi-volume-victory-shampoo-330ml-p6847/",
+      "rawInci": "EAN 4063528078377; product code NQ-VV-SH-201; INCI not published on this page."
+    }
+  ],
+  "rawInci": "Aqua [Water], Disodium laureth sulfosuccinate, Cocamidopropyl hydroxysultaine, Cocamidopropyl betaine, PEG-18 glyceryl oleate/cocoate, Parfum [Fragrance], Panthenol, Avena sativa (Oat) peptide, Gardenia taitensis flower extract, Lycium barbarum fruit extract, Malva sylvestris (Mallow) extract, Juniperus virginiana oil, Citrus aurantium peel oil, Glycol distearate, Citric acid, Tetramethyl acetyloctahydronaphthalenes, Polyquaternium-11, Cocamide MEA, Laureth-10, Propylene glycol, C13-15 alkanes, Glycerin, Linalyl acetate, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl glycol, Hexyl cinnamal, Linalool, Limonene",
+  "normalizedInci": [
+    "aqua [water]",
+    "disodium laureth sulfosuccinate",
+    "cocamidopropyl hydroxysultaine",
+    "cocamidopropyl betaine",
+    "peg-18 glyceryl oleate/cocoate",
+    "parfum [fragrance]",
+    "panthenol",
+    "avena sativa (oat) peptide",
+    "gardenia taitensis flower extract",
+    "lycium barbarum fruit extract",
+    "malva sylvestris (mallow) extract",
+    "juniperus virginiana oil",
+    "citrus aurantium peel oil",
+    "glycol distearate",
+    "citric acid",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "polyquaternium-11",
+    "cocamide mea",
+    "laureth-10",
+    "propylene glycol",
+    "c13-15 alkanes",
+    "glycerin",
+    "linalyl acetate",
+    "methylchloroisothiazolinone",
+    "methylisothiazolinone",
+    "1,2-hexanediol",
+    "caprylyl glycol",
+    "hexyl cinnamal",
+    "linalool",
+    "limonene"
+  ],
+  "inciFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

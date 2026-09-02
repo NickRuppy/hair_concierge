@@ -1,0 +1,490 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "03b847e5-01b9-40e5-950a-98efc73abb3a:e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES and Cocamidopropyl Betaine form the disclosed cleansing system.",
+      "A cationic guar is present before salt, humectants and botanical extracts.",
+      "Menthol, orange peel oil and mint oil create a sensory scalp-active route.",
+      "No recognized anti-dandruff active or heavy depositor is disclosed."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "ausgleichend und klärend bei schnell fettender Kopfhaut",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and Cocamidopropyl Betaine form the disclosed cleansing system.",
+          "inference": "The cleanser system is consistent with moderate rinse-off cleansing.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support low conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "A cationic guar is present before salt, humectants and botanical extracts.",
+          "inference": "The care system supports low shampoo conditioning.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "A cationic guar is present before salt, humectants and botanical extracts.",
+          "inference": "The rinse-off residue architecture indicates low weight potential.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is scalp_active.",
+      "supportingSignals": [
+        {
+          "observation": "The manufacturer positions the exact formula for quickly oily scalp and daily cleansing.",
+          "inference": "The source and formula align on scalp_active as the primary focus.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The anti-fett/oily-scalp formula supports a clarifying secondary focus through SLES-led cleansing, low heavy deposition and sebum-oriented positioning.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB cleansing and low heavy deposition align with oily-scalp and clarifying use.",
+          "inference": "A clarifying secondary focus is formula-coherent.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No sebum measurement, active level or comparative finished-product test is published.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The source directions and formula support a regular usage role.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate regular use.",
+          "inference": "The product role is regular; individual cadence still depends on response.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "salthouse-de-anti-fett-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "present",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to organicClarification.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off organicClarification contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product organicClarification endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "ausgleichend und klärend bei schnell fettender Kopfhaut",
+      "verdict": "plausible",
+      "support": "The manufacturer positions the exact formula for quickly oily scalp and daily cleansing.",
+      "limitation": "No sebum measurement, active level or comparative finished-product test is published.",
+      "sourceIds": [
+        "salthouse-de-anti-fett-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "salthouse-de-anti-fett-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "medical_claim",
+    "rationale": "The exact product page includes disease-adjacent accompanying-care wording for neurodermatitis and psoriasis. That marketing context is retained for profile-level medical abstention, but the disclosed formula can still be classified for healthy cosmetic use and does not create a disease-fit property."
+  }
+}

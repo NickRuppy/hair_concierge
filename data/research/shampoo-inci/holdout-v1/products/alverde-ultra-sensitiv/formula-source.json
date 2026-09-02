@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:alverde-ultra-sensitiv",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4066447919349",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-alverde-ultra-sensitiv-4066447919349-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1332317/alverde-naturkosmetik-shampoo-ultra-sensitiv",
+      "rawInci": "Aqua, Glycerin, Coco-Glucoside, Betaine, Xanthan Gum, Pentylene Glycol, Citric Acid, Caprylhydroxamic Acid.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4066447919349"
+    }
+  ],
+  "rawInci": "Aqua, Glycerin, Coco-Glucoside, Betaine, Xanthan Gum, Pentylene Glycol, Citric Acid, Caprylhydroxamic Acid.",
+  "normalizedInci": [
+    "aqua",
+    "glycerin",
+    "coco-glucoside",
+    "betaine",
+    "xanthan gum",
+    "pentylene glycol",
+    "citric acid",
+    "caprylhydroxamic acid"
+  ],
+  "inciFingerprint": "ef5d32adb69577f943166241c4b3415a315f4c955c4f6df7433e8a73ec50294e",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

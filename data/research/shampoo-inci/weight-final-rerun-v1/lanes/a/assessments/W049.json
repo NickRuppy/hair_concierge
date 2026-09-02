@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W049",
+  "formula": {
+    "inciFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "protein_film",
+        "name": "hydrolyzed keratin",
+        "position": 5
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 10
+      },
+      {
+        "family": "weak_refatter",
+        "name": "peg-7 glyceryl cocoate",
+        "position": 12
+      },
+      {
+        "family": "payload_lipid",
+        "name": "hydrogenated castor oil",
+        "position": 16
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 18
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 9
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 13,
+        "reason": "Zählt nicht als persistente Route."
+      },
+      {
+        "name": "peg-120 methyl glucose dioleate",
+        "position": 15,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Frühes Keratin, Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydrogenated Castor Oil und spätes kationisches Guar ergeben mehrere, aber meist nicht sehr frühe Depositionssignale."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Proteinfilm, Lipid-Payload und Guar können haften; ohne Silikon und mit spätem Polymer bleibt die Persistenz bounded."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, CAPB und Coco-Glucoside geben eine starke Reset-Basis."
+  },
+  "competingSignals": [
+    "Keine Silikone; kationisches Polymer liegt erst an Position 18.",
+    "Mehrere nicht persistente Verdicker wurden ausgeschlossen."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate passt, weil mehrere leichte bis mittlere Routen spürbare Rückstände plausibel machen, aber starker Reset und spätes Guar High verhindern.",
+  "whyNotNeighborBand": "Low unterschätzt Keratin plus mehrere Lipid-/Rückfetterwege; High wäre ohne Silikon und bei starkem Reset nicht ausreichend gestützt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unbekannte Einsatzmengen."
+  }
+}

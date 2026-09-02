@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+  "candidateId": "kerastase-nutritive-bain-satin-riche",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Kérastase",
+    "name": "Nutritive Bain Satin Riche",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "3474637154943"
+    ]
+  },
+  "selectionArchetype": "rich nourishment-positioned shampoo for very dry hair",
+  "canonicalFormulaSourceUrl": "https://www.kerastase.de/produktlinien/produktlinien/nutritive/bain-satin-riche/3474637154943.html",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "rich nourishment direction",
+    "very dry hair direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Nourishment and very-dry-hair positioning are permitted later focus evidence.",
+    "The shampoo is not positioned as a periodic reset product."
+  ],
+  "corroboratingUrls": [
+    "https://www.cocooncenter.com/premium/kerastase-bain-satin-riche-nutritive/113130.html"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Official formula is canonical; Cocooncenter is corroborating provenance.",
+  "officialProductPage": "https://www.kerastase.de/produktlinien/produktlinien/nutritive/bain-satin-riche/3474637154943.html"
+}

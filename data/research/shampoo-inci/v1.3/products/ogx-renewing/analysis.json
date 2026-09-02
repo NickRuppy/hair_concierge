@@ -1,0 +1,520 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10:37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Taurate, Decyl Glucoside and CAPB form the leading cleansing system.",
+      "Argan oil appears before starch derivative, Coco-Glucoside and Amodimethicone.",
+      "Amodimethicone plus cationic guar create a meaningful deposition route.",
+      "Parfum/Fragrance is the final disclosed ingredient."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "kräftiges, geschmeidiges & glänzendes Haar",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium methyl cocoyl taurate"
+    ],
+    "surfactantsSecondary": [
+      "decyl glucoside",
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "sodium hydrolyzed potato starch dodecenylsuccinate",
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "argania spinosa kernel oil",
+      "hydrogenated castor oil",
+      "coconut acid",
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "Taurate, Decyl Glucoside and CAPB form the leading cleansing system.",
+          "inference": "The cleanser system is consistent with moderate rinse-off cleansing.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support moderate conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Argan oil appears before starch derivative, Coco-Glucoside and Amodimethicone.",
+          "inference": "The care system supports moderate shampoo conditioning.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Argan oil appears before starch derivative, Coco-Glucoside and Amodimethicone.",
+          "inference": "The rinse-off residue architecture indicates moderate weight potential.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is shine.",
+      "supportingSignals": [
+        {
+          "observation": "The exact-GTIN German retailer page captures the current formula and positions it for shine and conditioning.",
+          "inference": "The source and formula align on shine as the primary focus.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "gentle"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The sulfate-free taurate/glucoside/CAPB cleanser architecture supports a gentle secondary focus, while retailer-only evidence and fragrance keep it bounded.",
+      "supportingSignals": [
+        {
+          "observation": "Taurate, Decyl Glucoside and CAPB form the leading cleansing system.",
+          "inference": "A gentle secondary focus is formula-coherent.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact German manufacturer formula or finished-product comparative endpoint is captured; Parfum/Fragrance is present.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The source directions and formula support a regular usage role.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate regular use.",
+          "inference": "The product role is regular; individual cadence still depends on response.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product conditioningDeposition endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product weightBuildup endpoint is public."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off shineS1 contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product shineS1 endpoint is public."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off smoothing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product smoothing endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product mildnessPotential endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "kräftiges, geschmeidiges & glänzendes Haar",
+      "verdict": "plausible",
+      "support": "The exact-GTIN German retailer page captures the current formula and positions it for shine and conditioning.",
+      "limitation": "No exact German manufacturer formula or finished-product comparative endpoint was found in this pass, so identity and performance confidence remain bounded.",
+      "sourceIds": [
+        "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "rossmann-de-ogx-renewing-3574661799438-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The exact-GTIN retailer page makes cosmetic hair appearance claims only."
+  }
+}

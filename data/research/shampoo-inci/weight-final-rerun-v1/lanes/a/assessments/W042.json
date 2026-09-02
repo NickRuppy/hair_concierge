@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W042",
+  "formula": {
+    "inciFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "silicone",
+        "name": "dimethiconol",
+        "position": 7
+      },
+      {
+        "family": "silicone",
+        "name": "dimethicone",
+        "position": 13
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 14
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "cocamide mea",
+        "position": 10
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 11,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Dimethiconol an Position 7, Dimethicone an Position 13 und kationisches Guar an Position 14 ergeben eine deutliche Silikon-/Polymerlast."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Silikonformen plus kationisches Polymer sind plausibel persistent und können kumulieren."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES, CAPB und Cocamide MEA reinigen solide, aber weniger klärend als die stärksten SLS-/Hydrotrop-Systeme."
+  },
+  "competingSignals": [
+    "SLES steht früh und es gibt keine zusätzliche Ölphase.",
+    "Glycol Distearate ist ausgeschlossen."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist am besten gestützt, weil ein frühes Silikon mit weiterem Silikon und kationischem Polymer konvergiert und der Reset nicht stark genug dagegensteht.",
+  "whyNotNeighborBand": "Moderate würde die Persistenz der Silikon-/Polymerkombination unterschätzen; Low ist nicht plausibel.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige retailer-Formel mit moderater Identitätssicherheit; genaue Silikonmengen bleiben offen."
+  }
+}
