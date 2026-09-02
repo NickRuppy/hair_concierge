@@ -47,6 +47,13 @@ test("server quiz drafts accept partial durable answers but reject unknown and e
   )
   assert.equal(parsePersonalPlanQuizServerDraft({ ...minimalDraft, dailyTime: "5_minutes" }), null)
   assert.equal(
+    parsePersonalPlanQuizServerDraft({
+      ...minimalDraft,
+      expectedRevision: 2_147_483_648,
+    }),
+    null,
+  )
+  assert.equal(
     parsePersonalPlanQuizServerDraft({ ...minimalDraft, answers: { texture: "not-a-value" } }),
     null,
   )

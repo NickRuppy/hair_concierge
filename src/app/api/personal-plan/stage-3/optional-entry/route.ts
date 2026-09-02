@@ -8,8 +8,20 @@ import {
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import { Stage3AuthoritySnapshotError } from "@/lib/personal-plan/products/authority/snapshot"
 import type { Stage3DraftResponse } from "@/lib/personal-plan/products/gateway"
-import { openSupabaseStage3OptionalInventory } from "@/lib/personal-plan/products/stage3-persistence-supabase"
+import {
+  createProductionStage3ProductsGateway,
+  type Stage3AuthorityProductionGateway,
+  type Stage3ProductionPersistence,
+} from "@/lib/personal-plan/products/production-persistence-gateway"
+import {
+  createSupabaseStage3ProductionPersistence,
+  openSupabaseStage3OptionalInventory,
+} from "@/lib/personal-plan/products/stage3-persistence-supabase"
 import { composeStage3BootstrapResponse } from "@/lib/personal-plan/products/stage3-bootstrap-response-server"
+import {
+  STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION,
+  Stage3BootstrapReviewContractError,
+} from "@/lib/personal-plan/products/stage3-bootstrap-review-contract"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
 import {
   checkRateLimit,
@@ -45,10 +57,24 @@ export type Stage3OptionalEntryRouteDeps = {
     personalPlanId: string
     refinedVersionId: string
   }) => Promise<Stage3DraftResponse>
+  gatewayFor: (
+    userId: string,
+  ) => Pick<Stage3AuthorityProductionGateway, "prepareLoadedDraft" | "reviewDecisionBundles">
 }
 
 function response(body: unknown, status = 200, headers?: HeadersInit) {
   return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } })
+}
+
+function log(event: string, started: number, code?: string, phases: Record<string, number> = {}) {
+  console.info("personal_plan_stage3_optional_entry_api", {
+    event,
+    code,
+    duration_ms: Date.now() - started,
+    ...Object.fromEntries(
+      Object.entries(phases).map(([name, duration]) => [`${name}_duration_ms`, duration]),
+    ),
+  })
 }
 
 function serverTiming(phases: Record<string, number>) {
@@ -59,6 +85,7 @@ function serverTiming(phases: Record<string, number>) {
 
 export function createStage3OptionalEntryRouteHandler(deps: Stage3OptionalEntryRouteDeps) {
   return async function POST(request: Request) {
+    const started = Date.now()
     const phases: Record<string, number> = {}
     if (!deps.enabled()) return response({ error: "personal_plan_not_available" }, 404)
 
@@ -109,19 +136,39 @@ export function createStage3OptionalEntryRouteHandler(deps: Stage3OptionalEntryR
 
     try {
       phaseStarted = Date.now()
-      const result = await deps.openOptionalInventory({
+      const opened = await deps.openOptionalInventory({
         userId,
         personalPlanId: parsed.data.personalPlanId,
         refinedVersionId: parsed.data.refinedVersionId,
       })
+      const gateway = deps.gatewayFor(userId)
+      const result = await gateway.prepareLoadedDraft(opened)
+      const bootstrap = await composeStage3BootstrapResponse({
+        loaded: result,
+        reviewDecisionBundles: gateway.reviewDecisionBundles.bind(gateway),
+      })
       phases.operation = Date.now() - phaseStarted
-      return response(await composeStage3BootstrapResponse({ loaded: result }), 200, {
+      return response(bootstrap, 200, {
         "Server-Timing": serverTiming(phases),
       })
     } catch (error) {
+      phases.operation ??= Date.now() - phaseStarted
+      if (error instanceof Stage3BootstrapReviewContractError) {
+        log("conflict", started, STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION, phases)
+        return response(
+          {
+            error: "stage3_bootstrap_contract_violation",
+            violation: STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION,
+          },
+          409,
+          { "Server-Timing": serverTiming(phases) },
+        )
+      }
       if (error instanceof Stage3AuthoritySnapshotError) {
+        log("conflict", started, error.code, phases)
         return response({ error: error.code }, 409, { "Server-Timing": serverTiming(phases) })
       }
+      log("unavailable", started, "temporarily_unavailable", phases)
       return response({ error: "temporarily_unavailable" }, 503, {
         "Server-Timing": serverTiming(phases),
       })
@@ -139,6 +186,13 @@ export const POST = createStage3OptionalEntryRouteHandler({
       userId,
       personalPlanId,
       refinedVersionId,
+    }),
+  gatewayFor: (userId) =>
+    createProductionStage3ProductsGateway({
+      userId,
+      persistence: createSupabaseStage3ProductionPersistence(
+        createAdminClient(),
+      ) as Stage3ProductionPersistence,
     }),
 })
 

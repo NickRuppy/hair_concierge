@@ -240,6 +240,53 @@ test("flag-off load performs no thumbnail enrichment reads", async () => {
   assert.equal(currentProductReads, 0)
 })
 
+test("preparing an externally opened draft primes the exact draft used for decision reviews", async () => {
+  const draft = readyDraft()
+  let draftReloads = 0
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadDraft: async () => {
+        draftReloads += 1
+        return { ...draft, revision: draft.revision + 1 }
+      },
+    },
+  })
+
+  const prepared = await gateway.prepareLoadedDraft({
+    status: draft.status,
+    draft,
+    requirements,
+  })
+  const reviews = await gateway.reviewDecisionBundles({ draftId: draft.draftId })
+
+  assert.equal(prepared.draft.revision, draft.revision)
+  assert.equal(draftReloads, 0)
+  assert.deepEqual(
+    reviews.map((review) => review.authorityEvaluation.subjectKey),
+    ["decision:conditioner:conditioner_rinse_out:capture-a"],
+  )
+})
+
+test("preparing an externally opened draft rejects a different owner", async () => {
+  const draft = readyDraft()
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: persistence(draft),
+  })
+
+  await assert.rejects(
+    () =>
+      gateway.prepareLoadedDraft({
+        status: draft.status,
+        draft: { ...draft, userId: "owner-b" },
+        requirements,
+      }),
+    /stage3_draft_not_found/,
+  )
+})
+
 test("catalog capture replay is idempotent after the first save committed", async () => {
   const initial = createStage3Draft({
     draftId: "draft-catalog-replay",

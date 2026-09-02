@@ -9,7 +9,11 @@ import {
   type Stage3ProductsGateway,
   type Stage3SearchResponse,
 } from "./gateway"
-import { parseStage3BootstrapResponse } from "./bootstrap-response"
+import {
+  isStage3BootstrapContractViolation,
+  parseStage3BootstrapResponse,
+  Stage3BootstrapContractError,
+} from "./bootstrap-response"
 import { stage3ProductDraftSchema } from "./contracts"
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
@@ -121,7 +125,27 @@ async function requestStage3Bootstrap(
   init: RequestInit,
   expected: { personalPlanId: string; refinedVersionId: string },
 ): Promise<Stage3BootstrapResponse> {
-  return parseStage3BootstrapResponse(await request<unknown>(fetcher, url, init), expected)
+  let response: Response
+  try {
+    response = await fetcher(url, { ...init, cache: "no-store" })
+  } catch {
+    throw new Stage3ProductsGatewayError("temporarily_unavailable")
+  }
+  const body = await response.json().catch(() => null)
+  if (!response.ok) {
+    if (
+      body &&
+      typeof body === "object" &&
+      "error" in body &&
+      body.error === "stage3_bootstrap_contract_violation" &&
+      "violation" in body &&
+      isStage3BootstrapContractViolation(body.violation)
+    ) {
+      throw new Stage3BootstrapContractError(body.violation)
+    }
+    throw stage3GatewayErrorFromResponse(response, body)
+  }
+  return parseStage3BootstrapResponse(body, expected)
 }
 
 export function createHttpStage3IntakeClient({
