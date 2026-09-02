@@ -1,0 +1,210 @@
+{
+  "blindCode": "I",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Sodium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Glycine, Piroctone Olamine, Glycerin, Citric Acid, Acacia Senegal Gum Extract, Centaurea Cyanus Flower Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 42090, CI 60730",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Sorbitan Caprylate"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Acacia Senegal Gum Extract"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      2
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      2
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Sodium Laureth Sulfate steht früh und wird durch Cocamidopropyl Betaine und Coco-Glucoside ergänzt. Das stützt eine starke, aber durch amphotere/nichtionische Co-Tenside moderierte Reinigungsbandbreite.",
+    "conditioningLevel": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht relativ früh und ist ein plausibler kationischer Depositionsweg. Glyceryl Oleate, Sorbitan Caprylate, Panthenol und Feuchthaltestoffe stützen Pflegegefühl, aber ohne Silikon oder reiches Conditioner-Gerüst bleibt die Einordnung moderat.",
+    "weightPotential": "Nach v1.4 ist cationic_polymer über Hydroxypropyl Guar Hydroxypropyltrimonium Chloride der substanzielle Weg. Schwache Wege sind lipid_butter_oil/humectant_refatting über Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Glycine und Glycerin sowie protein_film über Acacia Senegal Gum Extract; weil nur ein Weg klar substantiell ist, bleibt das Gewicht moderat.",
+    "focusPrimary": "Piroctone Olamine belegt den anerkannten Anti-Schuppen-Formelweg, aber v1.4 verlangt für scalp_active zusätzlich eine problemgeführte Produktpositionierung. Da die Blindformel keine Claims oder Nutzungshinweise enthält, bleibt der Primärfokus bis zur Unblind-Reconciliation general.",
+    "focusSecondary": "Sekundärfokus bleibt leer, weil Säuren, Chelator und Pflegepolymere ohne Produktpositionierung keine eigenständige zweite Rolle sicher belegen. Diese Routen bleiben in den Scores sichtbar.",
+    "usageRole": "Der Default bleibt regular, weil v1.4 für treatment einen anerkannten Aktivweg plus problemgeführte Positionierung verlangt. Piroctone Olamine bleibt für dandruffSupport relevant, löst blind aber keinen nicht-default Usage-Trigger aus.",
+    "scalpComfortTarget": "Trotz Piroctone Olamine, Feuchthaltestoffen und Lactic Acid ist kein separater, kohärent belegter Komfortpfad für trockene, juckende oder empfindliche Kopfhaut sichtbar. Parfum, Farbstoffe und Duftstoff bleiben Expositionshinweise.",
+    "dandruffSupport": "Die vollständige Formel enthält Piroctone Olamine. Nach Vertrag ist damit der anerkannte Anti-Schuppen-Formelweg supported; Konzentration und Endpunktwirkung bleiben unbewiesen."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-geführte Reinigungsbasis mit Cocamidopropyl Betaine und Coco-Glucoside.",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride steht früh genug für einen plausiblen kationischen Depositionsweg.",
+    "Lactic Acid ist prominent gelistet, Citric Acid zusätzlich später; ohne fertigen pH-Wert bleibt der saure Oberflächenweg unsicher.",
+    "Tetrasodium Glutamate Diacetate ist ein erkennbarer GLDA-Chelator und stützt schwache bis moderate anorganische Entfernung.",
+    "Piroctone Olamine ist als anerkannter Anti-Schuppen-Wirkstoff enthalten; CI 42090 und CI 60730 sind optische Expositions-/Farbhinweise, aber ohne Claim kein Tonungsbeweis."
+  ],
+  "counterSignals": [
+    "Keine Silikone, keine Konditionierungsamine und kein reiches Lipidgerüst; daher keine hohe Pflege- oder Gewichtseinstufung.",
+    "Säuren allein belegen ohne fertigen pH-Wert keinen starken acidic-shine-Effekt.",
+    "Ein einzelner GLDA-Chelator kann auch der Formulastabilität dienen und belegt ohne Positionierung keinen starken Hard-Water-Reset.",
+    "Farbstoffe können die Produktfarbe betreffen; ohne Tonungspositionierung bleibt S4 höchstens schwach."
+  ],
+  "candidate_id": "guhl-langzeit-volumen",
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "a15d94d13c6640888c52df57c26ee0b3794c6a2452f17dc8b323f5ea20dca902"
+  },
+  "payloadHash": "2bcb45fc30b94cf319d899784e73411dc8611b75f68bd037f675873cd8c98456",
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "volume",
+      "formulaCompatible": true,
+      "formulaRoute": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht.",
+      "decisionReason": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Die Hersteller-FAQ erlaubt tägliches Waschen; der v1.4-Trigger frequent verlangt zusätzlich nicht-starke Reinigung. Bei dieser starken Einordnung bleibt regular bestehen; ohne Reset-Absicht wird nicht alternating gewählt."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "early",
+          "evidence": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride liefert den substantiellen Polymerweg."
+        },
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Glyceryl Oleate und weitere Rückfetter stützen den Polymerweg, ohne eine zweite klar substanzielle reiche Lipidphase zu belegen."
+        }
+      ],
+      "competingSignals": [
+        "Keine Silikone; INCI erlaubt keine genaue Mengen- oder Persistenzmessung."
+      ],
+      "confidenceLimit": "sub1_uncertainty"
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "volume",
+      "reason": "Langzeit Volumen ist die dominante Herstellerpositionierung. Effiziente Reinigung, begrenzte Deposition und der leichte Polymer-/Filmweg sind damit vereinbar. Piroctone Olamine ändert die Produktrolle ohne Anti-Schuppen-Positionierung nicht."
+    }
+  ]
+}

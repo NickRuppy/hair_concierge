@@ -1,0 +1,509 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "d408aca9-cd16-4cb0-90e7-bab26a698000:e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES leads a system that also contains Sodium Xylenesulfonate, CAPB and TEA-Dodecylbenzenesulfonate.",
+      "Piroctone Olamine appears sixth, before the silicone deposition system.",
+      "Dimethiconol, Dimethicone and cationic guar create a meaningful conditioning route.",
+      "Parfum and fragrance allergens remain present despite the sensitive-scalp positioning."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Anti-Schuppen Shampoo für trockene, schuppige & empfindliche Kopfhaut",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "sodium xylenesulfonate",
+      "cocamidopropyl betaine",
+      "tea-dodecylbenzenesulfonate"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethiconol",
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid",
+      "sodium salicylate",
+      "acetic acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports strong cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "SLES leads a system that also contains Sodium Xylenesulfonate, CAPB and TEA-Dodecylbenzenesulfonate.",
+          "inference": "The cleanser system is consistent with strong rinse-off cleansing.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support moderate conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears sixth, before the silicone deposition system.",
+          "inference": "The care system supports moderate shampoo conditioning.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Dimethiconol, Dimethicone and cationic guar create a meaningful conditioning route.",
+          "inference": "The rinse-off residue architecture indicates moderate weight potential.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is scalp_active.",
+      "supportingSignals": [
+        {
+          "observation": "The exact-GTIN German retailer page identifies Piroctone Olamine and positions the product for dandruff plus dry and sensitive scalp.",
+          "inference": "The source and formula align on scalp_active as the primary focus.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence does not establish a second product direction beyond the primary focus.",
+          "inference": "The secondary-focus value is intentionally empty and complete.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The source directions and formula support a treatment usage role.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate treatment use.",
+          "inference": "The product role is treatment; individual cadence still depends on response.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Exact product positioning targets sensitive scalp with a coherent anti-dandruff/scalp-active route. Strong cleansing and exposures are handled in derived profile fit, not in the target field.",
+      "supportingSignals": [
+        {
+          "observation": "Exact product positioning targets sensitive scalp with a coherent anti-dandruff/scalp-active route. Strong cleansing and exposures are handled in derived profile fit, not in the target field.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact source and formula provide a direct dandruff support route, bounded by rinse-off exposure and counter-signals.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine is high in the exact formula and the product has direct anti-dandruff intended use.",
+          "inference": "A product-specific dandruff signal is present.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      3
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product conditioningDeposition endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product weightBuildup endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product mildnessPotential endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti-Schuppen Shampoo für trockene, schuppige & empfindliche Kopfhaut",
+      "verdict": "plausible",
+      "support": "The exact-GTIN German retailer page identifies Piroctone Olamine and positions the product for dandruff plus dry and sensitive scalp.",
+      "limitation": "No exact German manufacturer INCI page, active concentration or independently reviewable finished-product protocol was found in this pass.",
+      "sourceIds": [
+        "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-head-shoulders-dermaxpro-sensitive-8700216496032-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The captured page makes cosmetic anti-dandruff and sensitive-scalp claims without claiming treatment of a named disease."
+  }
+}

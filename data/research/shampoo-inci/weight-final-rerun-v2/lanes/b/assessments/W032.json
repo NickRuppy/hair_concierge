@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W032",
+  "formula": {
+    "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "low"
+  },
+  "evidence": {"depositionRelevant":[{"family":"silicone","name":"dimethiconol","position":10},{"family":"silicone","name":"dimethicone","position":13},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":15}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium laureth sulfate","position":2},{"family":"anionic_surfactant","name":"sodium lauryl sulfate","position":3},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":6}],"excludedIngredients":[{"name":"glycol distearate","position":7,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Dimethiconol, Dimethicone und kationisches Guar bilden eine klare Ablagerungskombination, jedoch erst nach einer sehr starken Hauptreinigung."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Die Silikon-/Polymer-Kombination ist persistent plausibel, aber die Platzierung und starke Tensidbasis halten high nicht sicher."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES und SLS an Position 2-3 plus Betain sind eine starke Reset-Architektur."
+  },
+  "competingSignals": [
+    "Zwei Silikone plus kationisches Polymer sprechen klar gegen low.",
+    "SLES/SLS sehr früh und niedrige Identitätssicherheit sprechen gegen eine robuste high-Einstufung."
+  ],
+  "unresolvedFacts": [
+    "Niedrige Identitätssicherheit der Retailer-Formel."
+  ],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate trägt beide Seiten: persistente Silikon-/Polymerpflegerouten sind plausibel, werden aber von einer starken Reinigungsbasis begrenzt.",
+  "whyNotNeighborBand": "Low unterschätzt die drei persistenten Pflegesignale; high wäre wegen SLES/SLS-Reset und niedriger Identität zu unsicher.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Niedrige Formelidentität und eine enge moderate/high-Grenze."
+  }
+}

@@ -1,0 +1,533 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "3d94c017-9edb-4ba0-accd-4772e262f012:c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Aloe leaf juice is second, but Sodium Coco-Sulfate remains the primary cleanser, supported by betaine and glucosides.",
+      "Glycerin, sodium hyaluronate, sunflower oil, cetearyl alcohol, PCA glyceryl oleate and cationic guar form a multi-cue care system.",
+      "Fragrance and several essential-oil components appear late in the list.",
+      "Official and exact-GTIN German retailer INCI lists match; order still cannot establish percentages."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "100% bestätigen: Sanft zur Kopfhaut¹-¹Anwenderstudie: 30 Teilnehmer, 28 Tage",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "lavera-de-116340"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium coco-sulfate",
+      "cocamidopropyl betaine",
+      "lauryl glucoside",
+      "coco-glucoside"
+    ],
+    "surfactantsSecondary": [
+      "sodium cetearyl sulfate"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "sunflower seed oil",
+      "cetearyl alcohol",
+      "pca glyceryl oleate",
+      "betaine"
+    ],
+    "proteinsFilmFormers": [
+      "sodium hyaluronate"
+    ],
+    "acids": [
+      "citric acid",
+      "levulinic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A balanced moderate cleanser is plausible. No active-matter or comparative cleansing result is available.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Coco-Sulfate is supported by betaine and glucosides.",
+          "inference": "A balanced moderate cleanser is plausible.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No active-matter or comparative cleansing result is available.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A coherent light-to-moderate care system is visible. Most care cues follow the cleanser and no deposition test is public.",
+      "supportingSignals": [
+        {
+          "observation": "Glycerin, sunflower oil, cetearyl alcohol, PCA glyceryl oleate, betaine and cationic guar are present.",
+          "inference": "A coherent light-to-moderate care system is visible.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Most care cues follow the cleanser and no deposition test is public.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Some weight potential is plausible, especially for fine hair. No silicone is present and rinse-off concentrations are unknown.",
+      "supportingSignals": [
+        {
+          "observation": "Oil, fatty alcohol, refatting agent and cationic guar create multiple deposition cues.",
+          "inference": "Some weight potential is plausible, especially for fine hair.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone is present and rinse-off concentrations are unknown.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "deposition-weight"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E3",
+      "evidenceScope": "shampoo_only_test",
+      "rationale": "Gentle positioning is supported in the tested context. Fragrance and multiple essential-oil components are present.",
+      "supportingSignals": [
+        {
+          "observation": "Sensitive positioning and a 30-person, 28-day user study align with a mixed cleanser/care formula.",
+          "inference": "Gentle positioning is supported in the tested context.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance and multiple essential-oil components are present.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "general"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A general moisture-care role is plausible. No isolated hydration endpoint is available.",
+      "supportingSignals": [
+        {
+          "observation": "Regular cleansing is paired with humectant and lipid cues.",
+          "inference": "A general moisture-care role is plausible.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No isolated hydration endpoint is available.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E3",
+      "evidenceScope": "shampoo_only_test",
+      "rationale": "Frequent cosmetic use is intended. Individual cadence and fragrance-sensitive subgroups were not reported.",
+      "supportingSignals": [
+        {
+          "observation": "The page recommends daily use and reports a 28-day user study.",
+          "inference": "Frequent cosmetic use is intended.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Individual cadence and fragrance-sensitive subgroups were not reported.",
+          "inference": "The classification remains bounded and conditional.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E3",
+      "evidenceScope": "shampoo_only_test",
+      "rationale": "Exact sensitive-scalp positioning plus product-specific scalp-gentleness evidence establish a dedicated cosmetic scalp-comfort target. Essential-oil fragrance exposure remains a heads-up, not a target downgrade.",
+      "supportingSignals": [
+        {
+          "observation": "Exact sensitive-scalp positioning plus product-specific scalp-gentleness evidence establish a dedicated cosmetic scalp-comfort target. Essential-oil fragrance exposure remains a heads-up, not a target downgrade.",
+          "inference": "The direct product property is scalp-comfort targeted. This is a target/mechanism classification, not a universal tolerance verdict.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Public INCI/claim evidence does not guarantee individual tolerance, exact irritation outcomes or finished-product performance magnitude. Fragrance, mint, menthol, sensory actives, strong cleansing or preservatives remain explanation/preference heads-ups where present.",
+          "inference": "Those factors are handled by the derived profile-fit matrix and exposure preferences, not as automatic blockers of the target classification.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "lavera-de-116340"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "lavera-de-116340",
+            "dm-de-3133400"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      1,
+      2
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent cleansing cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent conditioningDeposition cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Observed formula cues are functionally relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Multiple coherent mildnessPotential cues are present in the rinse-off formula; exact concentrations remain unknown.",
+        "g3EndpointSpecificity": "The route is endpoint-relevant but capped at 2 because no decisive shampoo-only comparator is captured."
+      }
+    },
+    "weightDepositionLoad": "Formula-only cues are qualitative; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E3",
+    "tests": [
+      {
+        "endpoint": "User-reported scalp gentleness; 30 participants over 28 days.",
+        "scope": "shampoo_only",
+        "sourceIds": [
+          "lavera-de-116340"
+        ]
+      }
+    ],
+    "scopeNotes": "The manufacturer summary supports consumer perception only; protocol and comparator are not public."
+  },
+  "claimAudit": [
+    {
+      "claim": "100% bestätigen: Sanft zur Kopfhaut¹-¹Anwenderstudie: 30 Teilnehmer, 28 Tage",
+      "verdict": "plausible",
+      "support": "The official page reports a 30-person, 28-day exact-product user study.",
+      "limitation": "The questionnaire, comparator, adverse-event detail and subgroup characteristics are not public; fragrance remains a counter-signal.",
+      "sourceIds": [
+        "lavera-de-116340",
+        "dm-de-3133400"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "lavera-de-116340",
+    "dm-de-3133400"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "The product addresses cosmetic sensitive-scalp comfort and dryness without a disease-treatment claim."
+  }
+}

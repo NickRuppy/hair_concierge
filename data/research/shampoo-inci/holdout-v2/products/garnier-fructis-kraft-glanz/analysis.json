@@ -1,0 +1,543 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:garnier-fructis-kraft-glanz:5aa65301a69e27682f0c6892e40c226f68248702a73a5ca2988a9987f936e604",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Sodium Laureth Sulfate and Coco-Betaine form the main cleansing system.",
+      "Guar Hydroxypropyltrimonium Chloride is a cationic deposition polymer.",
+      "Hydroxypropyltrimonium Lemon Protein is a cationic protein-derived film signal.",
+      "Salicylic Acid, Fumaric Acid and Citric Acid are present, but finished pH and contact-time intent are unknown.",
+      "Multiple fragrance allergens, citrus extracts and grapefruit peel oil are listed."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Vegane Formel mit Grapefruit-Extrakt, Vitamin B6 und Niacinamiden; stärkt die Haarfaser, revitalisiert und verleiht Glanz; für starkes Haar voller Volumen; ohne Silikone; dermatologisch getestet.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Betaine",
+      "PPG-5-Ceteth-20"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "Octyldodecanol"
+    ],
+    "proteinsFilmFormers": [
+      "Hydroxypropyltrimonium Lemon Protein",
+      "Carbomer"
+    ],
+    "acids": [
+      "Salicylic Acid",
+      "Fumaric Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES is the lead surfactant and Coco-Betaine is the main moderator; this supports strong ordinary cleansing, not clarifying by itself.",
+      "supportingSignals": [
+        {
+          "observation": "SLES plus Coco-Betaine is a strong ordinary cleansing chassis.",
+          "inference": "SLES is the lead surfactant and Coco-Betaine is the main moderator; this supports strong ordinary cleansing, not clarifying by itself.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Conditioning polymers and pearlizers may soften feel but do not lower the SLES-led cleansing band.",
+          "inference": "Conditioning polymers and pearlizers may soften feel but do not lower the SLES-led cleansing band.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic guar, Hydroxypropyltrimonium Lemon Protein, Glycol Distearate and Octyldodecanol support moderate non-silicone surface conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Cationic guar, cationic lemon protein and emollient/pearlizer signals support moderate conditioning.",
+          "inference": "Cationic guar, Hydroxypropyltrimonium Lemon Protein, Glycol Distearate and Octyldodecanol support moderate non-silicone surface conditioning.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone and no rich lipid system, so not high conditioning.",
+          "inference": "No silicone and no rich lipid system, so not high conditioning.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The cationic polymer is one substantive route; protein-film and lipid/emollient cues are weak, so v1.4 supports moderate rather than high weight.",
+      "supportingSignals": [
+        {
+          "observation": "One substantive cationic polymer route plus weak protein/lipid support stays moderate.",
+          "inference": "The cationic polymer is one substantive route; protein-film and lipid/emollient cues are weak, so v1.4 supports moderate rather than high weight.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Two weak support routes do not become high without a second distinct substantive route.",
+          "inference": "Two weak support routes do not become high without a second distinct substantive route.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The product name and manufacturer claims emphasize Kraft/strength; formula support is compatible only as temporary cosmetic repair/surface reinforcement.",
+      "supportingSignals": [
+        {
+          "observation": "Strengthening/Kraft claims map to conservative cosmetic repair over cationic polymer/protein surface care.",
+          "inference": "The product name and manufacturer claims emphasize Kraft/strength; formula support is compatible only as temporary cosmetic repair/surface reinforcement.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strengthening is not biological fiber repair; the claim is capped to cosmetic surface support.",
+          "inference": "Strengthening is not biological fiber repair; the claim is capped to cosmetic surface support.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glanz is explicit in the name/claims and has an independent smoothing/film route, so one secondary `shine` is justified; volume is left out to respect ordinary max-one secondary.",
+      "supportingSignals": [
+        {
+          "observation": "Glanz is separately named and has an S1 smoothing/film route distinct enough to keep one secondary.",
+          "inference": "Glanz is explicit in the name/claims and has an independent smoothing/film route, so one secondary `shine` is justified; volume is left out to respect ordinary max-one secondary.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Volume wording exists, but the most material distinct secondary in the name is shine.",
+          "inference": "Volume wording exists, but the most material distinct secondary in the name is shine.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Normal shampoo application and strong cleansing mean no frequent role; there is no reset/deep-cleansing or accepted active-treatment trigger.",
+      "supportingSignals": [
+        {
+          "observation": "Manufacturer use is normal shampoo; dm daily wording does not override strong-cleansing frequent trigger rules.",
+          "inference": "Normal shampoo application and strong cleansing mean no frequent role; there is no reset/deep-cleansing or accepted active-treatment trigger.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Daily-use wording from dm would not qualify for frequent because cleansing is strong and manufacturer use is ordinary.",
+          "inference": "Daily-use wording from dm would not qualify for frequent because cleansing is strong and manufacturer use is ordinary.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dermatologisch getestet and salicylic acid exposure do not equal a cosmetic scalp-comfort target; no dry, itchy, flaky or sensitive-scalp positioning is revealed.",
+      "supportingSignals": [
+        {
+          "observation": "Dermatologisch getestet is not a dry/itchy/sensitive scalp comfort target.",
+          "inference": "Dermatologisch getestet and salicylic acid exposure do not equal a cosmetic scalp-comfort target; no dry, itchy, flaky or sensitive-scalp positioning is revealed.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance allergens and citrus oils are exposure flags, not the basis for a negative comfort verdict.",
+          "inference": "Fragrance allergens and citrus oils are exposure flags, not the basis for a negative comfort verdict.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete manufacturer formula contains neither Piroctone Olamine nor Climbazole; Salicylic Acid is not accepted for the locked dandruff rule.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine and Climbazole are absent.",
+          "inference": "The complete manufacturer formula contains neither Piroctone Olamine nor Climbazole; Salicylic Acid is not accepted for the locked dandruff rule.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Salicylic Acid and normal cleansing can affect residue/skin feel but are not Piroctone Olamine or Climbazole.",
+          "inference": "Salicylic Acid and normal cleansing can affect residue/skin feel but are not Piroctone Olamine or Climbazole.",
+          "sourceIds": [
+            "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Residue: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Residue: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Beschwerung/Residue: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Film-/Body-Volumen V2: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Film-/Body-Volumen V2: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Film-/Body-Volumen V2: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Film-/Protein-Support R2: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Film-/Protein-Support R2: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Film-/Protein-Support R2: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      }
+    },
+    "weightDepositionLoad": "Die Beschwerung wird qualitativ aus v1.4-Route-Arten abgeleitet; INCI liefert keine exakten Einsatzmengen oder Wiederholungs-/Residue-Daten.",
+    "weightPersistence": "Persistenz bleibt mechanistisch begrenzt, weil keine wiederholten Shampoo-only Ablagerungsdaten im Quellenpaket vorliegen.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Chelator-/Klärungsarchitektur abgeleitet; keine Fertigprodukt-Resetprüfung ist erfasst.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine anerkannte echte Bond-Repair-Route wird aus INCI abgeleitet; Plex/Keratin/Protein-Sprache bleibt kosmetisch und temporär.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and unblinded product/source-packet claim audit only; no public shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Stärkt die Haarfaser, revitalisiert und verleiht Glanz",
+      "verdict": "plausible",
+      "support": "Cationic guar, cationic lemon protein derivative, Glycol Distearate/Octyldodecanol and acids support temporary surface care and smoothing/shine routes.",
+      "limitation": "No shampoo-only strengthening endpoint is captured; manufacturer and dm show formula drift, and the manufacturer formula is canonical.",
+      "sourceIds": [
+        "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "official-de-garnier-fructis-kraft-glanz-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Dermatologisch getestet plus strengthening/shine language remains cosmetic product positioning and does not assert disease treatment."
+  }
+}

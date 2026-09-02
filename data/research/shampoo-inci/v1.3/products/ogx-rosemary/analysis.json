@@ -1,0 +1,515 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86:915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Taurate, Decyl Glucoside and CAPB form the primary cleanser blend.",
+      "Rosemary oil, peppermint oil, Menthol and Menthyl Lactate create a strong sensory scalp route.",
+      "Amodimethicone and cationic starch provide deposition."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "entfernt sichtbar Öl und Rückstände und befreit Ihr fettiges Haar von Ablagerungen",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium methyl cocoyl taurate",
+      "decyl glucoside",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "starch hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "rosemary leaf oil",
+      "peppermint oil",
+      "glyceryl oleate"
+    ],
+    "proteinsFilmFormers": [
+      "sodium hydrolyzed potato starch dodecenylsuccinate"
+    ],
+    "acids": [
+      "citric acid",
+      "lactic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "A taurate/glucoside/betaine system supports moderate cleansing despite clarifying positioning.",
+      "supportingSignals": [
+        {
+          "observation": "Three primary co-surfactants lead the formula without SLS/SLES or olefin sulfonate.",
+          "inference": "The cleanser should remove oil without being classified as maximally strong.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Amodimethicone, cationic starch and Glyceryl Oleate support moderate conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "A silicone and cationic depositor are present before the late formula tail.",
+          "inference": "A clear deposition route tempers the clarifying system.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Amodimethicone and cationic starch create repeat-use weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "The formula contains both silicone and cationic deposition.",
+          "inference": "Weight potential is moderate, especially for fine hair.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Oil/residue-removal positioning and the cleanser architecture establish clarifying as primary.",
+      "supportingSignals": [
+        {
+          "observation": "The exact German page explicitly targets oily hair and buildup.",
+          "inference": "Organic residue removal is the clearest focus.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [
+        "scalp_active"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Rosemary, peppermint, Menthol and Menthyl Lactate create a sensory scalp-active secondary route.",
+      "supportingSignals": [
+        {
+          "observation": "Multiple mint and rosemary sensory ingredients appear early.",
+          "inference": "This supports sensory scalp activity, not hair-growth efficacy.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "usageRole": {
+      "value": "alternating",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Clarifying use plus silicone deposition is best modeled as alternating use.",
+      "supportingSignals": [
+        {
+          "observation": "The product removes oil/residue but also deposits Amodimethicone.",
+          "inference": "Alternating use is more defensible than universal frequent use.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The product is an oil/residue clarifier without a captured anti-dandruff active or endpoint.",
+      "supportingSignals": [
+        {
+          "observation": "No recognized anti-dandruff active or dandruff claim is disclosed.",
+          "inference": "Clarifying alone does not establish dandruff support.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No exact percentages, finished pH, comparative residue-removal test or sensitive-scalp tolerance result is public.",
+          "inference": "The product property remains bounded and does not guarantee an individual result.",
+          "sourceIds": [
+            "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "present",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      2,
+      3
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The cleansing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The conditioningDeposition score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The weightBuildup score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to smoothing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a smoothing contribution plausible.",
+        "g3EndpointSpecificity": "The smoothing score remains a range because no quantitative finished-product endpoint is public."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to organicClarification.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding rinse-off system make a organicClarification contribution plausible.",
+        "g3EndpointSpecificity": "The organicClarification score remains a range because no quantitative finished-product endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative repeat-use mass or panel result is available.",
+    "weightPersistence": "Persistence is inferred only from depositor type and remains unmeasured.",
+    "weightResetCapacity": "The cleanser architecture supports a directional reset route without a quantified removal result.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific repair route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact German retailer GTIN formula and current PDP; no exact German manufacturer formula capture, so identity confidence remains retailer-limited."
+  },
+  "claimAudit": [
+    {
+      "claim": "entfernt sichtbar Öl und Rückstände und befreit Ihr fettiges Haar von Ablagerungen",
+      "verdict": "plausible",
+      "support": "The multi-surfactant cleanser supports oil and organic-residue removal.",
+      "limitation": "No public comparative shampoo-only result quantifies the claimed visible removal.",
+      "sourceIds": [
+        "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "rossmann-de-ogx-rosemary-mint-3574661805931-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Oily-scalp, cooling and residue-removal positioning is cosmetic scalp care, not disease treatment."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4066447966008",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-1569035",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+      "rawInci": "Aqua, Coco-Glucoside, Glycerin, Sodium Coco-Sulfate, Sodium Cocoamphoacetate, Citric Acid, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Sodium Hydroxide"
+    },
+    {
+      "id": "dm-de-3138409-travel",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/3138409/balea-med-shampoo-ultra-sensitive-reisegroesse",
+      "rawInci": "Aqua, Coco-Glucoside, Glycerin, Sodium Coco-Sulfate, Sodium Cocoamphoacetate, Citric Acid, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Sodium Hydroxide"
+    }
+  ],
+  "rawInci": "Aqua, Coco-Glucoside, Glycerin, Sodium Coco-Sulfate, Sodium Cocoamphoacetate, Citric Acid, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Glyceryl Oleate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Sodium Hydroxide",
+  "normalizedInci": [
+    "aqua",
+    "coco-glucoside",
+    "glycerin",
+    "sodium coco-sulfate",
+    "sodium cocoamphoacetate",
+    "citric acid",
+    "panthenol",
+    "niacinamide",
+    "tocopherol",
+    "ascorbyl palmitate",
+    "glyceryl oleate",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "hydrogenated palm glycerides citrate",
+    "lecithin",
+    "sodium benzoate",
+    "potassium sorbate",
+    "sodium chloride",
+    "sodium hydroxide"
+  ],
+  "inciFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

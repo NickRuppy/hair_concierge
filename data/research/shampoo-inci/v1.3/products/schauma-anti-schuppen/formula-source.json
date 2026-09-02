@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+  "market": "DE",
+  "packSize": "400 ml",
+  "gtinEan": "4015100890730",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T20:30:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "schauma-de-anti-schuppen-classic-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "locator": "https://www.schauma.de/produkte/anti-schuppen-classic/anti-schuppen-classic-400ml-shampoo.html",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Propylene Glycol, Hydrogenated Castor Oil, Sodium Hydroxide, Citric Acid, PEG-7 Glyceryl Cocoate, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00"
+    },
+    {
+      "id": "dm-de-schauma-anti-schuppen-classic-1588728-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "locator": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+      "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Panthenol, Aloe Barbadensis Leaf Extract, Hydrogenated Castor Oil, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Propylene Glycol, Laureth-4, PEG-7 Glyceryl Cocoate, Citric Acid, Sodium Hydroxide, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00"
+    }
+  ],
+  "rawInci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Propylene Glycol, Hydrogenated Castor Oil, Sodium Hydroxide, Citric Acid, PEG-7 Glyceryl Cocoate, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+  "normalizedInci": [
+    "aqua (water, eau)",
+    "sodium laureth sulfate",
+    "sodium chloride",
+    "cocamidopropyl betaine",
+    "piroctone olamine",
+    "aloe barbadensis leaf extract",
+    "coco-glucoside",
+    "glyceryl oleate",
+    "glycol distearate",
+    "laureth-4",
+    "hydroxypropyl guar hydroxypropyltrimonium chloride",
+    "propylene glycol",
+    "hydrogenated castor oil",
+    "sodium hydroxide",
+    "citric acid",
+    "peg-7 glyceryl cocoate",
+    "parfum (fragrance)",
+    "sodium benzoate",
+    "ci 42053 (green 3)"
+  ],
+  "inciFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "Die aktuelle DE-Hersteller-INCI ist die kanonische Formel. Der abweichende dm-DE-Datensatz für GTIN 4015100890730 bleibt als Produktidentitäts- und Quellenprovenienz erhalten, wird aber nicht mit der Herstellerformel zusammengeführt."
+}

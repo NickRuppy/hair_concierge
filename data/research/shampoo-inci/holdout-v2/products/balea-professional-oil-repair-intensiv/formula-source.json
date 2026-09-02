@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4066447806786",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-balea-professional-oil-repair-intensiv-4066447806786-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T20:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1703915/balea-professional-shampoo-oil-repair-intensiv",
+      "rawInci": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Glycerin, Propylene Glycol, Laureth-4, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, PEG-4 Rapeseedamide, Disodium Cocoyl Glutamate, Sodium Cocoyl Glutamate, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid, Sodium Hydroxide",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4066447806786"
+    }
+  ],
+  "rawInci": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Glycerin, Propylene Glycol, Laureth-4, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, PEG-4 Rapeseedamide, Disodium Cocoyl Glutamate, Sodium Cocoyl Glutamate, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid, Sodium Hydroxide",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "argania spinosa kernel oil",
+    "orbignya oleifera seed oil",
+    "sclerocarya birrea seed oil",
+    "parfum",
+    "glycerin",
+    "propylene glycol",
+    "laureth-4",
+    "peg-40 hydrogenated castor oil",
+    "glycol distearate",
+    "peg-4 rapeseedamide",
+    "disodium cocoyl glutamate",
+    "sodium cocoyl glutamate",
+    "guar hydroxypropyltrimonium chloride",
+    "hydrolyzed keratin",
+    "sodium benzoate",
+    "potassium sorbate",
+    "benzoic acid",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "citric acid",
+    "sodium hydroxide"
+  ],
+  "inciFingerprint": "689733084ff714faf5752f96affb87876bd4116df9392cdc2300eb3a67e73e1e",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

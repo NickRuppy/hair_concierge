@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W039",
+  "formula": {
+    "inciFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "payload_lipid",
+        "name": "cocos nucifera (coconut) oil",
+        "position": 7
+      },
+      {
+        "family": "payload_lipid",
+        "name": "argania spinosa (argan) kernel oil",
+        "position": 8
+      },
+      {
+        "family": "film_former",
+        "name": "polyimide-1",
+        "position": 12
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "polyquaternium-10",
+        "position": 13
+      },
+      {
+        "family": "weak_refatter",
+        "name": "hydrogenated palm glycerides citrate",
+        "position": 14
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "polyquaternium-7",
+        "position": 15
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 16
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 18
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium c14-16 olefin sulfonate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 11
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 21,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Zwei Öle, Filmformer, mehrere Polyquats/Guar und Rückfetter ergeben eine stark konvergierende Depositionslast."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Öl-Payloads, Filmformer und mehrere kationische Polymere sind plausibel persistent und wiederholungsrelevant."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Olefin Sulfonate liefert starke Reinigung, wird aber durch die breite Konditionierungsarchitektur nicht vollständig kompensiert."
+  },
+  "competingSignals": [
+    "Olefin Sulfonate an Position 2 ist ein kräftiges Reset-Signal.",
+    "Coco-Glucoside ergänzt Reinigung, obwohl es später steht."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High passt, weil eine außergewöhnlich breite und persistente Öl-/Film-/Polymerarchitektur trotz kräftiger Reinigung deutliche Rückstände plausibel macht.",
+  "whyNotNeighborBand": "Moderate wäre zu niedrig, weil nicht nur eine einzelne Route, sondern mehrere persistente Systeme zusammenwirken; Low ist ausgeschlossen.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige retailer-Formel mit moderater Identitätssicherheit; Mengen bleiben unbekannt."
+  }
+}

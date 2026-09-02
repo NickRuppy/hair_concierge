@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4070765001044",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-1701109",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+      "rawInci": "AQUA | HYDROGENATED STARCH HYDROLYSATE | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | GLYCERIN | SODIUM CHLORIDE | COCO|GLUCOSIDE | ALLANTOIN | BISABOLOL | ZINC PCA | PANTHENOL | HYDROLYZED KERATIN | CAMELLIA SINENSIS LEAF EXTRACT | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | GLYCOL DISTEARATE | COCAMIDOPROPYL BETAINE | PARFUM | SODIUM BENZOATE"
+    }
+  ],
+  "rawInci": "AQUA, HYDROGENATED STARCH HYDROLYSATE, SODIUM LAURETH SULFATE, COCAMIDOPROPYL HYDROXYSULTAINE, GLYCERIN, SODIUM CHLORIDE, COCO-GLUCOSIDE, ALLANTOIN, BISABOLOL, ZINC PCA, PANTHENOL, HYDROLYZED KERATIN, CAMELLIA SINENSIS LEAF EXTRACT, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, GLYCOL DISTEARATE, COCAMIDOPROPYL BETAINE, PARFUM, SODIUM BENZOATE",
+  "normalizedInci": [
+    "aqua",
+    "hydrogenated starch hydrolysate",
+    "sodium laureth sulfate",
+    "cocamidopropyl hydroxysultaine",
+    "glycerin",
+    "sodium chloride",
+    "coco-glucoside",
+    "allantoin",
+    "bisabolol",
+    "zinc pca",
+    "panthenol",
+    "hydrolyzed keratin",
+    "camellia sinensis leaf extract",
+    "guar hydroxypropyltrimonium chloride",
+    "citric acid",
+    "glycol distearate",
+    "cocamidopropyl betaine",
+    "parfum",
+    "sodium benzoate"
+  ],
+  "inciFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

@@ -1,0 +1,577 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-matching-v1.3",
+  "formulaVersionId": "6dc65df2-2466-43e4-bdc2-3a05803f305c:7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Blind formula pass: sulfate-free broad surfactant blend led by CAPB, sulfosuccinate and isethionate.",
+      "Multiple cationic/bodying polymers appear: PQ-10, hydroxypropyl guar, PQ-7 and PQ-11.",
+      "Coconut oil/glyceryl oleate add light conditioning; no silicone is listed in the selected official formula.",
+      "Die aktuelle deutsche Herstellerformel ist für die DE-Analyse kanonisch. Die abweichende dm-AT-Liste bleibt als Markt-/Reformulierungsprovenienz sichtbar, überschreibt oder blockiert die deutsche Formel aber nicht."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "add body to thin, fine or oily hair",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "monday-de-volume"
+      ]
+    },
+    {
+      "textVerbatim": "0% SLS / sulfate-free surfactants",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "monday-de-volume",
+        "dm-at-1893700"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Cocamidopropyl Betaine",
+      "Disodium Laureth Sulfosuccinate",
+      "Sodium Cocoyl Isethionate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MIPA",
+      "Sodium Lauroyl Sarcosinate",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-10",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Polyquaternium-7",
+      "Polyquaternium-11"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Cocos Nucifera (Coconut) Oil",
+      "Glyceryl Oleate"
+    ],
+    "proteinsFilmFormers": [
+      "Acrylates Copolymer"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sulfate-free broad surfactant blend supports moderate-to-strong regular cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "CAPB/sulfosuccinate/isethionate/sarcosinate blend",
+          "inference": "Sulfate-free broad surfactant blend supports moderate-to-strong regular cleansing.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No clarifying directions",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Multiple cationic polymers plus light oils support moderate conditioning/body.",
+      "supportingSignals": [
+        {
+          "observation": "PQ-10, guar, PQ-7 and PQ-11",
+          "inference": "Multiple cationic polymers plus light oils support moderate conditioning/body.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "conditioning-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone or rich conditioner base",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-deposition"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Polymer/oil load creates moderate buildup risk despite silicone absence.",
+      "supportingSignals": [
+        {
+          "observation": "Multiple cationic polymers and coconut oil",
+          "inference": "Polymer/oil load creates moderate buildup risk despite silicone absence.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "weight-deposition-balance"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No heavy silicone",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "weight-deposition-balance"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Volume route is supported by clean-light cleansing and bodying polymers.",
+      "supportingSignals": [
+        {
+          "observation": "V1 and V2 both reach 2+",
+          "inference": "Volume route is supported by clean-light cleansing and bodying polymers.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "primary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Weight potential is not zero",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Light deposition can add smoothing/shine.",
+      "supportingSignals": [
+        {
+          "observation": "PQ/guar/glyceryl oleate",
+          "inference": "Light deposition can add smoothing/shine.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "secondary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No silicone gloss route",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular volume shampoo, not a reset or treatment.",
+      "supportingSignals": [
+        {
+          "observation": "Ordinary rinse-out directions",
+          "inference": "Regular volume shampoo, not a reset or treatment.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No package-linked use frequency is disclosed",
+          "inference": "The formula supports a regular-shampoo role, while exact cadence remains user-specific.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E1",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The record has no anti-dandruff claim or recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "monday-de-volume"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "monday-de-volume"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "monday-de-volume"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      2,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to cleansing, not to a neighboring marketing or treatment endpoint."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to conditioningDeposition, not to a neighboring marketing or treatment endpoint."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to weightBuildup, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS1, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "shineS3 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS3, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV1, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV2, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV3": {
+        "g1FunctionalRelevance": "volumeV3 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV3, not to a neighboring marketing or treatment endpoint."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to smoothing, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR1, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "repairR2 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR2, not to a neighboring marketing or treatment endpoint."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organicClarification has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to organicClarification, not to a neighboring marketing or treatment endpoint."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to mildnessPotential, not to a neighboring marketing or treatment endpoint."
+      }
+    },
+    "weightDepositionLoad": "Moderate due multiple cationic polymers and light oils.",
+    "weightPersistence": "Moderate; polymer films may persist but silicone is absent.",
+    "weightResetCapacity": "Moderate from the surfactant blend, not a true reset shampoo.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific active; global collagen references are not in the selected DE INCI.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Für die DE-Analyse gilt die am 2026-08-23 erneut geprüfte deutsche Herstellerformel. dm Deutschland führt unter Artikel 1893700 aktuell keine Produktdetailseite mit INCI; die abweichende dm-AT-Formel bleibt nur als Markt-/Reformulierungsprovenienz erhalten. Keine kontrollierte Shampoo-only-Volumenstudie gefunden."
+  },
+  "claimAudit": [
+    {
+      "claim": "add body to thin, fine or oily hair",
+      "verdict": "plausible",
+      "support": "Clean-light surfactant route plus bodying polymers support volume plausibility.",
+      "limitation": "No disclosed controlled shampoo-only volume test was found.",
+      "sourceIds": [
+        "monday-de-volume"
+      ]
+    },
+    {
+      "claim": "0% SLS / sulfate-free surfactants",
+      "verdict": "substantiated",
+      "support": "Selected formula contains no SLS/SLES.",
+      "limitation": "Sulfate-free does not by itself prove mildness.",
+      "sourceIds": [
+        "monday-de-volume"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "monday-de-volume",
+    "dm-at-1893700",
+    "apotea-se-4897097266343"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Rinse-off cosmetic shampoo; no dandruff, hair-loss, dermatitis or other medical treatment classification is made."
+  }
+}

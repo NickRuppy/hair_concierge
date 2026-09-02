@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:garnier-fructis-kraft-glanz",
+  "candidateId": "garnier-fructis-kraft-glanz",
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "exactIdentity": {
+    "brand": "Garnier Fructis",
+    "name": "Kraft und Glanz Kräftigendes Shampoo",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": ["3600542040068"]
+  },
+  "selectionArchetype": "shine/strength positioning with producer-retailer formula mismatch",
+  "canonicalFormulaSourceUrl": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/kraft-glanz/kraeftigendes-shampoo",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "The current German Garnier manufacturer page exposes a complete formula and formula code; it has priority over the dm exact-GTIN retailer formula under the producer-first/current-German hierarchy.",
+  "officialClaimSummary": [
+    "Vegane Formel mit Grapefruit-Extrakt, Vitamin B6 und Niacinamiden.",
+    "Stärkt die Haarfaser, revitalisiert und verleiht Glanz.",
+    "Für starkes Haar voller Volumen; ohne Silikone; dermatologisch getestet."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Primary positioning is strength/shine with some volume language.",
+    "Manufacturer says normal shampoo application; dm additionally calls it suitable for daily use."
+  ],
+  "corroboratingUrls": [],
+  "conflictingUrls": [
+    {
+      "url": "https://www.dm.de/p/d/1516732/garnier-fructis-shampoo-kraft-und-glanz",
+      "note": "Exact-GTIN dm PDP for 3600542040068 shows a materially different INCI with grapefruit fruit water much earlier and fewer botanical extracts than the current Garnier manufacturer formula."
+    }
+  ],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Manufacturer and dm position the product as a strengthening/shine regular shampoo, not a clarifying or occasional reset SKU."
+  },
+  "notes": "Canonical formula identity deliberately follows the current German manufacturer formula. The exact GTIN remains recorded for scanner matching, while formula drift is visible through the conflicting dm source."
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:balea-professional-oil-repair-intensiv",
+  "candidateId": "balea-professional-oil-repair-intensiv",
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "exactIdentity": {
+    "brand": "Balea Professional",
+    "name": "Shampoo Oil Repair Intensiv",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": ["4066447806786"]
+  },
+  "selectionArchetype": "dry or very damaged hair / oil-repair positioning",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/1703915/balea-professional-shampoo-oil-repair-intensiv",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "dm is the brand owner/manufacturer-distributor for Balea; its current German PDP is treated as official evidence and exposes exact GTIN plus full INCI.",
+  "officialClaimSummary": [
+    "Pflege-Formel mit 3-fach Öl-Komplex und Keratin.",
+    "Für extrem strapaziertes und trockenes Haar.",
+    "Ohne Silikone."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Repair/care positioning is strong.",
+    "Use instructions are normal rinse-out shampoo instructions, not reset-only."
+  ],
+  "corroboratingUrls": [],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "Current official dm page positions an oil-repair care shampoo for dry/damaged hair, not a deep-cleansing or occasional reset SKU."
+  },
+  "notes": "No independent retailer corroboration was added because the brand-owner PDP already contains exact GTIN and complete current INCI."
+}

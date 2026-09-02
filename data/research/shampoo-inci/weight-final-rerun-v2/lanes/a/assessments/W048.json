@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W048",
+  "formula": {
+    "inciFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 8
+      },
+      {
+        "family": "weak_refatter",
+        "name": "glyceryl oleate",
+        "position": 13
+      },
+      {
+        "family": "weak_refatter",
+        "name": "hydrogenated palm glycerides citrate",
+        "position": 15
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "coco-glucoside",
+        "position": 4
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Guar an Position 8 plus Glyceryl Oleate und Hydrogenated Palm Glycerides Citrate später ergeben eine leichte bis mittlere Rückstandsarchitektur."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Das kationische Guar kann haften; die Rückfetter sind eher schwach und nachgeordnet."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, CAPB und Coco-Glucoside früh im INCI liefern starken Reset."
+  },
+  "competingSignals": [
+    "Keine Silikone, Öle oder schweren Payloads.",
+    "Rückfetter liegen nach Position 12 und wirken begrenzt."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist knapp gestützt, weil ein mittig/frühes kationisches Polymer mit Rückfettern spürbare, aber geringe Rückstände plausibel macht.",
+  "whyNotNeighborBand": "Low wäre möglich bei niedriger Polymerdosierung, würde aber die Guar-plus-Rückfetter-Kombination unterschätzen; High fehlt klar.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und enge Low-vs-Moderate-Grenze."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "shampoo-final-weight-protocol-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "policyPath": "docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md",
+  "policySha256": "a4704a7dc3b7b405df64f7bd4e6b8b776350f22babd89b0142dbbfba3e6b1a9f",
+  "packetSha256": "eaaefd6a8281f7a1fbd1098711154bd08a3e6b449e053b329ccd82e0888dbe6d",
+  "mappingSha256": "ca383eac8ac551c97ade3fac60328cc1c11b152c821440f49296bdb1656e1fe4",
+  "lanes": [
+    "a",
+    "b"
+  ],
+  "assessmentContract": "shampoo-weight-assessment-v2",
+  "labelSeparation": "approved baseline is validated but absent from blind packet and mapping"
+}

@@ -1,0 +1,159 @@
+{
+  "blindCode": "G",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Gossypium Hirsutum Seed Oil, Guar Hydroxypropyltrimonium Chloride, Glycerin, Dicaprylyl Ether, Glyceryl Oleate, Glycol Distearate, Hydrogenated Castor Oil, Sodium Chloride, Citric Acid, Sodium Benzoate, Benzoic Acid, Parfum",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Decyl Glucoside",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Gossypium Hirsutum Seed Oil",
+      "Dicaprylyl Ether",
+      "Glyceryl Oleate",
+      "Glycol Distearate",
+      "Hydrogenated Castor Oil"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Citric Acid",
+      "Benzoic Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Sodium Laureth Sulfate steht direkt nach Wasser und wird durch Cocamidopropyl Betaine sowie zwei Glucoside ergänzt; das spricht für eine effiziente Reinigung, auch wenn rückfettende Stoffe den Griff abmildern können.",
+    "conditioningLevel": "Kationisches Guar plus mehrere Öl-, Ester- und Rückfettungsbausteine ergeben eine klare nicht-silikonbasierte Pflege-/Ablagerungsarchitektur.",
+    "weightPotential": "Nach v1.4 liegen zwei substanzielle Routen vor: ein kationischer Polymerpfad und ein Lipid-/Öl-/Rückfettungspfad; die starke Reinigung wird dafür nicht als automatische Aufhebung gewertet.",
+    "focusPrimary": "Ohne Produktname, Kategorie-Claim oder Herstellerpositionierung wird keine dominante Spezialrolle abgeleitet; die Formel wird deshalb blind als allgemeines Shampoo eingeordnet.",
+    "focusSecondary": "Ohne unabhängigen sekundären Positionierungshinweis bleibt die Sekundärrolle leer; Pflege, Gewicht und Reinigung werden separat erfasst.",
+    "usageRole": "Es gibt keinen Claim-Trigger für häufige Nutzung, Reset, Deep Cleansing oder Behandlung; daher bleibt die Standardrolle regulär.",
+    "scalpComfortTarget": "Die INCI zeigt keine erkannte gezielte Kopfhaut-Komfortroute wie ein bewusst mildes, sensitive- oder trockenheitsorientiertes System; das heißt nicht, dass sie ungeeignet ist.",
+    "dandruffSupport": "Piroctone Olamine und Climbazole sind nicht enthalten; damit fehlt die akzeptierte konventionelle Anti-Schuppen-Route im v1.3/v1.4-Vertrag."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "low",
+    "focusSecondary": "moderate",
+    "usageRole": "high",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-geführtes Tensidsystem mit amphoterem und nichtionischem Co-Tensidanteil.",
+    "Kationisches Guar ist als plausibler Ablagerungs- und Pflegehelfer vorhanden.",
+    "Cottonseed Oil, Dicaprylyl Ether, Glyceryl Oleate und Hydrogenated Castor Oil bilden einen deutlichen Lipid-/Rückfettungspfad.",
+    "Citric Acid ist vorhanden, aber ohne fertigen pH-Wert nur ein schwacher Säure-/S2-Hinweis.",
+    "Keine Silikone, keine Proteine, keine erkennbaren Chelatoren und keine akzeptierten Anti-Schuppen-Aktive."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Konzentrations- oder Ablagerungsprognosen; Coacervation und Rückstandsstärke bleiben formelabhängig.",
+    "Glycol Distearate kann vor allem die Produktoptik beeinflussen und wird nicht allein als Haar-Glanzbeweis gezählt.",
+    "Die starke Tensidbasis unterstützt Reinigung, ersetzt aber keine Claim-Information über eine Reset- oder Clarifying-Nutzung."
+  ],
+  "ruleApplication": {"policyVersion":"shampoo-classification-v1.4-draft","focusPrimary":{"claimDirection":"gentle","formulaCompatible":true,"formulaRoute":"SLES wird durch Cocamidopropyl Betaine und zwei Glucoside ergänzt; die Positionierung nennt eine milde, pH-optimierte Reinigung.","decisionReason":"Die Classic-Care-Positionierung ist mild und pH-optimiert; die kompatible Tensidarchitektur trägt deshalb den primären Fokus gentle."},"focusSecondary":{"defaultEmptyConsidered":true,"selectedValues":["shine"],"claimDirections":["shine"],"independentFormulaRoutes":["Lipid-/Rückfettungssystem und kationisches Guar bilden eine von der Mildheitsroute getrennte Glättungs-/Ablagerungsroute."],"distinctFromPrimary":true,"exception":"none"},"usageRole":{"defaultRole":"regular","trigger":"none","triggerEvidence":[],"rationale":"Die Positionierung ist tägliche Classic Care ohne Reset-, Tiefenreinigungs- oder Behandlungstrigger; regular bleibt die Standardrolle."},"weightPotential":{"formulaRoutes":[{"kind":"cationic_polymer","strength":"substantive","ingredientPosition":"mid","evidence":"Guar Hydroxypropyltrimonium Chloride ist als kationischer Ablagerungspfad vorhanden."},{"kind":"lipid_butter_oil","strength":"substantive","ingredientPosition":"mid","evidence":"Baumwollsamenöl, Glyceryl Oleate, Dicaprylyl Ether und Hydrogenated Castor Oil ergeben einen zusammenhängenden Lipid-/Rückfettungspfad."}],"competingSignals":["Die SLES-geführte Reinigung kann Ablagerungen begrenzen, hebt zwei substanzielle Routen aber nicht automatisch auf."],"confidenceLimit":"ingredient_position"}},
+  "finalDelta": [{"property":"focusPrimary","blindValue":"general","finalValue":"gentle","reason":"Die unblinde Classic-Care-Positionierung nennt milde, pH-optimierte Reinigung und ist mit der Tensidarchitektur vereinbar."},{"property":"focusSecondary","blindValue":[],"finalValue":["shine"],"reason":"Der unblinde Healthy-shine-Claim hat eine eigenständige Lipid-/kationische Ablagerungsroute."}],
+  "candidate_id": "nivea-classic-care",
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "f869e8087699de0d782edfd4a7e2fc9f694ae400a7e4ec5bab919415c6d5d29a"
+  },
+  "payloadHash": "b85d839bf57b0795b50a20f95812a839e71b9ddd38e3e3828b01c8d421586ecf"
+}

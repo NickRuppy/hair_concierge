@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W038",
+  "formula": {
+    "inciFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"protein_film","name":"hydrolyzed keratin","position":6},{"family":"payload_lipid","name":"argania spinosa kernel oil","position":7},{"family":"silicone","name":"amodimethicone","position":10},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":11},{"family":"payload_lipid","name":"hydrogenated castor oil","position":12}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium methyl cocoyl taurate","position":2},{"family":"nonionic_surfactant","name":"decyl glucoside","position":3},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4},{"family":"nonionic_surfactant","name":"coco-glucoside","position":9}],"excludedIngredients":[{"name":"glycol distearate","position":15,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Proteinfilm, Arganöl, Amodimethicone, kationisches Guar und Hydrogenated Castor Oil stehen alle im mittleren Hauptteil der Formel."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Amodimethicone plus kationisches Polymer und Lipid-/Proteinbegleitung macht anhaltende Ablagerung plausibel."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Taurat, Glucoside und Betain liefern eine breite, eher milde Reinigung, aber keinen starken Klärungscharakter."
+  },
+  "competingSignals": [
+    "Die Tensidbasis ist breit und kann bounded wirken.",
+    "Silikon, Polymer, Öl und Protein konvergieren deutlich."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist am besten gestützt, weil mehrere persistente Pflegesysteme in relativ prominenter Position zusammenlaufen und der Reset nicht stark genug wirkt.",
+  "whyNotNeighborBand": "Moderate würde die Silikon-/Polymer-/Lipid-/Protein-Konvergenz unterschätzen; low ist mit dieser Architektur nicht plausibel.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und unbekannte tatsächliche Dosierungen begrenzen die Sicherheit."
+  }
+}

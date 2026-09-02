@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:loreal-elvital-bond-repair-plus",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "3600524074654",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "loreal-de-elvital-bond-repair-plus-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.loreal-paris.de/elvital/bond-repair/shampoo",
+      "rawInci": "AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • ARGININE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • PINENE • BENZYL BENZOATE • LINALYL ACETATE • PROPYLENE GLYCOL • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • BETAINE • CITRUS LIMON PEEL OIL • HEXYL CINNAMAL",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "dm-de-elvital-bond-repair-plus-3600524074654-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+      "rawInci": "AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • ARGININE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • PINENE • BENZYL BENZOATE • LINALYL ACETATE • PROPYLENE GLYCOL • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • BETAINE • CITRUS LIMON PEEL OIL • HEXYL CINNAMAL",
+      "productMatch": "exact_gtin",
+      "gtinEan": "3600524074654"
+    }
+  ],
+  "rawInci": "AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • ARGININE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • PINENE • BENZYL BENZOATE • LINALYL ACETATE • PROPYLENE GLYCOL • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • BETAINE • CITRUS LIMON PEEL OIL • HEXYL CINNAMAL",
+  "normalizedInci": [
+    "aqua/water", "sodium c14-16 olefin sulfonate", "cocamide mea", "glycerin", "cocamidopropyl betaine", "glycol distearate", "sodium lauroyl sarcosinate", "parfum/fragrance", "hexylene glycol", "coco-betaine", "sodium hydroxide", "sodium chloride", "sodium benzoate", "hydroxypropyl guar hydroxypropyltrimonium chloride", "hydroxycitronellal", "peg-55 propylene glycol oleate", "arginine", "salicylic acid", "polyquaternium-7", "limonene", "benzoic acid", "linalool", "pinene", "benzyl benzoate", "linalyl acetate", "propylene glycol", "carbomer", "carvone", "geranyl acetate", "citric acid", "tetramethyl acetyloctahydronaphthalenes", "betaine", "citrus limon peel oil", "hexyl cinnamal"
+  ],
+  "inciFingerprint": "35ce7a09b7027cad8b840d35492bd80e1312ab6cf4d37450f711751656ba850c",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

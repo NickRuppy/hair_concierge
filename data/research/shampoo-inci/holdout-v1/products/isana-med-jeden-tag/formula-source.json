@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:isana-med-jeden-tag",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4305615629216",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "rossmann-de-isana-med-jeden-tag-4305615629216-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag/p/4305615629216/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Formic Acid, Isopropyl Alcohol",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4305615629216"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Formic Acid, Isopropyl Alcohol",
+  "normalizedInci": [
+    "aqua", "sodium laureth sulfate", "urea", "sodium chloride", "cocamidopropyl betaine", "sodium cocoyl glutamate", "disodium cocoamphodiacetate", "panthenol", "sodium laureth-8 sulfate", "glycol distearate", "magnesium laureth sulfate", "magnesium laureth-8 sulfate", "laureth-4", "sodium oleth sulfate", "magnesium oleth sulfate", "parfum", "citric acid", "sodium benzoate", "potassium sorbate", "formic acid", "isopropyl alcohol"
+  ],
+  "inciFingerprint": "318e54212ac194bb3eb1f202b20b69479ae3bf1802df5d83c45f8d773dc8ac1d",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

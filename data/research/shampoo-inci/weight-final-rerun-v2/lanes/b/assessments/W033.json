@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W033",
+  "formula": {
+    "inciFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"film_former","name":"acrylates copolymer","position":6},{"family":"payload_lipid","name":"butyrospermum parkii (shea) butter","position":10},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":15},{"family":"cationic_polymer","name":"polyquaternium-39","position":19}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium c14-16 olefin sulfonate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":3}],"excludedIngredients":[{"name":"glycol distearate","position":13,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Filmformer, Shea Butter und zwei kationische Polymere bilden mehrere konvergierende, haarsubstantive Pflegesysteme."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Polymerische Film-/Kationiksignale und ein Lipidpayload erhöhen die Plausibilität anhaltender Rückstände trotz Ausspülen."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Olefin Sulfonate mit Betain reinigt kräftig, aber die Reset-Breite ist geringer als bei mehreren ergänzenden Tensidklassen und steht starken Pflegesignalen gegenüber."
+  },
+  "competingSignals": [
+    "Olefin Sulfonate spricht für spürbare Reinigung.",
+    "Die Pflegekonvergenz umfasst Filmformer, Lipid und zwei kationische Polymere."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist plausibel, weil mehrere persistent wirkende Systeme zusammenkommen und der Reset die Kombination nicht ausreichend neutralisiert.",
+  "whyNotNeighborBand": "Moderate würde die Breite der Filmformer-/Lipid-/Polymerarchitektur zu stark glätten; low ist ausgeschlossen durch die Mehrfachkonvergenz.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und unbekannte Einsatzmengen begrenzen die Robustheit, obwohl die Architektur klar schwerer ist."
+  }
+}

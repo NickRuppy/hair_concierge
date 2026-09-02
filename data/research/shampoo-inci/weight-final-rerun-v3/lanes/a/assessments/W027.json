@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W027",
+  "formula": { "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad", "sourceTier": "retailer", "capturedAt": "2026-08-10T20:30:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "silicone", "name": "amodimethicone", "position": 11 }, { "family": "weak_refatter", "name": "glyceryl oleate", "position": 15 }, { "family": "weak_refatter", "name": "lecithin", "position": 16 }, { "family": "cationic_polymer", "name": "starch hydroxypropyltrimonium chloride", "position": 17 }, { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 23 }, { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 29 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium methyl cocoyl taurate", "position": 2 }, { "family": "nonionic_surfactant", "name": "decyl glucoside", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 }, { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 12 }], "excludedIngredients": [{ "name": "rosmarinus officinalis leaf oil", "position": 6, "reason": "Ätherisches Duftöl ist kein Lipid-Payload." }, { "name": "mentha piperita oil", "position": 7, "reason": "Ätherisches Duftöl ist kein Lipid-Payload." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Amodimethicone wird von einer kationischen Stärke-Route und mehreren überwiegend späteren Refattern ergänzt; das macht eine merkliche, aber noch begrenzte Pflegeablagerung plausibel." },
+  "persistence": { "value": "moderate", "rationale": "Amodimethicone und das kationische Polymer können haften, werden aber von einer breiten Tensidbasis und überwiegend nachgeordneten Refattern begrenzt." },
+  "resetCapacity": { "value": "moderate", "rationale": "Taurate, Decyl Glucoside, CAPB und später Coco-Glucoside reinigen breit, sind aber keine scharfe SLES/SLS-Reset-Architektur." },
+  "competingSignals": ["Die breite milde Tensidbasis verhindert einen Schluss auf maximalen Rückstand ohne Einschränkung.", "Amodimethicone plus kationische Stärke und Refatter bilden dennoch mehrere konvergierende Persistenzsignale."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Amodimethicone, kationische Stärke und ergänzende Refatter machen merkliche Rückstände plausibel, während die breite Tensidbasis und die überwiegend späteren Pflegesignale die Wirkung begrenzen.",
+  "whyNotNeighborBand": "Low würde die gekoppelte Silikon-/Polymerroute unterschätzen; High ist ohne reichere frühe Pflegearchitektur oder schwächeren Reset nicht ausreichend belegt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "Trotz identischer aktueller deutscher Quellen bleiben Konzentration und reale Depositionsleistung aus INCI allein ungemessen." }
+}

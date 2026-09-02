@@ -1,0 +1,492 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "261e5c9f-d312-4206-82da-fbd0ab6f3614:d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES and CAPB form the disclosed cleansing system.",
+      "Piroctone Olamine appears fifth in the complete INCI.",
+      "Cationic guar follows the anti-dandruff active.",
+      "Multiple essential oils and Limonene are present despite the absence of a Parfum token."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Milde Anti-Schuppenformel",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "hydroxypropyl guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "melaleuca alternifolia leaf oil",
+      "citrus oils"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid",
+      "lactic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and CAPB form the disclosed cleansing system.",
+          "inference": "The cleanser system is consistent with moderate rinse-off cleansing.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support low conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears fifth in the complete INCI.",
+          "inference": "The care system supports low shampoo conditioning.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports low weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears fifth in the complete INCI.",
+          "inference": "The rinse-off residue architecture indicates low weight potential.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is scalp_active.",
+      "supportingSignals": [
+        {
+          "observation": "The exact German dm page identifies Piroctone Olamine, anti-dandruff intent and GTIN 4008890006429.",
+          "inference": "The source and formula align on scalp_active as the primary focus.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence does not establish a second product direction beyond the primary focus.",
+          "inference": "The secondary-focus value is intentionally empty and complete.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The source directions and formula support a treatment usage role.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate treatment use.",
+          "inference": "The product role is treatment; individual cadence still depends on response.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact source and formula provide a direct dandruff support route, bounded by rinse-off exposure and missing comparative data.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine appears fifth and the official page directly targets dry, dandruff-prone scalp.",
+          "inference": "A product-specific dandruff signal is present.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "salthouse-de-anti-schuppen-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to mildnessPotential.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off mildnessPotential contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product mildnessPotential endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "Milde Anti-Schuppenformel",
+      "verdict": "plausible",
+      "support": "The exact German dm page identifies Piroctone Olamine, anti-dandruff intent and GTIN 4008890006429.",
+      "limitation": "The page provides no active concentration, clinical protocol or comparative mildness result.",
+      "sourceIds": [
+        "salthouse-de-anti-schuppen-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "salthouse-de-anti-schuppen-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "medical_claim",
+    "rationale": "The exact page includes disease-adjacent accompanying-care wording for neurodermatitis and psoriasis. It remains claim-audit context for profile-level medical abstention, but does not block formula-only cosmetic classification or create a disease-fit property."
+  }
+}

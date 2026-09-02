@@ -1,0 +1,275 @@
+{
+  "schema_version": "shampoo-research-holdout-v2",
+  "policy_version": "shampoo-classification-v1.4-draft",
+  "selected_at": "2026-08-26T20:30:00+02:00",
+  "status": "internal_research_only",
+  "candidates": [
+    {
+      "candidate_id": "balea-professional-oil-repair-intensiv",
+      "research_product_id": "holdout-v2:balea-professional-oil-repair-intensiv",
+      "catalog_product_id": null,
+      "brand": "Balea Professional",
+      "name": "Shampoo Oil Repair Intensiv",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4066447806786"
+      ],
+      "selection_archetype": "oil-rich repair claim and deposition-weight calibration",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1703915/balea-professional-shampoo-oil-repair-intensiv",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current official dm page positions an oil-repair care shampoo for dry/damaged hair, not a deep-cleansing or occasional reset SKU."
+      }
+    },
+    {
+      "candidate_id": "alverde-nutri-care",
+      "research_product_id": "holdout-v2:alverde-nutri-care",
+      "catalog_product_id": null,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Shampoo Nutri Care",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": [
+        "4066447975284"
+      ],
+      "selection_archetype": "natural glucoside blend with nutrition/repair positioning",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/3108258/alverde-naturkosmetik-shampoo-nutri-care",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current official dm page positions a care shampoo for damaged hair, not a deep-cleansing or occasional reset SKU."
+      }
+    },
+    {
+      "candidate_id": "isana-professional-plex",
+      "research_product_id": "holdout-v2:isana-professional-plex",
+      "catalog_product_id": null,
+      "brand": "ISANA PROFESSIONAL",
+      "name": "Plex Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4305615975917"
+      ],
+      "selection_archetype": "protein and cationic-polymer repair architecture",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Current official Rossmann page positions a repair/plex shampoo, not a clarifying or occasional reset SKU."
+      }
+    },
+    {
+      "candidate_id": "herbal-essences-fiji",
+      "research_product_id": "holdout-v2:herbal-essences-fiji",
+      "catalog_product_id": null,
+      "brand": "Herbal Essences",
+      "name": "Shampoo Fiji",
+      "market": "DE",
+      "pack_size": "350 ml",
+      "gtin_aliases": [
+        "8006530290012"
+      ],
+      "selection_archetype": "sulfate-free moisture positioning and ordinary-use default",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "No crawlable German manufacturer PDP with complete INCI was found; dm Germany and Rossmann Germany exact-GTIN PDPs plus Müller Germany exact-variant PDP agree on the same complete INCI.",
+      "selection_source": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "German retailer pages position a lightweight moisture shampoo, not a clarifying or occasional reset SKU."
+      }
+    },
+    {
+      "candidate_id": "garnier-fructis-kraft-glanz",
+      "research_product_id": "holdout-v2:garnier-fructis-kraft-glanz",
+      "catalog_product_id": null,
+      "brand": "GARNIER FRUCTIS",
+      "name": "Shampoo Kraft & Glanz",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "3600542040068"
+      ],
+      "selection_archetype": "dual strength-and-shine focus boundary",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1516732/garnier-fructis-shampoo-kraft-und-glanz",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Manufacturer and dm position the product as a strengthening/shine regular shampoo, not a clarifying or occasional reset SKU."
+      }
+    },
+    {
+      "candidate_id": "gliss-scalp-balance-sanft",
+      "research_product_id": "holdout-v2:gliss-scalp-balance-sanft",
+      "catalog_product_id": null,
+      "brand": "Schwarzkopf GLISS",
+      "name": "Scalp Balance Sanftes Shampoo",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": [
+        "4015100893021"
+      ],
+      "selection_archetype": "gentle scalp-comfort positioning",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.schwarzkopf.de/marken/haarpflege/gliss/scalp-balance/sanftes--shampoo.html",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+      }
+    },
+    {
+      "candidate_id": "nivea-classic-care",
+      "research_product_id": "holdout-v2:nivea-classic-care",
+      "catalog_product_id": null,
+      "brand": "NIVEA",
+      "name": "Shampoo Classic Care",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4006000192345"
+      ],
+      "selection_archetype": "classic ordinary-use shampoo with light care",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.dm.de/p/d/1620923/nivea-shampoo-classic-care",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "NIVEA and dm position this as a classic mild care shampoo, not as Tiefenreinigung or occasional reset."
+      }
+    },
+    {
+      "candidate_id": "nivea-men-anti-schuppen",
+      "research_product_id": "holdout-v2:nivea-men-anti-schuppen",
+      "catalog_product_id": null,
+      "brand": "NIVEA MEN",
+      "name": "Anti Schuppen Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4006000158464"
+      ],
+      "selection_archetype": "problem-led conventional anti-dandruff active",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.nivea.de/produkte/anti-schuppen-shampoo-40060001584640001.html",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+      }
+    },
+    {
+      "candidate_id": "guhl-langzeit-volumen",
+      "research_product_id": "holdout-v2:guhl-langzeit-volumen",
+      "catalog_product_id": null,
+      "brand": "GUHL",
+      "name": "Langzeit Volumen Kräftigendes Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4072600282427"
+      ],
+      "selection_archetype": "volume positioning with incidental conventional anti-dandruff active",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.guhl.com/produkt/langzeit-volumen/langzeit-volumen-shampoo/",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Exact product is positioned as an ordinary regular-use or active-led shampoo, not as a periodic deep cleanser. Separate Gliss deep-cleansing variant is not selected."
+      }
+    },
+    {
+      "candidate_id": "jean-len-repair-dattel-vanille",
+      "research_product_id": "holdout-v2:jean-len-repair-dattel-vanille",
+      "catalog_product_id": null,
+      "brand": "Jean&Len",
+      "name": "Shampoo Repair Dattel & Vanille",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "4260702181865"
+      ],
+      "selection_archetype": "repair and shine claims with non-silicone deposition",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "No current exact German Jean&Len manufacturer page with full INCI was found for this GTIN; the preferred German dm exact-GTIN page supplies the complete formula.",
+      "selection_source": "https://www.dm.de/p/d/1621982/jean-und-len-shampoo-repair-dattel-und-vanille",
+      "selected_at": "2026-08-26T20:30:00+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "The exact dm product page positions this as a repair/care shampoo for dry, stressed hair, not Tiefenreinigung or occasional reset."
+      }
+    }
+  ],
+  "reserves": [
+    {
+      "candidate_id": "herbal-essences-feuchtigkeit-aloe-vera",
+      "gtin": "8700216212786",
+      "selection_source": "https://www.dm.de/"
+    },
+    {
+      "candidate_id": "garnier-fructis-vitamine-kraft",
+      "gtin": "3600542430289",
+      "selection_source": "https://www.dm.de/"
+    },
+    {
+      "candidate_id": "balea-professional-keratin-repair",
+      "gtin": "4070765001068",
+      "selection_source": "https://www.dm.de/"
+    }
+  ]
+}

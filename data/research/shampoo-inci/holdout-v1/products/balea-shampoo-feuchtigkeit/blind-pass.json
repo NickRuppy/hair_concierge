@@ -1,0 +1,177 @@
+{
+  "candidate_id": "balea-shampoo-feuchtigkeit",
+  "blindCode": "G",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Citric Acid, Sodium Lactate, Lactic Acid, Sodium Hydroxide.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Panthenol",
+      "Glyceryl Oleate",
+      "Glycol Distearate",
+      "Lecithin",
+      "Sodium Lactate"
+    ],
+    "proteinsFilmFormers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Lactic Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "volume",
+    "focusSecondary": [
+      "shine"
+    ],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "dandruff_support": {
+    "value": "not_supported",
+    "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES/CAPB/Coco-Glucoside spricht für moderate Alltagsreinigung, nicht für einen Reset.",
+    "conditioningLevel": "Glycerin, Panthenol, Glyceryl Oleate und zwei kationische Polymer-/Stärke-Cues stützen moderate Pflege.",
+    "weightPotential": "Polymer-/Refatting-Route ist relevant, aber ohne Silikone und mit SLES-Reinigung bleibt das Gewicht moderat.",
+    "focusPrimary": "Blind wirkt die cationic-starch/low-silicone Architektur am ehesten wie leichter Körper/Volumen mit Pflege.",
+    "focusSecondary": "Glyceryl Oleate, Panthenol und kationische Polymere stützen einen sekundären Glanz-/Glätteweg.",
+    "usageRole": "Die Formel wirkt wie ein normales Alltagsshampoo.",
+    "scalpComfortTarget": "Keine dedizierte Kopfhautkomfort-, Sensitive- oder Anti-Schuppen-Route ist erkennbar.",
+    "dandruffSupport": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+    "Glycerin, Panthenol, Glyceryl Oleate, kationische Stärke und kationischer Guar stützen moderate Pflege/Glätte.",
+    "Die Formel enthält Duft und Säureexfoliant-Flags, aber keine Silikone und keine anerkannten Anti-Schuppen-Wirkstoffe."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Einsatzmengen, fertigen pH-Werte oder Depositionsergebnisse.",
+    "Claims, Marke und Produktname wurden in dieser blinden Einstufung nicht verwendet."
+  ],
+  "payloadHash": "2171501e23670f058516e3356ea4c41efa88a65c6f05524576dcaada6b554b28",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "volume",
+      "finalValue": "shine",
+      "reason": "Nach Unblinding ist die dm-Positionierung Feuchtigkeit/Hydration. Da es keinen Moisture-Fokuswert gibt und die Formel moderate Pflege/Refatting statt ein Volumenversprechen trägt, ist shine die passendste Pflege-/Finish-Projektion."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [
+        "shine"
+      ],
+      "finalValue": [
+        "volume"
+      ],
+      "reason": "Das cationic-starch/guar-System bleibt als sekundärer Bodying-Hinweis erhalten."
+    }
+  ]
+}

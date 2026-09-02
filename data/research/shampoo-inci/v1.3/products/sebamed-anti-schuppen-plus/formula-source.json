@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+  "market": "DE",
+  "packSize": "200 ml",
+  "gtinEan": "4103040051677",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T20:30:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "sebamed-de-anti-schuppen-plus-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "locator": "https://sebamed.de/de/p/antischuppen-shampoo-plus/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00"
+    },
+    {
+      "id": "dm-de-sebamed-anti-schuppen-plus-1585729-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "locator": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005",
+      "capturedAt": "2026-08-10T20:30:00.000+02:00"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Piroctone Olamine, Menthol, Parfum, Citric Acid, Phenoxyethanol, Sodium Benzoate, CI 42090, CI 47005",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "lauryl glucoside",
+    "sodium lauroyl sarcosinate",
+    "sodium chloride",
+    "hydroxypropyl oxidized starch pg-trimonium chloride",
+    "piroctone olamine",
+    "menthol",
+    "parfum",
+    "citric acid",
+    "phenoxyethanol",
+    "sodium benzoate",
+    "ci 42090",
+    "ci 47005"
+  ],
+  "inciFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

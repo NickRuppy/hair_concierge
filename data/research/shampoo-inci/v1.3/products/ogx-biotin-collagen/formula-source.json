@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+  "market": "DE",
+  "packSize": "385 ml",
+  "gtinEan": "3574661800202",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T12:00:00+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-ogx-biotin-collagen-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.dm.de/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "productMatch": "exact_gtin"
+    },
+    {
+      "id": "rossmann-ogx-biotin-collagen-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-ogx-biotin-und-collagen-shampoo/p/3574661800202",
+      "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/ Fragrance",
+      "productMatch": "exact_gtin"
+    },
+    {
+      "id": "mueller-ogx-biotin-collagen-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T12:00:00+02:00",
+      "locator": "https://www.mueller.de/p/ogx-thick-full-biotin-collagen-shampoo-385ml-107260/",
+      "rawInci": "Ingredients: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+      "productMatch": "exact_gtin"
+    }
+  ],
+  "rawInci": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Biotin, Hydrolyzed Collagen, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Starch Hydroxypropyltrimonium Chloride, Amodimethicone, Coco-Glucoside, Glyceryl Oleate, Sodium Lactate, Lactic acid, Urea, Hydrogenated Palm Glycerides Citrate, Coconut Acid, Disodium Tetrapropenyl Succinate, Lecithin, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Tocopherol, Ascorbyl Palmitate, Parfum/Fragrance",
+  "normalizedInci": [
+    "aqua/water/eau",
+    "sodium methyl cocoyl taurate",
+    "decyl glucoside",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "biotin",
+    "hydrolyzed collagen",
+    "sodium hydrolyzed potato starch dodecenylsuccinate",
+    "starch hydroxypropyltrimonium chloride",
+    "amodimethicone",
+    "coco-glucoside",
+    "glyceryl oleate",
+    "sodium lactate",
+    "lactic acid",
+    "urea",
+    "hydrogenated palm glycerides citrate",
+    "coconut acid",
+    "disodium tetrapropenyl succinate",
+    "lecithin",
+    "peg-150 distearate",
+    "hexylene glycol",
+    "citric acid",
+    "sodium hydroxide",
+    "sodium benzoate",
+    "benzoic acid",
+    "tocopherol",
+    "ascorbyl palmitate",
+    "parfum/fragrance"
+  ],
+  "inciFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

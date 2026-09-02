@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W044",
+  "formula": {
+    "inciFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "position": 11
+      },
+      {
+        "family": "cationic_conditioner",
+        "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+        "position": 11
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "nonionic_surfactant",
+        "name": "decyl glucoside",
+        "position": 2
+      },
+      {
+        "family": "anionic_surfactant",
+        "name": "disodium laureth sulfosuccinate",
+        "position": 3
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Das relevante Depositionssignal ist ein einzelnes kationisches oxidiertes Stärke-Derivat an Position 11; sonst fehlen persistente Systeme im Paket."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Ein einzelnes spätes kationisches Stärke-Signal hat begrenzte Persistenz ohne Silikone, Öle oder weitere Polymere."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Decyl Glucoside und Disodium Laureth Sulfosuccinate liefern milde bis solide Reinigung; Sulfoacetate im INCI unterstützt die Waschbasis, auch wenn es nicht im Evidenzblock steht."
+  },
+  "competingSignals": [
+    "Depositionssignal liegt spät und allein.",
+    "Keine Lipid- oder Silikon-Payloads im Evidenzpaket."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low passt, weil die Formel trotz kationischem Stärkesignal schlank bleibt und keine deutliche Mehrfachdeposition zeigt.",
+  "whyNotNeighborBand": "Moderate wäre nur bei substantieller Dosierung dieses einzelnen Stärkederivats plausibel; die Gesamtarchitektur stützt das nicht.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unbekannte Stärke-Derivat-Dosierung."
+  }
+}

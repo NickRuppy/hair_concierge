@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W050",
+  "formula": {
+    "inciFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "payload_lipid",
+        "name": "stearyl alcohol",
+        "position": 6
+      },
+      {
+        "family": "payload_lipid",
+        "name": "cetyl alcohol",
+        "position": 9
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "polyquaternium-6",
+        "position": 14
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 15
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 4
+      }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Stearyl Alcohol und Cetyl Alcohol relativ früh plus Polyquaternium-6 und Guar bilden eine reiche Fettalkohol-/Polymerarchitektur."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Fettalkohole und zwei kationische Polymere sind plausibel persistent und können spürbare Beschichtung erzeugen."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES, CAPB und Sodium Xylenesulfonate reinigen solide, aber die Konditionierungsarchitektur bleibt stark."
+  },
+  "competingSignals": [
+    "SLES und Xylenesulfonate geben eine relevante Reset-Gegenseite.",
+    "Keine Silikone, was die High-Entscheidung etwas knapper macht."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist am besten gestützt, weil frühe Fettalkohole mit zwei kationischen Polymeren eine deutlich schwere, persistente Architektur ergeben.",
+  "whyNotNeighborBand": "Moderate würde die frühe Fettalkoholbasis und die doppelte Polymerdeposition unterschätzen; Low ist nicht plausibel.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige retailer-Formel mit moderater Identitätssicherheit; genaue Fettalkohol-/Polymermengen bleiben offen."
+  }
+}

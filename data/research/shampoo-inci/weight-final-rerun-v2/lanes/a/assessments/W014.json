@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W014",
+  "formula": {
+    "inciFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T12:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "cationic_polymer",
+        "name": "starch hydroxypropyltrimonium chloride",
+        "position": 9
+      },
+      { "family": "silicone", "name": "amodimethicone", "position": 10 },
+      { "family": "weak_refatter", "name": "glyceryl oleate", "position": 12 },
+      { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 16 },
+      { "family": "weak_refatter", "name": "lecithin", "position": 19 },
+      { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 27 }
+    ],
+    "excludedIngredients": [],
+    "resetRelevant": [
+      { "family": "anionic_surfactant", "name": "sodium methyl cocoyl taurate", "position": 2 },
+      { "family": "nonionic_surfactant", "name": "decyl glucoside", "position": 3 },
+      { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 },
+      { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 11 }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Kationische Stärke, Amodimethicone und mehrere leichte Rückfetter ergeben eine klare, aber nicht reichhaltige Pflegebasis."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Amodimethicone und kationische Stärke sind persistent plausibel; ihre Positionen und die fehlende reiche Lipidphase halten die Gesamtwirkung begrenzt."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Taurate, Decyl Glucoside, CAPB und Coco-Glucoside ergeben eine breite, eher milde Reset-Seite."
+  },
+  "competingSignals": [
+    "Amodimethicone und mehrere Rückfetter sprechen gegen low.",
+    "Starch Hydroxypropyltrimonium Chloride ist als kationische Pflegeroute bestätigt.",
+    "Die breite Tensidmischung und überwiegend leichten Zusatzrouten sprechen gegen high."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist der beste blinde Wert, weil zwei bestätigte persistente Pflegerouten und mehrere leichte Rückfetter spürbare, aber begrenzte Rückstände plausibel machen.",
+  "whyNotNeighborBand": "Nicht low wegen kationischer Stärke, Amodimethicone und Rückfettern; nicht high, weil die vierteilige Tensidbasis relevant ist und eine frühe reiche Lipid- oder Fettalkoholarchitektur fehlt.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die Rollen sind aufgelöst, aber Retailer-Identität und unbekannte Einsatzmengen lassen eine moderate/high-Restgrenze offen."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v2:jean-len-repair-dattel-vanille",
+  "candidateId": "jean-len-repair-dattel-vanille",
+  "capturedAt": "2026-08-26T21:30:00.000+02:00",
+  "exactIdentity": {
+    "brand": "Jean&Len",
+    "name": "Shampoo Repair Dattel & Vanille",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": ["4260702181865"]
+  },
+  "selectionArchetype": "silicone-free repair/moisture shampoo",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/1621982/jean-und-len-shampoo-repair-dattel-und-vanille",
+  "manufacturerFormulaAvailability": "unavailable",
+  "retailerFallbackReason": "No current exact German Jean&Len manufacturer page with full INCI was found for this GTIN; the preferred German dm exact-GTIN page supplies the complete formula.",
+  "sourcePriorityRationale": "Manufacturer formula was unavailable, so the complete German dm exact-GTIN INCI is canonical. The Austrian dm exact-GTIN page shows the same formula as cross-market corroboration but does not raise German identity confidence above the single German retailer level.",
+  "officialClaimSummary": [
+    "Repair shampoo positioned for strongly stressed and dry hair.",
+    "With date and vanilla extract; claims moisture, shine and reduced hair breakage.",
+    "Silicone-free according to the dm exact-GTIN product page."
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Primary direction is repair/care; moisture and shine are claim directions but must be formula-gated.",
+    "Normal rinse-out shampoo positioning; no deep-cleansing, reset-only or treatment-only instruction."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.at/jean-und-len-shampoo-repair-dattel-und-vanille-p4260702181865.html"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The exact dm product page positions this as a repair/care shampoo for dry, stressed hair, not Tiefenreinigung or occasional reset."
+  },
+  "notes": "Identity confidence remains low under the validator because only one German exact-GTIN formula source is available; this is not an unresolved conflict."
+}

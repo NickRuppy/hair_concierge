@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:balea-shampoo-feuchtigkeit",
+  "market": "DE",
+  "packSize": "300 ml",
+  "gtinEan": "4066447982619",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1679752/balea-shampoo-feuchtigkeit",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Citric Acid, Sodium Lactate, Lactic Acid, Sodium Hydroxide.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "4066447982619"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Panthenol, Niacinamide, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Laureth-4, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Citric Acid, Sodium Lactate, Lactic Acid, Sodium Hydroxide.",
+  "normalizedInci": ["aqua", "sodium laureth sulfate", "cocamidopropyl betaine", "glycerin", "panthenol", "niacinamide", "tocopherol", "ascorbyl palmitate", "parfum", "glyceryl oleate", "coco-glucoside", "glycol distearate", "hydroxypropyl oxidized starch pg-trimonium chloride", "hydroxypropyl guar hydroxypropyltrimonium chloride", "laureth-4", "hydrogenated palm glycerides citrate", "lecithin", "sodium benzoate", "potassium sorbate", "tetramethyl acetyloctahydronaphthalenes", "sodium chloride", "citric acid", "sodium lactate", "lactic acid", "sodium hydroxide"],
+  "inciFingerprint": "3845c72d96e74845cf2a730943de0279c74fce467303118249b328baa23bdf06",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

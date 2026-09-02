@@ -1,0 +1,231 @@
+{
+  "candidate_id": "balea-professional-oil-repair-intensiv",
+  "blindCode": "A",
+  "rawInci": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Glycerin, Propylene Glycol, Laureth-4, PEG-40 Hydrogenated Castor Oil, Glycol Distearate, PEG-4 Rapeseedamide, Disodium Cocoyl Glutamate, Sodium Cocoyl Glutamate, Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Keratin, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid, Sodium Hydroxide",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Laureth-4",
+      "PEG-40 Hydrogenated Castor Oil",
+      "Disodium Cocoyl Glutamate",
+      "Sodium Cocoyl Glutamate"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Argania Spinosa Kernel Oil",
+      "Orbignya Oleifera Seed Oil",
+      "Sclerocarya Birrea Seed Oil",
+      "Glycol Distearate",
+      "PEG-4 Rapeseedamide"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Keratin"
+    ],
+    "acids": [
+      "Benzoic Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES is the lead cleanser with betaine and glutamate co-surfactants, so cleansing is strong despite the refatting/oil load.",
+    "conditioningLevel": "Three oils plus cationic guar and hydrolyzed keratin create a plausible non-silicone conditioning system, but rinse-off delivery and exact deposition are uncertain.",
+    "weightPotential": "The cationic polymer route is substantive, but the oils are treated as weak-to-moderate rather than clearly substantive because this is a surfactant-rich rinse-off shampoo without a clear oil-deposition carrier; therefore the exact v1.4 two-substantive-route threshold for high is not met.",
+    "focusPrimary": "Blind formula alone shows a care-leaning shampoo, but without claims it does not force a single dominant focus beyond general.",
+    "focusSecondary": "No secondary focus is assigned because v1.4 defaults to empty without distinct positioning signals.",
+    "usageRole": "No frequent, reset, clarifying or treatment trigger is available from formula-only input, so v1.4 default regular applies.",
+    "scalpComfortTarget": "The formula has some amphoteric and refatting moderation, but SLES, fragrance and no tolerance evidence mean scalp comfort is not formula-targeted.",
+    "dandruffSupport": "The complete formula does not list Piroctone Olamine or Climbazole."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "low",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES appears second, followed by Cocamidopropyl Betaine and salt.",
+    "Three botanical oils appear before fragrance, suggesting a meaningful oil/refatting signal for a rinse-off shampoo.",
+    "Guar Hydroxypropyltrimonium Chloride supplies a cationic polymer deposition route.",
+    "Hydrolyzed Keratin is present late and should be treated as weak surface-film support.",
+    "No silicone or recognized anti-dandruff active is listed."
+  ],
+  "counterSignals": [
+    "Oil deposition from rinse-off shampoo is uncertain without finished-formula evidence.",
+    "Strong SLES-led cleansing may reduce perceived softness and reset some residue.",
+    "Glycol Distearate can pearlize the product and should not be counted alone as hair shine.",
+    "Citric Acid alone does not establish finished acidic pH."
+  ],
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "ce771c14285b121e69dadbd24ddb1a0c39ab6906613745030d9ff389d00e6c27"
+  },
+  "payloadHash": "4c8d8cad27eafc2745128ada78d143e4e8596642a56bfc0c743439df7b56e54d",
+  "finalDelta": [
+    {
+      "property": "conditioningLevel",
+      "blindValue": "moderate",
+      "finalValue": "high",
+      "reason": "Der unblindete Oil-Repair-Kontext passt zur Formel: drei Pflanzenöle vor Parfum, kationisches Guar und Keratin stützen ein hohes, nicht-silikonisches Pflege-/Depositionspotenzial im Shampoo."
+    },
+    {
+      "property": "weightPotential",
+      "blindValue": "moderate",
+      "finalValue": "high",
+      "reason": "Nach v1.4 zählen der frühe Ölkomplex und kationisches Guar als zwei unterschiedliche substantive Depositionsrouten; deshalb ist das Beschwerungspotenzial hoch, auch wenn die Reinigung stark ist."
+    },
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "reason": "Die dominierende Oil-Repair-/Trockenhaar-Positionierung ist formelkompatibel über Öl, kationisches Guar und Keratin; Repair beschreibt hier temporäre kosmetische Pflege, keine echte Strukturheilung."
+    }
+  ],
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "repair",
+      "formulaCompatible": true,
+      "formulaRoute": "Ölkomplex vor Parfum plus kationisches Guar und Keratin stützen temporäre Pflege/Repair-Oberflächenwirkung.",
+      "decisionReason": "Der Name und die offiziellen Claims sind klar Oil-Repair-led; die Formel ist damit kompatibel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Normale Shampooanwendung; kein Reset-, Daily-non-strong- oder Active-Problem-Trigger."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "substantive",
+          "ingredientPosition": "early",
+          "evidence": "Argan-, Babassu- und Marulaöl stehen vor Parfum als zusammenhängender Öl-/Refatting-Komplex."
+        },
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Guar Hydroxypropyltrimonium Chloride ist eine wirksame kationische Depositionsroute auch bei niedriger Einsatzmenge."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Hydrolyzed Keratin ergänzt Repair-/Film-Support nur schwach."
+        }
+      ],
+      "competingSignals": [
+        "SLES-led cleansing can reduce perceived coating but does not cancel deposition routes."
+      ],
+      "confidenceLimit": "sub1_uncertainty"
+    }
+  }
+}

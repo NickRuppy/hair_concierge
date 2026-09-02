@@ -1,0 +1,276 @@
+{
+  "candidate_id": "pantene-3in1-repair-care",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Citrate, Sodium Xylenesulfonate, Sodium Lauryl Sulfate, Glycol Distearate, Sodium Chloride, Stearyl Alcohol, Parfum, Dimethiconol, Cetyl Alcohol, Sodium Benzoate, Dimethicone, Citric Acid, Sodium Salicylate, Guar Hydroxypropyltrimonium Chloride, TEA-Dodecylbenzenesulfonate, Sodium Hydroxide, Trideceth-10, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate",
+      "sodium lauryl sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "stearyl alcohol",
+      "cetyl alcohol",
+      "benzyl alcohol"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": [
+      "tetrasodium edta"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "high",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "high",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:pantene-3in1-repair-care",
+      "formula": {
+        "inciFingerprint": "6fa3f74f6e697708f687df29c7856d2f176860ae1867df81fa580e07a96160bd",
+        "sourceTier": "retailer",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "payload_lipid",
+            "name": "stearyl alcohol",
+            "position": 9
+          },
+          {
+            "family": "silicone",
+            "name": "dimethiconol",
+            "position": 11
+          },
+          {
+            "family": "payload_lipid",
+            "name": "cetyl alcohol",
+            "position": 12
+          },
+          {
+            "family": "silicone",
+            "name": "dimethicone",
+            "position": 14
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          },
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium lauryl sulfate",
+            "position": 6
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "glycol distearate",
+            "position": 7,
+            "reason": "Zählt nicht als persistente Route."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "high",
+        "rationale": "Stearyl Alcohol, Cetyl Alcohol, Dimethiconol, Dimethicone und Guar bilden eine schwere 3-in-1-Ablagerungsarchitektur."
+      },
+      "persistence": {
+        "value": "high",
+        "rationale": "Stearyl Alcohol, Cetyl Alcohol, Dimethiconol, Dimethicone und Guar bilden eine schwere 3-in-1-Ablagerungsarchitektur."
+      },
+      "resetCapacity": {
+        "value": "strong",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "high",
+      "whyThisBand": "Stearyl Alcohol, Cetyl Alcohol, Dimethiconol, Dimethicone und Guar bilden eine schwere 3-in-1-Ablagerungsarchitektur.",
+      "whyNotNeighborBand": "Nicht moderate, weil Fetalkohole, zwei nichtflüchtige Silikonwege und Guar zusammenwirken.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "high",
+      "confidence": "moderate",
+      "rationale": "Stearyl Alcohol, Cetyl Alcohol, Dimethiconol, Dimethicone und Guar bilden eine schwere 3-in-1-Ablagerungsarchitektur."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "9cbdf593d6c95e10620f360d0d2523d25f0aa06023e0d1ae4a27bf7b4de6a88a"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "repair",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "reason": "Die nach der Blindphase geprüfte Repair-Care-Positionierung ist mit der reichhaltigen Pflegearchitektur kompatibel."
+    }
+  ],
+  "payloadHash": "510c6adacd8bcf8eb760cd7134db414465bd4f52a0311579effec64819927a7d"
+}

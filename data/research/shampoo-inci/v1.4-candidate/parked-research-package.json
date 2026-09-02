@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "shampoo-inci-parked-research-package-v1",
+  "packageId": "shampoo-inci-v1.4",
+  "status": "parked_research_only",
+  "parkedAt": "2026-09-02",
+  "productionActive": false,
+  "catalogImportAuthorized": false,
+  "policy": {
+    "id": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+    "sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24"
+  },
+  "runbook": {
+    "path": "docs/research/shampoo-inci/v1.4/new-product-research-runbook.md",
+    "sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "existingProductCandidate": {
+    "path": "data/research/shampoo-inci/v1.4-candidate/candidate.json",
+    "sha256": "3c2c1bbe55d48a09a742591d33c9bd05bb41f9bcad45de9514ef0b79226a0e06",
+    "status": "finalizable_research_only",
+    "activeProducts": 50,
+    "propertiesPerProduct": 8,
+    "lockedSourceFiles": 112,
+    "lowConfidenceProperties": 0,
+    "missingRationaleReferences": 0
+  },
+  "weightClosure": {
+    "path": "data/research/shampoo-inci/weight-final-rerun-v3/report.json",
+    "sha256": "f2f9353dded6bacc59376eb4575fa45598e1c21af98d1a445e4cd719bb30425f",
+    "correctedProducts": 4
+  },
+  "newProductHoldout": {
+    "manifestPath": "data/research/shampoo-inci/holdout-v3/holdout-manifest.json",
+    "manifestSha256": "924970654ecd861f2e7df32bac1988a7fa134999b7a422afb19942eedb824d88",
+    "reportPath": "data/research/shampoo-inci/holdout-v3/holdout-report.json",
+    "reportSha256": "e372c555a4cec0e7005c5dd647d6b9c0d66783ee327bc2e3ee49316a607b3d4d",
+    "adjudicationPath": "data/research/shampoo-inci/holdout-v3/adjudication.json",
+    "adjudicationSha256": "1c900e275f3c29d8d0cd3275dbc55ad2c5e165655279fb94cc64970d189d38fd",
+    "products": 10,
+    "profilesReplayed": 18,
+    "rawExactAgreement": 0.8571428571428571,
+    "dandruffAgreement": 1,
+    "gatePassed": true
+  },
+  "verification": {
+    "candidateReceiptPath": "data/research/shampoo-inci/v1.4-candidate/verification-receipt.json",
+    "candidateReceiptSha256": "eea786c6e99c1f3fb56decd09cc3e4c6e79372baa73df1c8087ce2386f601fe8",
+    "readyCheckReceiptPath": "data/research/shampoo-inci/v1.4-candidate/ready-check-receipt.json",
+    "readyCheckReceiptSha256": "09674e9d9e516636fab82dcc5cec14d50c9fd3d4103921b2ce0ed7d5a3c703ad"
+  },
+  "integrityValidationCommand": "npm run research:shampoo:validate-parked-v14",
+  "archiveScope": "Frozen methodology, source evidence, research outputs, holdout results and integrity validation. Generation, catalog-import, database, Lab and production-matching code are intentionally excluded.",
+  "archiveContent": {
+    "files": 519,
+    "sha256": "7b8bf543ad23cbdda10249fe950ddd9217eb03858b39a4116c5c3f1243bd4a55"
+  },
+  "stopBoundary": "No catalog, database, matching, user-facing, deployment, or production activation is authorized by this package."
+}

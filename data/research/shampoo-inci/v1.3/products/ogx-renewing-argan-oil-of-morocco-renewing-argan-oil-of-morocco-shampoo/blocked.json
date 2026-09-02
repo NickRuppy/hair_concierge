@@ -1,0 +1,8 @@
+{
+  "schema_version": "shampoo-inci-blocked-v1",
+  "product_id": "f41badc9-16e3-41c1-ab6c-23541fffade0",
+  "status": "blocked",
+  "blocker_code": "catalog_entry_superseded",
+  "reason": "Veralteter doppelter Katalogeintrag: Die legacy GTIN 022796976116 ist nicht eindeutig einer aktuellen deutschen Formel zuzuordnen und wird durch den aktuellen deutschen OGX-Renewing-Argan-Oil-Produktsatz mit eigener UUID/GTIN ersetzt. Dieser Eintrag bleibt blockiert und darf erst nach Bestätigung durch Catalog Authority aus dem Kohortensnapshot entfernt werden; die Kohorte wird nicht stillschweigend verändert.",
+  "captured_at": "2026-08-22T12:00:00.000+02:00"
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v2:herbal-essences-fiji",
+  "market": "DE",
+  "packSize": "350 ml",
+  "gtinEan": "8006530290012",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T20:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-de-herbal-essences-fiji-8006530290012-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T20:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "rawInci": "Ingredients: Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "productMatch": "exact_gtin",
+      "gtinEan": "8006530290012"
+    },
+    {
+      "id": "rossmann-de-herbal-essences-fiji-8006530290012-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T20:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012",
+      "rawInci": "Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "productMatch": "exact_gtin",
+      "gtinEan": "8006530290012"
+    },
+    {
+      "id": "mueller-de-herbal-essences-fiji-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T20:00:00.000+02:00",
+      "locator": "https://www.mueller.de/p/herbal-essences-haarshampoo-fiji-PPN3182585/",
+      "rawInci": "Ingredients: Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "productMatch": "exact_variant"
+    }
+  ],
+  "rawInci": "Ingredients: Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+  "normalizedInci": [
+    "aqua",
+    "sodium cocoyl isethionate",
+    "lauramidopropyl betaine",
+    "cocamidopropyl betaine",
+    "sodium lauroyl sarcosinate",
+    "citric acid",
+    "sodium chloride",
+    "parfum",
+    "sodium benzoate",
+    "sodium salicylate",
+    "polyquaternium-10",
+    "sodium citrate",
+    "tetrasodium edta",
+    "hexamethylindanopyran",
+    "linalool",
+    "linalyl acetate",
+    "citrus aurantium peel oil",
+    "histidine",
+    "sodium hydroxide",
+    "coumarin",
+    "limonene",
+    "vanillin",
+    "terpineol",
+    "glycerin",
+    "cocos nucifera fruit juice"
+  ],
+  "inciFingerprint": "3f61f3ba85eaf215b60dffee572dcf0187b73897fb51488e52e99164f028a45d",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "No crawlable German manufacturer PDP with complete INCI was found. Two exact-GTIN German retailer PDPs and one Müller exact-variant PDP agree on the same formula, so dm/Rossmann retailer evidence is used as canonical fallback."
+}

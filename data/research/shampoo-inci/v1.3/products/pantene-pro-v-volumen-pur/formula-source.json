@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+  "market": "DE",
+  "packSize": "500 ml",
+  "gtinEan": "8700216558761",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T18:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-de-1581103",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/1581103/pantene-pro-v-shampoo-volumen-pur-xxl",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "productMatch": "exact_gtin"
+    },
+    {
+      "id": "rossmann-de-8700216558761",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T18:00:00.000+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-volumen-pur/p/8700216558761",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "productMatch": "exact_gtin"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "sodium xylenesulfonate",
+    "sodium chloride",
+    "parfum",
+    "citric acid",
+    "sodium benzoate",
+    "sodium citrate",
+    "sodium salicylate",
+    "hydroxypropyl methylcellulose",
+    "sodium hydroxide",
+    "panthenol",
+    "tetrasodium edta",
+    "hexyl cinnamal",
+    "histidine",
+    "glyoxal"
+  ],
+  "inciFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

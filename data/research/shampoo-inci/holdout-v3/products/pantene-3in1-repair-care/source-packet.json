@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:pantene-3in1-repair-care",
+  "candidateId": "pantene-3in1-repair-care",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Pantene Pro-V",
+    "name": "3in1 Repair & Care Shampoo, Conditioner & Haarkur",
+    "market": "DE",
+    "packSize": "250 ml",
+    "gtinAliases": [
+      "8700216558136"
+    ]
+  },
+  "selectionArchetype": "three-in-one repair-care shampoo",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/1561889/pantene-pro-v-shampoo-und-conditioner-und-haarkur-3in1-repair-und-care",
+  "manufacturerFormulaAvailability": "unavailable",
+  "retailerFallbackReason": "No current German manufacturer formula was captured for this exact pack; dm Germany is canonical and Oh Feliz corroborates the same selected product formula.",
+  "sourcePriorityRationale": "No complete manufacturer formula is used for this exact product packet; the selected German retailer formula is canonical.",
+  "officialClaimSummary": [
+    "three-in-one care positioning",
+    "repair-care direction",
+    "everyday-use direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Three-in-one and repair-care positioning are permitted later focus evidence.",
+    "Everyday-use framing is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://www.pantene.de/"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "dm formula is canonical under retailer fallback; Oh Feliz corroborates the selected product.",
+  "officialProductPage": "https://www.pantene.de/"
+}

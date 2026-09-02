@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:dove-taegliche-feuchtigkeit-2in1",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "8710908832284",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "budni-de-dove-taegliche-feuchtigkeit-2in1-8710908832284-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.budni.de/sortiment/produkte/3263347004",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Dimethiconol, Sodium Gluconate, Glycerin, Parfum, Lysine HCl, Arginine, Cocos Nucifera Oil, Hydrolyzed Soy Protein, Sodium Chloride, Citric Acid, Glycol Distearate, Sodium Benzoate, Carbomer, TEA-Dodecylbenzenesulfonate, TEA-Sulfate, Guar Hydroxypropyltrimonium Chloride, PEG-45M, Mica, Disodium EDTA, Cocamide MEA, Phenoxyethanol, PPG-6, Sodium Hydroxide, Benzyl Alcohol, Citronellol, Hexyl Cinnamal, Limonene, Linalool, CI 15985, CI 19140, CI 77891.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "8710908832284"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Dimethiconol, Sodium Gluconate, Glycerin, Parfum, Lysine HCl, Arginine, Cocos Nucifera Oil, Hydrolyzed Soy Protein, Sodium Chloride, Citric Acid, Glycol Distearate, Sodium Benzoate, Carbomer, TEA-Dodecylbenzenesulfonate, TEA-Sulfate, Guar Hydroxypropyltrimonium Chloride, PEG-45M, Mica, Disodium EDTA, Cocamide MEA, Phenoxyethanol, PPG-6, Sodium Hydroxide, Benzyl Alcohol, Citronellol, Hexyl Cinnamal, Limonene, Linalool, CI 15985, CI 19140, CI 77891.",
+  "normalizedInci": ["aqua", "sodium laureth sulfate", "cocamidopropyl betaine", "dimethiconol", "sodium gluconate", "glycerin", "parfum", "lysine hcl", "arginine", "cocos nucifera oil", "hydrolyzed soy protein", "sodium chloride", "citric acid", "glycol distearate", "sodium benzoate", "carbomer", "tea-dodecylbenzenesulfonate", "tea-sulfate", "guar hydroxypropyltrimonium chloride", "peg-45m", "mica", "disodium edta", "cocamide mea", "phenoxyethanol", "ppg-6", "sodium hydroxide", "benzyl alcohol", "citronellol", "hexyl cinnamal", "limonene", "linalool", "ci 15985", "ci 19140", "ci 77891"],
+  "inciFingerprint": "56ba24475a9535c4713065c524979c927efdffcfebd568acbb6986f05ca0e29b",
+  "identityConfidence": "low",
+  "conflictStatus": "none"
+}

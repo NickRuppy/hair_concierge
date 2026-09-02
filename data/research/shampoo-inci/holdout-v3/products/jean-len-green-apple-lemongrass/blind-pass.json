@@ -1,0 +1,256 @@
+{
+  "candidate_id": "jean-len-green-apple-lemongrass",
+  "rawInci": "aqua, sodium laureth sulfate, cocamidopropyl betaine, sodium chloride, panthenol, cymbopogon schoenanthus leaf extract, parfum, sodium benzoate, citric acid, peg-7 glyceryl cocoate, glycerin, arthrospira platensis extract, tocopherol, sodium formate, dicaprylyl ether, lauryl alcohol, guar hydroxypropyltrimonium chloride, tetramethyl acetyloctahydronaphthalenes, propylene glycol, limonene, citral, citrus aurantium peel oil, linalyl acetate, linalool, hexyl cinnamal, sorbitol, sodium hydroxide.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "dicaprylyl ether",
+      "lauryl alcohol",
+      "citrus aurantium peel oil"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      1
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "low",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Die vorliegende vollständige INCI wurde als Tensidarchitektur eingeordnet; keine Konzentrationsangaben liegen vor.",
+    "conditioningLevel": "Die vorliegende vollständige INCI wurde auf erkennbare Pflege- und Ablagerungswege eingeordnet.",
+    "weightPotential": "Die whole-formula Gewichtseinordnung nutzt nur die sichtbaren Deposition-, Persistenz- und Reset-Signale.",
+    "focusPrimary": "Ohne Claims oder Positionierungswissen bleibt der Blindwert general.",
+    "focusSecondary": "Ohne Claims oder Positionierungswissen wird kein Sekundärfokus vergeben.",
+    "usageRole": "Ohne Claims oder Positionierungswissen bleibt der Blind-Default regular.",
+    "scalpComfortTarget": "Die Formel allein belegt keine gezielte kosmetische Kopfhautkomfortrolle.",
+    "dandruffSupport": "Die vollständige INCI wird ausschließlich auf die anerkannten kosmetischen Anti-Schuppen-Aktive geprüft."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "high",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "high",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+  ],
+  "counterSignals": [
+    "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung."
+  ],
+  "wholeFormulaWeightAssessment": {
+    "assessment": {
+      "schemaVersion": "shampoo-weight-assessment-v3",
+      "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+      "formula": {
+        "inciFingerprint": "8755309ec6151b02543c86892ca6fefa8ec7fc7d121c36fd7218d30a207a86f8",
+        "sourceTier": "official",
+        "capturedAt": "2026-09-01T18:16:12+02:00",
+        "complete": true,
+        "identityConfidence": "moderate"
+      },
+      "evidence": {
+        "depositionRelevant": [
+          {
+            "family": "weak_refatter",
+            "name": "peg-7 glyceryl cocoate",
+            "position": 10
+          },
+          {
+            "family": "payload_lipid",
+            "name": "dicaprylyl ether",
+            "position": 15
+          },
+          {
+            "family": "cationic_polymer",
+            "name": "guar hydroxypropyltrimonium chloride",
+            "position": 17
+          }
+        ],
+        "resetRelevant": [
+          {
+            "family": "anionic_surfactant",
+            "name": "sodium laureth sulfate",
+            "position": 2
+          },
+          {
+            "family": "amphoteric_surfactant",
+            "name": "cocamidopropyl betaine",
+            "position": 3
+          }
+        ],
+        "excludedIngredients": [
+          {
+            "name": "citrus aurantium peel oil",
+            "position": 22,
+            "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+          }
+        ],
+        "unresolvedIngredients": []
+      },
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar sind späte/leichte Wege; SLES und CAPB liefern adäquaten Reset."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar sind späte/leichte Wege; SLES und CAPB liefern adäquaten Reset."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "Die Reset-Kapazität folgt der beobachteten Tensidarchitektur."
+      },
+      "competingSignals": [
+        "INCI liefert keine exakten Einsatzmengen oder gemessene Ablagerungsdaten."
+      ],
+      "unresolvedFacts": [],
+      "proposedWeightPotential": "low",
+      "whyThisBand": "PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar sind späte/leichte Wege; SLES und CAPB liefern adäquaten Reset.",
+      "whyNotNeighborBand": "Nicht moderate, weil die Ablagerungswege leicht und spät sind und keine Silikon- oder reichhaltige 2-in-1-Architektur vorliegt.",
+      "classificationConfidence": {
+        "value": "moderate",
+        "limitingFactor": "Rinse-off INCI erlaubt keine exakte Einsatzmengen- oder Persistenzmessung."
+      }
+    },
+    "independentLane": {
+      "proposedWeightPotential": "low",
+      "confidence": "moderate",
+      "rationale": "PEG-7 Glyceryl Cocoate, Dicaprylyl Ether und Guar sind späte/leichte Wege; SLES und CAPB liefern adäquaten Reset."
+    }
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "a3830e8438bdbdf344d891405d1fbe37b190d099eb0ea51dfef488e79ec94bab"
+  },
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4",
+    "focusPrimary": {
+      "claimDirection": "clarifying",
+      "formulaCompatible": true,
+      "formulaRoute": "Nach Unblind-Reconciliation ist die Positionierung mit der Gesamtformel kompatibel.",
+      "decisionReason": "Der finale Fokus folgt der geprüften Positionierung und der kompatiblen Gesamtformel."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Kein nicht-default Usage-Trigger ist erfüllt."
+    }
+  },
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "clarifying",
+      "reason": "Die nach der Blindphase geprüfte Schnell-fettend-/Fresh-Positionierung ist mit leichter SLES/CAPB-Architektur als clarifying kompatibel, ohne Tiefenreinigung zu behaupten."
+    }
+  ],
+  "payloadHash": "3dbf5eb469894b567f0c594cfd98a710a17cb30b35997440d20fd7a00df94985"
+}

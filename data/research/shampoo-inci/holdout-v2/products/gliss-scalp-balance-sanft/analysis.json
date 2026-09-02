@@ -1,0 +1,559 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:gliss-scalp-balance-sanft:ca38a7bf239d06376aa7a036f6388a512fa8f1d691a6a447e0554a133daba0f2",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES-geführte Reinigungsbasis mit Cocamidopropyl Betaine, Coco-Glucoside und weiteren nichtionischen Lösungsvermittlern.",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride ist als kationischer Depositionsweg vorhanden.",
+      "Glyceryl Oleate, PEG-7 Glyceryl Cocoate und Hydrogenated Castor Oil stützen leichte rückfettende Glätte; keine Silikone und kein anerkannter Anti-Schuppen-Wirkstoff sind gelistet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Sanftes Shampoo",
+      "sourceLocation": "back_pack",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ]
+    },
+    {
+      "textVerbatim": "Feuchtigkeit & Glanz",
+      "sourceLocation": "back_pack",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ]
+    },
+    {
+      "textVerbatim": "Regelmäßig anwenden.",
+      "sourceLocation": "back_pack",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside",
+      "Laureth-4",
+      "PEG-120 Methyl Glucose Dioleate"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "PEG-7 Glyceryl Cocoate",
+      "Glycol Distearate",
+      "Hydrogenated Castor Oil"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die frühe SLES-Basis stützt eine starke Reinigungsbandbreite. Betain, Glucosid und Rückfetter können die Wahrnehmung abmildern, ändern aber die direkte Reinigungsarchitektur nicht in niedrig oder nur moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate steht direkt nach Wasser; Cocamidopropyl Betaine und Coco-Glucoside ergänzen die Tensidbasis.",
+          "inference": "Das System ist auf effiziente Reinigung ausgelegt.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "sles_broad_cleansing"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Betain, Glucosid und rückfettende Bestandteile sind vorhanden.",
+          "inference": "Die Formel kann milder wirken als eine ungebufferte SLES-Basis; die genaue Tensidkonzentration bleibt unbekannt.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "sles_broad_cleansing"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Ein kationisches Guar-Derivat liefert einen plausiblen Depositionsweg; Glyceryl Oleate, PEG-7 Glyceryl Cocoate und Hydrogenated Castor Oil stützen leichte bis moderate Rückfettung. Ohne Silikon oder reiches Conditioner-Gerüst bleibt die Pflege moderat.",
+      "supportingSignals": [
+        {
+          "observation": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride sowie mehrere rückfettende Bestandteile sind gelistet.",
+          "inference": "Die Formel kann nach dem Ausspülen leichte bis moderate Gleit- und Pflegewirkung hinterlassen.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "cationic_guar_deposition",
+            "light_refatting_route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keine Silikone, keine Konditionierungsamine und kein reiches Fettalkohol-Gerüst sind vorhanden.",
+          "inference": "Das spricht gegen eine hohe Conditioner-ähnliche Ablagerung.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "cationic_guar_deposition",
+        "light_refatting_route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nach v1.4 reicht ein substantieller kationischer Polymerweg für moderates Gewicht; mehrere schwache Rückfettungswege erhöhen die Plausibilität. Es fehlt aber ein zweiter klar substantieller Weg wie Silikon oder ein reiches Lipidgerüst, daher nicht hoch.",
+      "supportingSignals": [
+        {
+          "observation": "Kationisches Guar plus Glyceryl Oleate, PEG-7 Glyceryl Cocoate, Hydrogenated Castor Oil und Panthenol sind vorhanden.",
+          "inference": "Ein moderates Nettodepositions- und Rückstandsrisiko ist plausibel.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "cationic_guar_deposition",
+            "weak_refatting_humectant_route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "SLES-geführte Reinigung und fehlende Silikone begrenzen die Persistenz.",
+          "inference": "Die Formel sollte nicht als hoch beschwerend eingestuft werden.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "cationic_guar_deposition",
+        "weak_refatting_humectant_route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Unblind ist „Sanftes Shampoo“ die dominierende Produktrolle. Die Formel ist trotz starker SLES-Reinigung nicht claim-widrig, weil Betain/Glucosid und rückfettende Pflegewege die sanfte Positionierung plausibel abfedern.",
+      "supportingSignals": [
+        {
+          "observation": "Der exakte Pack-Claim lautet „Sanftes Shampoo“; die Formel enthält Betain, Glucosid, Panthenol und Rückfetter.",
+          "inference": "Der Herstellerfokus gentle ist formelkompatibel, auch wenn die Reinigung stark bleibt.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "gentle_positioning_buffered_sles"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Sodium Laureth Sulfate steht früh und kein Produkt-Toleranztest liegt vor.",
+          "inference": "Die Einordnung ist ein Produktfokus, kein Nachweis besonders niedriger Irritation.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "gentle_positioning_buffered_sles"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "„Glanz“ ist als eigenständiger Nebenclaim sichtbar und hat mit kationischem Guar plus Rückfettern einen separaten S1-Glätteweg. Er bleibt sekundär, weil die Hauptpositionierung sanftes Scalp-Balance-Shampoo ist.",
+      "supportingSignals": [
+        {
+          "observation": "Der Pack nennt „Feuchtigkeit & Glanz“; kationisches Guar und Rückfetter stützen Oberflächenglätte.",
+          "inference": "Ein sekundärer Shine-Fokus ist plausibel und vom gentle-Primärfokus unterscheidbar.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "shine_s1_light_deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Citric Acid steht ohne fertigen pH-Wert; Glycol Distearate kann primär Produktperlmutt erzeugen.",
+          "inference": "Der Shine-Fokus darf nicht als starker Acid- oder optischer Haar-Glanzbeweis gelesen werden.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "shine_s1_light_deposition"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Anleitung nennt regelmäßige Anwendung, aber keinen täglichen/frequenten Nicht-Strong-Trigger, keine Reset-Absicht und keinen anerkannten Problemwirkstoff. Der v1.4-Default regular bleibt daher bestehen.",
+      "supportingSignals": [
+        {
+          "observation": "Der Pack nennt „Regelmäßig anwenden.“ ohne Reset-, Deep-Cleansing- oder Treatment-Kontext.",
+          "inference": "Die Standardrolle regular ist ausreichend.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "regular_use_default"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die Reinigung ist stark.",
+          "inference": "Starke Reinigung allein löst nach v1.4 keine alternating- oder occasional_reset-Rolle aus.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "regular_use_default"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Scalp Balance, sanfte Positionierung und Feuchtigkeitsclaim richten das Produkt kosmetisch auf Kopfhautkomfort. Panthenol, kationisches Guar und Rückfetter liefern eine plausible, aber nicht sensitiv-getestete Komfortroute.",
+      "supportingSignals": [
+        {
+          "observation": "Das Produkt ist als Scalp Balance Sanftes Shampoo mit Feuchtigkeitsclaim positioniert und enthält Panthenol sowie rückfettende Bestandteile.",
+          "inference": "Ein kosmetischer Kopfhautkomfort-Target ist plausibel.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "cosmetic_scalp_comfort_positioning"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Parfum, Zitronenschalenöl und Alpha-Isomethyl Ionone sind vorhanden; ein Toleranztest ist nicht dokumentiert.",
+          "inference": "targeted bedeutet keine universelle Sensitive-Eignung.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "cosmetic_scalp_comfort_positioning"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole. Nach dem gesperrten MVP-Vertrag ist Anti-Schuppen-Support deshalb not_supported.",
+      "supportingSignals": [
+        {
+          "observation": "Keine anerkannten konventionellen Anti-Schuppen-Aktive sind in der normalisierten INCI vorhanden.",
+          "inference": "Der akzeptierte Supportweg fehlt.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ],
+          "mechanismIds": [
+            "dandruff_active_absence_rule"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Scalp-Balance-Positionierung ist vorhanden.",
+          "inference": "Kosmetischer Kopfhautkomfort ersetzt die gesperrte Anti-Schuppen-Aktivregel nicht.",
+          "sourceIds": [
+            "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ],
+      "sharedMechanismIds": [
+        "dandruff_active_absence_rule"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die Tensidbasis ist direkt für Sebum- und Rückstandsreinigung relevant.",
+        "g2FormulaRelevanceAndDelivery": "SLES steht früh; Betain und Glucosid ergänzen die Reinigungsarchitektur.",
+        "g3EndpointSpecificity": "Der Score beschreibt Reinigung, nicht Irritation oder Milde."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Kationisches Guar und Rückfetter sind für Gleit- und Pflegegefühl relevant.",
+        "g2FormulaRelevanceAndDelivery": "Der Polymerweg und mehrere Rückfetter sind in der vollständigen INCI sichtbar.",
+        "g3EndpointSpecificity": "Der Score beschreibt Deposition/Pflege, nicht dauerhaftes Reparieren."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Depositions- und Rückfettungswege können Rückstand und Gewicht erzeugen.",
+        "g2FormulaRelevanceAndDelivery": "Ein substantieller Polymerweg plus schwache Lipid-/Humectantwege sind vorhanden.",
+        "g3EndpointSpecificity": "Der Score beschreibt Nettogewicht, nicht Pflegequalität."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glätte- und Depositionswege können Oberflächenglanz unterstützen.",
+        "g2FormulaRelevanceAndDelivery": "Kationisches Guar und Rückfetter liefern einen plausiblen S1-Weg.",
+        "g3EndpointSpecificity": "Der Score bleibt beim S1-Filmweg und nutzt Citric Acid nicht als starken Acid-Shine-Beweis."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Effiziente Reinigung und begrenztes Gewicht können Ansatztrennung unterstützen.",
+        "g2FormulaRelevanceAndDelivery": "SLES-geführte Reinigung ist vorhanden, aber moderate Deposition begrenzt den Effekt.",
+        "g3EndpointSpecificity": "Der Score beschreibt Clean-Light-Volumen, nicht Faserverdickung."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Kationische Polymere und Rückfetter können Reibung reduzieren.",
+        "g2FormulaRelevanceAndDelivery": "Die vollständige Formel enthält diese Bestandteile.",
+        "g3EndpointSpecificity": "Der Score beschreibt Glätte/Anti-Frizz, nicht Repair."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "Lubrikation kann mechanische Belastung beim Kämmen reduzieren.",
+        "g2FormulaRelevanceAndDelivery": "Kationisches Guar und Rückfetter sind plausibel lieferbar.",
+        "g3EndpointSpecificity": "R1 bleibt Schutz-/Lubrikationsrepair, kein Bond-Repair."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Co-Tenside und Rückfetter sind für mildere Wahrnehmung relevant.",
+        "g2FormulaRelevanceAndDelivery": "Betain, Glucosid und Rückfetter sind vorhanden, aber SLES bleibt früh.",
+        "g3EndpointSpecificity": "Der Score beschreibt nur relatives Mildness-Potenzial, keine Sensitive-Garantie."
+      }
+    },
+    "weightDepositionLoad": "Ein substantieller kationischer Polymerweg plus mehrere schwache Rückfetter/Humectants.",
+    "weightPersistence": "Moderat: kationisches Guar kann haarsubstantiv sein; keine Silikone oder reichen Lipidphasen.",
+    "weightResetCapacity": "Starke SLES-Reinigung begrenzt Aufbau, ist aber kein eigenständiger Reset-Claim.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Kein bond-spezifischer Reparaturweg; Biotin und Panthenol bleiben generische Unterstützer.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": true,
+    "resetLinkMissing": true
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exakte Formel und Claims sind über Hersteller-Packbild und dm-Abgleich gesichert; keine produktbezogenen Shampoo-only Tests wurden in den bereitgestellten Quellen dokumentiert."
+  },
+  "claimAudit": [
+    {
+      "claim": "Sanftes Shampoo",
+      "verdict": "plausible",
+      "support": "Betain/Glucosid, Panthenol und Rückfetter machen den gentle-Fokus plausibel.",
+      "limitation": "SLES steht früh; ohne Toleranztest ist das kein Nachweis besonders niedriger Irritation.",
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ]
+    },
+    {
+      "claim": "Feuchtigkeit & Glanz",
+      "verdict": "plausible",
+      "support": "Kationisches Guar plus Rückfetter stützen Feuchtigkeitsgefühl und S1-Glätte/Glanz.",
+      "limitation": "Citric Acid und Glycol Distearate dürfen ohne pH/Test nicht als starker eigenständiger Glanzbeweis zählen.",
+      "sourceIds": [
+        "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "henkel-de-gliss-scalp-balance-sanft-pack-4015100893021-2026-08-27",
+    "dm-de-gliss-scalp-balance-sanft-4015100893021-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Scalp-Balance- und gentle-Positionierung ist kosmetischer Kopfhautkomfort; keine medizinische Diagnose- oder Behandlungsleistung wird abgeleitet."
+  }
+}

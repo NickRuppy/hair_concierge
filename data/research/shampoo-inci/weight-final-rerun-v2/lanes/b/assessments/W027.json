@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W027",
+  "formula": {
+    "inciFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "low"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      { "family": "silicone", "name": "amodimethicone", "position": 11 },
+      { "family": "weak_refatter", "name": "glyceryl oleate", "position": 15 },
+      { "family": "weak_refatter", "name": "lecithin", "position": 16 },
+      {
+        "family": "cationic_polymer",
+        "name": "starch hydroxypropyltrimonium chloride",
+        "position": 17
+      },
+      { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 23 },
+      { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 29 }
+    ],
+    "resetRelevant": [
+      { "family": "anionic_surfactant", "name": "sodium methyl cocoyl taurate", "position": 2 },
+      { "family": "nonionic_surfactant", "name": "decyl glucoside", "position": 3 },
+      { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 },
+      { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 12 }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "rosmarinus officinalis leaf oil",
+        "position": 6,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      },
+      {
+        "name": "mentha piperita oil",
+        "position": 7,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Amodimethicone an Position 11, bestätigte kationische Stärke und mehrere schwache Refatter liefern eine plausible Pflegeablagerung."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Amodimethicone ist der persistenteste Hinweis, wird aber von überwiegend späteren und schwächeren Refattern begleitet."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Taurat, Glucoside und Betain sind breit, aber eher mild ausgerichtet; sie begrenzen, löschen die Silikon-/Polymerwirkung aber nicht sicher."
+  },
+  "competingSignals": [
+    "Milde, breite Tenside sprechen gegen starkes Coating.",
+    "Amodimethicone und die bestätigte kationische Stärke sprechen gegen low."
+  ],
+  "unresolvedFacts": ["Niedrige Identitätssicherheit begrenzt die Robustheit."],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist der konservative Mittelweg: ein persistentes Silikon und ergänzende Refatter machen merkliche Rückstände plausibel, die Architektur ist aber nicht klar schwer.",
+  "whyNotNeighborBand": "Low würde das Amodimethicone unterschätzen; high wäre wegen milder, breiter Reinigung, später Refatter und niedriger Identität nicht belastbar.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Die Inhaltsstoffrollen sind aufgelöst, aber die niedrige Formelidentität kann die Nachbarband-Grenze beeinflussen."
+  }
+}

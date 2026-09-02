@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "5701058011608",
+  "formulaCode": null,
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-de-urtekram-fragrance-free-sensitive-scalp-5701058011608-2026-09-01",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.urtekram.de/produkte/fragrance-free-sensitive-scalp-shampoo",
+      "rawInci": "Aqua, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Sodium Coco-Sulfate, Propanediol, Lauryl Glucoside, Glycerin, Glyceryl Caprylate, Lysolecithin, Beta-Sitosterol, Sodium Hyaluronate, Stearyl Glycyrrhetinate, Squalene, Xylitol, Glyceryl Oleate, Sodium Chloride, Tocopherol, Lactic Acid.",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "retailer-de-urtekram-fragrance-free-sensitive-scalp-5701058011608-2026-09-01",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-09-01T18:16:12+02:00",
+      "locator": "https://www.ecco-verde.de/urtekram/fragrance-free-sensitive-scalp-shampoo?sai=48979",
+      "rawInci": "Aqua, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Sodium Coco-Sulfate, Propanediol, Lauryl Glucoside, Glycerin, Glyceryl Caprylate, Lysolecithin, Beta-Sitosterol, Sodium Hyaluronate, Stearyl Glycyrrhetinate, Squalene, Xylitol, Glyceryl Oleate, Sodium Chloride, Tocopherol, Lactic Acid.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "5701058011608"
+    }
+  ],
+  "rawInci": "Aqua, Aloe Barbadensis Leaf Extract, Coco-Glucoside, Sodium Coco-Sulfate, Propanediol, Lauryl Glucoside, Glycerin, Glyceryl Caprylate, Lysolecithin, Beta-Sitosterol, Sodium Hyaluronate, Stearyl Glycyrrhetinate, Squalene, Xylitol, Glyceryl Oleate, Sodium Chloride, Tocopherol, Lactic Acid.",
+  "normalizedInci": [
+    "aqua",
+    "aloe barbadensis leaf extract",
+    "coco-glucoside",
+    "sodium coco-sulfate",
+    "propanediol",
+    "lauryl glucoside",
+    "glycerin",
+    "glyceryl caprylate",
+    "lysolecithin",
+    "beta-sitosterol",
+    "sodium hyaluronate",
+    "stearyl glycyrrhetinate",
+    "squalene",
+    "xylitol",
+    "glyceryl oleate",
+    "sodium chloride",
+    "tocopherol",
+    "lactic acid"
+  ],
+  "inciFingerprint": "439ee37f5822abd5d0fdb41d860d22debb67ac05bb07e24cc3e0e019dc00fdc0",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

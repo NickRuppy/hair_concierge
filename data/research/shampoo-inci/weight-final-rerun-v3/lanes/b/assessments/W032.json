@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W032",
+  "formula": { "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595", "sourceTier": "retailer", "capturedAt": "2026-08-10T20:30:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "silicone", "name": "dimethiconol", "position": 10 }, { "family": "silicone", "name": "dimethicone", "position": 13 }, { "family": "cationic_polymer", "name": "guar hydroxypropyltrimonium chloride", "position": 15 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "anionic_surfactant", "name": "sodium lauryl sulfate", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 6 }], "excludedIngredients": [{ "name": "glycol distearate", "position": 7, "reason": "Zählt nicht als persistente Route." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "high", "rationale": "Zwei Silikone und ein kationisches Guar schaffen eine deutliche Pflege- und Ablagerungsseite, die eine low-Einordnung ausschließt." },
+  "persistence": { "value": "moderate", "rationale": "Die Silikone können haften, doch die ungewöhnlich starke frühe Wascharchitektur begrenzt, wie sicher eine hohe Netto-Persistenz aus INCI allein folgt." },
+  "resetCapacity": { "value": "strong", "rationale": "SLES und SLS stehen an Position zwei und drei, ergänzt durch CAPB und TEA-Dodecylbenzenesulfonate; das ist ein ausgeprägt rücksetzendes System." },
+  "competingSignals": ["Dual-Silikon plus kationisches Guar spricht gegen low.", "Die multi-anionische SLES/SLS/CAPB/TEA-Reset-Seite begrenzt eine Einordnung als high."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die Formel besitzt eine relevante Silikon-/Polymerpersistenz, wird aber von einer ungewöhnlich starken multi-anionischen Reset-Basis begrenzt; moderate hält beide Seiten zusammen.",
+  "whyNotNeighborBand": "Low würde die zwei Silikone und das kationische Guar verfehlen. High wäre ohne reiche 2-in-1-, Öl- oder Fettalkohol-Architektur bei dieser starken Reset-Seite weniger gut gestützt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "INCI allein kann nicht messen, ob die starke Reinigung oder die Silikonablagerung im Gebrauch überwiegt." }
+}

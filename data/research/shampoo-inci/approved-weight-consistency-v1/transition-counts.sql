@@ -1,0 +1,1 @@
+SELECT json_extract(value, '$.old') || ' -> ' || json_extract(value, '$.engine.value') AS transition, count(*) AS count, 50 AS denominator, count(*) / 50.0 AS share FROM json_each(readfile('data/research/shampoo-inci/approved-weight-consistency-v1/audit.json'), '$.rows') GROUP BY transition ORDER BY count DESC, transition;

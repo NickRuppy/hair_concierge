@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "shampoo-research-holdout-v3-selection-audit-v1",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "selectedCandidateIds": [
+    "eucerin-dermocapillaire-ph5",
+    "loreal-elvital-hydra-hyaluronic",
+    "redken-volume-injection",
+    "vichy-dercos-anti-schuppen-sensitiv",
+    "urtekram-fragrance-free-sensitive-scalp",
+    "kerastase-nutritive-bain-satin-riche",
+    "syoss-intense-repair",
+    "pantene-3in1-repair-care",
+    "wella-invigo-nutri-enrich",
+    "jean-len-green-apple-lemongrass"
+  ],
+  "rejectedPrelabel": [
+    {
+      "name": "Maui Moisture Nourish & Moisture + Coconut Milk",
+      "decision": "blocked",
+      "reason": "Material formula/EAN ambiguity prevents frozen exact identity."
+    },
+    {
+      "name": "Schauma 7 Kräuter",
+      "decision": "blocked",
+      "reason": "The preselected 400 ml exact GTIN/formula is unavailable; current source resolves a different 750 ml SKU."
+    },
+    {
+      "name": "Pantene Glatt & Seidig",
+      "decision": "reserve_blocked",
+      "reason": "Same-GTIN formula conflict remains unresolved."
+    }
+  ],
+  "unusedReadyReserve": [
+    {
+      "name": "MONDAY Moisture",
+      "decision": "not_selected",
+      "reason": "Ready reserve retained unused after selecting the ten-product set."
+    }
+  ]
+}

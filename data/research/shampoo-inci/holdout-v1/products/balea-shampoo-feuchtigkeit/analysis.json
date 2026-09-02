@@ -1,0 +1,536 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:balea-shampoo-feuchtigkeit:3845c72d96e74845cf2a730943de0279c74fce467303118249b328baa23bdf06",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+      "Glycerin, Panthenol, Glyceryl Oleate, kationische Stärke und kationischer Guar stützen moderate Pflege/Glätte.",
+      "Die Formel enthält Duft und Säureexfoliant-Flags, aber keine Silikone und keine anerkannten Anti-Schuppen-Wirkstoffe."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Feuchtigkeit/Hydration",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Panthenol",
+      "Glyceryl Oleate",
+      "Glycol Distearate",
+      "Lecithin",
+      "Sodium Lactate"
+    ],
+    "proteinsFilmFormers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Lactic Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES/CAPB/Coco-Glucoside spricht für moderate Alltagsreinigung, nicht für einen Reset.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet cleansingStrength=moderate.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glycerin, Panthenol, Glyceryl Oleate und zwei kationische Polymer-/Stärke-Cues stützen moderate Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet conditioningLevel=moderate.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Polymer-/Refatting-Route ist relevant, aber ohne Silikone und mit SLES-Reinigung bleibt das Gewicht moderat.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet weightPotential=moderate.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Blind wirkt die cationic-starch/low-silicone Architektur am ehesten wie leichter Körper/Volumen mit Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet focusPrimary=shine.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "volume"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Glyceryl Oleate, Panthenol und kationische Polymere stützen einen sekundären Glanz-/Glätteweg.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet focusSecondary=volume.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Formel wirkt wie ein normales Alltagsshampoo.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet usageRole=regular.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine dedizierte Kopfhautkomfort-, Sensitive- oder Anti-Schuppen-Route ist erkennbar.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet scalpComfortTarget=not_targeted.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/CAPB/Coco-Glucoside bilden eine moderate Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet dandruffSupport=not_supported.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt cleansing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt conditioningDeposition begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt weightBuildup begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt smoothing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt mildnessPotential begrenzt und wird nicht auf benachbarte Claims übertragen."
+      }
+    },
+    "weightDepositionLoad": "Mittel: kationische Stärke/Guar und Glyceryl Oleate.",
+    "weightPersistence": "Niedrig bis mittel: keine Silikone oder reiche Öl-/Butterlast.",
+    "weightResetCapacity": "Mittel: SLES-basierte Reinigung kann Pflegeablagerung teilweise zurücksetzen.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond-spezifische Route; Panthenol und Pflegepolymere werden nicht als Bond-Repair gezählt.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market INCI plus post-unblinding claim audit; no independently reviewable finished-product shampoo performance dataset is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Feuchtigkeit/Hydration",
+      "verdict": "plausible",
+      "support": "Humectant- und Refatting-Cues plus kationische Polymere stützen eine formelplausible Pflege-/Glätteausrichtung.",
+      "limitation": "Rinse-off-Hydration oder dauerhafte Feuchtigkeit ist ohne fertiges Produkt-Testing nicht quantifiziert; Lactic/Citric Acid belegen keinen pH-Effekt.",
+      "sourceIds": [
+        "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-balea-feuchtigkeit-4066447982619-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Gewöhnliche kosmetische Feuchtigkeits-/Pflegekommunikation ohne medizinischen Kopfhautanspruch."
+  }
+}

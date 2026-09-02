@@ -1,0 +1,545 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:head-shoulders-2in1-classic-clean:c0f862a52a25a39ec6db26d338e7f82bffce6f77dd581465885acde33e221422",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+      "Piroctone Olamine ist in beiden erfassten Quellen enthalten.",
+      "Dimethiconol, Dimethicone und kationischer Guar bilden die 2-in-1-Pflege-/Glanzroute."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Anti-dandruff 2-in-1 Classic Clean",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "Sodium Xylenesulfonate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Cocamide MEA",
+      "TEA-Dodecylbenzenesulfonate",
+      "Trideceth-10"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethiconol",
+      "Dimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [
+      "Histidine"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Acetic Acid"
+    ],
+    "chelators": [
+      "Tetrasodium EDTA"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES, Sodium Xylenesulfonate und weitere Co-Tenside stützen starke Reinigung.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet cleansingStrength=strong.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Dimethiconol, Dimethicone, kationischer Guar und Glycol Distearate ergeben hohe 2-in-1-Pflege.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet conditioningLevel=high.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silikon-/Guar-Deposition ist relevant, aber starke Reinigung hält den Netto-Wert bei moderat.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet weightPotential=moderate.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine ist ein gesperrt anerkannter scalp-active Anti-Schuppen-Wirkstoff.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet focusPrimary=scalp_active.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine",
+        "repair"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silikon/Guar stützen Shine und bounded Repair/Schutz als Nebenschwerpunkte.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet focusSecondary=shine,repair.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "treatment",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine macht die Rolle treatment.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet usageRole=treatment.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine plus Anti-Schuppen-/Kopfhautroute zielt auf Kopfhautkontext.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet scalpComfortTarget=targeted.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Piroctone Olamine ist enthalten und erfüllt die gesperrte Support-Regel.",
+      "supportingSignals": [
+        {
+          "observation": "SLES/Sodium Xylenesulfonate plus CAPB/Cocamide MEA bilden eine starke Reinigungsbasis.",
+          "inference": "Diese Formelstütze begründet dandruffSupport=supported.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt cleansing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt conditioningDeposition begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt weightBuildup begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "shineS3 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS3 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt smoothing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organicClarification ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt organicClarification begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt mildnessPotential begrenzt und wird nicht auf benachbarte Claims übertragen."
+      }
+    },
+    "weightDepositionLoad": "Mittel bis hoch: Silikone plus kationischer Guar.",
+    "weightPersistence": "Mittel: Silikonfilm kann wiederholbar haften.",
+    "weightResetCapacity": "Hoch: starke SLES/Xylenesulfonate-Reinigung liefert Reset-Kapazität.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond-spezifische Route; Repair bedeutet hier Schutz/Glätte durch Deposition.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market INCI plus post-unblinding claim audit; no independently reviewable finished-product shampoo performance dataset is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Anti-dandruff 2-in-1",
+      "verdict": "plausible",
+      "support": "Piroctone Olamine unterstützt die gesperrte Anti-Schuppen-Formelroute; Silikone und kationischer Guar stützen die 2-in-1-Pflegeausrichtung.",
+      "limitation": "Die Formel belegt eine Wirkstoffroute, aber keine individuelle medizinische Wirksamkeit, Ursache der Schuppen oder Verträglichkeit.",
+      "sourceIds": [
+        "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26",
+    "dm-de-head-shoulders-2in1-classic-clean-8006530006385-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Anti-Schuppen- und 2-in-1-Kopfhautkommunikation bleibt kosmetisch; medizinische Profile müssen separat abstinieren."
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W037",
+  "formula": {
+    "inciFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T22:15:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "weak_refatter",
+        "name": "peg-7 glyceryl cocoate",
+        "position": 5
+      },
+      {
+        "family": "protein_film",
+        "name": "hydrolyzed keratin",
+        "position": 6
+      },
+      {
+        "family": "silicone",
+        "name": "dimethicone",
+        "position": 8
+      },
+      {
+        "family": "silicone",
+        "name": "amodimethicone",
+        "position": 12
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 13
+      },
+      {
+        "family": "payload_lipid",
+        "name": "hydrogenated castor oil",
+        "position": 15
+      },
+      {
+        "family": "payload_lipid",
+        "name": "prunus armeniaca (apricot) kernel oil",
+        "position": 21
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "peg-40 hydrogenated castor oil",
+        "position": 14,
+        "reason": "Solubilisator zählt nicht als persistente Route."
+      },
+      {
+        "name": "glycol distearate",
+        "position": 16,
+        "reason": "Zählt nicht als persistente Route."
+      },
+      {
+        "name": "peg-120 methyl glucose dioleate",
+        "position": 18,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "PEG-7 Glyceryl Cocoate, Keratin, Dimethicone, Amodimethicone, kationisches Guar und Lipid-Payloads bilden eine dichte Depositionsarchitektur."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Zwei Silikonformen, kationisches Polymer, Proteinfilm und Lipide sind plausibel persistent und kumulationsfähig."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "SLES und CAPB reinigen solide, aber die Reset-Basis ist schmaler als die Depositionsseite."
+  },
+  "competingSignals": [
+    "SLES steht früh und einige Lipid-/Ölsignale liegen erst später.",
+    "Mehrere nicht persistente Verdicker/Solubilisatoren wurden ausgeschlossen."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High ist am besten gestützt, weil mehrere persistente Systeme konvergieren und die Reset-Architektur nicht breit genug ist, um sie zu neutralisieren.",
+  "whyNotNeighborBand": "Moderate würde die Kombination aus Silikonen, Polymer, Protein und Lipid-Payloads unterschätzen; Low ist nicht plausibel.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Vollständige Formel, aber nur moderate Identitätssicherheit und unbekannte Mengen der Silikon-/Lipidphase."
+  }
+}

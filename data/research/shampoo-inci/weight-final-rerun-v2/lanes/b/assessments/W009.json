@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W009",
+  "formula": {
+    "inciFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-10T18:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      { "family": "weak_refatter", "name": "glyceryl oleate", "position": 8 },
+      {
+        "family": "cationic_polymer",
+        "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+        "position": 10
+      },
+      { "family": "weak_refatter", "name": "hydrogenated palm glycerides citrate", "position": 11 },
+      { "family": "cationic_conditioner", "name": "quaternium-80", "position": 12 },
+      { "family": "weak_refatter", "name": "lecithin", "position": 15 },
+      { "family": "weak_refatter", "name": "ascorbyl palmitate", "position": 16 }
+    ],
+    "resetRelevant": [
+      { "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 },
+      { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 3 },
+      { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 5 }
+    ],
+    "excludedIngredients": [],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Mehrere Refetter, kationisches Guar und bestätigtes Quaternium-80 bilden eine echte, aber durch ihre Positionen begrenzte Depositionsmatrix."
+  },
+  "persistence": {
+    "value": "moderate",
+    "rationale": "Refetter, Guar und Quaternium-80 können wiederholbar haften, bleiben bei starkem Reset und ohne frühe reiche Payload insgesamt begrenzt."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, CAPB und Coco-Glucoside stehen früh und geben starken Reset."
+  },
+  "competingSignals": [
+    "Viele schwache Depositionssignale stehen einer starken Tensidbasis gegenüber.",
+    "Quaternium-80 ist bestätigt, steht aber erst an Position 12."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die Summe aus Refettern, Guar und Quaternium-80 ist zu relevant für low, bleibt durch starken Reset und spätere Positionen begrenzt.",
+  "whyNotNeighborBand": "Nicht low, weil mehrere Refetter plus zwei kationische Routen kumulieren; nicht high, weil die Signale nicht früh oder reich genug sind und der Reset stark ist.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Die Rollen sind aufgelöst, aber genaue Einsatzmengen und die moderate Formelidentität bleiben unbekannt."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:head-shoulders-2in1-classic-clean",
+  "market": "DE",
+  "packSize": "225 ml",
+  "gtinEan": "8006530006385",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "head-shoulders-de-2in1-classic-clean-8006530006385-2026-08-26",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/2-in-1/classic-clean/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Sodium Salicylate, Linalool, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexamethylindanopyran, Linalyl Acetate, Histidine, Tetramethyl Acetyloctahydronaphthalenes, Acetic Acid, Benzyl Alcohol, Propylene Glycol, Triethylene Glycol, CI 42090, CI 17200.",
+      "productMatch": "exact_variant"
+    },
+    {
+      "id": "dm-de-head-shoulders-2in1-classic-clean-8006530006385-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/3115869/head-und-shoulders-shampoo-und-conditioner-2in1-anti-schuppen-classic-clean",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Sodium Salicylate, Linalool, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexamethylindanopyran, Linalyl Acetate, Histidine, Tetramethyl Acetyloctahydronaphthalenes, Acetic Acid, Benzyl Alcohol, Propylene Glycol, Triethylene Glycol, CI 42090, CI 17200.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "8006530006385"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Parfum, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Piroctone Olamine, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Hexyl Cinnamal, Sodium Salicylate, Linalool, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexamethylindanopyran, Linalyl Acetate, Histidine, Tetramethyl Acetyloctahydronaphthalenes, Acetic Acid, Benzyl Alcohol, Propylene Glycol, Triethylene Glycol, CI 42090, CI 17200.",
+  "normalizedInci": ["aqua", "sodium laureth sulfate", "sodium xylenesulfonate", "cocamidopropyl betaine", "sodium citrate", "parfum", "dimethiconol", "citric acid", "cocamide mea", "glycol distearate", "piroctone olamine", "sodium chloride", "dimethicone", "guar hydroxypropyltrimonium chloride", "sodium benzoate", "tea-dodecylbenzenesulfonate", "hexyl cinnamal", "sodium salicylate", "linalool", "tetrasodium edta", "trideceth-10", "sodium hydroxide", "hexamethylindanopyran", "linalyl acetate", "histidine", "tetramethyl acetyloctahydronaphthalenes", "acetic acid", "benzyl alcohol", "propylene glycol", "triethylene glycol", "ci 42090", "ci 17200"],
+  "inciFingerprint": "c0f862a52a25a39ec6db26d338e7f82bffce6f77dd581465885acde33e221422",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

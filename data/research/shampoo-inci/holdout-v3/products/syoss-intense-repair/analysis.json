@@ -1,0 +1,502 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4",
+  "formulaVersionId": "holdout-v3:syoss-intense-repair:0563dbbb4d21b0cab67f37f516859c51079aee890bcb6d6355a445b58ef07c36",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "repair direction; dry/damaged hair direction; protein-care claim direction",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "official-claim-de-syoss-intense-repair-2026-09-01"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride"
+    ],
+    "silicones": [
+      "dimethicone",
+      "amodimethicone"
+    ],
+    "conditioningLipidsAmines": [
+      "hydrogenated castor oil",
+      "peg-40 hydrogenated castor oil",
+      "peg-120 methyl glucose dioleate",
+      "prunus armeniaca (apricot) kernel oil"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed keratin",
+      "hydrolyzed soy protein"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES und CAPB ergeben eine wirksame gewöhnliche, aber nicht breite stark-resetende Basis.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "SLES und CAPB ergeben eine wirksame gewöhnliche, aber nicht breite stark-resetende Basis.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Proteine, Dimethicone, Amodimethicone, Guar und Lipide bilden eine reiche Pflegearchitektur.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Proteine, Dimethicone, Amodimethicone, Guar und Lipide bilden eine reiche Pflegearchitektur.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Silikonpaar, Polymer, Proteinfilme und Lipide ergeben high bei nur moderatem Reset.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Silikonpaar, Polymer, Proteinfilme und Lipide ergeben high bei nur moderatem Reset.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "weightPotential-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die nach der Blindphase geprüfte Repair-Positionierung ist mit Protein-, Silikon- und Polymerpflege kompatibel.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die nach der Blindphase geprüfte Repair-Positionierung ist mit Protein-, Silikon- und Polymerpflege kompatibel.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusPrimary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Es liegt keine zweite, eigenständige Fokusrolle mit unabhängiger Formelroute vor.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "focusSecondary-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Kein nicht-default Usage-Trigger ist belegt.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Kein nicht-default Usage-Trigger ist belegt.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "usageRole-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Keine gezielte kosmetische Kopfhautkomfort-Positionierung ist vorhanden.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Keine gezielte kosmetische Kopfhautkomfort-Positionierung ist vorhanden.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+      "supportingSignals": [
+        {
+          "observation": "Vollständige kanonische DE-INCI wurde vor dem Claim-Review als Gesamtformel bewertet.",
+          "inference": "Die vollständige INCI enthält weder Piroctone Olamine noch Climbazole.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-whole-formula"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "INCI liefert keine exakten Konzentrationen, keinen End-pH und keine garantierte Endproduktwirkung.",
+          "inference": "Die Einstufung bleibt eine konservative kosmetische Formelklassifikation.",
+          "sourceIds": [
+            "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "retailer-de-syoss-intense-repair-4015100860382-2026-09-01"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-whole-formula"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "present",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      0,
+      0
+    ],
+    "shineS2": [
+      0,
+      0
+    ],
+    "shineS3": [
+      0,
+      0
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      0,
+      0
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      0,
+      0
+    ],
+    "repairR1": [
+      0,
+      0
+    ],
+    "repairR2": [
+      0,
+      0
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      0
+    ],
+    "organicClarification": [
+      0,
+      0
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      0,
+      0
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Die benannten Formel- und Positionssignale sind für diesen kosmetischen Shampoo-Endpunkt funktional relevant.",
+        "g2FormulaRelevanceAndDelivery": "Die Signale erscheinen als zusammenhängende Tensid-, Pflege- oder Ablagerungsarchitektur.",
+        "g3EndpointSpecificity": "Der Schluss bleibt auf die kosmetische Shampoo-Klassifikation begrenzt."
+      }
+    },
+    "weightDepositionLoad": "Qualitative whole-formula Einordnung ohne Konzentrations- oder Wiederholungsdaten.",
+    "weightPersistence": "Persistenz wird mechanistisch aus der Gesamtarchitektur, nicht aus Routenzählung abgeleitet.",
+    "weightResetCapacity": "Reset-Kapazität wird qualitativ aus der Tensidarchitektur abgeleitet.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine echte Bond-Repair-Leistung wird aus INCI abgeleitet.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exaktmarktformel und getrennte Quellenpaket-Reconciliation; keine shampoo-only Leistungsprüfung."
+  },
+  "claimAudit": [
+    {
+      "claim": "repair direction; dry/damaged hair direction; protein-care claim direction",
+      "verdict": "plausible",
+      "support": "Die Positionierung wurde erst nach der Formelpass-Reconciliation berücksichtigt.",
+      "limitation": "INCI liefert keine Konzentrationen oder garantierte Endproduktwirkung.",
+      "sourceIds": [
+        "official-claim-de-syoss-intense-repair-2026-09-01"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "retailer-de-syoss-intense-repair-4015100860382-2026-09-01",
+    "official-claim-de-syoss-intense-repair-2026-09-01"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Kosmetische Haarpflege ohne medizinische Diagnose- oder Therapiezusage."
+  }
+}

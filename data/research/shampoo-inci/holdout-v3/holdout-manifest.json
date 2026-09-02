@@ -1,0 +1,260 @@
+{
+  "schema_version": "shampoo-research-holdout-v3",
+  "policy_version": "shampoo-classification-v1.4",
+  "policy_path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+  "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+  "selected_at": "2026-09-01T18:16:12+02:00",
+  "status": "research_only_candidate",
+  "candidates": [
+    {
+      "candidate_id": "eucerin-dermocapillaire-ph5",
+      "research_product_id": "holdout-v3:eucerin-dermocapillaire-ph5",
+      "catalog_product_id": null,
+      "brand": "Eucerin",
+      "name": "DermoCapillaire pH5 Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "4005800036736"
+      ],
+      "selection_archetype": "sensitive-scalp, pH-oriented everyday shampoo",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "The German manufacturer page provides positioning but no complete usable INCI in this research packet; dm Germany supplies the exact-GTIN formula.",
+      "selection_source": "https://www.dm.de/p/d/3087005/eucerin-eucerin-dermo-capillaire-ph5-shampoo",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "loreal-elvital-hydra-hyaluronic",
+      "research_product_id": "holdout-v3:loreal-elvital-hydra-hyaluronic",
+      "catalog_product_id": null,
+      "brand": "L'Oréal Paris Elvital",
+      "name": "Hydra Hyaluronic Feuchtigkeit Auffüllendes Shampoo",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "3600524137465"
+      ],
+      "selection_archetype": "moisture-positioned ordinary shampoo",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-300ml",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "redken-volume-injection",
+      "research_product_id": "holdout-v3:redken-volume-injection",
+      "catalog_product_id": null,
+      "brand": "Redken",
+      "name": "Volume Injection Shampoo",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "3474636920266"
+      ],
+      "selection_archetype": "volume-positioned daily shampoo",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.redken.eu/de-de/produkte/haarpflege/volume-injection/volume-injection-shampoo",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "vichy-dercos-anti-schuppen-sensitiv",
+      "research_product_id": "holdout-v3:vichy-dercos-anti-schuppen-sensitiv",
+      "catalog_product_id": null,
+      "brand": "Vichy",
+      "name": "Dercos Anti-Schuppen Sensitiv Shampoo",
+      "market": "DE",
+      "pack_size": "200 ml",
+      "gtin_aliases": [
+        "3337871323394"
+      ],
+      "selection_archetype": "sensitive-scalp anti-flake active shampoo",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.vichy.de/alle-produkte/haarpflege/shampoos/schuppen/dercos-anti-schuppen-sensitiv-shampoo",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "urtekram-fragrance-free-sensitive-scalp",
+      "research_product_id": "holdout-v3:urtekram-fragrance-free-sensitive-scalp",
+      "catalog_product_id": null,
+      "brand": "Urtekram",
+      "name": "Fragrance Free Sensitive Scalp Shampoo",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "5701058011608"
+      ],
+      "selection_archetype": "fragrance-free sensitive-scalp moisture shampoo",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.urtekram.de/produkte/fragrance-free-sensitive-scalp-shampoo",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "kerastase-nutritive-bain-satin-riche",
+      "research_product_id": "holdout-v3:kerastase-nutritive-bain-satin-riche",
+      "catalog_product_id": null,
+      "brand": "Kérastase",
+      "name": "Nutritive Bain Satin Riche",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "3474637154943"
+      ],
+      "selection_archetype": "rich nourishment-positioned shampoo for very dry hair",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.kerastase.de/produktlinien/produktlinien/nutritive/bain-satin-riche/3474637154943.html",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "syoss-intense-repair",
+      "research_product_id": "holdout-v3:syoss-intense-repair",
+      "catalog_product_id": null,
+      "brand": "Syoss",
+      "name": "Intense Repair Shampoo",
+      "market": "DE",
+      "pack_size": "440 ml",
+      "gtin_aliases": [
+        "4015100860382"
+      ],
+      "selection_archetype": "repair-positioned shampoo for dry or damaged hair",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "No current German manufacturer formula was captured for this exact pack; dm Germany supplies the formula tied to the selected product.",
+      "selection_source": "https://www.dm.de/p/d/3047031/syoss-shampoo-intense-repair",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "pantene-3in1-repair-care",
+      "research_product_id": "holdout-v3:pantene-3in1-repair-care",
+      "catalog_product_id": null,
+      "brand": "Pantene Pro-V",
+      "name": "3in1 Repair & Care Shampoo, Conditioner & Haarkur",
+      "market": "DE",
+      "pack_size": "250 ml",
+      "gtin_aliases": [
+        "8700216558136"
+      ],
+      "selection_archetype": "three-in-one repair-care shampoo",
+      "manufacturer_formula_status": "unavailable",
+      "retailer_fallback_reason": "No current German manufacturer formula was captured for this exact pack; dm Germany is canonical and Oh Feliz corroborates the same selected product formula.",
+      "selection_source": "https://www.dm.de/p/d/1561889/pantene-pro-v-shampoo-und-conditioner-und-haarkur-3in1-repair-und-care",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "wella-invigo-nutri-enrich",
+      "research_product_id": "holdout-v3:wella-invigo-nutri-enrich",
+      "catalog_product_id": null,
+      "brand": "Wella Professionals",
+      "name": "Invigo Nutri-Enrich Deep Nourishing Shampoo",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "4064666585765"
+      ],
+      "selection_archetype": "deep nourishment-positioned shampoo for dry or stressed hair",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.wella.com/professional/de-DE/products/haarpflege/invigo-nutri-enrich/invigo-nutri-enrich-deep-nourishing-shampoo",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    },
+    {
+      "candidate_id": "jean-len-green-apple-lemongrass",
+      "research_product_id": "holdout-v3:jean-len-green-apple-lemongrass",
+      "catalog_product_id": null,
+      "brand": "Jean&Len",
+      "name": "Green Apple & Lemongrass Shampoo",
+      "market": "DE",
+      "pack_size": "300 ml",
+      "gtin_aliases": [
+        "4262401738944"
+      ],
+      "selection_archetype": "fresh, quick-oily-hair shampoo",
+      "manufacturer_formula_status": "available",
+      "retailer_fallback_reason": null,
+      "selection_source": "https://www.jeanlen.de/shampoo-fuer-schnell-fettendes-haar-green-apple-lemongrass",
+      "selected_at": "2026-09-01T18:16:12+02:00",
+      "catalog_overlap_check": {
+        "normalized_name_match": false,
+        "gtin_match": false
+      },
+      "deep_cleansing_exclusion": {
+        "excluded": false,
+        "evidence": "Frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+      }
+    }
+  ]
+}

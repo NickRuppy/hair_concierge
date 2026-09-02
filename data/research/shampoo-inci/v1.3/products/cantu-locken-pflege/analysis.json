@@ -1,0 +1,502 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0:b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56",
+  "analysisStatus": "needs_review",
+  "formulaPass": {
+    "observations": [
+      "Sodium C14-16 Olefin Sulfonate is the primary cleanser after water; sulfate-free marketing does not make the cleanser weak.",
+      "Cocamidopropyl Betaine and Cocamide DIPA support the cleanser/foam system.",
+      "Shea butter, glycol distearate, panthenol, cationic guar and Polyquaternium-39 create moderate conditioning/deposition plausibility.",
+      "Disodium EDTA and the usage text about a second wash for heavy buildup support a residue-removal/reset-adjacent role.",
+      "Parfum and fragrance allergens are present; no silicones are visible."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Sulfate-free curl cleansing cream, removes buildup, shea butter, no silicones/mineral oils.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium c14-16 olefin sulfonate",
+      "cocamidopropyl betaine"
+    ],
+    "surfactantsSecondary": [],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride",
+      "polyquaternium-39"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "butyrospermum parkii (shea) butter",
+      "glycol distearate"
+    ],
+    "proteinsFilmFormers": [
+      "acrylates copolymer",
+      "polyester-37"
+    ],
+    "acids": [
+      "citric acid"
+    ],
+    "chelators": [
+      "disodium edta"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Olefin sulfonate leads the cleanser system; sulfate-free marketing does not imply low cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Sodium C14-16 Olefin Sulfonate is listed immediately after water with amphoteric support",
+          "inference": "strong cleansing architecture",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "strong-surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No active-matter level or finished cleansing test",
+          "inference": "do not infer exact detergency",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "strong-surfactant-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Shea butter plus glycol distearate, cationic guar and Polyquaternium-39 support moderate conditioning/deposition, not high conditioner-like performance.",
+      "supportingSignals": [
+        {
+          "observation": "Shea butter, Glycol Distearate, Guar Hydroxypropyltrimonium Chloride and Polyquaternium-39 are listed",
+          "inference": "moderate conditioning/deposition plausibility",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "conditioning-deposition-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong primary cleanser and no finished combing/deposition data",
+          "inference": "conditioning effect may be offset by cleansing strength",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-deposition-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Butter, glycol distearate and cationic/polyquat deposition support moderate weight potential even though no silicones are visible.",
+      "supportingSignals": [
+        {
+          "observation": "Shea butter, Glycol Distearate, Guar Hydroxypropyltrimonium Chloride and Polyquaternium-39",
+          "inference": "moderate coating/weight potential",
+          "sourceIds": [
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "moderate-deposition-weight"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong cleanser may reduce persistent residue compared with a conditioner",
+          "inference": "do not assign high weight potential",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "moderate-deposition-weight"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Strong olefin-sulfonate cleanser, EDTA and retailer/official usage text about heavy buildup support a clarifying/residue-removal focus.",
+      "supportingSignals": [
+        {
+          "observation": "Olefin sulfonate lead cleanser plus Disodium EDTA and second-wash guidance for heavy buildup",
+          "inference": "clarifying/residue-removal focus",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "residue-removal-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No measured residue-removal or chelation test; EDTA may also be formula stabilization",
+          "inference": "do not claim strong chelation or proven reset performance",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "residue-removal-system"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "No distinct secondary focus is established beyond the primary product direction. An empty secondary focus is a complete moderate-confidence classification, not a missing fallback value.",
+      "supportingSignals": [
+        {
+          "observation": "The exact product evidence does not establish a second product direction beyond the primary focus.",
+          "inference": "The secondary-focus value is intentionally empty and complete.",
+          "sourceIds": [
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "A secondary focus must add a distinct mechanism or use direction and cannot reuse the same evidence already counted for primary focus, scalp activity, scalp-comfort target or dandruff support.",
+          "inference": "The classification avoids double counting and remains bounded to the evidence.",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "alternating",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Strong cleansing with residue-removal positioning is better modeled as alternating use than default frequent use without a user profile.",
+      "supportingSignals": [
+        {
+          "observation": "Strong cleanser and second-wash guidance for buildup",
+          "inference": "alternating/reset-adjacent role",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "alternating-clarifying-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Also contains conditioning agents and is sold as a curl-care shampoo",
+          "inference": "not restricted to rare reset use for all users",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "alternating-clarifying-role"
+      ],
+      "reviewStatus": "needs_review"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The formula is a strong buildup-removal shampoo, not a dandruff-support system; no specific anti-flake route or endpoint is present.",
+      "supportingSignals": [
+        {
+          "observation": "The captured evidence positions the product for curl cleansing and buildup removal, with no anti-dandruff active or dandruff claim.",
+          "inference": "It should not be selected as a dandruff-targeted product.",
+          "sourceIds": [
+            "cantu-uk-official-cleansing-cream",
+            "dm-de-1675020"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong cleansing can remove surface oil and loose scale temporarily.",
+          "inference": "Nonspecific washing does not establish dandruff support.",
+          "sourceIds": [
+            "dm-de-1675020"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream",
+        "dm-de-1675020"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "needs_review"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      0,
+      1
+    ],
+    "conditioningDeposition": [
+      0,
+      1
+    ],
+    "weightBuildup": [
+      0,
+      1
+    ],
+    "shineS1": [
+      0,
+      1
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      0,
+      1
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {},
+    "weightDepositionLoad": "Formula-only signals are bounded; no quantitative deposition load is established.",
+    "weightPersistence": "No repeat-use residue measurement is captured.",
+    "weightResetCapacity": "No shampoo-only residue-removal measurement is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established from the captured formula evidence.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formula-only assessment; no shampoo-only performance outcome is established."
+  },
+  "claimAudit": [
+    {
+      "claim": "Sulfate-free curl cleansing cream, removes buildup, shea butter, no silicones/mineral oils.",
+      "verdict": "indeterminate",
+      "support": "The claim is recorded separately from the formula pass.",
+      "limitation": "Buildup-removal positioning is plausible; sulfate-free is not treated as mild/low-cleansing because olefin sulfonate leads the INCI. Curl suitability is not derived without profile facts.",
+      "sourceIds": [
+        "cantu-uk-official-cleansing-cream"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "cantu-uk-official-cleansing-cream",
+    "dm-de-1675020"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "The record makes no medical diagnosis, treatment, or efficacy claim; any scalp positioning remains cosmetic and non-approved."
+  }
+}

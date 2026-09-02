@@ -1,0 +1,467 @@
+{
+  "schemaVersion": "shampoo-inci-v1.4-candidate-verification-v1",
+  "candidateSha256": "3c2c1bbe55d48a09a742591d33c9bd05bb41f9bcad45de9514ef0b79226a0e06",
+  "status": "finalizable",
+  "counts": {
+    "activeEntries": 50,
+    "directPropertiesPerEntry": 8,
+    "v3Overrides": 4,
+    "v2WeightResolutions": 46,
+    "lowConfidenceProperties": 0,
+    "missingRationaleReferences": 0,
+    "status": "finalizable"
+  },
+  "inputLock": {
+    "files": [
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-2-in-1-urea-5/analysis.json",
+        "sha256": "200c3ccca641457b87c36a78db8105019ab070f37f43540010a8b0f0e79931d6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-2-in-1-urea-5/formula-source.json",
+        "sha256": "e8824072b29a2e8712540dfa36299236941468741effa9f1f7b94071ca85e2a7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/analysis.json",
+        "sha256": "81fdda62c1fd737be162a2c4c7eb0fc407bca7c90ac00fc16dae3916c8bf18e7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-aqua-hyaluron/formula-source.json",
+        "sha256": "28d093c786c76347612958f520474fff294607ac60de39a1f0e46f473b2d43d7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-kopfhaut-sensitive/analysis.json",
+        "sha256": "fa9e9789eb8a4de96499b83c8e8ac60f5dc11da5d9833b519e6b574c943072e8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-kopfhaut-sensitive/formula-source.json",
+        "sha256": "ffa5dfec63f87ea65693b1741116b734bfdb8c510e7894a4197e2a99bd6bc756"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-med-anti-schuppen/analysis.json",
+        "sha256": "0d11bc383ba242d15abb1289eeeaf30f3a7464a6f8c4dae753e5f8cca7ddd1ff"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-med-anti-schuppen/formula-source.json",
+        "sha256": "7560f01df2629ee858bc4fdb130ab8517227aef00160b0a3715a1c3ade4a3a21"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-professional-ultimate-volume/analysis.json",
+        "sha256": "30a9bdd7c9b218e7cc83a2ae6287dc56ebf8dc0abe8fa648fbaaa4a9101f1285"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-professional-ultimate-volume/formula-source.json",
+        "sha256": "cc48f483906058a308c39bfa3bce2f9543ccebec4e8b1f89cbcf5455a226a119"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-ultra-sensitive/analysis.json",
+        "sha256": "27438ddcda979c9754315805947bf18789ef9a86b2378a23e22510bb80727a3a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/balea-ultra-sensitive/formula-source.json",
+        "sha256": "9b12c56f4734f73af7d31f20aaa89b5649537a442c192737d6ff800a70af0ee4"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/analysis.json",
+        "sha256": "c88973c088d2ca42a8f382230f80eb8c8b010f9fd7c23df9eea41b92bdf9436f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/cantu-locken-pflege/formula-source.json",
+        "sha256": "f25c79e3c1c20f0e8a72ed96f161b94876fa3afd57128bb00424b0f5e189c185"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/dejan-garz-shampoo/analysis.json",
+        "sha256": "80b2f0cfc6faa66a6d21725de0c47f93662588261adc15c9085a9b8d4565835e"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/dejan-garz-shampoo/formula-source.json",
+        "sha256": "9432e994e6a49fb4205a05e8f9afb2371ae832dcd4e0fa02c20facf35f4b0e31"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-anti-schuppen/analysis.json",
+        "sha256": "77e761f10efde8bda636d6dc60d8903750ed71e682c8cd87743bf3974a1be6cb"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-anti-schuppen/formula-source.json",
+        "sha256": "68006c094f587cdc6963e7cd5af0f2abca08bf872c0d6b406682a6c691d3b69a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-frische-und-leichtigkeit/analysis.json",
+        "sha256": "b6af585a19cb8d4e66582abdb75236aa9005e2b5c9074ffe6d995b1bad089c77"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-frische-und-leichtigkeit/formula-source.json",
+        "sha256": "e6a5b57a6787b8112f464f6ae4b7d30cf725d3b276d02340dee55fa2ef3b33ea"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/analysis.json",
+        "sha256": "f125dc18982c4037583d9c436c34ea9d061de690ae12df09a16ca84ea182ac8d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-hyaluron-plus/formula-source.json",
+        "sha256": "4952bd2fc1892c8a4dec3a510cebf60f07d061c00d02f80b3fd4a88cf3959f22"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-kopfhaut-sensitive/analysis.json",
+        "sha256": "e619eee17bb106b5ad2def9a7d3c80c0a25cf32da802c08b32890fadec572d32"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-kopfhaut-sensitive/formula-source.json",
+        "sha256": "5aac8ea2a2a1cf4eb04911f9a81116b9d46f4308bf78017ea5867d34ae6bc6e8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-kraft-und-fuelle/analysis.json",
+        "sha256": "1c544a88e68996ec04e7a000efc3eaed0893aa6e31f25213b27210ad85d76349"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/guhl-kraft-und-fuelle/formula-source.json",
+        "sha256": "ac41861833fa8006068f65df6cb721eeabbb66d168cd625d002e910f9fd19223"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/analysis.json",
+        "sha256": "b7e8e3ec04da07256f42ec235e2036819147b5968b71ee9bf050ebcdb0438011"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hair-biology-revitalize-soothe/formula-source.json",
+        "sha256": "24861cd224be790ebead75b7a7e2266f2022c2426380467701c004c3588c2973"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hask-argan-oil/analysis.json",
+        "sha256": "2fa258d79662d05e6d9f7af6bcb5bc550daabb37fc3051ff6f7b7583766ae29f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json",
+        "sha256": "fa8e93270c34056b06c15c29230bf3cf95d5bab7477f33eec708a6e5dbedf797"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hask-curl-care/analysis.json",
+        "sha256": "d5b06dc5e2a1a4457a5998238d3e3cda93b71e92445fe87a2cd8943f8c2e1d70"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/hask-curl-care/formula-source.json",
+        "sha256": "e31504dce12f2684482d6575376b0c7d7dbdd1dab2608c9af1b9a068ddccf731"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/analysis.json",
+        "sha256": "2ad245805fa83e331417f1a055a7ca73022c6ee9d703b9f0e173e8caede5e335"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/formula-source.json",
+        "sha256": "562a5e8bce09b5a3f02465d44012b5fd432df3348b29a9a0f98512f25850175d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/analysis.json",
+        "sha256": "dbf96190e0cd83ba50189f9cbab88867a2aac8d511f74d4e9db2c9c5a7c82315"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/formula-source.json",
+        "sha256": "cc15f7c3c98ac10fc5635fa73831e06352de28a1b669f3dad16f7e5985deee46"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-sensitive/analysis.json",
+        "sha256": "f84bd0f02d1e0686c1e31ce5a95ba4c39ddc4772369aca29aea2479e6b9063c0"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/head-shoulders-sensitive/formula-source.json",
+        "sha256": "6b8beef27b58790c235693cc97bafacd22c59f544a592592441ce9fd909d5014"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/langhaarmadchen-lovely-long/analysis.json",
+        "sha256": "e5e1ef0aad1a2519c944c67d85a8bc407f321abb1d90fcb4eded43e4733c6f7a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/langhaarmadchen-lovely-long/formula-source.json",
+        "sha256": "c4234cd19b754e29747f7e403255b92465ea8f732c1472750e875b85d7b508b9"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/analysis.json",
+        "sha256": "9319275f94693136f3cde24c198abfddee3c9baa1b3f1e62e4d179fff5ecb051"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/formula-source.json",
+        "sha256": "9ba05641b929f79a4e51537ce58d5f9959639ba27cd8d82c5772d9fd7a29bf24"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/lavera-basis-sensitiv/analysis.json",
+        "sha256": "bbb19ad21c9c9e881245309cd019446c994cab705e8681d5173a7d69949f2b91"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/lavera-basis-sensitiv/formula-source.json",
+        "sha256": "b7f7dc4515049a87265caa51d24022fe78c448258b843813c330b6d5d0caf60f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/analysis.json",
+        "sha256": "e6852e820a153e70d21bd80c1225d8a9b65fcdb499fa265aa2ede7d8339deeea"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/loreal-elvital-glycolic-gloss/formula-source.json",
+        "sha256": "80f54450575cfd0864f35849ba76059d3c0631ab58a81508306133675b0b4a81"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/analysis.json",
+        "sha256": "6e19bfee42294e3cda10f7da1a9cbb195a6fcafe8ca694aa713c5c2c86c4bf42"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/monday-volume-kraft-fuelle/formula-source.json",
+        "sha256": "24515f55c718ef500e19f11d97675df002623343af3f0fb449b488558431603f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/neqi-moisture-mystery/analysis.json",
+        "sha256": "68425a6a1322b538c486db65d568d657422e09981aef70d51b9e02ccb221b2a4"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/neqi-moisture-mystery/formula-source.json",
+        "sha256": "bb632c50c45f1ba83f26140d4e9e2a33ccab7001b4448ee06b1d3a608eb9a9cb"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/neqi-volume-victory/analysis.json",
+        "sha256": "8ebc8b5eae379e55f56268e643d51bb86817cd82f33e4678c7860e0d66de6998"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/neqi-volume-victory/formula-source.json",
+        "sha256": "0c2db5ac3775a269554bf196dac7a2f4b176eaa13800bd51e2dd595583d41a01"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/nivea-shampoo-conditioner-2in1/analysis.json",
+        "sha256": "ddd2dc299395fbbda6cb271731050bdfa39fdb5b04babc6f5eb05d8442964639"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/nivea-shampoo-conditioner-2in1/formula-source.json",
+        "sha256": "fe834ff1e47359c714c4b5fd9c924756d061dd66c801e3c7111b7f206a72d033"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-biotin-collagen/analysis.json",
+        "sha256": "e0da06b05f2eabc54b3981030c95adb823dc6c3256b07e8ef5b0b1be1c74e8d2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-biotin-collagen/formula-source.json",
+        "sha256": "55cf3883285852b020933b394525154a85e94af1b72103a53801646cbb8c7b8f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-keratin-oil/analysis.json",
+        "sha256": "f60a180e0ff01c1bff7f7f1f22289d880e35346800a6824bc221638bf154ac4b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-keratin-oil/formula-source.json",
+        "sha256": "f93b601bffba3c3bc1dd00fb81efa018694f5f36b6b188b48afbd7f90fde08c5"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-renewing/analysis.json",
+        "sha256": "a35271ed6e901c82e787a26c83d363a0db3e47650c20f9a8f8d8ced02e136d1f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-renewing/formula-source.json",
+        "sha256": "cfc012781319a77c9857beed1c89fea83537a81e2a65ff07810b77585cf79dc7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-rosemary/analysis.json",
+        "sha256": "648986a84365e5e708ce26c1fa79699ceecc4385cb50212202985b8292c7fb3a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/ogx-rosemary/formula-source.json",
+        "sha256": "b67d476e80a31ba5b93cb22fe127ab5026025903f2dc916ca39f87891c9eee0e"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-anti-schuppen/analysis.json",
+        "sha256": "2f5f1c5f08b62c3d4441e2821fd621f3678c43e4e78fdcc12bc838766ae30eb6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-anti-schuppen/formula-source.json",
+        "sha256": "11f0028b342a3c08e8c399b383edcb8a08ac54f57ffc0391822be0b36aa98596"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-grow-abundance/analysis.json",
+        "sha256": "cf6a84096c280f382b619c5927f0e220db16c18c240d81b53a6dadeef891e1e2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-grow-abundance/formula-source.json",
+        "sha256": "c1518a65b348fdbfb58770250687b037aa550566488d99d16297d8c908604785"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-hydra-glow/analysis.json",
+        "sha256": "a00b1bd515c6fbf9c24e26914daab18f03ad76cad4f0fc46cbea447c595988da"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-hydra-glow/formula-source.json",
+        "sha256": "3bb3bd788244d25dc94d47ecef4c1898bc752e3833efec5035aaf67c4561967e"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-pro-v-volumen-pur/analysis.json",
+        "sha256": "51f7ce13a97ba14c09c6c34b14a4eb3bcbf01e52391ad9c057c6dccb673df126"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/pantene-pro-v-volumen-pur/formula-source.json",
+        "sha256": "572467aa4d0f1d448128cd05e603f2e27faa3d5140d3faa4efcc10d0cc287802"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-fett/analysis.json",
+        "sha256": "ef0cd65e6f219362a040d55b0e613729558a88f6a2f6768a3645fbffabf38294"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-fett/formula-source.json",
+        "sha256": "707cd7e8b986694353ae2059f225363378f941a2efcf5bb748109c7ed2a360b6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-juckreiz/analysis.json",
+        "sha256": "2c9b2feeca91f1da7a3f158cbc7ad612955307860d475daa2433982eda83224b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-juckreiz/formula-source.json",
+        "sha256": "e95bf1f49c5cb3e4fab8eb6633ce05ab77e1b602d31995b1172255de2c9dce6a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/analysis.json",
+        "sha256": "ca91555ddf416c525222ef4f29d563ad7cae457f9fc358869bab4c565e14e861"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/salthouse-anti-schuppen/formula-source.json",
+        "sha256": "2d0c500d8fdc301f44928f7fa4ccd59fa29dfd080a6edfa21e7f9cf43301e5ed"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sante-glossy-shine/analysis.json",
+        "sha256": "15b37a7c123dab19bb918c06b542a8e2755d1a31b8463f487ec68a5bd1dde6a6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sante-glossy-shine/formula-source.json",
+        "sha256": "55ebf91927c0daf75ad7487be3d43943e7e98a76cfecbb515e2c89ef31a97497"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sante-sensitive-care/analysis.json",
+        "sha256": "40c48862de4b74d5b8d8bdcde57d25b92b6fe2a958a1a9bed08252c98fcfb2bb"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sante-sensitive-care/formula-source.json",
+        "sha256": "1d008c08bef02ec6518d54adfc9b166257864ce896596ae2c1776334a5a58e04"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/schauma-anti-schuppen/analysis.json",
+        "sha256": "08bef426763d6ad43de04d4587d53b27f6d65dd4ad3010b7d6775cdf0c426b5b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/schauma-anti-schuppen/formula-source.json",
+        "sha256": "118228621d39434c1120744cdf9b61730cde9370f86c35a7cefcbe05e4fdf4d7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen-plus/analysis.json",
+        "sha256": "a4a9d0d2c7f3be8fdd4c1a41e88958c1e34805b08540ab80938883270d2ead3f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen-plus/formula-source.json",
+        "sha256": "0296d3ecbe7a3d9cf66665b19a4d3eecba2bc8ef745f99181b542bfcdd28c1b1"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen/analysis.json",
+        "sha256": "808ee1aab353056aa06ad72f36f4167050810f4edcdda0aceab0ffae06bcacaa"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-anti-schuppen/formula-source.json",
+        "sha256": "b45eb58aad555eb4b7172b9fbdd68ca65e2a833017ae1f7e57f36ac5d99c2b28"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/analysis.json",
+        "sha256": "6e37847a433da58557ece0f54b695aecd6f6b390dcdf9f3868c52174e609be13"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-every-day-shampoo/formula-source.json",
+        "sha256": "589615681a1a328ca0004288ffa156a0e92505f981faf55f5811f9832f99a8a2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/analysis.json",
+        "sha256": "d28e2a7ecd7a616cfa2b3654c2e6fec1a3c92ecb75756d4823d3e82f31ac1d78"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/sebamed-urea-5/formula-source.json",
+        "sha256": "c614dd696277fc54407629b2cd8272cf827cba91bfd246d46912d24b836fcef8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/analysis.json",
+        "sha256": "45da6f14beb5b441bc4b6e5effa6045dc85157243845e6ea42da49685707c27b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json",
+        "sha256": "e100bcdc12cd55a3028c797474d294f38b48db73bc1d7b82afcda142c15a4be4"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-curls/analysis.json",
+        "sha256": "95a4e59277d29fbf147ded10444d4bafff40bbd79ff0eb6739d5f787a49773ca"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-curls/formula-source.json",
+        "sha256": "4c17558b0d69f881b0854963ee137d37e4af5491cb29298f4c856c5d1b981ebc"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-fullness-shampoo/analysis.json",
+        "sha256": "21ff7e87171b37756472e6e4838bb9eab689c08a8256d0759be7f4ded86d5b99"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-fullness-shampoo/formula-source.json",
+        "sha256": "2cce0d2aeb6f62abecd9e28009bd29d38c7174580565920739519fd3d825a263"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-volume-shampoo/analysis.json",
+        "sha256": "f9b4485f0fddc23ba916d1362b30f11166c99c48a070bae494da2df387e7e7a2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/syoss-intense-volume-shampoo/formula-source.json",
+        "sha256": "d9e8d4604fef0657d35b7c6923162b82f61f3116927bd2305e0fc72e77383b0d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/analysis.json",
+        "sha256": "a60b566364eefaa976a14742ff327098edff3234e93bfbc96ec08798f69efe84"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.3/products/wahre-schatze-sanfte-hafermilch/formula-source.json",
+        "sha256": "90ca4cec3b4a4240d9e1878fe3f43dc7856c2f796b30c59bebd2502d4e1a8eb4"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/manifest.json",
+        "sha256": "bd29d1cd9d482b3e7b5fcfbb3ed8c916ad67a4d88154ebee226573c57b986046"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/mapping.json",
+        "sha256": "ca383eac8ac551c97ade3fac60328cc1c11b152c821440f49296bdb1656e1fe4"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/protocol.json",
+        "sha256": "3027ab21f48d3caf9c4397b4bad84af90e0c9f4360de7925e2ea0d8e146a3aa7"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v2/report.json",
+        "sha256": "abeb277ef352a951b83e7cbe6ca66410a816f11460918d80563e747b6a3c0c1c"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/adjudication.json",
+        "sha256": "17f33d20b8028aeedcd41706e136c035f71e27c1536d867a6c5322e5db95e0d1"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/assessment-freeze.json",
+        "sha256": "4a3264bbae930ddcd2c86649756b427a30cdceb2c119ccc041d923c674d4c4e4"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/blind-packet.json",
+        "sha256": "d9a0c45e8d9f90f4232e7b3f6f268ea751ea69814d2219bceaee679b4737be54"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/manifest.json",
+        "sha256": "31ffe7d0baa7f8d86c2470beaabe686d0eff54dbf8b53d0478806c40c7fa96bc"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/protocol.json",
+        "sha256": "a9581fa9ba9a5d7afa813072df5422363d74cd581bdee83d6792d6ed29f7d8be"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/report.json",
+        "sha256": "f2f9353dded6bacc59376eb4575fa45598e1c21af98d1a445e4cd719bb30425f"
+      },
+      {
+        "path": "data/research/shampoo-inci/weight-final-rerun-v3/source-overrides.json",
+        "sha256": "ba8f82979d8cb4c72e653f4617d714b9800366a1cc128fa84dc582de137559f7"
+      },
+      {
+        "path": "docs/research/shampoo-inci/v1.4/classification-standard.md",
+        "sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24"
+      }
+    ]
+  },
+  "stopBoundary": "No catalog, database, product matching, or production activation is authorized by this candidate artifact."
+}

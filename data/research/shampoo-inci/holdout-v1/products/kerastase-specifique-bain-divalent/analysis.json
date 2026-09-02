@@ -1,0 +1,550 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.3",
+  "formulaVersionId": "holdout-v1:kerastase-specifique-bain-divalent:5423d1c0433feea807e9842dce77223f3f920c32e7ce4d03e8c47120777fbaa7",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+      "Polyquaternium-11 und Guar Hydroxypropyltrimonium Chloride bilden eine plausible leichte bis moderate Deposition-/Filmroute.",
+      "Salicylic Acid, Capryloyl Glycine, Pyridoxine HCl und Menthoxypropanediol liefern gezielte Kopfhaut-/Balance-Cues; Piroctone Olamine und Climbazole fehlen."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "für fettige Ansätze und trockene, sensibilisierte Längen; ausgleichende Reinigung",
+      "sourceLocation": "product_page",
+      "scope": "shampoo_only",
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate",
+      "TEA-Lauryl Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MIPA",
+      "Disodium Cocoamphodiacetate"
+    ],
+    "cationicPolymers": [
+      "Polyquaternium-11",
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "Capryloyl Glycine"
+    ],
+    "proteinsFilmFormers": [
+      "Polyquaternium-11"
+    ],
+    "acids": [
+      "Citric Acid",
+      "Salicylic Acid",
+      "Fumaric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES plus TEA-Lauryl Sulfate und Cocamide MIPA bilden eine starke anionische Reinigungsbasis.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet cleansingStrength=strong.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Polyquaternium-11, kationischer Guar und Glycol Distearate liefern eine moderate Pflegearchitektur.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet conditioningLevel=moderate.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Mehrere filmbildende/kationische Signale können Gewicht erzeugen; starke Reinigung begrenzt den Wert auf moderat.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet weightPotential=moderate.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Salicylic Acid, Capryloyl Glycine und Kopfhaut-Cues machen scalp_active zum stärksten Schwerpunkt.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet focusPrimary=scalp_active.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying",
+        "volume"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Starke Reinigung und niedrige Silikon-/Öllast unterstützen Clarifying und Volumen als Nebenschwerpunkte.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet focusSecondary=clarifying,volume.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Ohne Claims wirkt die scalp-active Architektur eher wie ein gezielt eingesetztes Treatment-Shampoo.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet usageRole=regular.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Salicylic Acid/Capryloyl Glycine adressieren Kopfhautkomfort; das ist keine Verträglichkeitsgarantie.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet scalpComfortTarget=targeted.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten.",
+      "supportingSignals": [
+        {
+          "observation": "SLES und TEA-Lauryl Sulfate führen die Reinigungsarchitektur.",
+          "inference": "Diese Formelstütze begründet dandruffSupport=not_supported.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exakte Einsatzmengen, fertiger pH, Deposition und shampoo-spezifische Leistungsdaten sind nicht öffentlich belegt.",
+          "inference": "Die Einstufung bleibt eine konservative Formelklassifikation, keine Leistungs- oder Individualgarantie.",
+          "sourceIds": [
+            "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      2,
+      3
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      2,
+      3
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt cleansing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt conditioningDeposition begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt weightBuildup begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "shineS3": {
+        "g1FunctionalRelevance": "shineS3 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt shineS3 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "volumeV2 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV2 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "volumeV3": {
+        "g1FunctionalRelevance": "volumeV3 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt volumeV3 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt smoothing begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt repairR1 begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "organicClarification": {
+        "g1FunctionalRelevance": "organicClarification ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt organicClarification begrenzt und wird nicht auf benachbarte Claims übertragen."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential ist durch die erfasste Formelarchitektur funktional plausibel adressiert.",
+        "g2FormulaRelevanceAndDelivery": "Die relevanten INCI-Signale stehen im passenden Shampoo-Kontext; Einsatzmengen und fertige Leistung bleiben unbekannt.",
+        "g3EndpointSpecificity": "Die Bewertung bleibt auf den spezifischen Endpunkt mildnessPotential begrenzt und wird nicht auf benachbarte Claims übertragen."
+      }
+    },
+    "weightDepositionLoad": "Mittel: Polyquaternium-11, kationischer Guar und Glycol Distearate.",
+    "weightPersistence": "Mittel: Film-/Polymerdeposition kann wiederholte Nutzung beeinflussen.",
+    "weightResetCapacity": "Gut: starke SLES/TEA-Sulfat-Reinigung liefert Reset-Kapazität.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine bond-spezifische Route; Polyquaternium-11 wird als Film-/Bodying-Signal gezählt.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "organic"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": false,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": true,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market INCI plus post-unblinding claim audit; no independently reviewable finished-product shampoo performance dataset is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Oily-root/dry-length balancing",
+      "verdict": "plausible",
+      "support": "Die starke Reinigungsbasis plus scalp-active Säure-/Glycin-Cues passt zum öligen Ansatz; kationische Polymere begrenzen das Austrocknungsrisiko für Längen.",
+      "limitation": "Keine öffentlichen shampoo-spezifischen Tests oder Einsatzmengen belegen die Stärke der Balance; Duft- und Säureexposition bleiben sichtbar.",
+      "sourceIds": [
+        "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "kerastase-de-bain-divalent-3474636954766-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "cosmetic_scalp_targeted",
+    "rationale": "Die Analyse betrifft kosmetische Kopfhaut-Balance bei öligen Ansätzen; sie begründet keine medizinische Behandlung."
+  }
+}

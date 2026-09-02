@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4072600720219",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T00:00:00+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "official-guhl-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.guhl.com/produkt/hyaluron-pflege/hyaluron-pflege-shampoo/",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Coco-Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Hydrogenated Vegetable Oil, Lactic Acid, Glyceryl Oleate, Guar Hydroxypropyltrimonium Chloride, Sorbitan Caprylate, Erythritol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Citric Acid, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 45100, CI 60730"
+    },
+    {
+      "id": "rossmann-4072600720219-2026-08-10",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.rossmann.de/de/pflege-und-duft-guhl-hyaluron-pflege-feuchtigkeits-shampoo/p/4072600720219",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Glycol Distearate, Sodium Chloride, Citric Acid, Glycerin, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Piroctone Olamine, Glycine, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, CI 17200, CI 60730"
+    },
+    {
+      "id": "dm-at-4072600720219-2026-08-10",
+      "type": "retailer",
+      "market": "AT",
+      "capturedAt": "2026-08-10T00:00:00+02:00",
+      "locator": "https://www.dm.at/p/d/1688644/guhl-hyaluron-pflege-feuchtigkeits-shampoo",
+      "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Glycol Distearate, Sodium Chloride, Citric Acid, Glycerin, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Piroctone Olamine, Glycine, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, CI 17200, CI 60730"
+    }
+  ],
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Coco-Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Hydrogenated Vegetable Oil, Lactic Acid, Glyceryl Oleate, Guar Hydroxypropyltrimonium Chloride, Sorbitan Caprylate, Erythritol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Citric Acid, Hydrolyzed Hyaluronic Acid, Sodium Hyaluronate, Sodium Benzoate, Parfum, Tetramethyl Acetyloctahydronaphthalenes, CI 45100, CI 60730",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "coco-glucoside",
+    "cocamidopropyl betaine",
+    "sodium chloride",
+    "hydrogenated vegetable oil",
+    "lactic acid",
+    "glyceryl oleate",
+    "guar hydroxypropyltrimonium chloride",
+    "sorbitan caprylate",
+    "erythritol",
+    "glycerin",
+    "panthenol",
+    "tetrasodium glutamate diacetate",
+    "piroctone olamine",
+    "citric acid",
+    "hydrolyzed hyaluronic acid",
+    "sodium hyaluronate",
+    "sodium benzoate",
+    "parfum",
+    "tetramethyl acetyloctahydronaphthalenes",
+    "ci 45100",
+    "ci 60730"
+  ],
+  "inciFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none",
+  "conflictRationale": "Die aktuelle DE-Hersteller-INCI ist die kanonische Formel. Rossmann und dm-AT bleiben mit GTIN 4072600720219 als Produktidentitäts- und Quellenprovenienz erhalten, ihre abweichende INCI wird jedoch nicht mit der Herstellerformel zusammengeführt."
+}

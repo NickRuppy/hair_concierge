@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W039",
+  "formula": {
+    "inciFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T00:00:00+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {"depositionRelevant":[{"family":"payload_lipid","name":"cocos nucifera (coconut) oil","position":7},{"family":"payload_lipid","name":"argania spinosa (argan) kernel oil","position":8},{"family":"film_former","name":"polyimide-1","position":12},{"family":"cationic_polymer","name":"polyquaternium-10","position":13},{"family":"weak_refatter","name":"hydrogenated palm glycerides citrate","position":14},{"family":"cationic_polymer","name":"polyquaternium-7","position":15},{"family":"weak_refatter","name":"glyceryl oleate","position":16},{"family":"cationic_polymer","name":"guar hydroxypropyltrimonium chloride","position":18}],"resetRelevant":[{"family":"anionic_surfactant","name":"sodium c14-16 olefin sulfonate","position":2},{"family":"amphoteric_surfactant","name":"cocamidopropyl betaine","position":4},{"family":"nonionic_surfactant","name":"coco-glucoside","position":11}],"excludedIngredients":[{"name":"glycol distearate","position":21,"reason":"Zählt nicht als persistente Route."}],"unresolvedIngredients":[]},
+  "depositionLoad": {
+    "value": "high",
+    "rationale": "Coconut- und Arganöl, Filmformer, drei kationische Polymere und Refatter ergeben eine sehr dichte, konvergierende Pflegefracht."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Filmformer plus mehrere kationische Polymere und Öle stützen anhaltende und potenziell kumulative Rückstände."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Olefin Sulfonate reinigt kräftig und Coco-Glucoside ergänzt, aber die Pflegearchitektur ist deutlich breiter als die Reset-Entlastung."
+  },
+  "competingSignals": [
+    "Olefin Sulfonate spricht für stärkere Reinigung.",
+    "Mehrere Öle, Filmformer und kationische Polymere sprechen klar für hohe Persistenz."
+  ],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "high",
+  "whyThisBand": "High passt, weil mehrere persistent plausible Systeme zusammenkommen und die Reinigung diese Dichte nicht ausreichend ausgleicht.",
+  "whyNotNeighborBand": "Moderate würde die Breite aus Ölen, Filmformer und drei Polymeren unterschätzen.",
+  "classificationConfidence": {
+    "value": "moderate",
+    "limitingFactor": "Retailer-Quelle und unbekannte Konzentrationen bleiben die Hauptunsicherheit."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "holdout-v1:john-frieda-volume-lift",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "5037156299106",
+  "formulaCode": null,
+  "capturedAt": "2026-08-26T16:00:00.000+02:00",
+  "formulaSourceType": "retailer",
+  "sourceRecords": [
+    {
+      "id": "dm-de-john-frieda-volume-lift-5037156299106-2026-08-26",
+      "type": "retailer",
+      "market": "DE",
+      "capturedAt": "2026-08-26T16:00:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/3123431/john-frieda-shampoo-volume-lift",
+      "rawInci": "WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, LACTIC ACID, GLYCERYL OLEATE, SORBITAN CAPRYLATE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, HYDROLYZED VEGETABLE PROTEIN, HYDROLYZED RICE BRAN PROTEIN, HYDROLYZED SOY PROTEIN, KAPPAPHYCUS ALVAREZII EXTRACT, LAMINARIA SACCHARINA EXTRACT, CITRIC ACID, GLYCINE, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, FRAGRANCE/PARFUM, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE, PINENE.",
+      "productMatch": "exact_gtin",
+      "gtinEan": "5037156299106"
+    }
+  ],
+  "rawInci": "WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, LACTIC ACID, GLYCERYL OLEATE, SORBITAN CAPRYLATE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, HYDROLYZED VEGETABLE PROTEIN, HYDROLYZED RICE BRAN PROTEIN, HYDROLYZED SOY PROTEIN, KAPPAPHYCUS ALVAREZII EXTRACT, LAMINARIA SACCHARINA EXTRACT, CITRIC ACID, GLYCINE, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, FRAGRANCE/PARFUM, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE, PINENE.",
+  "normalizedInci": [
+    "water/aqua/eau", "sodium laureth sulfate", "coco-glucoside", "sodium chloride", "cocamidopropyl betaine", "lactic acid", "glyceryl oleate", "sorbitan caprylate", "guar hydroxypropyltrimonium chloride", "panthenol", "tetrasodium glutamate diacetate", "hydrolyzed vegetable protein", "hydrolyzed rice bran protein", "hydrolyzed soy protein", "kappaphycus alvarezii extract", "laminaria saccharina extract", "citric acid", "glycine", "ethylhexylglycerin", "sodium benzoate", "phenoxyethanol", "fragrance/parfum", "citrus limon (lemon) peel oil", "hexyl cinnamal", "limonene", "pinene"
+  ],
+  "inciFingerprint": "6ff60fb8ca80e097be18cbf28e1ca062f781a8da76c89f6ec1b57c531b6b6d44",
+  "identityConfidence": "low",
+  "conflictStatus": "none"
+}

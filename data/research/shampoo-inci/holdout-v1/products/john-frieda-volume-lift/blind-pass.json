@@ -1,0 +1,176 @@
+{
+  "candidate_id": "john-frieda-volume-lift",
+  "blindCode": "D",
+  "rawInci": "WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, LACTIC ACID, GLYCERYL OLEATE, SORBITAN CAPRYLATE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, HYDROLYZED VEGETABLE PROTEIN, HYDROLYZED RICE BRAN PROTEIN, HYDROLYZED SOY PROTEIN, KAPPAPHYCUS ALVAREZII EXTRACT, LAMINARIA SACCHARINA EXTRACT, CITRIC ACID, GLYCINE, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, FRAGRANCE/PARFUM, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE, PINENE.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Glucoside",
+      "Cocamidopropyl Betaine"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Panthenol",
+      "Glycine"
+    ],
+    "proteinsFilmFormers": [
+      "Hydrolyzed Vegetable Protein",
+      "Hydrolyzed Rice Bran Protein",
+      "Hydrolyzed Soy Protein"
+    ],
+    "acids": [
+      "Lactic Acid",
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Tetrasodium Glutamate Diacetate"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      2
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "repair",
+    "focusSecondary": [
+      "shine"
+    ],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES ist führend, aber Glucoside/CAPB und mehrere Pflegebestandteile verschieben das Profil weg von einem reinen Stark- oder Reset-Reiniger.",
+    "conditioningLevel": "Kationisches Guar, Glyceryl Oleate, Panthenol und mehrere hydrolysierte Proteine bilden ein plausibles nicht-silikonisches Pflege-/Film-System.",
+    "weightPotential": "Guar plus Lipid- und Proteinfilm-Signale können spürbar glätten; SLES-Reinigung und fehlende Silikone begrenzen die Persistenz.",
+    "focusPrimary": "Der stärkste Spezialmechanismus ist Oberflächenpflege: Lubrikation, kationische Deposition und Proteine stützen Schutz/temporäre Filmwirkung, nicht echte Strukturreparatur.",
+    "focusSecondary": "Glättung über Guar, Glyceryl Oleate und Proteine kann Oberflächenreflexion plausibel unterstützen; Säure/pH bleibt ohne pH-Daten sekundär.",
+    "usageRole": "Die Formel ist pflegebetont, aber weiterhin shampoo-typisch reinigend; kein klarer Reset- oder Treatment-Rollenbeleg aus INCI.",
+    "scalpComfortTarget": "Panthenol und Lactic Acid können Komfort unterstützen, aber die Gesamtarchitektur wirkt stärker haarpflegend; Duftstoffe und ätherische Öl-/Allergenhinweise sprechen gegen sensitive Zielsetzung.",
+    "dandruffSupport": "Die Formel enthält weder Piroctone Olamine noch Climbazole; Pflanzen-/Algenextrakte und Lactic Acid zählen nicht als gesperrte Anti-Schuppen-Route."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES/Coco-Glucoside/CAPB-Basis mit kationischem Guar als plausibles Depositionselement.",
+    "Glyceryl Oleate, Panthenol und drei hydrolysierte Proteine stützen Smoothing, R1 und etwas R2.",
+    "Tetrasodium Glutamate Diacetate ist ein Chelator, aber ohne starke Hartwasser-/Metall-Architektur nur niedrig zu werten.",
+    "Fragrance/Parfum, Citrus Limon Peel Oil und deklarierte Allergene sind sichtbar."
+  ],
+  "counterSignals": [
+    "Keine Silikone oder reichhaltigen Conditioner-Strukturen, daher kein High-Conditioning.",
+    "Proteine allein beweisen keine Reparatur und bleiben bei R2 maximal moderat.",
+    "Lactic Acid ohne fertigen pH erlaubt keine starke S2-Säureglanz-Aussage."
+  ],
+  "payloadHash": "d4a8fd5d459bcc927c9df99986232af69ec0760424f26c0a29d7cb86a903a4dd",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "repair",
+      "finalValue": "volume",
+      "reason": "Unblind exact-product positioning is lightweight fine/flat-hair volume; the formula supports lightness/film-assisted body enough to make volume primary."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [
+        "shine"
+      ],
+      "finalValue": [
+        "shine",
+        "repair"
+      ],
+      "reason": "The formula still has cationic/lipid/protein surface-care cues, so shine and temporary repair/surface care stay secondary rather than primary."
+    }
+  ]
+}

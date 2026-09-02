@@ -1,0 +1,549 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-matching-v1.3",
+  "formulaVersionId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b:982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "Die aktuelle DE-Hersteller-INCI zeigt eine sulfatfreie Sulfosuccinat-/amphotere Tensidbasis.",
+      "PEG-18 Glyceryl Oleate/Cocoate, Glycol Distearate, C13-15 Alkanes und pflanzliche Bestandteile bilden leichte Pflege-/Rückfettungssignale der Herstellerformel.",
+      "Der offizielle Shopify-Variantenendpunkt bestätigt für 330 ml SKU NQ-MM-SH-201 den Barcode 4063528078285; abweichende Händler-INCI bleiben als Provenienz dokumentiert und werden nicht mit der Herstellerformel zusammengeführt."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "moisturising shampoo for all hair types / gentle cleansing",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02453"
+      ]
+    },
+    {
+      "textVerbatim": "Signature Blend with peptides and plant extracts prevents breakage and strengthens hair from inside",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "neqi-official-en"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Disodium Laureth Sulfosuccinate",
+      "Cocamidopropyl Betaine",
+      "Cocamidopropyl Hydroxysultaine"
+    ],
+    "surfactantsSecondary": [
+      "PEG-18 Glyceryl Oleate/Cocoate",
+      "Cocamide MEA",
+      "Laureth-10"
+    ],
+    "cationicPolymers": [],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "PEG-18 Glyceryl Oleate/Cocoate",
+      "Glycol Distearate",
+      "C13-15 Alkanes"
+    ],
+    "proteinsFilmFormers": [
+      "Algin",
+      "Avena Sativa (Oat) Peptide"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Sulfosuccinate/amphoteric blend supports moderate cleansing.",
+      "supportingSignals": [
+        {
+          "observation": "Disodium Laureth Sulfosuccinate with CAPB/hydroxysultaine",
+          "inference": "Sulfosuccinate/amphoteric blend supports moderate cleansing.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "surfactant-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The selected manufacturer INCI has no reset-level chelator or strong clarifying surfactant chassis.",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "surfactant-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Refatting agents and alkanes support moderate conditioning at most.",
+      "supportingSignals": [
+        {
+          "observation": "PEG-18 glyceryl oleate/cocoate and C13-15 alkanes",
+          "inference": "Refatting agents and alkanes support moderate conditioning at most.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "conditioning-deposition"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die kanonische Herstellerformel enthält kein kationisches Guar und es liegt kein shampoo-spezifischer Kämmbarkeitstest vor.",
+          "inference": "Die Pflegeklassifikation bleibt auf formelbasierte Plausibilität begrenzt.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-deposition"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "low",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Selected official formula has no silicone and limited deposition aids.",
+      "supportingSignals": [
+        {
+          "observation": "No silicone in selected formula",
+          "inference": "Selected official formula has no silicone and limited deposition aids.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "weight-deposition-balance"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die kanonische Herstellerformel enthält kein Silikon und nur begrenzte Ablagerungshilfen.",
+          "inference": "Die Gewichtsabschätzung bleibt eine formelbasierte Einordnung ohne Wiederholungsnutzungs-Messung.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "weight-deposition-balance"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Clearest supported role is gentle/general moisture cleanser.",
+      "supportingSignals": [
+        {
+          "observation": "Sulfate-free sulfosuccinate/amphoteric architecture",
+          "inference": "Clearest supported role is gentle/general moisture cleanser.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "primary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Isothiazolinones/fragrance limit sensitive-scalp confidence",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Light refatting can support shine/softness.",
+      "supportingSignals": [
+        {
+          "observation": "Glyceryl oleate/cocoate and alkanes",
+          "inference": "Light refatting can support shine/softness.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "secondary-focus-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "No strong silicone or acid-pH shine route",
+          "inference": "Limits confidence and prevents overclaiming from INCI alone.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus-route"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "frequent",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Regular gentle cleanser, not a treatment or reset.",
+      "supportingSignals": [
+        {
+          "observation": "The selected manufacturer INCI shows a regular sulfosuccinate/amphoteric cleanser architecture without a scalp-active, reset-dominant, or treatment-specific active route.",
+          "inference": "Regular gentle cleanser, not a treatment or reset.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Die kanonische Herstellerformel enthält keine dominanten Reset- oder Behandlungsmarker.",
+          "inference": "Die Rolle bleibt als häufig verwendbarer, kosmetischer Reiniger eingeordnet.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The selected manufacturer INCI has no recognized dandruff-active route.",
+      "supportingSignals": [
+        {
+          "observation": "The selected manufacturer INCI does not list Piroctone Olamine, climbazole, zinc pyrithione, selenium sulfide, ketoconazole, or another recognized dandruff-active route.",
+          "inference": "Not supported is the conservative direct product-property value for dandruff support.",
+          "sourceIds": [
+            "neqi-official-en"
+          ],
+          "mechanismIds": [
+            "no-scalp-support-route"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Finished-product scalp performance and exact concentrations are not established by this artifact.",
+          "inference": "This remains product truth only and does not create treatment suitability or an approval upgrade.",
+          "sourceIds": [
+            "neqi-official-en"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "neqi-official-en"
+      ],
+      "sharedMechanismIds": [
+        "no-scalp-support-route"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      2
+    ],
+    "conditioningDeposition": [
+      1,
+      2
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      0,
+      0
+    ],
+    "volumeV3": [
+      0,
+      0
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      1,
+      2
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      1,
+      1
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      2,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "cleansing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to cleansing, not to a neighboring marketing or treatment endpoint."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "conditioningDeposition has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to conditioningDeposition, not to a neighboring marketing or treatment endpoint."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "weightBuildup has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to weightBuildup, not to a neighboring marketing or treatment endpoint."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "shineS1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to shineS1, not to a neighboring marketing or treatment endpoint."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "volumeV1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to volumeV1, not to a neighboring marketing or treatment endpoint."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "smoothing has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to smoothing, not to a neighboring marketing or treatment endpoint."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "repairR1 has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to repairR1, not to a neighboring marketing or treatment endpoint."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "mildnessPotential has a directly relevant formula mechanism in the mapped architecture.",
+        "g2FormulaRelevanceAndDelivery": "The relevant ingredients are present in the selected exact INCI, but concentration and delivery are not inferred beyond formula-level plausibility.",
+        "g3EndpointSpecificity": "The score applies only to mildnessPotential, not to a neighboring marketing or treatment endpoint."
+      }
+    },
+    "weightDepositionLoad": "Niedrig bis moderat in der kanonischen Herstellerformel durch Rückfettungs- und Feel-Modifier-Signale.",
+    "weightPersistence": "Niedrig bis moderat: kein Silikon, aber Rückfettungsbestandteile; eine Wiederholungsnutzungs-Messung liegt nicht vor.",
+    "weightResetCapacity": "Low-to-moderate; regular cleanser, not reset.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific chemistry.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": true,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": true,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Formelbasierte Bewertung der aktuellen DE-Hersteller-INCI. Für 330 ml bestätigt der offizielle Shopify-Variantenendpunkt SKU NQ-MM-SH-201 / Barcode 4063528078285; dm-DE und Rossmann dienen als unabhängige Produkt-, Größen- und GTIN-Provenienz. Abweichende Händler-INCI werden nicht in die Klassifikation eingerechnet."
+  },
+  "claimAudit": [
+    {
+      "claim": "moisturising shampoo for all hair types",
+      "verdict": "plausible",
+      "support": "Sulfosuccinate/amphoteric base plus refatting/humectant signals can support gentle moisturizing feel.",
+      "limitation": "Ein kontrollierter shampoo-spezifischer Feuchtigkeitstest liegt nicht vor.",
+      "sourceIds": [
+        "neqi-official-en",
+        "notino-de-neq02453"
+      ]
+    },
+    {
+      "claim": "prevents breakage and strengthens from inside",
+      "verdict": "weak",
+      "support": "Oat peptide/refatting signals can support surface care.",
+      "limitation": "No bond/inside-hair repair mechanism or shampoo-only breakage test disclosed.",
+      "sourceIds": [
+        "neqi-official-en"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "neqi-official-en",
+    "notino-de-neq02453",
+    "newflagpro-cz-ean"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Rinse-off cosmetic shampoo; no dandruff, hair-loss, dermatitis or other medical treatment classification is made."
+  }
+}

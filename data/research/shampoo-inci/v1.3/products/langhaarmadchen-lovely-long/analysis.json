@@ -1,0 +1,514 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "v1.4",
+  "formulaVersionId": "e76e0ed4-bd20-40cd-84ae-e93030610d40:59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES and CAPB form the leading cleansing system.",
+      "Hydrolyzed wheat protein and argan oil appear before cationic guar and the quaternary conditioning blend.",
+      "The disclosed formula contains several light-to-moderate film, lipid and conditioning routes.",
+      "No anti-dandruff active is disclosed, while fragrance is present late in the list."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "stimuliert das Haarwachstum",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "sodium laureth sulfate"
+    ],
+    "surfactantsSecondary": [
+      "cocamidopropyl betaine",
+      "coco-glucoside"
+    ],
+    "cationicPolymers": [
+      "guar hydroxypropyltrimonium chloride",
+      "bis-(isostearoyl/oleoyl isopropyl) dimonium methosulfate"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "argania spinosa kernel oil",
+      "glycol distearate",
+      "hydrogenated castor oil"
+    ],
+    "proteinsFilmFormers": [
+      "hydrolyzed wheat protein"
+    ],
+    "acids": [
+      "citric acid",
+      "benzoic acid"
+    ],
+    "chelators": []
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed surfactant architecture supports moderate cleansing strength.",
+      "supportingSignals": [
+        {
+          "observation": "SLES and CAPB form the leading cleansing system.",
+          "inference": "The cleanser system is consistent with moderate rinse-off cleansing.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "cleansing-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "cleansing-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed deposition and lipid routes support moderate conditioning.",
+      "supportingSignals": [
+        {
+          "observation": "Hydrolyzed wheat protein and argan oil appear before cationic guar and the quaternary conditioning blend.",
+          "inference": "The care system supports moderate shampoo conditioning.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "conditioning-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "conditioning-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The disclosed silicone, polymer and lipid load supports moderate weight potential.",
+      "supportingSignals": [
+        {
+          "observation": "The disclosed formula contains several light-to-moderate film, lipid and conditioning routes.",
+          "inference": "The rinse-off residue architecture indicates moderate weight potential.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "weight-system"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "weight-system"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The strongest product-specific route is repair.",
+      "supportingSignals": [
+        {
+          "observation": "The dm brand-owner page reports a consumer-perception result for the routine and discloses protein, argan oil and pea sprout extract.",
+          "inference": "The source and formula align on repair as the primary focus.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "primary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "primary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Protein, argan oil and cationic/quaternary conditioning cues support a bounded shine secondary focus; hair-growth wording is not used as evidence.",
+      "supportingSignals": [
+        {
+          "observation": "Hydrolyzed wheat protein, argan oil, cationic guar and quaternary conditioning blend are present.",
+          "inference": "A shine secondary focus is formula-coherent.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "secondary-focus"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "The hair-growth claim is not supported by a reviewable shampoo-only endpoint and cannot be inferred from INCI order.",
+          "inference": "The classification remains bounded and does not establish individual performance magnitude.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "secondary-focus"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The source directions and formula support a regular usage role.",
+      "supportingSignals": [
+        {
+          "observation": "Captured directions and formula architecture indicate regular use.",
+          "inference": "The product role is regular; individual cadence still depends on response.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "usage-role"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Exact ingredient percentages, finished-product pH and comparative performance were not published.",
+          "inference": "The conclusion is directional and does not establish an individual outcome.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "usage-role"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The exact formula/positioning are resolved for this shadow audit, but the product does not deliberately target dry, tight, itchy, flaky or sensitive scalp comfort with a coherent specialist route. This means no specialist scalp-comfort target, not that the product is unsuitable for every sensitive user.",
+      "supportingSignals": [
+        {
+          "observation": "The exact formula/positioning are sufficient for this shadow audit, but no exact-product evidence establishes a dedicated dry, tight, itchy, flaky or sensitive scalp-comfort target with a coherent specialist route.",
+          "inference": "The direct product property is not_targeted. This does not mean the product is unsuitable for every sensitive user.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "scalp-comfort-target"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Generic gentle, dermatological, anti-dandruff, oil-control, hair-care, volume, shine or repair positioning is not by itself a scalp-comfort target under the approved gates.",
+          "inference": "Sensitive-profile suitability is derived separately from cleansing strength, scalp oiliness, dandruff support and exposure preferences.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "scalp-comfort-target"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "The complete exact formula does not contain the MVP anti-dandruff support ingredients Piroctone Olamine or Climbazole; dry flakes remain a dry/sensitive-scalp route, not dandruff support.",
+      "supportingSignals": [
+        {
+          "observation": "The complete INCI contains no Piroctone Olamine or Climbazole.",
+          "inference": "No conventional anti-dandruff support route is established for the MVP database value.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ],
+          "mechanismIds": [
+            "dandruff-support"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ordinary cleansing may remove loose dry flakes, but that is not a dandruff-support ingredient route.",
+          "inference": "Route this to dry/sensitive-scalp fit rather than dandruff support.",
+          "sourceIds": [
+            "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ],
+      "sharedMechanismIds": [
+        "dandruff-support"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "verified_absent"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      2,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      1,
+      2
+    ],
+    "shineS1": [
+      1,
+      2
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      0,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      0,
+      1
+    ],
+    "volumeV2": [
+      0,
+      1
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      1
+    ],
+    "smoothing": [
+      0,
+      1
+    ],
+    "repairR1": [
+      1,
+      2
+    ],
+    "repairR2": [
+      0,
+      1
+    ],
+    "repairR3": [
+      0,
+      1
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      0,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      1
+    ],
+    "mildnessPotential": [
+      0,
+      1
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to cleansing.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off cleansing contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product cleansing endpoint is public."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to conditioningDeposition.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off conditioningDeposition contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product conditioningDeposition endpoint is public."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to weightBuildup.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off weightBuildup contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product weightBuildup endpoint is public."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to shineS1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off shineS1 contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product shineS1 endpoint is public."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "The captured formula contains a mechanism directly relevant to repairR1.",
+        "g2FormulaRelevanceAndDelivery": "Its INCI position and surrounding system make a rinse-off repairR1 contribution plausible.",
+        "g3EndpointSpecificity": "The score remains a range because no quantitative finished-product repairR1 endpoint is public."
+      }
+    },
+    "weightDepositionLoad": "Formula-only deposition load; no quantitative mass or repeat-use result is available.",
+    "weightPersistence": "Repeat-use persistence is not established by INCI order.",
+    "weightResetCapacity": "No finished-product residue-removal test is captured.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "No bond-specific route is established.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "none"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula plus product-page claim audit; no independently reviewable finished-product performance dataset."
+  },
+  "claimAudit": [
+    {
+      "claim": "stimuliert das Haarwachstum",
+      "verdict": "weak",
+      "support": "The dm brand-owner page reports a consumer-perception result for the routine and discloses protein, argan oil and pea sprout extract.",
+      "limitation": "The claim is not supported by an independently reviewable shampoo-only hair-growth endpoint and cannot be inferred from INCI order.",
+      "sourceIds": [
+        "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "dm-de-langhaarmaedchen-lovely-long-4067796002621-2026-08-10"
+  ],
+  "medicalBoundary": {
+    "status": "medical_claim",
+    "rationale": "The product page's hair-growth wording is retained in the claim audit. It cannot create a hair-growth property; the formula remains classifiable for healthy cosmetic use and medical profiles abstain at matching time."
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "candidate_id": "loreal-elvital-bond-repair-plus",
+  "blindCode": "E",
+  "rawInci": "AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • PARFUM / FRAGRANCE • HEXYLENE GLYCOL • COCO-BETAINE • SODIUM HYDROXIDE • SODIUM CHLORIDE • SODIUM BENZOATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • HYDROXYCITRONELLAL • PEG-55 PROPYLENE GLYCOL OLEATE • ARGININE • SALICYLIC ACID • POLYQUATERNIUM-7 • LIMONENE • BENZOIC ACID • LINALOOL • PINENE • BENZYL BENZOATE • LINALYL ACETATE • PROPYLENE GLYCOL • CARBOMER • CARVONE • GERANYL ACETATE • CITRIC ACID • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • BETAINE • CITRUS LIMON PEEL OIL • HEXYL CINNAMAL",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium C14-16 Olefin Sulfonate",
+      "Sodium Lauroyl Sarcosinate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamide MEA",
+      "Cocamidopropyl Betaine",
+      "Coco-Betaine"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Polyquaternium-7"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "PEG-55 Propylene Glycol Oleate",
+      "Arginine",
+      "Betaine"
+    ],
+    "proteinsFilmFormers": [],
+    "acids": [
+      "Salicylic Acid",
+      "Benzoic Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      4
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      2,
+      3
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      2,
+      3
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "shine",
+    "focusSecondary": [
+      "clarifying",
+      "scalp_active"
+    ],
+    "usageRole": "alternating",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "Olefin Sulfonate früh plus Sarcosinate und Betain-Co-Tenside ergeben ein starkes organisches Reinigungsprofil, auch ohne Sulfate.",
+    "conditioningLevel": "Kationisches Guar, Polyquaternium-7 und PEG-55 Propylene Glycol Oleate stützen Deposition/Smoothing; fehlende Silikone begrenzen die Einstufung.",
+    "weightPotential": "Zwei kationische Polymere plus refatting/oleate-Signale können Gewicht erzeugen; die starke Tensidbasis bietet aber zugleich Reset-Kapazität.",
+    "focusPrimary": "Der plausibelste Spezialnutzen ist Glanz/Smoothing aus kationischer Deposition plus organischer Rückstandsreinigung; Glycol Distearate allein wird nicht als Haarglanz gezählt.",
+    "focusSecondary": "Olefin-Sulfonate und Sarcosinate stützen einen klärenden Reinigungsanteil; Salicylic Acid ist ein sichtbarer kosmetischer Aktiv-/Exfoliant-Hinweis, aber nicht Anti-Schuppen-Support.",
+    "usageRole": "Starke Reinigung, Säure-/Salicylsäure-Exposition und moderate Deposition sprechen eher für abwechselnde Nutzung als für jeden Waschgang.",
+    "scalpComfortTarget": "Salicylic Acid zeigt einen aktiven/exfolierenden Hinweis, aber keine klare Komfort-Route für trockene, empfindliche oder juckende Kopfhaut; Duft-/Allergenlast wirkt dagegen.",
+    "dandruffSupport": "Salicylic Acid ist nicht Teil der gesperrten Support-Regel; ohne Piroctone Olamine oder Climbazole bleibt dandruffSupport nicht unterstützt."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "high",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "Sodium C14-16 Olefin Sulfonate steht früh und wird durch Sarcosinate, CAPB, Coco-Betaine und Cocamide MEA ergänzt.",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride und Polyquaternium-7 bilden ein plausibles kationisches Deposition-/Smoothing-System.",
+    "Salicylic Acid ist sichtbar; Citric Acid/Benzoic Acid liefern keine starke pH- oder Repair-Aussage.",
+    "Fragrance, deklarierte Allergene und Citrus Limon Peel Oil sind Expositionshinweise."
+  ],
+  "counterSignals": [
+    "Keine Silikone; daher kein starkes silikonisches Glanz-/Repair-System.",
+    "Glycol Distearate kann primär die Produktoptik pearlisieren und darf nicht allein als Haarglanzbeleg gezählt werden.",
+    "Ohne fertigen pH und Anwendungshinweise bleibt die Säure-/Scalp-Active-Auslegung begrenzt."
+  ],
+  "payloadHash": "df6cfd9b4b665d46d0dad93e062d07a7dff90ab0ca2735c3473dfb8b7a4dfcef",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "shine",
+      "finalValue": "repair",
+      "reason": "The exact product is a Bond Repair routine SKU and the formula has cationic/polyquat/arginine surface-care support; this can make repair the product focus, while R3 bond repair remains capped."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [
+        "clarifying",
+        "scalp_active"
+      ],
+      "finalValue": [
+        "clarifying",
+        "shine"
+      ],
+      "reason": "Salicylic Acid is not enough for a scalp-active product focus here; strong olefin-sulfonate cleaning and deposition/smoothing make clarifying and shine better secondary routes."
+    }
+  ]
+}

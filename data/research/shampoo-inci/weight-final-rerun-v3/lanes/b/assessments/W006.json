@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W006",
+  "formula": { "inciFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5", "sourceTier": "official", "capturedAt": "2026-08-10T00:00:00+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "payload_lipid", "name": "hydrogenated vegetable oil", "position": 6 }, { "family": "weak_refatter", "name": "glyceryl oleate", "position": 8 }, { "family": "cationic_polymer", "name": "guar hydroxypropyltrimonium chloride", "position": 9 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "nonionic_surfactant", "name": "coco-glucoside", "position": 3 }, { "family": "amphoteric_surfactant", "name": "cocamidopropyl betaine", "position": 4 }], "excludedIngredients": [], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Das frühe gehärtete Pflanzenöl ist als Payload relevant; Glyceryl Oleate und kationisches Guar ergänzen eine mittlere Pflegeablagerung." },
+  "persistence": { "value": "moderate", "rationale": "Die Pflegekomponenten können teilweise verbleiben, doch die Formel enthält weder einen Silikonverbund noch eine schwere Mehrfachpflegearchitektur." },
+  "resetCapacity": { "value": "strong", "rationale": "SLES, Coco-Glucoside und CAPB stehen am Anfang und liefern eine klar wirksame Abreinigung." },
+  "competingSignals": ["Pflanzenöl und kationisches Polymer erhöhen die verbleibende Pflege.", "Die breite frühe Tensidbasis wirkt dieser Ablagerung entgegen."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die Formel hat eine echte, aber begrenzte Öl-/Polymerroute und gleichzeitig eine starke Reset-Seite; moderate ist die kleinste Bandbreite, die beide Seiten abbildet.",
+  "whyNotNeighborBand": "Low passt nicht zur frühen Lipid-Payload. High wird durch die starke Waschbasis und das Fehlen zusätzlicher persistenter Routen nicht gestützt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "Die INCI-Reihenfolge kann die Formulierungsmenge und den Ausspülverlust der Pflegekomponenten nicht quantifizieren." }
+}

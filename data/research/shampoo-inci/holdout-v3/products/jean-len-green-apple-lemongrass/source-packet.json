@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:jean-len-green-apple-lemongrass",
+  "candidateId": "jean-len-green-apple-lemongrass",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Jean&Len",
+    "name": "Green Apple & Lemongrass Shampoo",
+    "market": "DE",
+    "packSize": "300 ml",
+    "gtinAliases": [
+      "4262401738944"
+    ]
+  },
+  "selectionArchetype": "fresh, quick-oily-hair shampoo",
+  "canonicalFormulaSourceUrl": "https://www.jeanlen.de/shampoo-fuer-schnell-fettendes-haar-green-apple-lemongrass",
+  "manufacturerFormulaAvailability": "available",
+  "retailerFallbackReason": null,
+  "sourcePriorityRationale": "Current German official formula is canonical; retailer provenance is retained as corroboration.",
+  "officialClaimSummary": [
+    "quick-oily-hair direction",
+    "fresh/clarifying direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Quick-oily-hair positioning is permitted later focus evidence.",
+    "Freshness language alone must not be treated as deep-cleansing or periodic-reset proof."
+  ],
+  "corroboratingUrls": [
+    "https://www.dm.de/p/d/3086484/jean-und-len-shampoo-green-apple-lemongrass"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Official formula is canonical; dm is corroborating exact-GTIN provenance.",
+  "officialProductPage": "https://www.jeanlen.de/shampoo-fuer-schnell-fettendes-haar-green-apple-lemongrass"
+}

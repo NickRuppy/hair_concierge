@@ -1,0 +1,677 @@
+{
+  "schemaVersion": "shampoo-weight-labels-v1",
+  "policyVersion": "shampoo-weight-v1",
+  "labelerId": "a",
+  "method": "Fresh no-context formula-only application; no prior labels or evaluator access",
+  "labels": [
+    {
+      "id": "A",
+      "value": "high",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "guar hydroxypropyltrimonium chloride",
+              "position": 17
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "argania spinosa kernel oil",
+              "position": 5
+            },
+            {
+              "name": "orbignya oleifera seed oil",
+              "position": 6
+            },
+            {
+              "name": "sclerocarya birrea seed oil",
+              "position": 7
+            }
+          ],
+          "ruleReason": "Mehrere anerkannte Payload-Öle liegen im prominenten Fenster und eine kationische Polymerroute ist vorhanden."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "hydrolyzed keratin",
+              "position": 18
+            }
+          ],
+          "ruleReason": "Keratin wird als Proteinfilm erkannt, erhält nach INCI-only-Regel aber keine automatische substanzielle Stärke."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "propylene glycol",
+          "reason": "Glykol; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "peg-40 hydrogenated castor oil",
+          "reason": "PEG-40 Hydrogenated Castor Oil ist laut Policy Solubilisator und kein Öl-Payload-Votum."
+        },
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "high",
+        "10": "high",
+        "12": "high"
+      },
+      "rationale": "Zwei substanzielle Routen sind vorhanden: kationisches Polymer und prominente Payload-Öle mit Polymerunterstützung. Das späte Keratin bleibt nur eine schwache Zusatzroute."
+    },
+    {
+      "id": "B",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "hydrolyzed wheat protein",
+              "position": 8
+            }
+          ],
+          "ruleReason": "Hydrolysiertes Protein wird erkannt, aber nach INCI-only-Regel nur als schwache Proteinfilmroute gezählt."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "ascorbyl palmitate",
+              "position": 10
+            },
+            {
+              "name": "glyceryl oleate",
+              "position": 14
+            },
+            {
+              "name": "hydrogenated palm glycerides citrate",
+              "position": 17
+            },
+            {
+              "name": "lecithin",
+              "position": 18
+            }
+          ],
+          "ruleReason": "Die Stoffe sind schwache Refatter; ohne anerkannte kationische Polymerroute werden sie nicht substantiell."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "sucrose",
+          "reason": "Zucker; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "prunus amygdalus dulcis seed extract",
+          "reason": "Botanischer Extrakt, kein nach Policy erkannter Öl- oder Butter-Payload."
+        },
+        {
+          "name": "sorbitol",
+          "reason": "Zuckeralkohol/Humectant; zählt nach Policy nicht als persistente Route."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "low",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Bei Fenster 10 ergeben Protein und schwache Refatter zwei unterschiedliche schwache Routen, daher moderate. Bei Fenster 8 fällt der Refatter an Position 10 heraus, wodurch nur eine schwache Route bleibt."
+    },
+    {
+      "id": "C",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "hydroxypropyl oxidized starch pg-trimonium chloride",
+              "position": 16
+            },
+            {
+              "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+              "position": 17
+            }
+          ],
+          "ruleReason": "Anerkannte kationische Polymere zählen positionsunabhängig als eine substanzielle Route."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "oryza sativa seed protein",
+              "position": 6
+            },
+            {
+              "name": "hydrolyzed wheat protein",
+              "position": 18
+            },
+            {
+              "name": "hydrolyzed soy protein",
+              "position": 20
+            }
+          ],
+          "ruleReason": "Explizite Protein-Inhaltsstoffe werden erkannt, bleiben aber nach INCI-only-Regel schwach."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "ascorbyl palmitate",
+              "position": 9
+            },
+            {
+              "name": "glyceryl oleate",
+              "position": 14
+            },
+            {
+              "name": "hydrogenated palm glycerides citrate",
+              "position": 23
+            },
+            {
+              "name": "lecithin",
+              "position": 24
+            }
+          ],
+          "ruleReason": "Es sind nur schwache Refatter erkannt; diese werden auch mit Polymerroute nicht zu einem Payload-Votum."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "panthenol",
+          "reason": "Panthenol zählt nach Policy nicht als Proteinfilm oder persistente Gewichtsroute."
+        },
+        {
+          "name": "oryza sativa extract",
+          "reason": "Botanischer Extrakt; keine erkannte persistente Route."
+        },
+        {
+          "name": "hydrolyzed adansonia digitata seed extract",
+          "reason": "Hydrolysierter Samenextrakt, aber kein explizites Protein oder Keratin nach Policy."
+        },
+        {
+          "name": "rice amino acids",
+          "reason": "Freie Aminosäuren zählen nach Policy nicht als Proteinfilm."
+        },
+        {
+          "name": "proline",
+          "reason": "Freie Aminosäure; zählt nicht als Proteinfilm."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Die kationische Polymerroute ist die einzige substanzielle Route. Protein und schwache Refatter ändern die Einstufung nicht auf high, weil keine zweite substanzielle Route vorliegt."
+    },
+    {
+      "id": "D",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "polyquaternium-10",
+              "position": 11
+            }
+          ],
+          "ruleReason": "Polyquaternium-10 ist ein anerkanntes kationisches Polymer und zählt auch außerhalb des prominenten Fensters substantiell."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "citrus aurantium peel oil",
+          "reason": "Citrus-Peel-Öl wird als ätherisches/fragrance Öl zuerst ausgeschlossen."
+        },
+        {
+          "name": "histidine",
+          "reason": "Freie Aminosäure; zählt nicht als Proteinfilm."
+        },
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "cocos nucifera fruit juice",
+          "reason": "Fruchtsaft statt Öl/Butter; kein erkannter Payload nach Policy."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Genau eine substanzielle Route ist vorhanden: Polyquaternium-10. Weitere erkannte schwache Gewichtsroute ist nicht vorhanden."
+    },
+    {
+      "id": "E",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "guar hydroxypropyltrimonium chloride",
+              "position": 6
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "hydroxypropyltrimonium lemon protein",
+              "position": 10
+            }
+          ],
+          "ruleReason": "Kationisches Protein zählt nach Policy als Proteinroute, nicht zusätzlich als Polymerroute, und bleibt schwach."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "octyldodecanol",
+              "position": 25
+            }
+          ],
+          "ruleReason": "Octyldodecanol ist erkannt, liegt aber außerhalb des prominenten Fensters und bleibt deshalb schwach."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "saccharum officinarum extract/sugar cane extract",
+          "reason": "Botanischer Extrakt; keine erkannte persistente Route."
+        },
+        {
+          "name": "camellia sinensis leaf extract",
+          "reason": "Botanischer Extrakt; keine erkannte persistente Route."
+        },
+        {
+          "name": "pyrus malus fruit extract/apple fruit extract",
+          "reason": "Fruchtextrakt statt Öl/Butter; kein erkannter Payload."
+        },
+        {
+          "name": "citrus grandis peel oil/grapefruit peel oil",
+          "reason": "Citrus-Peel-Öl wird als ätherisches/fragrance Öl ausgeschlossen."
+        },
+        {
+          "name": "citrus limon fruit extract/lemon fruit extract",
+          "reason": "Fruchtextrakt statt Öl/Butter; kein erkannter Payload."
+        }
+      ],
+      "unresolvedIngredients": [
+        {
+          "name": "carbomer",
+          "reason": "Unlisted polymer; als möglicher Recognition-Gap sichtbar gehalten, aber nicht als bekannte Route gezählt."
+        }
+      ],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Die Polymerroute macht die Formel moderate. Das kationische Protein ist nur Protein, nicht Polymer; Octyldodecanol liegt zu spät für eine substanzielle Lipidroute. Carbomer bleibt als unaufgelöster Polymer-Hinweis sichtbar."
+    },
+    {
+      "id": "F",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+              "position": 13
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "glyceryl oleate",
+              "position": 11
+            },
+            {
+              "name": "peg-7 glyceryl cocoate",
+              "position": 12
+            },
+            {
+              "name": "hydrogenated castor oil",
+              "position": 16
+            }
+          ],
+          "ruleReason": "Schwache Refatter beziehungsweise anerkanntes Hydrogenated Castor Oil liegen nicht als Payload im prominenten Fenster; die Lipidroute bleibt schwach."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "panthenol",
+          "reason": "Panthenol zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "biotin",
+          "reason": "Biotin zählt nach Policy nicht als Proteinfilm oder persistente Route."
+        },
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "peg-120 methyl glucose dioleate",
+          "reason": "Verdickungshinweis; laut Policy keine persistente Route."
+        },
+        {
+          "name": "citrus limon (lemon) peel oil",
+          "reason": "Citrus-Peel-Öl wird als ätherisches/fragrance Öl ausgeschlossen."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Genau eine substanzielle Route ist vorhanden: das kationische Polymer. Die Refatter erscheinen erst außerhalb des Fensters 10 oder sind schwache Refatter, daher keine zweite substanzielle Route."
+    },
+    {
+      "id": "G",
+      "value": "high",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "guar hydroxypropyltrimonium chloride",
+              "position": 7
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "gossypium hirsutum seed oil",
+              "position": 6
+            },
+            {
+              "name": "dicaprylyl ether",
+              "position": 9
+            },
+            {
+              "name": "glyceryl oleate",
+              "position": 10
+            },
+            {
+              "name": "hydrogenated castor oil",
+              "position": 12
+            }
+          ],
+          "ruleReason": "Ein Payload-Öl und Dicaprylyl Ether liegen im prominenten Fenster und eine Polymerroute ist vorhanden; weitere Refatter gehören zur selben Lipidroute."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "high",
+        "10": "high",
+        "12": "high"
+      },
+      "rationale": "Kationisches Polymer plus prominenter Lipid-Payload ergeben zwei substanzielle Routen. Mehrere Lipidstoffe bleiben eine Route, reichen hier aber zusammen mit dem Polymer für high."
+    },
+    {
+      "id": "H",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "guar hydroxypropyltrimonium chloride",
+              "position": 14
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "glyceryl oleate",
+              "position": 16
+            },
+            {
+              "name": "dicaprylyl ether",
+              "position": 17
+            },
+            {
+              "name": "hydrogenated castor oil",
+              "position": 18
+            }
+          ],
+          "ruleReason": "Erkannte Refatter/Emollients liegen außerhalb der prominenten Fenster und bleiben schwach."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "bambusa vulgaris shoot extract",
+          "reason": "Botanischer Extrakt; keine erkannte persistente Route."
+        },
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "propylene glycol",
+          "reason": "Glykol; zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "butylene glycol",
+          "reason": "Glykol; zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Das kationische Polymer liefert genau eine substanzielle Route. Die Lipidstoffe erscheinen zu spät, deshalb entsteht keine zweite substanzielle Route."
+    },
+    {
+      "id": "I",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "hydroxypropyl guar hydroxypropyltrimonium chloride",
+              "position": 7
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "glyceryl oleate",
+              "position": 8
+            }
+          ],
+          "ruleReason": "Glyceryl Oleate ist ein schwacher Refatter und wird nicht zu einem Payload-Votum."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "panthenol",
+          "reason": "Panthenol zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "glycine",
+          "reason": "Freie Aminosäure; zählt nicht als Proteinfilm."
+        },
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "acacia senegal gum extract",
+          "reason": "Botanischer Extrakt/Gum-Extrakt; keine erkannte Route nach Policy."
+        },
+        {
+          "name": "centaurea cyanus flower extract",
+          "reason": "Botanischer Extrakt; keine erkannte persistente Route."
+        },
+        {
+          "name": "sorbitan caprylate",
+          "reason": "Nicht als Payload, schwacher Refatter oder sonstige persistente Route in dieser Policy gelistet."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Die Polymerroute ist substantiell. Glyceryl Oleate bleibt als schwacher Refatter eine zweite, aber nicht substanzielle Route; dadurch bleibt die Formel moderate."
+    },
+    {
+      "id": "J",
+      "value": "moderate",
+      "routes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredients": [
+            {
+              "name": "guar hydroxypropyltrimonium chloride",
+              "position": 15
+            }
+          ],
+          "ruleReason": "Anerkanntes kationisches Polymer zählt positionsunabhängig als substanzielle Route."
+        },
+        {
+          "kind": "lipid_refatting",
+          "strength": "weak",
+          "ingredients": [
+            {
+              "name": "peg-18 glyceryl oleate/cocoate",
+              "position": 6
+            },
+            {
+              "name": "hydrogenated castor oil",
+              "position": 16
+            },
+            {
+              "name": "prunus armeniaca kernel oil",
+              "position": 19
+            },
+            {
+              "name": "glyceryl oleate",
+              "position": 21
+            }
+          ],
+          "ruleReason": "Der frühe Stoff ist ein schwacher Refatter; anerkannte Payload-Öle/Refatter liegen außerhalb des prominenten Fensters und bleiben deshalb schwach."
+        }
+      ],
+      "excludedIngredients": [
+        {
+          "name": "glycol distearate",
+          "reason": "Pearlizer; zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "peg-40 hydrogenated castor oil",
+          "reason": "PEG-40 Hydrogenated Castor Oil ist laut Policy Solubilisator und kein Öl-Payload-Votum."
+        },
+        {
+          "name": "panthenol",
+          "reason": "Panthenol zählt nach Policy nicht als persistente Route."
+        },
+        {
+          "name": "glycerin",
+          "reason": "Humectant; zählt nach Policy nicht als persistente Gewichtsroute."
+        },
+        {
+          "name": "vanilla planifolia fruit extract",
+          "reason": "Fruchtextrakt statt Öl/Butter; kein erkannter Payload."
+        },
+        {
+          "name": "phoenix dactylifera fruit extract",
+          "reason": "Fruchtextrakt statt Öl/Butter; kein erkannter Payload."
+        }
+      ],
+      "unresolvedIngredients": [],
+      "windowLabels": {
+        "8": "moderate",
+        "10": "moderate",
+        "12": "moderate"
+      },
+      "rationale": "Genau eine substanzielle Route ist vorhanden: das kationische Polymer. Die Lipidroute bleibt schwach, weil nur ein schwacher Refatter früh liegt und die Payload-Öle außerhalb des prominenten Fensters stehen."
+    }
+  ]
+}

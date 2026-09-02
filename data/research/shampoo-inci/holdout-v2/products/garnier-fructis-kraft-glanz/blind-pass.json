@@ -1,0 +1,229 @@
+{
+  "candidate_id": "garnier-fructis-kraft-glanz",
+  "blindCode": "E",
+  "rawInci": "1165895 B - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCOL DISTEARATE • SODIUM CHLORIDE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • NIACINAMIDE • SACCHARUM OFFICINARUM EXTRACT / SUGAR CANE EXTRACT • SODIUM BENZOATE • HYDROXYPROPYLTRIMONIUM LEMON PROTEIN • SODIUM HYDROXIDE • PHENOXYETHANOL • PPG-5-CETETH-20 • SALICYLIC ACID • LIMONENE • FUMARIC ACID • CAMELLIA SINENSIS LEAF EXTRACT • LINALOOL • BENZYL ALCOHOL • BENZYL SALICYLATE • PYRUS MALUS FRUIT EXTRACT / APPLE FRUIT EXTRACT • CARBOMER • PYRIDOXINE HCl • GERANIOL • OCTYLDODECANOL • CITRIC ACID • CITRONELLOL • CITRUS LIMON FRUIT EXTRACT / LEMON FRUIT EXTRACT • CITRUS GRANDIS PEEL OIL / GRAPEFRUIT PEEL OIL • CITRUS LIMON PEEL EXTRACT / LEMON PEEL EXTRACT • LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE • HEXYL CINNAMAL • PARFUM / FRAGRANCE (F.I.L. C191360/1).",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Coco-Betaine",
+      "PPG-5-Ceteth-20"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glycol Distearate",
+      "Octyldodecanol"
+    ],
+    "proteinsFilmFormers": [
+      "Hydroxypropyltrimonium Lemon Protein",
+      "Carbomer"
+    ],
+    "acids": [
+      "Salicylic Acid",
+      "Fumaric Acid",
+      "Citric Acid"
+    ],
+    "chelators": []
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      2
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      2
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      2,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      0,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      2
+    ],
+    "repairR1": [
+      2,
+      2
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      0,
+      0
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "general",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES is the lead surfactant with Coco-Betaine support, giving strong ordinary cleansing potential.",
+    "conditioningLevel": "Cationic guar plus a cationic lemon protein derivative and a small emollient signal support moderate non-silicone conditioning.",
+    "weightPotential": "The substantive cationic polymer route and protein-film signal create moderate deposition potential, but there is no silicone or rich lipid system.",
+    "focusPrimary": "Although the formula has scalp-exposure and conditioning signals, blind formula alone does not establish a dominant claim-compatible role, so general is retained.",
+    "focusSecondary": "Secondary focus defaults to empty because no distinct product-positioning signal is available in the blind pass.",
+    "usageRole": "Salicylic Acid does not by itself trigger treatment use, and there is no recognized anti-dandruff active or reset positioning, so regular applies.",
+    "scalpComfortTarget": "Salicylic Acid, fragrance allergens and citrus components create scalp exposure flags, but the formula does not prove a scalp-comfort target and is not suitable to classify as sensitive-scalp supportive.",
+    "dandruffSupport": "The complete formula does not list Piroctone Olamine or Climbazole."
+  },
+  "formulaObservations": [
+    "Sodium Laureth Sulfate and Coco-Betaine form the main cleansing system.",
+    "Guar Hydroxypropyltrimonium Chloride is a cationic deposition polymer.",
+    "Hydroxypropyltrimonium Lemon Protein is a cationic protein-derived film signal.",
+    "Salicylic Acid, Fumaric Acid and Citric Acid are present, but finished pH and contact-time intent are unknown.",
+    "Multiple fragrance allergens, citrus extracts and grapefruit peel oil are listed."
+  ],
+  "counterSignals": [
+    "Glycol Distearate should not be treated as hair shine evidence by itself.",
+    "Salicylic Acid is not Piroctone Olamine or Climbazole and does not make dandruffSupport supported.",
+    "Carbomer may be a rheology polymer rather than a hair-depositing film.",
+    "Botanical extracts, niacinamide and vitamins do not establish a dominant scalp-active or repair focus without claims or product evidence."
+  ],
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "low",
+    "dandruffSupport": "high"
+  },
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "39a5eb5df9bd0f5f4de759264869f29275f1cd7e54e4043fa73f39133ed6cbc3"
+  },
+  "payloadHash": "aa73546b2e1cbff0d635a5a4a9d404369fb8a9fb3b1a9a713991c8828db806b0",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "reason": "The product name and manufacturer claims emphasize Kraft/strength; formula support is compatible only as temporary cosmetic repair/surface reinforcement."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "finalValue": [
+        "shine"
+      ],
+      "reason": "Glanz is explicit in the name/claims and has an independent smoothing/film route, so one secondary `shine` is justified; volume is left out to respect ordinary max-one secondary."
+    }
+  ],
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "repair",
+      "formulaCompatible": true,
+      "formulaRoute": "Cationic guar plus cationic lemon protein derivative supports temporary cosmetic strength/repair surface care.",
+      "decisionReason": "Kraft/kräftigendes wording is dominant; shine remains a distinct secondary because it is explicit and formula-routed."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [
+        "shine"
+      ],
+      "claimDirections": [
+        "shine"
+      ],
+      "independentFormulaRoutes": [
+        "Cationic guar/protein film plus Glycol Distearate/Octyldodecanol support smoothing/reflection shine separately from the strength claim."
+      ],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "No non-default trigger: strong cleansing blocks frequent, and there is no reset or recognized anti-dandruff active route."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "mid",
+          "evidence": "Guar Hydroxypropyltrimonium Chloride is a substantive cationic deposition route."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "weak",
+          "ingredientPosition": "mid",
+          "evidence": "Hydroxypropyltrimonium Lemon Protein supports a weak-to-moderate temporary film cue."
+        },
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Octyldodecanol and Glycol Distearate provide limited emollient/pearlizer support, not a rich lipid route."
+        }
+      ],
+      "competingSignals": [
+        "No silicone or second substantive deposition route."
+      ],
+      "confidenceLimit": "ingredient_position"
+    }
+  }
+}

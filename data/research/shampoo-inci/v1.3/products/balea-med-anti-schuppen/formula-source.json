@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "shampoo-research-formula-v1",
+  "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+  "market": "DE",
+  "packSize": "250 ml",
+  "gtinEan": "4066447785425",
+  "formulaCode": null,
+  "capturedAt": "2026-08-10T22:15:00.000+02:00",
+  "formulaSourceType": "official",
+  "sourceRecords": [
+    {
+      "id": "dm-de-balea-med-anti-schuppen-4066447785425-2026-08-10",
+      "type": "official",
+      "market": "DE",
+      "capturedAt": "2026-08-10T22:15:00.000+02:00",
+      "locator": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+      "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | COCO|GLUCOSIDE | PANTHENOL | BISABOLOL | NIACINAMIDE | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | GLYCERIN | PIROCTONE OLAMINE | TOCOPHEROL | SODIUM CHLORIDE | GLYCERYL OLEATE | LAURETH|2 | HYDROGENATED PALM GLYCERIDES CITRATE | CITRIC ACID | SODIUM BENZOATE."
+    }
+  ],
+  "rawInci": "AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | COCO|GLUCOSIDE | PANTHENOL | BISABOLOL | NIACINAMIDE | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | GLYCERIN | PIROCTONE OLAMINE | TOCOPHEROL | SODIUM CHLORIDE | GLYCERYL OLEATE | LAURETH|2 | HYDROGENATED PALM GLYCERIDES CITRATE | CITRIC ACID | SODIUM BENZOATE.",
+  "normalizedInci": [
+    "aqua",
+    "sodium laureth sulfate",
+    "cocamidopropyl betaine",
+    "coco-glucoside",
+    "panthenol",
+    "bisabolol",
+    "niacinamide",
+    "guar hydroxypropyltrimonium chloride",
+    "glycerin",
+    "piroctone olamine",
+    "tocopherol",
+    "sodium chloride",
+    "glyceryl oleate",
+    "laureth|2",
+    "hydrogenated palm glycerides citrate",
+    "citric acid",
+    "sodium benzoate"
+  ],
+  "inciFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c",
+  "identityConfidence": "moderate",
+  "conflictStatus": "none"
+}

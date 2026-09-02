@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W032",
+  "formula": {
+    "inciFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595",
+    "sourceTier": "retailer",
+    "capturedAt": "2026-08-10T20:30:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "low"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "silicone",
+        "name": "dimethiconol",
+        "position": 10
+      },
+      {
+        "family": "silicone",
+        "name": "dimethicone",
+        "position": 13
+      },
+      {
+        "family": "cationic_polymer",
+        "name": "guar hydroxypropyltrimonium chloride",
+        "position": 15
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium laureth sulfate",
+        "position": 2
+      },
+      {
+        "family": "anionic_surfactant",
+        "name": "sodium lauryl sulfate",
+        "position": 3
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 6
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "glycol distearate",
+        "position": 7,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": []
+  },
+  "depositionLoad": {
+    "value": "moderate",
+    "rationale": "Dimethiconol, Dimethicone und kationisches Guar liefern relevante Deposition, liegen aber nach einer sehr starken Tensid-/Hydrotrop-Front."
+  },
+  "persistence": {
+    "value": "high",
+    "rationale": "Die beiden Silikonformen plus kationisches Polymer sind grundsätzlich persistent."
+  },
+  "resetCapacity": {
+    "value": "strong",
+    "rationale": "SLES, SLS, Sodium Xylenesulfonate und CAPB sprechen für sehr hohe Reset-Kapazität."
+  },
+  "competingSignals": [
+    "Sehr starke frühe anionische Reinigung begrenzt die schwere Wirkung.",
+    "Depositionssignale beginnen erst ab Position 10."
+  ],
+  "unresolvedFacts": [
+    "Formelidentität ist niedrig sicher."
+  ],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Moderate ist der beste vorläufige Band, weil persistente Silikon-/Polymerdeposition vorhanden ist, aber eine starke Reinigungsarchitektur dagegensteht.",
+  "whyNotNeighborBand": "Low wäre für zwei Silikone plus kationisches Polymer zu niedrig; High bleibt wegen später Depositionspositionen, starkem Reset und niedriger Identitätssicherheit unsicher.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Niedrige Formelidentität macht die genaue Bandentscheidung trotz vollständiger INCI nur vorläufig."
+  }
+}

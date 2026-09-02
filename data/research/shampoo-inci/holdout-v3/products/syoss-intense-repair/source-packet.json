@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "shampoo-research-source-packet-v1",
+  "productId": "holdout-v3:syoss-intense-repair",
+  "candidateId": "syoss-intense-repair",
+  "capturedAt": "2026-09-01T18:16:12+02:00",
+  "exactIdentity": {
+    "brand": "Syoss",
+    "name": "Intense Repair Shampoo",
+    "market": "DE",
+    "packSize": "440 ml",
+    "gtinAliases": [
+      "4015100860382"
+    ]
+  },
+  "selectionArchetype": "repair-positioned shampoo for dry or damaged hair",
+  "canonicalFormulaSourceUrl": "https://www.dm.de/p/d/3047031/syoss-shampoo-intense-repair",
+  "manufacturerFormulaAvailability": "unavailable",
+  "retailerFallbackReason": "No current German manufacturer formula was captured for this exact pack; dm Germany supplies the formula tied to the selected product.",
+  "sourcePriorityRationale": "No complete manufacturer formula is used for this exact product packet; the selected German retailer formula is canonical.",
+  "officialClaimSummary": [
+    "repair direction",
+    "dry/damaged hair direction",
+    "protein-care claim direction"
+  ],
+  "claimDirectionsRelevantToFocusUsage": [
+    "Repair positioning is permitted later focus evidence.",
+    "The regular shampoo framing is permitted for later usage-role review."
+  ],
+  "corroboratingUrls": [
+    "https://www.syoss.de/",
+    "https://www.budni.de/sortiment/produkte/6500479005"
+  ],
+  "conflictingUrls": [],
+  "deepCleansingExclusion": {
+    "excluded": false,
+    "evidence": "The frozen source packet does not position this exact SKU as a true deep-cleansing or periodic-reset product."
+  },
+  "notes": "Retailer-sourced formula; source packet preserves the exact selected German product identity.",
+  "officialProductPage": "https://www.syoss.de/"
+}

@@ -1,0 +1,166 @@
+{
+  "candidate_id": "dove-taegliche-feuchtigkeit-2in1",
+  "blindCode": "J",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Dimethiconol, Sodium Gluconate, Glycerin, Parfum, Lysine HCl, Arginine, Cocos Nucifera Oil, Hydrolyzed Soy Protein, Sodium Chloride, Citric Acid, Glycol Distearate, Sodium Benzoate, Carbomer, TEA-Dodecylbenzenesulfonate, TEA-Sulfate, Guar Hydroxypropyltrimonium Chloride, PEG-45M, Mica, Disodium EDTA, Cocamide MEA, Phenoxyethanol, PPG-6, Sodium Hydroxide, Benzyl Alcohol, Citronellol, Hexyl Cinnamal, Limonene, Linalool, CI 15985, CI 19140, CI 77891.",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "TEA-Dodecylbenzenesulfonate",
+      "TEA-Sulfate",
+      "Cocamide MEA",
+      "PPG-6"
+    ],
+    "cationicPolymers": [
+      "Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [
+      "Dimethiconol"
+    ],
+    "conditioningLipidsAmines": [
+      "Glycerin",
+      "Cocos Nucifera Oil",
+      "Glycol Distearate"
+    ],
+    "proteinsFilmFormers": [
+      "Lysine HCl",
+      "Arginine",
+      "Hydrolyzed Soy Protein",
+      "PEG-45M"
+    ],
+    "acids": [
+      "Citric Acid"
+    ],
+    "chelators": [
+      "Sodium Gluconate",
+      "Disodium EDTA"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      3,
+      3
+    ],
+    "weightBuildup": [
+      2,
+      2
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      0,
+      1
+    ],
+    "shineS3": [
+      1,
+      2
+    ],
+    "shineS4": [
+      0,
+      1
+    ],
+    "volumeV1": [
+      1,
+      2
+    ],
+    "volumeV2": [
+      1,
+      2
+    ],
+    "volumeV3": [
+      1,
+      2
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      1,
+      2
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      0,
+      1
+    ],
+    "organicClarification": [
+      1,
+      2
+    ],
+    "inorganicChelation": [
+      1,
+      2
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "moderate",
+    "focusPrimary": "repair",
+    "focusSecondary": [
+      "shine"
+    ],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "dandruff_support": {
+    "value": "not_supported",
+    "rationale": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES plus zusätzliche anionische/MEA-Co-Tenside stützen starke Reinigung.",
+    "conditioningLevel": "Frühes Dimethiconol, kationischer Guar, Kokosöl und Protein-/Aminosäure-Cues ergeben hohe Shampoo-Pflege.",
+    "weightPotential": "Die Deposition ist klar, wird aber durch starke Reinigung und 2-in-1-Rinse-off-Format auf moderat begrenzt.",
+    "focusPrimary": "Die stärkste kompakte Richtung ist Repair/Schutz über Silikon-, Guar-, Öl- und Proteinfilm.",
+    "focusSecondary": "Die gleiche Glättungsroute kann Shine unterstützen.",
+    "usageRole": "Trotz 2-in-1-Pflege wirkt die Formel wie ein reguläres Alltagsprodukt.",
+    "scalpComfortTarget": "Keine dedizierte Kopfhautkomfortroute ist sichtbar.",
+    "dandruffSupport": "Weder Piroctone Olamine noch Climbazole sind enthalten."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "moderate",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES und weitere Co-Tenside stützen starke Reinigung.",
+    "Dimethiconol steht früh; kationischer Guar, Kokosöl, Hydrolyzed Soy Protein und Aminosäuren stützen eine 2-in-1-Pflege-/Repair-Route.",
+    "Sodium Gluconate und Disodium EDTA liefern erkennbare, aber nicht als Reset beworbene Chelator-Cues; Piroctone Olamine/Climbazole fehlen."
+  ],
+  "counterSignals": [
+    "INCI erlaubt keine exakten Einsatzmengen, fertigen pH-Werte oder Depositionsergebnisse.",
+    "Claims, Marke und Produktname wurden in dieser blinden Einstufung nicht verwendet."
+  ],
+  "payloadHash": "2877c0585dfd5052466775e1558522b9f3f2bf0c4cbe8b22e1eea261d5159746",
+  "finalDelta": []
+}

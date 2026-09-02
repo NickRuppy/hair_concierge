@@ -1,0 +1,558 @@
+{
+  "schemaVersion": "shampoo-research-audit-v1",
+  "modelVersion": "shampoo-inci-v1.4-draft",
+  "formulaVersionId": "holdout-v2:isana-professional-plex:375479ebe8b3a2fa7f4a250d6455cb171f88b69e0d311b8fd1b660f796d0ab97",
+  "analysisStatus": "provisional",
+  "formulaPass": {
+    "observations": [
+      "SLES-led cleansing is combined with Cocamidopropyl Betaine and Coco-Glucoside.",
+      "Panthenol, rice protein, wheat protein, soy protein, rice amino acids and proline form a multi-protein/amino-acid cluster.",
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride provide cationic deposition/bodying routes.",
+      "Phytic Acid supplies a recognizable chelator signal and appears relatively early.",
+      "Glyceryl Oleate, hydrogenated palm glycerides citrate and lecithin add refatting support.",
+      "Post-unblind score adjustment: shineS2 [1,2] -> [1,1] and repairR4 [1,2] -> [1,1]; multiple acids do not disclose finished pH, and breakage claims do not prove a named stressor-protection endpoint in shampoo-only evidence."
+    ],
+    "completedBeforeClaimReview": true,
+    "claimAuditComplete": true
+  },
+  "claims": [
+    {
+      "textVerbatim": "Plex-Serie stärkt das Haar von innen und außen; Phytoprotein-Komplex aus Reis, Soja und Weizen; für geschädigte Haarstruktur, Spliss und Haarbruch.",
+      "sourceLocation": "product_page",
+      "scope": "unclear",
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ]
+    }
+  ],
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Oryza Sativa Seed Protein",
+      "Hydrolyzed Adansonia Digitata Seed Extract",
+      "Hydrolyzed Wheat Protein",
+      "Hydrolyzed Soy Protein",
+      "Rice Amino Acids",
+      "Proline"
+    ],
+    "acids": [
+      "Phytic Acid",
+      "Citric Acid",
+      "Lactic Acid",
+      "Gluconolactone",
+      "Sodium Lactate"
+    ],
+    "chelators": [
+      "Phytic Acid"
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "SLES steht sehr früh und wird nur durch CAPB/Coco-Glucoside abgepuffert; damit bleibt die direkte Reinigungsstärke stark.",
+      "supportingSignals": [
+        {
+          "observation": "SLES steht früh und wird durch CAPB/Coco-Glucoside nur moderiert.",
+          "inference": "SLES steht sehr früh und wird nur durch CAPB/Coco-Glucoside abgepuffert; damit bleibt die direkte Reinigungsstärke stark.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "cleansingStrength-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Refatting und Polymere können das Gefühl abmildern, machen die SLES-Leitbasis aber nicht moderat.",
+          "inference": "Refatting und Polymere können das Gefühl abmildern, machen die SLES-Leitbasis aber nicht moderat.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "cleansingStrength-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic starch, cationic guar, Glyceryl Oleate und ein breiter Protein-/Aminosäurecluster stützen hohes temporäres Conditioning ohne Silikon.",
+      "supportingSignals": [
+        {
+          "observation": "Zwei kationische Polymer-/Stärkerouten plus mehrere Protein-/Aminosäuresignale ergeben hohe nicht-silikonische Deposition.",
+          "inference": "Cationic starch, cationic guar, Glyceryl Oleate und ein breiter Protein-/Aminosäurecluster stützen hohes temporäres Conditioning ohne Silikon.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "conditioningLevel-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Ohne Fertigproduktdaten bleibt die Höhe mechanistisch, nicht gemessen.",
+          "inference": "Ohne Fertigproduktdaten bleibt die Höhe mechanistisch, nicht gemessen.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "conditioningLevel-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "weightPotential": {
+      "value": "high",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Cationic-Polymer-Deposition und protein-/aminoacidbasierter Film sind zwei unterschiedliche substantive Route-Arten; nach v1.4 bleibt das Gewichtspotenzial hoch.",
+      "supportingSignals": [
+        {
+          "observation": "Cationic polymers and protein-film route are distinct substantive deposition route kinds.",
+          "inference": "Cationic-Polymer-Deposition und protein-/aminoacidbasierter Film sind zwei unterschiedliche substantive Route-Arten; nach v1.4 bleibt das Gewichtspotenzial hoch.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "weightPotential-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Keine Silikone oder reichen Öle; die hohe Klasse beruht auf Polymer/Protein-Film, nicht auf Ölglanz.",
+          "inference": "Keine Silikone oder reichen Öle; die hohe Klasse beruht auf Polymer/Protein-Film, nicht auf Ölglanz.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26",
+        "pubmed-coacervate-17728938"
+      ],
+      "sharedMechanismIds": [
+        "weightPotential-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Nach Unblindung ist Plex/geschädigte Haarstruktur klar dominant; die Formel ist dafür als temporäre kosmetische Repair-/Filmroute kompatibel, nicht als echte Bindungsreparatur.",
+      "supportingSignals": [
+        {
+          "observation": "Plex-/Protein-/geschädigte-Haarstruktur-Claims passen zu temporärer Repair-/Oberflächenpflege.",
+          "inference": "Nach Unblindung ist Plex/geschädigte Haarstruktur klar dominant; die Formel ist dafür als temporäre kosmetische Repair-/Filmroute kompatibel, nicht als echte Bindungsreparatur.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusPrimary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Plex ist ein Claim-Cue; Repair wird konservativ als temporäre Oberflächenpflege verstanden.",
+          "inference": "Plex ist ein Claim-Cue; Repair wird konservativ als temporäre Oberflächenpflege verstanden.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusPrimary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "focusSecondary": {
+      "value": [],
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Volumen-/Body-Signale entstehen aus derselben Polymer-/Proteinarchitektur und sind nicht separat positioniert; secondary bleibt leer.",
+      "supportingSignals": [
+        {
+          "observation": "Kein separater zweiter Fokus bleibt unabhängig vom Repair-Claim.",
+          "inference": "Volumen-/Body-Signale entstehen aus derselben Polymer-/Proteinarchitektur und sind nicht separat positioniert; secondary bleibt leer.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "focusSecondary-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Starke V2-Body-Scores rechtfertigen ohne Claim keinen sekundären Volume-Fokus.",
+          "inference": "Starke V2-Body-Scores rechtfertigen ohne Claim keinen sekundären Volume-Fokus.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "focusSecondary-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "usageRole": {
+      "value": "regular",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Trotz starker Reinigung fehlt Reset-, Tiefenreinigungs- oder anerkannter Wirkstoff-Problem-Intent; default regular bleibt.",
+      "supportingSignals": [
+        {
+          "observation": "Die Quelle beschreibt normale Shampooanwendung.",
+          "inference": "Trotz starker Reinigung fehlt Reset-, Tiefenreinigungs- oder anerkannter Wirkstoff-Problem-Intent; default regular bleibt.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "usageRole-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Strong cleansing alone does not create alternating under v1.4.",
+          "inference": "Strong cleansing alone does not create alternating under v1.4.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "usageRole-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "decisionType": "direct_product_property",
+      "confidence": "moderate",
+      "confidenceCeiling": "moderate_to_moderately_high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die Claims zielen auf Haarstruktur, Spliss und Haarbruch; keine trockene, juckende oder sensitive Kopfhautroute wird unblindet sichtbar.",
+      "supportingSignals": [
+        {
+          "observation": "Die Positionierung adressiert Haarbruch/Spliss, nicht kosmetischen Kopfhautkomfort.",
+          "inference": "Die Claims zielen auf Haarstruktur, Spliss und Haarbruch; keine trockene, juckende oder sensitive Kopfhautroute wird unblindet sichtbar.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "scalpComfortTarget-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Fragrance exposure is visible but does not by itself imply scalp unsuitability.",
+          "inference": "Fragrance exposure is visible but does not by itself imply scalp unsuitability.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ],
+      "sharedMechanismIds": [
+        "scalpComfortTarget-1"
+      ],
+      "reviewStatus": "provisional"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "decisionType": "direct_product_property",
+      "confidence": "high",
+      "confidenceCeiling": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "formula_only",
+      "rationale": "Die vollständige INCI enthält keinen der gesperrten Anti-Schuppen-Wirkstoffe Piroctone Olamine oder Climbazole.",
+      "supportingSignals": [
+        {
+          "observation": "Piroctone Olamine und Climbazole fehlen in der vollständigen INCI.",
+          "inference": "Die vollständige INCI enthält keinen der gesperrten Anti-Schuppen-Wirkstoffe Piroctone Olamine oder Climbazole.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ],
+          "mechanismIds": [
+            "dandruffSupport-1"
+          ]
+        }
+      ],
+      "counterSignals": [
+        {
+          "observation": "Phytic Acid/Chelation is not an accepted dandruff active route.",
+          "inference": "Phytic Acid/Chelation is not an accepted dandruff active route.",
+          "sourceIds": [
+            "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+          ]
+        }
+      ],
+      "derivedFrom": [],
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26",
+        "eu-1223-article-19"
+      ],
+      "sharedMechanismIds": [
+        "dandruffSupport-1"
+      ],
+      "reviewStatus": "provisional"
+    }
+  },
+  "exposureFlags": {
+    "silicones": "verified_absent",
+    "fragrance": "present",
+    "sensoryActives": "verified_absent",
+    "acidExfoliants": "present"
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      1
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      3,
+      3
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      2,
+      3
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      1
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      2
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "gateDiagnostics": {
+    "scores2PlusGateRationales": {
+      "cleansing": {
+        "g1FunctionalRelevance": "Reinigungsstärke: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Reinigungsstärke: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Reinigungsstärke: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "conditioningDeposition": {
+        "g1FunctionalRelevance": "Conditioning/Deposition: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Conditioning/Deposition: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Conditioning/Deposition: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "weightBuildup": {
+        "g1FunctionalRelevance": "Beschwerung/Residue: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Beschwerung/Residue: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Beschwerung/Residue: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "shineS1": {
+        "g1FunctionalRelevance": "Glättungs-/Reflexionsglanz S1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Glättungs-/Reflexionsglanz S1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Glättungs-/Reflexionsglanz S1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV1": {
+        "g1FunctionalRelevance": "Leichtigkeitsvolumen V1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Leichtigkeitsvolumen V1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Leichtigkeitsvolumen V1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "volumeV2": {
+        "g1FunctionalRelevance": "Film-/Body-Volumen V2: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Film-/Body-Volumen V2: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Film-/Body-Volumen V2: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "smoothing": {
+        "g1FunctionalRelevance": "Smoothing: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Smoothing: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Smoothing: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR1": {
+        "g1FunctionalRelevance": "temporäre Oberflächenpflege R1: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "temporäre Oberflächenpflege R1: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "temporäre Oberflächenpflege R1: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "repairR2": {
+        "g1FunctionalRelevance": "Film-/Protein-Support R2: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Film-/Protein-Support R2: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Film-/Protein-Support R2: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "inorganicChelation": {
+        "g1FunctionalRelevance": "anorganische Chelation: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "anorganische Chelation: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "anorganische Chelation: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      },
+      "mildnessPotential": {
+        "g1FunctionalRelevance": "Mildness-Potenzial: Die benannten INCI-/Claim-Signale sind funktional relevant für diesen Shampoo-Endpunkt.",
+        "g2FormulaRelevanceAndDelivery": "Mildness-Potenzial: Die Signale erscheinen in einer plausiblen rinse-off Formelposition oder als zusammenhängendes System.",
+        "g3EndpointSpecificity": "Mildness-Potenzial: Der Schluss bleibt auf den konkreten kosmetischen Shampoo-Endpunkt begrenzt und wird nicht zu Nutzerfit, klinischer Wirkung oder Prozentannahme erweitert."
+      }
+    },
+    "weightDepositionLoad": "Die Beschwerung wird qualitativ aus v1.4-Route-Arten abgeleitet; INCI liefert keine exakten Einsatzmengen oder Wiederholungs-/Residue-Daten.",
+    "weightPersistence": "Persistenz bleibt mechanistisch begrenzt, weil keine wiederholten Shampoo-only Ablagerungsdaten im Quellenpaket vorliegen.",
+    "weightResetCapacity": "Reset-Kapazität wird nur aus Tensid-/Chelator-/Klärungsarchitektur abgeleitet; keine Fertigprodukt-Resetprüfung ist erfasst.",
+    "r4TargetStressor": null,
+    "r4ProtectiveRoute": null,
+    "r3FormulaSignalNote": "Keine anerkannte echte Bond-Repair-Route wird aus INCI abgeleitet; Plex/Keratin/Protein-Sprache bleibt kosmetisch und temporär.",
+    "r3EvidenceScope": "unclear",
+    "removalTarget": "both"
+  },
+  "routeDiagnostics": {
+    "acidNameOnly": true,
+    "isolatedPolymerOrProtein": false,
+    "bondCueOnly": false,
+    "r4StressorProtectionMissing": false,
+    "lateChelator": false,
+    "depositorWeightMismatch": false,
+    "resetLinkMissing": false
+  },
+  "evidence": {
+    "level": "E2",
+    "tests": [],
+    "scopeNotes": "Exact-market formula and unblinded product/source-packet claim audit only; no public shampoo-only finished-product performance endpoint is captured."
+  },
+  "claimAudit": [
+    {
+      "claim": "Plex/Phytoprotein-Komplex für geschädigte Haarstruktur, Spliss und Haarbruch",
+      "verdict": "plausible",
+      "support": "Die Formel enthält Panthenol, mehrere Protein-/Aminosäure-Signale sowie cationic starch und cationic guar; das passt zu temporärer Film-, Griff- und Oberflächenpflege.",
+      "limitation": "Plex und von innen/außen darf nicht als echte Bindungsreparatur oder Splissheilung gelesen werden; shampoo-only Tests fehlen.",
+      "sourceIds": [
+        "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+      ]
+    }
+  ],
+  "sourceIds": [
+    "rossmann-de-isana-professional-plex-4305615975917-2026-08-26"
+  ],
+  "medicalBoundary": {
+    "status": "clear",
+    "rationale": "Plex, split-end and breakage language is treated as cosmetic damage-care positioning, not medical treatment."
+  }
+}

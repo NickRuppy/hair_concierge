@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "shampoo-final-weight-rerun-manifest-v1",
+  "releaseHash": "c76ee4696ed8d7177bc8ca7d88f81b93e0622e89ad6cd270b51636cf78db8f16",
+  "policyPath": "docs/research/shampoo-inci/v1.4-draft/weight-potential-final-method.md",
+  "policySha256": "6437326719c66e79900259d7b413436a05ac5d36a792f00526fd4088ac168f78",
+  "counts": {
+    "total": 51,
+    "approved": 50,
+    "blocked": 1
+  },
+  "members": [
+    {
+      "outcome": "approved",
+      "candidateId": "guhl-kopfhaut-sensitive",
+      "formulaFingerprint": "681964e5ef51b99a774c0607cd8f1256e365de37303cc792b4a8ab67e0c5b3c0"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "salthouse-anti-fett",
+      "formulaFingerprint": "e957191d1942c0a61a223a39eb35466b0cc7b6e80438b3e9437640155a107512"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "head-shoulders-dermaxpro-shampoo-beruhigende-pflege",
+      "formulaFingerprint": "652a46750452985f7195830e08b2d4f10ff420fb00164a889abafa596fee3b0b"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "wahre-schatze-sanfte-hafermilch",
+      "formulaFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "langhaarmaedchen-beautiful-curls",
+      "formulaFingerprint": "a0797027e213ae6c61d9e405a4d50f050d239acdc8a85f9bf7a7b0249f60c5c8"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "guhl-hyaluron-plus",
+      "formulaFingerprint": "e9514b0eaa775626d124eb50372678918fdaf583dbb7bd807f74a3fca29389f5"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "hask-argan-oil",
+      "formulaFingerprint": "332844d4b18f676c712e29d7e18953a22f87e56dd42ea1e2f155da8e803ce481"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "salthouse-anti-juckreiz",
+      "formulaFingerprint": "67710fa629a81bd8e45327347deae333f1bbe7d9797f09f92e880415ca33a86b"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "dejan-garz-shampoo",
+      "formulaFingerprint": "dbdfbf17314d45145a3956e20a5f0ca2636d788e9359cd7f9005aedaf7dccaad"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "salthouse-anti-schuppen",
+      "formulaFingerprint": "d8d7e35eaa0992007e149e6e83ffe8d8462cb858f9c701b383a8e5ce736311ee"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "ogx-renewing",
+      "formulaFingerprint": "37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sebamed-anti-schuppen",
+      "formulaFingerprint": "f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "lavera-basis-sensitiv",
+      "formulaFingerprint": "c6a6bcfdddda7ab1e0edb6da7b5d3b1fe4bd021c86ff2bc13a6ef052048d7ea3"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "ogx-biotin-collagen",
+      "formulaFingerprint": "b1c71405cd2bfc449d8a138c11c947dfd135a8cfcc63cb4920649af4b3ad4471"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "syoss-intense-curls",
+      "formulaFingerprint": "cc0b2772e284a8bee0636a3833f85dc843313df513347d0415c388e78b47b3ae"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "swiss-o-par-teebaumol",
+      "formulaFingerprint": "100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sebamed-urea-5",
+      "formulaFingerprint": "9230bafda92f2719f7140a61d047ec26300c3b131e634376beeb7070ac928121"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sante-glossy-shine",
+      "formulaFingerprint": "6799fc664da9c91a99fde49429e167e6eeb2d542e83ef9f76ef7d202621abdfd"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "pantene-anti-schuppen",
+      "formulaFingerprint": "7a8423301829ac6ba462b14808039344b5b958320a68a432f9c7e0d01d1e5a88"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "neqi-volume-victory",
+      "formulaFingerprint": "3c99230c6206aff8cbe3b79544424ee68699d076c45a0eead9a5dd90a41e29ef"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sante-sensitive-care",
+      "formulaFingerprint": "c337918b71d78b7d8273ede21cbb9dd9706c10df991ee8c93544d4d1c22d343e"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "monday-volume-kraft-fuelle",
+      "formulaFingerprint": "7a10a2727d45b3e6c3383df986d8a474bb3eea2783c6cec2a16c94897adfa490"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "pantene-pro-v-volumen-pur",
+      "formulaFingerprint": "573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "head-shoulders-sensitive",
+      "formulaFingerprint": "048df67c8756ebcc6e8e0a83410ccd117b40411fe9c32a48ae64ed96cbfb8c02"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "pantene-grow-abundance",
+      "formulaFingerprint": "753375521db75018110fc216df92ba50670d4135e00ab360576b0251fc90a62d"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "guhl-anti-schuppen",
+      "formulaFingerprint": "e74bc4e08a06833cdb1c42bbd857db4984aea14de8037c5d69bc9b3415aff054"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "ogx-rosemary",
+      "formulaFingerprint": "915d74b99e4a12fddd22cc55872e6040095dc7b56617aa6e91a308ceafa0fcad"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sebamed-anti-schuppen-plus",
+      "formulaFingerprint": "0feac03a572453326568640ca50d3482bc3dcefd225f07c8f17a3293c924a31f"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "loreal-elvital-glycolic-gloss",
+      "formulaFingerprint": "aba7d11362555b1af2d27b7e554fd1e22f6cf7047e64f85d1792238f2ed7477c"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "guhl-kraft-und-fuelle",
+      "formulaFingerprint": "d04e0026e4afc1484135abd827ec1bcbce4cf5fbb536f878ef2e7fb6e1c820d3"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "schauma-anti-schuppen",
+      "formulaFingerprint": "293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "hair-biology-revitalize-soothe",
+      "formulaFingerprint": "0dcb369410641ba5bbce05200981e450139691238c3bb5db9615571212168595"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "cantu-locken-pflege",
+      "formulaFingerprint": "b69793db1e123671fdbc225549d69545ee85e2ce12f49e92149793ab5db3cf56"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-ultra-sensitive",
+      "formulaFingerprint": "fae3f71fc606b2f418d97bdd9081ae9bcb7dd1e8f165cbba430f7e94ca8f0b64"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "neqi-moisture-mystery",
+      "formulaFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-2-in-1-urea-5",
+      "formulaFingerprint": "2c4bbaf7d5b4381f4add019d2805672fce6d18e3f7c1199e14e62aab2006d6ab"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "syoss-intense-fullness-shampoo",
+      "formulaFingerprint": "3052b15ff7261233ee7e5e5ff7de0bfe8f8ddec43fa06e2e4352751bb703497d"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "ogx-keratin-oil",
+      "formulaFingerprint": "e4bb8fd4d4db91630b378fbb965b04ae8024c9045d8af37fa7c9d40778d45d1e"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "hask-curl-care",
+      "formulaFingerprint": "1d582e99e87d6b15eb65b3848a7b5c2de008f8a441def2869db40eb4b72c0ec2"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "guhl-frische-und-leichtigkeit",
+      "formulaFingerprint": "a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-professional-ultimate-volume",
+      "formulaFingerprint": "8c9386d5037f4e7f0d6c490898999bd0385753be707f78384a1800139303f1fe"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "head-shoulders-dermaxpro-haarshampoo-sensitive-pflege",
+      "formulaFingerprint": "e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "langhaarmadchen-lovely-long",
+      "formulaFingerprint": "59e7c96fdbf7505897e9a8918568e5ca71b66c6a8a1a0ae5639b314f02430662"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "sebamed-every-day-shampoo",
+      "formulaFingerprint": "0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-aqua-hyaluron",
+      "formulaFingerprint": "e99417ccdf7eaae5ef0f93c3fe220bbafc736f57e146a81c224303e74daf5816"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-kopfhaut-sensitive",
+      "formulaFingerprint": "0c0e78f8dcccb0915b26853ec70129e9537540b62c8ef99acd21272c4f71c35c"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "nivea-shampoo-conditioner-2in1",
+      "formulaFingerprint": "1c46da3ba762ff79d62e8ffa6393fc369883048f1c531a35558cb9a8634b02be"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "balea-med-anti-schuppen",
+      "formulaFingerprint": "fed597018c7dce657c84d78aa876d1fb50864e10178e82938e3c8ef407f9241c"
+    },
+    {
+      "outcome": "blocked",
+      "candidateId": "ogx-renewing-argan-oil-of-morocco-renewing-argan-oil-of-morocco-shampoo",
+      "blockerCode": "catalog_entry_superseded",
+      "reason": "Veralteter doppelter Katalogeintrag: Die legacy GTIN 022796976116 ist nicht eindeutig einer aktuellen deutschen Formel zuzuordnen und wird durch den aktuellen deutschen OGX-Renewing-Argan-Oil-Produktsatz mit eigener UUID/GTIN ersetzt. Dieser Eintrag bleibt blockiert und darf erst nach Bestätigung durch Catalog Authority aus dem Kohortensnapshot entfernt werden; die Kohorte wird nicht stillschweigend verändert."
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "syoss-intense-volume-shampoo",
+      "formulaFingerprint": "a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d"
+    },
+    {
+      "outcome": "approved",
+      "candidateId": "pantene-hydra-glow",
+      "formulaFingerprint": "f45c59566ca76f54a65272f0a27c79a088f08011c302530b9825fff04a8a0441"
+    }
+  ]
+}

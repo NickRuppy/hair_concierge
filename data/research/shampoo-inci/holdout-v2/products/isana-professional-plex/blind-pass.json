@@ -1,0 +1,226 @@
+{
+  "candidate_id": "isana-professional-plex",
+  "blindCode": "C",
+  "rawInci": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Oryza Sativa Seed Protein, Phytic Acid, Tocopherol, Ascorbyl Palmitate, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Parfum, Glycerin, Glyceryl Oleate, Calcium Gluconate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Coco-Glucoside, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Lactate, Sodium Hydroxide, Lactic Acid, Gluconolactone",
+  "formulaArchitecture": {
+    "surfactantsPrimary": [
+      "Sodium Laureth Sulfate"
+    ],
+    "surfactantsSecondary": [
+      "Cocamidopropyl Betaine",
+      "Coco-Glucoside"
+    ],
+    "cationicPolymers": [
+      "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "silicones": [],
+    "conditioningLipidsAmines": [
+      "Glyceryl Oleate",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Lecithin"
+    ],
+    "proteinsFilmFormers": [
+      "Panthenol",
+      "Oryza Sativa Seed Protein",
+      "Hydrolyzed Adansonia Digitata Seed Extract",
+      "Hydrolyzed Wheat Protein",
+      "Hydrolyzed Soy Protein",
+      "Rice Amino Acids",
+      "Proline"
+    ],
+    "acids": [
+      "Phytic Acid",
+      "Citric Acid",
+      "Lactic Acid",
+      "Gluconolactone",
+      "Sodium Lactate"
+    ],
+    "chelators": [
+      "Phytic Acid"
+    ]
+  },
+  "scoreRanges": {
+    "cleansing": [
+      3,
+      3
+    ],
+    "conditioningDeposition": [
+      2,
+      3
+    ],
+    "weightBuildup": [
+      3,
+      3
+    ],
+    "shineS1": [
+      2,
+      3
+    ],
+    "shineS2": [
+      1,
+      2
+    ],
+    "shineS3": [
+      1,
+      1
+    ],
+    "shineS4": [
+      0,
+      0
+    ],
+    "volumeV1": [
+      2,
+      3
+    ],
+    "volumeV2": [
+      3,
+      3
+    ],
+    "volumeV3": [
+      1,
+      1
+    ],
+    "volumeV4": [
+      0,
+      0
+    ],
+    "smoothing": [
+      2,
+      3
+    ],
+    "repairR1": [
+      2,
+      3
+    ],
+    "repairR2": [
+      2,
+      3
+    ],
+    "repairR3": [
+      0,
+      0
+    ],
+    "repairR4": [
+      1,
+      2
+    ],
+    "organicClarification": [
+      1,
+      1
+    ],
+    "inorganicChelation": [
+      1,
+      2
+    ],
+    "mildnessPotential": [
+      1,
+      2
+    ]
+  },
+  "properties": {
+    "cleansingStrength": "strong",
+    "conditioningLevel": "high",
+    "weightPotential": "high",
+    "focusPrimary": "volume",
+    "focusSecondary": [],
+    "usageRole": "regular",
+    "scalpComfortTarget": "not_targeted",
+    "dandruffSupport": "not_supported"
+  },
+  "propertyRationales": {
+    "cleansingStrength": "SLES is the second ingredient and is supported by betaine and glucoside co-surfactants, so cleansing potential is strong.",
+    "conditioningLevel": "Two cationic polymer routes, glyceryl oleate and multiple protein/amino-acid film signals create high non-silicone conditioning and surface-deposition potential.",
+    "weightPotential": "Under the exact v1.4 route-kind threshold, the cationic polymer route and the multi-protein/cationic starch film route are both treated as substantive distinct deposition routes, so weightPotential moves to high; strong cleansing is a competing feel signal but does not cancel those deposition routes.",
+    "focusPrimary": "The formula itself unusually concentrates clean-root support plus cationic starch/guar and multiple proteins, making a body/volume role the clearest blind formula-derived focus.",
+    "focusSecondary": "Secondary focus remains empty because no claim-led independent secondary positioning is available in the blind pass.",
+    "usageRole": "Strong cleansing alone is not a reset trigger under v1.4, and no treatment or frequent-use signal is available, so regular applies.",
+    "scalpComfortTarget": "The formula has amphoteric/nonionic moderation and refatting support, but SLES, fragrance and no tolerance evidence mean scalp comfort is not formula-targeted.",
+    "dandruffSupport": "The complete formula does not list Piroctone Olamine or Climbazole."
+  },
+  "propertyConfidence": {
+    "cleansingStrength": "moderate",
+    "conditioningLevel": "moderate",
+    "weightPotential": "moderate",
+    "focusPrimary": "moderate",
+    "focusSecondary": "moderate",
+    "usageRole": "moderate",
+    "scalpComfortTarget": "low",
+    "dandruffSupport": "high"
+  },
+  "formulaObservations": [
+    "SLES-led cleansing is combined with Cocamidopropyl Betaine and Coco-Glucoside.",
+    "Panthenol, rice protein, wheat protein, soy protein, rice amino acids and proline form a multi-protein/amino-acid cluster.",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride provide cationic deposition/bodying routes.",
+    "Phytic Acid supplies a recognizable chelator signal and appears relatively early.",
+    "Glyceryl Oleate, hydrogenated palm glycerides citrate and lecithin add refatting support."
+  ],
+  "counterSignals": [
+    "No finished pH is available, so multiple acids cannot be treated as proven acidic surface management.",
+    "Protein and amino-acid clusters remain temporary surface/body signals, not biological repair.",
+    "No silicone or rich oil system is present, limiting persistent smoothing weight.",
+    "Strong cleansing may make comfort and conditioning perception more user-dependent."
+  ],
+  "preUnblindReceipt": {
+    "schemaVersion": "shampoo-research-pre-unblind-receipt-v1",
+    "payloadHash": "d5dbaffffccfe6aff5cc65876ab5cec46a6546ef6555eebab39255213f33ccde"
+  },
+  "payloadHash": "2048dc724d9c391e35b691c205f41059b404d41cc4c927baaebe3ceedf288bb9",
+  "finalDelta": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "volume",
+      "finalValue": "repair",
+      "reason": "Nach Unblindung ist Plex/geschädigte Haarstruktur klar dominant; die Formel ist dafür als temporäre kosmetische Repair-/Filmroute kompatibel, nicht als echte Bindungsreparatur."
+    }
+  ],
+  "ruleApplication": {
+    "policyVersion": "shampoo-classification-v1.4-draft",
+    "focusPrimary": {
+      "claimDirection": "repair",
+      "formulaCompatible": true,
+      "formulaRoute": "Panthenol, mehrere Proteine/Aminosäuren sowie cationic starch/guar stützen temporäre Repair-/Oberflächenpflege.",
+      "decisionReason": "Die Plex- und geschädigte-Haarstruktur-Claims dominieren; volume from blind formula is not the product’s positioned role."
+    },
+    "focusSecondary": {
+      "defaultEmptyConsidered": true,
+      "selectedValues": [],
+      "claimDirections": [],
+      "independentFormulaRoutes": [],
+      "distinctFromPrimary": true,
+      "exception": "none"
+    },
+    "usageRole": {
+      "defaultRole": "regular",
+      "trigger": "none",
+      "triggerEvidence": [],
+      "rationale": "Normales Rinse-off-Shampoo ohne Reset- oder recognized-active Problemtrigger."
+    },
+    "weightPotential": {
+      "formulaRoutes": [
+        {
+          "kind": "cationic_polymer",
+          "strength": "substantive",
+          "ingredientPosition": "mid",
+          "evidence": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride create cationic deposition/bodying routes."
+        },
+        {
+          "kind": "protein_film",
+          "strength": "substantive",
+          "ingredientPosition": "mid",
+          "evidence": "Panthenol plus rice/wheat/soy proteins, amino acids and proline form a broad film/body cluster."
+        },
+        {
+          "kind": "lipid_butter_oil",
+          "strength": "weak",
+          "ingredientPosition": "late_or_sub1",
+          "evidence": "Glyceryl Oleate, Hydrogenated Palm Glycerides Citrate and Lecithin add light refatting."
+        }
+      ],
+      "competingSignals": [
+        "SLES-led cleansing can reduce soft feel but does not cancel the distinct deposition routes."
+      ],
+      "confidenceLimit": "ingredient_position"
+    }
+  }
+}

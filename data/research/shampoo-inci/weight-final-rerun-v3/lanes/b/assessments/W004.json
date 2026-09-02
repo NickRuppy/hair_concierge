@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v3",
+  "productId": "W004",
+  "formula": { "inciFingerprint": "d66a4eec70514e9f075ae9ded2ab737377540ad256c216ed484986e0b3386730", "sourceTier": "official", "capturedAt": "2026-08-10T18:00:00.000+02:00", "complete": true, "identityConfidence": "moderate" },
+  "evidence": { "depositionRelevant": [{ "family": "payload_lipid", "name": "glycine soja oil/soybean oil", "position": 6 }, { "family": "payload_lipid", "name": "dicaprylyl ether", "position": 13 }, { "family": "cationic_polymer", "name": "hydroxypropyl guar hydroxypropyltrimonium chloride", "position": 19 }, { "family": "cationic_polymer", "name": "polyquaternium-7", "position": 22 }], "resetRelevant": [{ "family": "anionic_surfactant", "name": "sodium laureth sulfate", "position": 2 }, { "family": "amphoteric_surfactant", "name": "coco-betaine", "position": 3 }], "excludedIngredients": [{ "name": "glycol distearate", "position": 4, "reason": "Zählt nicht als persistente Route." }, { "name": "peg-60 hydrogenated castor oil", "position": 12, "reason": "Solubilisator zählt nicht als persistente Route." }], "unresolvedIngredients": [] },
+  "depositionLoad": { "value": "moderate", "rationale": "Sojaöl liegt innerhalb der frühen Formel und wird von Dicaprylyl Ether sowie zwei kationischen Polymeren ergänzt; das ist mehr als eine leichte, rein wässrige Shampooformel." },
+  "persistence": { "value": "moderate", "rationale": "Die Polymerroute erhöht die Anhaftung, ohne dass ein Silikon- oder reiches Fettalkohol-System eine hohe Persistenz stützt." },
+  "resetCapacity": { "value": "strong", "rationale": "SLES mit Coco-Betaine an der Spitze der INCI bildet eine starke Gegenkraft zur Pflegeablagerung." },
+  "competingSignals": ["Öl-Payload und Polymer-Paar erhöhen die Gewichtstendenz.", "Die frühe Waschbasis setzt diese Tendenz bei jeder Wäsche deutlich zurück."],
+  "unresolvedFacts": [],
+  "proposedWeightPotential": "moderate",
+  "whyThisBand": "Die Deposition ist materiell vorhanden, wird aber von einer klar starken Reinigungsbasis ausgeglichen; moderate beschreibt diese Balance am besten.",
+  "whyNotNeighborBand": "Low wäre trotz Sojaöl und zweier kationischer Polymere zu schwach. High ist ohne stark persistentes Silikon-, Fettalkohol- oder 2-in-1-System nicht ausreichend belegt.",
+  "classificationConfidence": { "value": "moderate", "limitingFactor": "Die konkrete Dosierung und die Depositionsleistung der Rohstoffe sind aus der INCI-Liste nicht ablesbar." }
+}

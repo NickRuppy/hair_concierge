@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "shampoo-weight-assessment-v2",
+  "productId": "W035",
+  "formula": {
+    "inciFingerprint": "982b33ebfbbdf0fa2e3c00841a96ccaf64b3184b1a45878a7e725275e5afcbac",
+    "sourceTier": "official",
+    "capturedAt": "2026-08-23T12:00:00.000+02:00",
+    "complete": true,
+    "identityConfidence": "moderate"
+  },
+  "evidence": {
+    "depositionRelevant": [
+      {
+        "family": "weak_refatter",
+        "name": "peg-18 glyceryl oleate/cocoate",
+        "position": 5
+      }
+    ],
+    "resetRelevant": [
+      {
+        "family": "anionic_surfactant",
+        "name": "disodium laureth sulfosuccinate",
+        "position": 2
+      },
+      {
+        "family": "amphoteric_surfactant",
+        "name": "cocamidopropyl betaine",
+        "position": 3
+      },
+      {
+        "family": "nonionic_surfactant",
+        "name": "cocamide mea",
+        "position": 17
+      }
+    ],
+    "excludedIngredients": [
+      {
+        "name": "citrus aurantium peel oil",
+        "position": 13,
+        "reason": "Ätherisches Duftöl ist kein Lipid-Payload."
+      },
+      {
+        "name": "glycol distearate",
+        "position": 14,
+        "reason": "Zählt nicht als persistente Route."
+      }
+    ],
+    "unresolvedIngredients": [
+      {
+        "name": "juniperus virginiana oil",
+        "position": 12,
+        "reason": "Potentiell gewichtsrelevante Funktion ist nicht gelistet."
+      }
+    ]
+  },
+  "depositionLoad": {
+    "value": "light",
+    "rationale": "Nur PEG-18 Glyceryl Oleate/Cocoate ist als schwacher Rückfetter relevant; weitere gewichtige Polymer-, Silikon- oder Öl-Payloads fehlen im gelisteten Paket."
+  },
+  "persistence": {
+    "value": "low",
+    "rationale": "Ein einzelner Rückfetter hat begrenzte Persistenz, sofern das ungelöste Öl nicht deutlich anders funktioniert."
+  },
+  "resetCapacity": {
+    "value": "moderate",
+    "rationale": "Sulfosuccinate, CAPB und spätes Cocamide MEA geben eine ausreichende, aber milde Reset-Basis."
+  },
+  "competingSignals": [
+    "Keine kationischen Polymere oder Silikone im Evidenzpaket.",
+    "Mehrere potenzielle Duftöle wurden ausgeschlossen; Glycol Distearate zählt nicht als persistente Route."
+  ],
+  "unresolvedFacts": [
+    "Juniperus Virginiana Oil an Position 12 ist als potenziell gewichtsrelevant ungelöst, wahrscheinlich aber ohne gesicherte Payload-Einordnung."
+  ],
+  "proposedWeightPotential": "low",
+  "whyThisBand": "Low ist die beste vorläufige Einordnung, weil die gesicherte Deposition auf einen schwachen Rückfetter beschränkt ist.",
+  "whyNotNeighborBand": "Moderate wäre nur gerechtfertigt, wenn das ungelöste Juniperus-Virginiana-Öl oder der Rückfetter deutlich substantiver wäre; High ist ohne persistente Mehrfachsysteme nicht plausibel.",
+  "classificationConfidence": {
+    "value": "low",
+    "limitingFactor": "Das ungelöste Öl-Signal kann die Low-vs-Moderate-Grenze beeinflussen und begrenzt die Sicherheit."
+  }
+}
