@@ -10,6 +10,7 @@ export const PRODUCT_DISPOSITION_REVERSAL_SOURCE_BATCH =
   "S5-21-product-search-dispositions" as const
 export const PRODUCT_DISPOSITION_REVERSAL_MIGRATION = "20260831182124" as const
 export const PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION = "20260901162000" as const
+export const PRODUCT_DISPOSITION_REVERSAL_OGX_MIGRATION = "20260902090000" as const
 export const PRODUCT_DISPOSITION_REVERSAL_SOURCE_FINGERPRINT =
   "dcdc396bcfdb3a12e9aab4eb62a4f0e21ab2a6ca6227e495fc62b5be40ced6a6" as const
 
@@ -18,16 +19,20 @@ export const PRODUCT_DISPOSITION_REVERSAL_SOURCE_FINGERPRINT =
 export const PRODUCT_DISPOSITION_REVERSAL_APPROVED_MANIFEST_FINGERPRINTS = {
   "S5R-01-oil-reentry": "f13d497a33ec651920b6610efdd0404783fd707f7d505299c5ba5fbd4080be69",
   "S5R-03-e18-oil-reentry": "9bdbcad847edc3140d045f059efb3f762951a1d32c68040915c0f93e7d58e7a3",
+  "S5R-04-ogx-identity-resolution":
+    "9ccb3e1511725bb61428e7d57d47fd0945c89848aefa956612a61d40292b9733",
 } as const
 
 export const PRODUCT_DISPOSITION_REVERSAL_MIGRATIONS = {
   [PRODUCT_DISPOSITION_REVERSAL_MIGRATION]: PRODUCT_DISPOSITION_REVERSAL_MIGRATION,
   [PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION]: PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION,
+  [PRODUCT_DISPOSITION_REVERSAL_OGX_MIGRATION]: PRODUCT_DISPOSITION_REVERSAL_OGX_MIGRATION,
 } as const
 
 export const PRODUCT_DISPOSITION_REVERSAL_BATCH_MIGRATIONS = {
   "S5R-01-oil-reentry": PRODUCT_DISPOSITION_REVERSAL_MIGRATION,
   "S5R-03-e18-oil-reentry": PRODUCT_DISPOSITION_REVERSAL_E18_OIL_MIGRATION,
+  "S5R-04-ogx-identity-resolution": PRODUCT_DISPOSITION_REVERSAL_OGX_MIGRATION,
 } as const
 
 export const PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS = {
@@ -48,9 +53,14 @@ export const PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS = {
     "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
     "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
   ],
+  "S5R-04-ogx-identity-resolution": ["1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"],
 } as const
 
 export const PRODUCT_DISPOSITION_REVERSAL_PRODUCTS = {
+  "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf": {
+    disposition: "identity_ambiguous",
+    reason_code: "identity_ambiguous",
+  },
   "19aea9c4-4b90-4ec4-8cb6-90cb270010f7": {
     disposition: "awaiting_exact_analysis",
     reason_code: "insufficient_executable_directions",
@@ -147,12 +157,17 @@ const itemSchema = z
       .strict(),
     expected_disposition: z
       .object({
-        disposition: z.enum(["retired_from_personal_plan", "awaiting_exact_analysis"]),
+        disposition: z.enum([
+          "retired_from_personal_plan",
+          "awaiting_exact_analysis",
+          "identity_ambiguous",
+        ]),
         reason_code: z.enum([
           "wrong_category",
           "non_hair_product",
           "insufficient_executable_directions",
           "insufficient_finished_product_evidence",
+          "identity_ambiguous",
         ]),
         reason: z.string().min(1),
         sources: z.array(priorDispositionSourceSchema).min(1),

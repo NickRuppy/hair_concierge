@@ -151,6 +151,66 @@ function e18Manifest(state: "prepared_for_review" | "approved_by_nick" = "prepar
   }
 }
 
+function ogxManifest(state: "prepared_for_review" | "approved_by_nick" = "prepared_for_review") {
+  return {
+    schema_version: "personal-plan-product-disposition-reversal-v1",
+    batch_id: "S5R-04-ogx-identity-resolution",
+    review:
+      state === "approved_by_nick" ? { state, reviewed_by: "nick" } : { state, reviewed_by: null },
+    items: [
+      {
+        product_id: "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+        expected_product: {
+          name: "OGX Argan Oil",
+          category_key: "oil",
+          origin: "curated",
+          is_active: true,
+          lifecycle_status: "active",
+        },
+        expected_disposition: {
+          disposition: "identity_ambiguous",
+          reason_code: "identity_ambiguous",
+          reason:
+            "Catalog identity is incomplete and overlaps multiple current OGX Argan Oil finished products.",
+          sources: [
+            {
+              label: "OGX Kollektion",
+              url: "https://www.ogxbeauty.com/collections/argan-oil-of-morocco",
+              text: "OGX lists multiple Argan Oil of Morocco products, so the catalog name 'OGX Argan Oil' is not a complete finished-product identity.",
+              source_type: "manufacturer",
+              checked_at: "2026-08-11",
+            },
+            {
+              label: "OGX Produktseite",
+              url: "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-penetrating-oil",
+              text: "The exact OGX Penetrating Oil page indicates one possible finished product, but the catalog record does not distinguish it from other OGX Argan Oil products.",
+              source_type: "manufacturer",
+              checked_at: "2026-08-11",
+            },
+          ],
+          source_batch: "S5-21-product-search-dispositions",
+          source_fingerprint: SOURCE_FINGERPRINT,
+          reviewed_by: "nick",
+        },
+        reversal_reason:
+          "The existing dm purchase page resolves the catalog row to the regular OGX Moroccan Argan Penetrating Oil 100 ml and its exact EAN 3574661563312.",
+        sources: [
+          {
+            label: "dm — OGX Moroccan Argan Penetrating Oil 100 ml",
+            url: "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+            checked_at: "2026-09-02",
+          },
+          {
+            label: "OGX — Argan Oil of Morocco Penetrating Oil",
+            url: "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-penetrating-oil",
+            checked_at: "2026-09-02",
+          },
+        ],
+      },
+    ],
+  }
+}
+
 function exactRead(built: ReturnType<typeof buildPersonalPlanProductDispositionReversalManifest>) {
   return {
     async migrationState() {
@@ -222,17 +282,23 @@ test("builds one canonical exact-seven oil reversal manifest", () => {
   assert.equal(JSON.parse(built.canonicalJson).items.length, 7)
 })
 
-test("oil reversal cohorts account for the exact 13 disposed E18 products once", () => {
+test("builds the exact one-product OGX identity resolution cohort", () => {
+  const built = buildPersonalPlanProductDispositionReversalManifest(ogxManifest())
+  assert.equal(built.manifest.batch_id, "S5R-04-ogx-identity-resolution")
+  assert.equal(built.manifest.items.length, 1)
+  assert.equal(built.manifest.items[0]?.expected_disposition.disposition, "identity_ambiguous")
+})
+
+test("oil reversal cohorts account for the 13 E18 products plus exact OGX identity once", () => {
   const productIds: readonly string[] = Object.values(
     PRODUCT_DISPOSITION_REVERSAL_BATCH_PRODUCTS,
   ).flat()
-  assert.equal(productIds.length, 13)
-  assert.equal(new Set(productIds).size, 13)
-  // In the 18-row scanner target, Garnier has no disposition to reverse, OGX
-  // remains identity-ambiguous, and this separate Balea body oil stays outside
-  // the exact approved cohort even though it has an old oil disposition.
+  assert.equal(productIds.length, 14)
+  assert.equal(new Set(productIds).size, 14)
+  // Garnier has no disposition to reverse, while the separately reviewed Balea
+  // body oil remains outside the exact approved cohort.
   assert.ok(!productIds.includes("c574ee6f-ad22-45c0-b936-57b847d93433"))
-  assert.ok(!productIds.includes("1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"))
+  assert.ok(productIds.includes("1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf"))
   assert.ok(!productIds.includes("4f373d4f-fef8-4434-91c7-055133d8427f"))
 })
 
@@ -270,6 +336,23 @@ test("approved S5R-03 artifact validates and matches its pinned fingerprint", as
   assert.equal(
     built.fingerprint,
     "9bdbcad847edc3140d045f059efb3f762951a1d32c68040915c0f93e7d58e7a3",
+  )
+  assert.doesNotThrow(() => assertPersonalPlanProductDispositionReversalApprovedFingerprint(built))
+})
+
+test("approved S5R-04 artifact validates and matches its pinned fingerprint", async () => {
+  const input = JSON.parse(
+    await readFile(
+      "data/catalog-enrichment/personal-plan-stage5-v1/S5R-04-ogx-identity-resolution.json",
+      "utf8",
+    ),
+  )
+  const built = buildPersonalPlanProductDispositionReversalManifest(input)
+  assert.deepEqual(built.manifest.review, { state: "approved_by_nick", reviewed_by: "nick" })
+  assert.equal(built.manifest.items.length, 1)
+  assert.equal(
+    built.fingerprint,
+    "9ccb3e1511725bb61428e7d57d47fd0945c89848aefa956612a61d40292b9733",
   )
   assert.doesNotThrow(() => assertPersonalPlanProductDispositionReversalApprovedFingerprint(built))
 })
@@ -357,6 +440,20 @@ test("preflight requires the additive S5R-03 migration for the E18 oil re-entry 
   })
   assert.equal(blocked.ok, false)
   assert.ok(blocked.blockers.includes("required_migration_not_applied:20260901162000"))
+})
+
+test("preflight requires the additive S5R-04 migration for OGX identity resolution", async () => {
+  const built = buildPersonalPlanProductDispositionReversalManifest(ogxManifest())
+  const read = exactRead(built)
+  const blocked = await preflightPersonalPlanProductDispositionReversalManifest(built, {
+    ...read,
+    async migrationState(version) {
+      assert.equal(version, "20260902090000")
+      return "absent"
+    },
+  })
+  assert.equal(blocked.ok, false)
+  assert.ok(blocked.blockers.includes("required_migration_not_applied:20260902090000"))
 })
 
 test("preflight recognizes only an exact completed replay", async () => {

@@ -37,7 +37,8 @@ function makeManifest(
     | "E16"
     | "E17"
     | "E18"
-    | "E19",
+    | "E19"
+    | "E20",
 ) {
   const shape = {
     E1: [20, 21, "1", 31],
@@ -59,13 +60,14 @@ function makeManifest(
     E17: [1, 1, "b", 191],
     E18: [14, 14, "c", 201],
     E19: [1, 3, "d", 211],
+    E20: [1, 1, "e", 221],
   } as const
   const [productCount, gtinCount, batchDigit, prefix] = shape[batch]
   const items = Array.from({ length: productCount }, (_, index) => {
     const productId =
       batch === "E11"
         ? "8f84eae5-222d-4bbf-9ab0-f30361882a95"
-        : `${batchDigit}${String(index + 1).padStart(7, "0")}-${batch === "E18" ? "1818" : batch === "E19" ? "1919" : "1111"}-4111-8111-${String(index + 1).padStart(12, "0")}`
+        : `${batchDigit}${String(index + 1).padStart(7, "0")}-${batch === "E18" ? "1818" : batch === "E19" ? "1919" : batch === "E20" ? "2020" : "1111"}-4111-8111-${String(index + 1).padStart(12, "0")}`
     const item = {
       item_key: `${batch.toLowerCase()}-product-${index + 1}`,
       product_id: productId,
@@ -482,6 +484,10 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "supabase/migrations/20260901153000_scanner_existing_identifier_backfill_e19.sql",
     "utf8",
   )
+  let e20Executor = await readFile(
+    "supabase/migrations/20260902091000_scanner_existing_identifier_backfill_e20.sql",
+    "utf8",
+  )
   for (const batch of [
     "E1",
     "E2",
@@ -502,6 +508,7 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
     "E17",
     "E18",
     "E19",
+    "E20",
   ] as const) {
     const pins = {
       E1: "0002bbd596cc88acff0982ef147341d87d6c39a26a4b0709efd68aa48e733522",
@@ -523,18 +530,21 @@ async function database(manifests: ReturnType<typeof makeManifest>[]) {
       E17: "6b259ee2ceff31116e92d04a5a2c627379eb4b88e8cde3c51ae026860243f5ce",
       E18: "1b59aefef8ba0a5ae217c16d49a37b2b1e2e118157855a68b7c2e2931d3d5643",
       E19: "5f062d6932340d504ffd796985f25e03464ada0f32c119e07572c4c8543b47b8",
+      E20: "043fae1462b038c8babbfafc3559aac64894852f5e571f3b8d7b44123556d034",
     }
     e15Executor = e15Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e16Executor = e16Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e17Executor = e17Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e18Executor = e18Executor.replace(pins[batch], makeManifest(batch).fingerprint)
     e19Executor = e19Executor.replace(pins[batch], makeManifest(batch).fingerprint)
+    e20Executor = e20Executor.replaceAll(pins[batch], makeManifest(batch).fingerprint)
   }
   await pg.exec(e15Executor)
   await pg.exec(e16Executor)
   await pg.exec(e17Executor)
   await pg.exec(e18Executor)
   await pg.exec(e19Executor)
+  await pg.exec(e20Executor)
   return pg
 }
 
@@ -746,9 +756,23 @@ test("E4-E7 each apply and replay exactly while rejecting a wrong pin", async (t
   }
 })
 
-test("E8-E19 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
+test("E8-E20 each apply and replay exactly while rejecting wrong fingerprints and shapes", async (t) => {
   const manifests = (
-    ["E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16", "E17", "E18", "E19"] as const
+    [
+      "E8",
+      "E9",
+      "E10",
+      "E11",
+      "E12",
+      "E13",
+      "E14",
+      "E15",
+      "E16",
+      "E17",
+      "E18",
+      "E19",
+      "E20",
+    ] as const
   ).map((batch) => makeManifest(batch))
   const pg = await database(manifests)
   t.after(async () => pg.close())
@@ -786,12 +810,12 @@ test("E8-E19 each apply and replay exactly while rejecting wrong fingerprints an
   }
 })
 
-test("E19 executor rejects an unknown future batch before it can inherit E19 configuration", async (t) => {
+test("E20 executor rejects an unknown future batch before it can inherit E20 configuration", async (t) => {
   const e10 = makeManifest("E10")
   const pg = await database([e10])
   t.after(async () => pg.close())
   const unknown = JSON.parse(e10.raw)
-  unknown.batch = "E20"
+  unknown.batch = "E21"
   const unknownRaw = JSON.stringify(unknown)
 
   await assert.rejects(
@@ -968,6 +992,24 @@ test("E19 blocks Balea until readiness and rejects each of its three submitted G
     await assert.rejects(() => apply(pg, e19), /open submission.*overlap/i)
     await pg.exec(`DELETE FROM public.product_submissions`)
   }
+  const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
+    SELECT
+      (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_batches) AS batches,
+      (SELECT count(*)::integer FROM public.scanner_identifier_backfill_items) AS items
+  `)
+  assert.deepEqual(counts.rows[0], { identifiers: 0, batches: 0, items: 0 })
+})
+
+test("E20 blocks OGX until the obsolete identity disposition is released", async (t) => {
+  const e20 = makeManifest("E20")
+  const pg = await database([e20])
+  t.after(async () => pg.close())
+  await pg.query(
+    `INSERT INTO public.personal_plan_product_search_dispositions (product_id) VALUES ($1)`,
+    [e20.items[0]?.product_id],
+  )
+  await assert.rejects(() => apply(pg, e20), /E20 product is not scan-result-ready/i)
   const counts = await pg.query<{ identifiers: number; batches: number; items: number }>(`
     SELECT
       (SELECT count(*)::integer FROM public.product_identifiers) AS identifiers,
