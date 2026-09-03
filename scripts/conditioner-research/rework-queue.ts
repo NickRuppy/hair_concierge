@@ -1,7 +1,7 @@
 import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
 
-import { readConditionerReworkQueue } from "../src/lib/conditioner-research/review-state"
+import { readConditionerReworkQueue } from "../../src/lib/conditioner-research/review-state"
 
 export function unresolvedConditionerReworkPacket(filePath: string) {
   const queue = readConditionerReworkQueue(filePath)
