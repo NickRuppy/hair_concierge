@@ -22,9 +22,10 @@ and each learning has exactly one owning document; the others link to it.
 
 Learnings ownership: wave-process learnings belong in the expansion playbook;
 protocol/template rulings belong in the rulings ledger the playbook names;
-classification-rule changes belong in the owning engine's standard and
-`rule-changes` log; intake-contract changes belong here. Do not restate a rule
-in a second lane — link to it.
+classification-rule changes belong in the owning engine's versioned standard
+(plus its rule-changes log where the engine keeps one, e.g. Conditioner);
+intake-contract changes belong here. Do not restate a rule in a second lane —
+link to it.
 
 ## Core Rule
 

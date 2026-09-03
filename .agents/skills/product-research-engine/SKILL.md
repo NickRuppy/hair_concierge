@@ -7,7 +7,7 @@ description: Use when researching product properties with an ingredient/INCI-bas
 
 ## Purpose
 
-Route formula-first product research to the correct category engine and hold every run to the shared engine invariants. This skill is the router; the normative rules live in the versioned category docs and must not be restated or paraphrased here.
+Route formula-first product research to the correct category engine and hold every run to the shared engine invariants. This skill is the router: category-specific normative rules live in the versioned category docs and must not be restated or paraphrased here. The cross-category invariants below are owned by `docs/research/README.md` and summarized here only as a drift checklist.
 
 ## Category routing
 
@@ -28,7 +28,7 @@ Routing rules:
 
 ## Shared engine invariants
 
-These hold for every engine, current and future. The category standard defines the specifics; this list is the checklist that a run has not drifted:
+These hold for every engine, current and future (owning list: `docs/research/README.md`). The category standard defines the specifics; this list is the checklist that a run has not drifted:
 
 - **Blind formula-first.** Exact identity + canonical INCI is resolved and frozen before positioning/claims are unblinded; claims influence only explicitly claim-gated properties.
 - **Product truth ≠ user fit.** Never tune direct product properties to improve profile coverage, assortment balance, or agreement with prior expert labels. Fit is a separate deterministic layer.
