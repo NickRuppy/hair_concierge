@@ -14,6 +14,7 @@ import {
 import {
   buildExpansionProtocolRow,
   type ExpansionProtocolEvidence,
+  type ExpansionTemplateSlots,
 } from "@/lib/product-intake/expansion-apply-templates"
 
 /**
@@ -380,20 +381,27 @@ export function buildExpansionApplyBatch(
           checkedAt,
         },
       ]
-      let waitCopyDe = supplement.mask_wait_copy_de
-      const contactTimeSeconds = manifestProtocol.contact_time?.seconds ?? null
-      if (manifestProtocol.template_id === "TPL-MASK" && !waitCopyDe) {
-        waitCopyDe =
-          contactTimeSeconds === null
-            ? undefined
-            : (waitCopyForSeconds(contactTimeSeconds) ?? undefined)
+      // `contactTimeSeconds` / `waitCopyDe` are TPL-MASK-only slots: the builder
+      // rejects them outright on every other template (expansion-apply-templates.ts
+      // normalizeSlots), and `null` is not `undefined` — so they must be OMITTED,
+      // not nulled, for a non-mask stamp.
+      let maskSlots: Pick<ExpansionTemplateSlots, "contactTimeSeconds" | "waitCopyDe"> = {}
+      if (manifestProtocol.template_id === "TPL-MASK") {
+        const contactTimeSeconds = manifestProtocol.contact_time?.seconds ?? null
+        let waitCopyDe = supplement.mask_wait_copy_de
+        if (!waitCopyDe) {
+          waitCopyDe =
+            contactTimeSeconds === null
+              ? undefined
+              : (waitCopyForSeconds(contactTimeSeconds) ?? undefined)
+        }
+        maskSlots = { contactTimeSeconds, waitCopyDe }
       }
       try {
         const row = buildExpansionProtocolRow(manifestProtocol.template_id, {
           productId: "__PRODUCT_ID__",
           evidence,
-          contactTimeSeconds,
-          waitCopyDe,
+          ...maskSlots,
           usableOnDryHair: manifestProtocol.usable_on_dry_hair,
         })
         protocolRows.push({

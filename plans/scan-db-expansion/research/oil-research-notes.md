@@ -242,3 +242,12 @@ heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visu
 
 Alle drei jetzt über der Qualitätsbar (Retail-Packshot, keine Infografik-/Claims-Kacheln,
 kürzere Achse ≥ 800 px, Quelle dokumentiert).
+
+## Evidence quote backfill 2026-09-02
+
+Alle 19 Evidence-Zeilen tragen jetzt ein wörtliches `source_text`-Zitat, live von der
+jeweiligen `source_url` transkribiert (dm.de/Rossmann: GTIN-Feld bzw. JSON-LD-`sku`,
+INCI-Kopf, Verwendungshinweise, Preisangabe; Herstellerseiten: Claim-Passagen).
+`[…]` markiert Auslassungen zwischen wörtlichen, auf derselben Seite stehenden Passagen.
+Hinweis: Die Rossmann-Anwendung zum Monday Repair Argan Haaröl enthält den Seitentippfehler
+"zwischen den Hängen" — wörtlich so übernommen (sic), nicht korrigiert.

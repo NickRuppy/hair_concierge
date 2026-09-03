@@ -166,6 +166,7 @@
             "fact_value": "3600524135430",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_text": "GTIN: 3600524135430",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -185,6 +186,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
             "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_text": "INGREDIENTS: ISODODECANE • AQUA / WATER • DIPROPYLENE GLYCOL • DIMETHICONE • ALCOHOL DENAT. • DIMETHICONOL • GLYCERIN • PEG-14 DIMETHICONE • HYDROXYETHYL UREA",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -193,6 +195,7 @@
             "fact_value": "Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_text": "Zwei Tropfen zwischen den Handflächen verteilen und gleichmäßig in die Längen und Spitzen im feuchten oder trockenen Haar einarbeiten.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -201,6 +204,7 @@
             "fact_value": "Es bietet zuverlässigen Hitzeschutz und sorgt gleichzeitig für ein glänzendes, versiegeltes Finish. Keine Temperaturangabe auf dieser Seite; die dm-Packungsangaben nennen keinen Hitzeschutz.",
             "source_label": "loreal-paris.de Produktseite (Glycolic Gloss Ultimate Leave-In Serum)",
             "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/serum",
+            "source_text": "Ja. Es bietet zuverlässigen Hitzeschutz und sorgt gleichzeitig für ein glänzendes, versiegeltes Finish, sodass das Haar gesund und gepflegt aussieht.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -209,6 +213,7 @@
             "fact_value": "-75% Frizz (instrumenteller Test), bis zu +82% Glanz und +54% Geschmeidigkeit; Anwendung wortgleich zur dm-Packung (zwei Tropfen, Längen und Spitzen, feuchtes oder trockenes Haar); tägliche Anwendung geeignet.",
             "source_label": "loreal-paris.de Produktseite (Glycolic Gloss Ultimate Leave-In Serum)",
             "source_url": "https://www.loreal-paris.de/elvital/glycolic-gloss/serum",
+            "source_text": "Entdecke die transformierende Glossing-Behandlung für Zuhause, die bis zu fünf Haarwäschen hält und Dir bis zu +82% mehr Glanz** und +54% Geschmeidigkeit** verleiht . Zusätzlich verleiht das Elvital Glycolic Gloss Ultimate Leave-In Serum -75% Frizz**.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -217,6 +222,7 @@
             "fact_value": 9.95,
             "source_label": "dm.de Produktseite (dm-Dauerpreis)",
             "source_url": "https://www.dm.de/p/d/1343857/l-oreal-paris-elvital-leave-in-serum-glycolic-gloss",
+            "source_text": "9,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -366,6 +372,7 @@
             "fact_value": "3600524030865",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag), mod-10-valide; unabhängig bestätigt durch Globus-Produktlisting mit derselben GTIN in der URL",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_text": "Aufpolsterndes Feuchtigkeitsserum\",\"sku\":\"3600524030865\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -385,6 +392,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_text": "AQUA / WATER • QUATERNIUM-87 • COCOS NUCIFERA OIL / COCONUT OIL • SODIUM BENZOATE • SODIUM HYALURONATE • STEARYL ALCOHOL • PPG-1 TRIDECETH-6 • BEHENTRIMONIUM CHLORIDE • POLYQUATERNIUM-37",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -393,6 +401,7 @@
             "fact_value": "Auf nassem oder trockenem Haar auf die Längen sprühen. Die Haare wie gewohnt stylen.",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_text": "Auf nassem oder trockenem Haar auf die Längen sprühen. Die Haare wie gewohnt stylen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -401,6 +410,7 @@
             "fact_value": "Feuchtigkeitsboost mit Hyaluronsäure für dehydrierte Längen; polstert auf und definiert, ohne Rückstände und ohne zu beschweren; Anwendung in die Längen des nassen oder trockenen Haares; kein Hitzeschutz-Claim.",
             "source_label": "loreal-paris.de Produktseite (Hydra Hyaluronic Aufpolsterndes Feuchtigkeitsserum)",
             "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/aufpolsterndes-feuchtigkeitsserum",
+            "source_text": "Das Haarserum wurde speziell für feuchtigkeitsbedürftiges Haar entwickelt und ist mit Hyaluron angereichert. So werden auch die dehydrierten Längen Ihres Haares mit der nötigen Feuchtigkeit versorgt, um gesund auszusehen. Das Leave-in polstert das Haar auf und definiert es. Zudem hinterlässt es keine Rückstände.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -409,6 +419,7 @@
             "fact_value": 6.99,
             "source_label": "Rossmann.de Produktseite (150 ml, 1 L = 46,60 EUR)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-leave-in-haarkur-hydra-hyaluron-aufpolsterndes-feuchtigkeitsserum/p/3600524030865",
+            "source_text": "Artikelpreis 6,99 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -558,6 +569,7 @@
             "fact_value": "3600524075576",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "GTIN: 3600524075576",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -577,6 +589,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "INGREDIENTS: ISODODECANE • DIPROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • ALCOHOL DENAT. • GLYCERIN • DIMETHICONOL • PEG-14 DIMETHICONE • HYDROXYETHYL UREA • PARFUM / FRAGRANCE • CITRIC ACID • SODIUM CITRATE",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -585,15 +598,26 @@
             "fact_value": "Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "Einfach 2 Tropfen zwischen den Handflächen verreiben und gleichmäßig in die Längen und Spitzen von trockenem oder feuchtem Haar einarbeiten.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
           {
             "fact_key": "product.claims.bond_repair",
-            "fact_value": "20% Bond-Repair-Komplex mit Zitronensäure/Aminosäuren; 100% wiederhergestellte Stärke, 3x weniger Haarbruch beim Kämmen, 7x weniger Spliss; schützt die Haarbindungen und glättet die Haarfaser für mehr Glanz; Anwendung 2 Tropfen in Längen und Spitzen, feucht oder trocken; kein Hitzeschutz-Claim.",
-            "source_label": "loreal-paris.de Produktseite (Bond Repair Leave-in-Serum)",
+            "fact_value": "Formel mit 20% Bond-Repair-Komplex und Aminosäuren; wirkt tief im Inneren der Haarfaser, baut gebrochene Haarbrücken wieder auf und festigt Keratin-Mikrofibrillen.",
+            "source_label": "loreal-paris.de Produktseite (Bond Repair Plus Leave-in-Serum)",
             "source_url": "https://www.loreal-paris.de/elvital/bond-repair/leave-in-serum",
+            "source_text": "Die Formel des Bond Repair Leave-in Serums mit 20 % Bond Repair-Komplex und Aminosäuren wirkt tief im Inneren der Haarfaser, wo es gebrochene Haarbrücken wieder aufbaut und Keratin-Mikrofibrillen festigt.",
             "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.damage_repair",
+            "fact_value": "20% Bond-Repair-Komplex mit Zitronensäure; repariert alle Arten von Haarschäden; schützt Haarbrücken für mehr Geschmeidigkeit und Glanz; stärkeres Haar, weniger Spliss (unbeziffert — die früheren 100%-/3x-/7x-Claims stehen auf keiner aktuellen Quelle mehr).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung, Bullet-Claims)",
+            "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "20 % Bond-Repair-Komplex mit Zitronensäure […] Repariert alle Arten von Haarschäden […] Schützt Haarbrücken für mehr Geschmeidigkeit & Glanz […] Stärkeres Haar […] Weniger Spliss",
+            "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
           {
@@ -601,6 +625,7 @@
             "fact_value": 9.95,
             "source_label": "dm.de Produktlisting (Preis 9,95 EUR, Grundpreis 66,33 EUR/l bei 150 ml; auf der dm-Seite des Schwesterprodukts als Panel-Preis erfasst)",
             "source_url": "https://www.dm.de/p/d/1679221/l-oreal-paris-elvital-leave-in-haarserum-bond-repair-anti-haarschaeden",
+            "source_text": "9,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -619,7 +644,7 @@
           "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: explizit als Finish ZUSÄTZLICH zur Bond-Repair-Routine positioniert.",
           "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry: leichtes 2-Tropfen-Serum ohne Overload-Risiko.",
           "thickness_eligibility": "Alle Stärken: minimal dosiertes, leichtes Serum.",
-          "concern_eligibility": "hair_damage/repair: Kernclaim 'repariert alle Arten von Haarschäden'. split_ends: '7x weniger Spliss'. breakage: '3x weniger Haarbruch'.",
+          "concern_eligibility": "hair_damage/repair: Kernclaim 'Repariert alle Arten von Haarschäden' (dm). split_ends: 'Weniger Spliss' (dm, unbeziffert; der frühere 7x-Claim steht auf keiner aktuellen Seite mehr). breakage: 'Stärkeres Haar' + Bond-Repair-Positionierung (schwächer belegt; der frühere 3x-Haarbruch-Claim steht auf keiner aktuellen Seite mehr).",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder feucht' ist keine Dry-only-Anweisung; Längen und Spitzen konform.",
           "product.price_eur": "9,95 € verified 2026-09-02 directly on the dm.de product page price block (0,15 l / 66,33 €/l, dm-Dauerpreis seit 12.01.2023, GTIN on page matches); supersedes the earlier Ähnliche-Produkte-panel capture.",
           "protocols.tpl_leavein_drycare": "Ruling R-D (2026-09-02): DRYCARE-Default greift — format=serum ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('von trockenem oder feuchtem Haar'). Stamp zusätzlich zum DAMP-Stamp (separate Familie)."
@@ -737,6 +762,7 @@
             "fact_value": "3600542117593",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_text": "GTIN: 3600542117593",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -755,6 +781,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
             "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_text": "INGREDIENTS: AQUA / WATER • PROPYLENE GLYCOL • GLYCERIN • ALOE BARBADENSIS LEAF JUICE • SORBITAN OLEATE • PPG-1 TRIDECETH-6 • PEG- 150/DECYL ALCOHOL/SMDI COPOLYMER • SODIUM HYALURONATE",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -763,6 +790,7 @@
             "fact_value": "Die Garnier Fructis Hydra Aloe Air-Dry Cream auf nassem oder handtuchtrockenem Haar bis in die Spitzen einmassieren. Anschließend das Haar lufttrocknen lassen und ausbürsten, sobald das Haar komplett trocken ist.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_text": "Die Garnier Fructis Hydra Aloe Air-Dry Cream auf nassem oder handtuchtrockenem Haar bis in die Spitzen einmassieren. Anschließend das Haar lufttrocknen lassen und ausbürsten, sobald das Haar komplett trocken ist.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -771,6 +799,7 @@
             "fact_value": "Bändigt das Haar und erhöht die Griffigkeit; einfaches Styling ohne Trockenföhnen; 24 Stunden Anti-Frizz; Kombination aus Aloe Vera Gel und pflanzlichem Glycerin; Wirkung laut dm-Merkmalen: Pflege, Styling; Haartyp: normaler/jeder Haartyp.",
             "source_label": "dm.de Produktseite (Produktbeschreibung + Produktmerkmale)",
             "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_text": "Die Fructis Hydra Aloe Air-Dry Cream ist eine Leave-in Creme, die das Haar geschmeidig macht. Die Kombination aus Aloe Vera Gel und pflanzlichen Gylcerin natürlichen Ursprungs bändigt das Haar und erhöht die Griffigkeit. […] Einfaches Styling ohne Trockenföhnen […] 24 Stunden Anti-Frizz",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -779,6 +808,7 @@
             "fact_value": 5.95,
             "source_label": "dm.de Produktseite (dm-Dauerpreis, 400 ml, 14,88 EUR/l)",
             "source_url": "https://www.dm.de/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry",
+            "source_text": "5,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -945,6 +975,7 @@
             "fact_value": "4895248005988",
             "source_label": "Rossmann.de Produktseite (URL-GTIN + Syndigo-Tag), mod-10-valide; unabhängig bestätigt durch internationale Listings mit derselben GTIN (eBay UK, Walmart/Instacart-Treffer)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_text": "\"name\":\"Major Moisture Leave-In Conditioner\",\"sku\":\"4895248005988\"",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -965,6 +996,7 @@
             },
             "source_label": "Rossmann.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_text": "Aqua (Water), Cetearyl Alcohol, Cocos Nucifera (Coconut) Oil, Butyrospermum Parkii (Shea) Butter, Glycerin, Simmondsia Chinensis (Jojoba) Seed Oil, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -973,6 +1005,7 @@
             "fact_value": "Nach dem Duschvorgang anwenden. ... eine kleine Menge in das feuchte Haar geben, insbesondere auf die Spitzen, und einmassieren. Nicht ausspülen. Anschließend wie gewohnt stylen.",
             "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_text": "Nach dem Duschvorgang anwenden. Nachdem Sie das Haar mit dem Being Shampoo und Conditioner gewaschen haben, eine kleine Menge in das feuchte Haar geben, insbesondere auf die Spitzen, und einmassieren. Nicht ausspülen. Anschließend wie gewohnt stylen.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -981,6 +1014,7 @@
             "fact_value": "Manufacturer bestätigt: 'alternatively for use as a heat protectant'; Anwendung 'add a small amount to damp hair, focusing on ends. Do not rinse out. Style as usual.'; für Locken 3A-3C und Coils 4A-4C; Kakaobutter + Haferextrakt; Herstellerseite nennt 12 FL OZ / 354 mL.",
             "source_label": "beinghaircare.com Produktseite (Major Moisture Leave-In)",
             "source_url": "https://beinghaircare.com/blog/product/major-moisture-leave-in-moisturizing-leave-in-conditioner/",
+            "source_text": "Being Major Moisture Leave-In Conditioner helps to protect and perfect type 3A-3C curls and type 4A-4C coils of all kinds. This dermatologically tested, sulfate-free and silicone-free formula is ideal for use after washing, by working into ends to help style naturally, or alternatively for use as a heat protectant. […] add a small amount to damp hair, focusing on ends. Do not rinse out. Style as usual.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -989,6 +1023,7 @@
             "fact_value": 6.79,
             "source_label": "Rossmann.de Produktseite (6,79 EUR; Grundpreis 29,91 EUR/l)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-major-moisture-leave-in-conditioner/p/4895248005988",
+            "source_text": "Artikelpreis 6,79 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -1136,6 +1171,7 @@
             "fact_value": "4015100813951",
             "source_label": "dm.de Produktseite (GTIN-Feld)",
             "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_text": "GTIN: 4015100813951",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1155,6 +1191,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
             "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_text": "Ingredients: Aqua (Water, Eau), Dimethicone, Cetearyl Alcohol, Behentrimonium Chloride, Laureth-4, Isopropyl Myristate, Hydroxyoctanone, Hydrolyzed Pearl, Betaine, Cetrimonium Chloride, Quaternium-87",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1163,14 +1200,25 @@
             "fact_value": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_text": "Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen. Wache mit schönem und repariertem Haar auf - einfach durchbürsten und den Tag beginnen! Kann jeden Abend genutzt werden.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
           {
             "fact_key": "product.claims.overnight_leave_in",
-            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült werden muss; Ultimate-Repair-Linie für stark geschädigtes Haar (bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandelt).",
-            "source_label": "schwarzkopf.de Night Elixier Ultimate Repair Produktseite",
-            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/night-elixier/ultimate-repair.html",
+            "fact_value": "Leave-in-Produkt, das über Nacht wirkt und nicht ausgespült wird: regeneriert sehr geschädigtes Haar über Nacht, zieht sofort ein und hinterlässt keine Spuren auf dem Kopfkissen.",
+            "source_label": "schwarzkopf.de Gliss Night Elixier Ultimate Repair Produktseite (Beschreibung + Anwendung)",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair/night-elixier.html",
+            "source_text": "Ultimate Repair Night Elixier – Die Haarpflege für geschädigtes Haar mit HaptIQ System und Perlen-Extrakt verwandelt sehr geschädigtes Haar und regeneriert es über Nacht […] Sorglos über Nacht – Die tiefenwirksame Formel der Haarkur mit entspannendem Duft zieht sofort ein und hinterlässt keine Spuren auf dem Kopfkissen […] Vor dem Schlafengehen 2-4 Pumpstöße sanft in das nasse oder trockene Haar einarbeiten. Nicht ausspülen.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims.line_resilience_shine",
+            "fact_value": "Ultimate-Repair-Linie für stark geschädigtes Haar: bis zu 5x mehr Widerstandsfähigkeit und Glanz vs. unbehandeltes Haar (Linien-Claim, nicht produktspezifisch belegt).",
+            "source_label": "schwarzkopf.de Gliss Ultimate Repair Linienseite",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/ultimate-repair.html",
+            "source_text": "Um stark geschädigtes und trockenes Haar zu revitalisieren, ist angemessene Pflege erforderlich. Die Ultimate Repair Serie mit flüssigem Keratin + Schwarzperlenextrakt rekonstruiert die Haarstruktur und verleiht bis zu 5-mal mehr Widerstandsfähigkeit* und Glanz. *im Vergleich zu unbehandeltem Haar.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -1179,6 +1227,7 @@
             "fact_value": 7.45,
             "source_label": "dm.de Produktseite (dm-Dauerpreis)",
             "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+            "source_text": "7,45 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }
@@ -1357,6 +1406,7 @@
             "fact_value": "3600542567329",
             "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD)",
             "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_text": "GTIN: 3600542567329",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1378,6 +1428,7 @@
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_text": "INGREDIENTS: PROPYLENE GLYCOL • AQUA / WATER • DIMETHICONE • PHENYL TRIMETHICONE • GLYCERIN • ISODODECANE • DIMETHICONOL • AMODIMETHICONE • PHENOXYETHANOL • TRIDECETH-5 • PARFUM / FRAGRANCE",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1386,6 +1437,7 @@
             "fact_value": "Auf feuchtem oder trockenem Haar anwendbar. Gleichmäßig auf den Längen und Spitzen verteilen. Nicht ausspülen. Hitzeschutz bis 230°C beim Föhnen oder Glätten.",
             "source_label": "dm.de Produktseite (Verwendungshinweise)",
             "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_text": "Zunächst sollte das Haar gründlich gewaschen werden, wobei das Haarserum grundsätzlich auf feuchtem oder trockenem Haar anwendbar ist. Die Dosierung richtet sich nach Haarlänge und -dicke. Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült und die Haare nach kurzer Einwirkzeit wie gewohnt frisiert werden.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1394,6 +1446,7 @@
             "fact_value": "Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze; von Garnier bestätigt (Anwendung insbesondere vor dem Föhnen oder Glätten, Hitzeschutz bis 230 °C).",
             "source_label": "dm.de Produktseite (Produktbeschreibung) + garnier.de Produktseite",
             "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_text": "Außerdem bietet die Haarpflege Hitzeschutz bis zu 230 Grad.",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           },
@@ -1402,6 +1455,7 @@
             "fact_value": "Garnier bestätigt: Anwendung auf feuchtem oder trockenem Haar, Längen und Spitzen, insbesondere vor dem Föhnen oder Glätten; Hitzeschutz bis 230 °C; Leave-in ohne Ausspülen; Zielgruppe geschädigte Spitzen und splissiges Haar; identische INCI (Propylene Glycol, Aqua, Dimethicone, ...).",
             "source_label": "garnier.de Produktseite (Wahre Schätze Haar Honig Reparierendes Haarserum)",
             "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/reparierendes-haarserum",
+            "source_text": "Gleichmäßig auf den Längen und Spitzen verteilen und einwirken lassen. Das Leave-in-Haarserum muss nicht ausgespült und die Haare nach kurzer Einwirkzeit wie gewohnt frisiert werden. Ob föhnen oder glätten, das Serum schützt das Haar bis 230°C vor Hitze und sorgt für einen glänzenden, geschmeidigen Look.",
             "source_type": "manufacturer",
             "checked_at": "2026-09-02"
           },
@@ -1410,6 +1464,7 @@
             "fact_value": 6.95,
             "source_label": "dm.de Produktseite (dm-Dauerpreis)",
             "source_url": "https://www.dm.de/p/d/1324799/wahre-schaetze-haarserum-honig-reparierend",
+            "source_text": "6,95 €",
             "source_type": "retailer",
             "checked_at": "2026-09-02"
           }

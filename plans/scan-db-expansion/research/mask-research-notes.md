@@ -215,3 +215,40 @@ heruntergeladen und mit `sips -g pixelWidth -g pixelHeight` vermessen sowie visu
 
 Alle drei jetzt über der Qualitätsbar (Retail-Packshot, keine Vorher/Nachher- oder
 Marketing-Aufnahmen, kürzere Achse ≥ 800 px, Quelle dokumentiert).
+
+## Evidence quote backfill 2026-09-02
+
+Alle 24 Evidence-Zeilen tragen jetzt ein wörtliches `source_text`-Zitat, live von der
+jeweiligen `source_url` transkribiert (dm.de/Rossmann: GTIN-Feld bzw. JSON-LD-`sku`,
+INCI-Kopf, Verwendungshinweise, Preisangabe; Herstellerseiten: Claim-Passagen).
+`[…]` markiert Auslassungen zwischen wörtlichen, auf derselben Seite stehenden Passagen.
+Abweichung dokumentiert: Die idawargbeauty.se-Seite (Intense Moisture Hair Mask) zeigt
+heute die 250-ml-Variante mit "Leave on for 5-10 minutes" und "freshly washed hair" —
+die im `fact_value` festgehaltenen Angaben "5-15 minutes" / "towel-dried" / Passionsfruchtöl
+stehen dort nicht mehr (die deutsche Rossmann-Seite bestätigt weiterhin 5-15 Minuten,
+handtuchtrocken und Passiflora Edulis Seed Oil). Zitat entsprechend von der heutigen Seite
+übernommen, nicht rekonstruiert.
+
+## F1 reconciliation 2026-09-02
+
+**IDA WARG Intense Moisture Hair Mask — Zeile `product.claims.usage_corroboration`
+umgesourct (Codex-Review F1: fact_value/Quote-Drift).** Die Zeile zitierte die heutige
+idawargbeauty.se-Seite (5-10 Minuten, "freshly washed hair", Coconut Oil), während der
+fact_value 5-15 Minuten / handtuchtrocken / Passionsfruchtöl behauptete. Fix: source_url,
+source_label und source_text auf die Rossmann-Produktseite (EAN 6412600231793) umgestellt,
+die alle drei Details wörtlich bestätigt (live geprüft 2026-09-02: "Auf dem gewaschenen,
+handtuchtrockenen Haar anwenden. 5-15 Minuten einwirken lassen." + "angereichert mit
+Maracujaöl und Sodium PCA ... Sheabutter ... 100% vegan"). fact_value entsprechend auf
+diese belegten Details getrimmt; die "1-2x/Woche"-Kadenz wurde entfernt — sie steht weder
+auf Rossmann noch auf der heutigen Herstellerseite (die concentration-Rationale stützt
+sich primär auf das 5-15-Minuten-Intensiv-Profil, das bleibt belegt; die Kadenz-Erwähnung
+dort ist als historisch zu lesen).
+
+**Neues Risiko dokumentiert (Reformulierungs-Verdacht):** Die heutige idawargbeauty.se-INCI
+der 250-ml-Maske führt Cocos Nucifera Oil + Vitis Vinifera Seed Oil und KEIN Passiflora
+Edulis Seed Oil mehr; Rossmann (deutsche Handelsware, EAN 6412600231793) listet weiterhin
+Passiflora Edulis. Möglicherweise verkauft der deutsche Handel die alte Formel ab.
+Konsequenz für die manifeste Einstufung: keine — alle Authority-Facts sind auf die
+Rossmann-INCI (die verkaufte Ware) gesourct, und beide Varianten stützen weight=rich /
+moisture (Sheabutter + Humectants). Vor einem späteren Re-Check der Zeile aber die INCI
+der physischen Packung gegenprüfen.

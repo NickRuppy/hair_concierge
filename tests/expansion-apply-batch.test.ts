@@ -6,6 +6,8 @@ import {
   buildExpansionApplyBatch,
   canonicalGtin14,
   expansionItemKey,
+  type ExpansionApplyExistingItem,
+  type ExpansionApplyItem,
   type ExpansionApplySupplement,
 } from "@/lib/product-intake/expansion-apply"
 
@@ -23,10 +25,23 @@ const REVIEWED_HEAD = "b".repeat(40)
 const IMAGE_PREFIX =
   "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/"
 
-async function maskManifest() {
+async function researchManifest(file: string) {
   return JSON.parse(
-    await readFile(new URL("plans/scan-db-expansion/research/mask-manifest.json", ROOT), "utf8"),
+    await readFile(new URL(`plans/scan-db-expansion/research/${file}`, ROOT), "utf8"),
   ) as { products: Array<{ final: Record<string, unknown> }> }
+}
+
+async function maskManifest() {
+  return researchManifest("mask-manifest.json")
+}
+
+/** The stamped protocol rows an emitted item carries into the publication boundary. */
+function protocolRoles(item: ExpansionApplyItem | ExpansionApplyExistingItem): string[] {
+  if (item.kind !== "new_product") return []
+  const specs = item.final_payload.category_specs as
+    | { product_application_protocols?: Array<{ role: string }> }
+    | undefined
+  return (specs?.product_application_protocols ?? []).map((row) => row.role).sort()
 }
 
 /**
@@ -162,15 +177,23 @@ test("a product with no operator supplement is parked with a named gap", async (
 })
 
 test("evidence with no quote anywhere is parked — a source text is never invented", async () => {
-  const manifest = await maskManifest()
+  // The shipped manifests now carry a verbatim quote on every evidence row, so
+  // the quoteless state has to be constructed: strip the researcher quotes and
+  // point one row at a URL no protocol or supplement covers.
+  const manifest = structuredClone(await maskManifest())
+  for (const entry of manifest.products) {
+    for (const evidence of entry.final.evidence as Array<Record<string, unknown>>) {
+      delete evidence.source_text
+    }
+    ;(entry.final.evidence as Array<Record<string, unknown>>)[0].source_url =
+      "https://www.example-manufacturer.test/no-protocol-covers-this"
+  }
   const supplement = supplementFor(manifest, (_key, entry) => ({
     ...entry,
     evidence_source_texts: {},
   }))
   const result = buildExpansionApplyBatch({ manifest, supplement })
 
-  // The mask manifest's manufacturer-claim evidence rows carry no `source_text`
-  // and point at a URL no protocol source covers, so no quote can be derived.
   const withGap = result.parked.filter((parked) =>
     parked.gaps.some((gap) => gap.startsWith("evidence_source_text_missing")),
   )
@@ -336,6 +359,80 @@ test("an active product with the same brand+name parks the item as an identity c
   const parked = result.parked.find((entry) => entry.item_key?.startsWith("garnier"))
   assert.ok(parked)
   assert.ok(parked.gaps.some((gap) => gap.startsWith("identity_collision")))
+})
+
+// ---------------------------------------------------------------------------
+// Non-mask templates (B1). `contactTimeSeconds` / `waitCopyDe` are TPL-MASK-only
+// slots and the builder rejects them on every other template — including a
+// `null` contact time, which is not `undefined`. Fixturing masks alone hid a
+// caller that stamped those slots on EVERY template, so no oil, leave-in,
+// shampoo or conditioner protocol could publish at all.
+// ---------------------------------------------------------------------------
+
+test("an oil product's non-mask protocols stamp instead of parking (B1)", async () => {
+  const manifest = await researchManifest("oil-manifest.json")
+  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+
+  assert.deepEqual(
+    result.parked.filter((parked) =>
+      parked.gaps.some((gap) => gap.startsWith("protocol_stamp_failed")),
+    ),
+    [],
+  )
+
+  const key = expansionItemKey("Schwarzkopf Gliss", "Haaröl Tägliches Öl Elixier")
+  const item = result.batch.items.find((entry) => entry.item_key === key)
+  assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)
+  // TPL-OIL-DRYFINISH + TPL-OIL-LEAVEON, the manifest's two reviewed templates.
+  assert.deepEqual(protocolRoles(item), ["dry_finish", "leave_on_fibre_conditioning"])
+  assert.equal(
+    result.parked.filter((parked) =>
+      parked.gaps.some((gap) => gap.startsWith("missing_protocol_for_derived_role")),
+    ).length,
+    0,
+    JSON.stringify(result.parked),
+  )
+})
+
+test("a stray mask wait copy in the supplement cannot break a non-mask stamp (B1)", async () => {
+  const manifest = await researchManifest("oil-manifest.json")
+  const result = buildExpansionApplyBatch({
+    manifest,
+    supplement: supplementFor(manifest, (_key, entry) => ({
+      ...entry,
+      mask_wait_copy_de: "5–10 Minuten einwirken lassen.",
+    })),
+  })
+
+  assert.deepEqual(
+    result.parked.filter((parked) =>
+      parked.gaps.some((gap) => gap.startsWith("protocol_stamp_failed")),
+    ),
+    [],
+  )
+  const item = result.batch.items.find(
+    (entry) =>
+      entry.item_key === expansionItemKey("Schwarzkopf Gliss", "Haaröl Tägliches Öl Elixier"),
+  )
+  assert.ok(item, JSON.stringify(result.parked))
+  assert.deepEqual(protocolRoles(item), ["dry_finish", "leave_on_fibre_conditioning"])
+})
+
+test("a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (B1)", async () => {
+  const manifest = await researchManifest("leave-in-manifest.json")
+  const result = buildExpansionApplyBatch({ manifest, supplement: supplementFor(manifest) })
+
+  assert.deepEqual(
+    result.parked.filter((parked) =>
+      parked.gaps.some((gap) => gap.startsWith("protocol_stamp_failed")),
+    ),
+    [],
+  )
+
+  const key = expansionItemKey("Garnier Fructis", "Leave-In Creme Aloe Air Dry")
+  const item = result.batch.items.find((entry) => entry.item_key === key)
+  assert.ok(item, `${key} must publish — parked: ${JSON.stringify(result.parked)}`)
+  assert.deepEqual(protocolRoles(item), ["post_wash_leave_in"])
 })
 
 test("the emitted batch never carries a recommendation flag (R3)", async () => {
