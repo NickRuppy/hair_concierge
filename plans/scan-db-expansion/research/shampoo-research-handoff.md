@@ -23,7 +23,7 @@ Take names, sizes, EANs, and source URLs from those files as the starting point.
 - Schema: `src/lib/product-intake/expansion-manifest.ts` (zod). Worked example of a finished, honest manifest: `plans/scan-db-expansion/research/mask-manifest.json` + `mask-research-notes.md` — match their structure and evidence discipline.
 - Referee (run after every sub-batch, iterate to PASS):
   `npm run products:intake:expansion:validate -- --manifest plans/scan-db-expansion/research/shampoo-manifest-01.json`
-- Hard rules baked into the schema: `origin: "curated"`, `is_chaarlie_recommended: false` (anything else fails), EANs must pass the GS1 check digit, every EAN needs ≥1 source URL; single-source/unverified EANs stay in the manifest but marked `cross_source_agreement: false` + `excluded_from_apply: true` — NEVER invent digits.
+- Hard rules baked into the schema: `origin: "curated"`, `is_chaarlie_recommended: false` (anything else fails), EANs must pass the GS1 check digit, every EAN needs ≥1 source URL; single-source/unverified EANs stay in the manifest but marked `cross_source_agreement: false` + `excluded_from_apply: true` — NEVER invent digits. EAN verification rule (Nick 2026-09-02): the same digits in >=2 independent sources, or one physical scan. EXCEPTION (W5): for retailer-EXCLUSIVE brands (Balea/Balea Professional/Balea Med = dm; Isana = Rossmann; Langhaarmädchen = dm; comparable private labels) the owning retailer's structured GTIN field alone counts as verified — a second source cannot exist by construction; set cross_source_agreement: true with a rationale citing this rule. Naming rule (W6): always record the CURRENT shelf name; on a rebrand with identical INCI the newest retail listing name wins.
 
 ## Per product
 

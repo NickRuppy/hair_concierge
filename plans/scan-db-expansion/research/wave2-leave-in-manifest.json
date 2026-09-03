@@ -1,0 +1,1976 @@
+{
+  "batch_id": "scan-db-expansion-wave2-leave-in-2026-09-03",
+  "generated_at": "2026-09-03T12:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Creme Locken Methode Air Dry",
+          "brand": "Garnier Fructis",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 260,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1765201490/assets/pas/images/69f8e4cb-ccf8-46fe-a527-820c39b8d978/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry"
+          },
+          "description": "Silikonfreie, definierende Leave-in-Creme der Locken Methode mit 7% Feuchtigkeits-Komplex (Hyaluron + Shea-Fettsäuren); bändigt Frizz bis zu 100 Stunden, für alle Lockentypen, Lufttrocknen ohne Hitze."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542657044",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-locken-methode-air-dry-cream/p/3600542657044"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "curl_definition",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "curl_shape_support",
+              "moisture_softness",
+              "smooth_anti_frizz"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "curl_definition"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "moisture_anti_frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+              "text": "Die Garnier Fructis Locken Methode Air Dry Cream ist der dritte Schritt in der Locken Methode-Haarpflegeroutine. Dafür das Leave-In auf das feuchte oder trockene Haar auftragen und gleichmäßig einarbeiten. Anschließend die Locken nach Belieben stylen und lufttrocknen lassen. Hitze ist für die Wirksamkeit der Air Dry Cream nicht nötig. Zudem ist kein Ausspülen notwendig."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542657044",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch Rossmann-Produktseite (GTIN in URL + sku-Feld '3600542657044')",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_text": "GTIN: 3600542657044",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil, Butyrospermum Parkii Butter, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Sodium Hyaluronate, Hydroxypropyl Guar, ... (silikonfrei laut Merkmal + INCI, keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCERYL STEARATE • SODIUM HYALURONATE • HYDROXYPROPYL GUAR",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Dritter Schritt der Locken-Methode-Routine; auf feuchtes oder trockenes Haar auftragen, gleichmäßig einarbeiten, lufttrocknen lassen; kein Ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_text": "Dafür das Leave-In auf das feuchte oder trockene Haar auftragen und gleichmäßig einarbeiten. Anschließend die Locken nach Belieben stylen und lufttrocknen lassen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.curl_moisture_frizz",
+            "fact_value": "7% Feuchtigkeits-Komplex mit Hyaluron und Shea-Fettsäuren; Frizz-Bändigung bis zu 100 Stunden; langanhaltende Definition ohne zu beschweren; ohne Silikone; kein Hitzeschutz-Claim (Hitze explizit nicht nötig).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_text": "Dank ihres 7 % Feuchtigkeits-Komplexes mit Hyaluron und Shea-Fettsäuren spendet sie dem Haar intensive Feuchtigkeit. Die leichte Textur kann Frizz für bis zu 100 Stunden bändigen und sorgt für eine langanhaltende Definition, ohne die Locken zu beschweren.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 260 ml, 22,88 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry",
+            "source_text": "5,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). Draft-Name 'Leave-In Creme Locken Methode Air Dry' bestätigt; Rossmann führt es als 'Locken Methode Air Dry Cream'.",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '3600542657044', mod-10 valide. Unabhängiger Zweitbeleg: rossmann.de-Produktseite trägt dieselbe GTIN in URL und sku-Feld; zusätzlich budni.de-Listing. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "cream: 'Leave-In Creme' laut Name und dm-Kategorie.",
+          "category_specs.product_leave_in_specs.weight": "light: 'Die leichte Textur', 'ohne die Locken zu beschweren' (wörtliche Claims).",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner + styling_prep: Pflege-Leave-in als dritter Routine-Schritt mit ausgeprägter Styling-/Definitionsfunktion (dm-Wirkung 'Styling').",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim; Packung sagt explizit 'Hitze ist für die Wirksamkeit der Air Dry Cream nicht nötig'.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 7%-Feuchtigkeits-Komplex, 'intensive Feuchtigkeit'. curl_definition: 'langanhaltende Definition', Haartyp Lockiges Haar. anti_frizz: '100 Stunden Frizz bändigen'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Helianthus Annuus Seed Oil, Butyrospermum Parkii Butter. polymers: Hydroxypropyl Guar. humectants: Glycerin, Sodium Hyaluronate. Silikonfrei (Merkmal + INCI), keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'auf das feuchte oder trockene Haar'.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: durchgängige Feuchtigkeitsclaims + Humectant-Fokus; keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "curl_definition: Kernclaim der Locken-Methode-Linie (einziger sauber belegter Fit-Enum-Wert).",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als dritter Schritt ZUSÄTZLICH zur Locken-Methode-Routine (Shampoo + Maske) positioniert.",
+          "product_leave_in_eligibility": "curl_definition + moisture_anti_frizz für alle Stärken bei air_dry: Air-Dry-Produkt, 'für alle Lockentypen', leicht ohne Overload-Risiko.",
+          "thickness_eligibility": "Alle Stärken: leichte Textur mit explizitem Nicht-Beschweren-Claim.",
+          "concern_eligibility": "dryness: 'intensive Feuchtigkeit'. frizz + moisture_anti_frizz: 100h-Anti-Frizz-Claim.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'feucht oder trocken' ist Entweder-oder-Erlaubnis; Air-Dry-Routine ist der Template-Normalfall. Ruling R-D: format=cream → damp-only, kein DRYCARE-Stamp (Dry-Erlaubnis ist Toleranz, kein Between-Wash-Marketing — deckungsgleich mit Garnier Aloe Air Dry im Pilot-Batch)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Spray Kamille",
+          "brand": "Herbal Essences",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 145,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1762553802/assets/pas/images/fe4840da-7730-43aa-8090-acc8c789e6cf/herbal-essences-leave-in-spray-kamille",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille"
+          },
+          "description": "All-in-One-Leave-in-Spray mit Kamillenextrakt; verleiht Glanz, entwirrt sanft, reduziert Frizz und schützt vor Hitze; auf feuchtem oder trockenem Haar, täglich anwendbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216631792",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+              "https://www.ohfeliz.com/herbal-essences/leave-in-spray-smooth-shiny-camomile"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "anti_frizz",
+              "shine",
+              "detangling"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "smooth_anti_frizz",
+              "shine_support",
+              "detangle",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "tangling"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+              "text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+              "text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Produktbeschreibung + Produktmerkmale, Hitzeschutz)",
+              "url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+              "text": "Angereichert mit Kamillenextrakt, verleiht es den Haaren nicht nur Glanz, sondern schützt sie auch vor Hitze und entwirrt sanft."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216631792",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch ohfeliz.com Produktseite ('EAN: 8700216631792', 145 ml)",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+            "source_text": "GTIN: 8700216631792",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "spray",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, ..., Glycerin, ..., Aloe Barbadensis Leaf Juice, ..., Anthemis Nobilis Flower Extract (keine Proteine, keine Pflegeöle — Zitrusöle sind Duftstoffe)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+            "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, Caprylyl Glycol, 1,2-Hexanediol, Oleic Acid, Cetrimonium Chloride",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Gleichmäßig auf feuchtes oder trockenes Haar sprühen und durchkämmen; kein Ausspülen; wie gewohnt stylen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+            "source_text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Retailer-Claims 'Schütz vor Hitzeeinflüssen' (Bullet) und 'schützt sie auch vor Hitze' (Beschreibung) + Produktmerkmal 'Hitzeschutz'; keine Temperaturangabe.",
+            "source_label": "dm.de Produktseite (Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+            "source_text": "Wirkung:Anti-Frizz, Pflege, GlanzProdukteigenschaften:Hitzeschutz",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 145 ml, 41,03 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3045337/herbal-essences-leave-in-spray-kamille",
+            "source_text": "5,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). International als 'Smooth & Shine Chamomile Leave-In Spray' geführt (ohfeliz).",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '8700216631792', mod-10 valide. Unabhängiger Zweitbeleg: ohfeliz.com zeigt 'EAN: 8700216631792' mit 145 ml. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "spray: 'Leave-In Spray' laut Name; Anwendungstext 'sprühen'.",
+          "category_specs.product_leave_in_specs.weight": "light: wässriges Sprühprodukt ohne Öle/Butter; internationaler Produktname 'Weightless All In 1' (Amazon-Listing) stützt die Einstufung.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: pflegendes All-in-One-Spray als Zusatzpflege; kein Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true per R-E: dm-Beschreibung 'schützt sie auch vor Hitze' + Produktmerkmal 'Hitzeschutz'. Keine Temperatur → max_c=null.",
+          "category_specs.product_leave_in_specs.care_benefits": "anti_frizz: 'reduziert Frizz', dm-Wirkung Anti-Frizz. shine: 'verleiht Glanz'. detangling: 'entwirrt sanft'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. humectants: Propylene Glycol, Panthenol, Glycerin. Keine Proteine, keine Pflegeöle (Zitrus-/Duftöle zählen nicht).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'auf das feuchte oder trockene Haar'. pre_heat: wegen Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (abgeleitet): Glanz-/Anti-Frizz-/Entwirr-Profil ohne Feuchtigkeits- oder Proteinfokus; Humectants nur als Basisträger.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: 'entwirrt sanft'. heat_protect: Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatzpflege-Spray, kein Conditioner-Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz + shine_protect für alle Stärken bei air_dry (Anti-Frizz-/Glanz-Claims); heat_protect nur im heat_style-Kontext. Leichtes Spray ohne Overload-Risiko.",
+          "thickness_eligibility": "Alle Stärken: leichtes wässriges Spray.",
+          "concern_eligibility": "frizz: 'reduziert Frizz'. tangling: 'entwirrt sanft'. Glanz hat weiterhin keinen Concern-Code (bekanntes Taxonomie-Loch).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: Spray-Format ist laut Template eine Copy-Anpassung; 'feucht oder trocken' ist Entweder-oder-Erlaubnis.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=spray ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct ('auf das feuchte oder trockene Haar sprühen').",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Packung erlaubt explizit 'feucht oder trocken' (either_state_protection nach P9). Claim-Basis dm (R-E)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Spray Blütensanft Rosenduft",
+          "brand": "Herbal Essences",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 145,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1754982872/assets/pas/images/f6c83c4b-9932-4d37-8174-f8f6e2c1c235/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft"
+          },
+          "description": "Leave-in-Spray mit Rosenessenzen aus Grasse; entwirrt sanft, pflegt, reduziert Frizz und schützt vor Hitze; verleiht Glanz, auf feuchtem oder trockenem Haar, täglich anwendbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216631761",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+              "https://www.ohfeliz.co.uk/herbal-essences/petal-soft-rose-scent-leave-in-spray"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "anti_frizz",
+              "shine",
+              "detangling"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
+            "care_direction": "balanced",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "smooth_anti_frizz",
+              "shine_support",
+              "detangle",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "tangling"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+              "text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+              "text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Produktbeschreibung + Produktmerkmale, Hitzeschutz)",
+              "url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+              "text": "Dieses vielseitige Produkt entwirrt sanft, pflegt intensiv und reduziert Frizz, während es gleichzeitig vor Hitze schützt."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216631761",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch ohfeliz.co.uk Produktseite ('EAN: 8700216631761', 145 ml)",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_text": "GTIN: 8700216631761",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "spray",
+              "weight": "light",
+              "care_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, Behentrimonium Chloride, ... (nahezu identische Basis wie das Kamille-Schwesterprodukt; keine Proteine, keine Pflegeöle)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, Caprylyl Glycol, 1.2-Hexanediol, Parfum, Oleic Acid, Cetrimonium Chloride",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Gleichmäßig auf feuchtes oder trockenes Haar sprühen und durchkämmen; kein Ausspülen; wie gewohnt stylen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_text": "Gleichmäßig auf das feuchte oder trockene Haar sprühen und durchkämmen. Kein Ausspülen erforderlich. Wie gewohnt stylen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Retailer-Claims 'Schütz vor Hitzeeinflüssen' (Bullet) und 'gleichzeitig vor Hitze schützt' (Beschreibung) + Produktmerkmal 'Hitzeschutz'; keine Temperaturangabe.",
+            "source_label": "dm.de Produktseite (Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_text": "Wirkung:Anti-Frizz, Glanz, PflegeProdukteigenschaften:Hitzeschutz",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 145 ml, 41,03 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3045328/herbal-essences-leave-in-spray-bluetensanft-rosenduft",
+            "source_text": "5,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). International als 'Petal Soft Rose Scent Leave-In Spray' geführt (ohfeliz). Draft nennt zusätzlich Rossmann als Händler — Rossmann-Listing wurde nicht separat erhoben, ohfeliz deckt den Zweitbeleg.",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '8700216631761', mod-10 valide. Unabhängiger Zweitbeleg: ohfeliz.co.uk zeigt 'EAN: 8700216631761' mit 145 ml. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "spray: 'Leave-In Spray' laut Name; Anwendungstext 'sprühen'.",
+          "category_specs.product_leave_in_specs.weight": "light: wässriges Sprühprodukt ohne Öle/Butter; internationaler Produktname 'Weightless All In 1' (Amazon-Listing) stützt die Einstufung.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: pflegendes Zusatz-Spray; kein Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true per R-E: dm-Beschreibung 'vor Hitze schützt' + Produktmerkmal 'Hitzeschutz'. Keine Temperatur → max_c=null.",
+          "category_specs.product_leave_in_specs.care_benefits": "anti_frizz: 'reduziert Frizz', dm-Wirkung Anti-Frizz. shine: 'strahlender Glanz'. detangling: 'entwirrt sanft'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. humectants: Propylene Glycol, Panthenol. Keine Proteine, keine Pflegeöle (Zedernholzöl ist Duftstoff).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'auf das feuchte oder trockene Haar'. pre_heat: wegen Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_specs.care_direction": "balanced (abgeleitet): Glanz-/Anti-Frizz-/Entwirr-Profil ohne Feuchtigkeits- oder Proteinfokus.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: 'entwirrt sanft'. heat_protect: Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatzpflege-Spray, kein Conditioner-Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz + shine_protect für alle Stärken bei air_dry; heat_protect nur im heat_style-Kontext. Leichtes Spray ohne Overload-Risiko.",
+          "thickness_eligibility": "Alle Stärken: leichtes wässriges Spray.",
+          "concern_eligibility": "frizz: 'reduziert Frizz'. tangling: 'entwirrt sanft'.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: Spray-Format ist Template-Copy-Anpassung; 'feucht oder trocken' ist Entweder-oder-Erlaubnis.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=spray ∧ weight=light. Trockenhaar-Erlaubnis wörtlich gesourct.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Packung erlaubt explizit 'feucht oder trocken' (either_state_protection nach P9). Claim-Basis dm (R-E)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Serum Plex Care",
+          "brand": "Balea Professional",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.75,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1780786247/assets/pas/images/7e5827d7-c03c-471f-ad8a-bd485c2f01b8/balea-professional-leave-in-serum-plex-care",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care"
+          },
+          "description": "Leave-in-Serum mit Intense-Repair-Technologie, 3-fach Protein-Komplex und Aminosäuren für chemisch behandeltes und geschädigtes Haar; stärkt die Haarfasern, ins handtuchtrockene oder trockene Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4070765006322",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "repair",
+              "protein"
+            ],
+            "ingredient_flags": [
+              "proteins",
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "protein",
+            "repair_support_level": "medium",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "shine_support"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "repair"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+              "text": "Das Serum in das handtuchtrockene oder trockene Haar einmassieren."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+              "text": "Das Serum in das handtuchtrockene oder trockene Haar einmassieren."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4070765006322",
+            "source_label": "dm.de Produktseite (GTIN-Feld) — EINZIGE Quelle; kein unabhängiger Zweitbeleg gefunden (dm-Eigenmarke), daher excluded_from_apply=true per R-B. Achtung: ältere Listings (incibeauty, weareeves→dm-Alt-URL) tragen die abweichende GTIN 4066447220476 (mutmaßlich Vorgänger-EAN desselben Produkts).",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+            "source_text": "GTIN: 4070765006322",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "medium",
+              "care_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "proteins",
+                "silicones",
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Dodecane, Behentrimonium Chloride, Ricinus Communis Seed Oil, Panthenol, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine, ..., Silicone Quaternium-22, ..., Hydrolyzed Vegetable Protein, ..., Hydrolyzed Silk (Protein-/Aminosäuren-Fokus)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+            "source_text": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Dodecane, Behentrimonium Chloride, Ricinus Communis Seed Oil, Panthenol, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "In das handtuchtrockene oder trockene Haar einmassieren.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+            "source_text": "Das Serum in das handtuchtrockene oder trockene Haar einmassieren.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.plex_repair",
+            "fact_value": "Intense-Repair-Technologie, 3-fach Protein-Komplex und Aminosäuren; stärkt die Haarfasern, kann Lücken in der geschädigten Haarstruktur auffüllen; für chemisch behandeltes und geschädigtes Haar; kein Hitzeschutz-Claim auf der dm-Seite.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+            "source_text": "Die Formel mit Intense-Repair-Technologie, 3-fach Protein-Komplex und Aminosäuren stärkt die Haarfasern und kann dabei helfen, Lücken in der geschädigten Haarstruktur aufzufüllen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.75,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 50 ml, 55,00 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care",
+            "source_text": "2,75 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). dm-Artikelnummer 1674699.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '4070765006322', mod-10 valide (dm-eigener GS1-Kreis 4070765). KEIN unabhängiger Zweitbeleg auffindbar (dm-Eigenmarke, Drittlistings ohne EAN-Anzeige) → cross_source_agreement=false, excluded_from_apply=true per R-B. Nebenbefund: incibeauty und weareeves verweisen auf die ältere GTIN 4066447220476 (dm-Alt-URL desselben Produkts) — mutmaßlicher Relaunch mit neuer EAN; NICHT übernommen, da Formulierungsgleichheit unbelegt.",
+          "category_specs.product_leave_in_specs.format": "serum: 'Leave-In Serum' laut Name und dm-Kategorie.",
+          "category_specs.product_leave_in_specs.weight": "medium (abgeleitet, konservativ): Serum mit Fettalkohol-/Castoröl-Basis, keine Light-/Nicht-Beschweren-Claims; kein Butterfokus, daher nicht rich. R-D-Default (serum ∧ medium) bleibt erfüllt.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: intensives Zusatz-Pflegeserum; kein Conditioner-Ersatz-Claim, kein Öl-Analog.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf der dm-Seite (explizit geprüft; auch Beschreibung und Merkmale nennen keinen). Ein 220-Grad-Claim in Dritt-Shop-Suchtreffern gehört zum separaten Balea-Hitzeschutz-Produkt bzw. war nicht verifizierbar — nicht übernommen.",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: 'repariertes Haargefühl', Intense-Repair-Technologie. protein: 3-fach Protein-Komplex + Keratin/Erbsen-/Weizen-/Seidenprotein in der INCI.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "proteins: Hydrolyzed Keratin, Pea Protein, Vegetable Protein, Silk + Aminosäuren. silicones: Silicone Quaternium-22. oils: Ricinus Communis Seed Oil. humectants: Glycerin, Panthenol, PCA/Sodium PCA.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'handtuchtrocken oder trocken'.",
+          "category_specs.product_leave_in_specs.care_direction": "protein: dediziertes Protein-/Aminosäuren-Profil in Claims UND INCI (klarster Protein-Fall dieses Batches).",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: dedizierte Plex-/Repair-Linie mit echten Protein-Aktivstoffen, aber 'Lücken auffüllen' ist Film-/Auflagerungs-Chemie, kein belegter Bond-Builder — 'high' wäre nicht evidenzgedeckt.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim (einziger sauber belegter Fit-Enum-Wert; kein Entwirr-/Hitze-Claim).",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als intensive Zusatzpflege positioniert.",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry: Kern-Repair-Positionierung, sparsame Serum-Dosierung.",
+          "thickness_eligibility": "Alle Stärken: sparsam dosierbares 50-ml-Serum; dm-Haartyp nennt Schädigung, keine Stärke-Einschränkung.",
+          "concern_eligibility": "hair_damage/repair: 'für chemisch behandeltes & geschädigtes Haar'. split_ends: dm-Wirkung 'Anti-Spliss'.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'handtuchtrocken oder trocken' ist Entweder-oder-Erlaubnis; keine Platzierungs-Widersprüche im Anwendungstext ('vom Ansatz bis in die Spitzen' steht nur im Marketing-Fließtext → per R-C ignoriert).",
+          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=serum ∧ weight=medium. Trockenhaar-Erlaubnis wörtlich gesourct ('handtuchtrockene oder trockene Haar').",
+          "identifiers.4070765006322": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt.",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): dm-Galerie hat kein Flasche-solo-Bild; finales Cutout = Flaschen-Ausschnitt aus dem Kombi-Packshot (Karton entfernt, operator-geprüft)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Cream The Foundation",
+          "brand": "Dejan Garz",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1747496140/assets/pas/images/fbdc480c-798b-457c-bc4b-adc9c29416ea/dejan-garz-leave-in-cream-the-foundation",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation"
+          },
+          "description": "Reichhaltige Anti-Frizz-Leave-in-Creme mit Amodimethicone und Conditioner-Komplex für trockenes, strapaziertes Haar; spendet Feuchtigkeit, versiegelt die Schuppenschicht, auch als Overnight- oder Zwischendurch-Pflege."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4270004570120",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+              "https://www.hagel-shop.de/dejan-garz-the-foundation-leave-in-cream-100-ml.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "anti_frizz",
+              "detangling"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "smooth_anti_frizz",
+              "detangle"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "moisture_anti_frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+              "text": "Anwendung: Verteile 1 - 2 Pumpstöße im nassen oder trockenen Haar. Die Leave-In Conditioning Cream kann täglich oder nach Bedarf angewendet werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise, Zwischendurch-/Overnight-Positionierung)",
+              "url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+              "text": "Sie eignet sich auch sehr gut als Overnight Produkt oder als intensive Pflege für zwischendurch."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4270004570120",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch hagel-shop.de Produktseite ('EAN 4270004570120', GPSR-Hersteller New Flag GmbH)",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+            "source_text": "GTIN: 4270004570120",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "medium",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Glycerin, Amodimethicone, Behentrimonium Chloride, Cetrimonium Chloride, Panthenol, Argania Spinosa Kernel Oil, Simmondsia Chinensis Seed Oil, Ricinus Communis Seed Oil, ..., Phenyl Trimethicone, ..., Sodium Hyaluronate (keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+            "source_text": "INGREDIENTS: AQUA, CETEARYL ALCOHOL, GLYCERIN, AMODIMETHICONE, BEHENTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, PANTHENOL, ARGANIA SPINOSA KERNEL OIL, SIMMONDSIA CHINENSIS SEED OIL, RICINUS COMMUNIS SEED OIL",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "1-2 Pumpstöße im nassen oder trockenen Haar; täglich oder nach Bedarf; auch Overnight oder zwischendurch.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+            "source_text": "Anwendung: Verteile 1 - 2 Pumpstöße im nassen oder trockenen Haar. Die Leave-In Conditioning Cream kann täglich oder nach Bedarf angewendet werden. Sie eignet sich auch sehr gut als Overnight Produkt oder als intensive Pflege für zwischendurch.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_seal_frizz",
+            "fact_value": "Intensive Feuchtigkeit; versiegelt die Schuppenschicht (Spliss-Schutz durch Versiegelung, kein Repair-Claim); Anti-Frizz mit Amodimethicone + Conditioner-Komplex, ohne zu beschweren; leichte Kämmbarkeit; kein Hitzeschutz-Claim.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+            "source_text": "Mit einer speziellen Anti-Frizz Formel versorgt sie das Haar mit Feuchtigkeit und schützt es gleichzeitig vor Spliss, indem sie die Schuppenschicht versiegelt.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 100 ml, 99,50 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3063678/dejan-garz-leave-in-cream-the-foundation",
+            "source_text": "9,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). Hersteller-Serie 'The Foundation' (New Flag GmbH laut GPSR-Angabe bei Hagel).",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '4270004570120', mod-10 valide. Unabhängiger Zweitbeleg: hagel-shop.de zeigt 'EAN 4270004570120'. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "cream: 'Leave-In Cream' laut Name; dm-Merkmal 'Textur: Creme'; Pumpspender.",
+          "category_specs.product_leave_in_specs.weight": "medium (abgeleitet): dm nennt sie 'reichhaltige Pflege', zugleich 'ohne das Haar zu beschweren' und Haartyp 'Alle Haartypen'; Öl-/Silikon-Creme mit 1-2-Pumpstoß-Dosierung. Grenzfall zu rich (Hersteller-Shop nennt sie das reichhaltigste Produkt der Serie) — siehe Notes.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: 'Leave-In Conditioning Cream' als Zusatzpflege; kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf der dm-Seite (explizit geprüft).",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'Intensive Feuchtigkeit', 'Extraportion Feuchtigkeit'. anti_frizz: 'Anti-Frizz Formel'. detangling: 'leichte Kämmbarkeit'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone, Phenyl Trimethicone. oils: Argan-, Jojoba-, Castoröl. humectants: Glycerin, Panthenol, Sodium Hyaluronate. Keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'im nassen oder trockenen Haar' + Zwischendurch-Positionierung.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: durchgängige Feuchtigkeitsclaims; keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'Schutz vor Spliss durch Versiegelung' ist präventives Sealing, kein Repair; keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: 'leichte Kämmbarkeit & mehr Griffigkeit', Glättungs-/Anti-Frizz-Claims.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatzpflege ('Conditioning Cream'), kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: Feuchtigkeits-/Anti-Frizz-Kernclaims.",
+          "thickness_eligibility": "Alle Stärken: dm-Haartyp 'Alle Haartypen' + 'ohne das Haar zu beschweren'; sparsame Pump-Dosierung.",
+          "concern_eligibility": "dryness: 'für trockenes und strapaziertes Haar'. frizz + moisture_anti_frizz: Anti-Frizz-Kernclaims. split_ends bewusst NICHT gesetzt (nur präventiver Versiegelungs-Claim).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder trocken' ist Entweder-oder-Erlaubnis; keine Platzierungs-Widersprüche.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D: format=cream wäre damp-only, aber explizites Dry-/Between-Wash-Marketing qualifiziert immer — 'als intensive Pflege für zwischendurch' + 'Overnight Produkt' wörtlich gesourct. Overnight-Nutzung ist Zusatzpositionierung, kein Kategorien-Mismatch (kein R-C-Fall) — siehe Notes."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Serum The Foundation",
+          "brand": "Dejan Garz",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1747496075/assets/pas/images/e78eef2a-4f8c-4c51-b2e0-33938725d42b/dejan-garz-leave-in-serum-the-foundation",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation"
+          },
+          "description": "Schwereloses Anti-Frizz-Leave-in-Serum (Gel-Textur) mit Amodimethicone und Conditioner-Komplex; intensive Feuchtigkeit und Versiegelung für strapaziertes Haar, auch als sehr leichte Zwischendurch-Pflege."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4270004570137",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+              "https://www.hagel-shop.de/dejan-garz-the-foundation-leave-in-serum-100-ml.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "smooth_anti_frizz"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "moisture_anti_frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+              "text": "Anwendung: Vor Gebrauch gut schütteln. 1 – 2 Pumpstöße in das nasse oder trockene Haar geben. Das Leave-in Serum kann täglich oder nach Bedarf verwendet werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise, Zwischendurch-/Overnight-Positionierung)",
+              "url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+              "text": "Es eignet sich auch sehr gut als Overnight Produkt oder als sehr leichte Pflege für zwischendurch."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4270004570137",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch hagel-shop.de Produktseite ('EAN 4270004570137')",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+            "source_text": "GTIN: 4270004570137",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, PEG-40 Hydrogenated Castor Oil, Glycerin, Betaine, Amodimethicone, Cetrimonium Chloride, Panthenol, Hydroxypropyl Guar, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, ..., Xanthan Gum (wässrige Gel-Basis, keine Proteine, keine freien Öle/Butter)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale 'Textur: Gel')",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+            "source_text": "INGREDIENTS: AQUA, PEG-40 HYDROGENATED CASTOR OIL, GLYCERIN, BETAINE, AMODIMETHICONE, CETRIMONIUM CHLORIDE, PANTHENOL, HYDROXYPROPYL GUAR, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Vor Gebrauch schütteln; 1-2 Pumpstöße ins nasse oder trockene Haar; täglich oder nach Bedarf; auch Overnight oder als sehr leichte Zwischendurch-Pflege.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+            "source_text": "Anwendung: Vor Gebrauch gut schütteln. 1 – 2 Pumpstöße in das nasse oder trockene Haar geben. Das Leave-in Serum kann täglich oder nach Bedarf verwendet werden. Es eignet sich auch sehr gut als Overnight Produkt oder als sehr leichte Pflege für zwischendurch.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.weightless_moisture_frizz",
+            "fact_value": "Schwerelose Pflege; intensive Feuchtigkeit; präventiver Spliss-Schutz durch Versiegelung der Schuppenschicht; Anti-Frizz mit Amodimethicone + Conditioner-Komplex ohne zu beschweren; kein Hitzeschutz-Claim.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+            "source_text": "Diese reichhaltige Pflegeformel bietet nicht nur intensive Feuchtigkeit, sondern schützt auch präventiv vor Spliss, indem sie die Schuppenschicht des Haares versiegelt.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 100 ml, 99,50 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3062977/dejan-garz-leave-in-serum-the-foundation",
+            "source_text": "9,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1).",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '4270004570137', mod-10 valide. Unabhängiger Zweitbeleg: hagel-shop.de zeigt 'EAN 4270004570137'. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "serum: 'Leave-In Serum' laut Name; dm-Merkmal nennt 'Textur: Gel' — das Format-Enum kennt kein gel, serum ist die ehrlichste Zuordnung (wässrige Gel-Serum-Basis, Pumpspender).",
+          "category_specs.product_leave_in_specs.weight": "light: Kernclaim 'Schwerelose Pflege' + 'als sehr leichte Pflege für zwischendurch'; wässrige Gel-Basis ohne Öle/Butter.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: Zusatz-Pflegeserum; kein Conditioner-Ersatz-Claim, kein Öl-Analog.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim auf der dm-Seite (explizit geprüft).",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'intensive Feuchtigkeit'. anti_frizz: 'Anti-Frizz Formel für ein glattes Finish'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. polymers: Hydroxypropyl Guar (2x), Xanthan Gum. humectants: Glycerin, Betaine, Panthenol. PEG-40 Hydrogenated Castor Oil ist Solubilizer, bewusst NICHT als oils geflaggt; keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'in das nasse oder trockene Haar' + Zwischendurch-Positionierung.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Feuchtigkeits-Kernclaims + Humectant-Fokus (Glycerin, Betaine); keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: nur präventiver Versiegelungs-Claim, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth (erzwungene Wahl): Fit-Enum kennt keinen Feuchtigkeitswert; Glättungs-/Griffigkeits-Claims ('glattes Finish', 'Griffigkeit') sind die nächstliegende Zuordnung — schwächstes Feld dieses Produkts.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatzpflege, kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz für alle Stärken bei air_dry: leichtes Feuchtigkeits-/Anti-Frizz-Serum, 'ohne beschwert zu werden'.",
+          "thickness_eligibility": "Alle Stärken: dm-Haartyp 'Alle Haartypen', schwerelose Textur.",
+          "concern_eligibility": "dryness: 'für strapaziertes und trockenes Haar'. frizz + moisture_anti_frizz: Anti-Frizz-Kernclaims. split_ends bewusst NICHT gesetzt (nur präventiver Versiegelungs-Claim).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'nass oder trocken' ist Entweder-oder-Erlaubnis.",
+          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift doppelt — format=serum ∧ weight=light UND explizites Between-Wash-Marketing ('sehr leichte Pflege für zwischendurch', wörtlich gesourct)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarmaske Molecular Care",
+          "brand": "Balea Professional",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1764975551/assets/pas/images/bb909f58-7749-41a1-9c81-f920a0efe3d5/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care"
+          },
+          "description": "Leave-on-Intensivpflege (Pump-Creme) mit Multi-Layer-Repair-Technologie für poröses, pflegebedürftiges Haar; stärkt die Haarfasern, mit Hitzeschutz, ohne Ausspülen ins handtuchtrockene Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447910148",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+              "https://www.mynetfair.com/de/produktinformation/3368999/molecular-care-leave-in-haarmaske-4066447910148-balea-professional-dm----,3368999/"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "repair",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "pre_heat"
+            ],
+            "care_direction": "protein",
+            "repair_support_level": "medium",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "shine_support",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "repair",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+              "text": "Leave-In Haarmaske hubweise in die handtuchtrockenen Haarlängen und Spitzen einarbeiten. Sparsam dosieren, mit einem Hub beginnen und je nach Haardicke und -länge weitere Hübe verwenden. Nicht ausspülen. Nach 4 Minuten Einwirkzeit wie gewohnt stylen oder lufttrocknen lassen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Produktmerkmale, Hitzeschutz)",
+              "url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+              "text": "Produkteigenschaften:Vegan, Ohne Alkohol, Ohne Ammoniak, Hitzeschutz"
+            },
+            "deviation": null,
+            "usable_on_dry_hair": false
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447910148",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch mynetfair-Produktdatenbank ('Molecular Care Leave-In-Haarmaske von Balea Professional (dm) mit der EAN: 4066447910148') und eBay.de-Listing",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "GTIN: 4066447910148",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "medium",
+              "care_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "proteins",
+                "polymers"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Distearoylethyl Hydroxyethylmonium Methosulfate, ..., Amodimethicone, Cocos Nucifera Oil, ..., Hydrolyzed Wheat Protein, Arginine, Avena Sativa Peptide"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "INGREDIENTS: AQUA, CETEARYL ALCOHOL, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, SODIUM BENZOATE, PARFUM, COCO-CAPRYLATE, CETRIMONIUM CHLORIDE, AMODIMETHICONE, COCOS NUCIFERA OIL",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Hubweise in handtuchtrockene Längen und Spitzen; sparsam dosieren; nicht ausspülen; nach 4 Minuten Einwirkzeit stylen oder lufttrocknen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "Leave-In Haarmaske hubweise in die handtuchtrockenen Haarlängen und Spitzen einarbeiten. Sparsam dosieren, mit einem Hub beginnen und je nach Haardicke und -länge weitere Hübe verwenden. Nicht ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.category_sanity.leave_on",
+            "fact_value": "R-A-Prüfung: trotz 'Haarmaske' im Namen ein echtes Leave-on-Produkt — 'Kein Ausspülen erforderlich' (Beschreibung) und 'Nicht ausspülen' (Anwendung). Kategorie leave_in korrekt, keine Re-Kategorisierung.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "Besonders praktisch ist die Anwendung ohne Ausspülen: Einfach eine kleine Menge in die handtuchtrockenen Längen und Spitzen einarbeiten, vier Minuten einwirken lassen und wie gewohnt stylen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Retailer-Produktmerkmal 'Hitzeschutz' ohne Temperaturangabe; per R-E ausreichend. Anwendung nennt nur handtuchtrockenes Haar → usable_on_dry_hair=false.",
+            "source_label": "dm.de Produktseite (Produktmerkmale)",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "Produkteigenschaften:Vegan, Ohne Alkohol, Ohne Ammoniak, Hitzeschutz",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 50 ml, 59,00 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care",
+            "source_text": "2,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). 'Haarmaske' ist hier Marketing-Format — R-A-Prüfung bestätigt Leave-on (siehe Evidence category_sanity).",
+          "identifiers.ean_capture": "dm-GTIN-Feld '4066447910148', mod-10 valide. Unabhängiger Zweitbeleg: mynetfair-Produktdatenbank nennt dieselbe EAN mit Produkt und Marke; zusätzlich eBay.de-Listing. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "cream: Pump-Creme ('hubweise'); das Format-Enum kennt kein mask, cream ist die ehrlichste Zuordnung der Leave-on-Maskentextur.",
+          "category_specs.product_leave_in_specs.weight": "medium (abgeleitet): Intensivpflege für poröses Haar mit expliziter Sparsam-Dosierung; weder Light-Claim noch Butter-/Ölfokus.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: Leave-on-Zusatzpflege nach der Wäsche; kein Conditioner-Ersatz-Claim auf der dm-Seite.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true per R-E: dm-Produktmerkmal 'Hitzeschutz'. Keine Temperatur → max_c=null.",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: Multi-Layer-Repair-Technologie, 'Haarfasern werden gestärkt'. shine: 'geschmeidiges und glänzendes Ergebnis'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. oils: Cocos Nucifera Oil. proteins: Hydrolyzed Wheat Protein, Avena Sativa Peptide, Arginine. polymers: Guar Hydroxypropyltrimonium Chloride.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry: Anwendung nennt ausschließlich handtuchtrockenes Haar. pre_heat: wegen Hitzeschutz-Merkmal. KEIN dry_hair (nicht erlaubt laut Quelle).",
+          "category_specs.product_leave_in_specs.care_direction": "protein (abgeleitet): Repair-/Stärkungs-Positionierung für poröses Haar plus echte Proteine/Peptide in der INCI; kein Feuchtigkeits-Kernclaim.",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: dedizierte Repair-Technologie + Protein-Aktivstoffe, aber 'Multi-Layer-Repair' ist unbelegte Hersteller-Terminologie, kein verifizierter Bond-Builder — 'high' wäre nicht evidenzgedeckt.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim. heat_protect: Hitzeschutz-Merkmal.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatz-Intensivpflege; kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry; heat_protect nur im heat_style-Kontext.",
+          "thickness_eligibility": "Alle Stärken: Anwendungstext skaliert die Dosierung explizit 'je nach Haardicke und -länge'.",
+          "concern_eligibility": "hair_damage/repair: poröses, pflegebedürftiges Haar + Repair-Technologie. Bewusst schmal (kein Spliss-/Bruch-Claim).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: handtuchtrockene Längen/Spitzen sind template-konform. Die '4 Minuten Einwirkzeit' vor dem Styling ist eine Anwendungsstil-Differenz — per R-C ignoriert (kein struktureller Kategorien-Mismatch), im Quelltext dokumentiert; contact_time ist im Leave-in-Schema ohnehin nur für TPL-MASK zulässig.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=false: Quelle nennt ausschließlich handtuchtrockenes Haar → pre_heat_damp nach P9. Claim-Basis dm-Merkmal (R-E).",
+          "protocols.drycare_not_stamped": "Ruling R-D: format=cream → damp-only; kein Dry-/Between-Wash-Marketing vorhanden."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarmaske Peptide Intense Repair",
+          "brand": "Jean&Len",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.25,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1757641373/assets/pas/images/58761b27-9bb6-48a8-8de3-deb793d5317e/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair"
+          },
+          "description": "Silikonfreie Leave-on-Repairmaske mit Peptiden und Hydrolyzed-Protein-Trio für geschädigtes Haar; ersetzt den Conditioner nach der Wäsche, glättet, mindert Frizz, mit Hitzeschutz bis 230 °C."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4262500780288",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+              "https://www.fresh-store.eu/en/hair/106634-jean-len-leave-in-hair-mask-peptide-intense-repair-100-ml-338-fl-oz-4262500780288.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "medium",
+            "roles": [
+              "replacement_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "repair",
+              "anti_frizz",
+              "shine",
+              "moisture"
+            ],
+            "ingredient_flags": [
+              "proteins",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "pre_heat"
+            ],
+            "care_direction": "protein",
+            "repair_support_level": "medium",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "smooth_anti_frizz",
+              "shine_support",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "replacement_capable",
+            "care_benefits": [
+              "repair",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+              "text": "Haare shampoonieren, keinen Conditioner verwenden. Maske sparsam im handtuchtrockenen Haar verteilen, in den Längen und Spitzen einmassieren. 4 Minuten einwirken lassen, nicht ausspülen. Danach wie gewohnt trocknen und stylen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Produktbeschreibung, Hitzeschutz bis 230 °C)",
+              "url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+              "text": "Der integrierte Hitzeschutz bis 230 °C macht sie zum idealen Begleiter für schönes und geschmeidiges Haar, auch bei regelmäßigem Styling."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": false
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4262500780288",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch fresh-store.eu Produktseite ('EAN: 4262500780288', 100 ml)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "GTIN: 4262500780288",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "medium",
+              "care_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "proteins",
+                "humectants",
+                "polymers"
+              ],
+              "inci_basis": "aqua, alcohol denat., cetearyl alcohol, propanediol, glycerin, behentrimonium chloride, ..., panthenol, caesalpinia spinosa gum, hydrolyzed corn protein, hydrolyzed wheat protein, hydrolyzed soy protein, biotinoyl tripeptide-1, sh-oligopeptide-78 (silikonfrei laut Merkmal + INCI)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "Ingredients: aqua, alcohol denat., cetearyl alcohol, propanediol, glycerin, behentrimonium chloride, cetyl esters, dicaprylyl ether, lauryl alcohol, coco-glucoside",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Nach dem Shampoonieren ohne Conditioner; sparsam im handtuchtrockenen Haar in Längen und Spitzen; 4 Minuten einwirken, nicht ausspülen; danach trocknen und stylen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "Haare shampoonieren, keinen Conditioner verwenden. Maske sparsam im handtuchtrockenen Haar verteilen, in den Längen und Spitzen einmassieren. 4 Minuten einwirken lassen, nicht ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.category_sanity.leave_on",
+            "fact_value": "R-A-Prüfung: trotz 'Haarmaske' im Namen ein echtes Leave-on-Produkt — Anwendung endet mit 'nicht ausspülen'. Kategorie leave_in korrekt, keine Re-Kategorisierung.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "4 Minuten einwirken lassen, nicht ausspülen. Danach wie gewohnt trocknen und stylen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.peptide_repair_heat",
+            "fact_value": "Peptide reich an Aminosäuren; rekonstruiert die Haarstruktur; kann Styling-Schäden reparieren; glättet, mindert Frizz, verleiht Elastizität und Glanz; Hitzeschutz bis 230 °C; silikonfrei.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "Mit Peptiden, die reich an Aminosäuren sind, dringt die Formel tief in die Haarstruktur ein und kann Schäden durch Styling oder äußere Einflüsse reparieren.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.25,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 100 ml, 52,50 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+            "source_text": "5,25 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). 'Haarmaske' ist Marketing-Format — R-A-Prüfung bestätigt Leave-on (siehe Evidence category_sanity).",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '4262500780288', mod-10 valide. Unabhängiger Zweitbeleg: fresh-store.eu zeigt 'EAN: 4262500780288'; zusätzlich vivavoss.com-Listing. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "cream: Leave-on-Maskentextur (Tube/Creme); das Format-Enum kennt kein mask, cream ist die ehrlichste Zuordnung.",
+          "category_specs.product_leave_in_specs.weight": "medium (abgeleitet): Intensiv-Repairmaske mit Sparsam-Dosierung; kein Light-Claim, kein Butter-/Ölfokus.",
+          "category_specs.product_leave_in_specs.roles": "replacement_conditioner: Anwendung sagt wörtlich 'keinen Conditioner verwenden' — das Produkt nimmt den Conditioner-Platz nach der Wäsche ein (stärkster Replacement-Beleg dieses Batches).",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true per R-E: dm-Beschreibung 'integrierter Hitzeschutz bis 230 °C' + Merkmal 'Hitzeschutz'. heat_protection_max_c=230 (wörtlich bezifferte Quelle).",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: 'rekonstruiert die Haarstruktur', Anti-Spliss-Wirkung. anti_frizz: 'kann Frizz mindern'. shine: 'Glanz verleihen'. moisture: dm-Wirkung nennt Feuchtigkeit (schwächster der vier Werte).",
+          "category_specs.product_leave_in_specs.ingredient_flags": "proteins: Hydrolyzed Corn/Wheat/Soy Protein, Biotinoyl Tripeptide-1, sh-Oligopeptide-78. humectants: Glycerin, Propanediol, Panthenol. polymers: Caesalpinia Spinosa Gum. Silikonfrei (Merkmal + INCI); dicaprylyl ether ist Ester-Emollient, bewusst NICHT als oils geflaggt.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry: Anwendung nennt ausschließlich handtuchtrockenes Haar nach der Wäsche. pre_heat: wegen Hitzeschutz-Claim. KEIN dry_hair.",
+          "category_specs.product_leave_in_specs.care_direction": "protein: Peptid-/Protein-Kernclaims plus drei Hydrolyzed Proteins in der INCI.",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: dedizierte Peptid-Repair-Linie mit echten Protein-/Peptid-Aktivstoffen, aber 'rekonstruiert' ist Hersteller-Claim ohne verifizierte Bond-Builder-Chemie — konsistent mit den übrigen Medium-Einstufungen des Programms; 'high' wäre nicht evidenzgedeckt.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "replacement_capable: wörtlicher Packungstext 'keinen Conditioner verwenden'.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim. heat_protect: 230-Grad-Claim.",
+          "product_leave_in_eligibility": "repair-Bucket für alle Stärken bei air_dry; heat_protect nur im heat_style-Kontext.",
+          "thickness_eligibility": "Alle Stärken: sparsame Dosierung; dm-Haartyp nennt Schädigung, keine Stärke-Einschränkung.",
+          "concern_eligibility": "hair_damage/repair: 'für geschädigtes Haar', Repair-Kernclaims. split_ends: dm-Wirkung 'Anti-Spliss'. frizz: 'kann Frizz mindern'.",
+          "protocols.tpl_leavein_damp": "Keine Deviation (R-C): '4 Minuten einwirken' und die Kadenz-Empfehlung ('erste 4 Haarwäschen hintereinander, danach jede 4. Haarwäsche') sind Anwendungsstil-Differenzen, kein struktureller Kategorien-Mismatch — Template unverändert gestampt, Quelltext dokumentiert. 'Keinen Conditioner verwenden' ist im Fakt conditioner_relationship=replacement_capable abgebildet, nicht im Protokoll.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=false: Quelle bindet die Anwendung an handtuchtrockenes Haar nach der Wäsche → pre_heat_damp nach P9. 230-°C-Wert nur in product_leave_in_specs.heat_protection_max_c, nicht in die Template-Copy übernommen.",
+          "protocols.drycare_not_stamped": "Ruling R-D: format=cream → damp-only; kein Dry-/Between-Wash-Marketing (Anwendung ist explizit an den Waschtag gebunden)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarkur Avocado",
+          "brand": "Wahre Schätze",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3600,w_3600/v1763076680/assets/pas/images/edb5b755-31ca-4e1f-8481-73deb88a5912/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado"
+          },
+          "description": "Silikonfreie Leave-in-Creme mit Avocado-Öl und Shea Butter für sehr trockenes, welliges und lockiges Haar; spendet Feuchtigkeit, definiert Locken, Anti-Frizz, Hitzeschutz bis 230 °C."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542639200",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+              "https://www.budni.de/sortiment/produkte/6534037008"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "anti_frizz",
+              "curl_definition"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "smooth_anti_frizz",
+              "curl_shape_support",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "curl_definition",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "moisture_anti_frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+              "text": "Die Wahre Schätze Intensiv Pflegende Leave-In-Creme kann täglich auf trockenem oder nassem Haar angewendet werden. Dafür einfach eine kleine Menge in die Längen und Spitzen des Haares geben und sanft einmassieren. Der Leave-In Conditioner muss nicht ausgespült werden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Produktbeschreibung, Hitzeschutz bis 230 °C)",
+              "url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+              "text": "Die silikonfreie Formel gewährleistet ein natürliches Haargefühl, während der Hitzeschutz bis zu 230°C und die Anti-Frizz-Wirkung zusätzlichen Schutz bieten."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542639200",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch budni.de-Produktseite ('Intensiv Pflegende Leave-In Creme', WAHRE SCHÄTZE — zeigt 3600542639200 in der Produktbeschreibung mit identischer INCI)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "GTIN: 3600542639200",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "medium",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants",
+                "polymers"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil, Persea Gratissima Oil, Butyrospermum Parkii Butter, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Hydroxypropyl Guar, ... (silikonfrei laut Merkmal + INCI; keine Proteine; gleiche Basis wie die Garnier-Locken-Methode-Creme)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • PERSEA GRATISSIMA OIL / AVOCADO OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCERYL STEARATE • HYDROXYPROPYL GUAR",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Täglich auf trockenem oder nassem Haar; kleine Menge in Längen und Spitzen, sanft einmassieren; nicht ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "Dafür einfach eine kleine Menge in die Längen und Spitzen des Haares geben und sanft einmassieren. Der Leave-In Conditioner muss nicht ausgespült werden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Retailer-Claim 'Hitzeschutz bis zu 230°C' (Bullet + Beschreibung); per R-E ausreichend; heat_protection_max_c=230.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "Hitzeschutz bis zu 230°C",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_curl",
+            "fact_value": "Intensive Pflege für sehr trockenes, welliges und lockiges Haar; Avocado-Öl + Shea Butter; sofortige Feuchtigkeit und definierte Locken; silikonfrei.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "Angereichert mit purem Avocado-Öl und Shea Butter, versorgt sie das Haar sofort mit Feuchtigkeit und sorgt für definierte Locken.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 200 ml, 14,75 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+            "source_text": "2,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1). Verwendungstext nennt es 'Intensiv Pflegende Leave-In-Creme' (budni führt es unter diesem Namen). 'Haarkur' ist Marketing-Format — Leave-on-Anwendung ('muss nicht ausgespült werden') bestätigt leave_in, kein R-A-Fall.",
+          "identifiers.ean_capture": "EAN war im Draft offen; dm-GTIN-Feld '3600542639200', mod-10 valide, GS1-Präfix 3600542 (L'Oréal/Garnier-Kreis — Wahre Schätze ist eine Garnier-Linie, plausibel). Unabhängiger Zweitbeleg: budni.de zeigt dieselbe Nummer in der Produktbeschreibung mit identischer INCI. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "cream: 'Leave-In-Creme' laut Verwendungstext; Creme-Textur mit Öl-/Butteranteil.",
+          "category_specs.product_leave_in_specs.weight": "medium (abgeleitet): Öl-+Shea-Butter-Creme für sehr trockenes Haar mit 'kleine Menge'-Dosierung; kein Light-Claim ('leichte Textur' der baugleichen Garnier-Creme steht hier NICHT auf der Seite), kein reiner Butterfokus → nicht rich.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: 'Leave-In Conditioner' als Zusatzpflege; kein Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true per R-E: dm-Bullet 'Hitzeschutz bis zu 230°C' + Beschreibung. heat_protection_max_c=230 (wörtlich beziffert).",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'versorgt sofort mit Feuchtigkeit'. anti_frizz: 'Anti-Frizz-Wirkung für Geschmeidigkeit'. curl_definition: 'sorgt für definierte Locken', Haartyp Lockiges Haar.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Sonnenblumen-, Avocadoöl, Shea Butter. humectants: Glycerin. polymers: Hydroxypropyl Guar. Silikonfrei (Merkmal + INCI), keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Packung erlaubt explizit 'auf trockenem oder nassem Haar'. pre_heat: wegen Hitzeschutz-Claim.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Feuchtigkeits-Kernclaims + Öl-/Butter-Emollients; keine Proteine.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "curl_definition: Kernclaim. heat_protect: 230-Grad-Claim.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatzpflege ('Leave-In Conditioner' nach der Wäsche bzw. zwischendurch), kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "moisture_anti_frizz + curl_definition bei air_dry, heat_protect bei heat_style — jeweils nur normal + coarse (siehe thickness).",
+          "thickness_eligibility": "normal + coarse (konservativ): Öl-+Shea-Butter-Creme, positioniert für 'sehr trockenes, welliges und lockiges Haar'; kein Nicht-Beschweren-Claim auf der Seite → feines Haar ausgeschlossen (Overload-Risiko). Grenzfall für Nick dokumentiert (Notes §10).",
+          "concern_eligibility": "dryness: 'sehr trockenes Haar'. frizz + moisture_anti_frizz: Anti-Frizz-Kernclaim.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder nass' ist Entweder-oder-Erlaubnis; 'Längen und Spitzen' ist template-konform.",
+          "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Packung erlaubt explizit 'auf trockenem oder nassem Haar' (either_state_protection nach P9). 230-°C-Wert nur im Spec-Feld, nicht in der Template-Copy.",
+          "protocols.drycare_not_stamped": "Ruling R-D: format=cream → damp-only. 'Täglich auf trockenem Haar' ist Toleranz-/Frequenz-Erlaubnis, kein Between-Wash-Marketing — Grenzfall für Nick dokumentiert (Notes §10).",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): Deshadow hatte die braune Kappe entfernt (Warmton-Blindspot, unter der 15%-Guard-Schwelle); finales Cutout = unbearbeitete Original-Alpha."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

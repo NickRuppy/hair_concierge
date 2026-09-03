@@ -1,0 +1,1416 @@
+{
+  "batch_id": "scan-db-expansion-wave2-oil-2026-09-03",
+  "generated_at": "2026-09-03T10:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Intense Repair",
+          "brand": "Langhaarmädchen",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1787639789/assets/pas/images/f6b217ab-58a2-4498-b3e8-efde3050eb17/langhaarmaedchen-haaroel-intense-repair",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair"
+          },
+          "description": "Leichtes Haaröl mit Kokos- und Buritiöl für intensive Pflege ohne Beschweren; im feuchten oder trockenen Haar anwendbar, wirkt gegen Frizz und bietet Hitzeschutz bis 230 °C."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447864793",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+              "text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+              "text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+              "text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen. Bietet einen Hitzeschutz bis zu 230 °C."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447864793",
+            "source_label": "dm.de Produktseite (GTIN-Feld + JSON-LD; einzige Quelle, kein unabhängiger Zweitbeleg für die aktuelle EAN gefunden)",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+            "source_text": "GTIN: 4066447864793",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Dimethicone, Isododecane, C12-15 Alkyl Benzoate, Dimethiconol, Cocos Nucifera Oil, Mauritia Flexuosa Fruit Oil, Helianthus Annuus Seed Oil, Caprylic/Capric Triglyceride (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen; NEUE Rezeptur, siehe Notes)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+            "source_text": "INGREDIENTS: DIMETHICONE | ISODODECANE | C12-15 ALKYL BENZOATE | DIMETHICONOL | COCOS NUCIFERA OIL | MAURITIA FLEXUOSA FRUIT OIL | HELIANTHUS ANNUUS SEED OIL | CAPRYLIC/CAPRIC TRIGLYCERIDE | DIETHYLHEXYL SYRINGYLIDENEMALONATE | PARFUM | TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES | CI 40800.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "2-3 Pumphübe in den Handflächen verreiben, im feuchten oder trockenen Haar in Längen und Spitzen verteilen; Hitzeschutz bis 230 °C laut Produktbeschreibung.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+            "source_text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Beschreibungs-Claim (R-E ausreichend): Hitzeschutz bis zu 230 °C.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+            "source_text": "Ein weiterer Vorteil des Haaröls ist der integrierte Hitzeschutz, der das Haar bei Temperaturen bis zu 230 °C schützen kann.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+            "source_text": "4,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light (abgeleitet): 'intensive Pflege, ohne das Haar zu beschweren', volatile-/silikon-geführte INCI (Isododecane), Pumpdosierung 2-3 Hübe.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Hitzeschutz bis zu 230 °C' — per R-E ausreichend, kein Packungs-Claim nötig. Kein Pre-Wash-Claim, nicht gestampt.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-dominante INCI, Pflanzenöle im Mittelfeld; kein reines Pflanzenöl, nicht als Trockenöl vermarktet.",
+          "category_specs.product_oil_eligibility.oil_purpose": "light_finish (abgeleitet): 'ohne das Haar zu beschweren' + 'Für ein gepflegtes und glänzendes Finish' (wörtlich in der Beschreibung).",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Kokosöl, Buritiöl (Mauritia Flexuosa), Sonnenblumenöl, Caprylic/Capric Triglyceride + C12-15 Alkyl Benzoate (Ester-Emollients). Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: leichte Formel, 'ohne zu beschweren'; kein Fein-Haar-Warnhinweis.",
+          "concern_eligibility": "frizz: 'Wirkt gegen Frizz und fliegende Haare' (wörtlich). hair_damage bewusst NICHT aufgenommen: 'Intense Repair' ist nur der Linienname; weder Beschreibung noch Produktmerkmale claimen geschädigtes Haar als Zielgruppe. Kämmbarkeit/Glanz haben keinen Concern-Code.",
+          "protocols": "Keine Deviation: Platzierung 'Haarlängen und Spitzen' konform, Pumpformat laut Pilot-Ruling mit 'wenige Tropfen'-Copy konsistent, feucht-oder-trocken deckt beide Care-Stamps.",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'in den feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
+          "identifiers.cross_source_agreement": "false: EAN 4066447864793 nur auf der dm-Seite belegt (GTIN-Feld + JSON-LD). Externe Quellen (INCI Beauty 4058172702075/4066447241679, Hautschutzengel mit Cyclopentasiloxane-INCI) führen nur ÄLTERE Produktgenerationen — das Produkt wurde laut dm-Reviews (Aug/Sep 2026) frisch umformuliert. Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
+          "identifiers.4066447864793": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Violet Hair Oil The Britney",
+          "brand": "Dejan Garz",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 8.95,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1774485894/assets/pas/images/94d0b768-4cd6-4441-b6e4-9c71c9d54b2c/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney"
+          },
+          "description": "Silikonbasiertes Haaröl mit Kamelien-, Jojoba- und Arganöl, besonders für blondiertes oder strapaziertes Haar; 1–3 Tropfen ins trockene oder handtuchtrockene Haar, mit Hitzeschutz-Claim, ohne Farbstich."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4063528101808",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+              "https://www.rossmann.de/de/pflege-und-duft-dejan-garz-violet-hair-oil-the-britney/p/4063528101808"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+              "text": "Anwendung: 1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Nicht ausspülen. Bei Bedarf Anwendung wiederholen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+              "text": "Anwendung: 1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Nicht ausspülen. Bei Bedarf Anwendung wiederholen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+              "text": "1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Die silikonbasierte Formel mit einem reparierenden Silikonkomplex kann das Haar vor Stylinghitze schützen."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4063528101808",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + Rossmann-Produktseite unter derselben EAN (URL-GTIN + Syndigo-Produktdaten, live reproduziert)",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_text": "\"gtin\":\"4063528101808\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Isododecane, Dimethicone, Camellia Oleifera Seed Oil, Argania Spinosa Kernel Oil, Simmondsia Chinensis Seed Oil, Amodimethicone, Phenyl Trimethicone (anhydrisches Silikon-/Volatile-Profil, violettes Pigment CI 60725)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_text": "INGREDIENTS: ISODODECANE, DIMETHICONE, CAMELLIA OLEIFERA SEED OIL, ARGANIA SPINOSA KERNEL OIL, SIMMONDSIA CHINENSIS SEED OIL, AMODIMETHICONE, PHENYL TRIMETHICONE, PARFUM, HEXYL CINNAMAL, LINALOOL, ALPHA-ISOMETHYL IONONE, LIMONENE, CI 60725",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "1–3 Tropfen in den Handflächen verteilen, in trockene oder handtuchtrockene Haarlängen einarbeiten, nicht ausspülen; bei Bedarf wiederholen. Rossmann führt denselben Text.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de (Anwendung und Gebrauch)",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_text": "Anwendung: 1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Nicht ausspülen. Bei Bedarf Anwendung wiederholen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Beschreibungs-Claim (R-E ausreichend): 'Mit Hitzeschutz'; Schutz vor Stylinghitze durch Silikonkomplex. Keine Temperaturangabe.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_text": "Mit Hitzeschutz […] Die silikonbasierte Formel mit einem reparierenden Silikonkomplex kann das Haar vor Stylinghitze schützen und die Kämmbarkeit verbessern.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 8.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis; Rossmann-Artikelpreis 7,99 € notiert)",
+            "source_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+            "source_text": "\"price\":8.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light (abgeleitet): Isododecane an INCI-Position 1, 1–3-Tropfen-Dosierung, 'ohne einen Farbstich oder Rückstände zu hinterlassen'.",
+          "category_specs.product_oil_specs.role_support": "dry_finish + leave_on_fibre_conditioning: Packung erlaubt explizit 'trockenen oder handtuchtrockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Mit Hitzeschutz' / 'kann das Haar vor Stylinghitze schützen' — per R-E ausreichend. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (solide begründet): die Beschreibung nennt die Formel wörtlich 'silikonbasiert'; Silikone/Volatiles führen die INCI an.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Pflege-/Glanz-/Hitzeschutz-Multi-Use ohne wörtliche Finish- oder Styling-Zweckbindung; ein Einzelwert wäre unbelegte Präzision.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Amodimethicone, Phenyl Trimethicone. oils: Kamelienöl, Arganöl, Jojobaöl. Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: 'ideal für alle Haartypen' (wörtlich), leichte Tropfen-Dosierung.",
+          "concern_eligibility": "frizz: 'Kann Frizz entgegenwirken' / 'kann das Öl Frizz reduzieren'. hair_damage: 'besonders für blondiertes oder strapaziertes Haar' + 'ideale Pflege, besonders bei chemisch behandeltem Haar'. Kämmbarkeit/Glanz ohne Code; das Violett-Pigment (gegen Gelbstich-Optik) hat ebenfalls keinen Code — nur in den Notes.",
+          "protocols": "Keine Deviation: Platzierung Haarlängen, 'Nicht ausspülen' konform; 'Bei Bedarf Anwendung wiederholen' ist App-Stil (R-C: ignorieren, Template unverändert).",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'trockenen oder handtuchtrockenen' — either_state per P9-Mapping."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Arganöl Elixir, Tiefenreparatur",
+          "brand": "Herbal Essences",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 95,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1766098347/assets/pas/images/1d1d4b1c-b549-402b-a045-23f95dcf976f/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur"
+          },
+          "description": "Leichtes, nicht fettendes Haaröl-Elixier mit marokkanischem Arganöl für geschädigtes Haar; auf nassen oder trockenen Längen und Spitzen anwendbar, für Geschmeidigkeit und Glanz."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530075718",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+              "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-tiefenreparatur-arganoel-elixir/p/8006530075718"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+              "text": "Anwendung: Auf nassen oder trockenen Längen und Spitzen auftragen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+              "text": "Anwendung: Auf nassen oder trockenen Längen und Spitzen auftragen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530075718",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + Rossmann-Produktseite unter derselben EAN (URL-GTIN + Syndigo-Produktdaten, live reproduziert); zusätzlich 0815.at-Listing mit derselben EAN",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_text": "\"gtin\":\"8006530075718\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Cyclopentasiloxane, Dimethiconol, Argania Spinosa Kernel Oil (anhydrisches Silikon-Profil mit Arganöl an Position 3)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_text": "Ingredients: Cyclopentasiloxane, Dimethiconol, Argania Spinosa Kernel Oil, Parfum, Hexamethylindanopyran, Benzyl Benzoate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Linalyl Acetate, Limonene, Alpha-Isomethyl Ionone, Coumarin, Vanillin, Citrus Limon Peel Oil, Pinene, Trimethylcyclopentenyl Methylisopentenol, Eugenol, Benzyl Alcohol, Cinnamomum Zeylanicum Bark Oil",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Auf nassen oder trockenen Längen und Spitzen auftragen; kein Rinse-Hinweis, keine Zeitangabe. Rossmann führt denselben Text.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de (Anwendung und Gebrauch)",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_text": "Anwendung: Auf nassen oder trockenen Längen und Spitzen auftragen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.repair_positioning",
+            "fact_value": "Repair-Claim mit ehrlicher Fußnote: 'reparieren*' ist auf der dm-Seite als '*Oberflächenreparatur für Geschmeidigkeit' eingeschränkt.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_text": "Das Herbal Essences Tiefenreparatur Marokkanisches Arganöl Öl Elixir kann helfen, geschädigtes Haar intensiv zu pflegen und zu reparieren*. […] *Oberflächenreparatur für Geschmeidigkeit.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis; Rossmann-Artikelpreis 5,49 € notiert)",
+            "source_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+            "source_text": "\"price\":5.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light (solide begründet): 'Leichte, nicht fettende Formel' und 'ohne das Haar zu beschweren' wörtlich; Cyclopentasiloxane (flüchtiges Silikon) an Position 1.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'nassen oder trockenen' Längen und Spitzen. Kein Hitzeschutz-, kein Pre-Wash-Claim — bewusst nicht gestampt.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-dominante INCI (Cyclopentasiloxane, Dimethiconol) mit Arganöl an Position 3; kein reines Pflanzenöl, nicht als Trockenöl vermarktet.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): reine Pflege-/Repair-Positionierung ohne Finish- oder Styling-Zweckbindung.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Cyclopentasiloxane, Dimethiconol. oils: Arganöl. Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: leichte, nicht fettende Formel; kein Fein-Haar-Warnhinweis.",
+          "concern_eligibility": "hair_damage: 'geschädigtes Haar intensiv zu pflegen'. repair: 'Tiefenreparatur' als Produktname-Bestandteil — mit dm-Fußnote '*Oberflächenreparatur für Geschmeidigkeit' (in Evidence dokumentiert, kein Struktur-Repair-Versprechen).",
+          "protocols": "Keine Deviation: Platzierung 'Längen und Spitzen' konform, kein Widerspruch zu Templates; Schweigen zu Rinse/Zeit ändert nichts."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Plex Care",
+          "brand": "Balea Professional",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.75,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1769036847/assets/pas/images/f323d1d1-2df7-423e-b1b4-d80be8d6f848/balea-professional-haaroel-plex-care",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care"
+          },
+          "description": "Haaröl für chemisch behandeltes und geschädigtes Haar mit Intense-Repair-Technologie und integriertem Hitzeschutz; sparsam in die feuchten oder trockenen Haarlängen einarbeiten."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447888218",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+              "text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+              "text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+              "text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten. Zudem bietet die vegane Formel einen integrierten Hitzeschutz."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447888218",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN; einzige Quelle für die aktuelle EAN — externe Listings führen die Vorgänger-EAN 4066447668292)",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+            "source_text": "\"gtin\":\"4066447888218\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Zea Mays Oil (anhydrisch, volatile-dominant mit Pflanzenölen; INCI-Familie identisch mit Isana Professional Haaröl aus dem Pilot)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+            "source_text": "Ingredients: Isododecane, C11-13 Isoalkane, Dimethiconol, Isohexadecane, Helianthus Annuus Hybrid Oil, Dimethicone, Helianthus Annuus Seed Oil, Zea Mays Oil, Parfum, Benzyl Alcohol, Tetramethyl Acetyloctahydronaphthalenes",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten; keine Zeitangabe, kein Rinse-Hinweis.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+            "source_text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Beschreibungs-Claim (R-E ausreichend): integrierter Hitzeschutz. Keine Temperaturangabe.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+            "source_text": "Mit integriertem Hitzeschutz […] Zudem bietet die vegane Formel einen integrierten Hitzeschutz.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.75,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+            "source_text": "\"price\":2.75",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light (abgeleitet): 'pflegt das Haar, ohne es zu beschweren', volatile-dominante INCI (Isododecane, Isoalkane, Isohexadecane), sparsame Dosierung.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Mit integriertem Hitzeschutz' — per R-E ausreichend. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): volatile-/silikon-geführte INCI mit Pflanzenölen im Mittelfeld; gleiche Formelfamilie wie das Isana-Pilot-Öl (dort ebenfalls styling-oel).",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Repair-/Pflege-Positionierung ohne wörtliche Finish-/Styling-Zweckbindung.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethiconol, Dimethicone. oils: Sonnenblumenöl (2x), Maiskeimöl. Keine Humectants/Proteine/Polymere.",
+          "thickness_eligibility": "Alle Stärken: leichte Formel mit Sparsamkeits-Hinweis, kein expliziter Fein-Haar-Warnhinweis.",
+          "concern_eligibility": "hair_damage: 'speziell für die Bedürfnisse von chemisch behandeltem und geschädigtem Haar entwickelt'. repair: 'Intense-Repair-Technologie', 'Kräftigung der Haarstruktur', 'Widerstandsfähigkeit'.",
+          "protocols": "Keine Deviation: Platzierung Haarlängen konform, feucht-oder-trocken deckt beide Care-Stamps; Schweigen zu Zeit/Rinse ändert nichts.",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
+          "identifiers.cross_source_agreement": "false: EAN 4066447888218 nur via dm-JSON-LD belegt. INCI Beauty und die von Google indexierte dm-Alt-URL führen die Vorgänger-EAN 4066447668292 (Produktgenerationswechsel). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
+          "identifiers.4066447888218": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Bonding Oil",
+          "brand": "Bali Curls",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 30,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1772058454/assets/pas/images/90dca543-0e78-41ae-b796-a8e13cc4db1e/bali-curls-haaroel-bonding-oil",
+            "source_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil"
+          },
+          "description": "Leichtes, silikonfreies Pflegeöl für Locken und Wellen mit Macadamia- und Sonnenblumenöl; einige Tropfen ins saubere, nasse oder trockene Haar, versiegelt die Spitzen und verleiht Glanz."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4262391990513",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+              "https://incibeauty.com/en/produit/4262391990513"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": "light_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "bali-care.com Produktseite (Anwendung)",
+              "url": "https://www.bali-care.com/de-de/products/bonding-oil",
+              "text": "Erwärme einige Tropfen des Öls zwischen deinen Handflächen und trage es auf das saubere, nasse oder trockene Haar auf, um die Spitzen zu versiegeln und Glanz zu verleihen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "bali-care.com Produktseite (Anwendung)",
+              "url": "https://www.bali-care.com/de-de/products/bonding-oil",
+              "text": "Erwärme einige Tropfen des Öls zwischen deinen Handflächen und trage es auf das saubere, nasse oder trockene Haar auf, um die Spitzen zu versiegeln und Glanz zu verleihen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4262391990513",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + INCI-Beauty-Listing unter derselben EAN (Bindung via indexierten Listing-Titel + EAN-URL, Seiteninhalt nicht abrufbar — Isana-Präzedenz, siehe Notes)",
+            "source_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+            "source_text": "\"gtin\":\"4262391990513\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "oils"
+              ],
+              "inci_basis": "Ethylhexyl Stearate, Undecane, Coco-Caprylate/Caprate, Hydrogenated Ethylhexyl Olivate, Tridecane, ..., Macadamia Integrifolia/Tetraphylla Seed Oil, Shea Butter Ethyl Esters, Helianthus Annuus Seed Oil (anhydrisch, silikonfrei; Ester-/Volatile-Basis mit Pflanzenölen)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Herstellerseite führt deckungsgleiche INCI",
+            "source_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+            "source_text": "Ingredients: Ethylhexyl Stearate, Undecane, Coco-Caprylate/Caprate, Hydrogenated Ethylhexyl Olivate, Tridecane, Hydrogenated Castor Oil/Sebacic Acid Copolymer, Macadamia Integrifolia/Tetraphylla Seed Oil, Parfum, Isopropyl Myristate, Tocopherol, Shea Butter Ethyl Esters, Hydrogenated Olive Oil Unsaponifiables, Helianthus Annuus Seed Oil, Benzyl Alcohol, Linalool, Limonene, Geraniol, Bixa Orellana Seed Extract, CI 75120, Cananga Odorata Flower Extract.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Einige Tropfen zwischen den Handflächen erwärmen, auf sauberes, nasses oder trockenes Haar auftragen, Spitzen-Fokus. ACHTUNG: die dm-Verwendungshinweise enthalten NUR einen 'Extra Locken-Tipp' (Pre-Poo inkl. Kopfhaut, Zumischen ins Shampoo) und keine Grundanwendung — diese stammt von der Herstellerseite.",
+            "source_label": "bali-care.com Produktseite (Anwendung)",
+            "source_url": "https://www.bali-care.com/de-de/products/bonding-oil",
+            "source_text": "Erwärme einige Tropfen des Öls zwischen deinen Handflächen und trage es auf das saubere, nasse oder trockene Haar auf, um die Spitzen zu versiegeln und Glanz zu verleihen.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Herstellerseite bestätigt: sofortiger Glanz + Frizz-Reduktion, tägliche Anwendung möglich, für Curls, Waves und alle Haartypen.",
+            "source_label": "bali-care.com Produktseite (Claims/FAQ)",
+            "source_url": "https://www.bali-care.com/de-de/products/bonding-oil",
+            "source_text": "Verleiht sofortigen Glanz und reduziert Frizz […] Ja, täglich oder nach Bedarf anwenden – für mehr Glanz und weniger Frizz […] Ja, die Formel ist für Curls, Waves und alle Haartypen geeignet",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis)",
+            "source_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+            "source_text": "\"price\":9.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
+          "category_specs.product_oil_specs.weight": "light (solide begründet): 'Leichtes, pflegendes Haarelixier' (dm) / 'Leichtes, nährendes Bonding-Öl' (Hersteller); Ester-/Volatile-Basis ohne Butter, Tropfen-Dosierung.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Hersteller-Anwendung erlaubt explizit 'nasses oder trockenes Haar'. pre_wash_fibre_treatment bewusst NICHT gestampt: der Pre-Poo-'Extra-Tipp' (dm + Hersteller) nennt ausdrücklich die Kopfhaut und widerspricht damit der P8-Platzierung (Kopfhaut aussparen) — Flag für Nick statt Stamp, siehe Notes. Kein Hitzeschutz-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "natuerliches-oel (abgeleitet/geraten): silikonfrei (styling-oel scheidet aus), pflanzenbasierte Ester + Pflanzenöle, Naturkosmetik-nahe Positionierung; keine Trockenöl-Vermarktung. Kein Subtyp passt sauber auf eine Ester-geführte Formel — Vokabular-Frage in den Notes.",
+          "category_specs.product_oil_eligibility.oil_purpose": "light_finish (abgeleitet): 'Spitzen versiegeln und Glanz verleihen' + leichte Textur; kein Hitzestyling-Framing.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "oils: Macadamiaöl, Sonnenblumenöl, Sheabutter-Ester, Olivenöl-Derivate + Ester-Emollients. KEINE Silikone (explizit 'Ohne Silikone'). Keine Humectants/Proteine; Hydrogenated Castor Oil/Sebacic Acid Copolymer als Filmbildner bewusst nicht als eigenes Flag geführt (keine Vokabel).",
+          "thickness_eligibility": "Alle Stärken: 'für Curls, Waves und alle Haartypen geeignet' (Hersteller), leichte Formel.",
+          "concern_eligibility": "frizz: 'Verleiht sofortigen Glanz und reduziert Frizz' (Hersteller). Glanz/Geschmeidigkeit/Lockendefinition haben keinen Concern-Code — bewusst schmal.",
+          "protocols": "Keine Deviation: Hersteller-Anwendung (Handflächen, Spitzen-Fokus, nass oder trocken) ist template-konform. Die dm-Verwendungshinweise (nur Pre-Poo-Tipp inkl. Kopfhaut + Shampoo-Zumischung) sind nicht als Protokoll encodiert — dokumentiert in den Notes.",
+          "identifiers.cross_source_agreement": "true (mit Einschränkung, Isana-Präzedenz): dm-JSON-LD + INCI-Beauty-Listing exakt unter dieser EAN ('Bali Curls Curl Bonding Oil - 30 ml'); die INCI-Beauty-Seite selbst war nicht abrufbar (403) — Bindung über indexierten Titel + EAN-URL. Nick kann auf false drehen, wenn die Beleg-Tiefe nicht reicht."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haaröl Rosmarin",
+          "brand": "Weleda",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 11.95,
+          "net_content_value": 50,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1760371624/assets/pas/images/3dee6ae3-6365-493c-93f7-af697180db2d/weleda-haaroel-rosmarin",
+            "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin"
+          },
+          "description": "Rein pflanzliches Naturkosmetik-Haaröl auf Erdnussöl-Basis mit Rosmarin, Kleeblüten und Klettenwurzel für sprödes, brüchiges Haar; vor oder nach der Haarwäsche ins feuchte oder trockene Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4001638093620",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+              "https://www.rossmann.de/de/pflege-und-duft-weleda-intensiv-pflegendes-haaroel-rosmarin/p/4001638093620"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "rich",
+            "role_support": [
+              "pre_wash_fibre_treatment",
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "natuerliches-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "hair_damage",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-PREWASH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+              "text": "Anwendung: Vor oder nach der Haarwäsche einige Tropfen gleichmäßig in die Haarlängen verteilen, ins feuchte oder trockene Haar."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+              "text": "Nach der Haarwäsche einige Tropfen gleichmäßig in die Haarlängen verteilen, ins feuchte Haar. In die Haarspitzen eingeknetet, pflegt es intensiv."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+              "text": "Einige Tropfen gleichmäßig in die Haarlängen verteilen, ins trockene Haar. In die Haarspitzen eingeknetet, pflegt es intensiv."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4001638093620",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + Rossmann-Produktseite unter derselben EAN (URL-GTIN + Syndigo-Produktdaten, live reproduziert); zusätzlich shop-apotheke-Listing",
+            "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+            "source_text": "\"gtin\":\"4001638093620\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "role_support": [
+                "pre_wash_fibre_treatment",
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "oils"
+              ],
+              "inci_basis": "Arachis Hypogaea (Peanut) Oil an Position 1 (reines, nicht-flüchtiges Pflanzenöl; keine Silikone, keine Volatiles) + Pflanzenextrakte und ätherische Öle"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); weleda.de führt deckungsgleiche Volldeklaration",
+            "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+            "source_text": "Ingredients (INCI): Arachis Hypogaea (Peanut) Oil+, Trifolium Pratense (Clover) Flower Extract, Fragrance (Parfum)*, Arctium Lappa Root+ Extract, Rosmarinus Officinalis (Rosemary) Leaf Oil+, Limonene*, Linalool*, Geraniol*, Coumarin*. *from natural essential oils and/or plant extracts +organic ingredient",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Vor oder nach der Haarwäsche einige Tropfen in die Haarlängen, ins feuchte oder trockene Haar; Spitzen-Fokus ('eingeknetet'). Keine Zeitangabe für die Pre-Wash-Anwendung — P8-Kanon 15–20 Min greift ohne Deviation. Rossmann führt denselben Anwendungssatz.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de (Anwendung und Gebrauch)",
+            "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+            "source_text": "Anwendung: Vor oder nach der Haarwäsche einige Tropfen gleichmäßig in die Haarlängen verteilen, ins feuchte oder trockene Haar.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "weleda.de bestätigt Zielgruppe und Claims: sprödes und brüchiges Haar, weich und geschmeidig, erhält den natürlichen Glanz, Spitzen-Intensivpflege. Die dort zusätzlich genannte Kopfhaut-Massage-Eignung wurde bewusst NICHT encodiert (Kopfhaut-Guidance getrennt).",
+            "source_label": "weleda.de Produktseite (Intensiv pflegendes Haaröl)",
+            "source_url": "https://www.weleda.de/produkt/i/intensiv-pflegendes-haaroel",
+            "source_text": "Die Komposition mit Rosmarinöl und Auszügen aus Kleeblüten und Klettenwurzel lässt sprödes Haar weich und geschmeidig werden und schützt es vor schädigenden Umwelteinflüssen. In die Haarspitzen eingeknetet pflegt das Haaröl intensiv und es eignet sich auch für eine wohltuende Kopfhaut-Massage.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 11.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis; Rossmann 11,99 €, weleda.de 12,95 € notiert)",
+            "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+            "source_text": "\"price\":11.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Rossmann/Weleda führen 'Intensiv pflegendes Haaröl (Rosmarin)' als Alias.",
+          "category_specs.product_oil_specs.weight": "rich (abgeleitet/konservativ): 100 % nicht-flüchtige Pflanzenöl-Basis (Erdnussöl Position 1, keine Volatiles/Silikone, die den Film verdunsten lassen), 'Intensiv pflegendes Haaröl'-Positionierung, Spitzen-Fokus. Konservativ gegen Fein-Haar-Overload gewählt; beim Stamping greift die ends-Platzierung für rich Öle.",
+          "category_specs.product_oil_specs.role_support": "Packung nennt alle drei Anwendungen in einem Satz: 'Vor oder nach der Haarwäsche' (pre_wash_fibre_treatment), 'ins feuchte' (leave_on_fibre_conditioning), 'oder trockene Haar' (dry_finish). Kein Hitzeschutz-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "natuerliches-oel (solide): 'rein pflanzliches Haaröl' wörtlich, Naturkosmetik-zertifiziert, reine Pflanzenöl-INCI.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): drei gleichwertige Pflege-Anwendungen ohne Finish-/Styling-Zweckbindung.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "oils: Erdnussöl (Basis), Rosmarinöl (ätherisch). Keine Silikone, Humectants, Proteine, Polymere. ACHTUNG Erdnussöl-Allergen-Hinweis in den Notes.",
+          "thickness_eligibility": "Alle Stärken: Packung ohne Einschränkung; die rich-Gewichtung trägt die Fein-Haar-Vorsicht im Ranking. Diskussionspunkt in den Notes.",
+          "concern_eligibility": "dryness: dm-Haartyp 'Trockenes Haar'. hair_damage: dm-Haartyp 'Geschädigt/Strapaziert' + 'sprödes' Haar. breakage: 'brüchiges Haar' wörtlich. Die dm-Wirkungsangabe 'Gegen Haarausfall' wurde bewusst NICHT encodiert (medizinisch angrenzend, kein Produkt-Concern in unserem Vokabular).",
+          "protocols": "Keine Deviation: Pre-Wash ohne Zeitangabe (P8-Kanon 15–20 Min, Schweigen ist keine Abweichung), Platzierung 'Haarlängen'/'Haarspitzen' konform, keine Kopfhaut-Anweisung in der dm-Anwendung (die Weleda-Kopfhaut-Massage-Empfehlung ist eine separate, nicht encodierte Anwendung).",
+          "identifiers.cross_source_agreement": "true: dm-JSON-LD + Rossmann-Produktseite (URL-GTIN live reproduziert, identischer Anwendungstext) + shop-apotheke-Listing.",
+          "product.candidate_image": "Bild-Fix (2026-09-02): Kombi-Packshot enthielt den Karton (Nick-Präzedenz Balea: nur Flasche); auf das Flasche-solo-Galeriebild der dm-Seite umgestellt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+          "brand": "Garnier Fructis",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747419525/assets/pas/images/3e77ffff-439e-4abb-bd9c-379d8aab13e4/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar"
+          },
+          "description": "Multi-Use Wunderöl für stark geschädigtes Haar: Hitzeschutz bis 230 °C und Anti-Frizz-Pflege ohne Ausspülen; ein paar Tropfen im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542020060",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-hitzeschutzspray-anti-spliss-wunder-oel-stark-stark-geschaedigtes-haar/p/3600542020060"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish",
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "frizz",
+          "split_ends"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de",
+              "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+              "text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de",
+              "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+              "text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+              "text": "Ein paar Tropfen in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen. Schützt vor Hitze bis 230° C."
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542020060",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + Rossmann-Produktseite unter derselben EAN (URL-GTIN + Syndigo-Produktdaten, live reproduziert)",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_text": "\"gtin\":\"3600542020060\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish",
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Isododecane, Dimethicone, Dimethiconol, Olea Europaea Fruit Oil, Helianthus Annuus Seed Oil, Cocos Nucifera Oil, Persea Gratissima Oil, Butyrospermum Parkii Butter (anhydrisches Silikon-/Volatile-Profil mit Pflanzenölen und Sheabutter im Mittelfeld)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_text": "INGREDIENTS: ISODODECANE • DIMETHICONE • DIMETHICONOL • OLEA EUROPAEA FRUIT OIL / OLIVE FRUIT OIL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • ROSMARINUS OFFICINALIS LEAF EXTRACT / ROSEMARY LEAF EXTRACT • COCOS NUCIFERA OIL / COCONUT OIL • PERSEA GRATISSIMA OIL / AVOCADO OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • CITRIC ACID • TOCOPHEROL • LINALOOL • COUMARIN • LIMONENE • PARFUM / FRAGRANCE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "Ein paar Tropfen in die Handflächen, gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen; 'ohne ausspülen'. Rossmann führt denselben Text wortgleich.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise); wortgleich auf rossmann.de (Anwendung und Gebrauch)",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Expliziter Claim: Hitzeschutz bis 230 °C; zusätzlich schnellere Trockenzeit beim Föhnen.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_text": "Schützt vor Hitze bis 230° C […] Sie verleiht dabei bis zu 230° Hitzeschutz, beschleunigt die Trockenzeit beim Föhnen und beugt Frizz vor.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.anti_spliss_naming",
+            "fact_value": "Der Rossmann-Produktname trägt 'Anti-Spliss' als Kernclaim (deckt concern split_ends); dm-Name ohne Anti-Spliss.",
+            "source_label": "Rossmann.de Produktseite (Produktname, Syndigo-Produktdaten)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-hitzeschutzspray-anti-spliss-wunder-oel-stark-stark-geschaedigtes-haar/p/3600542020060",
+            "source_text": "\"name\":\"Hitzeschutzspray Anti-Spliss Wunder-Öl Stark Stark Geschädigtes Haar\",\"sku\":\"3600542020060\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis; Rossmann-Artikelpreis 5,99 € notiert)",
+            "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+            "source_text": "\"price\":5.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Rossmann-Alias mit 'Anti-Spliss' in Evidence dokumentiert.",
+          "category_key": "oil (Research-Verdikt mit R-A-Flag): anhydrische Öl-INCI, Tropfen-in-Handflächen-Applikation, Pflege-Rollen in allen drei Haarzuständen 'ohne ausspülen' — funktional ein Multi-Use-Öl der gleichen Formelfamilie wie Elvital Öl Magique (Pilot-Öl mit 230-°C-Claim). Retailer-Naming 'Hitzeschutzspray' spricht dagegen; deshalb tragen alle 3 Stamps das Identitäts-Flag als Deviation (Wahre-Schätze-Präzedenz) — Entscheidung bei Nick.",
+          "category_specs.product_oil_specs.weight": "light (solide begründet): 'schwerelose und nicht fettende Formel' wörtlich, Isododecane an Position 1.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: 'im nassen, feuchten oder trockenen Haar verteilen' + 'Anti-Frizz Pflege ohne ausspülen'. pre_heat_protection: expliziter 230-°C-Claim + Föhn-Kontext.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-geführte INCI mit Pflanzenölen/Sheabutter im Mittelfeld; als Spray vermarktet, aber tropfenweise appliziert — keine Trockenöl-Vermarktung.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Multi-Use (Pflege + Hitzeschutz + Anti-Frizz) ohne dominante Zweckbindung.",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Olivenöl, Sonnenblumenöl, Kokosöl, Avocadoöl, Sheabutter. Zitronenprotein wird nur beworben, steht aber nicht in der INCI — kein proteins-Flag.",
+          "thickness_eligibility": "Alle Stärken: dm-Haartyp 'Alle Haartypen', schwerelose Formel.",
+          "concern_eligibility": "hair_damage: 'Speziell für stark geschädigtes Haar entwickelt'. frizz: 'Frizz wird gebändigt'. split_ends: 'Anti-Spliss' im Rossmann-Produktnamen (Evidence-Zeile) — Namens-Claim, als solcher markiert.",
+          "protocols": "Alle 3 Stamps tragen die R-A-Kategorie-Identitätsfrage als strukturelle Deviation (kein Anwendungs-Konflikt: Platzierung Spitzen-Fokus, kein Ausspülen, feucht/nass/trocken sind template-konform).",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'im nassen, feuchten oder trockenen Haar' — either_state per P9-Mapping.",
+          "protocols.category_identity": "Nick W1 (2026-09-02): definitiv Öl — Formel schlägt Retailer-Marketing. Deviations aufgehoben. (Fix 2026-09-03: erste Anwendung scheiterte an 'Wunder-Öl'-Schreibweise.)"
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+          "brand": "Pantene Pro-V",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1747488822/assets/pas/images/bcbfef9f-73aa-4595-96c9-1263b3adea9a/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+            "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil"
+          },
+          "description": "Leichtes Silikon-Haaröl mit Arganöl für trockenes, geschädigtes Haar; eine kleine Menge in die Längen des nassen oder trockenen Haars geben, bändigt Frizz und verbessert den Glanz."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4084500085350",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-argan-infused-oil-haaroel/p/4084500085350"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "leave_on_fibre_conditioning",
+              "dry_finish"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": null,
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "dryness",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-LEAVEON",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); Rossmann-Anwendung bestätigt die Nach-der-Wäsche-Anwendung",
+              "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+              "text": "Verteile eine kleine Menge in die Längen des nassen oder trockenen Haars. Nicht ausspülen"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-OIL-DRYFINISH",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+              "text": "Verteile eine kleine Menge in die Längen des nassen oder trockenen Haars. Nicht ausspülen"
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4084500085350",
+            "source_label": "dm.de Produktseite (JSON-LD-GTIN) + Rossmann-Produktseite unter derselben EAN (URL-GTIN + Syndigo-Produktdaten, live reproduziert). Backlog-Ränge 145 (Rossmann-Listing) und 148 (dm-Listing) sind dieselbe SKU — zusammengeführt.",
+            "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+            "source_text": "\"gtin\":\"4084500085350\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "leave_on_fibre_conditioning",
+                "dry_finish"
+              ],
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Cyclopentasiloxane, Dimethiconol, Alcohol Denat., Argania Spinosa Kernel Oil, Panthenol; Aqua erst an Position 11 ohne Emulgatoren/Verdicker — silikonbasiertes Öl, KEINE Serum-Emulsion (Identitätscheck bestanden, s. Notes)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-Produktseite führt identische INCI",
+            "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+            "source_text": "Ingredients: Cyclopentasiloxane, Dimethiconol, Alcohol Denat., Parfum, Argania Spinosa Kernel Oil, Panthenyl Ethyl Ether, Panthenol, Benzyl Salicylate, Hexyl Cinnamal, Alpha-Isomethyl Ionone, Aqua, Linalool, Citronellol, Limonene",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.oil.application",
+            "fact_value": "dm: kleine Menge in die Längen des nassen oder trockenen Haars, nicht ausspülen. Rossmann formuliert enger ('Nach der Haarwäsche … mittlere Längen und Spitzen. Nicht ausspülen.') — kein Widerspruch, dm-Packungstext deckt beide Stamps.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+            "source_text": "Verteile eine kleine Menge in die Längen des nassen oder trockenen Haars. Nicht ausspülen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.retailer_corroboration",
+            "fact_value": "Rossmann bestätigt Produktidentität ('Argan Infused Oil Haaröl') und Claims: tägliche Pflege, bändigt Frizz, verbessert Glanz, für trockenes, geschädigtes Haar; Anwendung nach der Haarwäsche in mittlere Längen und Spitzen.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung + Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-argan-infused-oil-haaroel/p/4084500085350",
+            "source_text": "Das Pantene Pro-V Argan Infused Haaröl für die tägliche Pflege bändigt Frizz und verbessert den Glanz. […] Es eignet sich perfekt für trockenes, geschädigtes Haar. […] Nach der Haarwäsche eine kleine Menge in die mittleren Längen und Spitzen des Haars geben. Nicht ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis; Rossmann-Artikelpreis 3,99 € notiert)",
+            "source_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+            "source_text": "\"price\":4.95",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). dm führt das Öl unter 'Haarkur' im Namen; Rossmann nennt dieselbe EAN 'Argan Infused Oil Haaröl' — Kategorie oil per R-A durch Research finalisiert (Öl-Format, Öl-INCI, Leave-on-Anwendung).",
+          "category_specs.product_oil_specs.weight": "light (abgeleitet): 'Mit nur einem Tropfen', flüchtiges Cyclopentasiloxane an Position 1, keine Butter; Glanz-/Geschmeidigkeits-Positionierung ohne Beschweren-Claims.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: dm-Packungstext erlaubt explizit 'nassen oder trockenen' Haars + 'Nicht ausspülen'. Kein Hitzeschutz-, kein Pre-Wash-Claim.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-dominante INCI mit Arganöl im Mittelfeld; kein reines Pflanzenöl, nicht als Trockenöl vermarktet.",
+          "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): tägliche Pflege / Anti-Frizz / Glanz ohne wörtliche Finish-/Styling-Zweckbindung ('Glatt & Seidig' ist Linienname, kein Anwendungszweck).",
+          "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Cyclopentasiloxane, Dimethiconol. oils: Arganöl. Panthenol ist ein Humectant-Wirkstoff in Spuren — konservativ nicht als humectants geflaggt (Positionen 6–7, kein Feuchtigkeits-Kernclaim); zur Review in den Notes.",
+          "thickness_eligibility": "Alle Stärken: leichte Formel, Ein-Tropfen-Dosierung; kein Fein-Haar-Warnhinweis.",
+          "concern_eligibility": "frizz: 'bändigt Frizz'. dryness + hair_damage: 'Es eignet sich perfekt für trockenes, geschädigtes Haar.'",
+          "protocols": "Keine Deviation: Platzierung 'Längen' konform, 'Nicht ausspülen' konform; die engere Rossmann-Formulierung (nach der Wäsche) ist App-Stil, kein Widerspruch (R-C).",
+          "identifiers.cross_source_agreement": "true: dm-JSON-LD + Rossmann-URL-GTIN live reproduziert; Backlog-Duplikat (Rang 145 = Rang 148) dabei aufgelöst."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}
