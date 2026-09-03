@@ -11,7 +11,7 @@ Engine shampoo wave (54 SKUs) still in flight in `.worktrees/db-expansion-scan`.
 **Owning rules (do not duplicate — read these):**
 
 - Contract & validator: `src/lib/product-intake/expansion-manifest.ts`
-- Protocol templates + rulings ledger (P1–P9, R-A–R-E, W1–W6): `plans/scan-db-expansion/protocol-templates.md`
+- Protocol templates + rulings ledger (P1–P9, R-A–R-E, W1–W6): `docs/product-application-protocol-templates.md`
 - Program plan of record: `plans/2026-09-01-scan-db-expansion-pilot.md`
 - Research-engine spec (external engine lane): `plans/scan-db-expansion/research/shampoo-research-handoff.md`
 - Readiness oracle: `src/lib/scan/catalog-readiness.ts`
@@ -32,8 +32,8 @@ categories are **provisional** (retailer shelf placement); research corrects the
 - `npm run worktree:new -- <slug>`; **verify the worktree base equals the fetched `origin/main` tip**
   (a stale base has silently happened before).
 - One manifest per category under `plans/scan-db-expansion/research/`, written by research
-  subagents on **cheaper models** (opus for domain judgment, sonnet for mechanical work — never
-  the main session's model). The main session briefs, reviews, and integrates.
+  subagents routed per the model-routing rules (owning rule: `AGENTS.md` §Orchestration /
+  `CLAUDE.md` Multi-Model Orchestration). The main session briefs, reviews, and integrates.
 - Non-negotiables baked into the contract, enforced by the validator:
   - `is_chaarlie_recommended: false` always — promotion is Nick's manual per-product call.
   - **Verbatim `source_text` quotes on every evidence row, captured during research.**
@@ -71,7 +71,7 @@ remains. Never lower the bar to ship a parked item.
 
 Publish a review artifact (tables of all properties, confidence-flagged fields called out,
 open decisions as numbered questions). Nick rules; rulings are appended to the ledger in
-`plans/scan-db-expansion/protocol-templates.md`. **Assert every ruling-driven manifest edit**
+`docs/product-application-protocol-templates.md`. **Assert every ruling-driven manifest edit**
 (a spelling mismatch once made an edit silently no-op; only the preflight park caught it).
 
 ### Step 5 — Approval migration
@@ -123,8 +123,8 @@ the PR is the durable record.
 7. **User submissions overlap with expansion picks** — twice already. That confirms the
    selection signal and means the bracket procedure is a standing part of apply, not an edge
    case.
-8. **Research on cheaper models, main session orchestrates.** Four research agents per wave at
-   ~200k tokens each must not run on the orchestrator's model.
+8. **Research volume confirms the model-routing rule.** Four research agents per wave at
+   ~200k tokens each — the scale that makes `AGENTS.md` §Orchestration non-optional here.
 
 ---
 
