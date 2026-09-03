@@ -1,0 +1,1172 @@
+{
+  "batch_id": "scan-db-expansion-wave2-mask-2026-09-03",
+  "generated_at": "2026-09-03T10:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Haarmaske Hydra Hyaluronic",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1773354171/assets/pas/images/474537a9-c2ae-424d-aa81-68c49f637f41/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic"
+          },
+          "description": "Feuchtigkeitsmaske (neue Formel) mit Hyaluronsäure und 13 % Pflegekomplex für feuchtigkeitsbedürftiges Haar; leichte Textur, beschwert laut Hersteller nicht."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524245849",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+              "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-hydra-hyaluronic-feuchtigkeitsmaske/p/3600524245849"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+              "text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 180,
+              "source_text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524245849",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_text": "GTIN: 3600524245849",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sodium Hyaluronate, ..., Amodimethicone (weit hinten; keine Öle/Butter, keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • PARFUM / FRAGRANCE • SORBITAN ISOSTEARATE • MYRISTYL ALCOHOL • CI 17200 / RED 33 • CI 42090 / BLUE 1 • LACTIC ACID • COCO-BETAINE • SODIUM HYALURONATE • SODIUM CHLORIDE • SODIUM HYDROXIDE • PHENOXYETHANOL • DIMETHYL PHENETHYL ACETATE • LIMONENE • BENZOIC ACID • AMODIMETHICONE • TARTARIC ACID • CARVONE • CETYL ESTERS • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRUS AURANTIUM PEEL OIL • CITRIC ACID • COUMARIN",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "3 Minuten (exakt)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise); Rossmann-Produktseite zeigt denselben Text wortgleich",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_light",
+            "fact_value": "13 % Pflegekomplex + Hyaluronsäure; bis zu 100 Stunden Feuchtigkeit (dm) bzw. 72 Stunden (Herstellerseite); leichte Textur, beschwert nicht; für alle Haartypen.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_text": "Mit 13 Prozent Pflegekomplex und Hyaluronsäure […] Durch den 13 Prozent Pflegekomplex mit reiner Hyaluronsäure bleibt das Haar bis zu 100 Stunden hydratisiert, ohne beschwert zu wirken. Die leichte Formel lässt sich einfach ausspülen und verleiht dem Haar ein weiches und glattes Aussehen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Hyaluronsäure-Formel für feuchtigkeitsbedürftiges Haar, 72h-Feuchtigkeitsclaim, Glanz + Geschmeidigkeit, ohne zu beschweren.",
+            "source_label": "loreal-paris.de Produktseite",
+            "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-umhuellende-maske-300ml",
+            "source_text": "Die eigens für feuchtigkeitsbedürftiges Haar entwickelte Formel ist angereichert mit Hyaluronsäure, welche Ihre Längen für 72 Stunden mit Feuchtigkeit versorgt. […] erhält es nicht nur mehr Glanz, sondern zusätzlich Geschmeidigkeit und Griffigkeit […] ohne zu beschweren.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+            "source_text": "4,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Rossmann führt dieselbe EAN als 'Hydra Hyaluronic Feuchtigkeitsmaske' - Namensvariante.",
+          "category_specs.product_mask_specs.weight": "light: Hersteller- und dm-Claim 'leichte Textur/Formel, beschwert nicht', INCI ist eine leichte kationische Basis ohne Öle/Butter; Amodimethicone steht weit hinten (Spurenbereich). dm-Reviews beschreiben die neue Formel sogar als 'dünn wie Spülung'.",
+          "category_specs.product_mask_specs.concentration": "medium: klassische 3-Minuten-Drogeriemaske; der bezifferte 13%-Pflegekomplex allein rechtfertigt kein high (kein semi-permanenter Effekt wie beim Glycolic-Gloss-Präzedenzfall).",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Glycerin auf INCI-Position 2, Sodium Hyaluronate, durchgängige Feuchtigkeitsclaims; keine Proteine.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Amodimethicone (weit hinten). humectants: Glycerin, Sodium Hyaluronate. Keine Öle/Butter, keine Proteine, keine synthetischen Filmpolymere.",
+          "category_specs.product_mask_specs.repair_support_level": "low: reine Feuchtigkeitsmaske, keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'weiches, glattes Haar/glattes Aussehen'. shine: Hersteller bewirbt 'mehr Glanz'.",
+          "thickness_eligibility": "Alle Stärken: dm-Produktmerkmal 'Haartyp: Alle Haartypen', leichte Formel ohne Overload-Risiko.",
+          "concern_eligibility": "dryness/feuchtigkeit: Kernclaims Feuchtigkeit für feuchtigkeitsbedürftiges/trockenes Haar.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Platzierung 'von den Längen bis zu den Spitzen' entspricht P5, exakte 3-Minuten-Angabe, kein Conditioner-danach, keine Wärme. Hinweis: dm claimt 'bis zu 100 Stunden', Herstellerseite '72 Stunden' - Claims-Drift dokumentiert (vermutlich Alt-/Neuformel), für die Spec-Felder ohne Konsequenz."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+          "brand": "John Frieda",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/536/MAM_53683564/MAM_53683564_SHOP_IMAGE_1.4.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789"
+          },
+          "description": "Wöchentliche Intensiv-Reparaturkur mit Ceramiden sowie Kokos-, Oliven- und Rizinusöl gegen Frizz bei widerspenstigem, geschädigtem Haar; vegane Formel."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "5037156298789",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+              "https://www.dm.de/p/d/3123414/john-frieda-haarkur-frizz-ease-wunder-reparatur"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "silicones",
+              "oils"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+              "text": "Haare mit Wunder-Reparatur Shampoo waschen. Wunder-Kur ins nasse, gewaschene Haar einmassieren, insbesondere in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen. Gründlich ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "3-5 Minuten einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "5037156298789",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + JSON-LD-sku); dm.de führt dieselbe EAN als GTIN der 'Haarkur Frizz Ease Wunder-Reparatur, 250 ml'",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+            "source_text": "\"name\":\"Wunder-Reparatur Tiefenwirksame Wunder-Kur\",\"sku\":\"5037156298789\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Dimethicone, Behentrimonium Chloride, ..., Kokos-/Oliven-/Rizinusöl, Ceramide NG/NP (Spurenbereich); keine Proteine"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+            "source_text": "WATER/AQUA/EAU, CETEARYL ALCOHOL, DIMETHICONE, BEHENTRIMONIUM CHLORIDE, BEHENYL ALCOHOL, DIPROPYLENE GLYCOL, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE, DIMETHICONOL, PEG-45M, TETRASODIUM GLUTAMATE DIACETATE, MALIC ACID, COCOS NUCIFERA (COCONUT) OIL, OLEA EUROPAEA (OLIVE) FRUIT OIL, RICINUS COMMUNIS (CASTOR) SEED OIL, SODIUM HYDROXIDE, SILICA, CERAMIDE NG, CERAMIDE NP, TOCOPHEROL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, FRAGRANCE/PARFUM, HEXYL CINNAMAL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "3-5 Minuten (Range)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+            "source_text": "Haare mit Wunder-Reparatur Shampoo waschen. Wunder-Kur ins nasse, gewaschene Haar einmassieren, insbesondere in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen. Gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.frizz_repair",
+            "fact_value": "86% weniger Frizz mit 1 Anwendung (bei Verwendung der Serie); Ceramide + Kokos-/Oliven-/Rizinusöl; vegan; für widerspenstiges, geschädigtes Haar.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+            "source_text": "86% weniger Frizz mit 1 Anwendung bei Verwendung der Wunder-Reparatur Serie – repariert tiefenwirksam und pflegt intensiv […] formuliert mit Ceramiden sowie Kokos-, Oliven- und Rizinusöl für gestärktes Haar […] vegane Formel, frei von tierischen Inhaltsstoffen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.weekly_replaces_conditioner",
+            "fact_value": "Wöchentliche Pflegekur; Hersteller sequenziert die Kur explizit als Conditioner-Ersatz; repariert bis zu 90 % der Haaroberflächenschäden (Herstellerclaim).",
+            "source_label": "johnfrieda.com Produktseite (Die gesamte Routine, Step 2)",
+            "source_url": "https://www.johnfrieda.com/de-de/produkte/frizz-ease/wunder-reparatur/wunderkur-haarkur/",
+            "source_text": "Ersetze einmal wöchentlich den Conditioner durch die Wunder-Reparatur Wunderkur für intensive Tiefenpflege. […] Mit stärkenden Ceramiden glättet die intensive Formel Frizz, verleiht Glanz und repariert bis zu 90 % der Haaroberflächenschäden* für gesünder aussehendes Haar.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.99,
+            "source_label": "Rossmann.de Produktseite (250 ml, 1 L = 39,96 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-wunder-reparatur-tiefenwirksame-wunder-kur/p/5037156298789",
+            "source_text": "Artikelpreis 9,99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Rossmann-Produktname mit vorangestellter Serienbezeichnung (Rossmann-Markenfeld: 'JOHN FRIEDA Frizz Ease Wunder-Reparatur'). dm führt dieselbe EAN als 'Haarkur Frizz Ease Wunder-Reparatur' - Namensvariante dokumentiert.",
+          "category_specs.product_mask_specs.weight": "rich (abgeleitet): Dimethicone auf INCI-Position 3 plus Amodimethicone-Derivat, Dimethiconol und drei Öle; Intensiv-/Tiefenpflege-Positionierung ohne jeden Leichtigkeits-Claim.",
+          "category_specs.product_mask_specs.concentration": "high: vom Hersteller als wöchentliche Intensiv-Tiefenpflegekur positioniert ('MASQUE INTENSIF', ersetzt den Conditioner einmal pro Woche).",
+          "category_specs.product_mask_specs.balance_direction": "balanced: Frizz-/Versiegelungsfokus über Silikone und Öle; keine Proteine, kein Feuchtigkeitsfokus (kein Glycerin).",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Dimethicone, Bis(C13-15 Alkoxy) PG-Amodimethicone, Dimethiconol. oils: Kokos-, Oliven-, Rizinusöl. Ceramide haben keinen eigenen Flag; PEG-45M als Rheologie-Polymer bewusst nicht als polymers geflaggt.",
+          "category_specs.product_mask_specs.repair_support_level": "low: '86% weniger Frizz'/'repariert 90% der Oberflächenschäden' sind Glättungs-/Oberflächenclaims; Ceramide stehen im Spurenbereich, keine Proteine/Bond-Aktivstoffe. Ehrlich bleibt es eine Silikon-Smoothing-Kur.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: Kernclaim 86% weniger Frizz. shine: 'verleiht Glanz' (Hersteller).",
+          "thickness_eligibility": "normal/coarse: silikon- und ölreiche Rich-Formel; für feines Haar konservativ ausgeschlossen (Buildup-Risiko bei wöchentlicher Anwendung).",
+          "concern_eligibility": "frizz: Kernclaim. hair_damage/repair: 'widerspenstiges, geschädigtes Haar', Reparatur-Positionierung.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: 'insbesondere in die Spitzen' ist P5-konform, 3-5 Minuten als Range übernommen (§2.5: seconds=null, Copy '3–5 Minuten einwirken lassen.'). Der Serien-Querverweis ('mit Wunder-Reparatur Shampoo waschen') ist Cross-Selling, keine Regelabweichung. Herstellerseite bestätigt replaces_conditioner explizit."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Moisture BOOST Keratin Protect Haarmaske",
+          "brand": "Pantene Pro-V",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.99,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/185/MAM_18544833/MAM_18544833_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108"
+          },
+          "description": "Feuchtigkeits-Haarmaske mit Pro-V Formel und Active Nutri-Plex-Technologie für extrem trockenes Haar; schützt vor Luftfeuchtigkeit, sulfatfrei."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216940108",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+              "https://www.dm.de/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect",
+              "https://www.mueller.de/p/pantene-pro-v-haarmaske-moisture-boost-keratin-protect-PPN3139105/"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch); dm.de Verwendungshinweise wortgleich",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+              "text": "Ins feuchte Haar geben und von den Spitzen nach oben einmassieren. Die reichhaltige Formel für ein paar Minuten einwirken lassen und gründlich ausspülen. Für eine intensivere Wirkung lasse die Maske über Nacht einwirken und spüle sie dann aus."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Die reichhaltige Formel für ein paar Minuten einwirken lassen und gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216940108",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + JSON-LD-sku); dm.de GTIN-Feld und Müller-EAN-Suche bestätigen dieselben Ziffern",
+            "source_url": "https://www.dm.de/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect",
+            "source_text": "GTIN: 8700216940108",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Behentrimonium Chloride, ..., Panthenol, Histidine; KEIN Keratin trotz Produktname, keine Öle/Butter"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe); dm.de und mueller.de zeigen dieselbe INCI wortgleich",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+            "source_text": "Aqua, Stearyl Alcohol, Bis-Aminopropyl Dimethicone, Behentrimonium Chloride, Cetyl Alcohol, Oleic Acid, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Hexamethylindanopyran, Panthenol, Polysorbate 20, Dimethyl Phenethyl Acetate, Citric Acid, Histidine, Hexyl Cinnamal, Tetramethyl Acetyloctahydronaphthalenes, Vanillin, Hydroxycitronellal, Limonene, Rose Ketones, CI 17200",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "'ein paar Minuten' - KEINE exakte/Range-/Maximum-Angabe; Overnight nur als optionale Intensivierung",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+            "source_text": "Ins feuchte Haar geben und von den Spitzen nach oben einmassieren. Die reichhaltige Formel für ein paar Minuten einwirken lassen und gründlich ausspülen. Für eine intensivere Wirkung lasse die Maske über Nacht einwirken und spüle sie dann aus.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_boost",
+            "fact_value": "Intensive Feuchtigkeitspflege für extrem trockenes Haar; Pro-V Formel + Active Nutri-Plex; macht geschmeidig, schützt vor Luftfeuchtigkeit, sorgt für Glanz.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect",
+            "source_text": "Die Haarkur Moisture Boost Keratin Protect von PANTENE PRO-V bietet eine intensive Pflege für extrem trockenes Haar. Mit der PRO-V Formel und der Active Nutri-Plex-Technologie kann sie das Haar mit Feuchtigkeit versorgen, macht es geschmeidig und schützt vor Luftfeuchtigkeit.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.99,
+            "source_label": "Rossmann.de Produktseite (300 ml, 1 L = 13,30 €); Preisabweichung: dm 4,45 €, Müller 4,45 €",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-moisture-boost-keratin-protect-haarmaske/p/8700216940108",
+            "source_text": "Artikelpreis 3,99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite (Backlog-Retailer). dm führt dieselbe EAN als 'Haarmaske Moisture Boost Keratin Protect' - Namensvariante.",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): 'reichhaltige Formel'-Claim und stark deponierendes Bis-Aminopropyl Dimethicone auf Position 3 vs. schlanke Basis ohne Öle/Butter; gemischte Evidenz, daher Mitte (Präzedenz: Herbal Essences Blütensanft, gleiche Formelfamilie).",
+          "category_specs.product_mask_specs.concentration": "medium (konservativ): Standard-Drogeriemaske; die Overnight-Option und '8 Schichten tief' sind Marketing ohne belegte Intensiv-Treatment-Merkmale.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Moisture-Boost-Positionierung, 'intensive Feuchtigkeitspflege', Panthenol; keine Proteine.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Bis-Aminopropyl Dimethicone. humectants: Panthenol. Oleic Acid ist eine Fettsäure, bewusst kein oils-Flag; keine Proteine - trotz 'Keratin Protect' im Namen enthält die INCI KEIN Keratin (ehrlich dokumentiert).",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe; 'Keratin Protect' ist reines Namens-Marketing, die INCI ist eine Amino-Silikon-Feuchtigkeitsformel.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'macht es geschmeidig, schützt vor Luftfeuchtigkeit' (Anti-Humidity = Frizz-Schutz). shine: dm-Wirkung 'Feuchtigkeit, Glanz, Pflege'.",
+          "thickness_eligibility": "Alle Stärken: schlanke Amino-Silikon-Basis ohne Öle/Butter, kein spezifisches Overload-Risiko (Präzedenz Herbal Essences).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'extrem trockenes Haar', durchgängige Feuchtigkeitsclaims.",
+          "protocols.tpl_mask.deviation": "Keine Deviation, ABER NICHT STAMPBAR (P5): 'ein paar Minuten' ist weder exakte Zeit noch Range noch Maximum - die REQUIRED wait-Copy nach §2.5 kann nicht gefüllt werden; auf keiner Quelle (Rossmann, dm, Müller) steht eine Zahl. Produkt geht vor T4/T5 an Nick. Die Overnight-Option ist eine optionale Intensivierung derselben Rinse-out-Anwendung, kein Familienwechsel; Platzierung 'von den Spitzen nach oben' ist P5-konform."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 30_sek Reparatur",
+          "brand": "Guhl",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.45,
+          "net_content_value": 100,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1787960139/assets/pas/images/8be2d033-c7cd-42e9-8bbc-b4ced58b6941/guhl-haarkur-30-sek-reparatur",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur"
+          },
+          "description": "Silikonfreie 30-Sekunden-Expresskur mit Birnenextrakt und Avocadoöl für strapaziertes, geschädigtes Haar; vegan, 97 % Inhaltsstoffe natürlichen Ursprungs."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4072600720080",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+              "https://www.rossmann.de/de/pflege-und-duft-guhl-30_sek-intensiv-kur-reparatur/p/4072600720080"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "detangling_slip",
+              "smoothing_frizz_control"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); Rossmann-Anwendungstext wortgleich",
+              "url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+              "text": "Anwendung: Nach der Haarwäsche ins nasse Haar einmassieren, 30 Sekunden einwirken lassen und ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 30,
+              "source_text": "Nach der Haarwäsche ins nasse Haar einmassieren, 30 Sekunden einwirken lassen und ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4072600720080",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+            "source_text": "GTIN: 4072600720080",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, ..., Glycerin, Panthenol, ..., Pyrus Communis Fruit Extract, Persea Gratissima Oil (silikonfrei, keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+            "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Cetyl Esters, Dipropylene Glycol, Glycerin, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Ethylhexylglycerin, Pyrus Communis Fruit Extract, Persea Gratissima Oil, Tocopherol, Phenoxyethanol, Parfum.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "30 Sekunden (exakt)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+            "source_text": "Anwendung: Nach der Haarwäsche ins nasse Haar einmassieren, 30 Sekunden einwirken lassen und ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.express_repair",
+            "fact_value": "Intensiv wie eine Kur, schnell wie eine Spülung; regeneriert strapaziertes und geschädigtes Haar in 30 Sekunden; 97 % natürlichen Ursprungs, vegan, Feuchtigkeit.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+            "source_text": "Intensiv wie eine Kur, schnell wie eine Spülung […] Die hochkonzentrierte Pflegeformel der 30_sek Haarkur Reparatur von GUHL mit Birnen-Extrakt und Öl regeneriert strapaziertes und geschädigtes Haar nachhaltig in nur 30 Sekunden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "30 Sekunden Einwirkzeit, Birnenextrakt + Avocadoöl, ohne Silikone, 97 % natürlichen Ursprungs.",
+            "source_label": "guhl.com Produktseite",
+            "source_url": "https://www.guhl.com/produkt/30sek-intensiv-kuren/30sek-intensiv-kur-reparatur/",
+            "source_text": "Guhl 30sek Reparatur Intensiv Kur (100 ml) mit Birnenextrakt und Avocadoöl für strapaziertes und geschädigtes Haar; 30 Sekunden Einwirkzeit, ohne Silikone, Inhaltsstoffe zu 97 % natürlichen Ursprungs.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.45,
+            "source_label": "dm.de Produktseite; Preisabweichung: Rossmann 3,29 €",
+            "source_url": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+            "source_text": "3,45 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite. Rossmann führt dieselbe EAN als '30_sek Intensiv Kur Reparatur' (= Backlog-Name) - Namensvariante dokumentiert.",
+          "category_specs.product_mask_specs.weight": "light: spülungsartige Expresskur ('schnell wie eine Spülung'), leichte kationische Basis, Avocadoöl weit hinten, keine Butter, silikonfrei.",
+          "category_specs.product_mask_specs.concentration": "medium (konservativ): 'hochkonzentrierte Pflegeformel' ist Marketing; das 30-Sekunden-Expressformat spricht gegen ein Intensiv-Treatment (Präzedenz Gliss 7sec).",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Glycerin + Panthenol, dm-Claim 'Versorgt das Haar mit Feuchtigkeit'; keinerlei Proteine trotz Reparatur-Namens.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Persea Gratissima Oil (Avocado). humectants: Glycerin, Panthenol, Dipropylene Glycol. Silikonfrei laut Claim und INCI; keine Proteine, keine Filmpolymere.",
+          "category_specs.product_mask_specs.repair_support_level": "low: 'Reparatur' läuft über Birnenextrakt/Öl-Pflege-Marketing; keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "detangling_slip: dm-Wirkung 'Leichte Kämmbarkeit'. smoothing_frizz_control: 'spürbar mehr Geschmeidigkeit'.",
+          "thickness_eligibility": "Alle Stärken: leichte, silikonfreie Formel ohne Overload-Risiko. dm nennt als Haartyp u. a. 'Dick', schließt feines Haar aber nicht aus.",
+          "concern_eligibility": "hair_damage/repair: Zielgruppe 'strapaziertes und geschädigtes Haar', Reparatur-Positionierung. Feuchtigkeitsclaim vorhanden, aber sekundär - bewusst nicht als dryness/feuchtigkeit geflaggt.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: 'ins nasse Haar' ist laut Ruling keine Abweichung, keine Ansatz-Anweisung, kein Conditioner-danach, exakte 30-Sekunden-Angabe (§2.5-Copy: '30 Sekunden einwirken lassen.')."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 1 Minute Wunder-Ampulle Rescue Shots Repair & Care",
+          "brand": "Pantene Pro-V",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.95,
+          "net_content_value": 15,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747488619/assets/pas/images/da1cc6e5-57e5-4baa-a7bb-59e8b21a3e84/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care"
+          },
+          "description": "Hochkonzentrierte Single-Use-Ampulle (15 ml) für extrem geschädigtes Haar: 1 Minute im feuchten Haar einwirken lassen, dann ausspülen; 1-2x wöchentlich."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4084500390089",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-serum-shot-mit-collagen-peptiden/p/4084500390089"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "high",
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "silicones",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); Rossmann-Anwendungstext wortgleich",
+              "url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+              "text": "1. Nach der Haarwäsche mit einem Pantene Pro-V Shampoo die Pantene Pro-V Wunder-Ampulle in die Handfläche geben. 2. Auf das feuchte Haar auftragen und von den Spitzen nach oben einarbeiten. 3. Eine Minute einwirken lassen und danach gründlich ausspülen. Für beste Resultate 1 bis 2 Mal wöchentlich anwenden."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 60,
+              "source_text": "Eine Minute einwirken lassen und danach gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4084500390089",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann führt dieselben Ziffern in URL/Listing (dort unter dem neueren Namen 'Serum Shot mit Collagen Peptiden', INCI identisch)",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_text": "GTIN: 4084500390089",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Bis-Aminopropyl Dimethicone (Pos. 2), Stearyl Alcohol, Behentrimonium Chloride, ..., Panthenol, Panthenyl Ethyl Ether, Histidine; keine Proteine, keine Öle"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe); Rossmann-INCI wortgleich",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_text": "Ingredients: Aqua, Bis-Aminopropyl Dimethicone, Stearyl Alcohol, Behentrimonium Chloride, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Disodium EDTA, Panthenol, Panthenyl Ethyl Ether, Histidine, Citric Acid, Hexyl Cinnamal, Hydroxycitronellal, Magnesium Nitrate, Methylchloroisothiazolinone, Magnesium Chloride, Methylisothiazolinone",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "1 Minute (exakt); Kadenz laut Packung 1-2x wöchentlich (V1 hat keinen Kadenz-Slot - nur notiert)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_text": "1. Nach der Haarwäsche mit einem Pantene Pro-V Shampoo die Pantene Pro-V Wunder-Ampulle in die Handfläche geben. 2. Auf das feuchte Haar auftragen und von den Spitzen nach oben einarbeiten. 3. Eine Minute einwirken lassen und danach gründlich ausspülen. Für beste Resultate 1 bis 2 Mal wöchentlich anwenden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.rescue_shots",
+            "fact_value": "Repariert laut Hersteller 'Haarschäden von 6 Monaten' in 1 Minute bei extrem geschädigtem Haar; hochkonzentrierte Pro-V Formel; dm-Wirkung: Glanz.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_text": "Die Pantene Pro-V 1 Min Wunder- Ampullen 15ml reparieren Haarschäden von 6 Monaten in nur 1 Minute bei extrem geschädigtem Haar. Die hochkonzentrierte Pantene Pro-V Formel schützt das Haar gegen Schäden und erhöht die Widerstandskraft gegen Styling-Schäden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identity.rossmann_rebrand",
+            "fact_value": "Rossmann listet dieselbe EAN mit identischer INCI und identischem Anwendungstext unter dem neueren Namen 'Serum Shot mit Collagen Peptiden'; auch das aktuelle dm-Packshot zeigt die 'Serum Shot'-Aufmachung (Aprikosenöl/Vitamin B7 auf der Packung, beides nicht in der Retailer-INCI).",
+            "source_label": "Rossmann.de Produktseite (Seitentitel + JSON-LD-sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-serum-shot-mit-collagen-peptiden/p/4084500390089",
+            "source_text": "Pantene Pro-V Serum Shot mit Collagen Peptiden online kaufen | rossmann.de",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.95,
+            "source_label": "dm.de Produktseite (15 ml); Preisabweichung: Rossmann 1,99 €",
+            "source_url": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+            "source_text": "1,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (Backlog-Retailer). ACHTUNG Rebranding-Verdacht: Rossmann-Name und aktuelles Packungsdesign (auch bei dm) lauten 'Serum Shot mit Collagen Peptiden' - siehe Notes, Umbenennungs-Entscheidung an Nick.",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): stark deponierendes Bis-Aminopropyl Dimethicone auf Position 2 in einer ansonsten schlanken Basis ohne Öle/Butter; gemischte Evidenz (Präzedenz Herbal Essences, gleiche Formelfamilie).",
+          "category_specs.product_mask_specs.concentration": "high: Single-Use-Ampullenformat, 'hochkonzentrierte Formel'-Claim, 1-2x-wöchentliche Kadenz - klassisches Intensiv-Treatment-Profil trotz kurzer Einwirkzeit.",
+          "category_specs.product_mask_specs.balance_direction": "balanced: Repair-/Schutz-Positionierung ohne Proteine und ohne Feuchtigkeitsfokus; Panthenol allein trägt keinen Moisture-Schwerpunkt.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Bis-Aminopropyl Dimethicone. humectants: Panthenol, Panthenyl Ethyl Ether. Keine Öle, keine Proteine (Histidin ist eine Einzel-Aminosäure, kein Protein-Flag - Präzedenz Herbal Essences).",
+          "category_specs.product_mask_specs.repair_support_level": "low: 'repariert Haarschäden von 6 Monaten' ist unbelegtes Marketing; keine Protein-/Bond-Aktivstoffe, Wirkmechanismus ist Amino-Silikon-Glättung.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: dm-Produktmerkmal 'Wirkung: Glanz'. Weitere Benefits nicht beworben - bewusst schmal.",
+          "thickness_eligibility": "Alle Stärken: leichte Serum-Textur, Dosis pro Anwendung ist durch das 15-ml-Format begrenzt; kein spezifisches Overload-Risiko erkennbar.",
+          "concern_eligibility": "hair_damage/repair: Zielgruppe 'extrem geschädigtes Haar', Repair & Care-Positionierung.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: 'von den Spitzen nach oben einarbeiten' ist P5-konform, exakte 1-Minuten-Angabe, kein Conditioner-danach. Der Marken-Querverweis ('mit einem Pantene Pro-V Shampoo') ist Cross-Selling. Ampullenformat ist Verpackungsstil, kein Strukturbruch (Anwendung = klassische Rinse-out-Maske)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarmaske Keratin Sleek, Anti-Frizz Kur",
+          "brand": "Garnier Fructis",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 370,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1770426576/assets/pas/images/d8fc86da-119c-4b32-8fcf-3e08ffb61a37/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+            "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur"
+          },
+          "description": "Vegane Anti-Frizz-Maske mit 13 % Keratin-Komplex (pflanzliche Hydrolysat-Proteine) und Arganöl für trockenes, frizz-neigendes Haar; Glättung bis zu 3 Tage."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542638951",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-keratin-sleek-maske/p/3600542638951"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "proteins",
+              "oils"
+            ],
+            "repair_support_level": "medium",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "garnier.de Produktseite (Anwendung, Schritt 2); dm/Rossmann nennen nur 'mehrere Minuten' ohne Zahl",
+              "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/maske",
+              "text": "2. Nun eine großzügige Menge der Keratin Sleek Haarmaske in das Haar geben und einige Minuten (zirka 3-5) einwirken lassen. Anschließend sorgfältig unter klarem Wasser ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "einige Minuten (zirka 3-5) einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542638951",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
+            "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+            "source_text": "GTIN: 3600542638951",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "proteins",
+                "oils"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sonnenblumen-/Arganöl, Sheabutter, Hydrolyzed Corn/Soy/Wheat Protein (silikonfrei, kein Glycerin)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+            "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • ARGANIA SPINOSA KERNEL OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • HYDROLYZED WHEAT PROTEIN • CAPRYLYL GLYCOL • CITRIC ACID • TARTARIC ACID • PHENOXYETHANOL • BENZOIC ACID • LINALOOL • AMYL CINNAMAL • HEXYL CINNAMAL • BENZYL ALCOHOL • PARFUM / FRAGRANCE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "zirka 3-5 Minuten (Range, Herstellerseite); Retailer-Texte nennen nur 'mehrere Minuten'",
+            "source_label": "garnier.de Produktseite (Anwendung)",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/maske",
+            "source_text": "2. Nun eine großzügige Menge der Keratin Sleek Haarmaske in das Haar geben und einige Minuten (zirka 3-5) einwirken lassen. Anschließend sorgfältig unter klarem Wasser ausspülen.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.keratin_sleek",
+            "fact_value": "13 % Keratin-Komplex + Arganöl; füllt verlorenes Keratin auf, stärkt die Haarstruktur, bändigt Frizz; glatt und glänzend bis zu 3 Tage; vegan.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+            "source_text": "Diese Haarmaske enthält einen 13 % Keratin-Komplex sowie Arganöl, die zusammen für Geschmeidigkeit und intensiven Glanz sorgen. Während der Anwendung wird verlorenes Keratin wieder aufgefüllt, was die Haarstruktur stärkt und Frizz effektiv bändigt. Zudem sorgt die Maske für intensive Feuchtigkeit, die das Haar bis zu drei Tage lang glatt und glänzend hält.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "dm.de Produktseite (370 ml); Preisabweichung: Rossmann 5,99 €",
+            "source_url": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+            "source_text": "5,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite. Rossmann führt dieselbe EAN als 'Keratin Sleek Maske' - Namensvariante.",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): Öle + Sheabutter im INCI-Mittelfeld sprechen gegen light, aber keine Rich-Positionierung und silikonfrei; gemischte Evidenz, daher Mitte (Präzedenz Banana Hair Food, gleiche Formelfamilie).",
+          "category_specs.product_mask_specs.concentration": "medium: 3-5-Minuten-Drogeriemaske; der bezifferte 13%-Komplex allein rechtfertigt kein high, der 3-Tage-Effekt ist kein semi-permanenter Laminierungseffekt (Konsistenz mit Hydra Hyaluronic, Abgrenzung zum Glycolic-Gloss-Präzedenzfall).",
+          "category_specs.product_mask_specs.balance_direction": "protein: drei hydrolysierte Proteine in der INCI plus durchgängige Keratin-/Stärkungs-Positionierung.",
+          "category_specs.product_mask_specs.ingredient_flags": "proteins: Hydrolyzed Corn/Soy/Wheat Protein. oils: Sonnenblumenöl, Arganöl, Sheabutter. Silikonfrei; kein Glycerin/klassischer Humectant.",
+          "category_specs.product_mask_specs.repair_support_level": "medium: drei hydrolysierte Proteine mit Stärkungs-Claim ('stärkt die Haarstruktur') - Präzedenz Gliss 7sec (Hydrolyzed Keratin = medium); 'high' wäre ohne Bond-Builder-Evidenz nicht gedeckt.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: Kernclaim Anti-Frizz/Glättung. shine: 'intensiver Glanz'.",
+          "thickness_eligibility": "normal/coarse: Emollient-Last (2 Öle + Sheabutter) und Anti-Frizz-/Widerspenstig-Positionierung; für feines Haar konservativ ausgeschlossen (Präzedenz Banana Hair Food).",
+          "concern_eligibility": "frizz: Kernclaim. dryness: explizit 'trockenes und frizz-neigendes Haar'. Protein-Balance ist über balance_direction abgebildet, nicht als Concern.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 'zirka 3-5 Minuten' von der Herstellerseite übernommen (§2.5: seconds=null, Copy '3–5 Minuten einwirken lassen.'); Retailer-Formulierung 'mehrere Minuten' ist unpräziser, widerspricht aber nicht. Der Serien-Kontext (Shampoo davor, Serum danach) ist Cross-Selling, keine conditioner_after-Sequenz und kein Regelbruch."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 1-Minute Traube",
+          "brand": "Wahre Schätze",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 340,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1764672892/assets/pas/images/513ce4aa-7073-408d-86cf-b8f6aa27490f/wahre-schaetze-haarkur-1-minute-traube",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube"
+          },
+          "description": "Vegane 1-Minuten-Feuchtigkeitskur mit Traubenwasser und Traubenkernöl für feuchtigkeitsbedürftiges Haar; bis zu 4 Tage Feuchtigkeit laut Hersteller."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542656191",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-wahre-schaetze-1-minute-haarkur/p/3600542656191"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants",
+              "silicones"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+              "text": "Nach der Haarwäsche die 1-Minute Haarkur von Garnier Wahre Schätze großzügig in das nasse Haar einarbeiten. Anschließend die cremig- schmelzende Textur für etwa eine Minute einwirken lassen. Danach die Maske gründlich unter klarem und warmem Wasser ausspülen und die Haarpflegeroutine mit einem passenden Conditioner abrunden."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 60,
+              "source_text": "Anschließend die cremig- schmelzende Textur für etwa eine Minute einwirken lassen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542656191",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+            "source_text": "GTIN: 3600542656191",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants",
+                "silicones"
+              ],
+              "inci_basis": "Aqua, Glycerin (Pos. 2), Cetearyl Alcohol, ..., Sonnenblumenöl, Traubenwasser, Traubenkernöl, ..., Amodimethicone (Mittelfeld); keine Proteine, keine Butter"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+            "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • SORBITAN ISOSTEARATE • PARFUM / FRAGRANCE • MYRISTYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER • VITIS VINIFERA SEED OIL / GRAPE SEED OIL • ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT • AMODIMETHICONE • SODIUM CHLORIDE • SODIUM HYDROXIDE • COCO-BETAINE • CITRIC ACID • LACTIC ACID • TARTARIC ACID • CETYL ESTERS • TOCOPHEROL • PHENOXYETHANOL • BENZOIC ACID • CI 17200 / RED 33 • LINALOOL • LINALYL ACETATE • TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL • LIMONENE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CARVONE • HEXYL CINNAMAL",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "etwa 1 Minute (exakt übernommen als 60 s)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+            "source_text": "Nach der Haarwäsche die 1-Minute Haarkur von Garnier Wahre Schätze großzügig in das nasse Haar einarbeiten. Anschließend die cremig- schmelzende Textur für etwa eine Minute einwirken lassen. Danach die Maske gründlich unter klarem und warmem Wasser ausspülen und die Haarpflegeroutine mit einem passenden Conditioner abrunden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.hydraboost",
+            "fact_value": "Traubenwasser + Traubenkernöl; intensiv hydratisiert, bis zu 4 Tage Feuchtigkeit; cremig-schmelzende Textur; sofortige Strahlkraft; vegan.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+            "source_text": "Dank ihrer Formel mit Traubenwasser und Traubenkernöl wird das Haar intensiv hydratisiert und erhält bis zu vier Tage lang Feuchtigkeit. Die cremig-schmelzende Maske kann die natürliche Strahlkraft regenerieren und dem Haar neue Stärke verleihen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Anwendung deckungsgleich: nasses Haar, etwa eine Minute, ausspülen; Conditioner-danach auch auf der Herstellerseite (per R-C ignoriert).",
+            "source_label": "garnier.de Produktseite (Anwendung)",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/traube-hydraboost/1-minute-haarkur",
+            "source_text": "1. Nach der Haarwäsche die Wahre Schätze 1-Minute Haarkur Traube Hydraboost in das nasse Haar geben und vorsichtig einarbeiten. 2. Nun für etwa eine Minute einwirken lassen. 3. Anschließend gründlich unter klarem Wasser ausspülen. 4. Die Haarpflegeroutine mit einem passenden Conditioner ergänzen.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm.de Produktseite (340 ml); Preisabweichung: Rossmann 4,99 €",
+            "source_url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+            "source_text": "4,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite. Marke bei dm 'Wahre Schätze' (Garnier-Linie; Rossmann führt sie als 'Garnier Wahre Schätze').",
+          "category_specs.product_mask_specs.weight": "medium: 'cremig-schmelzende' Jar-Maske mit Ölen im INCI-Mittelfeld, aber ohne Butter und ohne Rich-Claim; gemischte Evidenz, daher Mitte.",
+          "category_specs.product_mask_specs.concentration": "medium: 1-Minuten-Expresskur; 'intensiv regenerierend' ist Marketing, das Format spricht gegen ein Intensiv-Treatment.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Glycerin auf Position 2, Traubenwasser, durchgängige Feuchtigkeitsclaims (bis zu 4 Tage); keine Proteine.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sonnenblumen- und Traubenkernöl. humectants: Glycerin. silicones: Amodimethicone (Mittelfeld). Hinweis: dm-Badge 'Vegan' und Amodimethicone koexistieren; kein 'Ohne Silikone'-Claim bei dieser Variante.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Repair-Claims über generisches 'neue Stärke' hinaus, keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: 'sofortige Strahlkraft', dm-Wirkung 'Glanz'. Entwirren/Glättung nicht beworben - bewusst schmal.",
+          "thickness_eligibility": "Alle Stärken: leichte Öle (Traubenkern, Sonnenblume) ohne Butter, Claim 'ohne zu beschweren' fehlt zwar, aber kein Overload-Signal; feines Haar nicht ausgeschlossen.",
+          "concern_eligibility": "dryness/feuchtigkeit: 'feuchtigkeitsbedürftiges Haar', Hydraboost-Kernclaims.",
+          "protocols.tpl_mask.deviation": "Ruling R-C: Die Anweisung 'die Haarpflegeroutine mit einem passenden Conditioner abrunden' (conditioner-after, auch auf garnier.de) wird IGNORIERT; die Standard-Regel replaces_conditioner (P5) wird unverändert gestampt, deviation=null. Der Verpackungstext bleibt als product_source dokumentiert. 'etwa eine Minute' wird als exakte 60 s übernommen (Produktname '1-Minute', Copy '1 Minute einwirken lassen.')."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 1-Minute Honig Schätze",
+          "brand": "Wahre Schätze",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.95,
+          "net_content_value": 340,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747420600/assets/pas/images/d8d6a0a6-945e-4a37-b9c9-82c0638787c5/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze"
+          },
+          "description": "Silikonfreie 1-Minuten-Haarkur mit Akazienhonig für strapaziertes, brüchiges Haar; gegen Spliss und Haarbruch, 97 % Inhaltsstoffe natürlichen Ursprungs."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542509428",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-haarkur-1-minute-honig-schaetze-strapaziertes-und-bruechiges-haar/p/3600542509428"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "medium",
+            "concentration": "medium",
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "split_ends",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+              "text": "Garnier Wahre Schätze 1-Minute Haarkur Honig Schätze großzügig ins nasse Haar einarbeiten, einwirken lassen. Nach 1 Minute kann die Haarkur bereits ausgespült werden, bis keine Rückstände mehr vorhanden sind. Danach das Haar wie gewohnt föhnen und stylen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 60,
+              "source_text": "Nach 1 Minute kann die Haarkur bereits ausgespült werden, bis keine Rückstände mehr vorhanden sind."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542509428",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_text": "GTIN: 3600542509428",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "balanced",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sonnenblumenöl, Sheabutter, Mel/Honey, Honey Extract, Glycerin (silikonfrei, keine Proteine; kein Cera Alba trotz Bienenwachs-Claim)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • GLYCERIN • CAPRYLYL GLYCOL • CITRIC ACID • TARTARIC ACID • POTASSIUM SORBATE • SODIUM BENZOATE • BENZOIC ACID • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "1 Minute (exakt)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_text": "Garnier Wahre Schätze 1-Minute Haarkur Honig Schätze großzügig ins nasse Haar einarbeiten, einwirken lassen. Nach 1 Minute kann die Haarkur bereits ausgespült werden, bis keine Rückstände mehr vorhanden sind. Danach das Haar wie gewohnt föhnen und stylen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.honig_repair",
+            "fact_value": "Akazienhonig + Bienenwachs gegen Spliss und Haarbruch; reparierende Wirkung für brüchiges, strapaziertes Haar; geschmeidig ohne zu beschweren; 97 % natürlichen Ursprungs.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_text": "Die Garnier Wahre Schätze 1-Minute Haarmaske Honig Schätze von Garnier vereint Akazienhonig mit Bienenwachs und führt damit zu weniger Spliss und Haarbruch. […] Dadurch entstehen im Nu geschmeidigere Haare, ohne zu beschweren. Dabei besteht die Formel aus 97 % Inhaltsstoffen natürlichen Ursprungs und Wasser.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.manufacturer_corroboration",
+            "fact_value": "Anwendung deckungsgleich: einmassieren nach der Wäsche, 1 Minute Einwirkzeit, gründlich ausspülen.",
+            "source_label": "garnier.de Produktseite (Anwendung)",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/1-minute-haarkur",
+            "source_text": "Die Garnier Wahre Schätze 1-Minute Haarkur mit Akazienhonig und Bienenwachs nach dem Haare waschen in die Haare einmassieren. Nach 1 Minute Einwirkzeit kann die Haarkur ausgespült werden. Das gründliche Ausspülen ist wichtig, damit keine Rückstände zurückbleiben, die das Haar beschweren könnten.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm.de Produktseite (340 ml); Preisabweichung: Rossmann 4,99 €",
+            "source_url": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+            "source_text": "4,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite. Rossmann-Variante: '1-Minute Haarkur Honig Schätze Strapaziertes & Brüchiges Haar'.",
+          "category_specs.product_mask_specs.weight": "medium (konservativ): Sheabutter auf INCI-Position 7 spricht gegen light, Claim 'schwereloses Haargefühl/ohne zu beschweren' gegen rich; gemischte Evidenz, daher Mitte.",
+          "category_specs.product_mask_specs.concentration": "medium: 1-Minuten-Expresskur, kein Intensiv-Treatment-Anspruch.",
+          "category_specs.product_mask_specs.balance_direction": "balanced: Repair-/Anti-Haarbruch-Positionierung ohne Proteine; Emollient-Honig-Formel mit Humectants, aber ohne beworbenen Feuchtigkeitsfokus - weder Protein- noch Moisture-Schwerpunkt.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sonnenblumenöl, Sheabutter. humectants: Honig/Honig-Extrakt, Glycerin. Silikonfrei laut dm-Badge und INCI; keine Proteine. Hinweis: 'Bienenwachs' wird beworben, Cera Alba steht aber nicht in der dm-INCI (dokumentierte Claim/INCI-Abweichung).",
+          "category_specs.product_mask_specs.repair_support_level": "low: 'reparierend' läuft über Honig/Wachs-Marketing; keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'geschmeidigere Haare'. Glanz/Entwirren nicht beworben - bewusst schmal.",
+          "thickness_eligibility": "normal/coarse (konservativ): Sheabutter-haltige Formel; der Gegen-Claim 'ohne zu beschweren' ist dokumentiert, Entscheidung reviewbar (Präzedenz Banana Hair Food: Butter → feines Haar ausgeschlossen).",
+          "concern_eligibility": "hair_damage/split_ends/breakage: Kernclaims 'weniger Spliss und Haarbruch', Zielgruppe strapaziertes, brüchiges Haar.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: 'ins nasse Haar' per Ruling ok, exakte 1-Minuten-Angabe, kein Conditioner-danach ('danach wie gewohnt föhnen und stylen'), keine Ansatz-Anweisung."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}
