@@ -1136,10 +1136,7 @@
               "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
               "text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
             },
-            "deviation": {
-              "reason": "R-A-Kategorie-Identitätsfrage (kein App-Stil-Konflikt): dm und Rossmann führen das Produkt namentlich als 'Hitzeschutzspray'; der Backlog-Draft vermerkt es als 'heat-protectant oil spray'. Die Research-Evidenz (anhydrische Öl-INCI, Tropfen-Applikation in den Handflächen, Anti-Frizz-Pflege 'ohne ausspülen' in allen drei Haarzuständen) spricht für ein Multi-Use-Öl — Entscheidung oil vs. heat_protectant liegt bei Nick.",
-              "packaging_text": "Hitzeschutzspray Wunderöl, stark geschädigtes Haar (dm-Produktname) / Der Hitzeschutzspray Fruchtis Schaden Löscher Multi-Use Wunderöl bietet Hitzeschutz und Anti-Frizz-Pflege ohne ausspülen."
-            }
+            "deviation": null
           },
           {
             "template_id": "TPL-OIL-DRYFINISH",
@@ -1148,10 +1145,7 @@
               "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
               "text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
             },
-            "deviation": {
-              "reason": "R-A-Kategorie-Identitätsfrage — siehe TPL-OIL-LEAVEON-Stamp (identische Begründung).",
-              "packaging_text": "Hitzeschutzspray Wunderöl, stark geschädigtes Haar (dm-Produktname) / Der Hitzeschutzspray Fruchtis Schaden Löscher Multi-Use Wunderöl bietet Hitzeschutz und Anti-Frizz-Pflege ohne ausspülen."
-            }
+            "deviation": null
           },
           {
             "template_id": "TPL-OIL-HEAT",
@@ -1160,10 +1154,7 @@
               "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
               "text": "Ein paar Tropfen in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen. Schützt vor Hitze bis 230° C."
             },
-            "deviation": {
-              "reason": "R-A-Kategorie-Identitätsfrage — siehe TPL-OIL-LEAVEON-Stamp (identische Begründung).",
-              "packaging_text": "Hitzeschutzspray Wunderöl, stark geschädigtes Haar (dm-Produktname) / Sie verleiht dabei bis zu 230° Hitzeschutz, beschleunigt die Trockenzeit beim Föhnen und beugt Frizz vor."
-            },
+            "deviation": null,
             "usable_on_dry_hair": true
           }
         ],
@@ -1246,7 +1237,8 @@
           "thickness_eligibility": "Alle Stärken: dm-Haartyp 'Alle Haartypen', schwerelose Formel.",
           "concern_eligibility": "hair_damage: 'Speziell für stark geschädigtes Haar entwickelt'. frizz: 'Frizz wird gebändigt'. split_ends: 'Anti-Spliss' im Rossmann-Produktnamen (Evidence-Zeile) — Namens-Claim, als solcher markiert.",
           "protocols": "Alle 3 Stamps tragen die R-A-Kategorie-Identitätsfrage als strukturelle Deviation (kein Anwendungs-Konflikt: Platzierung Spitzen-Fokus, kein Ausspülen, feucht/nass/trocken sind template-konform).",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'im nassen, feuchten oder trockenen Haar' — either_state per P9-Mapping."
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'im nassen, feuchten oder trockenen Haar' — either_state per P9-Mapping.",
+          "protocols.category_identity": "Nick W1 (2026-09-02): definitiv Öl — Formel schlägt Retailer-Marketing. Deviations aufgehoben. (Fix 2026-09-03: erste Anwendung scheiterte an 'Wunder-Öl'-Schreibweise.)"
         }
       }
     },

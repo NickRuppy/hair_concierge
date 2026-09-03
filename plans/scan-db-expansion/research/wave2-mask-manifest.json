@@ -5,154 +5,6 @@
     {
       "final": {
         "product": {
-          "name": "Haarmaske Hydra Hyaluronic",
-          "brand": "L'Oréal Paris Elvital",
-          "category_key": "mask",
-          "origin": "curated",
-          "is_chaarlie_recommended": false,
-          "price_eur": 4.95,
-          "net_content_value": 300,
-          "net_content_unit": "ml",
-          "candidate_image": {
-            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1773354171/assets/pas/images/474537a9-c2ae-424d-aa81-68c49f637f41/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic"
-          },
-          "description": "Feuchtigkeitsmaske (neue Formel) mit Hyaluronsäure und 13 % Pflegekomplex für feuchtigkeitsbedürftiges Haar; leichte Textur, beschwert laut Hersteller nicht."
-        },
-        "identifiers": [
-          {
-            "type": "ean",
-            "value": "3600524245849",
-            "cross_source_agreement": true,
-            "source_urls": [
-              "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-              "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-hydra-hyaluronic-feuchtigkeitsmaske/p/3600524245849"
-            ],
-            "excluded_from_apply": false
-          }
-        ],
-        "category_specs": {
-          "product_mask_specs": {
-            "weight": "light",
-            "concentration": "medium",
-            "balance_direction": "moisture",
-            "ingredient_flags": [
-              "silicones",
-              "humectants"
-            ],
-            "repair_support_level": "low",
-            "functional_benefits": [
-              "smoothing_frizz_control",
-              "shine"
-            ]
-          }
-        },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "dryness",
-          "feuchtigkeit"
-        ],
-        "protocols": [
-          {
-            "template_id": "TPL-MASK",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise)",
-              "url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-              "text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen."
-            },
-            "deviation": null,
-            "contact_time": {
-              "seconds": 180,
-              "source_text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen."
-            }
-          }
-        ],
-        "evidence": [
-          {
-            "fact_key": "product.identifiers.ean",
-            "fact_value": "3600524245849",
-            "source_label": "dm.de Produktseite (GTIN-Feld); Rossmann-Produktseite bestätigt dieselben Ziffern in URL und Listing",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_text": "GTIN: 3600524245849",
-            "source_type": "retailer",
-            "checked_at": "2026-09-03"
-          },
-          {
-            "fact_key": "product_mask_specs.authority_facts",
-            "fact_value": {
-              "weight": "light",
-              "balance_direction": "moisture",
-              "repair_support_level": "low",
-              "ingredient_flags": [
-                "silicones",
-                "humectants"
-              ],
-              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, ..., Sodium Hyaluronate, ..., Amodimethicone (weit hinten; keine Öle/Butter, keine Proteine)"
-            },
-            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_text": "INGREDIENTS: AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • PARFUM / FRAGRANCE • SORBITAN ISOSTEARATE • MYRISTYL ALCOHOL • CI 17200 / RED 33 • CI 42090 / BLUE 1 • LACTIC ACID • COCO-BETAINE • SODIUM HYALURONATE • SODIUM CHLORIDE • SODIUM HYDROXIDE • PHENOXYETHANOL • DIMETHYL PHENETHYL ACETATE • LIMONENE • BENZOIC ACID • AMODIMETHICONE • TARTARIC ACID • CARVONE • CETYL ESTERS • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRUS AURANTIUM PEEL OIL • CITRIC ACID • COUMARIN",
-            "source_type": "retailer",
-            "checked_at": "2026-09-03"
-          },
-          {
-            "fact_key": "protocols.tpl_mask.contact_time",
-            "fact_value": "3 Minuten (exakt)",
-            "source_label": "dm.de Produktseite (Verwendungshinweise); Rossmann-Produktseite zeigt denselben Text wortgleich",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_text": "Auf gewaschenem Haar von den Längen bis zu den Spitzen verteilen, 3 Minuten einwirken lassen, dann gründlich ausspülen. Bei Kontakt mit den Augen diese sofort gründlich ausspülen.",
-            "source_type": "retailer",
-            "checked_at": "2026-09-03"
-          },
-          {
-            "fact_key": "product.claims.moisture_light",
-            "fact_value": "13 % Pflegekomplex + Hyaluronsäure; bis zu 100 Stunden Feuchtigkeit (dm) bzw. 72 Stunden (Herstellerseite); leichte Textur, beschwert nicht; für alle Haartypen.",
-            "source_label": "dm.de Produktseite (Produktbeschreibung)",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_text": "Mit 13 Prozent Pflegekomplex und Hyaluronsäure […] Durch den 13 Prozent Pflegekomplex mit reiner Hyaluronsäure bleibt das Haar bis zu 100 Stunden hydratisiert, ohne beschwert zu wirken. Die leichte Formel lässt sich einfach ausspülen und verleiht dem Haar ein weiches und glattes Aussehen.",
-            "source_type": "retailer",
-            "checked_at": "2026-09-03"
-          },
-          {
-            "fact_key": "product.claims.manufacturer_corroboration",
-            "fact_value": "Hyaluronsäure-Formel für feuchtigkeitsbedürftiges Haar, 72h-Feuchtigkeitsclaim, Glanz + Geschmeidigkeit, ohne zu beschweren.",
-            "source_label": "loreal-paris.de Produktseite",
-            "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-umhuellende-maske-300ml",
-            "source_text": "Die eigens für feuchtigkeitsbedürftiges Haar entwickelte Formel ist angereichert mit Hyaluronsäure, welche Ihre Längen für 72 Stunden mit Feuchtigkeit versorgt. […] erhält es nicht nur mehr Glanz, sondern zusätzlich Geschmeidigkeit und Griffigkeit […] ohne zu beschweren.",
-            "source_type": "manufacturer",
-            "checked_at": "2026-09-03"
-          },
-          {
-            "fact_key": "product.price_eur",
-            "fact_value": 4.95,
-            "source_label": "dm.de Produktseite",
-            "source_url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
-            "source_text": "4,95 €",
-            "source_type": "retailer",
-            "checked_at": "2026-09-03"
-          }
-        ],
-        "field_rationales": {
-          "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Rossmann führt dieselbe EAN als 'Hydra Hyaluronic Feuchtigkeitsmaske' - Namensvariante.",
-          "category_specs.product_mask_specs.weight": "light: Hersteller- und dm-Claim 'leichte Textur/Formel, beschwert nicht', INCI ist eine leichte kationische Basis ohne Öle/Butter; Amodimethicone steht weit hinten (Spurenbereich). dm-Reviews beschreiben die neue Formel sogar als 'dünn wie Spülung'.",
-          "category_specs.product_mask_specs.concentration": "medium: klassische 3-Minuten-Drogeriemaske; der bezifferte 13%-Pflegekomplex allein rechtfertigt kein high (kein semi-permanenter Effekt wie beim Glycolic-Gloss-Präzedenzfall).",
-          "category_specs.product_mask_specs.balance_direction": "moisture: Glycerin auf INCI-Position 2, Sodium Hyaluronate, durchgängige Feuchtigkeitsclaims; keine Proteine.",
-          "category_specs.product_mask_specs.ingredient_flags": "silicones: Amodimethicone (weit hinten). humectants: Glycerin, Sodium Hyaluronate. Keine Öle/Butter, keine Proteine, keine synthetischen Filmpolymere.",
-          "category_specs.product_mask_specs.repair_support_level": "low: reine Feuchtigkeitsmaske, keine Repair-Claims, keine Protein-/Bond-Aktivstoffe.",
-          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'weiches, glattes Haar/glattes Aussehen'. shine: Hersteller bewirbt 'mehr Glanz'.",
-          "thickness_eligibility": "Alle Stärken: dm-Produktmerkmal 'Haartyp: Alle Haartypen', leichte Formel ohne Overload-Risiko.",
-          "concern_eligibility": "dryness/feuchtigkeit: Kernclaims Feuchtigkeit für feuchtigkeitsbedürftiges/trockenes Haar.",
-          "protocols.tpl_mask.deviation": "Keine Deviation: Platzierung 'von den Längen bis zu den Spitzen' entspricht P5, exakte 3-Minuten-Angabe, kein Conditioner-danach, keine Wärme. Hinweis: dm claimt 'bis zu 100 Stunden', Herstellerseite '72 Stunden' - Claims-Drift dokumentiert (vermutlich Alt-/Neuformel), für die Spec-Felder ohne Konsequenz."
-        }
-      }
-    },
-    {
-      "final": {
-        "product": {
           "name": "Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
           "brand": "John Frieda",
           "category_key": "mask",
@@ -1168,5 +1020,22 @@
       }
     }
   ],
-  "existing_product_updates": []
+  "existing_product_updates": [
+    {
+      "product_id": "e482e42a-bdac-4f5e-bd3b-489e702c0c4b",
+      "expected_product": {
+        "name": "Feuchtigkeit-Umhüllende Maske",
+        "brand": "L'Oréal Paris",
+        "category_key": "mask",
+        "is_active": true,
+        "lifecycle_status": "active",
+        "is_chaarlie_recommended": false
+      },
+      "rename": {
+        "from": "Feuchtigkeit-Umhüllende Maske",
+        "to": "L'Oréal Paris Elvital Haarmaske Hydra Hyaluronic",
+        "reason": "W6 current-shelf-name rule: same GTIN 3600524245849; catalog row carried the generic descriptor from user submission (2026-09-03)"
+      }
+    }
+  ]
 }
