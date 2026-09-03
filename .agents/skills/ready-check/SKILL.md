@@ -1,6 +1,6 @@
 ---
 name: ready-check
-description: Use when a Hair Concierge change has been implemented and needs repo-specific verification before claiming readiness, especially for UI, onboarding, recommendation, copy, data, migration, or trust-facing work.
+description: Use when a Hair Concierge change has been implemented and needs repo-specific verification of decision coverage and the promised end-state before claiming readiness, especially for UI, onboarding, recommendation, copy, data, migration, or trust-facing work.
 ---
 
 # Hair Concierge Ready Check
@@ -9,7 +9,7 @@ Verify the promised end-state on the exact tree that will be reviewed. This skil
 
 ## 1. Define the proof
 
-Read the approved plan/spec and the final diff. Map each promised outcome and risk to observable evidence. If the intended end-state is unclear or unobservable, stop and name the missing contract.
+Read the approved plan/spec or inline implementation contract and the final diff. Map each promised outcome and risk to observable evidence. For every change entering through `implementation-loop`, revalidate that decision coverage is current and `confirmed`, its **Coverage acknowledgement** identifies the plan revision or handoff under review, and no consequential choice surfaced in implementation without returning through `plan-hardening-loop`. A quick-work check that never triggered `implementation-loop` has no decision-coverage record to revalidate. If the intended end-state or required decision coverage is unclear, stale, or unobservable, stop and name the missing contract.
 
 ## 2. Run fresh checks
 
@@ -29,6 +29,7 @@ Record:
 - branch and base
 - a canonical content fingerprint: SHA-256 of a sorted manifest containing each
   in-scope path relative to the base plus its current content hash or `DELETED`
+- revalidated decision-coverage status and **Coverage acknowledgement** for every `implementation-loop` change; omit only for quick work that never triggered that loop
 - promised outcomes checked
 - commands and results
 - browser/manual evidence

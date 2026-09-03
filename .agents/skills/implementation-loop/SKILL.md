@@ -1,6 +1,6 @@
 ---
 name: implementation-loop
-description: Use for Hair Concierge when an approved implementation plan or clearly bounded non-trivial change should be executed through branch setup, implementation, verification, final review, and a review-ready handoff. Use after plan-hardening-loop; do not use for brainstorming or plan creation.
+description: Use for Hair Concierge when an approved implementation plan or clearly bounded non-trivial non-user-facing change should be executed through decision-coverage intake, branch setup, implementation, verification, final review, and a review-ready handoff. Use after plan-hardening-loop; do not use for brainstorming or plan creation.
 ---
 
 # Implementation Loop
@@ -17,9 +17,13 @@ A Goal can contain this loop. The loop does not require formal Goal mode.
 
 ## 1. Anchor the outcome
 
-Read the approved plan and inspect any active goal before editing.
+Read the approved plan when one exists and inspect any active goal before editing.
 
-For user-facing work, confirm the plan contains **Planning evidence**, confirmed evidence review, a **Designed user journey**, and explicit user-journey sign-off. If any is missing or pending, return to `plan-hardening-loop`; do not implement. A prose-only visual description or general plan approval is not a substitute. If a prototype settled a decision, confirm its finding and disposition are recorded and rewrite retained behavior through the normal production test and safeguard workflow. For backend-only work, accept an explicitly confirmed operator/integration journey plus an explicit statement that no user-facing mockup is required because no surface, copy, timing, or feedback changes.
+For plan-backed work, confirm the plan's **Decision coverage** is current and `confirmed`, states `Undiscussed consequential assumptions affecting this handoff: none`, and has no open decision that the handed-off tasks depend on. "Current" means the record reflects the latest chosen direction, scoped tasks, evidence, and counterpart findings; its coverage acknowledgement names when Nick last saw it and which plan revision or handoff it covers. When a plan written before this contract is the current source for implementation or verification, refresh that active plan or its handoff before continuing, even if implementation edits are already complete; do not bulk retrofit historical plans that are not driving active work.
+
+For a clearly bounded non-trivial non-user-facing change that genuinely needs no durable plan, draft the same compact coverage inline in the implementation contract, present it to Nick, and wait for explicit acknowledgement before marking it `confirmed` or making the first edit. If evidence exposes a consequential choice, return to `plan-hardening-loop`; do not self-confirm the record or continue editing while coverage is `pending`.
+
+For user-facing work, also confirm **Planning evidence**, confirmed evidence review, a **Designed user journey**, and explicit user-journey sign-off. If any required gate is missing or pending, return to `plan-hardening-loop`; do not implement. A prose-only visual description or general plan approval is not a substitute. If a prototype settled a decision, confirm its finding and disposition are recorded and rewrite retained behavior through the normal production test and safeguard workflow. For non-user-facing work, accept an explicitly confirmed operator/integration journey plus an explicit statement that no user-facing mockup is required because no surface, copy, timing, or user-visible feedback changes.
 
 Use formal Goal mode only when the user explicitly asks for it and the work is likely to span multiple turns, resumptions, or a long implementation sequence. If formal Goal mode is requested, first inspect the existing goal to avoid replacing unrelated active work.
 
@@ -30,11 +34,18 @@ In every implementation-loop run, state a compact implementation contract. Forma
 ```text
 Outcome: <user-visible or repository state that must become true>
 Scope: <plan path and boundaries>
+Decision coverage: <confirmed from the plan | pending until Nick acknowledges on the no-plan path, then confirmed before first edit>
+Confirmed with Nick: <plan section or consequential choices>
+Inherited from evidence or contract: <plan section or determining sources>
+Implementation defaults: <plan section or non-consequential choices only>
+Open consequential assumptions: <none, or acknowledged parked work>
+Undiscussed consequential assumptions affecting this handoff: <none, or list>
+Coverage acknowledgement: <when Nick saw this record; plan revision or handoff covered>
 Verification: <proof required>
 Stop: <last authorized external action>
 ```
 
-Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine automation runs do not trigger this skill and do not require an implementation contract or formal Goal. A tiny user-facing fix still returns to `plan-hardening-loop` for contextual evidence review and journey sign-off.
+Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine non-user-facing automation runs do not trigger this skill and do not require an implementation contract or formal Goal unless evidence exposes a consequential choice. Use the consequence-based definition of "tiny" in `AGENTS.md`; line count alone does not create an exemption. A tiny user-facing fix still returns to `plan-hardening-loop` for contextual evidence review and journey sign-off.
 
 Completion criterion: the controlling outcome is stable, authorization is clear, and process details are subordinate to it.
 
@@ -59,7 +70,7 @@ Follow the plan in dependency order. For each slice:
 
 When changing deterministic behavior or regression guards, read `references/test-first-quality.md` and record the red proof.
 
-Return to planning only when evidence reveals a product decision, material architecture change, scope expansion, or risk acceptance that the approved plan did not settle.
+Return to planning only when evidence reveals a product decision, material architecture change, scope expansion, or risk acceptance that the approved plan did not settle. Immediately mark decision coverage `pending`; do not continue the affected work until `plan-hardening-loop` has resolved or explicitly parked the choice and restored current confirmed coverage.
 
 Completion criterion: every in-scope plan item is implemented or explicitly blocked, with no unrelated edits absorbed and every task-owned artifact classified as commit, archive, or discard.
 
@@ -71,6 +82,7 @@ Create a verification receipt containing:
 
 - branch and base
 - the canonical content fingerprint from `ready-check`
+- revalidated decision-coverage status and coverage acknowledgement
 - commands and outcomes
 - manual or browser evidence
 - artifact disposition and unresolved task-owned files
@@ -84,10 +96,12 @@ Use `request-code-review` as the single repository review router. Run the config
 
 If content changes after either receipt, refresh the stale receipt; do not blindly rerun unrelated review lanes. Staging or committing byte-identical content does not stale a receipt.
 
+Before handoff, revalidate decision coverage against the final tree. A material implementation deviation or review finding that introduces a consequential choice returns coverage to `pending` and the affected work to `plan-hardening-loop`.
+
 Completion criterion: no blocking verified findings remain and verification/review receipts identify the same canonical content fingerprint.
 
 ## 6. Hand off
 
-Report outcome, changed behavior, verification, review findings, artifact disposition, residual risk, branch/worktree, and the next authorized action. Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action.
+Report outcome, changed behavior, revalidated decision-coverage status and coverage acknowledgement, verification, review findings, artifact disposition, residual risk, branch/worktree, and the next authorized action. Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action.
 
 Use `ship-it` only after the user asks to publish the verified branch.

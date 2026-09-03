@@ -1,6 +1,6 @@
 ---
 name: plan-hardening-loop
-description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups or conditional runnable prototypes for user-facing work, obtain a counterpart-model review, align the designed user journey before implementation, or continue from a Wayfinder handoff. For user-facing work, this skill ends only after evidence review and explicit user-journey sign-off; every plan ends at an approved implementation handoff. Use `$wayfinder` first only when Nick explicitly invokes it and dependent decisions prevent an implementation outcome or scope from being stated. Use implementation-loop for execution.
+description: Use for Hair Concierge when the user wants to create, grill, harden, or review a non-trivial implementation plan, compare meaningful architecture or UX options, create mockups or conditional runnable prototypes for user-facing work, obtain a counterpart-model review, align consequential decisions, or continue from a Wayfinder handoff. Every plan ends only with current confirmed decision coverage and an approved implementation handoff; user-facing work also requires evidence review and explicit user-journey sign-off. Use `$wayfinder` first only when Nick explicitly invokes it and dependent decisions prevent an implementation outcome or scope from being stated. Use implementation-loop for execution.
 ---
 
 # Plan Hardening Loop
@@ -13,7 +13,7 @@ Turn fuzzy intent or an existing plan into one chosen, evidence-grounded impleme
 - It does not implement the plan. Handoff execution to `implementation-loop`.
 - It accepts a Wayfinder handoff once the planning contract can be stated. If dependent decisions still prevent that, explain the boundary and offer explicit `$wayfinder` invocation instead of silently switching workflows.
 - Keep external evidence, internal product logic, and reconciliation separate as defined in `AGENTS.md`.
-- Do not use it for a tiny non-user-facing change that does not need a durable plan. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
+- Do not use it for a tiny non-user-facing change that does not need a durable plan unless evidence exposes a consequential choice; this loop then owns that decision before work continues. Any user-facing change still uses the mockup and journey gates even when the eventual code diff is small.
 
 ## 1. Establish the planning contract
 
@@ -43,7 +43,32 @@ Use one high-leverage question at a time. For architecture, UX, data ownership, 
 
 Recommend one option when the evidence supports it. After every 2-4 substantive decisions, checkpoint what is settled, what remains open, and the likely direction.
 
-Completion criterion: every consequential fork has one chosen direction or one explicit unresolved user decision.
+Maintain a compact decision-coverage record with four buckets:
+
+- **Confirmed with Nick:** product, experience, scope, and risk choices he explicitly approved.
+- **Inherited from evidence or contract:** behavior uniquely determined by current product rules, repository authority, or supplied requirements, with no meaningful fork left; cite the determining source rather than asking ceremonially.
+- **Implementation defaults:** routine technical choices with no meaningful product consequence.
+- **Open consequential assumptions:** anything not yet confirmed where another choice could change user-visible behavior, product semantics, scope, data ownership, access or payment, rollout, recoverability, or material risk. Mark each item `resolve before handoff` or `parked out of scope` and name the affected work.
+
+Track the record status as `pending` or `confirmed`. It is `confirmed` only after Nick has seen the current record, every consequential choice affecting the handed-off scope is settled, he explicitly acknowledges each remaining choice parked with its affected work out of scope, and the record states `Undiscussed consequential assumptions affecting this handoff: none`. A current record reflects the latest chosen direction, scoped tasks, evidence, and counterpart findings. Its coverage acknowledgement records when Nick last saw it and which plan revision or handoff it covers. Any material plan revision or counterpart finding that changes a consequential choice makes the record `pending` again until Nick confirms it; otherwise re-check and retain the status with an updated coverage acknowledgement.
+
+Do not treat evidence that merely supports one viable direction, a reviewer preference, or the orchestrator's recommendation as user approval of a consequential choice. Move that choice into the open bucket and ask for the decision. Do not fill the record with naming, test mechanics, or other internals that cannot change the product outcome.
+
+Before final handoff, explicitly state `Undiscussed consequential assumptions affecting this handoff: none`. If that is not true, list the assumptions and keep the affected work open.
+
+Compact example:
+
+```text
+Decision coverage: <pending|confirmed>
+Confirmed with Nick: <consequential choices>
+Inherited from evidence or contract: <determining sources>
+Implementation defaults: <non-consequential choices only>
+Open consequential assumptions: <none, or explicitly acknowledged parked work>
+Undiscussed consequential assumptions affecting this handoff: <none, or list>
+Coverage acknowledgement: <when Nick saw this record; plan revision or handoff covered>
+```
+
+Completion criterion: every known consequential fork has a chosen direction or is explicitly marked `resolve before handoff` or `parked out of scope` with its affected work, the record is current for this planning stage, and no consequential assumption is hidden inside an implementation default.
 
 ## 3. Make consequential behavior concrete
 
@@ -59,19 +84,19 @@ State the decision the artifact must resolve, then choose the lightest evidence 
 
 Do enough grilling to name the prototype question and its decision criterion before invoking `prototype`. A prototype is a higher-fidelity branch of this mockup step, not an opening phase or an automatic requirement. Use its UI branch for interactive or stateful experience questions and its logic branch for state transitions, business rules, data shapes, or interface behavior. Return the prototype's answer to this loop, record the selected behavior in the plan, and require production implementation to rewrite retained behavior with normal tests and safeguards.
 
-For backend-only planning, skip the user-facing mockup ladder. Invoke `prototype` only when operating a logic model will settle a consequential implementation decision more reliably than discussion or a static diagram.
+For non-user-facing planning, skip the user-facing mockup ladder. Invoke `prototype` only when operating a logic model will settle a consequential implementation decision more reliably than discussion or a static diagram.
 
 Ground mockups in the actual product surface when one exists. Inspect and capture the current surface first, then annotate that screenshot or recreate the proposed state as rendered lightweight HTML. For copy-only changes, show the before/after wording inside the real component layout at a representative viewport. A Markdown quote, ASCII sketch, detached copy sample, or prose description does not count as a mockup for an existing surface.
 
 Use realistic content and German UI copy. Show mobile and desktop when the experience materially differs, and include loading, empty, error, confirmation, or recovery states when they affect comprehension or trust.
 
-Mockups and prototypes are planning artifacts, not production implementation. Keep durable decision evidence in the task worktree and transient previews outside the repository. Present the relevant evidence to the user, incorporate feedback, record what it proved, and record the selected direction in the plan. Purely backend work may skip user-facing evidence only when the plan explicitly states that no user-facing surface, copy, timing, or feedback changes.
+Mockups and prototypes are planning artifacts, not production implementation. Keep durable decision evidence in the task worktree and transient previews outside the repository. Present the relevant evidence to the user, incorporate feedback, record what it proved, and record the selected direction in the plan. Purely non-user-facing work may skip user-facing evidence only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
 
 Completion criterion: the user has seen or operated the relevant experience, feedback and prototype findings are reflected in the chosen direction, and evidence review is recorded as confirmed for user-facing work. Any logic prototype also has its finding and disposition recorded.
 
 ## 4. Write or update the plan
 
-Read `references/plan-format.md`, then create or patch the plan under `plans/` in the task worktree. Preserve only the chosen path and complete its self-review before counterpart review.
+Read `references/plan-format.md`, then create or patch the plan under `plans/` in the task worktree. Preserve only the chosen path, include the current decision-coverage record, and complete its self-review before counterpart review.
 
 Completion criterion: the plan contains concrete files or repository surfaces, scope boundaries, ordered tasks, automated and manual verification, review gates, and an execution handoff.
 
@@ -90,7 +115,9 @@ Classify `Type` as `defect`, `tradeoff`, or `scope/product decision`. Classify `
 - Never silently accept a product, scope, architecture, or risk tradeoff on the user's behalf.
 - Rerun the counterpart only after material blocker-driven changes, multiple concrete implementation traps, or an explicit user request. Do not rerun for a cleaner approval sentence.
 
-Completion criterion: every material finding is classified, supported or rejected by evidence, and reflected in the plan or an explicit open decision.
+Revalidate decision coverage after the review. A material finding that changes a consequential choice returns the record to `pending` until Nick confirms it. If findings change only technical defects or non-consequential defaults, update the record and retain `confirmed` with a current coverage acknowledgement.
+
+Completion criterion: every material finding is classified, supported or rejected by evidence, reflected in the plan or an explicit open decision, and reconciled with current decision coverage.
 
 ## 6. Confirm the designed user journey
 
@@ -106,6 +133,8 @@ Describe the journey from the user's perspective, not as an implementation check
 
 Link the reviewed mockups or screenshots for every user-facing change and ensure the narrated journey matches them. Keep invisible backend work outside the journey unless it changes timing, feedback, trust, or available actions. For a feature with no end-user surface, present the equivalent operator or integration journey and state explicitly that no end-user journey changes.
 
+Present the final decision-coverage record with the journey: what Nick decided, what was inherited, which non-consequential implementation defaults remain, and which decisions are explicitly parked out of scope. Journey sign-off is invalid while an open or undiscussed consequential assumption affects the handed-off scope.
+
 Ask whether this journey exactly matches the user's intent. A general approval given before this walkthrough does not count as journey sign-off. Do not hand off to implementation while sign-off is pending.
 
 If the user corrects the journey:
@@ -118,12 +147,13 @@ Completion criterion: the plan records the exact confirmed journey and marks use
 
 ## 7. Hand off cleanly
 
-The loop is done when the chosen direction is explicit, blockers are resolved or exposed as user decisions, required mockups have been reviewed, the designed user journey has explicit sign-off, the plan is executable, and verification is checkable.
+The loop is done when the chosen direction is explicit, decision coverage is current and `confirmed`, no item remains marked `resolve before handoff`, no open or undiscussed consequential assumption affects the handoff, blockers are resolved or explicitly parked out of scope, required mockups have been reviewed, the designed user journey has explicit sign-off, the plan is executable, and verification is checkable.
 
 Report:
 
 - plan path
 - review artifact path, if intentionally retained
+- decision-coverage status, Coverage acknowledgement, the required no-undiscussed-assumptions statement, and any decisions parked out of scope
 - accepted, rejected, deferred, and decision-required findings
 - evidence review status and selected artifact or direction
 - user-journey sign-off status and any corrections incorporated

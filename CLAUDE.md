@@ -9,9 +9,9 @@
 This is the repo's canonical loop, shared with Codex. Each stage's contract of record is `.agents/skills/<name>/SKILL.md` — read it when entering the stage. Claude-side execution of each stage:
 
 - **`$wayfinder`** — explicit-only pre-planning for open-ended work; read its SKILL.md when Nick invokes it.
-- **`plan-hardening-loop`** — run via Plan Mode + the User-Facing Planning Gates below. The stage ends only at an approved implementation handoff (for user-facing work: confirmed evidence review + journey sign-off).
-- **`implementation-loop`** — execute via `executing-plans` / `subagent-driven-development`, `branch-gate` first.
-- **`ready-check`** — repo and user-flow verification on the exact tree to be reviewed: `npm run ci:verify` + drive the affected flow (see "Finishing a Feature Branch" steps 1 and 4).
+- **`plan-hardening-loop`** — run via Plan Mode + the User-Facing Planning Gates below. The stage ends only with current, confirmed decision coverage and an approved implementation handoff (for user-facing work: confirmed evidence review + journey sign-off).
+- **`implementation-loop`** — enforce the decision-coverage intake gate, then execute via `executing-plans` / `subagent-driven-development`, `branch-gate` first.
+- **`ready-check`** — repo, decision-coverage, and user-flow verification on the exact tree to be reviewed: `npm run ci:verify` + drive the affected flow (see "Finishing a Feature Branch" steps 1 and 4).
 - **`request-code-review`** — the single review router; on the Claude side this is the Codex whole-branch review ("Finishing a Feature Branch" step 2). One counterpart lane, no stacked reviewers.
 - **`ship-it`** — the `/ship` agent: publish-only (commit, push, PR). Skip re-running verification `/ship` would duplicate on an unchanged tree.
 - **`merge` / `worktree:finish`** — the "merge it" flow in "Ship Workflow"; merge is separate authorization from shipping.
@@ -31,9 +31,11 @@ When entering plan mode for any task:
 
 2. **Let the user choose** — Use `AskUserQuestion` with the approaches as options. Include a short recommendation if one approach is clearly better.
 
-3. **Then plan** — Create or reuse the task worktree, then write the chosen plan under `plans/`. Do not include rejected approaches.
+3. **Check decision coverage** — Track status `pending` or `confirmed` and separate `Confirmed with Nick`, `Inherited from evidence or contract`, `Implementation defaults`, and `Open consequential assumptions`. A choice is consequential when another choice could change user-visible behavior, product semantics, scope, data ownership, access or payment, rollout, recoverability, or material risk. Ask about those choices; keep routine internals out. Coverage is `confirmed` only after Nick sees the current record, every consequential choice affecting the handoff is settled, he explicitly acknowledges each remaining choice parked with its affected work out of scope, and the record states `Undiscussed consequential assumptions affecting this handoff: none`.
 
-For trivial non-user-facing tasks (single file, <20 lines changed), skip the options table and plan directly. User-facing work still requires the mockup and journey gates below even when the eventual code diff is small.
+4. **Then plan** — Create or reuse the task worktree, then write the chosen plan under `plans/`. Do not include rejected approaches.
+
+Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine non-user-facing automation runs may skip the options comparison and decision-coverage checkpoint unless evidence exposes a consequential choice. "Tiny" means mechanically bounded work that cannot affect a consequential category above; line count alone does not make a change tiny. User-facing work still requires decision coverage plus the mockup and journey gates below even when the eventual code diff is small.
 
 ## User-Facing Planning Gates
 
@@ -44,9 +46,9 @@ Before any user-facing implementation:
 3. If interaction, changing state, or a logic model cannot be judged from static evidence, first name the question and decision criterion, then follow the repo's `prototype` contract (`.agents/skills/prototype/SKILL.md`) as a higher-fidelity branch of this mockup step. Record what it proved and rewrite retained behavior through the normal production implementation and test workflow.
 4. Present the relevant evidence to Nick, incorporate feedback, and record evidence review as confirmed in the implementation plan.
 5. Translate the final design into a concrete user journey: entry state, ordered user actions and system responses, meaningful variants, error/recovery states, and completion.
-6. Walk Nick through that journey and obtain explicit sign-off. Earlier general plan approval does not satisfy the evidence or journey gate.
+6. Revalidate and present the final decision-coverage record with the journey, then obtain explicit sign-off. Earlier general plan approval does not satisfy the evidence or journey gate, and sign-off is invalid while an open or undiscussed consequential assumption affects the handed-off scope.
 
-Do not invoke `executing-plans` or `subagent-driven-development` while evidence review or user-journey sign-off is missing or pending. Purely backend work may skip user-facing evidence only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
+For plan-backed work, do not invoke `executing-plans` or `subagent-driven-development` until the relevant user, operator, or integration journey sign-off is confirmed, decision coverage is current and `confirmed`, and no consequential assumption affects the handed-off scope. User-facing work also waits for confirmed evidence review. Clearly bounded non-trivial non-user-facing work without a durable plan uses the equivalent compact coverage in its implementation contract. The quick-work exemption above remains conditional on no consequential choice surfacing. Purely non-user-facing work may skip user-facing evidence only when the plan explicitly states that no surface, copy, timing, or user-visible feedback changes.
 
 ## Branch Gate
 
