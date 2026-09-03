@@ -1023,14 +1023,6 @@
   "existing_product_updates": [
     {
       "product_id": "e482e42a-bdac-4f5e-bd3b-489e702c0c4b",
-      "expected_product": {
-        "name": "Feuchtigkeit-Umhüllende Maske",
-        "brand": "L'Oréal Paris",
-        "category_key": "mask",
-        "is_active": true,
-        "lifecycle_status": "active",
-        "is_chaarlie_recommended": false
-      },
       "rename": {
         "from": "Feuchtigkeit-Umhüllende Maske",
         "to": "L'Oréal Paris Elvital Haarmaske Hydra Hyaluronic",
