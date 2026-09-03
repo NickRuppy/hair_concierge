@@ -5,7 +5,7 @@ import {
 
 /**
  * Stamps the 12 reviewed protocol content templates from
- * `plans/scan-db-expansion/protocol-templates.md` (Rev 2) onto a single product,
+ * `docs/product-application-protocol-templates.md` (Rev 2) onto a single product,
  * producing the exact `product_application_protocols` row the Product Intake spec
  * operation expects (category-validators.ts:168-183).
  *
@@ -27,13 +27,13 @@ import {
  *
  * 1. TPL-MASK's `protocolFacts.contactTimeSeconds` is written in the markdown as
  *    a STRING placeholder (`"⟨REQUIRED: from packaging …⟩"`,
- *    protocol-templates.md:594). `applicationGuidanceProtocolSchema` types the
+ *    product-application-protocol-templates.md:594). `applicationGuidanceProtocolSchema` types the
  *    field as `z.number().int().nonnegative().nullable()`
  *    (src/lib/routines/personal-plan/application/contracts.ts:266). Followed the
  *    schema: the slot is a `number | null`.
  *
  * 2. §2.3 lists only `"retailer"` and `"manufacturer"` as evidence source types
- *    (protocol-templates.md:87). The schema's enum is
+ *    (product-application-protocol-templates.md:87). The schema's enum is
  *    `manufacturer | retailer | professional_authority | internal_authority`
  *    (contracts.ts:318-323). Followed the schema, minus `internal_authority`,
  *    which the expansion manifest's own evidence enum also excludes
@@ -41,7 +41,7 @@ import {
  *
  * 3. The markdown leaves `applicationFamily` as a per-product slot for the two
  *    heat templates (`⟨pre_heat_damp | either_state_protection⟩`,
- *    protocol-templates.md:832 and :1081), so no single constant can be exactly
+ *    product-application-protocol-templates.md:832 and :1081), so no single constant can be exactly
  *    right for them. `EXPANSION_TEMPLATE_APPLICATION_FAMILY` therefore records
  *    the DEFAULT (damp-only) family, `pre_heat_damp` — which is also the V2
  *    builder's own default for `sourceRole: "pre_heat_protection"`
@@ -49,7 +49,7 @@ import {
  *    the V2 pointer both carry `either_state_protection` instead.
  *
  * 4. `application_stage` for TPL-LEAVEIN-DRYCARE is `dry_hair`
- *    (protocol-templates.md:736) while its payload `sequence.anchor` is
+ *    (product-application-protocol-templates.md:736) while its payload `sequence.anchor` is
  *    `dry_finish`. That is not a contradiction: the column is a free
  *    `nullableTrimmedString` (category-validators.ts:739) and only
  *    `sequence.anchor` is constrained to `APPLICATION_SEQUENCE_ANCHORS`
@@ -129,7 +129,7 @@ type TemplateContext = {
   usableOnDryHair: boolean
 }
 
-/** P9 mapping table (protocol-templates.md:810-813 and :1059-1062). */
+/** P9 mapping table (product-application-protocol-templates.md:810-813 and :1059-1062). */
 function heatFamily(ctx: TemplateContext): string {
   return ctx.usableOnDryHair ? "either_state_protection" : "pre_heat_damp"
 }

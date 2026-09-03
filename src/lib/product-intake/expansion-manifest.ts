@@ -68,7 +68,7 @@ export type ExpansionTemplateId = (typeof EXPANSION_TEMPLATE_IDS)[number]
 const HEAT_TEMPLATE_IDS = new Set<ExpansionTemplateId>(["TPL-LEAVEIN-HEAT", "TPL-OIL-HEAT"])
 const MASK_TEMPLATE_ID: ExpansionTemplateId = "TPL-MASK"
 
-/** Maps each template to the (category, derived protocol role) it stamps — plans/scan-db-expansion/protocol-templates.md §4. */
+/** Maps each template to the (category, derived protocol role) it stamps — docs/product-application-protocol-templates.md §4. */
 export const EXPANSION_TEMPLATE_META: Record<
   ExpansionTemplateId,
   { category: ExpansionCategoryKey; role: string }
@@ -483,7 +483,8 @@ export const expansionExistingProductUpdateSchema = z
       ctx.addIssue({
         code: "custom",
         path: [],
-        message: "existing_product_updates entry requires at least one action (add_identifiers or rename)",
+        message:
+          "existing_product_updates entry requires at least one action (add_identifiers or rename)",
       })
     }
   })
@@ -598,16 +599,18 @@ export function validateExpansionManifest(raw: unknown): ExpansionManifestValida
     }
   })
 
-  const existingProductUpdates: ExpansionManifestItemReport[] = rawUpdates.map((rawUpdate, index) => {
-    const result = expansionExistingProductUpdateSchema.safeParse(rawUpdate)
-    const productId = (rawUpdate as { product_id?: unknown })?.product_id
-    return {
-      index,
-      label: typeof productId === "string" ? productId : `existing_product_updates[${index}]`,
-      status: result.success ? "pass" : "fail",
-      violations: result.success ? [] : issueLines(result.error.issues),
-    }
-  })
+  const existingProductUpdates: ExpansionManifestItemReport[] = rawUpdates.map(
+    (rawUpdate, index) => {
+      const result = expansionExistingProductUpdateSchema.safeParse(rawUpdate)
+      const productId = (rawUpdate as { product_id?: unknown })?.product_id
+      return {
+        index,
+        label: typeof productId === "string" ? productId : `existing_product_updates[${index}]`,
+        status: result.success ? "pass" : "fail",
+        violations: result.success ? [] : issueLines(result.error.issues),
+      }
+    },
+  )
 
   const deviationFlagged: ExpansionManifestValidationReport["deviationFlagged"] = []
   const excludedEans: ExpansionManifestValidationReport["excludedEans"] = []
@@ -620,7 +623,9 @@ export function validateExpansionManifest(raw: unknown): ExpansionManifestValida
       const deviatedTemplateIds = protocols
         .filter(
           (protocol) =>
-            protocol && typeof protocol === "object" && (protocol as { deviation?: unknown }).deviation,
+            protocol &&
+            typeof protocol === "object" &&
+            (protocol as { deviation?: unknown }).deviation,
         )
         .map((protocol) => String((protocol as { template_id?: unknown }).template_id))
       if (deviatedTemplateIds.length > 0) {
@@ -670,7 +675,9 @@ export function validateExpansionManifest(raw: unknown): ExpansionManifestValida
   ).length
 
   const ok =
-    envelopeViolations.length === 0 && productsFailed === 0 && existingProductUpdatesFailed === 0 &&
+    envelopeViolations.length === 0 &&
+    productsFailed === 0 &&
+    existingProductUpdatesFailed === 0 &&
     duplicateEans.length === 0
 
   return {
