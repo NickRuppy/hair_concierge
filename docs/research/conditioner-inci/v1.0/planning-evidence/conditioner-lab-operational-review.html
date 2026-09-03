@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conditioner Lab – operativer Review-Mockup</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #1c1917; background: #fafaf9; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      button, textarea { font: inherit; }
+      .page { max-width: 1280px; margin: 0 auto; padding: 24px; }
+      .eyebrow { color: #78716c; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+      h1 { margin: 8px 0; font-size: 32px; }
+      h2, h3, p { margin-top: 0; }
+      .muted { color: #57534e; line-height: 1.55; }
+      .header { display: flex; gap: 24px; justify-content: space-between; align-items: end; }
+      .counts { display: grid; grid-template-columns: repeat(4, minmax(105px, 1fr)); gap: 8px; }
+      .count, .card, .panel, .notice, .field, .comment { border: 1px solid #d6d3d1; border-radius: 10px; background: white; }
+      .count { padding: 10px; text-align: center; font-size: 12px; }
+      .count strong { display: block; font-size: 20px; }
+      .tabs { display: flex; gap: 8px; margin: 24px 0; border-bottom: 1px solid #d6d3d1; }
+      .tab { border: 0; background: transparent; padding: 12px 14px; font-weight: 700; }
+      .tab.active { border-bottom: 3px solid #1c1917; }
+      .layout { display: grid; grid-template-columns: 340px minmax(0,1fr); gap: 24px; }
+      .layout > * { min-width: 0; }
+      .queue { display: grid; gap: 10px; }
+      .queue-group { margin: 16px 0 8px; font-size: 13px; color: #57534e; }
+      .card { padding: 14px; }
+      .card.compact { padding: 11px 12px; }
+      .card.compact p { margin: 5px 0 0; font-size: 13px; }
+      .card.selected { border-color: #1c1917; box-shadow: 0 0 0 1px #1c1917; }
+      .card-top, .panel-top, .field-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+      .pill { display: inline-block; border: 1px solid #d6d3d1; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+      .pill.open { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+      .pill.ok { background: #ecfdf5; border-color: #a7f3d0; color: #166534; }
+      .pill.info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+      .panel { padding: 20px; background: #f5f5f4; }
+      .primary { border: 1px solid #166534; background: #15803d; color: white; border-radius: 8px; padding: 10px 14px; font-weight: 700; }
+      .secondary { border: 1px solid #a8a29e; background: white; color: #292524; border-radius: 7px; padding: 7px 10px; font-weight: 700; }
+      .rework { border-color: #c2410c; color: #9a3412; }
+      .notice { margin: 18px 0; padding: 14px; background: #eff6ff; border-color: #bfdbfe; }
+      .notice strong { color: #1e3a8a; }
+      .comment { margin: 16px 0; padding: 14px; }
+      textarea { width: 100%; min-height: 72px; margin-top: 8px; padding: 10px; border: 1px solid #a8a29e; border-radius: 7px; }
+      .fields { display: grid; gap: 10px; margin-top: 16px; }
+      .field { padding: 14px; }
+      .field h3 { margin-bottom: 3px; font-size: 16px; }
+      .value { font-weight: 800; }
+      .rationale { margin: 8px 0 12px; color: #57534e; font-size: 14px; line-height: 1.45; }
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+      .footer-note { margin-top: 20px; padding: 14px; border-left: 4px solid #78716c; background: #f5f5f4; font-size: 14px; line-height: 1.55; }
+      @media (max-width: 840px) {
+        .page { padding: 16px; }
+        .header { display: block; }
+        .counts { grid-template-columns: repeat(2, 1fr); margin-top: 16px; }
+        .layout { grid-template-columns: 1fr; }
+        .queue { display: flex; max-width: 100%; overflow-x: auto; padding-bottom: 4px; }
+        .card { min-width: 280px; }
+        .panel-top { display: block; }
+        .panel-top .primary { width: 100%; margin-top: 12px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div>
+          <div class="eyebrow">Planungsansicht · noch keine echten Freigaben</div>
+          <h1>Conditioner Research Lab</h1>
+          <p class="muted">Exakte Conditioner-Formeln prüfen, einzelne Eigenschaften überarbeiten lassen und die vollständige lokale Analyse freigeben. Keine Katalogfreigabe und keine Product-Intake-Aktion.</p>
+        </div>
+        <div class="counts" aria-label="Pilot-Umfang">
+          <div class="count"><strong>12</strong>Pilot-Produkte</div>
+          <div class="count"><strong>11</strong>Vollprofile</div>
+          <div class="count"><strong>5</strong>Zuerst prüfen</div>
+          <div class="count"><strong>1</strong>G0-Grenzfall</div>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Lab-Bereiche">
+        <button class="tab active">Research Queue &amp; Produkt-Audit</button>
+        <button class="tab">Kalibrierung &amp; Unsicherheiten</button>
+      </nav>
+
+      <section class="layout">
+        <aside>
+          <h2>Recherche-Queue</h2>
+          <p class="muted">Alle Pilot-Produkte erscheinen hier. „Zuerst prüfen“ markiert nur die kritischen Entscheidungen; es bedeutet nicht, dass nur diese Felder recherchiert wurden.</p>
+          <div class="queue">
+            <strong class="queue-group">Zuerst prüfen · 4</strong>
+            <article class="card selected">
+              <div class="card-top"><strong>NEQI Volume Victory</strong><span class="pill open">Priorität</span></div>
+              <p class="muted">Gewichtspotenzial → Haardicken-Fit</p>
+              <button class="secondary">Jetzt prüfen</button>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Hair Food Aloe Vera</strong><span class="pill open">Priorität</span></div>
+              <p class="muted">Sekundärer Fokus</p>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Jean&amp;Len Colorglow</strong><span class="pill open">Priorität</span></div>
+              <p class="muted">Primärer Fokus</p>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Balea Bond+ Reparatur</strong><span class="pill open">Priorität</span></div>
+              <p class="muted">Primärer Fokus</p>
+            </article>
+
+            <strong class="queue-group">Standardprüfung · 6</strong>
+            <article class="card compact">
+              <div class="card-top"><strong>Balea Med Ultra Sensitive</strong><span class="pill info">Vollprofil</span></div>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Balea Aqua Hyaluron</strong><span class="pill info">Vollprofil</span></div>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>John Frieda Wunder-Reparatur</strong><span class="pill info">Vollprofil</span></div>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>OGX Biotin &amp; Collagen</strong><span class="pill info">Vollprofil</span></div>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Cantu Conditioner Cream</strong><span class="pill info">Vollprofil</span></div>
+            </article>
+            <article class="card compact">
+              <div class="card-top"><strong>Bali Curls Moisturising</strong><span class="pill info">Vollprofil</span></div>
+              <p class="muted">Herstellerformel kanonisch; Händler nur Bestätigung</p>
+            </article>
+
+            <strong class="queue-group">Produktform prüfen · 1</strong>
+            <article class="card compact">
+              <div class="card-top"><strong>Cantu Leave-In Repair Cream</strong><span class="pill info">G0</span></div>
+              <p class="muted">Kein rinse-out Conditioner; Ausschluss bestätigen</p>
+            </article>
+          </div>
+        </aside>
+
+        <article class="panel">
+          <div class="panel-top">
+            <div>
+              <div class="eyebrow">Produkt-Audit · exakte Formelversion</div>
+              <h2>NEQI Volume Victory Conditioner</h2>
+              <p class="muted">Das vollständige Sieben-Felder-Profil ist recherchiert. Prüfe zuerst nur den markierten Entscheidungsknoten: Gewichtspotenzial moderat; dadurch bleibt feines Haar im breiten Fit. Danach kannst du die übrigen fünf Felder normal gegen Evidenz und Begründung bestätigen.</p>
+            </div>
+            <button class="primary">Gesamtes Produkt freigeben</button>
+          </div>
+
+          <div class="notice">
+            <strong>Vollständigkeit versus Priorität:</strong> Alle sieben Vergleichsfelder unten wurden recherchiert. Die Prioritätsmarkierung sagt nur, wo eine bewusste Entscheidung nötig ist. „Gesamtes Produkt freigeben“ bestätigt anschließend alle sieben Felder und die lokale Analyse; es veröffentlicht kein Katalogprodukt. Anwendung und Häufigkeitswortlaut bleiben separate Protokoll-Metadaten.
+          </div>
+
+          <div class="comment">
+            <label for="comment"><strong>Reviewer-Kommentar</strong> · Pflicht für Rework, optional bei Freigabe</label>
+            <textarea id="comment" placeholder="Zum Beispiel: Bitte Gewichtspotenzial gegen Herstellerpositionierung und genaue Silikonroute neu bewerten."></textarea>
+          </div>
+
+          <h2>Vorgeschlagene Datenbank-Klassifikation</h2>
+          <div class="fields">
+            <section class="field">
+              <div class="field-top"><div><h3>Gewichtspotenzial</h3><span class="value">moderat</span></div><span class="pill info">Unsicher</span></div>
+              <p class="rationale">Konservativer Lean-Fallback. Die Formel zeigt eine höhere Ablagerungstendenz, die exakte Volume-Positionierung ist ein materielles Gegensignal.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Haardicken-Fit</h3><span class="value">fein · mittel · grob</span></div><span class="pill open">Noch zu prüfen</span></div>
+              <p class="rationale">Feines Haar bleibt enthalten, weil Formelunsicherheit nicht als restriktiver High-Fallback codiert wird.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Pflegelevel</h3><span class="value">hoch</span></div><span class="pill info">Vollständig recherchiert</span></div>
+              <p class="rationale">Kationische Conditioner-Basis plus frühe Fettalkohole ergeben ein deutliches Pflege- und Ablagerungssystem.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Primärer Fokus</h3><span class="value">smoothing</span></div><span class="pill info">Vollständig recherchiert</span></div>
+              <p class="rationale">Die Oberflächen- und Filmarchitektur ist der praktisch stärkste Endpunkt; Repair bleibt nur temporäre Unterstützung.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Sekundärer Fokus</h3><span class="value">repair</span></div><span class="pill info">Vollständig recherchiert</span></div>
+              <p class="rationale">Haferpeptid stützt einen temporären Film-/Schutzbeitrag, ohne strukturelle Reparatur zu behaupten.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Schädigungs-Fit</h3><span class="value">moderat geschädigt · stark geschädigt</span></div><span class="pill info">Vollständig recherchiert</span></div>
+              <p class="rationale">Das hohe Pflegelevel und der temporäre Film unterstützen geschädigte Längen kosmetisch; dies ist keine strukturelle Reparaturbehauptung.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+            <section class="field">
+              <div class="field-top"><div><h3>Textur-Fit</h3><span class="value">wellig · lockig · coily</span></div><span class="pill info">Vollständig recherchiert</span></div>
+              <p class="rationale">Breiter Produkt-Prior für Texturen, die von der ausgeprägten Konditionierung und Glättung profitieren; kein universeller Ausschluss anderer Nutzer.</p>
+              <div class="actions"><button class="secondary">Eigenschaft freigeben</button><button class="secondary rework">Rework anfordern</button></div>
+            </section>
+          </div>
+
+          <div class="footer-note">
+            <strong>Guidance-Sync:</strong> Ändert ein Review eine wiederverwendbare Regel, werden Standard, Quick Reference, Focus Guide, Agent Context, Research Prompt, Runbook und Rule Log vor dem nächsten Batch gemeinsam aktualisiert. Eine reine Produktevidenz-Korrektur bleibt im Produktartefakt und Entscheidungsverlauf.
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

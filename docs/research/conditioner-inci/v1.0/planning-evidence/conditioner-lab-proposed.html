@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conditioner Research Lab – Planungsentwurf</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #181512; background: #f5eee5; font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    nav { height: 60px; padding: 12px 5.5vw; background: #fffaf4; border-bottom: 1px solid #ded8d1; display: flex; gap: 16px; }
+    .tab { padding: 9px 17px; border-radius: 24px; font-weight: 600; }
+    .tab.active { color: white; background: #111; }
+    main { width: min(1232px, 90vw); margin: 26px auto 60px; }
+    .eyebrow { color: #79736d; font-size: 12px; text-transform: uppercase; }
+    h1 { margin: 10px 0 4px; font-size: 31px; }
+    h2, h3, p { margin-top: 0; }
+    .lead { max-width: 780px; color: #57514b; font-size: 16px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0 24px; max-width: 780px; }
+    .stat, .card, .panel { background: #fff; border: 1px solid #ddd; border-radius: 12px; }
+    .stat { padding: 10px; text-align: center; }
+    .stat strong { display: block; font-size: 19px; }
+    .workspace { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
+    .queue { display: grid; gap: 10px; }
+    .card { padding: 16px; }
+    .card.selected { border: 2px solid #181512; }
+    .row { display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; }
+    .muted { color: #6e6862; }
+    .small { font-size: 13px; }
+    .pill { display: inline-block; padding: 5px 10px; border-radius: 16px; background: #eaf6ff; color: #00679b; border: 1px solid #a9ddf5; font-size: 12px; font-weight: 600; }
+    .pill.warn { background: #fff5d8; border-color: #ebcf77; color: #705400; }
+    .pill.ok { background: #ebfff5; border-color: #9de5bf; color: #087348; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+    .chip { padding: 4px 8px; color: #00679b; border: 1px solid #a9ddf5; background: #eff9ff; border-radius: 14px; font-size: 12px; }
+    .panel { overflow: hidden; }
+    .panel > header { padding: 20px; border-bottom: 1px solid #ddd; }
+    .panel section { margin: 18px; padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+    .uncertainty { background: #fffdf9; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 11px 12px; border-top: 1px solid #e4e0db; text-align: left; vertical-align: top; }
+    th { color: #514b45; font-weight: 600; }
+    td strong { display: block; }
+    .audit { background: #f8f2e9; }
+    .source { overflow-wrap: anywhere; color: #00679b; }
+    @media (max-width: 860px) {
+      nav { height: auto; padding: 10px 16px; gap: 8px; }
+      .tab { flex: 1; padding: 8px 10px; text-align: center; font-size: 13px; line-height: 1.25; }
+      main { width: 92vw; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .workspace { grid-template-columns: 1fr; }
+      .queue { grid-template-columns: 84vw 84vw; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="tab active">Research Queue &amp; Produkt-Audit</div>
+    <div class="tab">Kalibrierung &amp; Unsicherheiten</div>
+  </nav>
+  <main>
+    <div class="eyebrow">Nur Entwicklung · Artefaktmodus benötigt keine Produktionsdatenbank</div>
+    <h1>Conditioner Research Lab</h1>
+    <p class="lead">Interne Review-Ansicht für die zwölf Produkte des Conditioner-Piloten: exakte Formel, INCI-Audit, vollständiges Sieben-Felder-Vergleichsprofil und transparente Unsicherheiten. Keine Katalogfreigabe und keine Product-Intake-Aktion.</p>
+    <div class="stats">
+      <div class="stat"><strong>11</strong>Profile vollständig</div>
+      <div class="stat"><strong>7</strong>Vergleichsfelder je Profil</div>
+      <div class="stat"><strong>0</strong>Quellenkonflikte</div>
+      <div class="stat"><strong>1</strong>Ausgeschlossen</div>
+    </div>
+
+    <div class="workspace">
+      <aside>
+        <h2>Recherche-Queue</h2>
+        <div class="queue">
+          <article class="card selected">
+            <div class="row"><div><strong>Hair Food Aloe Vera</strong><div class="muted">Garnier Fructis · DE · 200 ml</div></div><span class="pill">Fokus prüfen</span></div>
+            <p class="small muted">Vollständiges Pilotprofil · v1.2-rc1</p>
+            <strong class="small">Unsichere Eigenschaften</strong>
+            <div class="chips"><span class="chip">Primärer Fokus</span><span class="chip">Sekundäre Schwerpunkte</span></div>
+            <div class="row small"><span><strong>Formel</strong>verifiziert</span><span><strong>Profil</strong>vollständig</span></div>
+          </article>
+          <article class="card">
+            <div class="row"><div><strong>Bali Curls Reisegröße</strong><div class="muted">Bali Curls · DE · 75 ml</div></div><span class="pill ok">Formel geklärt</span></div>
+            <p class="small muted">Hersteller plus Exact-EAN-Retailer bestätigen die Formelautorität.</p>
+          </article>
+          <article class="card">
+            <div class="row"><div><strong>Balea Aqua Hyaluron</strong><div class="muted">Balea · DE · 200 ml</div></div><span class="pill ok">Profil vollständig</span></div>
+            <p class="small muted">Leichtes Profil · niedriges Gewichtspotenzial.</p>
+          </article>
+          <article class="card">
+            <div class="row"><div><strong>Cantu Leave-In Repair Cream</strong><div class="muted">Cantu · DE</div></div><span class="pill warn">Ausgeschlossen</span></div>
+            <p class="small muted">Leave-in-Produkt; Gate G0 stoppt die Conditioner-Klassifikation.</p>
+          </article>
+        </div>
+      </aside>
+
+      <article class="panel">
+        <header>
+          <div class="eyebrow">Produkt-Audit</div>
+          <h2>Hair Food Aloe Vera Feuchtigkeits-Spülung</h2>
+          <p class="muted">Ingredient-basiertes Pilotprofil und Review-Grenzen. Änderungen werden hier nicht in den Katalog geschrieben.</p>
+        </header>
+        <section class="uncertainty">
+          <span class="pill">Review-Hinweis</span>
+          <p>Der primäre Fokus wurde nach Review auf <strong>Smoothing</strong> gesetzt; Detangling und Curl Support bleiben als eigenständige sekundäre Routen sichtbar.</p>
+        </section>
+        <section class="audit">
+          <h3>Vorgeschlagene Conditioner-Klassifikation</h3>
+          <p class="muted small">Vollständiges Profil aus geprüftem INCI-Audit und Hersteller-Anwendung.</p>
+          <table>
+            <thead><tr><th>Eigenschaft</th><th>Wert</th><th>Reviewstatus</th><th>Begründung</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Pflegelevel</strong><span class="muted small">conditioning_level</span></td><td><strong>hoch</strong></td><td>vollständig</td><td>Kationische Basis plus Fettalkohole und Lipidroute.</td></tr>
+              <tr><td><strong>Gewichtspotenzial</strong><span class="muted small">weight_potential</span></td><td><strong>hoch</strong></td><td>vollständig</td><td>Öl-/Emollient-Cluster und depositionsfähige Basis.</td></tr>
+              <tr><td><strong>Primärer Fokus</strong><span class="muted small">primary_focus</span></td><td><strong>Smoothing</strong></td><td>prüfen</td><td>Die zusammenhängende Oberflächen- und Emollient-Architektur ist die stärkste produktdifferenzierende Route.</td></tr>
+              <tr><td><strong>Sekundäre Schwerpunkte</strong></td><td><strong>Detangling · Curl Support</strong></td><td>vollständig</td><td>Zwei eigenständige, nicht doppelt gezählte Prioren.</td></tr>
+              <tr><td><strong>Haardicken-Fit</strong></td><td><strong>mittel · grob</strong></td><td>Produktprior</td><td>Hohe Gewichtung; kein universeller Ausschluss.</td></tr>
+              <tr><td><strong>Schädigungs-Fit</strong></td><td><strong>moderat · stark</strong></td><td>Produktprior</td><td>Slip-/Filmroute, keine strukturelle Reparaturbehauptung.</td></tr>
+              <tr><td><strong>Textur-Fit</strong></td><td><strong>wellig · lockig · kraus</strong></td><td>Produktprior</td><td>Reichhaltige Slip- und Definitionsarchitektur.</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <div class="row"><div><h3>Formelidentität &amp; Quelle</h3><p class="muted">GTIN 3600542398022 · Formel verifiziert</p></div><span class="pill ok">kein Konflikt</span></div>
+          <p class="source small">garnier.de/haarpflege/.../feuchtigkeits-spuelung-mit-aloe-vera</p>
+          <h3>Original-INCI</h3>
+          <p class="small muted">Aqua / Water, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil, Aloe Barbadensis Leaf Juice, Cocos Nucifera Oil …</p>
+        </section>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

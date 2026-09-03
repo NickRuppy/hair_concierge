@@ -1,0 +1,101 @@
+{
+  "483b41d6-632c-4efe-9bcc-488c80bf5bb7": {
+    "conditioning_level": "9985d741cac039e24defdb69ba570291f0d54a128ce441a95823de55791b66c9",
+    "weight_potential": "f61b70bc3f185d9ae597835d1bc482a38c030aa9513f7726c27f3c1802774ebb",
+    "primary_focus": "b7170aed8e41cbe419d96f5b275f4c6047d06c2d87a9e77edf0d5245ba84de7c",
+    "secondary_focus": "ab71c88d76629502fbab6dd252f24ae5eafa5b48c09efaa72cc5f768d9d33391",
+    "hair_thickness_fit": "8d3dc5684322924d27147f9b4f4afb9f68519d8fb53ab3ce54cf85fc96e11353",
+    "damage_fit": "f91f507e93617553ffb66a860973176db2cb0a399c85be0b87bfd88335ab9c64",
+    "texture_fit": "c1dd8f3b7307280916d775c95ee13c65917a72de29f658a3438f92b27e98a1d2"
+  },
+  "a6730d6f-df2f-4ebf-8013-eb39162f15df": {
+    "conditioning_level": "de99c75233847962ade6d608d8d68f49066e7c773d3bb07aef390a4781ed9646",
+    "weight_potential": "62afd0aca27341b075fc595a1120d3ab715e2127257f017b1c5e1d6a42789a38",
+    "primary_focus": "c462c30aa85e0363eabd08306f294de1225f042066a64b2cabcbd8c29fd53d13",
+    "secondary_focus": "83c6cb4f668cf77c342667fffe8e3c4c54c958026a4e8111f185ee03db01b1e8",
+    "hair_thickness_fit": "33ab10ec243e083cc6039132c9c65227113860999e24ad93d3ad9264df6b16f4",
+    "damage_fit": "a128ef2e19987f9f44e082b346307ade545dc877e99d721b0b16296f900b6745",
+    "texture_fit": "9bd319ed25ab4a29dc31e99defad7528e1f3bd5c805088386d8cb92153a41538"
+  },
+  "5516009a-eecb-42dd-87f6-07c560161136": {
+    "conditioning_level": "90f2dac9585c27304aa0a144516e549c3467a8808a5363ac7a574f6d12f1e931",
+    "weight_potential": "0bb4a825ce60f5f3a91e51b40f3f4b78621753e26b7b038854cb29723fd7bfdf",
+    "primary_focus": "bbad376ff3b71e12cb0f4b23d6368047cc8637eaf4847b29e187121c70727977",
+    "secondary_focus": "5e6556c6743213f68bbc6a4884c71e5e2db3348a4b3ad796ac1e46970504e74d",
+    "hair_thickness_fit": "4752fc5860f20f673f0656519f6e1fcd9eb1605a5f94e88a1f2d949331723506",
+    "damage_fit": "4c1961a52f4394a6d3f45731123c219fe8023183d9e669b1cf9876af09c618f2",
+    "texture_fit": "7ae75e813cd690ef1cacaceb87d807ebd88e304d90a92e998a5cd15fcf470143"
+  },
+  "952a4834-e451-4dc3-ba19-ebb8927eb5e4": {
+    "conditioning_level": "e6b82d40f65505a2ba48b32173a4a51f69c5e746c52e202305597abd0007187d",
+    "weight_potential": "ace96130d571787bb968e3f377330f8b5a6ceaf911f8997ceb95e659c694f004",
+    "primary_focus": "ab02eb09f2687cd022151977f2fb2efd466e32e28af9a089c8a0f2ea47bcfef2",
+    "secondary_focus": "d5061f65b4efbdc300723ac4a6311a86df45aedafe0c0dff3d91a20107aa0c5e",
+    "hair_thickness_fit": "9c7276e424fbccbedd24a5c7299b38a06a84ed1f86259d870bcda71350eccbd8",
+    "damage_fit": "1b8829654f81785d9d241ca24ede39bd3c11ee1bcefaaf4a6ff34ce844c7d1cf",
+    "texture_fit": "117b70803b87f080204983f00ebf615b742669656bbf45043ee5f736dc8d323b"
+  },
+  "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d": {
+    "conditioning_level": "79db2593ca44e85778645f8de898bd3bdc153204dee311ca31270a4acf2ed95a",
+    "weight_potential": "a7d411253b5136ef6f2b8472081fe4147143b5d012db35f41ade7f04a5caf16e",
+    "primary_focus": "76fdf154efe66b296424a192d11cc1e29e5cbd6f12c1a6eb3ff7446100c5ecd4",
+    "secondary_focus": "b8f9534c29375899b1e471c60cd3dd7ccde85178783e2f1f11e7215e9d8f62af",
+    "hair_thickness_fit": "92160680fafd1709814d0dc3dc411cfa5f50d0f1550e775c8e0ac386fd57c205",
+    "damage_fit": "7460114634667f99a10e54412316a7166ac343c73b6adf1a14c79d320f83c614",
+    "texture_fit": "d57ec30401f141681d57342344626a56d1d0cf65103f32027b2ec99d24ef77a9"
+  },
+  "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504": {
+    "conditioning_level": "c4a96b2b869fb3fb87927ef9545cf03b6da06349245a2e1f5ff45dd667f0e701",
+    "weight_potential": "400f556f86665fc33fae7972d745e356be18cad4328f18795cec178f19f231f5",
+    "primary_focus": "f14564f025180ebb702f64f430b5abec50ae140331291f4ad6e94b5e593b485a",
+    "secondary_focus": "8bb7c757501732c5b088d9818886a1047ec9620bdda50bcc8e09cc63073f29dc",
+    "hair_thickness_fit": "f6b37ff076001ff7cb008d2228d5ef19a729ca84f5768cc6470a825a2b8d10a6",
+    "damage_fit": "314e8922abc48b8402d3290f8fe0e60735a7019fba303c53f3fe3e7fcefa72f6",
+    "texture_fit": "9e4bce45266df793b9cd7c3dd47c63e5329d8bd7865e42b3727024fd7516bd48"
+  },
+  "4fca59e5-fbc4-4132-a821-dac6ff0cdb68": {
+    "conditioning_level": "c1152a778e660003423e3dc9f046d60864247cd58b516c8b169052ccd3458863",
+    "weight_potential": "fb9015363c552781c9e43670528ea2f9c89d77d272c318a6df064bd59a2e32a3",
+    "primary_focus": "ba78bb69839ed54f70362f7304cc922fa85a719586d71f80e4f65e58f5bfde6f",
+    "secondary_focus": "2084e7e05a53f91879be383a96bed023e0fbcffc009861390f57769c2527ba4d",
+    "hair_thickness_fit": "c9ae169e29a1fbcf3ab835df8f6a28f91297595cb500dbd06556f19c41d33f46",
+    "damage_fit": "100ed59a595edb20c897539e5493d145770cbcd7e05ab9d67ee1f0c45801d4b1",
+    "texture_fit": "86aaf840b385ef80d2239c1cc26057564c7ccca967e00f00337764cc802a29c5"
+  },
+  "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66": {
+    "conditioning_level": "43561da7853785c7ac03d8c1fe528b9f475d4ab1abf8a243807462bf17b4c061",
+    "weight_potential": "a7ae45804b3dca5e24c18bef73d38121285b8c1d6749207eaf98c3991e5a4d29",
+    "primary_focus": "4dac1546491146c66e2985307dbcb36cd57d0d62501e86cb1b7b2a3e17a1276c",
+    "secondary_focus": "40212fc227d1e5d5df7481be1e964bd942a5d09fde8e890dee4dd2cb78bb0c62",
+    "hair_thickness_fit": "0a687f65e655539fccba962f10640e5e1b2aca92302ab890edd7fd1ffd36a955",
+    "damage_fit": "4fe12144f370ba0cc07e187285b0f12ea168075d6a8df0590d371148796ed6a5",
+    "texture_fit": "0d905effc1996e7df4515442e9f73f4a6cfb86f3d594f251cf10832b00a341f2"
+  },
+  "4f67cb6d-4b28-490b-9817-e8fc8e91b010": {
+    "conditioning_level": "e7be725c2949e3a27547fe48b19a830fb11c920fec2b955119a01fba08e748ff",
+    "weight_potential": "14ca36ac5e11c3ee230d175ce3695dbe4c864e01ff2b7278e246af3240fae2ac",
+    "primary_focus": "b883a5cbf6d852a72dc2f70329c0350cb34c86ff8c9ec27ce7da50bbbdb26ed3",
+    "secondary_focus": "db8c321991d6877a54cdf6feee5ad602aa8d46e492fdad8346434d22b8088035",
+    "hair_thickness_fit": "c2f79f3179f92d9f7a0e816f52f1c30a265b49232afbacfec82f11863df14c4f",
+    "damage_fit": "adf3d36a25e759707a939d03cb58b17f9a918a8b604885a2242584882000cca7",
+    "texture_fit": "41824a9c803815813b183cfb8648086e11d0ce5aa3ea28fa0adbb12265139d05"
+  },
+  "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe": {
+    "conditioning_level": "bf1a6009f6c7ee14477432bbc562c88548d7af9129641eb1666790ce7e4daf6e",
+    "weight_potential": "cb8007648834baa24c31b6f769ee7cef0d55929ea1fed62f142e146849e7f37c",
+    "primary_focus": "19b040baccfd76e41882bd2d8325d952638dc850d19303d7077a53f5b14bef90",
+    "secondary_focus": "9c77857e5c8afc9e61b22db08e63a20b31e82d25deb3497d0a617100bdf66137",
+    "hair_thickness_fit": "7e7d6f35edc4c9cfaab49f08d0e375dcd8893848647b97e73c3faf3cb8f9e0be",
+    "damage_fit": "bd5e8f7ede30a3aacdba62b89d5123035880a5c79936649eb472e6e9bb5cf1c4",
+    "texture_fit": "b469cc2026ba530a0eeec83797428a28d6af681c2406a7f1145698b8331ace26"
+  },
+  "9f8da740-87b6-45e0-ab86-d77d63f2e22b": {
+    "conditioning_level": "b7244e8d2771cc09fead1fa0addd1d65567a93c861e477d4cd6cd7ce37a46c04",
+    "weight_potential": "d5e0fd08d9020100647b46a440db582be46a89e16d30f88240b87aecdf6ec16b",
+    "primary_focus": "cb9ed3d726d4046d27592530456f2a46bf2e290d1709ca2ff794c43f8c88264a",
+    "secondary_focus": "f2412d401488d2e6ac9705d754271484a84822ed80277566fdbd63379e7597be",
+    "hair_thickness_fit": "4fb070b9742825287f35f156b067bad309aeea9b8831239b86305a6671f1c6ad",
+    "damage_fit": "56b4ce138bba8aa95c43d51d24c74d8c5065a9ca72d278156c4d3a2a8f478d2f",
+    "texture_fit": "e0039aa780291d9d87978b78a39296ed2e83ce810b400d517c895e366789ff08"
+  }
+}

@@ -1,0 +1,434 @@
+{
+  "schema_version": "conditioner-calibration-review.v1.0",
+  "standard_version": "conditioner-classification-standard.v1.0-rc1",
+  "normalized_at": "2026-08-23",
+  "reviewer": "C",
+  "status": "DONE_WITH_CONCERNS",
+  "prohibited_files_accessed": false,
+  "inherited_key_context": false,
+  "clean_room_attestation": "I used only the permitted standard, formula packet, and blind-review instruction file; I did not inspect an answer key, reviewer output, repository history, plans, summaries, network sources, or any other file.",
+  "classifications": [
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "formula_fingerprint": "ce8d05ad752a7be533c6556e7eb955e62da2d636d2263fe3ccb869c87421341f",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R3",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Eligible rinse-out formula with cetyl alcohol plus cetrimonium chloride, cationic guar, light emollients, and citric acid supports conventional conditioning and lubrication potential, but no finished-product rinse or buildup evidence.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "moderate",
+        "wet_slip_detangling_potential": "moderate",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "no_listed_fragrance_signal",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "formula_fingerprint": "040f1bd4837a90ae7b3f53aece89b496723ba4607d7ca2df18e246cdebb5bf8f",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Cetearyl alcohol with stearamidopropyl dimethylamine and lactic acid supports a basic cationic conditioning-base pattern; absence of clear silicone, cationic polymer, or lipid route keeps weight and shine potential restrained.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "moderate",
+        "wet_slip_detangling_potential": "moderate",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "lower",
+        "weight_deposition_potential": "lower",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_preserving",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "formula_fingerprint": "eea7bb9742003c10dd6313c20fad55c83354a157f38b984683b118be03dfa6b2",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Amidoamine/fatty-alcohol conditioning appears alongside sunflower and coconut oils, esters, guar film support, acids, parfum, and allergens; this raises conditioning and weight potential without proving rinse feel or buildup.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "formula_fingerprint": "c09c97562c7c701dbf4b575ce09e84618a91c645a93c4e24a96b63359b677769",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Multiple independent routes are present: fatty alcohol/cetrimonium base, amodimethicone, Polyquaternium-11, emollients, oat peptide, optical mineral signals, acid, parfum, essential oils, and allergens; the volume name does not override the rich architecture.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "higher",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "formula_fingerprint": "a125a5c7957821ef251caf4f37f13cbbb5d6f13f141703198245a170586bef9d",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Cetearyl alcohol with behentrimonium chloride, another cationic surfactant, esters, oils, ceramide, chelator/acid context, fragrance, and allergen supports higher conditioning and weight potential; repair wording remains claim-only for bond support.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M3_OPTICAL_ALIGNMENT_FILM",
+        "M4_CLAIM_ONLY_PROPRIETARY"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "claim_only",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "formula_fingerprint": "d6019125cf04e0d69108e501464222258f83c273f54c3a133c69dea60570f07d",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Eligible packet despite 2-in-1 naming; cetearyl alcohol, behentrimonium chloride, cetyl esters, panthenol, chelator/lactic acid, oat oil, parfum, and vanillin support strong conventional conditioning but not bond-specific repair.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M3_OPTICAL_ALIGNMENT_FILM",
+        "M4_CLAIM_ONLY_PROPRIETARY"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "claim_only",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "formula_fingerprint": "4c69d48dd7347bfca88fa77000aa0f13c2019b503f019f5f855e2ce2a80a8ccf",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R2",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Behentrimonium/fatty-alcohol base plus dimethicone, amidoamine, emollient esters, hydrolyzed collagen, acid, and parfum create several coherent conditioning and film/lubrication routes; formula alone cannot prove buildup or repair efficacy.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "higher",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "formula_fingerprint": "00011c74c4871aa9400afec7ea5f9c8df019b559082e360d51b3b967ca4eef70",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Stearyl/cetyl alcohols, shea butter, amidoamine, esters/hydrocarbon, Polyquaternium-7, Polyester-11, acids/EDTA, parfum, and allergen signal a rich non-silicone conditioning and film architecture.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "formula_fingerprint": "02a24542d33b0d611ac9a4b0ec51611880d1248ce519cfc811e403c7165ca662",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "rationale": "Cetearyl alcohol with distearoylethyl methosulfate, behentrimonium/cetrimonium chlorides, dicaprylyl ether, sunflower oil, acid context, benzophenone-4, and parfum supports higher conditioning and color-care candidate potential without anti-fade proof.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "higher",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "candidate",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "formula_fingerprint": "d85752e70c256a5b0c54e63875e1549a87683a504094eaec8197394d89c8a4a8",
+      "boundary": "eligible",
+      "routes": [
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "rationale": "No clear long-chain cationic quat or amidoamine base is visible, but fatty alcohols, shea butter, coconut oil, starch/gum film-support signals, lactic acid, parfum, allergens, and aromatic extract support emollient-rich conditioning with higher weight potential.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "moderate",
+        "wet_slip_detangling_potential": "moderate",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "formula_fingerprint": "192a1aa8d863d5de013575bca75e2d5d3559e3e28ad315f8c90352160df6f1b0",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8"
+      ],
+      "rationale": "Cetearyl alcohol, cetrimonium chloride, behenamidopropyl dimethylamine, esters/triheptanoin, lactic acid, gluconamide/gluconate bond-claim chemistry, glycine/chondrus film-support context, and parfum support rich conditioning plus formula-only bond-chemistry candidacy.",
+      "shared_mechanisms": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION",
+        "M2_TEMPORARY_FILM_SUPPORT",
+        "M3_OPTICAL_ALIGNMENT_FILM",
+        "M4_CLAIM_ONLY_PROPRIETARY"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "chemistry_candidate",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "unknown"
+      }
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "formula_fingerprint": "140654589497e8a449cd7715e27bfb30a7629836c93d5ae9b53d25ece50c690b",
+      "boundary": "excluded_product_form",
+      "routes": [],
+      "rationale": "G0 stops classification because the packet marks the product identity and category boundary as excluded_product_form for a leave-in repair cream rather than a conventional short-contact rinse-out conditioner.",
+      "shared_mechanisms": [],
+      "values": {
+        "conditioning_deposition_potential": null,
+        "wet_slip_detangling_potential": null,
+        "dry_combability_potential": null,
+        "surface_lubrication_softness_potential": null,
+        "smoothing_frizz_control_potential": null,
+        "shine_potential": null,
+        "weight_deposition_potential": null,
+        "rinse_behavior": null,
+        "cumulative_residue_risk": null,
+        "body_lightness_potential": null,
+        "repair_lubrication_protection": null,
+        "repair_surface_film": null,
+        "bond_specific_support": null,
+        "color_chemical_damage_protection": null,
+        "fragrance_scalp_exposure": null,
+        "usage_role": null
+      }
+    }
+  ],
+  "concerns": [
+    "Product 11d42d9d-b8d8-42ae-a432-9a3d0f9d3504 has 2-in-1 Kur & Spülung naming, but the locked packet marks it eligible, so I classified it while keeping usage_role unknown.",
+    "Several eligible products lack directions or finished-product protocol evidence in the permitted packet, so usage_role is unknown, rinse_behavior is unknown, and cumulative_residue_risk is indeterminate throughout eligible entries.",
+    "Bali Curls 8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe lacks a clear cationic conditioning base in the visible INCI, so I treated lipid and non-cationic film routes as the basis for moderate conditioning with higher weight potential."
+  ]
+}

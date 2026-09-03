@@ -1,0 +1,50 @@
+{
+  "schema_version": "conditioner-stage-a-artifact-manifest.v1.6",
+  "created_at": "2026-09-02",
+  "updated_at": "2026-09-03",
+  "normative_source": {
+    "path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+    "bytes": 25863,
+    "sha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135"
+  },
+  "review_source_snapshot": {
+    "version": "1.6-rc1",
+    "path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.v1.6-rc1.md",
+    "bytes": 24808,
+    "sha256": "f317b8514ecc72e14ea97220c99dbe01ba528e408f2b4f211264bced79a157a8",
+    "verification": "retained exact release-candidate source reviewed by independent Reviewer G for the 22/22 care-direction and repair-support comparison"
+  },
+  "reading_copies": [
+    {
+      "format": "docx",
+      "path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx",
+      "bytes": 51799,
+      "sha256": "3b5f6be980dba556e8b9e353a500084fe58daa55304c3b096ab3688cea018ff7",
+      "source": "normative_source",
+      "verification": "synchronized with the locked v1.6 nine-property standard, Conditioner Production Adapter v1 boundary, and explicit separate review/publication gates; accessibility 0 high, 0 medium, 0 low; all 10 rendered pages reviewed"
+    },
+    {
+      "format": "pdf",
+      "path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.pdf",
+      "bytes": 285047,
+      "sha256": "acd2d1ba66e1522b86995c29c2c7a7a4141e81c1af39f96ff5dd3bfe8568bb41",
+      "source": "docx_reading_copy",
+      "verification": "10-page reading copy visually inspected after adapter synchronization; title, status, adapter boundary, source hierarchy, rule thresholds, and release-candidate provenance are present with no clipping, overlap, broken table, or missing clarification"
+    }
+  ],
+  "calibration_workbook": {
+    "path": "docs/research/conditioner-inci/v1.0/conditioner-calibration-workbook.xlsx",
+    "bytes": 52499,
+    "sha256": "5f1a3707adc55a70475b11ce5d9c9e9c7f6d5604f207b0153cda7a938bf00c3b",
+    "delivery_copy_path": "outputs/019f65c4-e918-7ea3-a74d-adb8de039de8/conditioner-calibration-workbook.xlsx",
+    "delivery_copy_sha256": "5f1a3707adc55a70475b11ce5d9c9e9c7f6d5604f207b0153cda7a938bf00c3b",
+    "verification": "Historical v1.2 workbook snapshot retained unchanged; current v1.6 review authority is the Lab plus calibration-full-profile-key/agreement JSON. Reviewer G independently matched the two new properties 22/22. The active composite is 94/99 pre-adjudication, 85/99 post-adjudication, and 68/77 non-focus; it preserves frozen Reviewer F values for the earlier seven fields and is not a fresh de-novo nine-property repeatability result"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/conditioner-inci/v1.0/v1.6-logic-lock-receipt.json",
+    "bytes": 4313,
+    "sha256": "2eb5d61f7b0beab2ed66f6066842410b4736b3d297475bb1c8dd3970061606b7",
+    "verification": "records the locked v1.6 scope, three reviewed anchors, unchanged promotion semantics, validation limits, versioned compatibility projection approval, and separate product, catalog, database, and publication gates"
+  },
+  "production_writes": false
+}

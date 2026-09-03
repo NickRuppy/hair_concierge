@@ -322,6 +322,22 @@ That workflow keeps Shampoo v1.4 as the complete research authority and projects
 only the reviewed property lane. Its `property_lane_ready` status is not catalog
 intake readiness, global recommendation readiness, or publish approval.
 
+Conditioner-specific rule:
+
+- For every previously unknown conventional rinse-out Conditioner, use
+  [Conditioner Production Adapter v1](./product-intake-conditioner-production-adapter.md).
+- Research the complete Conditioner Standard v1.6 profile first and retain
+  `conditioner-research-envelope-v1.6` in the `property_synthesis` artifact.
+- The deterministic adapter, not the research model, writes the preview values
+  for `suitable_thicknesses`, `product_conditioner_specs`, and
+  `product_conditioner_rerank_specs`.
+- Adapter compatibility rows are current matching policy, not ingredient
+  observations or a diagnosis of the user.
+- Exact `conditioner_rinse_out` protocol content still comes from authoritative
+  product directions and is reviewed separately.
+- `projection_ready` is only property-lane readiness; it is not catalog intake
+  readiness, global recommendation readiness, or publish approval.
+
 Manual addition checklist:
 
 1. Resolve canonical identity and brand review first.

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conditioner Lab — Live-property alignment</title>
+  <style>
+    :root { --ink:#1c1917; --muted:#78716c; --paper:#fffaf4; --sand:#f5eee5; --line:#d6d3d1; --new:#dff4e7; --new-line:#67a87e; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--sand); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; }
+    main { max-width:1180px; margin:0 auto; padding:36px 22px 64px; }
+    .eyebrow { font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#57534e; }
+    h1 { margin:8px 0 10px; font-family:Georgia,serif; font-size:42px; line-height:1.05; }
+    .intro { max-width:850px; color:#57534e; line-height:1.55; }
+    .callout { margin:24px 0; padding:18px 20px; border:1px solid var(--new-line); border-radius:18px; background:var(--new); }
+    .callout strong { display:block; margin-bottom:6px; }
+    .card { margin-top:22px; overflow:hidden; border:1px solid var(--line); border-radius:22px; background:var(--paper); box-shadow:0 18px 50px rgba(68,55,44,.08); }
+    .head { padding:22px 24px 16px; border-bottom:1px solid var(--line); }
+    .head h2 { margin:0 0 5px; font-size:22px; }
+    .head p { margin:0; color:var(--muted); }
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:15px 18px; border-bottom:1px solid #e7e5e4; text-align:left; vertical-align:top; }
+    th { background:#fafaf9; color:#57534e; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+    tr:last-child td { border-bottom:0; }
+    .field { font-weight:800; }
+    code { display:block; margin-top:3px; color:var(--muted); font-size:12px; }
+    .value { font-weight:800; }
+    .status { display:inline-block; padding:5px 9px; border-radius:999px; background:#fef3c7; color:#92400e; font-size:12px; font-weight:800; }
+    .approved { background:#e7e5e4; color:#44403c; }
+    .new-row { background:linear-gradient(90deg,var(--new),rgba(223,244,231,.35)); }
+    .new-row td:first-child { border-left:5px solid var(--new-line); }
+    .reason { color:#44403c; line-height:1.45; }
+    .reason b { color:var(--ink); }
+    .legend { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:20px; }
+    .legend section { padding:18px; border:1px solid var(--line); border-radius:16px; background:rgba(255,250,244,.72); }
+    .legend h3 { margin:0 0 8px; font-size:16px; }
+    .legend p { margin:0; color:#57534e; line-height:1.45; }
+    footer { margin-top:24px; color:var(--muted); font-size:13px; }
+    @media (max-width:760px) {
+      h1 { font-size:34px; }
+      .legend { grid-template-columns:1fr; }
+      table,thead,tbody,tr,th,td { display:block; }
+      thead { display:none; }
+      tr { padding:14px 0; border-bottom:1px solid var(--line); }
+      td { padding:5px 16px; border:0; }
+      .new-row td:first-child { border-left:5px solid var(--new-line); padding-left:11px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Planungsansicht · keine Produktionsdaten</div>
+    <h1>Zwei fehlende Produktfakten, derselbe Review-Flow</h1>
+    <p class="intro">Die sieben bereits geprüften Eigenschaften bleiben unverändert. Zwei neue, eigenständig recherchierte Eigenschaften schließen die Lücke zum Live-Matching: Pflegerichtung und Repair-Unterstützung.</p>
+    <div class="callout"><strong>Was öffnet erneut?</strong>Nur die zwei neuen Zeilen. Bestehende Freigaben bleiben erhalten; die gesamte Produktfreigabe wartet anschließend auf alle neun Eigenschaften.</div>
+    <article class="card">
+      <div class="head">
+        <h2>Balea Med Ultra Sensitive Conditioner</h2>
+        <p>Beispiel für die kompakte Produktübersicht nach der Erweiterung</p>
+      </div>
+      <table>
+        <thead><tr><th>Eigenschaft</th><th>Datenbankwert</th><th>Reviewstatus</th><th>Reasoning</th></tr></thead>
+        <tbody>
+          <tr><td class="field">Pflegelevel<code>conditioning_level</code></td><td class="value">high</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+          <tr><td class="field">Gewichtspotenzial<code>weight_potential</code></td><td class="value">moderate</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+          <tr class="new-row"><td class="field">Pflegerichtung<code>care_direction</code></td><td class="value">moisture</td><td><span class="status">offen · neu</span></td><td class="reason"><b>Formula signals:</b> Glycerin (#3), Dicaprylyl Ether (#5), Isopropyl Palmitate (#6) and Panthenol (#7) add humectant/emollient support; no protein, peptide or keratin route is visible. <b>Why not balanced or protein:</b> the cationic base conditions hair but does not create a protein direction.</td></tr>
+          <tr class="new-row"><td class="field">Repair-Unterstützung<code>repair_support_level</code></td><td class="value">low</td><td><span class="status">offen · neu</span></td><td class="reason"><b>Formula signals:</b> the formula has conventional cationic, fatty-alcohol and emollient routes. <b>Why not medium:</b> no distinct protein/peptide film or named bond chemistry is present. Ordinary lubrication and positioning alone do not create a separate repair route.</td></tr>
+          <tr><td class="field">Primärer Fokus<code>primary_focus</code></td><td class="value">general</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+          <tr><td class="field">Sekundäre Schwerpunkte<code>secondary_focus</code></td><td class="value">detangling</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+          <tr><td class="field">Haardicken-Fit<code>hair_thickness_fit</code></td><td class="value">fine · medium · coarse</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+          <tr><td class="field">Schädigungs-Fit<code>damage_fit</code></td><td class="value">healthy · moderately_damaged</td><td><span class="status">offen</span></td><td class="reason">Bereits offene v1.5-Neukalibrierung; unabhängig von der neuen Repair-Unterstützung.</td></tr>
+          <tr><td class="field">Textur-Fit<code>texture_fit</code></td><td class="value">straight · wavy · curly</td><td><span class="status approved">freigegeben</span></td><td class="reason">Bestehende Begründung bleibt unverändert.</td></tr>
+        </tbody>
+      </table>
+    </article>
+    <div class="legend">
+      <section><h3>Pflegerichtung</h3><p><b>protein</b> bei einer prägenden Protein-/Peptid-/Keratinroute, <b>moisture</b> bei dominanter humectant-/emollient-/lipidbasierter Pflege ohne prägende Proteinroute, <b>balanced</b> bei zwei tatsächlich starken Richtungen. Kein Nutzer-Mangeltest.</p></section>
+      <section><h3>Repair-Unterstützung</h3><p><b>low</b> für normale Konditionierung, <b>medium</b> für eine eigenständige temporäre Film-/Damage-Route, <b>high</b> nur bei deutlich stärkerer Route oder passender Exact-Product-Evidenz. Nicht dasselbe wie Damage Fit.</p></section>
+    </div>
+    <footer>Das Lab bleibt ein lokales Research-Review. Keine Katalogfreigabe, keine Supabase-Schreiboperation und keine Produktionsaktivierung.</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "artifact": "conditioner-bali-formula-recalibration",
+  "version": "1.2-rc1",
+  "recalibrated_at": "2026-08-24",
+  "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+  "exact_name": "Bali Curls Moisturising Conditioner Reisegröße",
+  "market": "DE/EU",
+  "pack_size": "75 ml",
+  "gtin": "4262391991626",
+  "authority": {
+    "formula_source": "https://www.bali-care.com/de-de/products/moisturizing-conditioner",
+    "formula_source_type": "manufacturer",
+    "exact_gtin_confirmation": "https://www.hagel-shop.de/bali-curls-curls-moisturising-conditioner-75-ml.html",
+    "active_formula_conflict": false,
+    "source_dispositions": [
+      {
+        "url": "https://www.dm.de/bali-curls-conditioner-moisturising-p4262391991626.html",
+        "disposition": "historical_outlier_transcription",
+        "reason": "Exact EAN but visibly divergent and typo-heavy retailer transcription; manufacturer formula is authoritative."
+      },
+      {
+        "url": "https://www.flaconi.de/haare/bali-curls/moisturising/bali-curls-moisturising-conditioner.html",
+        "disposition": "different_identity_supporting_context_only",
+        "reason": "Formula is compatible with the manufacturer formula but the listed EAN 4262391990056 is not the pilot EAN."
+      }
+    ]
+  },
+  "superseded_formula_fingerprint": "d85752e70c256a5b0c54e63875e1549a87683a504094eaec8197394d89c8a4a8",
+  "accepted_formula_fingerprint": "5c643700db25fece77b870b6a1d9d58d15435540c46a011e471563a346808c7f",
+  "direct_property_changes": {
+    "conditioning_deposition_potential": ["moderate", "higher"],
+    "wet_slip_detangling_potential": ["moderate", "higher"],
+    "dry_combability_potential": ["moderate", "higher"],
+    "surface_lubrication_softness_potential": ["moderate", "higher"],
+    "smoothing_frizz_control_potential": ["moderate", "higher"]
+  },
+  "retained_direct_property_limits": {
+    "rinse_behavior": "unknown",
+    "cumulative_residue_risk": "indeterminate",
+    "structural_repair": "not_supported"
+  },
+  "accepted_profile": {
+    "conditioning_level": "high",
+    "weight_potential": "high",
+    "primary_focus": "curl_support",
+    "secondary_focus": ["detangling", "smoothing"],
+    "usage_role": "regular",
+    "hair_thickness_fit": ["medium", "coarse"],
+    "damage_fit": ["moderately_damaged", "highly_damaged"],
+    "texture_fit": ["wavy", "curly", "coily"],
+    "scalp_application_fit": "conditional"
+  },
+  "blind_reviewer_e_exact_cells": 9,
+  "catalog_or_production_write": false
+}

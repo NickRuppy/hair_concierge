@@ -73,6 +73,8 @@ import {
 
 import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } from "./cli"
 import { finalizeProductImageAsset } from "./finalize-package-image"
+import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditioner-research-adapter"
+import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
 
 type WorkerResult = {
   worker_id: string
@@ -350,6 +352,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
         detail?.category,
         brandResolutionContext,
         detail?.decisions ?? [],
+        job.submission_id,
       )
       const leasedJob = await updateResearchJob(options.supabase, {
         jobId: job.id,
@@ -1008,7 +1011,8 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
     return {
       category_key: "conditioner",
       instruction:
-        "Research and emit only conditioner approval specs under researched_payload.final.category_specs.",
+        "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
+      conditioner_research: conditionerResearchPromptContract(),
       required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
       product_conditioner_specs:
         "array with one row per relevant hair thickness; each row has thickness and protein_moisture_balance",
@@ -1294,6 +1298,7 @@ function normalizeResearchOutputForCategory(
   category: string | null | undefined,
   brandResolutionContext: BrandResolutionPromptContext,
   reviewDecisions: ProductIntakeReviewDecisionRow[],
+  expectedResearchId: string,
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
   if (!categoryKey) return output
@@ -1310,6 +1315,15 @@ function normalizeResearchOutputForCategory(
   applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
   const categorySpecs = normalizeRecord(final?.category_specs)
   const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
+
+  if (categoryKey === "conditioner" && final) {
+    const adapterResult = applyConditionerResearchAdapter({
+      final,
+      artifacts: output.artifacts,
+      expectedResearchId,
+    })
+    blockers.push(...adapterResult.blockers)
+  }
 
   if (leaveInSpecs) {
     const normalizedStages = normalizeLeaveInApplicationStages(leaveInSpecs.application_stage)

@@ -1,0 +1,134 @@
+{
+  "schema_version": "conditioner-calibration-key.v1.0",
+  "standard_version": "conditioner-classification-standard.v1.0",
+  "created_at": "2026-08-23",
+  "reviewer": "A",
+  "evidence_scope": "exact formula only; no finished-product test data",
+  "ordinal_order": ["lower", "moderate", "higher"],
+  "common_formula_only_defaults": {
+    "rinse_behavior": "unknown",
+    "cumulative_residue_risk": "indeterminate"
+  },
+  "products": [
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "exact_name": "Balea Med Ultra Sensitive Conditioner",
+      "formula_fingerprint": "ce8d05ad752a7be533c6556e7eb955e62da2d636d2263fe3ccb869c87421341f",
+      "boundary": "eligible",
+      "routes": ["R1", "R3", "R4", "R6"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"moderate","smoothing_frizz_control_potential":"moderate","shine_potential":"lower","weight_deposition_potential":"moderate","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"balanced","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"no_listed_fragrance_signal","usage_role":"unknown"},
+      "rationale": "Cetrimonium chloride plus fatty alcohol supports a coherent conditioning base; cationic guar adds one shared deposition/film route. Fragrance is not listed, but absence is limited to this captured formula and is not a safety conclusion.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION"]
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "exact_name": "Balea Professional Aqua Hyaluron Conditioner",
+      "formula_fingerprint": "040f1bd4837a90ae7b3f53aece89b496723ba4607d7ca2df18e246cdebb5bf8f",
+      "boundary": "eligible",
+      "routes": ["R1", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"moderate","wet_slip_detangling_potential":"moderate","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"moderate","smoothing_frizz_control_potential":"moderate","shine_potential":"lower","weight_deposition_potential":"lower","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_preserving","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"fragrance_declared","usage_role":"unknown"},
+      "rationale": "A compact fatty-alcohol/amidoamine architecture supports moderate conditioning potential without a visible silicone, rich lipid, or polymer film route. Hyaluron and product naming do not upgrade performance.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION"]
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "exact_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "formula_fingerprint": "eea7bb9742003c10dd6313c20fad55c83354a157f38b984683b118be03dfa6b2",
+      "boundary": "eligible",
+      "routes": ["R1", "R4", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"moderate","shine_potential":"moderate","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"aromatic_or_allergen_exposure","usage_role":"unknown"},
+      "rationale": "The amidoamine/fatty-alcohol base and several lipid/emollient signals support a balanced, moderate potential; aloe and moisture wording are not independent mechanisms.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "exact_name": "Volume Victory Conditioner",
+      "formula_fingerprint": "c09c97562c7c701dbf4b575ce09e84618a91c645a93c4e24a96b63359b677769",
+      "boundary": "eligible",
+      "routes": ["R1", "R2", "R3", "R5", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"higher","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"higher","shine_potential":"higher","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"candidate","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"aromatic_or_allergen_exposure","usage_role":"unknown"},
+      "rationale": "Cationic base, amodimethicone, polyquaternium and peptide/film signals form a deposition-rich architecture. The volume name cannot override those formula observations, and the overlapping routes are not counted as independent technologies.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M2_TEMPORARY_FILM_SUPPORT", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "exact_name": "Frizz Ease Wunder-Reparatur Conditioner",
+      "formula_fingerprint": "a125a5c7957821ef251caf4f37f13cbbb5d6f13f141703198245a170586bef9d",
+      "boundary": "eligible",
+      "routes": ["R1", "R4", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"higher","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"higher","shine_potential":"moderate","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"aromatic_or_allergen_exposure","usage_role":"unknown"},
+      "rationale": "A strongly cationic fatty-alcohol base plus emollient ester, oils and ceramide supports high lubrication/deposition potential. Repair remains temporary protection/film potential, not structural restoration.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "exact_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "formula_fingerprint": "d6019125cf04e0d69108e501464222258f83c273f54c3a133c69dea60570f07d",
+      "boundary": "eligible",
+      "routes": ["R1", "R4", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"moderate","smoothing_frizz_control_potential":"moderate","shine_potential":"moderate","weight_deposition_potential":"moderate","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"balanced","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"fragrance_declared","usage_role":"unknown"},
+      "rationale": "Behentrimonium chloride and the fatty-alcohol base support high conditioning potential even without silicone. Cetyl esters and oat oil add relubrication, but panthenol and repair wording do not prove structural repair.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "exact_name": "Biotin & Collagen Conditioner",
+      "formula_fingerprint": "4c69d48dd7347bfca88fa77000aa0f13c2019b503f019f5f855e2ce2a80a8ccf",
+      "boundary": "eligible",
+      "routes": ["R1", "R2", "R4", "R5", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"higher","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"higher","shine_potential":"higher","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"candidate","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"fragrance_declared","usage_role":"unknown"},
+      "rationale": "Cationic base, dimethicone and emollients support a rich deposition/lubrication route. Hydrolyzed collagen may contribute temporary film potential; biotin/collagen naming does not imply strand thickening or structural repair.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M2_TEMPORARY_FILM_SUPPORT", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "exact_name": "Conditioner Cream",
+      "formula_fingerprint": "00011c74c4871aa9400afec7ea5f9c8df019b559082e360d51b3b967ca4eef70",
+      "boundary": "eligible",
+      "routes": ["R1", "R3", "R4", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"higher","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"higher","shine_potential":"moderate","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"candidate","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"aromatic_or_allergen_exposure","usage_role":"unknown"},
+      "rationale": "Fatty alcohols, amidoamine, shea butter and two polymer/film signals support rich deposition and lubrication potential. Vitamins do not create separate repair mechanisms.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M2_TEMPORARY_FILM_SUPPORT", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "exact_name": "Colorglow Granatapfel Rose Conditioner",
+      "formula_fingerprint": "02a24542d33b0d611ac9a4b0ec51611880d1248ce519cfc811e403c7165ca662",
+      "boundary": "eligible",
+      "routes": ["R1", "R4", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"moderate","smoothing_frizz_control_potential":"moderate","shine_potential":"moderate","weight_deposition_potential":"moderate","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"balanced","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"unknown","color_chemical_damage_protection":"candidate","fragrance_scalp_exposure":"fragrance_declared","usage_role":"unknown"},
+      "rationale": "Multiple cationic surfactants support strong conditioning potential; benzophenone-4 makes color/UV protection a candidate only. Acid presence cannot establish finished-product pH or anti-fade performance.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "exact_name": "Moisturising Conditioner Reisegröße",
+      "formula_fingerprint": "5c643700db25fece77b870b6a1d9d58d15435540c46a011e471563a346808c7f",
+      "boundary": "eligible",
+      "routes": ["R1", "R3", "R4", "R5", "R6", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"higher","surface_lubrication_softness_potential":"higher","smoothing_frizz_control_potential":"higher","shine_potential":"moderate","weight_deposition_potential":"higher","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"likely_depositing","repair_lubrication_protection":"candidate","repair_surface_film":"candidate","bond_specific_support":"unknown","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"aromatic_or_allergen_exposure","usage_role":"unknown"},
+      "rationale": "The manufacturer formula, confirmed for EAN 4262391991626 by an exact-product retailer, contains a conventional cationic/fatty-alcohol base, cationic guar, several oils and butter. This supports high conditioning, slip, smoothing and weight potential; formula-only evidence still does not prove finished-product sensory performance, rinse behavior or structural repair.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION", "M2_TEMPORARY_FILM_SUPPORT", "M3_OPTICAL_ALIGNMENT_FILM"]
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "exact_name": "Bond+ Reparatur Spülung",
+      "formula_fingerprint": "192a1aa8d863d5de013575bca75e2d5d3559e3e28ad315f8c90352160df6f1b0",
+      "boundary": "eligible",
+      "routes": ["R1", "R4", "R6", "R7", "R8"],
+      "values": {"conditioning_deposition_potential":"higher","wet_slip_detangling_potential":"higher","dry_combability_potential":"moderate","surface_lubrication_softness_potential":"moderate","smoothing_frizz_control_potential":"moderate","shine_potential":"moderate","weight_deposition_potential":"moderate","rinse_behavior":"unknown","cumulative_residue_risk":"indeterminate","body_lightness_potential":"balanced","repair_lubrication_protection":"candidate","repair_surface_film":"none_visible","bond_specific_support":"chemistry_candidate","color_chemical_damage_protection":"general_conditioning","fragrance_scalp_exposure":"fragrance_declared","usage_role":"unknown"},
+      "rationale": "The cationic base supports conditioning; hydroxypropylgluconamide/hydroxypropylammonium gluconate provide a distinct bond-claim chemistry candidate. Exact finished-product substantiation is still required before product-tested status.",
+      "shared_mechanisms": ["M1_DEPOSITION_SURFACE_LUBRICATION"]
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "exact_name": "Leave-In Repair Cream",
+      "formula_fingerprint": "140654589497e8a449cd7715e27bfb30a7629836c93d5ae9b53d25ece50c690b",
+      "boundary": "excluded_product_form",
+      "routes": [],
+      "values": null,
+      "rationale": "Authoritative directions identify a leave-in product. Gate G0 excludes it before Conditioner direct-property classification.",
+      "shared_mechanisms": []
+    }
+  ]
+}

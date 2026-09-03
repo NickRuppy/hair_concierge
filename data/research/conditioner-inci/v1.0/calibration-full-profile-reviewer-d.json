@@ -1,0 +1,404 @@
+{
+  "artifact": "conditioner-calibration-full-profile-review",
+  "schema_version": "conditioner-calibration-full-profile-review.v1.0",
+  "metadata": {
+    "reviewer": "D_blind",
+    "standard_version": "1.1-rc1-historical-nine-field-projection",
+    "created_at": "2026-08-24",
+    "clean_room_attestation": "Historical clean-room blind classification from the v1.1 ten-field pass, mechanically projected to the nine retained fields for comparison. The separate v1.2 focus recalibration supersedes its old focus judgments where the rule or Bali formula changed.",
+    "source_paths": {
+      "standard": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+      "full_profile_packet": "data/research/conditioner-inci/v1.0/calibration-full-profile-packet.json",
+      "pilot_formulas": "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json",
+      "pilot_directions": "data/research/conditioner-inci/v1.0/calibration-pilot-directions.json",
+      "direct_property_key": "data/research/conditioner-inci/v1.0/calibration-key.json"
+    }
+  },
+  "profile_order": [
+    "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+    "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+    "5516009a-eecb-42dd-87f6-07c560161136",
+    "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+    "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+    "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+    "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+    "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+    "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+    "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+    "9f8da740-87b6-45e0-ab86-d77d63f2e22b"
+  ],
+  "profiles": [
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "exact_name": "Balea Med Ultra Sensitive Conditioner",
+      "conditioning_level": "high",
+      "weight_potential": "moderate",
+      "primary_focus": "detangling",
+      "secondary_focus": [
+        "smoothing"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "primary_focus",
+        "damage_fit"
+      ],
+      "assumption_notes": [
+        "High conditioning and slip map to detangling, but the moderate-weight balanced architecture keeps the fit broad rather than rich-only."
+      ]
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "exact_name": "Balea Professional Aqua Hyaluron Conditioner",
+      "conditioning_level": "moderate",
+      "weight_potential": "low",
+      "primary_focus": "lightness",
+      "secondary_focus": [
+        "detangling"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "fine",
+        "medium"
+      ],
+      "damage_fit": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "texture_fit": [
+        "straight",
+        "wavy"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "secondary_focus"
+      ],
+      "assumption_notes": [
+        "Low weight and likely-preserving body make lightness the clearest projection; hyaluron naming is not treated as a performance route."
+      ]
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "exact_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "conditioning_level": "high",
+      "weight_potential": "high",
+      "primary_focus": "detangling",
+      "secondary_focus": [
+        "smoothing",
+        "curl_support"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "avoid_roots",
+      "uncertain_fields": [
+        "secondary_focus",
+        "texture_fit"
+      ],
+      "assumption_notes": [
+        "High slip drives detangling; the high-weight lipid route broadens toward curl support, but no curl claim is used as decisive evidence."
+      ]
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "exact_name": "Volume Victory Conditioner",
+      "conditioning_level": "high",
+      "weight_potential": "high",
+      "primary_focus": "repair",
+      "secondary_focus": [
+        "smoothing",
+        "shine"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "avoid_roots",
+      "uncertain_fields": [
+        "primary_focus",
+        "secondary_focus",
+        "hair_thickness_fit",
+        "texture_fit"
+      ],
+      "assumption_notes": [
+        "Despite the volume positioning, the reviewed silicone, polyquaternium, and peptide/film signals make the product project richer and more depositing."
+      ]
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "exact_name": "Frizz Ease Wunder-Reparatur Conditioner",
+      "conditioning_level": "high",
+      "weight_potential": "high",
+      "primary_focus": "smoothing",
+      "secondary_focus": [
+        "detangling"
+      ],
+      "usage_role": "frequent",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "avoid_roots",
+      "uncertain_fields": [
+        "usage_role",
+        "texture_fit"
+      ],
+      "assumption_notes": [
+        "Smoothing is the strongest non-repair focus; the direction supports frequent use, while the high-deposition formula keeps that frequency judgment cautious."
+      ]
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "exact_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "conditioning_level": "high",
+      "weight_potential": "moderate",
+      "primary_focus": "detangling",
+      "secondary_focus": [
+        "smoothing"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "primary_focus",
+        "damage_fit"
+      ],
+      "assumption_notes": [
+        "The 2-in-1 repair wording is not enough to set repair; the cationic base and slip make detangling the practical lead."
+      ]
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "exact_name": "Biotin & Collagen Conditioner",
+      "conditioning_level": "high",
+      "weight_potential": "high",
+      "primary_focus": "repair",
+      "secondary_focus": [
+        "smoothing",
+        "shine"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "primary_focus",
+        "secondary_focus"
+      ],
+      "assumption_notes": [
+        "Hydrolyzed collagen supports temporary film repair projection, not strand thickening; dimethicone and emollients support rich smoothing and shine."
+      ]
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "exact_name": "Conditioner Cream",
+      "conditioning_level": "high",
+      "weight_potential": "high",
+      "primary_focus": "curl_support",
+      "secondary_focus": [
+        "detangling",
+        "smoothing"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "avoid_roots",
+      "uncertain_fields": [
+        "secondary_focus"
+      ],
+      "assumption_notes": [
+        "Rich butter, polymer/film, high slip, and high deposition support curl/coily layering; vitamins are not counted as separate repair evidence."
+      ]
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "exact_name": "Colorglow Granatapfel Rose Conditioner",
+      "conditioning_level": "high",
+      "weight_potential": "moderate",
+      "primary_focus": "color_care",
+      "secondary_focus": [
+        "detangling",
+        "shine"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "primary_focus",
+        "secondary_focus"
+      ],
+      "assumption_notes": [
+        "Color care is only a formula-level compatibility candidate from benzophenone-4 and context; it is not treated as tested anti-fade performance."
+      ]
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "exact_name": "Moisturising Conditioner Reisegröße",
+      "conditioning_level": "moderate",
+      "weight_potential": "high",
+      "primary_focus": "general",
+      "secondary_focus": [],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "texture_fit": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "conditioning_level",
+        "weight_potential",
+        "primary_focus",
+        "secondary_focus",
+        "hair_thickness_fit",
+        "damage_fit",
+        "texture_fit"
+      ],
+      "assumption_notes": [
+        "Historical v1.1 judgment from the former dm formula basis; superseded by the v1.2 manufacturer-formula recalibration and retained only for audit history."
+      ]
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "exact_name": "Bond+ Reparatur Spülung",
+      "conditioning_level": "high",
+      "weight_potential": "moderate",
+      "primary_focus": "repair",
+      "secondary_focus": [
+        "detangling"
+      ],
+      "usage_role": "regular",
+      "hair_thickness_fit": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "damage_fit": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "texture_fit": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "scalp_application_fit": "conditional",
+      "uncertain_fields": [
+        "primary_focus",
+        "damage_fit"
+      ],
+      "assumption_notes": [
+        "The gluconamide/gluconate chemistry supports a bond-claim candidate, but no product-tested bond or repair performance is inferred."
+      ]
+    }
+  ],
+  "excluded_products": [
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "exact_name": "Leave-In Repair Cream",
+      "category_boundary_status": "excluded_product_form",
+      "exclusion_reason": "Authoritative directions identify a leave-in application with no rinse-out use; no Conditioner full profile was produced.",
+      "directions_summary": "Leave-in application; not rinsed out."
+    }
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "schema_version": "conditioner-calibration-invalid-run.v1.0",
+  "reviewer": "B",
+  "status": "INVALID_CLEAN_ROOM",
+  "invalid_reason": "Reviewer inherited integrator context containing proposed key values before classification.",
+  "usable_for_agreement_metrics": false,
+  "preserved_for_audit": true,
+  "classifications": [
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "formula_fingerprint": "ce8d05ad752a7be533c6556e7eb955e62da2d636d2263fe3ccb869c87421341f",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R3",
+        "R4",
+        "R6"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "no_listed_fragrance_signal",
+        "usage_role": "frequent"
+      },
+      "rationale": "Cetrimonium chloride, fatty alcohols, cationic guar and emollients support a conventional conditioning/deposition architecture; shine remains only a potential surface-alignment inference.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "formula_fingerprint": "040f1bd4837a90ae7b3f53aece89b496723ba4607d7ca2df18e246cdebb5bf8f",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "moderate",
+        "wet_slip_detangling_potential": "moderate",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "lower",
+        "weight_deposition_potential": "lower",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_preserving",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "frequent"
+      },
+      "rationale": "A relatively simple amidoamine/fatty-alcohol system supports moderate conditioning potential without visible silicone, polymer or rich lipid routes.",
+      "shared_mechanisms": [
+        "M1",
+        "M2"
+      ]
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "formula_fingerprint": "eea7bb9742003c10dd6313c20fad55c83354a157f38b984683b118be03dfa6b2",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "moderate",
+        "wet_slip_detangling_potential": "moderate",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "regular"
+      },
+      "rationale": "Amidoamine/fatty alcohol plus oils and esters supports balanced conditioning and relubrication potential; aloe and moisture wording are not separate evidence.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "formula_fingerprint": "c09c97562c7c701dbf4b575ce09e84618a91c645a93c4e24a96b63359b677769",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R2",
+        "R3",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "regular"
+      },
+      "rationale": "The base, amodimethicone, polyquaternium and peptide signals support multiple routes, but their mid/tail positions and shared mechanisms cap most formula-only properties at moderate.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "formula_fingerprint": "a125a5c7957821ef251caf4f37f13cbbb5d6f13f141703198245a170586bef9d",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "regular"
+      },
+      "rationale": "A strong cationic/fatty-alcohol base with emollient ester, oils and ceramide supports rich lubrication and deposition potential; repair remains temporary surface protection.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "formula_fingerprint": "d6019125cf04e0d69108e501464222258f83c273f54c3a133c69dea60570f07d",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "regular"
+      },
+      "rationale": "Behentrimonium chloride, fatty alcohol and ester/oat oil signals support conditioning and relubrication potential; 2in1 repair wording cannot prove a repair endpoint.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "formula_fingerprint": "4c69d48dd7347bfca88fa77000aa0f13c2019b503f019f5f855e2ce2a80a8ccf",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R2",
+        "R4",
+        "R5",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "higher",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "regular"
+      },
+      "rationale": "Cationic base, dimethicone, amidoamine and emollients form a coherent richer deposition route; collagen is only temporary film support.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "formula_fingerprint": "00011c74c4871aa9400afec7ea5f9c8df019b559082e360d51b3b967ca4eef70",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R3",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "higher",
+        "surface_lubrication_softness_potential": "higher",
+        "smoothing_frizz_control_potential": "higher",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "candidate",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "regular"
+      },
+      "rationale": "Fatty alcohols, shea butter, amidoamine, polyquaternium and film-forming ingredients support richer conditioning and deposition potential; vitamins do not add repair evidence.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "formula_fingerprint": "02a24542d33b0d611ac9a4b0ec51611880d1248ce519cfc811e403c7165ca662",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "candidate",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "regular"
+      },
+      "rationale": "Multiple cationic ingredients support conditioning, while benzophenone-4 and general conditioning support only a color-care candidate without anti-fade proof.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "formula_fingerprint": "d85752e70c256a5b0c54e63875e1549a87683a504094eaec8197394d89c8a4a8",
+      "boundary": "eligible",
+      "routes": [
+        "R4",
+        "R6",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "lower",
+        "wet_slip_detangling_potential": "lower",
+        "dry_combability_potential": "lower",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "lower",
+        "shine_potential": "lower",
+        "weight_deposition_potential": "higher",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "likely_depositing",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "unknown",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "aromatic_or_allergen_exposure",
+        "usage_role": "regular"
+      },
+      "rationale": "The captured formula shows fatty alcohols, butter and oil but no conventional cationic conditioning base; source typo risk favors lower conditioning confidence while weight remains depositing.",
+      "shared_mechanisms": [
+        "M1",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "formula_fingerprint": "192a1aa8d863d5de013575bca75e2d5d3559e3e28ad315f8c90352160df6f1b0",
+      "boundary": "eligible",
+      "routes": [
+        "R1",
+        "R4",
+        "R6",
+        "R7",
+        "R8"
+      ],
+      "values": {
+        "conditioning_deposition_potential": "higher",
+        "wet_slip_detangling_potential": "higher",
+        "dry_combability_potential": "moderate",
+        "surface_lubrication_softness_potential": "moderate",
+        "smoothing_frizz_control_potential": "moderate",
+        "shine_potential": "moderate",
+        "weight_deposition_potential": "moderate",
+        "rinse_behavior": "unknown",
+        "cumulative_residue_risk": "indeterminate",
+        "body_lightness_potential": "balanced",
+        "repair_lubrication_protection": "candidate",
+        "repair_surface_film": "none_visible",
+        "bond_specific_support": "chemistry_candidate",
+        "color_chemical_damage_protection": "general_conditioning",
+        "fragrance_scalp_exposure": "fragrance_declared",
+        "usage_role": "regular"
+      },
+      "rationale": "The cationic base supports conditioning and the gluconamide/gluconate pair supports a bond-chemistry candidate, but no finished-product test upgrades it.",
+      "shared_mechanisms": [
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "formula_fingerprint": "140654589497e8a449cd7715e27bfb30a7629836c93d5ae9b53d25ece50c690b",
+      "boundary": "excluded_product_form",
+      "routes": [],
+      "values": null,
+      "rationale": "Gate G0 excludes the leave-in cream before direct-property classification.",
+      "shared_mechanisms": []
+    }
+  ],
+  "concerns": [
+    {
+      "concern_id": "CLEAN_ROOM_NOT_CERTIFIED",
+      "severity": "material",
+      "detail": "This resumed pass cannot satisfy the original independent-blind acceptance condition because the active integrator inspected calibration-key.json before completing Reviewer B."
+    },
+    {
+      "concern_id": "HIGHER_THRESHOLD_AMBIGUITY",
+      "severity": "moderate",
+      "detail": "NEQI Volume Victory shows ambiguity around when multiple mid-list routes should elevate dry, shine, weight and body values to higher."
+    },
+    {
+      "concern_id": "NO_CATIONIC_BASE_AMBIGUITY",
+      "severity": "moderate",
+      "detail": "Bali Curls shows ambiguity around scoring a lipid-heavy formula with no visible conventional cationic conditioning route and a source typo caution."
+    }
+  ]
+}

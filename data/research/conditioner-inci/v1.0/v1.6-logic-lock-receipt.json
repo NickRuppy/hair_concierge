@@ -1,0 +1,96 @@
+{
+  "schema_version": "conditioner-research-logic-lock.v1",
+  "locked_standard_version": "1.6",
+  "locked_at": "2026-09-02",
+  "decision": "approved_and_locked_for_reuse",
+  "normative_standard_path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+  "review_source_snapshot": {
+    "version": "1.6-rc1",
+    "path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.v1.6-rc1.md",
+    "bytes": 24808,
+    "sha256": "f317b8514ecc72e14ea97220c99dbe01ba528e408f2b4f211264bced79a157a8"
+  },
+  "approved_scope": {
+    "category": "conventional short-contact rinse-out conditioners",
+    "market": "Germany/EU",
+    "comparison_profile_fields": [
+      "conditioning_level",
+      "weight_potential",
+      "care_direction",
+      "repair_support_level",
+      "primary_focus",
+      "secondary_focus",
+      "hair_thickness_fit",
+      "damage_fit",
+      "texture_fit"
+    ],
+    "care_direction_values": [
+      "protein",
+      "moisture",
+      "balanced"
+    ],
+    "repair_support_level_values": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
+  "reviewed_anchor_patterns": [
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "brand": "NEQI",
+      "product": "Volume Victory Conditioner",
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "purpose": "material peptide route with temporary film support"
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "brand": "OGX",
+      "product": "Biotin & Collagen Conditioner",
+      "care_direction": "balanced",
+      "repair_support_level": "medium",
+      "purpose": "substantive mixed protein-plus-moisture architecture"
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "brand": "Guhl",
+      "product": "Bond+ Reparatur Spülung",
+      "care_direction": "moisture",
+      "repair_support_level": "high",
+      "purpose": "non-protein care direction plus a separate named paired bond route"
+    }
+  ],
+  "locked_interpretation": {
+    "care_direction": "Product formula direction only; never a diagnosis of a user's protein or moisture deficiency. Balanced requires a substantive mixed protein-plus-moisture architecture and is not an uncertainty or neutral fallback.",
+    "repair_support_level": "Comparative temporary damage-support potential only. Low is ordinary conditioning, medium requires a distinct temporary protein/peptide/keratin film route, and high requires a materially stronger named bond route visible in the reviewed formula. No value proves structural repair.",
+    "evidence_ceiling": "Formula-only conclusions remain E2 and cannot establish finished-product performance."
+  },
+  "validation_basis": {
+    "review_source_standard_version": "1.6-rc1",
+    "promotion_rule_change": false,
+    "promotion_note": "Final v1.6 preserves the reviewed care-direction and repair-support thresholds, routes, evidence ceiling, and accepted product classifications. Finalization also clarifies that a specialist Damage Fit result is exactly moderately_damaged plus highly_damaged, matching the existing accepted key and Lab behavior rather than adding a third value.",
+    "promotion_clarifications": [
+      "Damage Fit specialist output shape is an exact two-value replacement set, not an append operation."
+    ],
+    "new_field_exact_cells": 22,
+    "new_field_total_cells": 22,
+    "composite_exact_cells": 85,
+    "composite_total_cells": 99,
+    "full_nine_field_de_novo_rerun": false,
+    "historical_stress_suite_covers_new_fields": false
+  },
+  "known_limits_retained": [
+    "Balanced currently has one strong pilot anchor and should be monitored on future mixed formulas.",
+    "Unfamiliar future bond technologies may require a new evidence judgment.",
+    "The care-direction taxonomy has no bond-specific value; Guhl Bond+ is intentionally moisture/high.",
+    "Fresh out-of-sample stress cases are required before claiming broad v1.6 repeatability."
+  ],
+  "separate_gates": {
+    "individual_product_lab_approval": "required",
+    "user_side_protein_moisture_matching_policy": "approved_only_as_conditioner-production-adapter-v1_compatibility_projection",
+    "catalog_activation": false,
+    "production_database_write": false,
+    "commit_push_or_pr": false
+  }
+}
