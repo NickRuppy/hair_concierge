@@ -208,6 +208,11 @@ test-screenshots*/
 !/data/research/shampoo-production-light-v1/calibration-v1/
 !/data/research/shampoo-production-light-v1/calibration-v1/expected-projections.json
 !/data/research/shampoo-production-light-v1/calibration-v1/report.md
+!/data/research/conditioner-inci/
+!/data/research/conditioner-inci/**
+/data/research/conditioner-inci/**/lab-review-state.json
+/data/research/conditioner-inci/**/rework-queue.json
+!/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
 !/data/catalog-enrichment/oil-authority-enrichment-v1/

@@ -1,0 +1,48 @@
+{
+  "schema_version": "conditioner-calibration-blind-review.v1.0",
+  "reviewer": "C",
+  "standard_path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+  "formula_packet_path": "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json",
+  "answer_key_path": null,
+  "answer_key_included": false,
+  "instructions": [
+    "Classify each locked exact formula independently using only the named standard and formula packet.",
+    "Do not inspect calibration-key.json or another reviewer's output.",
+    "Apply G0 before formula classification; an excluded product has null direct-property values.",
+    "Use unknown or indeterminate when the standard requires abstention.",
+    "Return routes, all 16 direct-property values, one concise rationale, and shared mechanism IDs."
+  ],
+  "required_properties": [
+    "conditioning_deposition_potential",
+    "wet_slip_detangling_potential",
+    "dry_combability_potential",
+    "surface_lubrication_softness_potential",
+    "smoothing_frizz_control_potential",
+    "shine_potential",
+    "weight_deposition_potential",
+    "rinse_behavior",
+    "cumulative_residue_risk",
+    "body_lightness_potential",
+    "repair_lubrication_protection",
+    "repair_surface_film",
+    "bond_specific_support",
+    "color_chemical_damage_protection",
+    "fragrance_scalp_exposure",
+    "usage_role"
+  ],
+  "product_ids": [
+    "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+    "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+    "5516009a-eecb-42dd-87f6-07c560161136",
+    "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+    "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+    "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+    "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+    "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+    "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+    "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+    "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+    "7539ab79-f4f6-49d7-9269-08034ef4de96"
+  ],
+  "classifications": []
+}

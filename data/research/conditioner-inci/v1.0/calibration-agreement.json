@@ -1,0 +1,102 @@
+{
+  "schema_version": "conditioner-calibration-agreement.v1.0",
+  "standard_version": "conditioner-classification-standard.v1.0",
+  "created_at": "2026-08-23",
+  "reviewer_a": "proposed key, reconciled after clean blind review",
+  "reviewer_blind": "Reviewer C",
+  "clean_room_attestation": {
+    "prohibited_files_accessed": false,
+    "inherited_key_context": false,
+    "invalid_predecessor_excluded": "calibration-reviewer-b-invalid.json"
+  },
+  "summary": {
+    "eligible_products": 11,
+    "properties_per_product": 16,
+    "comparisons": 176,
+    "exact_agreements": 157,
+    "exact_agreement_pct": 89.2,
+    "ordinal_comparisons": 122,
+    "adjacent_agreements": 122,
+    "adjacent_agreement_pct": 100.0,
+    "ordinal_mean_absolute_difference": 0.139,
+    "ordinal_max_difference": 1,
+    "material_disagreements": 0,
+    "systemic_rule_change_required": false,
+    "pilot_rerun_required": true,
+    "pilot_rerun_performed": true,
+    "verdict": "pass_with_documented_clarifications"
+  },
+  "accepted_reconciliation_before_final_metrics": [
+    {
+      "scope": "all 11 eligible pilot products",
+      "property": "usage_role",
+      "change": "frequent_or_regular_to_unknown",
+      "reason": "The locked blind packet did not contain authoritative directions; product names and formula architecture cannot establish an E1 usage role."
+    },
+    {
+      "products": ["Balea Med Ultra Sensitive Conditioner", "Frizz Ease Wunder-Reparatur Conditioner"],
+      "property": "repair_surface_film",
+      "change": "candidate_to_none_visible",
+      "reason": "A cationic polymer or emollient route is not automatically the distinct R5 temporary film-support route."
+    },
+    {
+      "product": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "properties": ["conditioning_deposition_potential", "wet_slip_detangling_potential", "surface_lubrication_softness_potential", "weight_deposition_potential", "body_lightness_potential"],
+      "change": "moderate_or_balanced_to_higher_or_likely_depositing",
+      "reason": "The high-list emollient/oil cluster and amidoamine/fatty-alcohol base provide two endpoint-relevant formula observations; aloe and moisture wording were not counted."
+    }
+  ],
+  "ordinal_score_map": {
+    "conditioning_deposition_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "wet_slip_detangling_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "dry_combability_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "surface_lubrication_softness_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "smoothing_frizz_control_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "shine_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "weight_deposition_potential": {"lower": 0, "moderate": 1, "higher": 2},
+    "body_lightness_potential": {"likely_preserving": 0, "balanced": 1, "likely_depositing": 2},
+    "repair_lubrication_protection": {"none_visible": 0, "candidate": 1, "tested": 2},
+    "repair_surface_film": {"none_visible": 0, "candidate": 1, "tested": 2},
+    "bond_specific_support": {"claim_only": 0, "chemistry_candidate": 1, "product_tested": 2},
+    "color_chemical_damage_protection": {"general_conditioning": 0, "candidate": 1, "product_tested": 2}
+  },
+  "by_property": [
+    {"property":"conditioning_deposition_potential","n":11,"exact":10,"exact_agreement_pct":90.9,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.091,"max_difference":1},
+    {"property":"wet_slip_detangling_potential","n":11,"exact":10,"exact_agreement_pct":90.9,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.091,"max_difference":1},
+    {"property":"dry_combability_potential","n":11,"exact":10,"exact_agreement_pct":90.9,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.091,"max_difference":1},
+    {"property":"surface_lubrication_softness_potential","n":11,"exact":8,"exact_agreement_pct":72.7,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.273,"max_difference":1},
+    {"property":"smoothing_frizz_control_potential","n":11,"exact":9,"exact_agreement_pct":81.8,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.182,"max_difference":1},
+    {"property":"shine_potential","n":11,"exact":9,"exact_agreement_pct":81.8,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.182,"max_difference":1},
+    {"property":"weight_deposition_potential","n":11,"exact":9,"exact_agreement_pct":81.8,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.182,"max_difference":1},
+    {"property":"rinse_behavior","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":0,"adjacent":0,"adjacent_agreement_pct":null,"mean_absolute_difference":null,"max_difference":null},
+    {"property":"cumulative_residue_risk","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":0,"adjacent":0,"adjacent_agreement_pct":null,"mean_absolute_difference":null,"max_difference":null},
+    {"property":"body_lightness_potential","n":11,"exact":9,"exact_agreement_pct":81.8,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.182,"max_difference":1},
+    {"property":"repair_lubrication_protection","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.0,"max_difference":0},
+    {"property":"repair_surface_film","n":11,"exact":8,"exact_agreement_pct":72.7,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.273,"max_difference":1},
+    {"property":"bond_specific_support","n":11,"exact":9,"exact_agreement_pct":81.8,"ordinal_n":1,"adjacent":1,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.0,"max_difference":0},
+    {"property":"color_chemical_damage_protection","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":11,"adjacent":11,"adjacent_agreement_pct":100.0,"mean_absolute_difference":0.0,"max_difference":0},
+    {"property":"fragrance_scalp_exposure","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":0,"adjacent":0,"adjacent_agreement_pct":null,"mean_absolute_difference":null,"max_difference":null},
+    {"property":"usage_role","n":11,"exact":11,"exact_agreement_pct":100.0,"ordinal_n":0,"adjacent":0,"adjacent_agreement_pct":null,"mean_absolute_difference":null,"max_difference":null}
+  ],
+  "differences": [
+    {"product_id":"483b41d6-632c-4efe-9bcc-488c80bf5bb7","product":"Balea Med Ultra Sensitive Conditioner","property":"conditioning_deposition_potential","reviewer_a":"higher","reviewer_c":"moderate","cause":"legitimate_threshold_uncertainty","material":false,"disposition":"retain conservative documented difference"},
+    {"product_id":"483b41d6-632c-4efe-9bcc-488c80bf5bb7","product":"Balea Med Ultra Sensitive Conditioner","property":"wet_slip_detangling_potential","reviewer_a":"higher","reviewer_c":"moderate","cause":"legitimate_threshold_uncertainty","material":false,"disposition":"retain conservative documented difference"},
+    {"product_id":"483b41d6-632c-4efe-9bcc-488c80bf5bb7","product":"Balea Med Ultra Sensitive Conditioner","property":"shine_potential","reviewer_a":"lower","reviewer_c":"moderate","cause":"legitimate_threshold_uncertainty","material":false,"disposition":"retain conservative documented difference"},
+    {"product_id":"5516009a-eecb-42dd-87f6-07c560161136","product":"Hair Food Aloe Vera Feuchtigkeits-Spülung","property":"repair_surface_film","reviewer_a":"none_visible","reviewer_c":"candidate","cause":"rheology_signal_overextension","material":false,"disposition":"retain none_visible; non-cationic guar alone does not establish R5"},
+    {"product_id":"62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d","product":"Frizz Ease Wunder-Reparatur Conditioner","property":"bond_specific_support","reviewer_a":"unknown","reviewer_c":"claim_only","cause":"claim_scope_ambiguity","material":false,"disposition":"generic repair naming is not a bond-specific claim"},
+    {"product_id":"11d42d9d-b8d8-42ae-a432-9a3d0f9d3504","product":"Panthenol + Reparatur 2in1 Kur & Spülung","property":"surface_lubrication_softness_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"overconfident_endpoint_inference","material":false,"disposition":"retain moderate without distinct softness evidence"},
+    {"product_id":"11d42d9d-b8d8-42ae-a432-9a3d0f9d3504","product":"Panthenol + Reparatur 2in1 Kur & Spülung","property":"bond_specific_support","reviewer_a":"unknown","reviewer_c":"claim_only","cause":"claim_scope_ambiguity","material":false,"disposition":"generic repair naming is not a bond-specific claim"},
+    {"product_id":"4f67cb6d-4b28-490b-9817-e8fc8e91b010","product":"Colorglow Granatapfel Rose Conditioner","property":"surface_lubrication_softness_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate; same cationic base is not several endpoint observations"},
+    {"product_id":"4f67cb6d-4b28-490b-9817-e8fc8e91b010","product":"Colorglow Granatapfel Rose Conditioner","property":"smoothing_frizz_control_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"4f67cb6d-4b28-490b-9817-e8fc8e91b010","product":"Colorglow Granatapfel Rose Conditioner","property":"shine_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"4f67cb6d-4b28-490b-9817-e8fc8e91b010","product":"Colorglow Granatapfel Rose Conditioner","property":"weight_deposition_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"4f67cb6d-4b28-490b-9817-e8fc8e91b010","product":"Colorglow Granatapfel Rose Conditioner","property":"body_lightness_potential","reviewer_a":"balanced","reviewer_c":"likely_depositing","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain balanced"},
+    {"product_id":"8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe","product":"Moisturising Conditioner Reisegröße","property":"repair_surface_film","reviewer_a":"none_visible","reviewer_c":"candidate","cause":"rheology_signal_overextension","material":false,"disposition":"retain none_visible; gums and starch do not alone establish fibre film"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"dry_combability_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate; bond-chemistry candidate does not upgrade combing without product data"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"surface_lubrication_softness_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"smoothing_frizz_control_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"weight_deposition_potential","reviewer_a":"moderate","reviewer_c":"higher","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain moderate"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"body_lightness_potential","reviewer_a":"balanced","reviewer_c":"likely_depositing","cause":"shared_mechanism_double_counting","material":false,"disposition":"retain balanced"},
+    {"product_id":"9f8da740-87b6-45e0-ab86-d77d63f2e22b","product":"Bond+ Reparatur Spülung","property":"repair_surface_film","reviewer_a":"none_visible","reviewer_c":"candidate","cause":"tail_signal_overextension","material":false,"disposition":"retain none_visible; glycine and Chondrus extract do not establish an R5 fibre film"}
+  ]
+}

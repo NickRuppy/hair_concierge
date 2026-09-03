@@ -1,0 +1,511 @@
+{
+  "artifact_version": "conditioner-calibration-pilot-formulas-v1",
+  "standard_version": "conditioner-v1.0-rc1",
+  "locked_at": "2026-08-23T12:00:00+02:00",
+  "answer_key_included": false,
+  "normalization": "uppercase; punctuation separators converted to spaces; whitespace collapsed; no concentration inference",
+  "product_count": 12,
+  "products": [
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "brand": "Balea",
+      "exact_name": "Balea Med Ultra Sensitive Conditioner",
+      "market": "DE/EU",
+      "pack_size": "250 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4066447966022",
+          "normalized_value": "4066447966022",
+          "source_id": "P-483b41d6",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-483b41d6",
+        "url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+        "title": "Exact-market source for Balea Balea Med Ultra Sensitive Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetyl Alcohol, Glycerin, Cetrimonium Chloride, Dicaprylyl Ether, Isopropyl Palmitate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Citric Acid, Niacinamide, Potassium Sorbate",
+      "normalized_inci": "AQUA CETYL ALCOHOL GLYCERIN CETRIMONIUM CHLORIDE DICAPRYLYL ETHER ISOPROPYL PALMITATE PANTHENOL HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE SODIUM BENZOATE CITRIC ACID NIACINAMIDE POTASSIUM SORBATE",
+      "formula_fingerprint": "ce8d05ad752a7be533c6556e7eb955e62da2d636d2263fe3ccb869c87421341f",
+      "formula_status": "verified",
+      "archetypes": [
+        "sensitive_fragrance_free",
+        "lightweight"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "brand": "Balea",
+      "exact_name": "Balea Professional Aqua Hyaluron Conditioner",
+      "market": "DE/EU",
+      "pack_size": "200 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4066447342055",
+          "normalized_value": "4066447342055",
+          "source_id": "P-a6730d6f",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-a6730d6f",
+        "url": "https://www.dm.de/p/d/1675522/balea-professional-spuelung-aqua-hyaluron",
+        "title": "Exact-market source for Balea Balea Professional Aqua Hyaluron Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Stearamidopropyl Dimethylamine, Glycerin, Lactic Acid, Sodium Cetearyl Sulfate, Parfum, Sodium Benzoate, Aloe Barbadensis Leaf Juice Powder, Potassium Sorbate, Sodium Hyaluronate, Disodium Phosphate, Potassium Phosphate",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL STEARAMIDOPROPYL DIMETHYLAMINE GLYCERIN LACTIC ACID SODIUM CETEARYL SULFATE PARFUM SODIUM BENZOATE ALOE BARBADENSIS LEAF JUICE POWDER POTASSIUM SORBATE SODIUM HYALURONATE DISODIUM PHOSPHATE POTASSIUM PHOSPHATE",
+      "formula_fingerprint": "040f1bd4837a90ae7b3f53aece89b496723ba4607d7ca2df18e246cdebb5bf8f",
+      "formula_status": "verified",
+      "archetypes": [
+        "lightweight",
+        "mainstream_general"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "brand": "Garnier Fructis",
+      "exact_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "market": "DE/EU",
+      "pack_size": "400 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "3600542398022",
+          "normalized_value": "3600542398022",
+          "source_id": "P-5516009a",
+          "identity_confidence": "moderate"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified_with_minor_source_difference",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-5516009a",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/feuchtigkeits-spuelung-mit-aloe-vera",
+        "title": "Exact-market source for Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua / Water, Glycerin, Cetearyl Alcohol, Helianthus Annuus Seed Oil / Sunflower Seed Oil, Aloe Barbadensis Leaf Juice, Cocos Nucifera Oil / Coconut Oil, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Hydroxypropyl Guar, Caprylyl Glycol, Citric Acid, Tartaric Acid, Cetyl Esters, Potassium Sorbate, Sodium Benzoate, Salicylic Acid, Linalool, Geraniol, Citronellol, Parfum / Fragrance",
+      "normalized_inci": "AQUA WATER GLYCERIN CETEARYL ALCOHOL HELIANTHUS ANNUUS SEED OIL SUNFLOWER SEED OIL ALOE BARBADENSIS LEAF JUICE COCOS NUCIFERA OIL COCONUT OIL STEARAMIDOPROPYL DIMETHYLAMINE GLYCERYL STEARATE HYDROXYPROPYL GUAR CAPRYLYL GLYCOL CITRIC ACID TARTARIC ACID CETYL ESTERS POTASSIUM SORBATE SODIUM BENZOATE SALICYLIC ACID LINALOOL GERANIOL CITRONELLOL PARFUM FRAGRANCE",
+      "formula_fingerprint": "eea7bb9742003c10dd6313c20fad55c83354a157f38b984683b118be03dfa6b2",
+      "formula_status": "verified",
+      "archetypes": [
+        "mainstream_general",
+        "oil_lipid"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "brand": "NEQI",
+      "exact_name": "Volume Victory Conditioner",
+      "market": "DE/EU",
+      "pack_size": "250 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4063528078407",
+          "normalized_value": "4063528078407",
+          "source_id": "P-952a4834",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-952a4834",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-conditioner/p/4063528078407",
+        "title": "Exact-market source for NEQI Volume Victory Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Myristyl Alcohol, Cetearyl Alcohol, Cetrimonium Chloride, Panthenol, Avena Sativa Oat Peptide, Gardenia Taitensis Flower Extract, Lycium Barbarum Fruit Extract, Malva Sylvestris Extract, Juniperus Virginiana Oil, Citrus Aurantium Peel Oil, Phenoxyethanol, Amodimethicone, Synthetic Fluorphlogopite, Titanium Dioxide, Polyquaternium-11, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, C13-15 Alkane, Glycerin, Citric Acid, Trideceth-10, Tin Oxide, Methylchloroisothiazolinone, Methylisothiazolinone, 1,2-Hexanediol, Caprylyl Glycol, Parfum, Hexyl Cinnamal, Limonene, Linalool",
+      "normalized_inci": "AQUA MYRISTYL ALCOHOL CETEARYL ALCOHOL CETRIMONIUM CHLORIDE PANTHENOL AVENA SATIVA OAT PEPTIDE GARDENIA TAITENSIS FLOWER EXTRACT LYCIUM BARBARUM FRUIT EXTRACT MALVA SYLVESTRIS EXTRACT JUNIPERUS VIRGINIANA OIL CITRUS AURANTIUM PEEL OIL PHENOXYETHANOL AMODIMETHICONE SYNTHETIC FLUORPHLOGOPITE TITANIUM DIOXIDE POLYQUATERNIUM 11 TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES PROPYLENE GLYCOL C13 15 ALKANE GLYCERIN CITRIC ACID TRIDECETH 10 TIN OXIDE METHYLCHLOROISOTHIAZOLINONE METHYLISOTHIAZOLINONE 1 2 HEXANEDIOL CAPRYLYL GLYCOL PARFUM HEXYL CINNAMAL LIMONENE LINALOOL",
+      "formula_fingerprint": "c09c97562c7c701dbf4b575ce09e84618a91c645a93c4e24a96b63359b677769",
+      "formula_status": "verified",
+      "archetypes": [
+        "volume_lightness",
+        "protein_film",
+        "light_brand_rich_architecture"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "brand": "John Frieda",
+      "exact_name": "Frizz Ease Wunder-Reparatur Conditioner",
+      "market": "DE/EU",
+      "pack_size": "500 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "5037156298741",
+          "normalized_value": "5037156298741",
+          "source_id": "P-62ff4f08",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-62ff4f08",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-frizz-ease-wunder-reparatur-frizz-ease-wunder-reparatur-conditioner/p/5037156298741",
+        "title": "Exact-market source for John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Water, Cetearyl Alcohol, Isopropyl Myristate, Behentrimonium Chloride, Dicocoylethyl Hydroxyethylmonium Methosulfate, Dipropylene Glycol, Propylene Glycol, Panthenol, Sodium Hydroxide, Tetrasodium Glutamate Diacetate, Olea Europaea Fruit Oil, Ricinus Communis Seed Oil, Ceramide NG, Citric Acid, Benzoic Acid, Fragrance, Hexyl Cinnamal, Tetramethyl Acetyloctahydronaphthalenes",
+      "normalized_inci": "WATER CETEARYL ALCOHOL ISOPROPYL MYRISTATE BEHENTRIMONIUM CHLORIDE DICOCOYLETHYL HYDROXYETHYLMONIUM METHOSULFATE DIPROPYLENE GLYCOL PROPYLENE GLYCOL PANTHENOL SODIUM HYDROXIDE TETRASODIUM GLUTAMATE DIACETATE OLEA EUROPAEA FRUIT OIL RICINUS COMMUNIS SEED OIL CERAMIDE NG CITRIC ACID BENZOIC ACID FRAGRANCE HEXYL CINNAMAL TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "formula_fingerprint": "a125a5c7957821ef251caf4f37f13cbbb5d6f13f141703198245a170586bef9d",
+      "formula_status": "verified",
+      "archetypes": [
+        "rich_repair",
+        "oil_lipid"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "brand": "Guhl",
+      "exact_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "market": "DE/EU",
+      "pack_size": "200 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4072600703403",
+          "normalized_value": "4072600703403",
+          "source_id": "P-11d42d9d",
+          "identity_confidence": "moderate"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified_with_minor_source_difference",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-11d42d9d",
+        "url": "https://www.guhl.com/produkt/panthenol-reparatur/panthenol-reparatur-2in1-kur-spuelung/",
+        "title": "Exact-market source for Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "source_type": "manufacturer",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Dipropylene Glycol, Cetyl Esters, Panthenol, Tetrasodium Glutamate Diacetate, Lactic Acid, Ethylhexylglycerin, Glycine, Avena Sativa Kernel Oil, Phenoxyethanol, Parfum, Vanillin",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL BEHENTRIMONIUM CHLORIDE DIPROPYLENE GLYCOL CETYL ESTERS PANTHENOL TETRASODIUM GLUTAMATE DIACETATE LACTIC ACID ETHYLHEXYLGLYCERIN GLYCINE AVENA SATIVA KERNEL OIL PHENOXYETHANOL PARFUM VANILLIN",
+      "formula_fingerprint": "d6019125cf04e0d69108e501464222258f83c273f54c3a133c69dea60570f07d",
+      "formula_status": "verified",
+      "archetypes": [
+        "silicone_free_strongly_cationic"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "brand": "OGX",
+      "exact_name": "Biotin & Collagen Conditioner",
+      "market": "DE/EU",
+      "pack_size": "385 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "3574661799506",
+          "normalized_value": "3574661799506",
+          "source_id": "P-4fca59e5",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-4fca59e5",
+        "url": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+        "title": "Exact-market source for OGX Biotin & Collagen Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Behentrimonium Chloride, Glycerin, Biotin, Hydrolyzed Collagen, Dimethicone, Stearamidopropyl Dimethylamine, Isopropyl Myristate, Coco-Caprylate/Caprate, Steareth-20, Isopropyl Alcohol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Parfum",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL BEHENTRIMONIUM CHLORIDE GLYCERIN BIOTIN HYDROLYZED COLLAGEN DIMETHICONE STEARAMIDOPROPYL DIMETHYLAMINE ISOPROPYL MYRISTATE COCO CAPRYLATE CAPRATE STEARETH 20 ISOPROPYL ALCOHOL CITRIC ACID SODIUM HYDROXIDE SODIUM BENZOATE PARFUM",
+      "formula_fingerprint": "4c69d48dd7347bfca88fa77000aa0f13c2019b503f019f5f855e2ce2a80a8ccf",
+      "formula_status": "verified",
+      "archetypes": [
+        "protein_film",
+        "rich_silicone_repair"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "brand": "Cantu",
+      "exact_name": "Conditioner Cream",
+      "market": "DE/EU",
+      "pack_size": "400 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "810006945478",
+          "normalized_value": "810006945478",
+          "source_id": "P-d8ac8909",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-d8ac8909",
+        "url": "https://www.dm.de/p/d/1675021/cantu-conditioner-cream",
+        "title": "Exact-market source for Cantu Conditioner Cream",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Stearyl Alcohol, Cetyl Alcohol, Butyrospermum Parkii Butter, Stearamidopropyl Dimethylamine, Glyceryl Stearate, Riboflavin, Niacin, Pantothenic Acid, Pyridoxine, Biotin, Folic Acid, Cyanocobalamin, Panthenol, Leuconostoc/Radish Root Ferment Filtrate, Parfum, Polyester-11, Phenoxyethanol, Neopentyl Glycol Diheptanoate, Isododecane, Polyquaternium-7, Lactic Acid, Disodium EDTA, Ethylhexylglycerin, Sodium Benzoate, Benzyl Benzoate, Citric Acid, Tocopherol",
+      "normalized_inci": "AQUA STEARYL ALCOHOL CETYL ALCOHOL BUTYROSPERMUM PARKII BUTTER STEARAMIDOPROPYL DIMETHYLAMINE GLYCERYL STEARATE RIBOFLAVIN NIACIN PANTOTHENIC ACID PYRIDOXINE BIOTIN FOLIC ACID CYANOCOBALAMIN PANTHENOL LEUCONOSTOC RADISH ROOT FERMENT FILTRATE PARFUM POLYESTER 11 PHENOXYETHANOL NEOPENTYL GLYCOL DIHEPTANOATE ISODODECANE POLYQUATERNIUM 7 LACTIC ACID DISODIUM EDTA ETHYLHEXYLGLYCERIN SODIUM BENZOATE BENZYL BENZOATE CITRIC ACID TOCOPHEROL",
+      "formula_fingerprint": "00011c74c4871aa9400afec7ea5f9c8df019b559082e360d51b3b967ca4eef70",
+      "formula_status": "verified",
+      "archetypes": [
+        "oil_butter",
+        "curl_coily_rich"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "brand": "Jean&Len",
+      "exact_name": "Colorglow Granatapfel Rose Conditioner",
+      "market": "DE/EU",
+      "pack_size": "300 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4262401738883",
+          "normalized_value": "4262401738883",
+          "source_id": "P-4f67cb6d",
+          "identity_confidence": "high"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-4f67cb6d",
+        "url": "https://www.dm.de/p/d/3086487/jean-und-len-conditioner-colorglow-granatapfel-rose",
+        "title": "Exact-market source for Jean&Len Colorglow Granatapfel Rose Conditioner",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Distearoylethyl Hydroxyethylmonium Methosulfate, Punica Granatum Fruit Extract, Rosa Gallica Flower Extract, Panthenol, Tocopherol, Dicaprylyl Ether, Behentrimonium Chloride, Cetrimonium Chloride, Phenoxyethanol, Parfum, Benzophenone-4, Isopropyl Alcohol, Helianthus Annuus Seed Oil, Glycerin, Alcohol, Sodium Hydroxide, Citric Acid, Tetramethyl Acetyloctahydronaphthalenes",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE PUNICA GRANATUM FRUIT EXTRACT ROSA GALLICA FLOWER EXTRACT PANTHENOL TOCOPHEROL DICAPRYLYL ETHER BEHENTRIMONIUM CHLORIDE CETRIMONIUM CHLORIDE PHENOXYETHANOL PARFUM BENZOPHENONE 4 ISOPROPYL ALCOHOL HELIANTHUS ANNUUS SEED OIL GLYCERIN ALCOHOL SODIUM HYDROXIDE CITRIC ACID TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "formula_fingerprint": "02a24542d33b0d611ac9a4b0ec51611880d1248ce519cfc811e403c7165ca662",
+      "formula_status": "verified",
+      "archetypes": [
+        "acidic_color_care"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "brand": "Bali Curls",
+      "exact_name": "Moisturising Conditioner Reisegröße",
+      "market": "DE/EU",
+      "pack_size": "75 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4262391991626",
+          "normalized_value": "4262391991626",
+          "source_id": "P-8182ee3f",
+          "identity_confidence": "moderate"
+        }
+      ],
+      "formula_capture_date": "2026-08-24",
+      "identity_status": "verified",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-8182ee3f",
+        "url": "https://www.bali-care.com/de-de/products/moisturizing-conditioner",
+        "title": "Manufacturer formula for Bali Curls Moisturising Conditioner, including the 75 ml pack",
+        "source_type": "manufacturer",
+        "market": "DE/EU",
+        "captured_at": "2026-08-24T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Glycerin, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Glycine Soja Oil, Helianthus Annuus Seed Oil, Cetrimonium Chloride, Betaine, Behentrimonium Methosulfate, Panthenol, Sodium Benzoate, Parfum, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Stearate SE, Potassium Sorbate, Lactic Acid, Linalool, Citric Acid, Limonene, Cananga Odorata Flower Extract",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL GLYCERIN COCOS NUCIFERA OIL BUTYROSPERMUM PARKII BUTTER GLYCINE SOJA OIL HELIANTHUS ANNUUS SEED OIL CETRIMONIUM CHLORIDE BETAINE BEHENTRIMONIUM METHOSULFATE PANTHENOL SODIUM BENZOATE PARFUM HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE GLYCERYL STEARATE SE POTASSIUM SORBATE LACTIC ACID LINALOOL CITRIC ACID LIMONENE CANANGA ODORATA FLOWER EXTRACT",
+      "formula_fingerprint": "5c643700db25fece77b870b6a1d9d58d15435540c46a011e471563a346808c7f",
+      "formula_status": "verified",
+      "archetypes": [
+        "curl_coily_rich",
+        "manufacturer_retailer_confirmed"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "brand": "Guhl",
+      "exact_name": "Bond+ Reparatur Spülung",
+      "market": "DE/EU",
+      "pack_size": "200 ml",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "4072600701218",
+          "normalized_value": "4072600701218",
+          "source_id": "P-9f8da740",
+          "identity_confidence": "moderate"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "verified_with_minor_source_difference",
+      "category_boundary_status": "eligible",
+      "source": {
+        "source_id": "P-9f8da740",
+        "url": "https://www.guhl.com/produkt/bond-reparatur/bond-reparatur-spuelung/",
+        "title": "Exact-market source for Guhl Bond+ Reparatur Spülung",
+        "source_type": "manufacturer",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Cetearyl Alcohol, Cetyl Esters, Cetrimonium Chloride, Behenamidopropyl Dimethylamine, Triheptanoin, Hydroxypropylgluconamide, Benzyl Alcohol, Lactic Acid, Hydroxypropylammonium Gluconate, Panthenol, Ethylhexylglycerin, Glycine, Glycerin, Chondrus Crispus Extract, Phenethyl Alcohol, Phenoxyethanol, Sodium Benzoate, Potassium Sorbate, Parfum",
+      "normalized_inci": "AQUA CETEARYL ALCOHOL CETYL ESTERS CETRIMONIUM CHLORIDE BEHENAMIDOPROPYL DIMETHYLAMINE TRIHEPTANOIN HYDROXYPROPYLGLUCONAMIDE BENZYL ALCOHOL LACTIC ACID HYDROXYPROPYLAMMONIUM GLUCONATE PANTHENOL ETHYLHEXYLGLYCERIN GLYCINE GLYCERIN CHONDRUS CRISPUS EXTRACT PHENETHYL ALCOHOL PHENOXYETHANOL SODIUM BENZOATE POTASSIUM SORBATE PARFUM",
+      "formula_fingerprint": "192a1aa8d863d5de013575bca75e2d5d3559e3e28ad315f8c90352160df6f1b0",
+      "formula_status": "verified",
+      "archetypes": [
+        "bond_claim"
+      ],
+      "locked_for_blind_review": true
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "brand": "Cantu",
+      "exact_name": "Leave-In Repair Cream",
+      "market": "DE/EU",
+      "pack_size": "453 g",
+      "identifiers": [
+        {
+          "type": "gtin",
+          "value": "810006945430",
+          "normalized_value": "810006945430",
+          "source_id": "P-7539ab79",
+          "identity_confidence": "moderate"
+        }
+      ],
+      "formula_capture_date": "2026-08-23",
+      "identity_status": "excluded_product_form",
+      "category_boundary_status": "excluded_product_form",
+      "source": {
+        "source_id": "P-7539ab79",
+        "url": "https://www.dm.de/p/d/1685686/cantu-leave-in-haarkur-repair-creme",
+        "title": "Exact-market source for Cantu Leave-In Repair Cream",
+        "source_type": "retailer_exact_gtin",
+        "market": "DE",
+        "captured_at": "2026-08-23T12:00:00+02:00",
+        "supports": [
+          "identity",
+          "product_form",
+          "formula",
+          "claim"
+        ]
+      },
+      "raw_inci": "Aqua, Canola Oil, Cetearyl Alcohol, Glycerin, Behentrimonium Methosulfate, Butyrospermum Parkii Butter, Olea Europaea Fruit Oil, Riboflavin, Niacin, Pantothenic Acid, Pyridoxine, Folic Acid, Cyanocobalamin, Biotin, Leuconostoc/Radish Root Ferment Filtrate, Panthenol, Citrus Sinensis Fruit Extract, Salvia Officinalis Leaf Extract, Urtica Dioica Extract, Aloe Barbadensis Leaf Juice, Achillea Millefolium Extract, Actinidia Chinensis Fruit Extract, Rosmarinus Officinalis Leaf Extract, Sodium Hyaluronate, Hydrogenated Ethylhexyl Olivate, Hydrogenated Olive Oil Unsaponifiables, Parfum, Phenoxyethanol, Ethylhexylglycerin, Polyquaternium-10, Disodium EDTA, Pentaerythrityl Tetracaprylate/Tetracaprate, Sodium Benzoate, Citric Acid, Cetrimonium Chloride, Benzyl Alcohol, Benzyl Salicylate, Citral, Coumarin, Hexyl Cinnamal, Limonene, Linalool, Sodium Hydroxide, Helianthus Annuus Seed Oil, Lecithin, Ascorbyl Palmitate, Tocopherol, Propylene Glycol, Potassium Sorbate, Lactic Acid, Tetrasodium Glutamate Diacetate, Tetramethyl Acetyloctahydronaphthalenes",
+      "normalized_inci": "AQUA CANOLA OIL CETEARYL ALCOHOL GLYCERIN BEHENTRIMONIUM METHOSULFATE BUTYROSPERMUM PARKII BUTTER OLEA EUROPAEA FRUIT OIL RIBOFLAVIN NIACIN PANTOTHENIC ACID PYRIDOXINE FOLIC ACID CYANOCOBALAMIN BIOTIN LEUCONOSTOC RADISH ROOT FERMENT FILTRATE PANTHENOL CITRUS SINENSIS FRUIT EXTRACT SALVIA OFFICINALIS LEAF EXTRACT URTICA DIOICA EXTRACT ALOE BARBADENSIS LEAF JUICE ACHILLEA MILLEFOLIUM EXTRACT ACTINIDIA CHINENSIS FRUIT EXTRACT ROSMARINUS OFFICINALIS LEAF EXTRACT SODIUM HYALURONATE HYDROGENATED ETHYLHEXYL OLIVATE HYDROGENATED OLIVE OIL UNSAPONIFIABLES PARFUM PHENOXYETHANOL ETHYLHEXYLGLYCERIN POLYQUATERNIUM 10 DISODIUM EDTA PENTAERYTHRITYL TETRACAPRYLATE TETRACAPRATE SODIUM BENZOATE CITRIC ACID CETRIMONIUM CHLORIDE BENZYL ALCOHOL BENZYL SALICYLATE CITRAL COUMARIN HEXYL CINNAMAL LIMONENE LINALOOL SODIUM HYDROXIDE HELIANTHUS ANNUUS SEED OIL LECITHIN ASCORBYL PALMITATE TOCOPHEROL PROPYLENE GLYCOL POTASSIUM SORBATE LACTIC ACID TETRASODIUM GLUTAMATE DIACETATE TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+      "formula_fingerprint": "140654589497e8a449cd7715e27bfb30a7629836c93d5ae9b53d25ece50c690b",
+      "formula_status": "verified",
+      "archetypes": [
+        "product_form_boundary"
+      ],
+      "locked_for_blind_review": true
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+{
+  "artifact": "conditioner-calibration-full-profile-agreement",
+  "version": "1.6",
+  "review_source_standard_version": "1.6-rc1",
+  "logic_lock_receipt_path": "data/research/conditioner-inci/v1.0/v1.6-logic-lock-receipt.json",
+  "comparison_basis": {
+    "accepted_key": "accepted_nine_field_key_after_care_and_repair_calibration",
+    "blind_reviewer": "composite: frozen Reviewer F for seven historical fields plus independent Reviewer G for care_direction and repair_support_level",
+    "eligible_products": 11,
+    "profile_fields_per_product": 9,
+    "total_cells": 99,
+    "array_comparison": "exact set equality after canonical ordering",
+    "excluded_product_boundary_match": true,
+    "rinseability_removed": true,
+    "usage_role_removed": true,
+    "scalp_application_fit_removed": true,
+    "care_direction_added": true,
+    "repair_support_level_added": true
+  },
+  "new_field_review": {
+    "reviewer": "conditioner_blind_reviewer_g",
+    "scope": [
+      "care_direction",
+      "repair_support_level"
+    ],
+    "exact_cells": 22,
+    "total_cells": 22,
+    "full_nine_field_de_novo_rerun": false
+  },
+  "pre_adjudication": {
+    "exact_cells": 94,
+    "total_cells": 99,
+    "exact_agreement_pct": 94.9,
+    "by_field": [
+      {
+        "field": "conditioning_level",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "weight_potential",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "care_direction",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "repair_support_level",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "primary_focus",
+        "exact": 9,
+        "n": 11,
+        "exact_pct": 81.8
+      },
+      {
+        "field": "secondary_focus",
+        "exact": 8,
+        "n": 11,
+        "exact_pct": 72.7
+      },
+      {
+        "field": "hair_thickness_fit",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "damage_fit",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      },
+      {
+        "field": "texture_fit",
+        "exact": 11,
+        "n": 11,
+        "exact_pct": 100.0
+      }
+    ],
+    "semantic_differences": [
+      {
+        "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+        "exact_name": "Conditioner Cream",
+        "field": "primary_focus",
+        "accepted": "curl_support",
+        "reviewer_f": "smoothing",
+        "adjudication": "curl_support",
+        "reason": "The high-slip rich architecture plus exact curl/coily positioning clears the special-purpose curl-support threshold; smoothing remains a supported capability."
+      },
+      {
+        "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+        "exact_name": "Conditioner Cream",
+        "field": "secondary_focus",
+        "accepted": [
+          "detangling",
+          "smoothing"
+        ],
+        "reviewer_f": [
+          "repair"
+        ],
+        "adjudication": [
+          "detangling",
+          "smoothing"
+        ],
+        "reason": "Polyester-11 remains a formula-level film candidate but does not make repair a useful product purpose without damage corroboration; slip and smoothing remain the practical capabilities."
+      },
+      {
+        "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+        "exact_name": "Colorglow Granatapfel Rose Conditioner",
+        "field": "secondary_focus",
+        "accepted": [
+          "detangling",
+          "shine"
+        ],
+        "reviewer_f": [
+          "detangling"
+        ],
+        "adjudication": [
+          "detangling",
+          "shine"
+        ],
+        "reason": "Color-glow positioning and the optical protection candidate make shine useful alongside the color-care primary, while anti-fade performance remains unproven."
+      },
+      {
+        "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+        "exact_name": "Moisturising Conditioner Reisegröße",
+        "field": "primary_focus",
+        "accepted": "curl_support",
+        "reviewer_f": "smoothing",
+        "adjudication": "curl_support",
+        "reason": "The high-slip rich architecture plus exact curl positioning clears the special-purpose curl-support threshold; smoothing remains supported."
+      },
+      {
+        "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+        "exact_name": "Moisturising Conditioner Reisegröße",
+        "field": "secondary_focus",
+        "accepted": [
+          "detangling",
+          "smoothing"
+        ],
+        "reviewer_f": [
+          "curl_support"
+        ],
+        "adjudication": [
+          "detangling",
+          "smoothing"
+        ],
+        "reason": "Curl support is already primary; detangling and smoothing remain useful supported endpoints."
+      }
+    ],
+    "order_only_normalizations": []
+  },
+  "human_policy_overrides": [
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "exact_name": "Volume Victory Conditioner",
+      "field": "weight_potential",
+      "accepted": "moderate",
+      "reviewer_f": "high",
+      "adjudication": "moderate",
+      "reason": "The detailed formula trace retains higher deposition potential, but the exact Volume positioning is a material unresolved counter-signal. The lean matching fallback is moderate so formula-only uncertainty does not become a restrictive fine-hair exclusion."
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "exact_name": "Volume Victory Conditioner",
+      "field": "hair_thickness_fit",
+      "accepted": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "reviewer_f": [
+        "medium",
+        "coarse"
+      ],
+      "adjudication": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "reason": "The moderate lean fallback keeps fine hair in the broad product prior. This is not a promise of a weightless finish; dosage and desired finish remain contextual."
+    },
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "exact_name": "Balea Med Ultra Sensitive Conditioner",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "The cationic base, cationic guar, and emollients support strong general conditioning but no distinct protein, peptide, keratin, bond, or tested damage-specialist route."
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "exact_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "The oils and emollients are ordinary conditioning architecture; no distinct protein, peptide, keratin, bond, or tested damage-specialist route is visible."
+    },
+    {
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "exact_name": "Frizz Ease Wunder-Reparatur Conditioner",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "Silicone, oils, ceramide, and repair wording do not create a qualifying damage-specialist route without distinct chemistry or product testing."
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "exact_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "Panthenol, oil, and repair naming remain ordinary support signals and do not establish a specialist damage route."
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "exact_name": "Conditioner Cream",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "Polyester-11 and Polyquaternium-7 are generic polymer signals here; without protein, peptide, keratin, bond, exact damage positioning, or product testing they do not clear the specialist threshold."
+    },
+    {
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "exact_name": "Colorglow Granatapfel Rose Conditioner",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "The color and UV-support candidate differentiates color care, not damage-specialist support; no qualifying protein, peptide, keratin, bond, or tested damage route is visible."
+    },
+    {
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "exact_name": "Moisturising Conditioner Reisegröße",
+      "field": "damage_fit",
+      "accepted": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reviewer_f": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "adjudication": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "reason": "The rich cationic, oil, and butter architecture supports general conditioning and curl care but no distinct protein, peptide, keratin, bond, or tested damage-specialist route."
+    }
+  ],
+  "post_adjudication": {
+    "accepted_key_path": "data/research/conditioner-inci/v1.0/calibration-full-profile-key.json",
+    "blind_reviewer_path": "data/research/conditioner-inci/v1.0/calibration-full-profile-reviewer-g.json",
+    "exact_cells": 85,
+    "total_cells": 99,
+    "exact_agreement_pct": 85.9,
+    "remaining_difference_count": 14,
+    "remaining_differences": [
+      {
+        "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+        "exact_name": "Conditioner Cream",
+        "field": "primary_focus",
+        "classification": "accepted_focus_judgment"
+      },
+      {
+        "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+        "exact_name": "Conditioner Cream",
+        "field": "secondary_focus",
+        "classification": "accepted_focus_judgment"
+      },
+      {
+        "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+        "exact_name": "Colorglow Granatapfel Rose Conditioner",
+        "field": "secondary_focus",
+        "classification": "accepted_focus_judgment"
+      },
+      {
+        "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+        "exact_name": "Moisturising Conditioner Reisegröße",
+        "field": "primary_focus",
+        "classification": "accepted_focus_judgment"
+      },
+      {
+        "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+        "exact_name": "Moisturising Conditioner Reisegröße",
+        "field": "secondary_focus",
+        "classification": "accepted_focus_judgment"
+      },
+      {
+        "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+        "exact_name": "Volume Victory Conditioner",
+        "field": "weight_potential",
+        "classification": "accepted_conservative_matching_override"
+      },
+      {
+        "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+        "exact_name": "Volume Victory Conditioner",
+        "field": "hair_thickness_fit",
+        "classification": "derived_from_accepted_conservative_matching_override"
+      },
+      {
+        "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+        "exact_name": "Balea Med Ultra Sensitive Conditioner",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+        "exact_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+        "exact_name": "Frizz Ease Wunder-Reparatur Conditioner",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+        "exact_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+        "exact_name": "Conditioner Cream",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+        "exact_name": "Colorglow Granatapfel Rose Conditioner",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      },
+      {
+        "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+        "exact_name": "Moisturising Conditioner Reisegröße",
+        "field": "damage_fit",
+        "classification": "accepted_damage_fit_recalibration"
+      }
+    ],
+    "non_focus_exact_cells": 68,
+    "non_focus_total_cells": 77,
+    "all_non_focus_fields_exact": false,
+    "bali_formula_authority_resolved": true,
+    "systemic_rule_change_applied": true,
+    "fresh_blind_rerun_required_before_repeatability_claim": true,
+    "named_recalibration_products_focus_exact": true,
+    "new_field_exact_cells": 22,
+    "new_field_total_cells": 22
+  },
+  "interpretation": "Reviewer G combines the frozen Reviewer F seven-field baseline with a fresh independent blind review of care_direction and repair_support_level. The new fields agree in 22/22 cells. Historical focus, NEQI weight/thickness, and v1.5 Damage Fit differences remain visible. Current accepted-key agreement is 85/99 overall and 68/77 on non-focus fields.",
+  "historical_metric_separation": "The v1.6 nine-field metrics preserve the historical v1.5 seven-field comparison and add 22 independently reviewed care-direction/repair-support cells. They do not alter historical direct-property agreement."
+}

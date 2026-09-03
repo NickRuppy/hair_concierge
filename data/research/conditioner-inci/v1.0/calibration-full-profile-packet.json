@@ -1,0 +1,50 @@
+{
+  "artifact": "conditioner-calibration-full-profile-blind-packet",
+  "version": "1.6-rc1",
+  "status": "locked_for_independent_classification",
+  "standard_path": "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md",
+  "formula_packet_path": "data/research/conditioner-inci/v1.0/calibration-pilot-formulas.json",
+  "directions_packet_path": "data/research/conditioner-inci/v1.0/calibration-pilot-directions.json",
+  "direct_property_packet_path": "data/research/conditioner-inci/v1.0/calibration-key.json",
+  "instructions": [
+    "Classify all 11 eligible rinse-out products using sections 9 and 10 of the standard.",
+    "Do not produce a profile for the excluded leave-in product.",
+    "Use the reviewed direct properties for the comparative profile; retain direction evidence separately as protocol metadata. Current catalog fields are not inputs.",
+    "Return one complete nine-field comparative profile per eligible product plus concise uncertain_fields and assumption_notes. Exact directions remain protocol metadata rather than comparison properties.",
+    "Classify care_direction as protein, moisture, or balanced from the relative prominence of specific protein/peptide routes and humectant/emollient support. This is a product direction, not a user deficiency diagnosis.",
+    "Classify repair_support_level as low, medium, or high: ordinary conditioning is low, a distinct temporary protein/peptide film is medium, and a materially stronger paired bond route visible in the reviewed formula is high. Preserve the E2 ceiling and do not treat positioning alone as proof of repair.",
+    "Do not add a rinseability projection; weight_potential is the retained ingredient-informed deposition signal.",
+    "Apply Damage Fit v1.5: low -> healthy; moderate and general high -> healthy + moderately_damaged. Include highly_damaged only for high conditioning plus a distinct protein/peptide/keratin fibre-film route, named bond chemistry, exceptional corroborated protection, or relevant exact-product test. Generic silicone, oil, panthenol, ceramide, cationic polymer, repair naming, or generic lubrication alone does not qualify.",
+    "Return classifications and evidence only. The Lab derives deterministic unsalted per-field fingerprints and owns the one-way v1.4 review-state compatibility bridge; the blind reviewer must not generate or migrate review-state fingerprints."
+  ],
+  "required_profile_fields": [
+    "conditioning_level",
+    "weight_potential",
+    "care_direction",
+    "repair_support_level",
+    "primary_focus",
+    "secondary_focus",
+    "hair_thickness_fit",
+    "damage_fit",
+    "texture_fit",
+    "uncertain_fields",
+    "assumption_notes"
+  ],
+  "eligible_product_ids": [
+    "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+    "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+    "5516009a-eecb-42dd-87f6-07c560161136",
+    "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+    "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+    "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+    "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+    "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+    "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+    "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+    "9f8da740-87b6-45e0-ab86-d77d63f2e22b"
+  ],
+  "excluded_product_ids": [
+    "7539ab79-f4f6-49d7-9269-08034ef4de96"
+  ],
+  "profiles": []
+}

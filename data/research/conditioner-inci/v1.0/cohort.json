@@ -1,0 +1,2551 @@
+{
+  "artifact_version": "conditioner-stage-a-cohort-v1",
+  "standard_version": "conditioner-v1.0-draft",
+  "captured_at": "2026-08-23T11:11:30.427157+00:00",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "query_version": "conditioner-stage-a-cohort-v1",
+  "query_predicate": "products.category_key=conditioner AND is_active=true AND lifecycle_status=active",
+  "source_mode": "live Supabase read-only capture",
+  "source_table_note": "Current Conditioner specs and rerank values are frozen comparison facts only; they are not research authority.",
+  "starting_row_count": 49,
+  "content_hash_scope": "canonical JSON encoding of rows; hash recorded in cohort-receipt.md",
+  "summary": {
+    "eligible": 46,
+    "excluded_product_form": 3,
+    "identity_rework": 0,
+    "formula_rework": 0,
+    "with_scan_identifier": 6,
+    "needing_identifier_research": 40
+  },
+  "rows": [
+    {
+      "name": "Alverde Conditioner Glanz",
+      "brand": "Alverde",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:52.44529+00:00",
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "updated_at": "2026-08-15T07:47:54.590858+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Balea Med Ultra Sensitive Conditioner",
+      "brand": "Balea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:51.231689+00:00",
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "updated_at": "2026-08-15T07:46:58.995544+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Balea Natural Beauty Hibiskus",
+      "brand": "Balea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:49.840863+00:00",
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "updated_at": "2026-08-15T07:45:34.849987+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-05-03T14:50:13.267303+00:00",
+        "updated_at": "2026-05-03T14:50:13.267303+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "brand": "Balea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-16T19:18:31.936282+00:00",
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "updated_at": "2026-08-15T07:48:43.585593+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "brand": "Balea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:58.311159+00:00",
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "updated_at": "2026-08-15T07:49:44.692573+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Bali Curls Moisturising Conditioner",
+      "brand": "Bali Curls",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:01.385656+00:00",
+      "product_id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "updated_at": "2026-08-15T07:47:29.41564+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": 250,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Bali Curls Moisturising Conditioner 75 ml",
+      "brand": "Bali Curls",
+      "origin": "user_submitted",
+      "category": "Conditioner (Drogerie)",
+      "is_active": true,
+      "created_at": "2026-08-21T12:28:36.742008+00:00",
+      "product_id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "updated_at": "2026-08-21T12:28:36.958698+00:00",
+      "identifiers": [
+        {
+          "id": "562928e8-ce76-455d-9624-88d9b0880aab",
+          "type": "ean",
+          "value": "4262391991626",
+          "source": "dm PDP and scanned identifier",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "normalized_value": "4262391991626"
+        },
+        {
+          "id": "9d760e53-95d9-4c5e-afed-b8f08d26d0db",
+          "type": "retailer_sku",
+          "value": "3123188",
+          "source": "dm PDP",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "normalized_value": "3123188"
+        },
+        {
+          "id": "f45709ab-5153-4392-a1ea-c1ed9e042c0f",
+          "type": "retailer_url",
+          "value": "https://www.dm.de/p/d/3123188/bali-curls-conditioner-moisturing-reisegroesse",
+          "source": "dm",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "normalized_value": "https://www.dm.de/p/d/3123188/bali-curls-conditioner-moisturing-reisegroesse"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-08-21T12:28:36.742008+00:00",
+        "updated_at": "2026-08-21T12:28:36.742008+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "polymers",
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-08-21T12:28:36.742008+00:00",
+          "updated_at": "2026-08-21T12:28:36.742008+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Cantu Conditioner Cream",
+      "brand": "Cantu",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:02.111003+00:00",
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "updated_at": "2026-08-15T07:49:27.69831+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Cantu Leave-In Repair Cream",
+      "brand": "Cantu",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:57.693088+00:00",
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "updated_at": "2026-08-15T07:47:48.054406+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "excluded_product_form",
+        "reason_code": "leave_in_only",
+        "identity_readiness": "not_applicable",
+        "boundary_confidence": "authoritative_product_page",
+        "evidence_sources": [
+          "https://www.cantubeauty.com/products/classics/leave-in-conditioning-repair-cream/"
+        ],
+        "notes": "Official directions say do not rinse; outside short-contact rinse-out scope."
+      }
+    },
+    {
+      "name": "Dejan Garz The Foundation Conditioner",
+      "brand": "Dejan Garz",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:51.583236+00:00",
+      "product_id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "updated_at": "2026-08-15T07:46:39.366802+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Garnier Hair Food Macadamia",
+      "brand": "Garnier",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-06-11T08:12:20.466518+00:00",
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "updated_at": "2026-08-15T07:47:01.94896+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-06-11T08:12:20.466518+00:00",
+        "updated_at": "2026-06-11T08:12:20.466518+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "excluded_product_form",
+        "reason_code": "multi_use_mask_and_leave_in",
+        "identity_readiness": "not_applicable",
+        "boundary_confidence": "authoritative_product_page",
+        "evidence_sources": [
+          "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia"
+        ],
+        "notes": "Officially a 3-in-1 mask usable as conditioner, mask, and leave-in; persistence/contact-time assumptions do not match the charter."
+      }
+    },
+    {
+      "name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "brand": "Garnier Fructis",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:50.851934+00:00",
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "updated_at": "2026-08-15T07:47:17.882019+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": 400,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "brand": "Garnier Wahre Schätze",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:56.285174+00:00",
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "updated_at": "2026-08-15T07:48:24.683235+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung",
+      "brand": "Garnier Wahre Schätze",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:00.699462+00:00",
+      "product_id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "updated_at": "2026-08-15T07:48:10.840159+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Gliss Kur Aqua Revive Conditioner",
+      "brand": "Gliss",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:50.453534+00:00",
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "updated_at": "2026-08-15T07:45:38.107823+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Gliss Ultimate Repair Spülung",
+      "brand": "Gliss",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-06-27T20:11:29.980509+00:00",
+      "product_id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "updated_at": "2026-08-15T07:48:05.98354+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-06-27T20:11:30.165807+00:00",
+        "updated_at": "2026-06-27T20:11:30.165807+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "brand": "Guhl",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:53.441107+00:00",
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "updated_at": "2026-08-15T07:48:34.229577+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "brand": "Guhl",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:47.415092+00:00",
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "updated_at": "2026-08-15T07:45:56.088492+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "rinse_out_despite_dual_marketing_label",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "authoritative_product_page",
+        "evidence_sources": [
+          "https://www.guhl.com/produkt/panthenol-reparatur/panthenol-reparatur-2in1-kur-spuelung/"
+        ],
+        "notes": "Official directions describe lengths/ends application and immediate rinse; no leave-on route or separate mask dwell time is specified."
+      }
+    },
+    {
+      "name": "Hair Biology Full & Shining Conditioner",
+      "brand": "Hair Biology",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:01.81768+00:00",
+      "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "updated_at": "2026-08-15T07:46:54.810964+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Hask Argan Oil Repairing Conditioner",
+      "brand": "Hask",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:57.987647+00:00",
+      "product_id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "updated_at": "2026-08-15T07:48:55.168288+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Hask Curl Care Conditioner",
+      "brand": "Hask",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:59.080437+00:00",
+      "product_id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "updated_at": "2026-08-15T07:46:36.450571+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "brand": "Herbal Essences",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:54.441394+00:00",
+      "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "updated_at": "2026-08-15T07:47:02.932579+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Isana Professional Arganöl & Pflege Spülung",
+      "brand": "Isana",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:02.422856+00:00",
+      "product_id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "updated_at": "2026-08-15T07:47:53.846578+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Jean&Len Colorglow Granatapfel Rose Conditioner",
+      "brand": "Jean&Len",
+      "origin": "user_submitted",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-06-27T12:36:06.382132+00:00",
+      "product_id": "4f67cb6d-4b28-490b-9817-e8fc8e91b010",
+      "updated_at": "2026-08-15T07:47:07.725074+00:00",
+      "identifiers": [
+        {
+          "id": "b2113ad0-7bb8-4bcc-a812-da202b931e02",
+          "type": "gtin",
+          "value": "4262401738883",
+          "source": "dm product listing",
+          "created_at": "2026-06-27T12:36:06.382132+00:00",
+          "updated_at": "2026-06-27T12:36:06.382132+00:00",
+          "normalized_value": "4262401738883"
+        },
+        {
+          "id": "91eb7416-6f48-4aef-b5c1-fd9d655e675a",
+          "type": "retailer_sku",
+          "value": "2900100221",
+          "source": "Jean&Len product page",
+          "created_at": "2026-06-27T12:36:06.382132+00:00",
+          "updated_at": "2026-06-27T12:36:06.382132+00:00",
+          "normalized_value": "2900100221"
+        },
+        {
+          "id": "c1f92132-de9b-4491-b96b-d22d58551aaa",
+          "type": "retailer_sku",
+          "value": "3086487",
+          "source": "dm product listing",
+          "created_at": "2026-06-27T12:36:06.382132+00:00",
+          "updated_at": "2026-06-27T12:36:06.382132+00:00",
+          "normalized_value": "3086487"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-06-27T12:36:06.382132+00:00",
+        "updated_at": "2026-06-27T12:36:06.382132+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "humectants",
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Jean&Len Conditioner Keratin/Mandel",
+      "brand": "Jean&Len",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:48.12315+00:00",
+      "product_id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "updated_at": "2026-08-15T07:49:31.355614+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": 300,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+      "brand": "John Frieda",
+      "origin": "user_submitted",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-07-02T08:28:11.736806+00:00",
+      "product_id": "62ff4f08-3ff2-49f3-9e93-e6fd0f395a4d",
+      "updated_at": "2026-08-15T07:47:28.390342+00:00",
+      "identifiers": [
+        {
+          "id": "a2b697d2-13fc-494c-aaef-6ea93e3797a2",
+          "type": "gtin",
+          "value": "5037156298697",
+          "source": "Rossmann product URL for the 250 ml listing",
+          "created_at": "2026-07-02T08:28:11.736806+00:00",
+          "updated_at": "2026-07-02T08:28:11.736806+00:00",
+          "normalized_value": "5037156298697"
+        },
+        {
+          "id": "9077a2b1-fdb9-45a5-9767-689471f85594",
+          "type": "retailer_sku",
+          "value": "214257",
+          "source": "Rossmann product listing",
+          "created_at": "2026-07-02T08:28:11.736806+00:00",
+          "updated_at": "2026-07-02T08:28:11.736806+00:00",
+          "normalized_value": "214257"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-07-02T08:28:11.736806+00:00",
+        "updated_at": "2026-07-02T08:28:11.736806+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "oils",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Anti-Haarverlust Spülung",
+      "brand": "L'Oréal Paris",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:01.009325+00:00",
+      "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "updated_at": "2026-08-22T06:38:57.08173+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "rinse_out_with_medically_adjacent_claims",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "authoritative_product_page",
+        "evidence_sources": [
+          "https://www.loreal-paris.de/elvital/fiber-booster/anti-haarverlust-spuelung"
+        ],
+        "notes": "Rinse-out conditioner form is in scope; hair-loss/lifecycle claims are quarantined from ingredient-derived matching and require claim-scope review."
+      }
+    },
+    {
+      "name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "brand": "Langhaarmädchen",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:59.686603+00:00",
+      "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "updated_at": "2026-08-15T07:46:34.587248+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Langhaarmädchen Lovely Long Conditioner",
+      "brand": "Langhaarmädchen",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-16T19:18:32.818635+00:00",
+      "product_id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "updated_at": "2026-08-15T07:46:24.979665+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Monday Moisture Conditioner",
+      "brand": "Monday",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:55.128445+00:00",
+      "product_id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "updated_at": "2026-08-15T07:50:10.878299+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Neqi Diamond Glass Conditioner",
+      "brand": "Neqi",
+      "origin": "user_submitted",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-07-05T19:53:11.900713+00:00",
+      "product_id": "5f4f1300-bc15-4ce0-9ed8-035feb606bde",
+      "updated_at": "2026-08-15T07:47:27.647299+00:00",
+      "identifiers": [
+        {
+          "id": "0db5f40c-1b83-4c46-bfba-8b4fb3509039",
+          "type": "gtin",
+          "value": "4063528097613",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "created_at": "2026-07-05T19:53:11.900713+00:00",
+          "updated_at": "2026-07-05T19:53:11.900713+00:00",
+          "normalized_value": "4063528097613"
+        },
+        {
+          "id": "b381a3b8-84bb-4773-816e-8cb311f5f6ca",
+          "type": "retailer_sku",
+          "value": "3101240",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "created_at": "2026-07-05T19:53:11.900713+00:00",
+          "updated_at": "2026-07-05T19:53:11.900713+00:00",
+          "normalized_value": "3101240"
+        },
+        {
+          "id": "4df7d22f-90bf-499a-b3ba-d39d2480c030",
+          "type": "retailer_sku",
+          "value": "NQ-DG-CO-201",
+          "source": "https://en.johnbeerens.com/collections/merk-neqi/products/neqi-diamond-glass-conditioner-250ml",
+          "created_at": "2026-07-05T19:53:11.900713+00:00",
+          "updated_at": "2026-07-05T19:53:11.900713+00:00",
+          "normalized_value": "nq-dg-co-201"
+        },
+        {
+          "id": "70c6f582-60ca-48ad-bc3c-66cfb66c69ce",
+          "type": "retailer_url",
+          "value": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "source": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass",
+          "created_at": "2026-07-05T19:53:11.900713+00:00",
+          "updated_at": "2026-07-05T19:53:11.900713+00:00",
+          "normalized_value": "https://www.dm.de/p/d/3101240/neqi-conditioner-diamond-glass"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-07-05T19:53:11.900713+00:00",
+        "updated_at": "2026-07-05T19:53:11.900713+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones",
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Neqi Moisture Mystery Conditioner",
+      "brand": "Neqi",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-16T19:18:32.426493+00:00",
+      "product_id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "updated_at": "2026-08-15T07:48:20.596871+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Neqi Repair Reveal Conditioner",
+      "brand": "Neqi",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:54.134052+00:00",
+      "product_id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "updated_at": "2026-08-15T07:46:32.789727+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Neqi Volume Victory Conditioner",
+      "brand": "Neqi",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:52.128675+00:00",
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "updated_at": "2026-08-15T07:48:19.566776+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Nivea Power Repair Conditioner",
+      "brand": "Nivea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:49.202491+00:00",
+      "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "updated_at": "2026-08-15T07:46:13.647534+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Nivea Volumen & Kraft",
+      "brand": "Nivea",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:57.382478+00:00",
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "updated_at": "2026-08-15T07:46:19.799365+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "OGX Biotin & Collagen Conditioner",
+      "brand": "OGX",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:55.95038+00:00",
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "updated_at": "2026-08-15T07:47:09.585771+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "OGX Bond Protein Repair Conditioner",
+      "brand": "OGX",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:58.667316+00:00",
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "updated_at": "2026-08-15T07:46:06.145552+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "OGX Renewing Argan Oil of Morocco Conditioner",
+      "brand": "OGX",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:54.783164+00:00",
+      "product_id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "updated_at": "2026-08-15T07:49:05.723314+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "brand": "Pantene",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:52.715159+00:00",
+      "product_id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "updated_at": "2026-08-15T07:47:44.601524+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "excluded_product_form",
+        "reason_code": "dual_rinse_out_and_leave_on",
+        "identity_readiness": "not_applicable",
+        "boundary_confidence": "exact_gtin_retailer_page",
+        "evidence_sources": [
+          "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair"
+        ],
+        "notes": "Exact GTIN directions permit both rinse-out and leave-on use; outside the conventional rinse-out authority but retained as a stress case."
+      }
+    },
+    {
+      "name": "Pantene Pro-V Miracles Hydra Glow Conditioner",
+      "brand": "Pantene",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:50.132945+00:00",
+      "product_id": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "updated_at": "2026-08-15T07:48:23.061474+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-05-03T14:50:13.267303+00:00",
+        "updated_at": "2026-05-03T14:50:13.267303+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Pantene Pro-V Moisture Boost Pflegespülung",
+      "brand": "Pantene",
+      "origin": "user_submitted",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-07-05T17:54:10.60653+00:00",
+      "product_id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "updated_at": "2026-08-15T07:48:16.284544+00:00",
+      "identifiers": [
+        {
+          "id": "6cf61a92-6f39-4d60-aa48-aec422fd9b94",
+          "type": "gtin",
+          "value": "08700216939140",
+          "source": "https://static.prod.ecom.mueller.de/products/8700216939140/Markant_8700216939140_FrontView_08700216939140_C1N1_s01_v01.jpg",
+          "created_at": "2026-07-05T17:54:10.60653+00:00",
+          "updated_at": "2026-07-05T17:54:10.60653+00:00",
+          "normalized_value": "08700216939140"
+        },
+        {
+          "id": "fa0e91e5-6a96-4e16-b405-23e7c5857b98",
+          "type": "retailer_sku",
+          "value": "3150289",
+          "source": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+          "created_at": "2026-07-05T17:54:10.60653+00:00",
+          "updated_at": "2026-07-05T17:54:10.60653+00:00",
+          "normalized_value": "3150289"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "light",
+        "created_at": "2026-07-05T17:54:10.60653+00:00",
+        "updated_at": "2026-07-05T17:54:10.60653+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones",
+          "humectants"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Pomélo+Co Molecular Repair Conditioner",
+      "brand": "Pomélo+Co",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:47.805237+00:00",
+      "product_id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "updated_at": "2026-08-15T07:48:22.094921+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Pomélo+Co Shine Therapy Conditioner",
+      "brand": "Pomélo+Co",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:57.087918+00:00",
+      "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "updated_at": "2026-08-15T07:46:17.759175+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "SANTE Deep Repair Conditioner",
+      "brand": "Sante",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:53.113108+00:00",
+      "product_id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "updated_at": "2026-08-15T07:45:37.240402+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "oils"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Sante Intense Hydration Conditioner",
+      "brand": "Sante",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:49.550837+00:00",
+      "product_id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "updated_at": "2026-08-15T07:49:24.223003+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-05-03T14:50:13.267303+00:00",
+        "updated_at": "2026-05-03T14:50:13.267303+00:00",
+        "category_key": "conditioner",
+        "repair_level": "low",
+        "ingredient_flags": [],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Schwarzkopf GLISS Liquid Silk Spülung",
+      "brand": "Schwarzkopf",
+      "origin": "user_submitted",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-07-03T13:51:18.3297+00:00",
+      "product_id": "7fb31d10-ff21-410b-9dc2-2d1ad34b9130",
+      "updated_at": "2026-08-15T07:48:04.176667+00:00",
+      "identifiers": [
+        {
+          "id": "6cbb7539-748a-4524-a7bf-7b6bad771b96",
+          "type": "ean",
+          "value": "4015100812350",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "created_at": "2026-07-03T13:51:18.3297+00:00",
+          "updated_at": "2026-07-03T13:51:18.3297+00:00",
+          "normalized_value": "4015100812350"
+        },
+        {
+          "id": "e9361364-9387-4378-b6b9-153a972813f2",
+          "type": "retailer_sku",
+          "value": "154406",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "created_at": "2026-07-03T13:51:18.3297+00:00",
+          "updated_at": "2026-07-03T13:51:18.3297+00:00",
+          "normalized_value": "154406"
+        },
+        {
+          "id": "bfaf8754-ae6c-4a8a-80ca-426f864f5d8c",
+          "type": "retailer_url",
+          "value": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "source": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350",
+          "created_at": "2026-07-03T13:51:18.3297+00:00",
+          "updated_at": "2026-07-03T13:51:18.3297+00:00",
+          "normalized_value": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-spuelung/p/4015100812350"
+        }
+      ],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-07-03T13:51:18.3297+00:00",
+        "updated_at": "2026-07-03T13:51:18.3297+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones",
+          "polymers",
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "balance_direction": "balanced"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        },
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": false,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "identifier_present",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Syoss Intense Curls Conditioner",
+      "brand": "Syoss",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:34:00.389802+00:00",
+      "product_id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "updated_at": "2026-08-15T07:48:42.810606+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "medium",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "moisture"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "snaps"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    },
+    {
+      "name": "Syoss Intense Keratin Conditioner",
+      "brand": "Syoss",
+      "origin": "curated",
+      "category": "Conditioner",
+      "is_active": true,
+      "created_at": "2026-03-03T12:33:53.822533+00:00",
+      "product_id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "updated_at": "2026-08-15T07:49:52.829925+00:00",
+      "identifiers": [],
+      "rerank_spec": {
+        "weight": "medium",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [
+          "silicones"
+        ],
+        "balance_direction": "protein"
+      },
+      "category_key": "conditioner",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "conditioner_specs": [
+        {
+          "thickness": "normal",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "net_content_value": null,
+      "is_chaarlie_recommended": true,
+      "research_boundary": {
+        "disposition": "eligible",
+        "reason_code": "catalogued_conventional_rinse_out_candidate",
+        "identity_readiness": "needs_identifier_research",
+        "boundary_confidence": "catalog_and_product_name_provisional",
+        "evidence_sources": [],
+        "notes": "No product-form conflict visible in frozen catalog identity; exact-market source verification remains required before formula classification."
+      }
+    }
+  ]
+}
