@@ -24,7 +24,8 @@ Use this skill to ask the local `claude` CLI for a structured second opinion, th
 ### Plan/spec review
 
 1. Resolve the requested plan path. Plans usually live under `plans/`, but accept any markdown file the user names.
-2. From the repository root, run the bundled script. Repository plan reviews default to the system temporary directory; pass an output path only when the review is intentionally retained:
+2. The bundled script requires the reviewer to inspect Decision coverage against `.agents/skills/plan-hardening-loop/SKILL.md` and `.agents/skills/plan-hardening-loop/references/plan-format.md`, including bucket completeness, current coverage acknowledgement, hidden consequential assumptions, and any choice that still needs Nick rather than reviewer or orchestrator approval.
+3. From the repository root, run the script. Repository plan reviews default to the system temporary directory; pass an output path only when the review is intentionally retained:
 
 ```bash
 ./.agents/skills/claude-plan-review/scripts/claude-plan-review.sh <plan-file>
@@ -42,7 +43,7 @@ Optional environment controls:
 CLAUDE_PLAN_REVIEW_MODEL=opus CLAUDE_PLAN_REVIEW_EFFORT=high CLAUDE_PLAN_REVIEW_TIMEOUT=900 ./.agents/skills/claude-plan-review/scripts/claude-plan-review.sh <plan-file>
 ```
 
-3. Read the generated review and summarize the highest-signal findings. Do not paste the full report unless the user asks.
+4. Read the generated review and summarize the highest-signal findings. Do not paste the full report unless the user asks.
 
 ### Code review
 

@@ -1,6 +1,6 @@
 interface:
   display_name: "Plan Hardening Loop"
-  short_description: "Grill plans, test uncertainty, confirm journeys"
-  default_prompt: "Use $plan-hardening-loop to turn this idea into a reviewed plan, show me the lightest useful evidence for every user-facing change, use $prototype only when interaction or logic needs testing, walk me through the designed user journey, and stop until I explicitly confirm both."
+  short_description: "Align decisions, test uncertainty, confirm journeys"
+  default_prompt: "Use $plan-hardening-loop to turn this idea into a reviewed plan, surface consequential decisions in the decision-coverage record, show me the lightest useful evidence for every user-facing change, use $prototype only when interaction or logic needs testing, walk me through the designed user journey, and stop until I explicitly confirm the decision coverage, evidence, and journey."
 policy:
   allow_implicit_invocation: true
