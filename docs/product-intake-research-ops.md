@@ -10,8 +10,14 @@ the final Supabase write is guarded and must be explicitly triggered by Nick.
 
 ## Which Workflow Am I In?
 
-Four documentation lanes exist around adding and describing products. Each fact
-and each learning has exactly one owning document; the others link to it.
+There is one product-adding workflow, not several: every product passes the
+same core steps regardless of how it arrives — identity → category properties
+→ image → review → guarded publish (this document owns those steps). What
+varies is how products are selected (user submission vs. proactive wave), how
+deep property research goes (standard contract vs. formula engine), and how
+review is batched (per-product cockpit vs. sealed batch). The documentation
+lanes below own those variation points. Each fact and each learning has
+exactly one owning document; the others link to it.
 
 | Lane | Use when | Owning document |
 | --- | --- | --- |
