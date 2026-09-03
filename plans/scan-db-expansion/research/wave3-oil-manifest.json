@@ -28,7 +28,7 @@
               "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
               "https://www.dm.de/hitzeschutz-oel-spray-oil-nutritive-p4015100813876.html"
             ],
-            "excluded_from_apply": false
+            "excluded_from_apply": true
           }
         ],
         "category_specs": {
@@ -154,7 +154,8 @@
           "concern_eligibility": "hair_damage: 'strohiges, strapaziertes Haar' als Zielgruppe. repair: wörtlicher Claim 'Reparatur und... verbesserte Haarqualität' (Basis-Formel-Beschreibung aller Gliss-Produkte).",
           "protocols.tpl_oil_heat": "Keine Deviation: Platzierung 'mittlere Längen und Spitzen' konform mit lengths_ends, 'nicht auswaschen' konform mit rinse=leave_in.",
           "protocols.tpl_oil_heat.usable_on_dry_hair": "true (either_state_protection): Quelle nennt explizit 'handtuchtrockene ODER trockene Haar' für die Hitzeschutz-Anwendung selbst — erfüllt P9s Entweder-oder-Kriterium direkt, keine bloße Präferenzformulierung.",
-          "protocols.tpl_oil_heat.format": "QA-Audit M9: 150-ml-PUMPSPRAY — TPL-OIL-HEAT hat nur Tropfen-Dosierung (\"Wenige Tropfen … verreiben\"); Stamper braucht Spray-Dosierungscopy (\"Sparsam aufsprühen\", Quelle: \"ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben.\"). Copy-Entscheidung an Nick vor dem Stamp."
+          "protocols.tpl_oil_heat.format": "QA-Audit M9: 150-ml-PUMPSPRAY — TPL-OIL-HEAT hat nur Tropfen-Dosierung (\"Wenige Tropfen … verreiben\"); Stamper braucht Spray-Dosierungscopy (\"Sparsam aufsprühen\", Quelle: \"ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben.\"). Copy-Entscheidung an Nick vor dem Stamp.",
+          "identifiers.0.excluded_from_apply": "Ruling (Nick, 2026-09-03): Kategorie Öl bestätigt (W1, wasserfreie INCI), aber für Wave 3 geparkt — Spray-Dosierungscopy für TPL-OIL noch nicht entschieden; Produkt kommt mit der Copy-Entscheidung in einer späteren Welle."
         }
       }
     }

@@ -1243,3 +1243,28 @@ Per product, per derived role:
 - **EAN validity (R-B):** an EAN is verified when the same digits appear for the same product in ≥2 independent sources (two retailers, or retailer + manufacturer), or after one physical scan. Single-source EANs stay `excluded_from_apply`.
 - **Heat claims (R-E):** a manufacturer or retailer description claim of heat protection is sufficient for `provides_heat_protection`; packaging-level claims are not required. For Oil this capability never creates a fourth role or protocol template.
 - **Selection categories are provisional (R-A):** shelf placement from dm/Rossmann is a first guess; category is finalized by research.
+
+
+### Wave-3 rulings (Nick, 2026-09-03)
+
+- **X1 — W5 generalized:** the single-source EAN exemption covers ALL retailer-exclusive
+  house brands (Balea, Isana, alverde, Alterra, and future ones), not just the originally
+  named pair. The retailer's own listing suffices as EAN source.
+- **X2 — Multi-size EANs, one row:** size variants of the same formulation attach to ONE
+  product row as multiple identifiers. Cross-confirmed size EANs are apply-ready; unconfirmed
+  sizes ride along `excluded_from_apply` until a second source or physical scan confirms them
+  (precedent: Wahre Schätze Traube Hydraboost 200/250 ml).
+- **X3 — Co-wash / cleansing conditioners out of scope:** a product labeled "Spülung" whose
+  formula is a cleansing system (surfactants, no cationic conditioning agents) fits no open
+  category — park, do not force-stamp conditioner guidance (precedent: Being Nourish + Shine).
+- **X4 — German market name (extends W6):** when a product carries a US/legacy name and a
+  current German-retail name, the German-market shelf name wins for catalog naming
+  (precedent: HASK Argan Conditioning Treatment Haarkur).
+- **X5 — Repair bar = Conditioner Standard v1.6 §10.2, verbatim across expansion lanes:**
+  `low` = ordinary conditioning/lubrication; `medium` = distinct temporary
+  protein/peptide/keratin fibre-film route; `high` = materially stronger NAMED bond route
+  visible in the formula (maleate/gluconamide systems). Generic "Repair"/"Plex" naming does
+  not move the level. Peptides are medium (fibre film), not high.
+- **X6 — Spray-oil dosing copy deferred:** TPL-OIL's canonical droplet dosing does not fit
+  pump-spray oils; a canonical spray dosing line is NOT yet ruled. Spray-format oils are
+  parked until the copy is decided (parked: Gliss Hitzeschutz Öl-Spray Oil Nutritive).

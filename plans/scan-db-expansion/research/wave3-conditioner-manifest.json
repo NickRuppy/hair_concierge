@@ -1587,6 +1587,16 @@
               "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html"
             ],
             "excluded_from_apply": true
+          },
+          {
+            "type": "ean",
+            "value": "3600542656412",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.flaconi.de/haare/garnier/wahre-schaetze/garnier-wahre-schaetze-hydra-boost-conditioner.html",
+              "https://www.mytime.de/"
+            ],
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -1697,7 +1707,8 @@
           "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
           "concern_eligibility": "feuchtigkeit + dryness: Kernclaims.",
           "protocols.tpl_conditioner.deviation": "null (R-C): Quelle nennt Platzierung konform zum Template; keine Ansatz-Aussparen-Formulierung ist stilistisch, kein Widerspruch.",
-          "identifiers.cross_source_agreement": "false/excluded_from_apply=true (R-B): kein zweiter Beleg für die exakte 250-ml/3600542656320-Kombination gefunden — siehe evidence 'ean_no_cross_source' und offene Frage in den Notes."
+          "identifiers.cross_source_agreement": "false/excluded_from_apply=true (R-B): kein zweiter Beleg für die exakte 250-ml/3600542656320-Kombination gefunden — siehe evidence 'ean_no_cross_source' und offene Frage in den Notes.",
+          "identifiers": "Ruling D2 (Nick, 2026-09-03): eine Produktzeile, beide Groessen-EANs — 200 ml (3600542656412, flaconi+mytime 2-Quellen-bestaetigt) apply-ready; 250-ml-dm-EAN (3600542656320) bleibt excluded bis Zweitbeleg/physischer Scan. Praezedenz: Multi-Barcode-pro-Zeile-Ruling aus dem Pilot + Wave-2 GTIN-Varianten."
         }
       }
     },

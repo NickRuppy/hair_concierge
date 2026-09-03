@@ -1448,5 +1448,14 @@
       }
     }
   ],
-  "existing_product_updates": []
+  "existing_product_updates": [
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "rename": {
+        "from": "Hask Argan Oil Repairing Deep Conditioner",
+        "to": "HASK Argan Conditioning Treatment Haarkur",
+        "reason": "Ruling D6 (Nick, 2026-09-03): deutscher Marktname (Rossmann-Titel) statt US-Name; gleiche GTIN 0071164333068, in Prod verifiziert bereits am Produkt. Kein neues Produkt."
+      }
+    }
+  ]
 }
