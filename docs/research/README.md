@@ -12,7 +12,7 @@ For agent routing (which engine applies to a product, and what to do when none e
 | Conditioner | Standard **v1.6 logic-locked**; Production Adapter v1 active for intake | [conditioner-inci/](./conditioner-inci/README.md) (artifact root: `v1.0/`) | [Conditioner Production Adapter v1](../product-intake-conditioner-production-adapter.md) | `src/lib/conditioner-research/production-adapter.ts` — `npm run research:conditioner:production-adapter` |
 | Mask, Leave-in, Oil, others | No engine yet | Start from the [category template](./category-classification-engine-template.md) | — | — |
 
-A category without an engine still goes through the standard Product Intake research contract in `docs/product-intake-research-ops.md`; the engines add the deeper formula-first methodology on top, they do not replace intake.
+A category without an engine still goes through the standard Product Intake research contract in `docs/product-intake-research-ops.md`; the engines add the deeper formula-first methodology on top, they do not replace intake. Batch additions of scannable, non-recommended products run through the scan-DB-expansion lane (`docs/scan-db-expansion-playbook.md`), which consumes engine research where an engine exists. The lane map lives in `docs/product-intake-research-ops.md` ("Which Workflow Am I In?").
 
 ## Shared invariants
 

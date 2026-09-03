@@ -37,9 +37,10 @@ These hold for every engine, current and future. The category standard defines t
 - **Guidance synchronization.** A reusable rule change updates the normative standard and every consuming guide (prompt, agent context, quick reference, runbook) before the next batch.
 - **Research stops before activation.** No engine command writes to Supabase or production. Projection readiness (`property_lane_ready` / `projection_ready`) is not catalog intake readiness, global recommendation readiness, or publish approval. Guarded publish belongs to the `product-intake` skill and Nick's explicit final handoff.
 
-## Relationship to other skills
+## Relationship to other skills and lanes
 
 - `product-intake` owns identity/brand review, images, price/link sourcing, protocols, review-center operations, and the guarded publish. This skill owns only the formula-research lane that feeds it.
+- Batch waves of scannable, non-recommended products belong to the scan-DB-expansion lane (`docs/scan-db-expansion-playbook.md`); it consumes engine research where an engine exists but owns its own recipe, wave learnings, and selection signals. The lane map lives in `docs/product-intake-research-ops.md` ("Which Workflow Am I In?").
 - `hair-care-expert` owns external evidence research. Keep external evidence independent from internal engine methodology unless Nick explicitly asks for reconciliation.
 
 ## Bootstrapping a new category engine

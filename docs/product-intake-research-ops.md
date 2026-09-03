@@ -8,6 +8,24 @@ same standard of identity, category properties, sources, image quality, user
 linking, and chat notification. Research and review are local/operator-driven;
 the final Supabase write is guarded and must be explicitly triggered by Nick.
 
+## Which Workflow Am I In?
+
+Four documentation lanes exist around adding and describing products. Each fact
+and each learning has exactly one owning document; the others link to it.
+
+| Lane | Use when | Owning document |
+| --- | --- | --- |
+| Single-product intake | One user-submitted or manually added product goes through research → review → guarded publish | This document (skill: `product-intake`) |
+| Batch scan-DB expansion | A wave of 30-40 scannable, non-recommended products is added through the expansion pipeline | `docs/scan-db-expansion-playbook.md` (recipe, wave learnings, selection signals) |
+| Formula research engines | Deep INCI-based classification of a Shampoo/Conditioner, or engine/standard maintenance | `docs/research/README.md` (skill: `product-research-engine`) |
+| Catalog data contract | What tables own which facts, read/write boundaries | `docs/catalog-authority.md` |
+
+Learnings ownership: wave-process learnings belong in the expansion playbook;
+protocol/template rulings belong in the rulings ledger the playbook names;
+classification-rule changes belong in the owning engine's standard and
+`rule-changes` log; intake-contract changes belong here. Do not restate a rule
+in a second lane — link to it.
+
 ## Core Rule
 
 Codex and the local review tools may prepare research, preview payloads, image
