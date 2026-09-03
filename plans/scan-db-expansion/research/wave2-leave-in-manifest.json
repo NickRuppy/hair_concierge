@@ -935,11 +935,11 @@
           {
             "type": "ean",
             "value": "4070765006322",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1674699/balea-professional-leave-in-serum-plex-care"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -1108,7 +1108,8 @@
           "thickness_eligibility": "Alle Stärken: sparsam dosierbares 50-ml-Serum; dm-Haartyp nennt Schädigung, keine Stärke-Einschränkung.",
           "concern_eligibility": "hair_damage/repair: 'für chemisch behandeltes & geschädigtes Haar'. split_ends: dm-Wirkung 'Anti-Spliss'.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'handtuchtrocken oder trocken' ist Entweder-oder-Erlaubnis; keine Platzierungs-Widersprüche im Anwendungstext ('vom Ansatz bis in die Spitzen' steht nur im Marketing-Fließtext → per R-C ignoriert).",
-          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=serum ∧ weight=medium. Trockenhaar-Erlaubnis wörtlich gesourct ('handtuchtrockene oder trockene Haar')."
+          "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=serum ∧ weight=medium. Trockenhaar-Erlaubnis wörtlich gesourct ('handtuchtrockene oder trockene Haar').",
+          "identifiers.4070765006322": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
       }
     },

@@ -549,11 +549,11 @@
           {
             "type": "ean",
             "value": "4066447888218",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -704,7 +704,8 @@
           "concern_eligibility": "hair_damage: 'speziell für die Bedürfnisse von chemisch behandeltem und geschädigtem Haar entwickelt'. repair: 'Intense-Repair-Technologie', 'Kräftigung der Haarstruktur', 'Widerstandsfähigkeit'.",
           "protocols": "Keine Deviation: Platzierung Haarlängen konform, feucht-oder-trocken deckt beide Care-Stamps; Schweigen zu Zeit/Rinse ändert nichts.",
           "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
-          "identifiers.cross_source_agreement": "false: EAN 4066447888218 nur via dm-JSON-LD belegt. INCI Beauty und die von Google indexierte dm-Alt-URL führen die Vorgänger-EAN 4066447668292 (Produktgenerationswechsel). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B)."
+          "identifiers.cross_source_agreement": "false: EAN 4066447888218 nur via dm-JSON-LD belegt. INCI Beauty und die von Google indexierte dm-Alt-URL führen die Vorgänger-EAN 4066447668292 (Produktgenerationswechsel). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
+          "identifiers.4066447888218": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
       }
     },

@@ -589,7 +589,7 @@
     {
       "final": {
         "product": {
-          "name": "Haarkur 1 Minute Wunder-Ampulle Rescue Shots Repair & Care",
+          "name": "Pantene Pro-V Serum Shot mit Collagen Peptiden",
           "brand": "Pantene Pro-V",
           "category_key": "mask",
           "origin": "curated",
@@ -720,7 +720,7 @@
           }
         ],
         "field_rationales": {
-          "product.name": "Exakter Name laut dm-Produktseite (Backlog-Retailer). ACHTUNG Rebranding-Verdacht: Rossmann-Name und aktuelles Packungsdesign (auch bei dm) lauten 'Serum Shot mit Collagen Peptiden' - siehe Notes, Umbenennungs-Entscheidung an Nick.",
+          "product.name": "Nick W6 (2026-09-02): aktueller Shelf-Name gewinnt — Rossmann listet dieselbe EAN als 'Serum Shot mit Collagen Peptiden', dm-Packshot zeigt bereits das neue Design (alter dm-Listingname: 'Haarkur 1 Minute Wunder-Ampulle Rescue Shots Repair & Care'). INCI identisch.",
           "category_specs.product_mask_specs.weight": "medium (konservativ): stark deponierendes Bis-Aminopropyl Dimethicone auf Position 2 in einer ansonsten schlanken Basis ohne Öle/Butter; gemischte Evidenz (Präzedenz Herbal Essences, gleiche Formelfamilie).",
           "category_specs.product_mask_specs.concentration": "high: Single-Use-Ampullenformat, 'hochkonzentrierte Formel'-Claim, 1-2x-wöchentliche Kadenz - klassisches Intensiv-Treatment-Profil trotz kurzer Einwirkzeit.",
           "category_specs.product_mask_specs.balance_direction": "balanced: Repair-/Schutz-Positionierung ohne Proteine und ohne Feuchtigkeitsfokus; Panthenol allein trägt keinen Moisture-Schwerpunkt.",
