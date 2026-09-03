@@ -336,3 +336,8 @@ wurde heruntergeladen, mit `sips` vermessen und visuell geprüft (Read-Tool).
 Alle 8 über der Qualitätsbar (kürzere Achse ≥ 800 px; dm-CDN-Transform `h_3000,w_3000`
 skaliert dieselbe Cloudinary-Quelle proportional hoch, Rossmann `width=2000`-Parameter
 wie im Pilot).
+
+
+## Nick's W-rulings (2026-09-02)
+- W3 (NEW STANDING RULE, amends P5): a mask whose packaging states NO parseable contact time gets the DEFAULT fallback wait copy '3–5 Minuten einwirken lassen.' (seconds=null), supplied as operator wait copy and documented as fallback. Applied to Pantene Moisture BOOST Keratin Protect — now publishable.
+- W6: current-shelf naming accepted (Rescue Shots → record under current 'Serum Shot' name at apply if dm shows it; monitor note stands).

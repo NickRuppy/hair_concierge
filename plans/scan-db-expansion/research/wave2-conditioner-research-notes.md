@@ -420,3 +420,9 @@ Kadenz-Slot (bekanntes Template-Thema) — Kadenz nur dokumentiert.
   5. Langhaarmädchen: physischen Scan organisieren (dm-Filiale) zur EAN-Freigabe?
   6. Repair-Messlatte: Bestand „Ultimate Repair = high" (Plan 2026-06-27) auf die
      aktuelle Messlatte (max. medium ohne Bond-System) nachziehen?
+
+
+## Nick's W-rulings (2026-09-02)
+- W2: JF Salon Blonde Champagnerblond DROPPED from the wave — toning/direct-dye products are out of scope for now (parked in backlog; no toning treatment exists yet).
+- JF Go Blonder STAYS (its 'aufhellend' line is marketing without lightener actives — not a toner; researched values unchanged).
+- W4: cream dry-use tolerance = damp-only confirmed (no stamp changes needed — researched conservatively).
