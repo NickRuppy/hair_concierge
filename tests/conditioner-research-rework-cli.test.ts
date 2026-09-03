@@ -4,7 +4,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import test from "node:test"
 
-import { unresolvedConditionerReworkPacket } from "../scripts/conditioner-research-rework-queue"
+import { unresolvedConditionerReworkPacket } from "../scripts/conditioner-research/rework-queue"
 import { updateConditionerReworkQueue } from "../src/lib/conditioner-research/review-state"
 
 test("Conditioner rework CLI packet exposes only unresolved exact-version handoffs", () => {

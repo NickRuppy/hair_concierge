@@ -8,6 +8,31 @@ same standard of identity, category properties, sources, image quality, user
 linking, and chat notification. Research and review are local/operator-driven;
 the final Supabase write is guarded and must be explicitly triggered by Nick.
 
+## Which Workflow Am I In?
+
+There is one product-adding workflow, not several: every product passes the
+same core steps regardless of how it arrives — identity → category properties
+→ image → review → guarded publish (this document owns those steps). What
+varies is how products are selected (user submission vs. proactive wave), how
+deep property research goes (standard contract vs. formula engine), and how
+review is batched (per-product cockpit vs. sealed batch). The documentation
+lanes below own those variation points. Each fact and each learning has
+exactly one owning document; the others link to it.
+
+| Lane | Use when | Owning document |
+| --- | --- | --- |
+| Single-product intake | One user-submitted or manually added product goes through research → review → guarded publish | This document (skill: `product-intake`) |
+| Batch scan-DB expansion | A wave of 30-40 scannable, non-recommended products is added through the expansion pipeline | `docs/scan-db-expansion-playbook.md` (recipe, wave learnings, selection signals) |
+| Formula research engines | Deep INCI-based classification of a Shampoo/Conditioner, or engine/standard maintenance | `docs/research/README.md` (skill: `product-research-engine`) |
+| Catalog data contract | What tables own which facts, read/write boundaries | `docs/catalog-authority.md` |
+
+Learnings ownership: wave-process learnings belong in the expansion playbook;
+protocol/template rulings belong in the rulings ledger the playbook names;
+classification-rule changes belong in the owning engine's versioned standard
+(plus its rule-changes log where the engine keeps one, e.g. Conditioner);
+intake-contract changes belong here. Do not restate a rule in a second lane —
+link to it.
+
 ## Core Rule
 
 Codex and the local review tools may prepare research, preview payloads, image

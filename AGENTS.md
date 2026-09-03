@@ -59,6 +59,10 @@ Use only when Nick explicitly invokes it to define one Personal Plan product cat
 
 Use for product-intake research, review-center operations, image work, rework, worker debugging, publish preflight, and guarded final handoff. `docs/product-intake-research-ops.md` is the source of truth; automation prompts must not restate its policy. For a stuck worker, start with `product-intake` alone to inspect job, queue, and lock state; add `diagnosing-bugs` only after evidence identifies a reproducible code defect. Keep diagnosis read-only; retry, requeue, cancel, or clear a lock only with explicit approval.
 
+### `product-research-engine`
+
+Use for formula-first product research with a category engine: classifying a new Shampoo or Conditioner from its INCI, running production projections (Shampoo Production Light, Conditioner Production Adapter), maintaining classification standards under `docs/research/`, or bootstrapping an engine for a new category from the category template. It routes to the versioned category contract and enforces the shared engine invariants (blind formula-first, product truth vs. user fit, immutable artifacts, no production writes). Guarded publish and the rest of intake stay with `product-intake`.
+
 ### `funnel-variant-creator`
 
 Use for campaign-matched landing and offer packages, the shared funnel generator, and bounded fork-based draft PRs. Contributors edit only `src/funnels/**`, `public/images/funnels/**`, and `docs/funnel-briefs/**`. Landing tracking stays route-owned, and offer variants render the shared pricing slot exactly once. Tracking, cookies, analytics, checkout, payment IDs, migrations, workflows, activation, and merge remain owner-controlled. Fork CI skips live-secret checks visibly; never work around that with `pull_request_target` or production credentials.
