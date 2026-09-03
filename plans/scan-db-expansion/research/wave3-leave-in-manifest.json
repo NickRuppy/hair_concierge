@@ -35,31 +35,73 @@
           "product_leave_in_specs": {
             "format": "cream",
             "weight": "light",
-            "roles": ["extension_conditioner", "styling_prep"],
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "curl_definition", "detangling"],
-            "ingredient_flags": ["oils", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "moisture",
+              "curl_definition",
+              "detangling"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["curl_shape_support", "moisture_softness", "detangle"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "curl_shape_support",
+              "moisture_softness",
+              "detangle"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["curl_definition", "detangle_smooth"]
+            "care_benefits": [
+              "curl_definition",
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "curl_definition", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "curl_definition", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "curl_definition", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "tangling", "breakage"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "tangling",
+          "breakage"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -97,7 +139,10 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["oils", "humectants"],
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Propanediol, Coco Caprylate/Caprate, Brassica Oleracea Italica Seed Oil, Argania Spinosa Kernel Oil, Butyrospermum Parkii Butter, Cocos Nucifera Oil, Magnolia Officinalis Bark Extract, Rosmarinus Officinalis Leaf Extract, Helianthus Annuus Seed Oil, Tocopherol (silikonfrei laut Merkmal + INCI, keine Proteine)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
@@ -178,7 +223,9 @@
             "type": "ean",
             "value": "8006530325387",
             "cross_source_agreement": false,
-            "source_urls": ["https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss"],
+            "source_urls": [
+              "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss"
+            ],
             "excluded_from_apply": true
           }
         ],
@@ -186,34 +233,87 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "shine", "anti_frizz"],
-            "ingredient_flags": ["silicones", "oils", "humectants", "polymers"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "moisture",
+              "shine",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["moisture_softness", "shine_support", "smooth_anti_frizz"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support",
+              "smooth_anti_frizz"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "moisture_anti_frizz", "styling_context": "air_dry" },
-            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "frizz"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -251,7 +351,12 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["silicones", "oils", "humectants", "polymers"],
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "humectants",
+                "polymers"
+              ],
               "inci_basis": "Aqua, Glycerin, Cetyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Carthamus Tinctorius Seed Oil, Simmondsia Chinensis Seed Oil, Hydroxyethylcellulose, PVP, ..., Amodimethicone, ..., Macadamia Ternifolia Seed Oil (keine Proteine)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
@@ -325,52 +430,102 @@
             "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754975654/assets/pas/images/67f7df7f-b3a9-444e-84d8-340b68737ab5/pantene-pro-v-leave-in-spray-sunkiss-glow",
             "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow"
           },
-          "description": "Leave-in-Sonnenschutzspray mit Pro-Vitamin-Komplex, das dem sonnenstrapazierten Haar strahlenden Glanz verleiht, intensiv pflegt und repariert sowie Feuchtigkeit spendet; leichte Textur ohne Beschweren, für feuchtes oder trockenes Haar, kein Ausspülen erforderlich."
+          "description": "Leave-in-Pflegespray mit Rizinusöl, Niacinamid und Biotin für sonnenstrapaziertes Haar."
         },
         "identifiers": [
           {
             "type": "ean",
             "value": "8006530063807",
-            "cross_source_agreement": true,
+            "cross_source_agreement": false,
             "source_urls": [
               "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
               "https://www.target.com/p/pantene-sunkiss-glow-spray-uv-hair-protection-leave-in-conditioning-treatment-5-7-oz/-/A-1010323960"
             ],
-            "excluded_from_apply": false
+            "excluded_from_apply": true
           }
         ],
         "category_specs": {
           "product_leave_in_specs": {
             "format": "spray",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "shine", "repair"],
-            "ingredient_flags": ["silicones", "oils", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["moisture_softness", "shine_support", "repair_support"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support",
+              "repair_support"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["repair"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "hair_damage", "repair"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -408,12 +563,16 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["silicones", "oils", "humectants"],
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, ..., Ricinus Communis Seed Oil, ..., Niacinamide, ..., Biotin, Rosa Gallica Flower Extract, Silk Extract (kein hydrolysiertes Protein)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
             "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
-            "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, 1,2-Hexanediol, Caprylyl Glycol, Parfum, Oleic Acid, Cetrimonium Chloride, Tocopheryl Acetate, Behentrimonium Chloride",
+            "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, 1,2-Hexanediol, Caprylyl Glycol, Parfum, Oleic Acid, Cetrimonium Chloride, Tocopheryl Acetate, Behentrimonium Chloride …",
             "source_type": "retailer",
             "checked_at": "2026-09-03"
           },
@@ -457,13 +616,15 @@
           "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'auf feuchtes oder trockenes Haar sprühen'.",
           "category_specs.product_leave_in_specs.care_direction": "moisture: Feuchtigkeits-/Glanz-Fokus dominiert; keine hydrolysierten Proteine in der INCI.",
           "category_specs.product_leave_in_specs.repair_support_level": "low: 'Pflegt und repariert' ist ein Marketing-Bullet ohne Protein-/Bond-Aktivstoff in der INCI (Silk Extract ist kein Hydrolysat) — Claim wird in care_benefits/concern_eligibility abgebildet, aber nicht als hohe Repair-Potenz gewertet.",
-          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: einzige direkt passende Fit-Enum-Option, gestützt durch den wörtlichen 'repariert'-Claim.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "QA-Audit M10-Folge: repair entfernt (repair_support_level=low, keine Repair-Aktive); Schema erzwingt >=1 aus {heat_protect,curl_definition,repair,detangle_smooth} — detangle_smooth als Forced-Pick-Konvention für Moisture/Shine-Produkte (Wave-2-Präzedenz), Produkt ist ohnehin excluded_from_apply (C1).",
           "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als Zusatzspray positioniert.",
           "product_leave_in_eligibility": "repair + shine_protect für alle Stärken bei air_dry: die beiden am klarsten belegten Need-Buckets; kein Frizz-Claim, daher nicht moisture_anti_frizz.",
           "thickness_eligibility": "Alle Stärken: leichtes Spray ohne Stärke-Einschränkung.",
           "concern_eligibility": "dryness: Feuchtigkeitsclaim. hair_damage + repair: wörtlicher 'repariert'-Bullet.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'feuchtes oder trockenes Haar' ist Entweder-oder-Erlaubnis.",
-          "protocols.tpl_leavein_drycare": "Explizite Trockenhaar-Erlaubnis wörtlich gesourct ('auf feuchtes ODER trockenes Haar sprühen') — R-D-Ausnahme greift unabhängig vom format/weight-Default."
+          "protocols.tpl_leavein_drycare": "Explizite Trockenhaar-Erlaubnis wörtlich gesourct ('auf feuchtes ODER trockenes Haar sprühen') — R-D-Ausnahme greift unabhängig vom format/weight-Default.",
+          "product.description": "QA-Audit M10: Sonnenschutz-Marketingclaim entfernt (kein UV-Filter in der INCI); repair-Routing entfernt (repair_support_level=low, keine Repair-Aktive).",
+          "identifiers.0.excluded_from_apply": "QA-Audit C1 (2026-09-03): target.com-UPC 080878204038 (5.7 oz) ist ein anderes SKU als EAN 8006530063807 (200 ml) — Zweitbeleg entfällt, R-B nicht erfüllt. Physischer Scan schaltet frei."
         }
       }
     },
@@ -500,31 +661,69 @@
           "product_leave_in_specs": {
             "format": "spray",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "shine"],
-            "ingredient_flags": ["silicones", "polymers", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair"],
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["moisture_softness", "shine_support"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness", "breakage"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "breakage"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -562,7 +761,11 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["silicones", "polymers", "humectants"],
+              "ingredient_flags": [
+                "silicones",
+                "polymers",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Amodimethicone, Propylene Glycol, Panthenol, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Trideceth-15, Trideceth-3, Polyquaternium-16, VP/VA Copolymer, PEG-14 Dimethicone (keine Proteine, keine Pflegeöle)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
@@ -643,7 +846,9 @@
             "type": "ean",
             "value": "4066447975345",
             "cross_source_agreement": true,
-            "source_urls": ["https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care"],
+            "source_urls": [
+              "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care"
+            ],
             "excluded_from_apply": false
           }
         ],
@@ -651,34 +856,88 @@
           "product_leave_in_specs": {
             "format": "serum",
             "weight": "medium",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": true,
             "heat_protection_max_c": 230,
             "heat_activation_required": false,
-            "care_benefits": ["repair", "protein"],
-            "ingredient_flags": ["oils", "proteins", "humectants"],
-            "application_stage": ["towel_dry", "dry_hair", "pre_heat"],
+            "care_benefits": [
+              "repair",
+              "protein"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
             "care_direction": "protein",
             "repair_support_level": "medium",
-            "plan_roles": ["post_wash_leave_in", "pre_heat_application"],
-            "functional_benefits": ["repair_support", "heat_protect"]
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "heat_protect"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "medium",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["repair", "heat_protect"]
+            "care_benefits": [
+              "repair",
+              "heat_protect"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "repair", "styling_context": "air_dry" },
-            { "thickness": "fine", "need_bucket": "heat_protect", "styling_context": "heat_style" },
-            { "thickness": "normal", "need_bucket": "heat_protect", "styling_context": "heat_style" },
-            { "thickness": "coarse", "need_bucket": "heat_protect", "styling_context": "heat_style" }
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair", "split_ends"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -726,7 +985,11 @@
               "weight": "medium",
               "care_direction": "protein",
               "repair_support_level": "medium",
-              "ingredient_flags": ["oils", "proteins", "humectants"],
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ],
               "inci_basis": "Aqua, Glycerin, Helianthus Annuus Hybrid Oil, Arginine, Hydrolyzed Wheat Protein, Betaine, Prunus Amygdalus Dulcis Seed Extract, Olus Oil, ..., Propanediol, Cetearyl Alcohol, Gellan Gum (silikonfrei laut Merkmal + INCI)"
             },
             "source_label": "dm.de Produktseite (Inhaltsstoffe)",
@@ -807,43 +1070,81 @@
           {
             "type": "ean",
             "value": "4895248005162",
-            "cross_source_agreement": true,
+            "cross_source_agreement": false,
             "source_urls": [
               "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
               "https://incibeauty.com/en/produit/4895248005162"
             ],
-            "excluded_from_apply": false
+            "excluded_from_apply": true
           }
         ],
         "category_specs": {
           "product_leave_in_specs": {
             "format": "lotion",
             "weight": "light",
-            "roles": ["extension_conditioner"],
+            "roles": [
+              "extension_conditioner"
+            ],
             "provides_heat_protection": false,
             "heat_protection_max_c": null,
             "heat_activation_required": false,
-            "care_benefits": ["moisture", "shine"],
-            "ingredient_flags": ["silicones", "oils", "proteins", "humectants", "polymers"],
-            "application_stage": ["towel_dry"],
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry"
+            ],
             "care_direction": "moisture",
             "repair_support_level": "low",
-            "plan_roles": ["post_wash_leave_in"],
-            "functional_benefits": ["moisture_softness", "shine_support"]
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support"
+            ]
           },
           "product_leave_in_fit_specs": {
             "weight": "light",
             "conditioner_relationship": "booster_only",
-            "care_benefits": ["detangle_smooth"]
+            "care_benefits": [
+              "detangle_smooth"
+            ]
           },
           "product_leave_in_eligibility": [
-            { "thickness": "fine", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "normal", "need_bucket": "shine_protect", "styling_context": "air_dry" },
-            { "thickness": "coarse", "need_bucket": "shine_protect", "styling_context": "air_dry" }
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["dryness"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
         "protocols": [
           {
             "template_id": "TPL-LEAVEIN-DAMP",
@@ -881,7 +1182,13 @@
               "weight": "light",
               "care_direction": "moisture",
               "repair_support_level": "low",
-              "ingredient_flags": ["silicones", "oils", "proteins", "humectants", "polymers"],
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "proteins",
+                "humectants",
+                "polymers"
+              ],
               "inci_basis": "Aqua, Glycerin, Dimethicone, Cocos Nucifera Oil, C10-18 Triglycerides, Cetearyl Alcohol, Simmondsia Chinensis Seed Oil, Sodium Hyaluronate, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, ..., Hydroxyethylcellulose, Polyquaternium-37, Dimethiconol"
             },
             "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
@@ -936,7 +1243,8 @@
           "thickness_eligibility": "Alle Stärken: leichte Formel ohne Stärke-Einschränkung im Text.",
           "concern_eligibility": "dryness: einziger klar belegter Concern-Code (Feuchtigkeitsclaim).",
           "protocols.tpl_leavein_damp": "Keine Deviation: einzige gesourcte Anwendung ist feuchtes Haar.",
-          "protocols.tpl_leavein_drycare": "R-D-Format-Default (format=lotion ∧ weight=light) — KEIN expliziter Trockenhaar-Quellentext; Stamp beruht ausschließlich auf der Format-/Gewichts-Regel, nicht auf einem Marketing-Claim. Deviation bleibt null, da R-D ein Regel-Default ist, kein Quellenwiderspruch."
+          "protocols.tpl_leavein_drycare": "R-D-Format-Default (format=lotion ∧ weight=light) — KEIN expliziter Trockenhaar-Quellentext; Stamp beruht ausschließlich auf der Format-/Gewichts-Regel, nicht auf einem Marketing-Claim. Deviation bleibt null, da R-D ein Regel-Default ist, kein Quellenwiderspruch.",
+          "identifiers.0.excluded_from_apply": "QA-Audit M7 (2026-09-03): incibeauty-URL ist aus der EAN konstruiert (zirkulär) und Cloudflare-blockiert — kein unabhängiger Zweitbeleg, R-B nicht erfüllt. Physischer Scan schaltet frei."
         }
       }
     }

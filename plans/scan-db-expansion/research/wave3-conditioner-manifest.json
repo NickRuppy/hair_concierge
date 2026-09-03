@@ -330,7 +330,7 @@
           ],
           "product_conditioner_rerank_specs": {
             "weight": "rich",
-            "repair_level": "high",
+            "repair_level": "medium",
             "balance_direction": "protein",
             "ingredient_flags": [
               "oils",
@@ -413,7 +413,7 @@
           "product.name": "Exakter Name laut rossmann.de-Produktseite.",
           "category_specs.product_conditioner_specs": "Protein-/Repair-Richtung (drei Keratin-Formen in der INCI) → stretches_stays (Proteinmangel) für alle Stärken.",
           "category_specs.product_conditioner_rerank_specs.weight": "rich: Butyrospermum Parkii Butter (Shea) + Sclerocarya Birrea Seed Oil (Marula) auf Pos. 10–11, silikonfrei aber butterhaltig.",
-          "category_specs.product_conditioner_rerank_specs.repair_level": "high: drei Keratin-Aktivstoffe (Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin) auf Pos. 7–9 — stärkstes Protein-Profil der Wave-3-Kohorte.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "QA-Audit M1: high→medium — Programm-Messlatte: max. medium ohne Bond-System (Wave-2-Präzedenz: Syoss Intense Repair, Gliss Total Repair = medium); INCI ohne Bond-Chemie; konsistent mit Plex Maske (medium) derselben Linie. Zur Bestätigung an Nick.",
           "category_specs.product_conditioner_rerank_specs.balance_direction": "protein: dreifaches Keratin-System + 'Repair'-Positionierung, keine Feuchtigkeits-Kernclaims.",
           "category_specs.product_conditioner_rerank_specs.ingredient_flags": "proteins: Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin. oils: Butyrospermum Parkii Butter, Sclerocarya Birrea Seed Oil. polymers: Quaternium-87. humectants: Propylene Glycol, Panthenol.",
           "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
@@ -609,7 +609,7 @@
           ],
           "product_conditioner_rerank_specs": {
             "weight": "medium",
-            "repair_level": "high",
+            "repair_level": "medium",
             "balance_direction": "protein",
             "ingredient_flags": [
               "oils",
@@ -690,7 +690,7 @@
           "product.name": "Exakter Name laut rossmann.de-Produktseite.",
           "category_specs.product_conditioner_specs": "Protein-/Bond-Repair-Richtung (Phytoprotein-Komplex aus Reis, Soja, Weizen) → stretches_stays für alle Stärken.",
           "category_specs.product_conditioner_rerank_specs.weight": "medium: Cocos Nucifera Oil auf Pos. 11, keine Butter.",
-          "category_specs.product_conditioner_rerank_specs.repair_level": "high: 'Plex'-Bond-Positionierung + drei Proteinquellen (Oryza Sativa Seed Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein) plus Rice Amino Acids.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "QA-Audit M1: high→medium — Programm-Messlatte: max. medium ohne Bond-System (Wave-2-Präzedenz: Syoss Intense Repair, Gliss Total Repair = medium); INCI ohne Bond-Chemie; konsistent mit Plex Maske (medium) derselben Linie. Zur Bestätigung an Nick.",
           "category_specs.product_conditioner_rerank_specs.balance_direction": "protein: Phytoprotein-Komplex ist der Kernclaim, keine Feuchtigkeits-Kernaussage.",
           "category_specs.product_conditioner_rerank_specs.ingredient_flags": "proteins: Oryza Sativa Seed Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein. oils: Cocos Nucifera Oil. humectants: Glycerin, Panthenol.",
           "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
@@ -1147,12 +1147,12 @@
           {
             "type": "ean",
             "value": "4895248005919",
-            "cross_source_agreement": true,
+            "cross_source_agreement": false,
             "source_urls": [
               "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
               "https://world.openbeautyfacts.org/product/4895248005919"
             ],
-            "excluded_from_apply": false
+            "excluded_from_apply": true
           }
         ],
         "category_specs": {
@@ -1277,7 +1277,8 @@
           "concern_eligibility": "feuchtigkeit + dryness: Kernclaims.",
           "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
           "identifiers.cross_source_agreement": "Being ist NICHT retailer-exklusiv — R-B-Bestätigung über world.openbeautyfacts.org (unabhängige Produktdatenbank) mit identischer EAN, wenn auch mit unvollständigem Produkteintrag dort.",
-          "category_specs.NOTE_FOR_NICK": "INCI ist ungewöhnlich tensidreich für einen Rinse-out-Conditioner (siehe evidence 'product.formula_note.surfactant_rich'). Kategorisierung als 'conditioner' beibehalten (R-A: Anwendung/Vertrieb spricht dafür), aber weight/repair_level-Einstufung ist mit geringerer Konfidenz belegt und sollte von Nick gegengeprüft werden."
+          "category_specs.NOTE_FOR_NICK": "INCI ist ungewöhnlich tensidreich für einen Rinse-out-Conditioner (siehe evidence 'product.formula_note.surfactant_rich'). Kategorisierung als 'conditioner' beibehalten (R-A: Anwendung/Vertrieb spricht dafür), aber weight/repair_level-Einstufung ist mit geringerer Konfidenz belegt und sollte von Nick gegengeprüft werden.",
+          "identifiers.0.excluded_from_apply": "QA-Audit M3+M7 (2026-09-03): Reinigungsformel (4 Tenside, keine kationischen Conditioner-Agents; Rossmann: \"Daily Clean Conditioner … Haarwäsche\") — Kategoriefrage an Nick (Co-Wash passt in keine offene Kategorie); Zweitbeleg openbeautyfacts ist barcode-only ohne Produktname (R-B nicht erfüllt)."
         }
       }
     },

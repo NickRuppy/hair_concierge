@@ -34,31 +34,46 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": ["pre_heat_protection"]
+            "role_support": [
+              "pre_heat_protection"
+            ]
           },
           "product_oil_eligibility": [
             {
               "thickness": "fine",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["oils"]
+              "ingredient_flags": [
+                "oils"
+              ]
             },
             {
               "thickness": "normal",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["oils"]
+              "ingredient_flags": [
+                "oils"
+              ]
             },
             {
               "thickness": "coarse",
               "oil_subtype": "styling-oel",
               "oil_purpose": "styling_finish",
-              "ingredient_flags": ["oils"]
+              "ingredient_flags": [
+                "oils"
+              ]
             }
           ]
         },
-        "thickness_eligibility": ["fine", "normal", "coarse"],
-        "concern_eligibility": ["hair_damage", "repair"],
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
         "protocols": [
           {
             "template_id": "TPL-OIL-HEAT",
@@ -85,8 +100,12 @@
             "fact_key": "product_oil_specs.authority_facts",
             "fact_value": {
               "weight": "light",
-              "role_support": ["pre_heat_protection"],
-              "ingredient_flags": ["oils"],
+              "role_support": [
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "oils"
+              ],
               "inci_basis": "Isododecane, Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Helianthus Annuus (Sunflower) Seed Oil, Prunus Armeniaca (Apricot) Kernel Oil, Sclerocarya Birrea Seed Oil (Marula), Parfum, Tocopherol, CI 40800 — anhydrische Formel (kein Aqua), KEINE Silikone trotz Spray-Format und Hitzeschutz-Positionierung (formula-beats-marketing / W1: substantiell ein Öl, kategorisiert als oil statt heat_protectant)"
             },
             "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
@@ -134,7 +153,8 @@
           "thickness_eligibility": "Alle Stärken: leichte Formel ohne Stärke-Einschränkung im Text.",
           "concern_eligibility": "hair_damage: 'strohiges, strapaziertes Haar' als Zielgruppe. repair: wörtlicher Claim 'Reparatur und... verbesserte Haarqualität' (Basis-Formel-Beschreibung aller Gliss-Produkte).",
           "protocols.tpl_oil_heat": "Keine Deviation: Platzierung 'mittlere Längen und Spitzen' konform mit lengths_ends, 'nicht auswaschen' konform mit rinse=leave_in.",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true (either_state_protection): Quelle nennt explizit 'handtuchtrockene ODER trockene Haar' für die Hitzeschutz-Anwendung selbst — erfüllt P9s Entweder-oder-Kriterium direkt, keine bloße Präferenzformulierung."
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true (either_state_protection): Quelle nennt explizit 'handtuchtrockene ODER trockene Haar' für die Hitzeschutz-Anwendung selbst — erfüllt P9s Entweder-oder-Kriterium direkt, keine bloße Präferenzformulierung.",
+          "protocols.tpl_oil_heat.format": "QA-Audit M9: 150-ml-PUMPSPRAY — TPL-OIL-HEAT hat nur Tropfen-Dosierung (\"Wenige Tropfen … verreiben\"); Stamper braucht Spray-Dosierungscopy (\"Sparsam aufsprühen\", Quelle: \"ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben.\"). Copy-Entscheidung an Nick vor dem Stamp."
         }
       }
     }

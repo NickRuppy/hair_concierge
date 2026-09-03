@@ -626,16 +626,18 @@ form must match §2.5, and the column and `contactTimeSeconds` must agree.
 `"Kurz einwirken lassen."` is **not** an acceptable fill for a mask — if the source
 truly states no time, the product is not stampable and goes to Nick.
 
-**Typical deviations to watch for**
+**Typical deviations to watch for** *(list updated 2026-09-03 to match R-C — see the
+rulings addendum: application-style packaging differences are IGNORED, never deviations)*
 
-- **`conditioner_after`** — only when the source explicitly sequences a conditioner
-  after the mask. Otherwise the rule stands.
+- **`conditioner_after` sequencing on packaging** — NOT a deviation (R-C; IDA-WARG
+  precedent, reaffirmed wave 3 Bali Curls). Stamp the P5 default `replaces_conditioner`
+  unchanged; note the packaging text in field_rationales only.
 - **Long contact times (>5 min)** — 10–20 min and "bis zu 10 Minuten" are normal on
-  masks. Use the range/maximum copy forms so the V2 parser picks them up.
-- **Heat activation** ("unter der Haube", "mit Handtuch warm einwickeln") — not
-  representable in this template; deviation.
-- **Overnight masks** — wrong family entirely; flag as out of scope for the pilot.
-- **"Im ganzen Haar verteilen"** → contradicts P5. Deviation, keep `lengths_ends`.
+  masks. Use the range/maximum copy forms so the V2 parser picks them up. Not a deviation.
+- **"Im ganzen Haar verteilen"** — NOT a deviation (R-C). Keep `lengths_ends` unchanged.
+- **Overnight masks** — STRUCTURAL: wrong family entirely; flag as out of scope.
+- **Heat activation** ("unter der Haube", "mit Handtuch warm einwickeln") — STRUCTURAL:
+  not representable in this template; genuine deviation, goes to Nick.
 
 ---
 

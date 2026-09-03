@@ -12,8 +12,8 @@ Research lane: `category_key="mask"` items from `A_backlog_remainder` and `B_top
 - **Excluded (dedupe, not a new product):** 1 — HASK Argan Conditioning Treatment Haarkur.
 - **Recategorized:** 0 (all 10 are genuine rinse-out masks; no leave-in/spray mislabels found this
   wave, unlike the 2 wave-2 cases the brief flagged as a watch-item).
-- **Deviation-flagged:** 1 — Bali Curls Deep Repair Mask (`conditioner_after` instead of the
-  default `replaces_conditioner`; see below).
+- **Deviation-flagged:** 0 — the initially recorded Bali Curls `conditioner_after` deviation
+  was struck per R-C in the orchestrator review 2026-09-03 (see below).
 - **Parked for Nick (not stampable / needs a decision):** 0 hard blockers, but see "Open questions"
   — one naming call (Bali Curls) and one thickness-eligibility judgment call (Being Mega Shine) are
   flagged as lower-confidence rather than parked outright, since both are schema-valid either way.
@@ -118,13 +118,12 @@ the mask:
 > unserem MOISTURISING CONDITIONER fort um die Schuppenschicht deines Haares zu schließen und zu
 > versiegeln.**"
 
-Per protocol-templates.md's TPL-MASK "typical deviations" list, this is exactly the documented
-exception ("`conditioner_after` — only when the source explicitly sequences a conditioner after the
-mask"). Recorded as a `deviation` object on the product's TPL-MASK protocol row in the manifest;
-the manifest schema doesn't have a `conditionerRelationship` field to flip directly (that lives in
-the V1 payload the research engine stamps downstream), so this is flagged for the engine/Nick to
-apply `conditioner_after` instead of `replaces_conditioner` when stamping this product's protocol
-payload.
+RESOLVED in orchestrator review (2026-09-03): the deviation initially recorded here was based on
+the templates doc's stale "typical deviations" list, which predated ruling R-C. R-C (rulings
+addendum) explicitly names conditioner-after masks as an application-style packaging difference
+that is IGNORED — the IDA-WARG deviation was dropped on the same grounds in the pilot. The
+manifest now carries `deviation: null` and the standard P5 `replaces_conditioner` stamp, with the
+packaging text preserved in field_rationales. The stale doc list has been updated to match R-C.
 
 ## W6 naming call: Bali Curls "Deep Repair Mask" vs. Rossmann's "Deep Hydration Mask"
 
@@ -181,8 +180,8 @@ All 10 candidate images are packshots (tub/jar/tube only, no cartons), ≥800px 
    see point 4 in the HASK section).
 2. **Bali Curls naming** — confirm "Deep Repair Mask" over Rossmann's live "Deep Hydration Mask"
    label (W6 judgment call, evidence above), or override to keep the sourced-retailer's name.
-3. **Bali Curls `conditioner_after` deviation** — confirm the downstream protocol stamp should use
-   `conditioner_after` instead of the P5 default `replaces_conditioner` for this one product.
+3. ~~Bali Curls `conditioner_after` deviation~~ — WITHDRAWN: already settled by R-C (packaging
+   never overrides category application rules); standard `replaces_conditioner` is stamped.
 4. **Being Mega Shine thickness_eligibility** — confirm whether the explicit "für alle Haartypen"
    source claim should override the formula-based buildup-risk exclusion of `fine` hair (I included
    `fine`; the more conservative/consistent call would exclude it like its sibling Mega Moisture).

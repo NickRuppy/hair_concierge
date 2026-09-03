@@ -762,7 +762,6 @@
           }
         },
         "thickness_eligibility": [
-          "fine",
           "normal",
           "coarse"
         ],
@@ -859,7 +858,7 @@
           "category_specs.product_mask_specs.ingredient_flags": "oils: Kokos-, Mandel-, Jojobaöl, Sheabutter. polymers: Polyquaternium-37, Polyquaternium-10, Acrylates/Stearyl Methacrylate Copolymer. humectants: Glycerin, Aloe Barbadensis Leaf Juice, Trehalose.",
           "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe.",
           "category_specs.product_mask_specs.functional_benefits": "shine: Kernclaim 'optimaler Glanz'/'gesunder Glanz' im Namen und in der Beschreibung. detangling_slip: Sheabutter-/Aloe-Pflegeclaim.",
-          "thickness_eligibility": "NIEDRIGE KONFIDENZ / Zwiespalt für Nick: Quelle claimt explizit 'für alle Haartypen geeignet' (anders als die curl-spezifische Schwester Mega Moisture) — daher inkl. fine trotz derselben öl-/polymerreichen Rich-Formel wie Mega Moisture, wo fine ausgeschlossen wurde. Konservativere Alternative wäre normal/coarse wie bei Mega Moisture; die explizite Quellenaussage wurde hier höher gewichtet als das reine Formel-Buildup-Risiko.",
+          "thickness_eligibility": "QA-Audit M4: fine ausgeschlossen — Kokosöl Pos. 2 + Sheabutter, weight rich/concentration high; konsistent mit Bali Curls + alverde Hydro (gleicher Alle-Haartypen-Claim, formelbasiert ausgeschlossen). Marketingclaim schlägt Formel nicht (W1-Logik).",
           "concern_eligibility": "dryness/feuchtigkeit: 'optimalen Feuchtigkeitsgehalt', 'normalem bis trockenem Haar'. Kein frizz-Flag (kein Frizz-Claim, anders als Mega Moisture).",
           "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen; explizite Conditioner-Ersatz-Aussage bestätigt den P5-Default replaces_conditioner."
         }
@@ -1162,12 +1161,12 @@
           {
             "type": "ean",
             "value": "4895248003984",
-            "cross_source_agreement": true,
+            "cross_source_agreement": false,
             "source_urls": [
               "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
               "https://www.idealo.de/preisvergleich/OffersOfProduct/206988707_-moisture-intense-hydrating-mask-for-dry-hair-250-ml-monday-haircare.html"
             ],
-            "excluded_from_apply": false
+            "excluded_from_apply": true
           }
         ],
         "category_specs": {
@@ -1290,7 +1289,8 @@
           "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: Silikon-/Öl-Kombination glättet typischerweise. shine: Silikon-Glanzeffekt (kein expliziter Glanz-Claim im Text, aber Standard-Silikonwirkung) — NIEDRIGE KONFIDENZ, da nicht wörtlich als Glanz beworben; auf Formelbasis abgeleitet.",
           "thickness_eligibility": "normal/coarse: Silikon+4-Öl-Rich-Formel; für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
           "concern_eligibility": "dryness/feuchtigkeit: Kernclaim. hair_damage/repair: 'geschädigtes Haar', 'reparierendem Keratin'.",
-          "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen; keine explizite Conditioner-Sequenz genannt — Default replaces_conditioner bleibt bestehen (kein Widerspruch)."
+          "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen; keine explizite Conditioner-Sequenz genannt — Default replaces_conditioner bleibt bestehen (kein Widerspruch).",
+          "identifiers.0.excluded_from_apply": "QA-Audit C2 (2026-09-03): idealo-Seite enthält keine EAN (nur Preiszeile) und ist Preisaggregator — kein Zweitbeleg, R-B nicht erfüllt. Physischer Scan schaltet frei."
         }
       }
     },
@@ -1448,14 +1448,5 @@
       }
     }
   ],
-  "existing_product_updates": [
-    {
-      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
-      "rename": {
-        "from": "Hask Argan Oil Repairing Deep Conditioner",
-        "to": "HASK Argan Conditioning Treatment Haarkur",
-        "reason": "Dedupe-Check (wave3): identische GTIN 00071164333068 bereits am Katalogprodukt; W6 aktueller Rossmann-Regalname. Kein neues Produkt angelegt."
-      }
-    }
-  ]
+  "existing_product_updates": []
 }
