@@ -1057,11 +1057,11 @@
           {
             "type": "ean",
             "value": "4070765004588",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1539684/langhaarmaedchen-conditioner-intense-repair"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -1177,7 +1177,8 @@
           "category_specs.product_conditioner_rerank_specs.ingredient_flags": "silicones: Dimethicone, Silicone Quaternium-22. oils: Kokos-, Buritiöl. humectants: Glycerin, Panthenol, PCA, Sodium PCA.",
           "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=medium trägt die Feinhaar-Vorsicht.",
           "concern_eligibility": "feuchtigkeit (Formelfokus) + frizz ('beugt Frizz vor') + breakage ('schützt vor Haarbruch') + tangling ('verbessert die Kämmbarkeit').",
-          "protocols.tpl_conditioner.deviation": "null: Anwendung vollständig P2-konform."
+          "protocols.tpl_conditioner.deviation": "null: Anwendung vollständig P2-konform.",
+          "identifiers.4070765004588": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
       }
     },

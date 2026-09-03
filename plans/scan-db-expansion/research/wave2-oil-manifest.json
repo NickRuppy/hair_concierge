@@ -23,11 +23,11 @@
           {
             "type": "ean",
             "value": "4066447864793",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -177,7 +177,8 @@
           "concern_eligibility": "frizz: 'Wirkt gegen Frizz und fliegende Haare' (wörtlich). hair_damage bewusst NICHT aufgenommen: 'Intense Repair' ist nur der Linienname; weder Beschreibung noch Produktmerkmale claimen geschädigtes Haar als Zielgruppe. Kämmbarkeit/Glanz haben keinen Concern-Code.",
           "protocols": "Keine Deviation: Platzierung 'Haarlängen und Spitzen' konform, Pumpformat laut Pilot-Ruling mit 'wenige Tropfen'-Copy konsistent, feucht-oder-trocken deckt beide Care-Stamps.",
           "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'in den feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
-          "identifiers.cross_source_agreement": "false: EAN 4066447864793 nur auf der dm-Seite belegt (GTIN-Feld + JSON-LD). Externe Quellen (INCI Beauty 4058172702075/4066447241679, Hautschutzengel mit Cyclopentasiloxane-INCI) führen nur ÄLTERE Produktgenerationen — das Produkt wurde laut dm-Reviews (Aug/Sep 2026) frisch umformuliert. Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B)."
+          "identifiers.cross_source_agreement": "false: EAN 4066447864793 nur auf der dm-Seite belegt (GTIN-Feld + JSON-LD). Externe Quellen (INCI Beauty 4058172702075/4066447241679, Hautschutzengel mit Cyclopentasiloxane-INCI) führen nur ÄLTERE Produktgenerationen — das Produkt wurde laut dm-Reviews (Aug/Sep 2026) frisch umformuliert. Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
+          "identifiers.4066447864793": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
       }
     },
