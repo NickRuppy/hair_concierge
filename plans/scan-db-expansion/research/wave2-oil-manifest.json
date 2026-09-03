@@ -885,7 +885,7 @@
           "net_content_value": 50,
           "net_content_unit": "ml",
           "candidate_image": {
-            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1760371642/assets/pas/images/3eb68096-a94e-43b1-a398-6bfb2bb3ef23/weleda-haaroel-rosmarin",
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1760371624/assets/pas/images/3dee6ae3-6365-493c-93f7-af697180db2d/weleda-haaroel-rosmarin",
             "source_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin"
           },
           "description": "Rein pflanzliches Naturkosmetik-Haaröl auf Erdnussöl-Basis mit Rosmarin, Kleeblüten und Klettenwurzel für sprödes, brüchiges Haar; vor oder nach der Haarwäsche ins feuchte oder trockene Haar."
@@ -1045,7 +1045,8 @@
           "thickness_eligibility": "Alle Stärken: Packung ohne Einschränkung; die rich-Gewichtung trägt die Fein-Haar-Vorsicht im Ranking. Diskussionspunkt in den Notes.",
           "concern_eligibility": "dryness: dm-Haartyp 'Trockenes Haar'. hair_damage: dm-Haartyp 'Geschädigt/Strapaziert' + 'sprödes' Haar. breakage: 'brüchiges Haar' wörtlich. Die dm-Wirkungsangabe 'Gegen Haarausfall' wurde bewusst NICHT encodiert (medizinisch angrenzend, kein Produkt-Concern in unserem Vokabular).",
           "protocols": "Keine Deviation: Pre-Wash ohne Zeitangabe (P8-Kanon 15–20 Min, Schweigen ist keine Abweichung), Platzierung 'Haarlängen'/'Haarspitzen' konform, keine Kopfhaut-Anweisung in der dm-Anwendung (die Weleda-Kopfhaut-Massage-Empfehlung ist eine separate, nicht encodierte Anwendung).",
-          "identifiers.cross_source_agreement": "true: dm-JSON-LD + Rossmann-Produktseite (URL-GTIN live reproduziert, identischer Anwendungstext) + shop-apotheke-Listing."
+          "identifiers.cross_source_agreement": "true: dm-JSON-LD + Rossmann-Produktseite (URL-GTIN live reproduziert, identischer Anwendungstext) + shop-apotheke-Listing.",
+          "product.candidate_image": "Bild-Fix (2026-09-02): Kombi-Packshot enthielt den Karton (Nick-Präzedenz Balea: nur Flasche); auf das Flasche-solo-Galeriebild der dm-Seite umgestellt."
         }
       }
     },
