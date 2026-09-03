@@ -1109,7 +1109,8 @@
           "concern_eligibility": "hair_damage/repair: 'für chemisch behandeltes & geschädigtes Haar'. split_ends: dm-Wirkung 'Anti-Spliss'.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'handtuchtrocken oder trocken' ist Entweder-oder-Erlaubnis; keine Platzierungs-Widersprüche im Anwendungstext ('vom Ansatz bis in die Spitzen' steht nur im Marketing-Fließtext → per R-C ignoriert).",
           "protocols.tpl_leavein_drycare": "Ruling R-D: DRYCARE-Default greift — format=serum ∧ weight=medium. Trockenhaar-Erlaubnis wörtlich gesourct ('handtuchtrockene oder trockene Haar').",
-          "identifiers.4070765006322": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
+          "identifiers.4070765006322": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt.",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): dm-Galerie hat kein Flasche-solo-Bild; finales Cutout = Flaschen-Ausschnitt aus dem Kombi-Packshot (Karton entfernt, operator-geprüft)."
         }
       }
     },
@@ -2190,7 +2191,8 @@
           "concern_eligibility": "dryness: 'sehr trockenes Haar'. frizz + moisture_anti_frizz: Anti-Frizz-Kernclaim.",
           "protocols.tpl_leavein_damp": "Keine Deviation: 'trocken oder nass' ist Entweder-oder-Erlaubnis; 'Längen und Spitzen' ist template-konform.",
           "protocols.tpl_leavein_heat": "usable_on_dry_hair=true: Packung erlaubt explizit 'auf trockenem oder nassem Haar' (either_state_protection nach P9). 230-°C-Wert nur im Spec-Feld, nicht in der Template-Copy.",
-          "protocols.drycare_not_stamped": "Ruling R-D: format=cream → damp-only. 'Täglich auf trockenem Haar' ist Toleranz-/Frequenz-Erlaubnis, kein Between-Wash-Marketing — Grenzfall für Nick dokumentiert (Notes §10)."
+          "protocols.drycare_not_stamped": "Ruling R-D: format=cream → damp-only. 'Täglich auf trockenem Haar' ist Toleranz-/Frequenz-Erlaubnis, kein Between-Wash-Marketing — Grenzfall für Nick dokumentiert (Notes §10).",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): Deshadow hatte die braune Kappe entfernt (Warmton-Blindspot, unter der 15%-Guard-Schwelle); finales Cutout = unbearbeitete Original-Alpha."
         }
       }
     }

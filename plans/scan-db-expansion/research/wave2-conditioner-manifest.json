@@ -1487,7 +1487,7 @@
           "net_content_value": 250,
           "net_content_unit": "ml",
           "candidate_image": {
-            "url": "https://www.rossmann.de/media-neu/155/MAM_15572855/MAM_15572855_SHOP_IMAGE_2.0.png?width=2000&height=2000",
+            "url": "https://www.rossmann.de/media-neu/155/MAM_15572855/MAM_15572855_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&canvas=2000,2000&format=png",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-tiefenspuelung-intense-repair/p/4015100860986"
           },
           "description": "Reichhaltige Protein-Tiefenspülung ('reichhaltiger als eine Spülung, leichter als eine Kur') mit 9% Protein-Pflege-Komplex für trockenes, geschädigtes Haar."
@@ -1616,7 +1616,8 @@
           "category_specs.product_conditioner_rerank_specs.ingredient_flags": "proteins: Hydrolyzed Keratin, Hydrolyzed Soy Protein. silicones: Dimethicone. polymers: Guar Hydroxypropyltrimonium Chloride.",
           "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=rich schützt feines Haar im Ranking.",
           "concern_eligibility": "hair_damage + dryness (Kernclaims 'trockenes, geschädigtes Haar') + protein (Proteinrichtung).",
-          "protocols.tpl_conditioner.deviation": "null (R-C): 'in nasses Haar einarbeiten' ohne Ansatz-Anweisung = Anwendungsstil; 'ohne Einwirkzeit'-Marketing überschreibt die 1-3-Min-Regel nicht."
+          "protocols.tpl_conditioner.deviation": "null (R-C): 'in nasses Haar einarbeiten' ohne Ansatz-Anweisung = Anwendungsstil; 'ohne Einwirkzeit'-Marketing überschreibt die 1-3-Min-Regel nicht.",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): Quelle war ohne fit=bounds vertikal gestaucht; aspekt-korrekte Variante."
         }
       }
     },
@@ -1632,7 +1633,7 @@
           "net_content_value": 200,
           "net_content_unit": "ml",
           "candidate_image": {
-            "url": "https://www.rossmann.de/media-neu/181/MAM_18168014/MAM_18168014_SHOP_IMAGE_2.0.png?width=2000&height=2000",
+            "url": "https://www.rossmann.de/media-neu/181/MAM_18168014/MAM_18168014_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&canvas=2000,2000&format=png",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-nivea-hairmilk-shine-glanzspuelung/p/4006000192673"
           },
           "description": "Silikonfreie, vegane Glanzspülung mit Mandelmilch und Magnolien-Extrakt für glanzloses, trockenes Haar; pflegt, ohne zu beschweren."
@@ -1767,7 +1768,8 @@
           "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Mandelöl (Prunus Amygdalus Dulcis Oil, Pos. 6). humectants: Glycerin (Pos. 3). Hydroxyethylcellulose ist Verdicker, kein polymers-Flag.",
           "thickness_eligibility": "Alle Stärken: 'für alle Haartypen' laut Produktseite, leichte Formel.",
           "concern_eligibility": "feuchtigkeit + dryness: Kernclaims; Glanz hat keinen Code (Notes).",
-          "protocols.tpl_conditioner.deviation": "null: Packungsanwendung ist das P2-Musterbeispiel (Ansatz aussparen, ca. 1 Minute)."
+          "protocols.tpl_conditioner.deviation": "null: Packungsanwendung ist das P2-Musterbeispiel (Ansatz aussparen, ca. 1 Minute).",
+          "product.candidate_image": "Bild-Fix (Nick 2026-09-02): Quelle war ohne fit=bounds vertikal gestaucht; aspekt-korrekte Variante."
         }
       }
     },
