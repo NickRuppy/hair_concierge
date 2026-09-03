@@ -1,0 +1,1461 @@
+{
+  "batch_id": "scan-db-expansion-wave3-mask-2026-09-03",
+  "generated_at": "2026-09-03T12:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Plex Maske",
+          "brand": "Isana Professional",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.49,
+          "net_content_value": 125,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/119/MAM_11969500/MAM_11969500_SHOP_IMAGE_3.2.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948"
+          },
+          "description": "Haarmaske mit Kerarice (Reisprotein-Extrakt) und Phytoprotein-Komplex aus Reis, Soja und Weizen; stärkt geschädigte Haarstruktur, bändigt Spliss, silikonfrei."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615975948",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "proteins",
+              "humectants"
+            ],
+            "repair_support_level": "medium",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+              "text": "Eine großzügige Menge gleichmäßig in die feuchten Haare auftragen, 5-10 Minuten einwirken lassen und wieder ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Eine großzügige Menge gleichmäßig in die feuchten Haare auftragen, 5-10 Minuten einwirken lassen und wieder ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615975948",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + JSON-LD-sku); Isana Professional ist eine Rossmann-Exklusivmarke (W5) — Single-Source ausreichend",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+            "source_text": "\"name\":\"Plex Maske\",\"sku\":\"4305615975948\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "proteins",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Niacinamide, Oryza Sativa Seed Protein, Phytic Acid, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, ..., Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, ...; silikonfrei"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+            "source_text": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Niacinamide, Oryza Sativa Seed Protein, Phytic Acid, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Parfum, Calcium Gluconate, Distearoylethyl Hydroxyethylmonium Methosulfate, Isopropyl Alcohol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Sodium Benzoate, Potassium Sorbate, Citric Acid, Gluconolactone, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "5-10 Minuten (Range)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+            "source_text": "Eine großzügige Menge gleichmäßig in die feuchten Haare auftragen, 5-10 Minuten einwirken lassen und wieder ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.plex_repair",
+            "fact_value": "Phytoprotein-Komplex aus Reis, Soja und Weizen; Wirkstoff Kerarice (Reisproteine/-extrakt); stärkt Widerstandskraft, bändigt Spliss, reduziert Haarbruch, verbessert Elastizität; ohne Silikone; für alle Haartypen.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+            "source_text": "Die Rezeptur mit einem Phytoprotein-Komplex aus Reis, Soja und Weizen pflegt und repariert die geschädigte Haarstruktur. Die Formulierung stärkt die Widerstandskraft der Haare, bändigt Spliss und reduziert Haarbruch.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.49,
+            "source_label": "Rossmann.de Produktseite (125 ml, 1 L = 19,92 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+            "source_text": "Artikelpreis 2,49 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite (JSON-LD: brand 'ISANA PROFESSIONAL', name 'Plex Maske'). Isana Professional ist Rossmann-Exklusivmarke.",
+          "category_specs.product_mask_specs.weight": "light: keine Öle/Butter, nur Cetearyl Alcohol/Behentrimonium Chloride als Basis-Konditionierer, Isopropyl Palmitate ist ein leichter Ester; silikonfrei laut Claim und INCI.",
+          "category_specs.product_mask_specs.concentration": "medium: Standard-Drogeriemaske mit 5-10 Minuten Einwirkzeit, 'großzügige Menge'-Dosierung ohne Express- oder Overnight-Positionierung.",
+          "category_specs.product_mask_specs.balance_direction": "protein: Kernclaim ist der Phytoprotein-Komplex (Reis/Soja/Weizen) plus Kerarice-Reisprotein; INCI führt 3 hydrolysierte Proteine + Aminosäuren. Glycerin an Position 2 ist Standard-Basisfeuchthalter, nicht der Markenkern.",
+          "category_specs.product_mask_specs.ingredient_flags": "proteins: Oryza Sativa Seed Protein, Hydrolyzed Wheat/Soy Protein, Rice Amino Acids. humectants: Glycerin, Panthenol, Niacinamide. Kein Öl-Flag (Isopropyl Palmitate ist ein synthetischer Ester, kein Pflanzenöl-Claim); Hydroxypropyl Guar bewusst nicht als polymers geflaggt (Konditionierpolymer, kein Markenclaim, Präzedenz PEG-45M-Ausschluss wave2).",
+          "category_specs.product_mask_specs.repair_support_level": "medium: 3 hydrolysierte Proteine (Reis/Weizen/Soja) + Aminosäuren mit explizitem Stärkungs-/Reparatur-Claim — Präzedenz Garnier Keratin Sleek (wave2, 3 Proteine = medium).",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'Haarstruktur sieht geglättet aus', bändigt Spliss. detangling_slip: 'geschmeidiges und weiches Haar', verbesserte Elastizität.",
+          "thickness_eligibility": "Alle Stärken: silikon- und ölfreie leichte Formel ohne Buildup-Risiko, Claim 'für alle Haartypen'.",
+          "concern_eligibility": "hair_damage/repair: Kernclaim Wiederaufbau geschwächter Haarstruktur. split_ends: 'bändigt Spliss'. breakage: 'reduziert Haarbruch'.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 5-10 Minuten übernommen (§2.5: seconds=null, Copy '5–10 Minuten einwirken lassen.'); keine Ansatz-Anweisung, keine explizite Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarmaske Locken Traum",
+          "brand": "Isana Professional",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.79,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/567/MAM_56707990/MAM_56707990_SHOP_IMAGE_1.4.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965"
+          },
+          "description": "Haarmaske für lockiges, krauses und gewelltes Haar mit Curly Shape Complex (Weizenkeim-Extrakten), Sheabutter, Kokos- und Camelienöl; silikonfrei, vegan."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615846965",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+              "text": "Nach der Haarwäsche sanft ins feuchte Haar einmassieren, 3-5 Minuten einwirken lassen und sorgfältig ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Nach der Haarwäsche sanft ins feuchte Haar einmassieren, 3-5 Minuten einwirken lassen und sorgfältig ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615846965",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + JSON-LD-sku); Isana Professional ist Rossmann-Exklusivmarke (W5) — Single-Source ausreichend",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+            "source_text": "\"name\":\"Haarmaske Locken Traum\",\"sku\":\"4305615846965\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Coco-Caprylate, Behentrimonium Chloride, Triticum Vulgare Bran/Germ Extract, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil, Glycerin, Panthenol, Stearamidopropyl Dimethylamine, Cocos Nucifera Oil, Butyrospermum Parkii Butter, Linoleic Acid, ...; keine Proteine, keine Silikone"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+            "source_text": "AQUA| CETEARYL ALCOHOL| COCO-CAPRYLATE| BEHENTRIMONIUM CHLORIDE| TRITICUM VULGARE BRAN EXTRACT| TRITICUM VULGARE GERM EXTRACT| TRITICUM VULGARE GERM OIL| CAMELLIA OLEIFERA SEED OIL| GLYCERIN| PANTHENOL| STEARAMIDOPROPYL DIMETHYLAMINE| COCOS NUCIFERA OIL| BUTYROSPERMUM PARKII BUTTER| LINOLEIC ACID| ISOPROPYL ALCOHOL| LAURYL ALCOHOL| DICAPRYLYL ETHER| CETEARYL NONANOATE| CAPRYLIC/CAPRIC TRIGLYCERIDE| QUARTZ POWDER| XANTHAN GUM| LACTIC ACID| CITRIC ACID| PARFUM| LINALOOL| HEXYL CINNAMAL| LIMONENE| BENZYL ALCOHOL| TOCOPHEROL| TOCOPHERYL ACETATE| POTASSIUM SORBATE| SODIUM BENZOATE.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "3-5 Minuten (Range)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+            "source_text": "Nach der Haarwäsche sanft ins feuchte Haar einmassieren, 3-5 Minuten einwirken lassen und sorgfältig ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.curly_shape",
+            "fact_value": "Speziell für lockiges, krauses und gewelltes Haar; Curly Shape Complex + Sheabutter für gewichtsloses Verwöhnen und Feuchtigkeit; zähmt und pflegt trockene, widerspenstige Locken.",
+            "source_label": "WebSearch-Zusammenfassung Rossmann.de Produktbeschreibung",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+            "source_text": "ISANA PROFESSIONAL Haarmaske Locken Traum wurde speziell für die Bedürfnisse von lockigem, krausem und gewelltem Haar entwickelt.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.79,
+            "source_label": "Rossmann.de Produktseite (250 ml)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+            "source_text": "2.79",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite (JSON-LD: name 'Haarmaske Locken Traum').",
+          "category_specs.product_mask_specs.weight": "rich: 3 Öl-/Butterquellen (Weizenkeimöl, Camelienöl, Kokosöl) plus Sheabutter, silikonfrei aber emollientreich.",
+          "category_specs.product_mask_specs.concentration": "medium: 3-5 Minuten Standard-Einwirkzeit, keine Express- oder Intensiv-Overnight-Positionierung.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: keine hydrolysierten Proteine in der INCI; Curly-Care-Positionierung über Öle/Butter + Glycerin/Panthenol.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Weizenkeimöl, Camelienöl, Kokosöl (Coco-Caprylate zusätzlich als leichter Ester). humectants: Glycerin, Panthenol. Kein Protein-Flag (Weizenkeim-Extrakte sind keine hydrolysierten Proteine).",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe, Wirkmechanismus ist Öl-/Butter-Glättung für Locken.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: zähmt widerspenstige Locken. detangling_slip: gewichtsloses Verwöhnen, geschmeidige Locken.",
+          "thickness_eligibility": "normal/coarse: ölreiche Rich-Formel (3 Öle + Butter) ohne Silikone; für feines Haar konservativ ausgeschlossen (Buildup-Risiko, Präzedenz wave2).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'trockene, widerspenstige Locken'. frizz: Curly-Shape-/Frizz-Zähmungs-Positionierung.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 3-5 Minuten übernommen; keine Ansatz-Anweisung, keine Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Deep Repair Mask",
+          "brand": "Bali Curls",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 8.99,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/131/MAM_13156339/MAM_13156339_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-deep-hydration-mask/p/4262391990001"
+          },
+          "description": "Vegane, reichhaltige Anti-Frizz-Haarmaske mit Sheabutter, Kokos- und Avocadoöl sowie Ylang-Ylang-Extrakt für lockiges und gewelltes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4262391990001",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-bali-curls-deep-hydration-mask/p/4262391990001",
+              "https://www.dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise); identische GTIN wie Rossmann (dort unter dem älteren Namen 'Deep Hydration Mask')",
+              "url": "https://www.dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html",
+              "text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haare auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus. Für eine noch tiefe Pflege kannst du sie auch etwas länger einwirken lassen. Fahre nun mit einem Conditioner, wie unserem MOISTURISING CONDITIONER fort um die Schuppenschicht deines Haares zu schließen und zu versiegeln."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haare auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4262391990001",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN + JSON-LD-sku); dm.de führt dieselbe GTIN im URL-Pfad unter dem Namen 'Haarmaske Deep Repair'",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-deep-hydration-mask/p/4262391990001",
+            "source_text": "\"name\":\"Deep Hydration Mask\",\"sku\":\"4262391990001\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_dm_confirmation",
+            "fact_value": "4262391990001",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html",
+            "source_text": "GTIN: 4262391990001",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Glycerin, Butyrospermum Parkii Butter, Cocos Nucifera Oil, Glycine Soja Oil, Persea Gratissima Oil, Cetrimonium Chloride, Betaine, Behentrimonium Methosulfate, Panthenol, ...; keine Silikone, keine Proteine"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-deep-hydration-mask/p/4262391990001",
+            "source_text": "AQUA, CETEARYL ALCOHOL, GLY-CERIN, BUTYROSPERMUM PARKII BUTTER, COCOS NUCIFERA OIL, GLYCINE SOJA OIL, PERSEA GRA-TISSIMA OIL, CETRIMONIUM CHLORIDE, BETAINE. BEHENTRIMONIUM METHOSULFATE, PANTHENOL, SODIUM BENZOATE, PARFUM, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, POTASSIUM SORBATE, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE. CANANGA ODORATA FLOWER EXTRACT",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "2-3 Minuten (Range, verlängerbar)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html",
+            "source_text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haare auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus. Für eine noch tiefe Pflege kannst du sie auch etwas länger einwirken lassen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identity.current_shelf_name",
+            "fact_value": "dm.de, der Markenhersteller (bali-care.com) und weitere EU-Händler (Superdrug, Lockenbox, CurlyTools) führen dasselbe Produkt (identische GTIN, identische INCI-Kernzutaten) unter dem Namen 'Deep Repair Mask' bzw. 'Haarmaske Deep Repair'. Nur Rossmann.de (und rossmann.dk) zeigen noch 'Deep Hydration Mask' — vermutlich ein nicht aktualisierter Altname.",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html",
+            "source_text": "BALI CURLS Haarmaske Deep Repair, 200 ml",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 8.99,
+            "source_label": "Rossmann.de Produktseite (200 ml, 1 L = 44,95 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-deep-hydration-mask/p/4262391990001",
+            "source_text": "Artikelpreis 8,99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "W6 aktueller Shelf-Name: dm.de UND der Markenhersteller bali-care.com sowie mehrere weitere EU-Händler (Superdrug, Lockenbox, CurlyTools, Bellapil, ohfeliz) führen dieselbe GTIN unter 'Deep Repair Mask'/'Haarmaske Deep Repair'. Rossmann.de zeigt aktuell noch 'Deep Hydration Mask' — dokumentiert als vermutlich veralteter Rossmann-Altname, da alle anderen aktuellen Quellen übereinstimmend 'Deep Repair' führen. Offene Frage für Nick: welchen Namen im Zweifel wählen, wenn nur der Backlog-Retailer (Rossmann) abweicht.",
+          "category_specs.product_mask_specs.weight": "rich: Sheabutter + 3 Öle (Kokos, Soja, Avocado), silikonfrei aber emollientreich.",
+          "category_specs.product_mask_specs.concentration": "medium: 2-3 Minuten Basis-Einwirkzeit (verlängerbar für 'tiefere Pflege'), kein Express- oder deklariertes Intensiv-Format.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: keine Proteine in der INCI, Öl-/Butter-Feuchtigkeitsfokus + Panthenol/Glycerin.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sheabutter, Kokosöl, Sojaöl, Avocadoöl. humectants: Glycerin, Panthenol, Betaine.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe, reine Öl-/Butter-Pflege.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'Anti-Frizz-Formel', glättet Haarstruktur (Avocadoöl). detangling_slip: 'geschmeidig, weich und leicht kämmbar' (Sheabutter-Claim).",
+          "thickness_eligibility": "normal/coarse: ölreiche Rich-Formel (3 Öle + Butter); für feines Haar konservativ ausgeschlossen (Buildup-Risiko, Curly-Fokus meist gröberes Haar).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'besonders trockene, spröde' Haare. frizz: Anti-Frizz-Kernclaim.",
+          "protocols.tpl_mask.deviation": "Deviation gestrichen per R-C (Orchestrator-Review 2026-09-03): dm.de sequenziert nach der Maske einen Conditioner — Anwendungsstil, kein struktureller Mismatch; Packaging überschreibt Chaarlie-Regeln nicht (Präzedenz: IDA-WARG im Pilot). Standard TPL-MASK replaces_conditioner gestempelt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur Feuchtigkeit",
+          "brand": "Balea",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 0.55,
+          "net_content_value": 25,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747477251/assets/pas/images/56be1efd-77c1-439d-9ac4-8a26a6d70a48/balea-haarkur-feuchtigkeit",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit"
+          },
+          "description": "Aufbaukur-Ampulle mit Anti-Trocken-Effekt für trockenes und strapaziertes Haar; Vitamin B3 und Provitamin B5, ohne Silikone, vegan."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447154832",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "light",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+              "text": "Nach der Haarwäsche im handtuchtrockenen Haar verteilen. Bis in die Spitzen einmassieren und 3-5 Minuten einwirken lassen. Gründlich ausspülen. Je nach Haarlänge reicht die Packung für bis zu 2 Anwendungen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Nach der Haarwäsche im handtuchtrockenen Haar verteilen. Bis in die Spitzen einmassieren und 3-5 Minuten einwirken lassen. Gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447154832",
+            "source_label": "dm.de Produktseite (GTIN-Feld); Balea ist dm-Hausmarke (W5) — Single-Source ausreichend",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+            "source_text": "GTIN: 4066447154832",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Caprylic/Capric Triglyceride, Cetrimonium Chloride, Panthenol, Parfum, Dicaprylyl Ether, Sodium Benzoate, Lauryl Alcohol, Sodium Stearoyl Glutamate, Niacinamide, ...; ohne Silikone, ohne Mikroplastik"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+            "source_text": "INGREDIENTS: AQUA, GLYCERIN, CETEARYL ALCOHOL, CAPRYLIC/CAPRIC TRIGLYCERIDE, CETRIMONIUM CHLORIDE, PANTHENOL, PARFUM, DICAPRYLYL ETHER, SODIUM BENZOATE, LAURYL ALCOHOL, SODIUM STEAROYL GLUTAMATE, NIACINAMIDE, POTASSIUM SORBATE, CITRIC ACID, SODIUM CHLORIDE, TOCOPHEROL",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "3-5 Minuten (Range)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+            "source_text": "Nach der Haarwäsche im handtuchtrockenen Haar verteilen. Bis in die Spitzen einmassieren und 3-5 Minuten einwirken lassen. Gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.anti_trocken",
+            "fact_value": "Aufbau-Pflegeformel mit Anti-Trocken-Effekt; Aufbaukomplex mit Vitamin B3 (Niacinamide) und Provitamin B5 (Panthenol); glättet die Haaroberfläche; ohne Mikroplastik und ohne unlösliche synthetische Polymere.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+            "source_text": "Dank ihrer Aufbau-Pflegeformel mit Anti-Trocken-Effekt glättet sie die Haaroberfläche und pflegt Ihr Haar. ... Der Aufbaukomplex mit Vitamin B3 und Provitamin B5 pflegt Ihr Haar zudem geschmeidig. Rezeptur ohne Mikroplastik und rein wasserlösliche synthetische Polymere.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.55,
+            "source_label": "dm.de Produktseite (25 ml, 22,00 €/L)",
+            "source_url": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+            "source_text": "0,55 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter dm-Produktname 'Haarkur Feuchtigkeit' (dm-Beschreibungstext nennt intern 'Aufbaukur Feuchtigkeit' — Marketingvariante, Produkttitel bleibt maßgeblich).",
+          "category_specs.product_mask_specs.weight": "light: keine Öle/Butter, Caprylic/Capric Triglyceride ist ein leichter Ester, ohne Silikone.",
+          "category_specs.product_mask_specs.concentration": "medium: 3-5 Minuten Standard-Einwirkzeit trotz kleinem Ampullenformat (25 ml, bis zu 2 Anwendungen) — Präzedenz Guhl 30-sek (wave2, Express-Format aber medium wegen Konzentrat-Claim).",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Glycerin an Position 2, Panthenol, Niacinamide (Vitamin B3); keine Proteine.",
+          "category_specs.product_mask_specs.ingredient_flags": "humectants: Glycerin, Panthenol, Niacinamide. Kein Öl-Flag (Caprylic/Capric Triglyceride ist ein synthetischer Ester ohne Öl-Marketingclaim).",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe, reine Feuchtigkeits-/Glättungsformel.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'glättet die Haaroberfläche'. detangling_slip: 'leichte Kämmbarkeit'.",
+          "thickness_eligibility": "Alle Stärken: leichte, silikonfreie Formel ohne Öle/Butter, kein Buildup-Risiko.",
+          "concern_eligibility": "dryness/feuchtigkeit: 'trockenes und strapaziertes Haar', Anti-Trocken-Effekt-Kernclaim.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 3-5 Minuten übernommen; 'bis in die Spitzen' impliziert P5-konforme Platzierung, keine Ansatz-Anweisung; keine Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Mega Moisture Haarmaske",
+          "brand": "Being (by ZURU)",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/239/MAM_23934714/MAM_23934714_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008"
+          },
+          "description": "Feuchtigkeitsspendende Haarmaske für Locken vom Typ 3A-3C und 4A-4C mit Kakaobutter und Haferextrakt; sulfat- und silikonfrei, dermatologisch getestet."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248006008",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+              "https://www.hagel-shop.de/being-mega-moisture-intensive-feuchtigkeit-haarmaske-354-ml-12133578.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz",
+          "feuchtigkeit",
+          "tangling"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+              "text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 600,
+              "source_text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248006008",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN); hagel-shop.de führt dieselbe EAN im Produktdatenblatt",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+            "source_text": "rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_secondsource",
+            "fact_value": "4895248006008",
+            "source_label": "hagel-shop.de Produktdatenblatt (EAN-Feld)",
+            "source_url": "https://www.hagel-shop.de/being-mega-moisture-intensive-feuchtigkeit-haarmaske-354-ml-12133578.html",
+            "source_text": "EAN 4895248006008",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Avena Sativa (Oat) Extract, Theobroma Cacao (Cocoa) Seed Butter, Butyrospermum Parkii (Shea) Butter, ..., Polyquaternium-37, Polyquaternium-10, Hydroxyethylcellulose, Acrylates/Stearyl Methacrylate Copolymer, ...; keine Silikone, keine Proteine"
+            },
+            "source_label": "beinghaircare.com Produktseite (Markenhersteller, Inhaltsstoffe)",
+            "source_url": "https://beinghaircare.com/blog/product/mega-moisture-mask-moisturizing-hair-mask/",
+            "source_text": "Aqua (Water), Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Avena Sativa (Oat) Flower/Leaf/Stem Extract, Theobroma Cacao (Cocoa) Seed Butter, Butyrospermum Parkii (Shea) Butter, Tetrasodium Glutamate Diacetate, Behentrimonium Methosulfate, Polyquaternium-37, Polyquaternium-10, Hydroxyethylcellulose, PPG-1 Trideceth-6, Propylene Glycol Dicaprylate/Dicaprate, Acrylates/Stearyl Methacrylate Copolymer, Phenoxyethanol, Chlorphenesin, Citric Acid, Sorbitan Oleate, Pentylene Glycol, Butylene Glycol, Disodium Phosphate, Polysorbate 60, Sodium Phosphate, Parfum (Fragrance).",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "10 Minuten (exakt)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+            "source_text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.curl_replaces_conditioner",
+            "fact_value": "Für Locken vom Typ 3A-3C und 4A-4C; dermatologisch getestet, sulfat- und silikonfrei; für die zweimal wöchentliche Anwendung oder als Ersatz für eine Spülung bei besonders trockenem und/oder strapaziertem Haar; Kakaobutter und Haferextrakt.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+            "source_text": "Die dermatologisch getestete, sulfat- und silikonfreie Formel eignet sich ideal für die zweimal wöchentliche Anwendung oder als Ersatz für eine Spülung bei besonders trockenem und/oder strapaziertem Haar.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "Rossmann.de Produktseite (354 ml, 1 L = 19,18 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+            "source_text": "6.79 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite ('Mega Moisture Haarmaske'), bestätigt durch hagel-shop.de-Listing (dort teils fehlerhafter Beschreibungstext für ein anderes Being-Produkt gemischt — Titel/EAN/Menge stimmen aber überein, daher nur als Namens-/EAN-Beleg genutzt, nicht als INCI-Quelle).",
+          "category_specs.product_mask_specs.weight": "rich: 3 Öle (Kokos, Mandel, Jojoba) + Kakaobutter + Sheabutter, dazu 2 Polyquaternium-Konditionierpolymere und ein Acrylate-Copolymer.",
+          "category_specs.product_mask_specs.concentration": "high: 10 Minuten exakte Einwirkzeit, Conditioner-Ersatz-Positionierung, sehr ölreiche Formel mit mehreren Konditionierpolymeren.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: keine hydrolysierten Proteine in der INCI; reine Öl-/Butter-/Polymer-Feuchtigkeitsformel, 'Moisture' bereits im Produktnamen.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Kokos-, Mandel-, Jojobaöl, Kakao-/Sheabutter. polymers: Polyquaternium-37, Polyquaternium-10, Acrylates/Stearyl Methacrylate Copolymer (drei distinkte Konditionier-/Filmpolymere, deutlich markanter als die wave2-Präzedenz PEG-45M). humectants: Glycerin.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: bekämpft Frizz laut Markenhersteller-Claim. detangling_slip: 'macht das Haar leicht kämmbar' (Markenhersteller).",
+          "thickness_eligibility": "normal/coarse: sehr ölreiche Formel mit Polymeren, curl-spezifisch für Typ 3A-4C (tendenziell gröberes Haar); für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'besonders trockenes ... Haar'. frizz: Anti-Frizz laut Markenhersteller. tangling: Kämmbarkeits-Claim.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen (Spalte + Payload = 600); explizite Conditioner-Ersatz-Aussage bestätigt den P5-Default replaces_conditioner (kein Widerspruch, kein Abweichungsfall)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Mega Shine Haarmaske",
+          "brand": "Being (by ZURU)",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/239/MAM_23935278/MAM_23935278_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015"
+          },
+          "description": "Regenerierende, feuchtigkeitsspendende Haarmaske mit Sheabutter und Aloe-Extrakt für normales bis trockenes Haar; sulfat- und silikonfrei, für alle Haartypen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248006015",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+              "https://www.hagel-shop.de/being-mega-shine-feuchtigkeit-haarmaske-354-ml-12133579.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "shine",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+              "text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 600,
+              "source_text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248006015",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN); hagel-shop.de führt dieselbe EAN im Produktdatenblatt",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_text": "rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_secondsource",
+            "fact_value": "4895248006015",
+            "source_label": "hagel-shop.de Produktdatenblatt (EAN-Feld)",
+            "source_url": "https://www.hagel-shop.de/being-mega-shine-feuchtigkeit-haarmaske-354-ml-12133579.html",
+            "source_text": "EAN 4895248006015",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Aloe Barbadensis Leaf Juice, Acrylates/Stearyl Methacrylate Copolymer, ..., Polyquaternium-37, Polyquaternium-10, ...; keine Silikone, keine Proteine"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_text": "Aqua (Water), Cocos Nucifera (Coconut) Oil, Cetearyl Alcohol, Glycerin, Ceteareth-20, Prunus Amygdalus Dulcis (Sweet Almond) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Aloe Barbadensis Leaf Juice, Acrylates/Stearyl Methacrylate Copolymer, Tetrasodium Glutamate Diacetate, Polyquaternium-37, Polyquaternium-10, Behentrimonium Methosulfate, Propylene Glycol Dicaprylate/Dicaprate, Phenoxyethanol, Chlorphenesin, Hydroxyethylcellulose, PPG-1 Trideceth-6, Citric Acid, Sorbitan Oleate, Disodium Phosphate, Polysorbate 60, Sodium Phosphate, Trehalose, Ethylhexylglycerin, Parfum (Fragrance).",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "10 Minuten (exakt)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_text": "1-2 mal pro Woche auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.shine_all_types",
+            "fact_value": "Erhält Feuchtigkeitsgehalt und optimalen Glanz in normalem bis trockenem Haar; für alle Haartypen geeignet; sulfat- und silikonfrei, dermatologisch getestet; Sheabutter und Aloe-Extrakt speichern Feuchtigkeit und verleihen gesunden Glanz; als Ersatz für eine Spülung bei besonders trockenem/strapaziertem Haar geeignet.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_text": "Die dermatologisch getestete, sulfat- und silikonfreie Formel ist für alle Haartypen geeignet und eignet sich ideal für die zweimal wöchentliche Anwendung oder als Ersatz für eine Spülung bei besonders trockenem und/oder strapaziertem Haar.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "Rossmann.de Produktseite (354 ml, 1 L = 19,18 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+            "source_text": "6.79 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite; hagel-shop.de-EAN-Beleg als Zweitquelle bestätigt.",
+          "category_specs.product_mask_specs.weight": "rich: 3 Öle (Kokos, Mandel, Jojoba) + Sheabutter + Aloe-Saft, plus 2 Polyquaternium-Konditionierpolymere.",
+          "category_specs.product_mask_specs.concentration": "high: 10 Minuten exakte Einwirkzeit, Conditioner-Ersatz-Positionierung, sehr ölreiche Formel — identisches Konzentrationsprofil zur Schwester-Formel Mega Moisture.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: keine hydrolysierten Proteine; Öl-/Butter-/Aloe-Feuchtigkeitsformel.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Kokos-, Mandel-, Jojobaöl, Sheabutter. polymers: Polyquaternium-37, Polyquaternium-10, Acrylates/Stearyl Methacrylate Copolymer. humectants: Glycerin, Aloe Barbadensis Leaf Juice, Trehalose.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "shine: Kernclaim 'optimaler Glanz'/'gesunder Glanz' im Namen und in der Beschreibung. detangling_slip: Sheabutter-/Aloe-Pflegeclaim.",
+          "thickness_eligibility": "NIEDRIGE KONFIDENZ / Zwiespalt für Nick: Quelle claimt explizit 'für alle Haartypen geeignet' (anders als die curl-spezifische Schwester Mega Moisture) — daher inkl. fine trotz derselben öl-/polymerreichen Rich-Formel wie Mega Moisture, wo fine ausgeschlossen wurde. Konservativere Alternative wäre normal/coarse wie bei Mega Moisture; die explizite Quellenaussage wurde hier höher gewichtet als das reine Formel-Buildup-Risiko.",
+          "concern_eligibility": "dryness/feuchtigkeit: 'optimalen Feuchtigkeitsgehalt', 'normalem bis trockenem Haar'. Kein frizz-Flag (kein Frizz-Claim, anders als Mega Moisture).",
+          "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen; explizite Conditioner-Ersatz-Aussage bestätigt den P5-Default replaces_conditioner."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarmaske Hydro Feuchtigkeit",
+          "brand": "alverde NATURKOSMETIK",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 0.95,
+          "net_content_value": 20,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1777295113/assets/pas/images/7503b45e-a87c-4822-8fd3-ae444cd23f51/alverde-naturkosmetik-haarmaske-hydro-feuchtigkeit",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html"
+          },
+          "description": "Zertifizierte Naturkosmetik-Haarmaske mit Bio-Aloe Vera, Hyaluron und einem Bio-Öl-Komplex aus Kokos-, Jojoba- und Sojaöl für trockenes und sprödes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447918946",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+              "text": "Die Haarmaske 1-2-Mal pro Woche ca. 5-10 Minuten einwirken lassen. Anschließend gründlich ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Die Haarmaske 1-2-Mal pro Woche ca. 5-10 Minuten einwirken lassen. Anschließend gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447918946",
+            "source_label": "dm.de Produktseite (GTIN-Feld); alverde ist dm-Hausmarke (W5) — Single-Source ausreichend",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+            "source_text": "GTIN: 4066447918946",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Glycerin, Alcohol*, Brassica Alcohol, Glycine Soja Oil*, Simmondsia Chinensis Seed Oil*, Cocos Nucifera Oil*, Inulin, Betaine, ..., Butyrospermum Parkii Butter*, Aloe Barbadensis Leaf Juice Powder*, ..., Sodium Hyaluronate, Tocopherol; *Bio-Zertifizierung; keine Silikone, keine Proteine"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+            "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Glycerin, Alcohol*, Brassica Alcohol, Glycine Soja Oil*, Simmondsia Chinensis Seed Oil*, Cocos Nucifera Oil*, Inulin, Betaine, Brassicyl Isoleucinate Esylate, Levulinic Acid, Coco-Glucoside, Glyceryl Oleate, Parfum**, Glyceryl Caprylate, Sodium Levulinate, Arginine, Sodium PCA, Butyrospermum Parkii Butter*, p-Anisic Acid, Aloe Barbadensis Leaf Juice Powder*, Benzyl Alcohol**, Citronellol**, Cedrus Atlantica Oil/Extract**, Citric Acid, Sodium Hyaluronate, Tocopherol, Hydrogenated Vegetable Glycerides Citrate. / *ingredients from certified organic agriculture **from natural essential oils",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "5-10 Minuten (Range)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+            "source_text": "Die Haarmaske 1-2-Mal pro Woche ca. 5-10 Minuten einwirken lassen. Anschließend gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.hydro_complex",
+            "fact_value": "Intensive Pflege für trockenes und sprödes Haar; Hydro-Komplex aus Bio-Aloe Vera, Hyaluron und Glycerin sowie Bio-Öl-Komplex aus Kokos-, Jojoba- und Soja-Öl; zertifizierte Naturkosmetik; wirkt dem Austrocknen entgegen, verbessert Kämmbarkeit.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+            "source_text": "Die Rezeptur mit einem Hydro-Komplex aus Bio-Aloe Vera, Hyaluron und Glycerin sowie einem reichhaltigen Bio-Öl-Komplex aus Kokos-, Jojoba- und Soja-Öl kann dem Austrocknen der Haare entgegenwirken.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.95,
+            "source_label": "dm.de Produktseite (20 ml, 47,50 €/L)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+            "source_text": "0,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter dm-Produktname 'Haarmaske Hydro Feuchtigkeit' (dm-Beschreibungstext nennt 'Haarmaske Feuchtigkeit Aloe Vera & Hyaluron' als Untertitel — beide Bezeichnungen für dieselbe GTIN, Produkttitel maßgeblich).",
+          "category_specs.product_mask_specs.weight": "rich: 3 zertifizierte Bio-Öle (Soja, Jojoba, Kokos) + Sheabutter.",
+          "category_specs.product_mask_specs.concentration": "medium: 5-10 Minuten Standard-Einwirkzeit, 1-2x wöchentlich, kein Express- oder deklariertes Intensiv-Format trotz kleinem 20-ml-Format.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: Sodium Hyaluronate + Aloe Barbadensis + Glycerin als starker Feuchtigkeitskomplex; keine Proteine in der INCI.",
+          "category_specs.product_mask_specs.ingredient_flags": "oils: Sojaöl, Jojobaöl, Kokosöl, Sheabutter. humectants: Glycerin, Sodium Hyaluronate, Aloe Barbadensis Leaf Juice Powder, Sodium PCA.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'strapazierte Haaroberfläche wird geglättet'. detangling_slip: 'verbesserte Kämmbarkeit'.",
+          "thickness_eligibility": "normal/coarse: 3-Öl-Komplex + Sheabutter (Rich-Formel); für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'trockenes und sprödes Haar', Hydro-Komplex-Kernclaim.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 5-10 Minuten übernommen; keine Ansatz-Anweisung, keine Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarkur 4in1 Repair & Care Wunderkur",
+          "brand": "alverde NATURKOSMETIK",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.25,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1747487649/assets/pas/images/b64574dc-8866-4bd4-82d6-ca26feabd8bc/alverde-naturkosmetik-haarkur-4in1-repair-und-care-wunderkur",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html"
+          },
+          "description": "Reichhaltige Haarkur mit Avocado-Öl, Kakao-Butter und pflanzlichem (hydrolysiertem) Keratin für geschädigtes Haar; stärkt und repariert die Haarstruktur, vegan."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4067796145861",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "proteins",
+              "oils",
+              "humectants"
+            ],
+            "repair_support_level": "medium",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+              "text": "Zum Ausspülen: Die Wunderkur ca. 5-10 Minute einwirken lassen und anschließend ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Zum Ausspülen: Die Wunderkur ca. 5-10 Minute einwirken lassen und anschließend ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4067796145861",
+            "source_label": "dm.de Produktseite (GTIN-Feld); alverde ist dm-Hausmarke (W5) — Single-Source ausreichend",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+            "source_text": "GTIN: 4067796145861",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "proteins",
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Alcohol denat., Cetearyl Alcohol, Sodium Cetearyl Sulfate, Glycerin, ..., Butyrospermum Parkii Butter*, Theobroma Cacao Seed Butter*, Persea Gratissima Oil*, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, ...; *Bio-Zertifizierung; keine Silikone"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+            "source_text": "Aqua, Alcohol* denat., Cetearyl Alcohol, Sodium Cetearyl Sulfate, Glycerin, Isoamyl Laurate, Levulinic Acid, Caesalpinia Spinosa Gum, Brassicyl Isoleucinate Esylate, PCA Glyceryl Oleate, Sodium Levulinate, Butyrospermum Parkii Butter*, Theobroma Cacao Seed Butter*, Persea Gratissima Oil*, Hydrolyzed Corn Protein, Brassica Alcohol, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Sodium Anisate, Lactobacillus Ferment, Parfum**, ... / * ingredients from certified organic agriculture ** from natural essential oils",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "5-10 Minuten (Range)",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+            "source_text": "Zum Ausspülen: Die Wunderkur ca. 5-10 Minute einwirken lassen und anschließend ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.4in1_repair",
+            "fact_value": "Für geschädigtes Haar; stärkt und repariert die Haarstruktur von innen heraus, dringt tief in die Haarfaser ein; mit Avocado-Öl, Kakao-Butter und pflanzlichem Keratin; Haar wird widerstandsfähiger, glänzender und geschmeidiger.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+            "source_text": "Diese reichhaltige Haarkur wurde speziell entwickelt, um die Haarstruktur von innen heraus zu stärken und zu reparieren. Sie dringt tief in die Haarfaser ein, um dort ihre Wirkung zu entfalten und das Haar mit Nährstoffen zu versorgen. Durch die regelmäßige Anwendung kann das Haar widerstandsfähiger, glänzender und spürbar geschmeidiger werden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.25,
+            "source_label": "dm.de Produktseite (200 ml, 16,25 €/L)",
+            "source_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+            "source_text": "3,25 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter dm-Produktname 'Haarkur 4in1 Repair & Care Wunderkur'.",
+          "category_specs.product_mask_specs.weight": "rich: Sheabutter + Kakaobutter + Avocadoöl (3 Butter-/Ölquellen).",
+          "category_specs.product_mask_specs.concentration": "medium: 5-10 Minuten Standard-Einwirkzeit, kein Express- oder Overnight-Format.",
+          "category_specs.product_mask_specs.balance_direction": "protein: 'pflanzliches Keratin'-Kernclaim, INCI führt 3 hydrolysierte Proteine (Mais, Weizen, Soja) — Präzedenz Garnier Keratin Sleek (wave2, 3 hydrolysierte Proteine trotz vorhandener Öle = protein-Richtung).",
+          "category_specs.product_mask_specs.ingredient_flags": "proteins: Hydrolyzed Corn/Wheat/Soy Protein. oils: Avocadoöl, Kakaobutter, Sheabutter. humectants: Glycerin.",
+          "category_specs.product_mask_specs.repair_support_level": "medium: 3 hydrolysierte Proteine mit explizitem Stärkungs-/Reparatur-Claim — identische Präzedenz-Logik wie Garnier Keratin Sleek (wave2: medium).",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'spürbar geschmeidiger'. shine: 'glänzender'.",
+          "thickness_eligibility": "normal/coarse: 3 Butter-/Ölquellen (Rich-Formel); für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
+          "concern_eligibility": "hair_damage/repair: 'geschädigtes Haar', 'stärkt und repariert die Haarstruktur' als Kernpositionierung.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 5-10 Minuten übernommen ('Zum Ausspülen' bestätigt Rinse-out-Format); keine Ansatz-Anweisung, keine Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Deep Moisture Intensive Feuchtigkeit Haarmaske",
+          "brand": "MONDAY Haircare",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/172/MAM_17230208/MAM_17230208_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984"
+          },
+          "description": "Haarmaske mit feuchtigkeitsspendenden Naturstoffen, Kokosöl, Sheabutter, Kakaobutter, Arganöl und reparierendem (hydrolysiertem) Keratin für trockenes und geschädigtes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248003984",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+              "https://www.idealo.de/preisvergleich/OffersOfProduct/206988707_-moisture-intense-hydrating-mask-for-dry-hair-250-ml-monday-haircare.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "high",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "repair_support_level": "medium",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit",
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+              "text": "1–2 Mal wöchentlich auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": 600,
+              "source_text": "1–2 Mal wöchentlich auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248003984",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN); idealo.de aggregiert 5 unabhängige Händlerangebote unter derselben GTIN (u.a. 'MONDAY Haircare Deep Moisture Intensive Feuchtigkeit Haarmaske 250 ml')",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_text": "rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_secondsource",
+            "fact_value": "4895248003984",
+            "source_label": "idealo.de Preisvergleich (5 unabhängige Angebote, gleiches Produkt)",
+            "source_url": "https://www.idealo.de/preisvergleich/OffersOfProduct/206988707_-moisture-intense-hydrating-mask-for-dry-hair-250-ml-monday-haircare.html",
+            "source_text": "MONDAY Haircare Deep Moisture Intensive Feuchtigkeit Haarmaske 250 ml — 4,99 € (19,96 €/Liter); 5 Angebote",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "proteins",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetearyl Alcohol, Dimethicone, Cocos Nucifera (Coconut) Oil, Stearyl Alcohol, Dipropylene Glycol, Dimethiconol, Butyrospermum Parkii (Shea) Butter, Theobroma Cacao (Cocoa) Seed Butter, Argania Spinosa Kernel Oil, Hydrolyzed Keratin, ..."
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_text": "Aqua (Water), Glycerin, Cetearyl Alcohol, Dimethicone, Cocos Nucifera (Coconut) Oil, Stearyl Alcohol, Dipropylene Glycol, Dimethiconol, Butyrospermum Parkii (Shea) Butter, Theobroma Cacao (Cocoa) Seed Butter, Argania Spinosa Kernel Oil, Hydrolyzed Keratin, Behentrimonium Chloride, Phenoxyethanol, Hydroxyethylcellulose, PEG-100 Stearate, Glyceryl Stearate, Isopropyl Alcohol, Polysorbate 80, Chlorphenesin, C12-15 Pareth-3, Disodium EDTA, TEA-Dodecylbenzenesulfonate, Cocamidopropyl Betaine, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Disodium Phosphate, Polysorbate 60, Sodium Phosphate, Parfum (Fragrance), Hexyl Cinnamal, Linalool",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "10 Minuten (exakt)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_text": "1–2 Mal wöchentlich auf das feuchte oder handtuchtrockene Haar auftragen, in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen und anschließend ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.deep_moisture_keratin",
+            "fact_value": "Stärkt und pflegt trockenes und geschädigtes Haar mit intensiv feuchtigkeitsspendenden Naturstoffen und reparierendem Keratin.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_text": "Die Deep Moisture Haarmaske von MONDAY Haircare stärkt und pflegt trockenes und geschädigtes Haar mit intensiv feuchtigkeitsspendenden Naturstoffen und reparierendem Keratin.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.99,
+            "source_label": "Rossmann.de Produktseite (250 ml, 1 L = 19,96 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984",
+            "source_text": "4.99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite, bestätigt durch idealo.de-Aggregation (5 Händler, identische GTIN, minimal abweichende Titel-Kurzformen wie 'MONDAY Moisture Feuchtigkeit Haarmaske').",
+          "category_specs.product_mask_specs.weight": "rich: Dimethicone + Dimethiconol (2 Silikone) plus Kokosöl, Sheabutter, Kakaobutter, Arganöl (4 Öl-/Butterquellen) — sehr geladene Formel.",
+          "category_specs.product_mask_specs.concentration": "high: 10 Minuten exakte Einwirkzeit, 'Deep'/'Intensive' Positionierung, sehr reichhaltige Silikon-Öl-Formel mit Conditioner-Ersatz als Default.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: 'Deep Moisture'/'Intensive Feuchtigkeit' bereits im Namen, feuchtigkeitsspendende Naturstoffe zuerst in der Produktbeschreibung genannt; das einzelne Hydrolyzed Keratin ist sekundär genannt ('und reparierendem Keratin').",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Kokosöl, Sheabutter, Kakaobutter, Arganöl. proteins: Hydrolyzed Keratin (echtes Keratin, nicht nur Namens-Marketing). humectants: Glycerin.",
+          "category_specs.product_mask_specs.repair_support_level": "medium: nur 1 Protein (vs. 3 bei Garnier Keratin Sleek/alverde 4in1), aber echtes Hydrolyzed Keratin statt Pflanzenprotein-Surrogat und explizit als 'reparierend' beworben — konservativ auf medium statt low/high eingestuft.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: Silikon-/Öl-Kombination glättet typischerweise. shine: Silikon-Glanzeffekt (kein expliziter Glanz-Claim im Text, aber Standard-Silikonwirkung) — NIEDRIGE KONFIDENZ, da nicht wörtlich als Glanz beworben; auf Formelbasis abgeleitet.",
+          "thickness_eligibility": "normal/coarse: Silikon+4-Öl-Rich-Formel; für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
+          "concern_eligibility": "dryness/feuchtigkeit: Kernclaim. hair_damage/repair: 'geschädigtes Haar', 'reparierendem Keratin'.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: exakte 10-Minuten-Angabe übernommen; keine explizite Conditioner-Sequenz genannt — Default replaces_conditioner bleibt bestehen (kein Widerspruch)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Coconut Miracle Oil Haarmaske",
+          "brand": "OGX",
+          "category_key": "mask",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.99,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/179/MAM_17984855/MAM_17984855_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168"
+          },
+          "description": "Extra starke, feuchtigkeitsspendende Haarmaske mit Kokosöl, Vanilleschotenextrakt und Tiare-Essenz für trockenes, geschädigtes und krauses Haar; ohne sulfathaltige Tenside."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3574661685168",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+              "https://www.dm.de/ogx-haarkur-coconut-miracle-oil-p3574661685168.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_mask_specs": {
+            "weight": "rich",
+            "concentration": "medium",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "polymers",
+              "humectants"
+            ],
+            "repair_support_level": "low",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "shine"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "feuchtigkeit",
+          "frizz",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-MASK",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+              "text": "Nach der Haarwäsche großzügig im Haar verteilen und bis in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen, anschließend die Haare ausspülen. Für ein optimales Ergebnis zusammen mit anderen Haarpflegeprodukten von OGX verwenden."
+            },
+            "deviation": null,
+            "contact_time": {
+              "seconds": null,
+              "source_text": "Nach der Haarwäsche großzügig im Haar verteilen und bis in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen, anschließend die Haare ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3574661685168",
+            "source_label": "Rossmann.de Produktseite (URL-GTIN); dm.de führt dieselbe GTIN im URL-Pfad als 'OGX Haarkur Coconut Miracle Oil'",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_text": "rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_secondsource",
+            "fact_value": "3574661685168",
+            "source_label": "dm.de Produktseite (URL-GTIN)",
+            "source_url": "https://www.dm.de/ogx-haarkur-coconut-miracle-oil-p3574661685168.html",
+            "source_text": "dm.de/ogx-haarkur-coconut-miracle-oil-p3574661685168.html",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_mask_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua/Water/Eau, Cetearyl Alcohol, Cetyl Alcohol, Behentrimonium Chloride, Glycerin, PPG-3 Benzyl Ether Myristate, Amodimethicone, Steareth-20, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, Polyquaternium-47, Polyquaternium-37, ...; keine Proteine"
+            },
+            "source_label": "Rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_text": "Aqua/Water/Eau, Cetearyl Alcohol, Cetyl Alcohol, Behentrimonium Chloride, Glycerin, PPG-3 Benzyl Ether Myristate, Amodimethicone, Steareth-20, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, Polyquaternium-47, Polyquaternium-37, PPG-1 Trideceth-6, Sorbitan Oleate, Glycol Distearate, Propylene Glycol Dicaprylate/Dicaprate, Isopropyl Alcohol, Citric Acid, Sodium Hydroxide, Disodium EDTA, Sodium Benzoate, Phenoxyethanol, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Parfum/Fragrance, Linalool, Benzyl Salicylate",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_mask.contact_time",
+            "fact_value": "3-5 Minuten (Range)",
+            "source_label": "Rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_text": "Nach der Haarwäsche großzügig im Haar verteilen und bis in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen, anschließend die Haare ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.coconut_miracle",
+            "fact_value": "Extra starke Formel mit feuchtigkeitsspendendem Kokosöl, Vanilleschotenextrakt und Tiare-Essenz; sorgt für seidiges & glattes Haar; ohne sulfathaltige Tenside; verleiht strahlenden Glanz; wirkt bereits nach 60 Sekunden; ideal für trockenes, geschädigtes & voluminöses Haar, bändigt krauses Haar; neu mit mehr Inhalt.",
+            "source_label": "Rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_text": "Neu: jetzt mit mehr Inhalt – Die extra starke OGX Coconut Miracle Oil Hair Mask mit feuchtigkeitsspendendem Kokosöl, Vanilleschotenextrakt und Tiare-Essenz ist eine pflegende Haarmaske und sorgt für seidiges & glattes Haar ... Darüber hinaus versorgt die glättende Anti Frizz Haarkur ohne sulfathaltige Tenside das Haar mit wichtiger Feuchtigkeit, verleiht strahlenden Glanz & wirkt bereits nach 60 Sekunden. Zudem eignet sich die sanfte Haarpflege ideal für trockenes, geschädigtes & voluminöses Haar und hilft, krauses Haar zu bändigen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.99,
+            "source_label": "Rossmann.de Produktseite (300 ml, 1 L = 33,30 €)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168",
+            "source_text": "9.99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut Rossmann-Produktseite ('Coconut Miracle Oil Haarmaske'); dm.de führt dieselbe GTIN als 'OGX Haarkur Coconut Miracle Oil' — Namensvariante dokumentiert, Rossmann-Name (Backlog-Retailer) als Primärname übernommen.",
+          "category_specs.product_mask_specs.weight": "rich: Amodimethicone (Silikon) + Kokosöl + 2 Polyquaternium-Konditionierpolymere.",
+          "category_specs.product_mask_specs.concentration": "medium: 3-5 Minuten Standard-Einwirkzeit; die '60-Sekunden'-Werbeaussage ist ein Marketing-Claim für den ersten sichtbaren Effekt, nicht die vorgeschriebene Einwirkzeit — konservativ auf medium eingestuft statt high.",
+          "category_specs.product_mask_specs.balance_direction": "moisture: keine Proteine in der INCI; Kokosöl + Glycerin als Feuchtigkeitskern, 'feuchtigkeitsspendendem Kokosöl' als Kernclaim.",
+          "category_specs.product_mask_specs.ingredient_flags": "silicones: Amodimethicone. oils: Kokosöl. polymers: Polyquaternium-47, Polyquaternium-37. humectants: Glycerin.",
+          "category_specs.product_mask_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_mask_specs.functional_benefits": "smoothing_frizz_control: 'seidiges & glattes Haar', 'bändigt krauses Haar'. shine: 'verleiht strahlenden Glanz'.",
+          "thickness_eligibility": "normal/coarse: Silikon+Kokosöl-Rich-Formel mit 2 Konditionierpolymeren; für feines Haar konservativ ausgeschlossen (Buildup-Risiko).",
+          "concern_eligibility": "dryness/feuchtigkeit: 'trockenes ... Haar', Feuchtigkeits-Kernclaim. frizz: 'Anti Frizz Haarkur', 'bändigt krauses Haar'. hair_damage: 'geschädigtes ... Haar'.",
+          "protocols.tpl_mask.deviation": "Keine Deviation: Range 3-5 Minuten übernommen; 'im Haar verteilen ... bis in die Spitzen' ist keine explizite Ansatz-Anweisung und widerspricht P5 nicht; keine Conditioner-Sequenz — Default replaces_conditioner bleibt bestehen."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "rename": {
+        "from": "Hask Argan Oil Repairing Deep Conditioner",
+        "to": "HASK Argan Conditioning Treatment Haarkur",
+        "reason": "Dedupe-Check (wave3): identische GTIN 00071164333068 bereits am Katalogprodukt; W6 aktueller Rossmann-Regalname. Kein neues Produkt angelegt."
+      }
+    }
+  ]
+}
