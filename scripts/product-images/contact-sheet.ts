@@ -15,7 +15,9 @@
  *     --results <batchOutDir>/results.json [--out <batchOutDir>/review.html]
  */
 import { readFileSync, writeFileSync } from "node:fs"
-import { dirname, relative, resolve } from "node:path"
+import { dirname, resolve } from "node:path"
+
+import sharp from "sharp"
 import { fileURLToPath } from "node:url"
 
 import { parseArgs, requireFlag } from "./cli-args"
@@ -38,9 +40,12 @@ function escapeHtml(value: string): string {
   )
 }
 
-function relPath(baseDir: string, target: string | null): string | null {
+// Self-contained sheet: embed downscaled previews as data URIs so the file
+// renders anywhere (viewers, chat uploads) without its sibling files.
+async function embed(target: string | null): Promise<string | null> {
   if (!target) return null
-  return relative(baseDir, target).replaceAll("\\", "/")
+  const buf = await sharp(target).resize({ width: 480, height: 480, fit: "inside", withoutEnlargement: true }).png().toBuffer()
+  return `data:image/png;base64,${buf.toString("base64")}`
 }
 
 function figure(src: string | null, label: string): string {
@@ -50,10 +55,10 @@ function figure(src: string | null, label: string): string {
   return `<figure><img src="${escapeHtml(src)}" loading="lazy" alt="${escapeHtml(label)}" /><figcaption>${escapeHtml(label)}</figcaption></figure>`
 }
 
-function renderCard(result: ImageResult, baseDir: string): string {
-  const original = relPath(baseDir, result.files.original)
-  const white = relPath(baseDir, result.files.qa_white)
-  const magenta = relPath(baseDir, result.files.qa_magenta)
+async function renderCard(result: ImageResult): Promise<string> {
+  const original = await embed(result.files.original)
+  const white = await embed(result.files.qa_white)
+  const magenta = await embed(result.files.qa_magenta)
   const hasCutout = Boolean(result.files.cutout)
   const checked = result.status === "ok" ? "checked" : ""
   const disabled = hasCutout ? "" : "disabled"
@@ -80,8 +85,8 @@ function renderCard(result: ImageResult, baseDir: string): string {
 </div>`
 }
 
-function buildHtml(payload: { summary: Record<string, unknown>; results: ImageResult[] }, baseDir: string): string {
-  const rows = payload.results.map((result) => renderCard(result, baseDir)).join("\n")
+async function buildHtml(payload: { summary: Record<string, unknown>; results: ImageResult[] }): Promise<string> {
+  const rows = (await Promise.all(payload.results.map((result) => renderCard(result)))).join("\n")
   return `<!doctype html>
 <html lang="de">
 <head>
@@ -162,7 +167,6 @@ async function main(): Promise<void> {
   const flags = parseArgs()
   const resultsPath = resolve(requireFlag(flags, "results", USAGE))
   const outPath = resolve(flags.get("out") ?? resolve(dirname(resultsPath), "review.html"))
-  const baseDir = dirname(outPath)
 
   const payload = JSON.parse(readFileSync(resultsPath, "utf8")) as {
     summary: Record<string, unknown>
@@ -172,7 +176,7 @@ async function main(): Promise<void> {
     throw new Error(`${resultsPath} does not look like a batch-run.ts results.json (missing "results" array)`)
   }
 
-  const html = buildHtml(payload, baseDir)
+  const html = await buildHtml(payload)
   writeFileSync(outPath, html)
   console.log(`Review sheet: ${outPath}`)
   console.log(`Open it directly in a browser (file://${outPath}).`)
