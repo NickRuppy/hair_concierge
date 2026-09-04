@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto"
-import { execFileSync } from "node:child_process"
 import { readFileSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
 
@@ -19,10 +18,6 @@ const imageReceiptPath = resolve(import.meta.dirname, "approved-image-finalizati
 // Exact time at which Nick's in-thread approval was recorded into the local package.
 const reviewedAt = "2026-09-04T06:52:43.000Z"
 const researchCheckedAt = "2026-09-02T12:00:00.000Z"
-const reviewedHead = execFileSync("git", ["rev-parse", "HEAD"], {
-  cwd: root,
-  encoding: "utf8",
-}).trim()
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"))
@@ -61,6 +56,8 @@ const existingFinalizedImages = new Map(
 )
 const operatorProfileId =
   process.env.SHAMPOO_SCANNABLE_OPERATOR_PROFILE_ID ?? existingSupplement.operator_profile_id
+const reviewedHead =
+  process.env.SHAMPOO_SCANNABLE_REVIEWED_HEAD ?? existingSupplement.reviewed_head
 if (
   !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     operatorProfileId,
@@ -68,6 +65,11 @@ if (
 ) {
   throw new Error(
     "A valid operator profile ID is required in the existing supplement or SHAMPOO_SCANNABLE_OPERATOR_PROFILE_ID",
+  )
+}
+if (!/^[a-f0-9]{40}$/.test(reviewedHead)) {
+  throw new Error(
+    "A valid sealed reviewed head is required in the existing supplement or SHAMPOO_SCANNABLE_REVIEWED_HEAD",
   )
 }
 const manifests = new Map()
