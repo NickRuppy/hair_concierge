@@ -75,7 +75,9 @@ and the mask-vs-conditioner category itself (metadata/directions decide at G0, p
 
 ## Watch-list for the first-set review (Nick's iterate caveat)
 
-1. `texture_fit` — no matching consumer; likely shadows weight. Top pruning candidate.
-2. `damage_fit` — possibly fully derivable from conditioning level + repair route; could become
+1. `damage_fit` — possibly fully derivable from conditioning level + repair route; could become
    a computed row.
-3. `primary_focus: lightness` — may go unused in this category.
+2. `primary_focus: lightness` — may go unused in this category (Nick acknowledged 2026-09-04).
+
+`texture_fit` is off the watch-list: Nick ruled 2026-09-04 that it is needed down the line for
+user-profile matching even though mask matching does not consume it today.
