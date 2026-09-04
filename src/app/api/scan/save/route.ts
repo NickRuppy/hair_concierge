@@ -4,11 +4,10 @@ import { z } from "zod"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
 import {
   loadScanSavedState,
+  moveScanSavedProduct,
   removeScanRoutineProduct,
   removeScanWishlistProduct,
-  saveScanRoutineProduct,
-  saveScanWishlistProduct,
-  type ScanSavedStatePayload,
+  type ScanSaveKind,
 } from "@/lib/scan/saved-state"
 import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -25,18 +24,12 @@ export type ScanSaveRouteDeps = {
   getUserId: () => Promise<string | null>
   checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
-  saveWishlist: typeof saveScanWishlistProduct
+  moveSavedProduct: typeof moveScanSavedProduct
   removeWishlist: typeof removeScanWishlistProduct
-  saveRoutine: typeof saveScanRoutineProduct
   removeRoutine: typeof removeScanRoutineProduct
   loadSavedState: typeof loadScanSavedState
   captureScanException?: typeof captureScanException
 }
-
-type ScanSaveKind = "routine" | "merkliste"
-
-const otherKind = (kind: ScanSaveKind): ScanSaveKind =>
-  kind === "merkliste" ? "routine" : "merkliste"
 
 const fail = (error: string, status: number, headers?: HeadersInit) =>
   NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
@@ -89,41 +82,21 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
 
       try {
         const client = deps.createAdminClient()
-        // Both kinds share the eligibility outcome shape (active product, ruling R7
-        // quarantine, plus the routine-only origin/ownership gate).
-        const result =
-          parsed.kind === "merkliste"
-            ? await deps.saveWishlist(client, userId, parsed.productId)
-            : await deps.saveRoutine(client, userId, parsed.productId)
+        // The two destinations are exclusive, so a save is a MOVE — destination write
+        // plus source cleanup plus the state read, all inside one transaction
+        // (`scan_move_saved_product`). A source row another surface owns is left
+        // standing and is not a failure; the returned state reports what stands.
+        const result = await deps.moveSavedProduct(client, userId, parsed.productId, parsed.kind)
         if (result.outcome === "product_not_found") return fail("product_not_found", 404)
         if (result.outcome === "product_not_saveable") return fail("product_not_saveable", 409)
 
-        // The two destinations are exclusive, so a save is a MOVE. Doing the cleanup here
-        // rather than as a second client call keeps it on one rate-limit charge and
-        // removes the window where a dropped/aborted follow-up request left the product
-        // in both lists. A cleanup that cannot happen because the other row belongs to
-        // another surface (`not_removable_here`) is not a failure — that row was never
-        // ours to move, and `loadSavedState` below reports what actually stands.
-        try {
-          await removeKind(client, userId, parsed.productId, otherKind(parsed.kind))
-        } catch (error) {
-          console.error("[scan] save move cleanup failed", error)
-          ;(deps.captureScanException ?? captureScanException)(error, {
-            route: "save",
-            status: 500,
-            reason: "save_move_cleanup_failed",
-            userId,
-          })
-          return fail("save_incomplete", 500)
-        }
-
-        // `result.savedState` already describes the post-move state: the kind just saved
-        // wins the loader's priority order in every reachable combination, so no extra
-        // round trip is needed to answer "where does this product sit now?".
-        const savedState: ScanSavedStatePayload = result.savedState
-
         return NextResponse.json(
-          { ok: true, kind: parsed.kind, productId: parsed.productId, savedState },
+          {
+            ok: true,
+            kind: parsed.kind,
+            productId: parsed.productId,
+            savedState: result.savedState,
+          },
           { headers: { "Cache-Control": "no-store" } },
         )
       } catch (error) {
@@ -180,9 +153,8 @@ const handlers = createScanSaveRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
   createAdminClient,
-  saveWishlist: saveScanWishlistProduct,
+  moveSavedProduct: moveScanSavedProduct,
   removeWishlist: removeScanWishlistProduct,
-  saveRoutine: saveScanRoutineProduct,
   removeRoutine: removeScanRoutineProduct,
   loadSavedState: loadScanSavedState,
 })
