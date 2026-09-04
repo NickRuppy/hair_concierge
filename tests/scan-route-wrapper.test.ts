@@ -10,7 +10,7 @@ import {
   type ScanRouteContext,
   type ScanRouteDeps,
 } from "../src/lib/scan/route"
-import { fixedWindowRetryAfterSeconds, SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
+import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 
@@ -77,10 +77,7 @@ test("createScanRoute: rate limited returns 429 with the derived Retry-After", a
   })
   const response = await handler(request())
   assert.equal(response.status, 429)
-  assert.equal(
-    response.headers.get("Retry-After"),
-    String(fixedWindowRetryAfterSeconds(SCAN_RATE_LIMIT)),
-  )
+  assertRetryAfter(response)
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
@@ -172,3 +169,37 @@ test("createScanRoute: onError runs before capture, sharing the handler's ctx", 
   assert.deepEqual(seenCtx?.body, { value: "abc" })
   assert.equal(seenCtx?.userId, userId)
 })
+
+test("createScanRoute: a throwing onError hook still yields 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
+  const handler = buildRoute({
+    handler: async () => {
+      throw thrown
+    },
+    onError: async () => {
+      throw new Error("hook exploded")
+    },
+    deps: baseDeps({
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
+      },
+    }),
+  })
+  const response = await handler(request())
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.deepEqual(captured, [{ route: "resolve", status: 503, reason: "resolve_failed", userId }])
+})
+
+/**
+ * The header is computed inside the handler, so recomputing `fixedWindowRetryAfterSeconds`
+ * here can straddle a second boundary and flake. Assert the bound instead (precedent:
+ * tests/personal-plan-api-stage3.test.ts).
+ */
+function assertRetryAfter(response: Response) {
+  const header = response.headers.get("Retry-After") ?? ""
+  assert.match(header, /^[1-9][0-9]?$/)
+  assert.ok(Number(header) <= SCAN_RATE_LIMIT.windowMs / 1000)
+}

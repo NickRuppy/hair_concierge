@@ -75,7 +75,13 @@ export function createScanRoute<TBody>(config: {
       return await config.handler(ctx)
     } catch (error) {
       console.error(`[scan] ${config.route} failed`, error)
-      if (config.onError) await config.onError(error, ctx)
+      // The hook is telemetry, never a gate: a throw inside it must not swallow the 503
+      // or the Sentry capture below.
+      try {
+        await config.onError?.(error, ctx)
+      } catch (hookError) {
+        console.error(`[scan] ${config.route} onError hook failed`, hookError)
+      }
       ;(config.deps.captureScanException ?? captureScanException)(error, {
         route: config.route,
         status: 503,

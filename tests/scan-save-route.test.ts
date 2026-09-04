@@ -3,7 +3,7 @@ import test from "node:test"
 
 import { createScanSaveRouteHandlers, type ScanSaveRouteDeps } from "../src/app/api/scan/save/route"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
-import { fixedWindowRetryAfterSeconds, SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
+import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
@@ -50,10 +50,7 @@ test("scan save POST: rate limited returns 429 with Retry-After, before any writ
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 429)
-  assert.equal(
-    response.headers.get("Retry-After"),
-    String(fixedWindowRetryAfterSeconds(SCAN_RATE_LIMIT)),
-  )
+  assertRetryAfter(response)
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
@@ -299,3 +296,14 @@ test("scan save DELETE: an unexpected error maps to 503 and captures to Sentry",
     { route: "save", status: 503, reason: "save_removal_failed", userId },
   ])
 })
+
+/**
+ * The header is computed inside the handler, so recomputing `fixedWindowRetryAfterSeconds`
+ * here can straddle a second boundary and flake. Assert the bound instead (precedent:
+ * tests/personal-plan-api-stage3.test.ts).
+ */
+function assertRetryAfter(response: Response) {
+  const header = response.headers.get("Retry-After") ?? ""
+  assert.match(header, /^[1-9][0-9]?$/)
+  assert.ok(Number(header) <= SCAN_RATE_LIMIT.windowMs / 1000)
+}
