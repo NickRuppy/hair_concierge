@@ -82,6 +82,10 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     buildScanVerdict: () => inCatalogVerdict,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
     loadPresentationRows: async () => [presentationRow],
+    // Next's real `after` throws outside a request scope, and these tests assert on the
+    // response only. Tests that assert on the deferred telemetry swap in
+    // `collectAttempts().deps.after`, which records the task so `flush()` can drain it.
+    after: () => {},
     ...overrides,
   }
 }
@@ -532,30 +536,43 @@ test("scan resolve: an unexpected lib error maps to 503 and captures to Sentry",
   assert.deepEqual(captured, [{ route: "resolve", status: 503, reason: "resolve_failed", userId }])
 })
 
+/**
+ * Attempt telemetry is deferred off the response path via `after` (F11), so the writes have
+ * not run yet when the handler resolves. The fake queues each task the way Next does and
+ * `flush()` drains it, which is what the assertions below wait on.
+ */
 function collectAttempts() {
   const starts: unknown[] = []
   const completions: unknown[] = []
-  const recordScanResolveAttempt = async (_client: unknown, attempt: unknown) => {
-    starts.push(attempt)
+  const queued: Array<() => Promise<void> | void> = []
+  const deps: Partial<ScanResolveRouteDeps> = {
+    recordScanResolveAttempt: (async (_client: unknown, attempt: unknown) => {
+      starts.push(attempt)
+    }) as never,
+    completeScanResolveAttempt: (async (_client: unknown, completion: unknown) => {
+      completions.push(completion)
+    }) as never,
+    // Real `after` callbacks run only once the response has been sent, so the fake holds
+    // the task until `flush()` — running it earlier would not model production.
+    after: (task) => {
+      queued.push(task)
+    },
   }
-  const completeScanResolveAttempt = async (_client: unknown, completion: unknown) => {
-    completions.push(completion)
+  const flush = async () => {
+    while (queued.length > 0) {
+      for (const task of queued.splice(0)) await task()
+    }
   }
-  return { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt }
+  return { starts, completions, deps, flush }
 }
 
 test("attempt telemetry: catalog hit starts before lookup and completes only after payload build", async () => {
-  const { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt } =
-    collectAttempts()
-  const handler = createScanResolveRouteHandler(
-    baseDeps({
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
-    }),
-  )
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(baseDeps(attempts.deps))
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  assert.deepEqual(starts, [
+  await attempts.flush()
+  assert.deepEqual(attempts.starts, [
     {
       attemptId: "attempt-1",
       userId,
@@ -563,7 +580,7 @@ test("attempt telemetry: catalog hit starts before lookup and completes only aft
       rawValue: "4006381333931",
     },
   ])
-  assert.deepEqual(completions, [
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "hit",
@@ -575,17 +592,17 @@ test("attempt telemetry: catalog hit starts before lookup and completes only aft
 })
 
 test("attempt telemetry: an unknown fit verdict is completed but not counted as resolved", async () => {
-  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
     baseDeps({
+      ...attempts.deps,
       buildScanVerdict: () => ({ ...inCatalogVerdict, verdict: "unknown" }),
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "hit",
@@ -597,19 +614,15 @@ test("attempt telemetry: an unknown fit verdict is completed but not counted as 
 })
 
 test("attempt telemetry: catalog miss completes as unknown_product", async () => {
-  const { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt } =
-    collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
-    baseDeps({
-      lookupCatalogProductByIdentifier: async () => null,
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
-    }),
+    baseDeps({ ...attempts.deps, lookupCatalogProductByIdentifier: async () => null }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  assert.equal(starts.length, 1)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.equal(attempts.starts.length, 1)
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "miss",
@@ -621,19 +634,15 @@ test("attempt telemetry: catalog miss completes as unknown_product", async () =>
 })
 
 test("attempt telemetry: invalid checksum starts then completes as invalid_identifier", async () => {
-  const { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt } =
-    collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
-    baseDeps({
-      validateEanInput: () => ({ ok: false, reason: "checksum" }),
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
-    }),
+    baseDeps({ ...attempts.deps, validateEanInput: () => ({ ok: false, reason: "checksum" }) }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333930" } }))
   assert.equal(response.status, 400)
-  assert.equal(starts.length, 1)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.equal(attempts.starts.length, 1)
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "invalid",
@@ -645,17 +654,14 @@ test("attempt telemetry: invalid checksum starts then completes as invalid_ident
 })
 
 test("attempt telemetry: quarantined hit retains its matching product", async () => {
-  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
-    baseDeps({
-      isProductSearchQuarantined: async () => true,
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
-    }),
+    baseDeps({ ...attempts.deps, isProductSearchQuarantined: async () => true }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "quarantined",
@@ -667,18 +673,18 @@ test("attempt telemetry: quarantined hit retains its matching product", async ()
 })
 
 test("attempt telemetry: open submission completes as pending_submission", async () => {
-  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
     baseDeps({
+      ...attempts.deps,
       lookupCatalogProductByIdentifier: async () => null,
       findOpenScanSubmission: async () => ({ submissionId: "sub-1", status: "researching" }),
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "miss",
@@ -690,27 +696,27 @@ test("attempt telemetry: open submission completes as pending_submission", async
 })
 
 test("attempt telemetry: resolve-by-productId logs nothing — no barcode involved", async () => {
-  const { starts, completions, recordScanResolveAttempt, completeScanResolveAttempt } =
-    collectAttempts()
-  const handler = createScanResolveRouteHandler(
-    baseDeps({
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
-    }),
-  )
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(baseDeps(attempts.deps))
   const response = await handler(request({ productId }))
   assert.equal(response.status, 200)
-  assert.deepEqual(starts, [])
-  assert.deepEqual(completions, [])
+  await attempts.flush()
+  assert.deepEqual(attempts.starts, [])
+  assert.deepEqual(attempts.completions, [])
 })
 
-test("attempt telemetry: starts before identifier validation", async () => {
+test("attempt telemetry: F11 — nothing is written before the response, record before completion", async () => {
   const order: string[] = []
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
     baseDeps({
-      recordScanResolveAttempt: async () => {
+      ...attempts.deps,
+      recordScanResolveAttempt: (async () => {
         order.push("start")
-      },
+      }) as never,
+      completeScanResolveAttempt: (async () => {
+        order.push("complete")
+      }) as never,
       validateEanInput: () => {
         order.push("validate")
         return { ok: false, reason: "checksum" }
@@ -719,21 +725,45 @@ test("attempt telemetry: starts before identifier validation", async () => {
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333930" } }))
   assert.equal(response.status, 400)
-  assert.deepEqual(order, ["start", "validate"])
+  // The attempt is queued before validation runs, but neither write has touched the DB by
+  // the time the client has its answer.
+  assert.deepEqual(order, ["validate"])
+  await attempts.flush()
+  assert.deepEqual(order, ["validate", "start", "complete"])
 })
 
-test("attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss", async () => {
-  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+test("attempt telemetry: the completion never overtakes the record, even on a slow insert", async () => {
+  const order: string[] = []
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
     baseDeps({
-      loadScanEvaluationContext: async () => null,
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
+      ...attempts.deps,
+      // A slow INSERT is exactly the case Next's `after` queue would not serialise on its
+      // own (p-queue defaults to concurrency: Infinity) — the UPDATE must still come last.
+      recordScanResolveAttempt: (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 5))
+        order.push("start")
+      }) as never,
+      completeScanResolveAttempt: (async () => {
+        order.push("complete")
+      }) as never,
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  await attempts.flush()
+  assert.deepEqual(order, ["start", "complete"])
+})
+
+test("attempt telemetry: a missing profile is a hit but profile_ineligible, not a catalog miss", async () => {
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({ ...attempts.deps, loadScanEvaluationContext: async () => null }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 409)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "hit",
@@ -745,19 +775,19 @@ test("attempt telemetry: a missing profile is a hit but profile_ineligible, not 
 })
 
 test("attempt telemetry: a post-lookup failure records the current bounded stage", async () => {
-  const { completions, recordScanResolveAttempt, completeScanResolveAttempt } = collectAttempts()
+  const attempts = collectAttempts()
   const handler = createScanResolveRouteHandler(
     baseDeps({
+      ...attempts.deps,
       loadScanProductFacts: async () => {
         throw new Error("facts unavailable")
       },
-      recordScanResolveAttempt: recordScanResolveAttempt as never,
-      completeScanResolveAttempt: completeScanResolveAttempt as never,
     }),
   )
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 503)
-  assert.deepEqual(completions, [
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
       lookupOutcome: "hit",
@@ -766,6 +796,51 @@ test("attempt telemetry: a post-lookup failure records the current bounded stage
       failureStage: "product_facts",
     },
   ])
+})
+
+test("attempt telemetry: F15 — a quarantine-lookup failure keeps the matched product", async () => {
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      isProductSearchQuarantined: async () => {
+        throw new Error("dispositions unavailable")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 503)
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
+    {
+      attemptId: "attempt-1",
+      lookupOutcome: "hit",
+      terminalOutcome: "temporarily_unavailable",
+      matchedProductId: productId,
+      failureStage: "quarantine_lookup",
+    },
+  ])
+})
+
+test("attempt telemetry: one admin client per request, shared with the onError path", async () => {
+  const attempts = collectAttempts()
+  let created = 0
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      createAdminClient: (() => {
+        created += 1
+        return {} as never
+      }) as never,
+      loadScanProductFacts: async () => {
+        throw new Error("facts unavailable")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 503)
+  await attempts.flush()
+  assert.equal(created, 1)
 })
 
 /**

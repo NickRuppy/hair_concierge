@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { after } from "next/server"
 import { z } from "zod"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
@@ -14,7 +15,7 @@ import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
-import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit } from "@/lib/rate-limit"
 import {
@@ -36,7 +37,7 @@ import {
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
-import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
+import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import { loadScanSavedState } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanVerdictPayload } from "@/lib/scan/types"
@@ -95,21 +96,11 @@ export type ScanResolveRouteDeps = {
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
   captureScanException?: typeof captureScanException
+  /** Injection seam for Next's `after` — tests substitute a synchronous runner. */
+  after?: ScanAfter
 }
 
-/**
- * A category with no target to compare against — genuinely not needed, or not decided
- * yet. Duplicated (not imported) from `resolve-verdict.ts`'s private `isNotNeeded`: that
- * predicate isn't exported (Task 1's settled interface), and this route only needs it to
- * skip an unnecessary full-catalog `recommendationCandidates` load — `buildScanVerdict`
- * itself re-derives the real branch internally regardless of what this route decides here.
- */
-function isDecisionWithoutTarget(decision: PlanCategoryDecision): boolean {
-  if (decision.needTier === "not_needed") return true
-  return (
-    decision.target === null && decision.needTier !== "basis" && decision.needTier !== "optional"
-  )
-}
+type ScanAfter = (task: () => Promise<void> | void) => void
 
 /**
  * Mutable attempt-telemetry bookkeeping for one request, created fresh per parse() call
@@ -123,9 +114,17 @@ type ResolveAttemptTracker = {
   lookupOutcome: ScanResolveLookupOutcome | null
   matchedProductId: string | null
   failureStage: ScanResolveFailureStage
+  /** Deferred telemetry writes, drained in FIFO order — see `scheduleAttemptWrite`. */
+  telemetryWrites: Array<() => Promise<void>>
+  telemetryDrainScheduled: boolean
 }
 
-type ResolveRouteBody = { input: ResolveInput; attempt: ResolveAttemptTracker }
+type ResolveRouteBody = {
+  input: ResolveInput
+  attempt: ResolveAttemptTracker
+  /** One admin client per request, shared by the handler and the `onError` hook. */
+  client: SupabaseClient
+}
 
 type ResolveTerminalOutcome =
   | "invalid_identifier"
@@ -137,28 +136,61 @@ type ResolveTerminalOutcome =
   | "temporarily_unavailable"
 
 /**
+ * Attempt telemetry must not sit on the response path (F11), but the attempt row is
+ * INSERTed by `recordScanResolveAttempt` and then UPDATEd by `completeScanResolveAttempt`,
+ * so the two writes still have to run in order. Two separate `after` calls would NOT give
+ * that: `AfterContext.addCallback` pushes each callback into a p-queue constructed with
+ * p-queue's default `concurrency: Infinity`
+ * (node_modules/next/dist/server/after/after-context.js), so callbacks are only *started*
+ * in enqueue order and then run concurrently — the UPDATE could overtake its INSERT and
+ * the completion would be silently lost (both helpers are fail-open).
+ *
+ * So the writes are collected here and drained by a single `after` callback that awaits
+ * them one at a time. Registering that drain on the first write is safe because `after`
+ * callbacks only run once the response has been sent
+ * (`AfterContext.runCallbacksOnClose`), by which point the completion is already queued.
+ */
+function scheduleAttemptWrite(
+  attempt: ResolveAttemptTracker,
+  runAfter: ScanAfter,
+  write: () => Promise<void>,
+) {
+  attempt.telemetryWrites.push(write)
+  if (attempt.telemetryDrainScheduled) return
+  attempt.telemetryDrainScheduled = true
+  runAfter(async () => {
+    for (let index = 0; index < attempt.telemetryWrites.length; index += 1) {
+      await attempt.telemetryWrites[index]()
+    }
+  })
+}
+
+/**
  * Shared by the handler's normal-completion calls and the wrapper's `onError` hook (the
  * catch-all's own completion, for a throw mid-handler) — same guard, same shape, one place.
  */
-async function completeResolveAttempt(
+function completeResolveAttempt(
   deps: ScanResolveRouteDeps,
+  runAfter: ScanAfter,
   client: SupabaseClient,
   attempt: ResolveAttemptTracker,
   terminalOutcome: ResolveTerminalOutcome,
   stage: ScanResolveFailureStage | null,
 ) {
   if (!attempt.attemptId) return
-  await deps.completeScanResolveAttempt(client, {
+  const completion = {
     attemptId: attempt.attemptId,
     lookupOutcome: attempt.lookupOutcome,
     terminalOutcome,
     matchedProductId: attempt.matchedProductId,
     failureStage: stage,
-  })
+  }
+  scheduleAttemptWrite(attempt, runAfter, () => deps.completeScanResolveAttempt(client, completion))
 }
 
 export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
   const parseBody = parseJsonBody(resolveBodySchema)
+  const runAfter: ScanAfter = deps.after ?? after
 
   return createScanRoute<ResolveRouteBody>({
     route: "resolve",
@@ -170,21 +202,24 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         ok: true,
         body: {
           input: parsed.body,
+          client: deps.createAdminClient(),
           attempt: {
             attemptId: null,
             lookupOutcome: null,
             matchedProductId: null,
             failureStage: "identifier_lookup",
+            telemetryWrites: [],
+            telemetryDrainScheduled: false,
           },
         },
       }
     },
     failureReason: "resolve_failed",
     onError: async (_error, ctx) => {
-      const { attempt } = ctx.body
-      const client = deps.createAdminClient()
-      await completeResolveAttempt(
+      const { attempt, client } = ctx.body
+      completeResolveAttempt(
         deps,
+        runAfter,
         client,
         attempt,
         "temporarily_unavailable",
@@ -192,9 +227,8 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       )
     },
     handler: async (ctx) => {
-      const { input, attempt } = ctx.body
+      const { input, attempt, client } = ctx.body
       const userId = ctx.userId
-      const client = deps.createAdminClient()
 
       const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
         kind: "unknown_product",
@@ -208,7 +242,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       const completeAttempt = (
         terminalOutcome: ResolveTerminalOutcome,
         stage: ScanResolveFailureStage | null,
-      ) => completeResolveAttempt(deps, client, attempt, terminalOutcome, stage)
+      ) => completeResolveAttempt(deps, runAfter, client, attempt, terminalOutcome, stage)
 
       let productId: string
       let category: PersonalPlanCategory
@@ -217,18 +251,21 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         const identifier = input.identifier
         // Barcode attempts are started before validation; productId resolution below
         // originates in the search sheet and intentionally has no barcode telemetry.
-        attempt.attemptId = deps.createScanResolveAttemptId()
-        await deps.recordScanResolveAttempt(client, {
-          attemptId: attempt.attemptId,
-          userId,
-          identifierType: identifier.type,
-          rawValue: identifier.value,
-        })
+        const attemptId = deps.createScanResolveAttemptId()
+        attempt.attemptId = attemptId
+        scheduleAttemptWrite(attempt, runAfter, () =>
+          deps.recordScanResolveAttempt(client, {
+            attemptId,
+            userId,
+            identifierType: identifier.type,
+            rawValue: identifier.value,
+          }),
+        )
 
         const validation = deps.validateEanInput(identifier.value)
         if (!validation.ok) {
           attempt.lookupOutcome = "invalid"
-          await completeAttempt("invalid_identifier", "identifier_lookup")
+          completeAttempt("invalid_identifier", "identifier_lookup")
           return scanFail("invalid_identifier", 400)
         }
         const normalizedValue = normalizeIdentifierValue(validation.value)
@@ -242,11 +279,15 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
+        // F15: bind the match to the attempt BEFORE the quarantine await, so a throw in
+        // there still completes with the product the identifier actually matched.
+        attempt.matchedProductId = hit?.productId ?? null
+        attempt.lookupOutcome = hit ? "hit" : "miss"
+
         attempt.failureStage = "quarantine_lookup"
         const quarantined =
           hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
-        attempt.matchedProductId = hit?.productId ?? null
-        attempt.lookupOutcome = quarantined ? "quarantined" : hit ? "hit" : "miss"
+        if (quarantined) attempt.lookupOutcome = "quarantined"
 
         if (!hit || quarantined) {
           // The catalog is the authority: an open research submission only decides what
@@ -255,7 +296,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           attempt.failureStage = "submission_lookup"
           const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
           if (pending) {
-            await completeAttempt("pending_submission", null)
+            completeAttempt("pending_submission", null)
             return scanOk({
               kind: "pending_submission",
               submissionId: pending.submissionId,
@@ -263,7 +304,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               status: pending.status,
             } satisfies ScanResolveResult)
           }
-          await completeAttempt("unknown_product", null)
+          completeAttempt("unknown_product", null)
           return scanOk(unknownProduct(identifier.type, normalizedValue))
         }
 
@@ -283,7 +324,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       attempt.failureStage = "profile_context"
       const context = await deps.loadScanEvaluationContext(client, userId)
       if (!context) {
-        await completeAttempt("profile_ineligible", null)
+        completeAttempt("profile_ineligible", null)
         return scanFail("profile_missing", 409)
       }
 
@@ -308,7 +349,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         attempt.failureStage = "product_facts"
         const [productFacts, recommendationCandidates] = await Promise.all([
           deps.loadScanProductFacts(client, category, productId, selectionContext),
-          isDecisionWithoutTarget(decision)
+          isNotNeeded(decision)
             ? Promise.resolve<Stage3CategoryProductFacts[]>([])
             : deps.loadRecommendationCandidates(client, {
                 category,
@@ -390,7 +431,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         snapshotSource: context.snapshotSource,
         savedState,
       }
-      await completeAttempt(
+      completeAttempt(
         eligibleVerdict.kind === "in_catalog" && eligibleVerdict.verdict === "unknown"
           ? "verdict_unknown"
           : "resolved",
