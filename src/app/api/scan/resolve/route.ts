@@ -96,7 +96,10 @@ export type ScanResolveRouteDeps = {
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
   captureScanException?: typeof captureScanException
-  /** Injection seam for Next's `after` — tests substitute a synchronous runner. */
+  /**
+   * Injection seam for Next's `after`, which throws outside a request scope. Tests pass a
+   * runner that holds the task until they drain it, mirroring post-response execution.
+   */
   after?: ScanAfter
 }
 
@@ -275,15 +278,15 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           value: identifier.value,
         })
 
+        // F15: bind the match to the attempt before the quarantine await below, so a
+        // failure in there still completes with the product the identifier matched.
+        attempt.matchedProductId = hit?.productId ?? null
+        attempt.lookupOutcome = hit ? "hit" : "miss"
+
         // Ruling R7: a disposition-quarantined product (identity_ambiguous, retired, or
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
-        // F15: bind the match to the attempt BEFORE the quarantine await, so a throw in
-        // there still completes with the product the identifier actually matched.
-        attempt.matchedProductId = hit?.productId ?? null
-        attempt.lookupOutcome = hit ? "hit" : "miss"
-
         attempt.failureStage = "quarantine_lookup"
         const quarantined =
           hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
