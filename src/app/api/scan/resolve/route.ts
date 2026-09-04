@@ -161,11 +161,18 @@ function scheduleAttemptWrite(
   attempt.telemetryWrites.push(write)
   if (attempt.telemetryDrainScheduled) return
   attempt.telemetryDrainScheduled = true
-  runAfter(async () => {
-    for (let index = 0; index < attempt.telemetryWrites.length; index += 1) {
-      await attempt.telemetryWrites[index]()
-    }
-  })
+  try {
+    runAfter(async () => {
+      for (let index = 0; index < attempt.telemetryWrites.length; index += 1) {
+        await attempt.telemetryWrites[index]()
+      }
+    })
+  } catch (error) {
+    // `after()` throws synchronously when there is no request store or `waitUntil` (e.g. a
+    // misconfigured runtime) — telemetry scheduling must stay fail-open like the writes
+    // themselves, never turn an otherwise-resolved scan into a 503.
+    console.warn("[scan] telemetry scheduling failed", error)
+  }
 }
 
 /**

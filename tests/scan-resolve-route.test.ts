@@ -559,8 +559,11 @@ function collectAttempts() {
     },
   }
   const flush = async () => {
+    // Mirrors Next's real `after` queue (p-queue, concurrency: Infinity): every queued task
+    // starts at once, so a regression to two independent `after()` calls (record + complete)
+    // is not silently serialized back into order by the fake itself.
     while (queued.length > 0) {
-      for (const task of queued.splice(0)) await task()
+      await Promise.all(queued.splice(0).map((task) => task()))
     }
   }
   return { starts, completions, deps, flush }
@@ -841,6 +844,18 @@ test("attempt telemetry: one admin client per request, shared with the onError p
   assert.equal(response.status, 503)
   await attempts.flush()
   assert.equal(created, 1)
+})
+
+test("attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      after: () => {
+        throw new Error("no store")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
 })
 
 /**

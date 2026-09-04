@@ -1,10 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { canonicalizeGtin } from "@/lib/product-identity/normalize"
+import { captureScanException } from "@/lib/observability/scan"
 
 export type ScanResolveLookupOutcome = "hit" | "miss" | "quarantined" | "invalid"
-
-type LegacyScanResolveOutcome = ScanResolveLookupOutcome | "pending_submission"
 
 export type ScanResolveTerminalOutcome =
   | "invalid_identifier"
@@ -50,10 +49,40 @@ export function createScanResolveAttemptId(): string {
   return crypto.randomUUID()
 }
 
+const ATTEMPT_LOG_CAPTURE_THROTTLE_MS = 60_000
+
+/** Module-level so repeated failures across requests in the same process share one window. */
+let attemptLogCaptureThrottleUntilMs = 0
+
+/** Test-only: clears the throttle window so the next write failure captures again. */
+export function resetAttemptLogCaptureThrottleForTests(): void {
+  attemptLogCaptureThrottleUntilMs = 0
+}
+
+/**
+ * A systemic attempt-log failure (RLS/schema regression) must not go unnoticed just because
+ * both writers are fail-open. Capped at once per 60s per process so a sustained outage pages
+ * once instead of flooding Sentry on every scan.
+ */
+function reportAttemptLogFailure(
+  error: unknown,
+  captureException: typeof captureScanException,
+): void {
+  const now = Date.now()
+  if (now < attemptLogCaptureThrottleUntilMs) return
+  attemptLogCaptureThrottleUntilMs = now + ATTEMPT_LOG_CAPTURE_THROTTLE_MS
+  captureException(error, {
+    route: "resolve",
+    status: 200,
+    reason: "attempt_log_write_failed",
+  })
+}
+
 /** Fail-open start: telemetry failures must never break scanning. */
 export async function recordScanResolveAttempt(
   client: SupabaseClient,
   attempt: ScanResolveAttempt,
+  captureException: typeof captureScanException = captureScanException,
 ): Promise<void> {
   try {
     const { error } = await client.from("scan_resolve_events").insert({
@@ -62,26 +91,15 @@ export async function recordScanResolveAttempt(
       identifier_type: attempt.identifierType,
       raw_value: attempt.rawValue,
       canonical_value: canonicalizeGtin(attempt.rawValue),
-      // Nullable under the expand migration; completion dual-writes this
-      // legacy field while existing reporting migrates to v2 fields.
-      outcome: null,
     })
-    if (error) console.warn("scan_resolve_attempt_start_failed", { message: error.message })
+    if (error) {
+      console.warn("scan_resolve_attempt_start_failed", { message: error.message })
+      reportAttemptLogFailure(new Error(error.message), captureException)
+    }
   } catch (cause) {
     console.warn("scan_resolve_attempt_start_failed", { cause })
+    reportAttemptLogFailure(cause, captureException)
   }
-}
-
-function legacyOutcomeFor(
-  lookupOutcome: ScanResolveLookupOutcome | null,
-  terminalOutcome: ScanResolveTerminalOutcome,
-): LegacyScanResolveOutcome | null {
-  if (terminalOutcome === "invalid_identifier") return "invalid"
-  if (terminalOutcome === "pending_submission") return "pending_submission"
-  if (terminalOutcome === "unknown_product") {
-    return lookupOutcome === "quarantined" ? "quarantined" : "miss"
-  }
-  return lookupOutcome === "hit" ? "hit" : null
 }
 
 /**
@@ -91,6 +109,7 @@ function legacyOutcomeFor(
 export async function completeScanResolveAttempt(
   client: SupabaseClient,
   completion: ScanResolveAttemptCompletion,
+  captureException: typeof captureScanException = captureScanException,
 ): Promise<void> {
   try {
     const { error } = await client
@@ -101,12 +120,15 @@ export async function completeScanResolveAttempt(
         matched_product_id: completion.matchedProductId,
         failure_stage: completion.failureStage,
         completed_at: new Date().toISOString(),
-        outcome: legacyOutcomeFor(completion.lookupOutcome, completion.terminalOutcome),
       })
       .eq("id", completion.attemptId)
       .is("completed_at", null)
-    if (error) console.warn("scan_resolve_attempt_completion_failed", { message: error.message })
+    if (error) {
+      console.warn("scan_resolve_attempt_completion_failed", { message: error.message })
+      reportAttemptLogFailure(new Error(error.message), captureException)
+    }
   } catch (cause) {
     console.warn("scan_resolve_attempt_completion_failed", { cause })
+    reportAttemptLogFailure(cause, captureException)
   }
 }

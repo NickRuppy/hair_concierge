@@ -5,7 +5,17 @@ import {
   completeScanResolveAttempt,
   createScanResolveAttemptId,
   recordScanResolveAttempt,
+  resetAttemptLogCaptureThrottleForTests,
 } from "../src/lib/scan/resolve-event-log"
+import type { captureScanException } from "../src/lib/observability/scan"
+
+function stubCapture() {
+  const captured: unknown[] = []
+  const capture = ((error: unknown, details: unknown) => {
+    captured.push({ error, details })
+  }) as typeof captureScanException
+  return { capture, captured }
+}
 
 function stubClient(response: { error: unknown } | (() => never)) {
   let inserted: unknown = null
@@ -49,11 +59,10 @@ test("records a started attempt with canonical value", async () => {
     identifier_type: "ean",
     raw_value: "0022796976116",
     canonical_value: "00022796976116",
-    outcome: null,
   })
 })
 
-test("completes exactly the same unfinished attempt with terminal and legacy outcomes", async () => {
+test("completes exactly the same unfinished attempt with the v2 terminal outcome", async () => {
   let updated: unknown = null
   const filters: Array<[string, unknown]> = []
   const client = {
@@ -94,7 +103,6 @@ test("completes exactly the same unfinished attempt with terminal and legacy out
       matched_product_id: "prod-1",
       failure_stage: null,
       completed_at: "<timestamp>",
-      outcome: "hit",
     },
   )
   assert.equal(typeof (updated as { completed_at: unknown }).completed_at, "string")
@@ -171,4 +179,100 @@ test("fail-open: a completion error never propagates", async () => {
       failureStage: null,
     }),
   )
+})
+
+test("a start-write failure captures once to Sentry with the attempt_log_write_failed reason", async () => {
+  resetAttemptLogCaptureThrottleForTests()
+  const { client } = stubClient({ error: { message: "boom" } })
+  const { capture, captured } = stubCapture()
+
+  await recordScanResolveAttempt(
+    client as never,
+    {
+      attemptId: "00000000-0000-4000-8000-000000000001",
+      userId: "user-1",
+      identifierType: "ean",
+      rawValue: "4012345678901",
+    },
+    capture,
+  )
+
+  assert.equal(captured.length, 1)
+  assert.deepEqual((captured[0] as { details: unknown }).details, {
+    route: "resolve",
+    status: 200,
+    reason: "attempt_log_write_failed",
+  })
+})
+
+test("a completion-write failure also captures to Sentry", async () => {
+  resetAttemptLogCaptureThrottleForTests()
+  const client = {
+    from() {
+      return {
+        update() {
+          return {
+            eq() {
+              return {
+                is: async () => ({ error: { message: "completion unavailable" } }),
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+  const { capture, captured } = stubCapture()
+
+  await completeScanResolveAttempt(
+    client as never,
+    {
+      attemptId: "00000000-0000-4000-8000-000000000001",
+      lookupOutcome: "miss",
+      terminalOutcome: "unknown_product",
+      matchedProductId: null,
+      failureStage: null,
+    },
+    capture,
+  )
+
+  assert.equal(captured.length, 1)
+})
+
+test("a second write failure within the 60s throttle window does not capture again", async () => {
+  resetAttemptLogCaptureThrottleForTests()
+  const { client } = stubClient({ error: { message: "boom" } })
+  const { capture, captured } = stubCapture()
+  const attempt = {
+    attemptId: "00000000-0000-4000-8000-000000000001",
+    userId: "user-1",
+    identifierType: "ean",
+    rawValue: "4012345678901",
+  }
+
+  await recordScanResolveAttempt(client as never, attempt, capture)
+  assert.equal(captured.length, 1)
+
+  await recordScanResolveAttempt(client as never, attempt, capture)
+  assert.equal(captured.length, 1)
+})
+
+test("a write failure after the throttle window resets captures again", async () => {
+  resetAttemptLogCaptureThrottleForTests()
+  const { client } = stubClient({ error: { message: "boom" } })
+  const { capture, captured } = stubCapture()
+  const attempt = {
+    attemptId: "00000000-0000-4000-8000-000000000001",
+    userId: "user-1",
+    identifierType: "ean",
+    rawValue: "4012345678901",
+  }
+
+  await recordScanResolveAttempt(client as never, attempt, capture)
+  assert.equal(captured.length, 1)
+
+  // Simulates the 60s window having elapsed without a real sleep.
+  resetAttemptLogCaptureThrottleForTests()
+  await recordScanResolveAttempt(client as never, attempt, capture)
+  assert.equal(captured.length, 2)
 })
