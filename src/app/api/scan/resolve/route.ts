@@ -195,7 +195,13 @@ function completeResolveAttempt(
     matchedProductId: attempt.matchedProductId,
     failureStage: stage,
   }
-  scheduleAttemptWrite(attempt, runAfter, () => deps.completeScanResolveAttempt(client, completion))
+  scheduleAttemptWrite(attempt, runAfter, () =>
+    deps.completeScanResolveAttempt(
+      client,
+      completion,
+      deps.captureScanException ?? captureScanException,
+    ),
+  )
 }
 
 export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
@@ -264,12 +270,16 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         const attemptId = deps.createScanResolveAttemptId()
         attempt.attemptId = attemptId
         scheduleAttemptWrite(attempt, runAfter, () =>
-          deps.recordScanResolveAttempt(client, {
-            attemptId,
-            userId,
-            identifierType: identifier.type,
-            rawValue: identifier.value,
-          }),
+          deps.recordScanResolveAttempt(
+            client,
+            {
+              attemptId,
+              userId,
+              identifierType: identifier.type,
+              rawValue: identifier.value,
+            },
+            deps.captureScanException ?? captureScanException,
+          ),
         )
 
         const validation = deps.validateEanInput(identifier.value)

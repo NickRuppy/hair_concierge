@@ -126,34 +126,47 @@ test("non-GTIN raw value logs a null canonical value", async () => {
 })
 
 test("fail-open: an insert error never throws", async () => {
+  resetAttemptLogCaptureThrottleForTests()
   const { client } = stubClient({ error: { message: "boom" } })
+  const { capture } = stubCapture()
 
   await assert.doesNotReject(
-    recordScanResolveAttempt(client as never, {
-      attemptId: "00000000-0000-4000-8000-000000000001",
-      userId: "user-1",
-      identifierType: "ean",
-      rawValue: "4012345678901",
-    }),
+    recordScanResolveAttempt(
+      client as never,
+      {
+        attemptId: "00000000-0000-4000-8000-000000000001",
+        userId: "user-1",
+        identifierType: "ean",
+        rawValue: "4012345678901",
+      },
+      capture,
+    ),
   )
 })
 
 test("fail-open: a thrown client error never propagates", async () => {
+  resetAttemptLogCaptureThrottleForTests()
   const { client } = stubClient(() => {
     throw new Error("network down")
   })
+  const { capture } = stubCapture()
 
   await assert.doesNotReject(
-    recordScanResolveAttempt(client as never, {
-      attemptId: "00000000-0000-4000-8000-000000000001",
-      userId: "user-1",
-      identifierType: "ean",
-      rawValue: "4012345678901",
-    }),
+    recordScanResolveAttempt(
+      client as never,
+      {
+        attemptId: "00000000-0000-4000-8000-000000000001",
+        userId: "user-1",
+        identifierType: "ean",
+        rawValue: "4012345678901",
+      },
+      capture,
+    ),
   )
 })
 
 test("fail-open: a completion error never propagates", async () => {
+  resetAttemptLogCaptureThrottleForTests()
   const client = {
     from() {
       return {
@@ -169,15 +182,20 @@ test("fail-open: a completion error never propagates", async () => {
       }
     },
   }
+  const { capture } = stubCapture()
 
   await assert.doesNotReject(
-    completeScanResolveAttempt(client as never, {
-      attemptId: "00000000-0000-4000-8000-000000000001",
-      lookupOutcome: "miss",
-      terminalOutcome: "unknown_product",
-      matchedProductId: null,
-      failureStage: null,
-    }),
+    completeScanResolveAttempt(
+      client as never,
+      {
+        attemptId: "00000000-0000-4000-8000-000000000001",
+        lookupOutcome: "miss",
+        terminalOutcome: "unknown_product",
+        matchedProductId: null,
+        failureStage: null,
+      },
+      capture,
+    ),
   )
 })
 

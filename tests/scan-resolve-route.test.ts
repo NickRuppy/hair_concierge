@@ -6,6 +6,10 @@ import {
   type ScanResolveRouteDeps,
 } from "../src/app/api/scan/resolve/route"
 import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
+import {
+  recordScanResolveAttempt,
+  resetAttemptLogCaptureThrottleForTests,
+} from "../src/lib/scan/resolve-event-log"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
@@ -844,6 +848,40 @@ test("attempt telemetry: one admin client per request, shared with the onError p
   assert.equal(response.status, 503)
   await attempts.flush()
   assert.equal(created, 1)
+})
+
+test("attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException", async () => {
+  // Uses the REAL recordScanResolveAttempt (not the fake) so the assertion proves the route
+  // actually threads its `deps.captureScanException` override into the writer, not just that
+  // a fake records whatever it's handed.
+  resetAttemptLogCaptureThrottleForTests()
+  const queued: Array<() => Promise<void> | void> = []
+  const captured: unknown[] = []
+  const failingClient = {
+    from() {
+      return {
+        insert: async () => ({ error: { message: "boom" } }),
+      }
+    },
+  }
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      recordScanResolveAttempt,
+      createAdminClient: () => failingClient as never,
+      captureScanException: (_error, details) => {
+        captured.push(details)
+      },
+      after: (task) => {
+        queued.push(task)
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  await Promise.all(queued.splice(0).map((task) => task()))
+  assert.deepEqual(captured, [
+    { route: "resolve", status: 200, reason: "attempt_log_write_failed" },
+  ])
 })
 
 test("attempt telemetry: a synchronously throwing after() cannot turn a resolved scan into a 503", async () => {
