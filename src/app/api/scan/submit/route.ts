@@ -12,6 +12,7 @@ import {
 } from "@/lib/product-intake/submissions"
 import type { ScanProductIntakeSubmissionResult } from "@/lib/product-intake/types"
 import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { captureScanException } from "@/lib/observability/scan"
@@ -43,6 +44,7 @@ export type ScanSubmitRouteDeps = {
   validateEanInput: typeof validateEanInput
   createAdminClient: typeof createAdminClient
   createRepository: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
+  filterScanEligibleProductIds: typeof filterScanEligibleProductIds
   submit: typeof submitScanProductIntake
   captureScanException?: typeof captureScanException
 }
@@ -98,7 +100,13 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
     try {
       const admin = deps.createAdminClient()
       const repository = deps.createRepository(admin)
-      const result = await deps.submit({ userId, input, repository })
+      const result = await deps.submit({
+        userId,
+        input,
+        repository,
+        isMatchScanEligible: async (id) =>
+          (await deps.filterScanEligibleProductIds(admin, [id])).has(id),
+      })
       return NextResponse.json(toResponse(result), {
         status: result.kind === "already_in_catalog" ? 200 : 202,
         headers: { "Cache-Control": "no-store" },
@@ -133,5 +141,6 @@ export const POST = createScanSubmitRouteHandler({
   validateEanInput,
   createAdminClient,
   createRepository: createSupabaseProductIntakeRepository,
+  filterScanEligibleProductIds,
   submit: submitScanProductIntake,
 })

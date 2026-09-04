@@ -945,6 +945,16 @@ export type SubmitScanProductIntakeParams = {
   userId: string
   input: ScanProductIntakeSubmissionInput
   repository: ProductIntakeRepository
+  /**
+   * Gate applied to a catalog match's product id before it is honoured as
+   * `already_in_catalog` (controller ruling R7, extended to submit dedupe): a quarantined
+   * or non-active-lifecycle product must not be resolved as a dedupe hit, since the same
+   * product would then 404 when the client re-resolves it by id. Required (not optional)
+   * because the only real caller, the scan submit route, always has a scan-eligibility
+   * check available (`filterScanEligibleProductIds`) -- keeping it required keeps that
+   * dependency honest instead of silently defaulting to "always eligible".
+   */
+  isMatchScanEligible: (productId: string) => Promise<boolean>
   now?: () => string
 }
 
@@ -961,6 +971,9 @@ export type SubmitScanProductIntakeParams = {
  * for the anchorless case are enforced by idx_product_submissions_one_open_scan
  * (migration 20260820103000), a scan-scoped sibling of the usage-keyed and
  * user_product-keyed partial unique indexes the legacy paths rely on.
+ * A catalog match is only honoured as `already_in_catalog` when it passes
+ * `params.isMatchScanEligible` (controller ruling R7); otherwise it falls through to the
+ * same pending-submission path as a miss.
  */
 export async function submitScanProductIntake(
   params: SubmitScanProductIntakeParams,
@@ -999,11 +1012,14 @@ export async function submitScanProductIntake(
   )
 
   if (match.status === "matched" && match.productId) {
-    return {
-      kind: "already_in_catalog",
-      productId: match.productId,
-      category: params.input.category,
-      match,
+    const eligible = await params.isMatchScanEligible(match.productId)
+    if (eligible) {
+      return {
+        kind: "already_in_catalog",
+        productId: match.productId,
+        category: params.input.category,
+        match,
+      }
     }
   }
 

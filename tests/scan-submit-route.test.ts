@@ -18,6 +18,10 @@ function baseDeps(overrides: Partial<ScanSubmitRouteDeps> = {}): ScanSubmitRoute
     validateEanInput,
     createAdminClient: () => ({}) as never,
     createRepository: () => ({}) as never,
+    // Miss/unmatched-path tests never reach the eligibility check (submitScanProductIntake
+    // only calls isMatchScanEligible for a "matched" result), so an empty set is a safe,
+    // inert default here -- tests that care about eligibility override this.
+    filterScanEligibleProductIds: async () => new Set(),
     submit: async () => ({
       kind: "pending_review",
       category: "shampoo",
@@ -147,6 +151,78 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
     submissionId,
     headline: "Eingereicht!",
   })
+})
+
+test("scan submit: a scan-eligible catalog match is wired into submit's isMatchScanEligible, honoured as 200 already_in_catalog", async () => {
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      filterScanEligibleProductIds: async (_admin, ids) => new Set(ids),
+      submit: async ({ isMatchScanEligible }) => {
+        const eligible = await isMatchScanEligible(productId)
+        return eligible
+          ? {
+              kind: "already_in_catalog",
+              productId,
+              category: "shampoo",
+              match: { status: "identifier_category_exact" } as never,
+            }
+          : {
+              kind: "pending_review",
+              category: "shampoo",
+              submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+              match: { status: "identifier_category_exact" } as never,
+            }
+      },
+    }),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { kind: "already_in_catalog", productId })
+})
+
+test("scan submit: a quarantined/inactive catalog match fails isMatchScanEligible and falls through to a 202 pending submission, with the scanned identifier reaching insertProductSubmission", async () => {
+  const submissionCalls: Array<{ scanned_identifier_value: string | null }> = []
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      // Nothing is eligible -- mirrors a quarantined or non-active-lifecycle match.
+      filterScanEligibleProductIds: async () => new Set(),
+      createRepository: () =>
+        ({
+          insertProductSubmission: async (row: { scanned_identifier_value: string | null }) => {
+            submissionCalls.push(row)
+            return { id: submissionId, status: "pending_review", category: "shampoo" }
+          },
+        }) as never,
+      submit: async ({ isMatchScanEligible, repository, input }) => {
+        const eligible = await isMatchScanEligible(productId)
+        if (eligible) {
+          return {
+            kind: "already_in_catalog",
+            productId,
+            category: "shampoo",
+            match: { status: "identifier_category_exact" } as never,
+          }
+        }
+        const submission = await repository.insertProductSubmission({
+          scanned_identifier_value: input.scannedIdentifier?.value ?? null,
+        } as never)
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submission.id, status: "pending_review", category: "shampoo" },
+          match: { status: "identifier_category_exact" } as never,
+        }
+      },
+    }),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), {
+    kind: "pending_submission",
+    submissionId,
+    headline: "Eingereicht!",
+  })
+  assert.deepEqual(submissionCalls, [{ scanned_identifier_value: "4006381333931" }])
 })
 
 test("scan submit: passes frequency_range null (no invented data), never touching usage", async () => {

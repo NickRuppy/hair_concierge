@@ -1446,6 +1446,7 @@ test("scan submit with a cataloged EAN resolves already_in_catalog and touches z
       scannedIdentifier: { type: "ean", value: "4006381333931" },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => true,
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1464,6 +1465,46 @@ test("scan submit with a cataloged EAN resolves already_in_catalog and touches z
   assert.deepEqual(fake.calls, [])
 })
 
+test("a catalog match that fails the scan eligibility gate (quarantined/inactive) falls through to a pending submission, same as a miss", async () => {
+  const catalogWithIdentifier: ProductIntakeCatalog = {
+    ...catalog,
+    identifiers: [
+      {
+        product_id: "product-garnier-mask",
+        identifier_type: "ean",
+        identifier_value: "4006381333931",
+        source: null,
+      },
+    ],
+  }
+  const fake = createFakeRepository({ catalog: catalogWithIdentifier })
+  let checkedProductId: string | null = null
+
+  const result = await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "4006381333931" },
+    }),
+    repository: fake.repository,
+    isMatchScanEligible: async (productId) => {
+      checkedProductId = productId
+      return false
+    },
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(checkedProductId, "product-garnier-mask")
+  assert.equal(result.kind, "pending_review")
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].source, "scan")
+  assert.equal(fake.submissions[0].scanned_identifier_type, "ean")
+  assert.equal(fake.submissions[0].scanned_identifier_value, "4006381333931")
+  assert.equal(fake.usage, null)
+  assert.deepEqual(fake.calls, ["insert_submission"])
+})
+
 test("unknown scanned EAN creates an anchorless pending submission with the normalized identifier persisted, touching zero user_product_usage rows", async () => {
   const fake = createFakeRepository()
 
@@ -1475,6 +1516,9 @@ test("unknown scanned EAN creates an anchorless pending submission with the norm
       scannedIdentifier: { type: "ean", value: "9999999999999" },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1502,6 +1546,9 @@ test("scan submission normalizes the scanned identifier once before it is matche
       scannedIdentifier: { type: "barcode", value: rawValue },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1523,6 +1570,9 @@ test("scan submission omits scanned_identifier columns and matchProductIntake's 
       product_name_text: "Mystery Maske",
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
