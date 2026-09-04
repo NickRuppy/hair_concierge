@@ -1,3 +1,10 @@
+/**
+ * Operator-only readiness oracle: predicts whether a catalog product would resolve a
+ * `scan_result_ready` verdict across every applicable role/thickness combination, for the
+ * product-intake expansion tooling's preflight/verify scripts and the coverage export. Not
+ * part of the runtime `/scan` request path — nothing under `src/app/api/scan/` imports this.
+ */
+
 import type { CategorySelectionContext } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
@@ -8,7 +15,7 @@ import type {
   PlanProductRole,
 } from "@/lib/personal-plan/types"
 
-import { buildScanVerdict } from "./resolve-verdict"
+import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 
 export type ScanCatalogReadinessVerdict = {
   profile: PlanHairThickness

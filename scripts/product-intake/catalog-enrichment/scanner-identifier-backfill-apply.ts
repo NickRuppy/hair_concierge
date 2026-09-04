@@ -1,3 +1,5 @@
+import { pathToFileURL } from "node:url"
+
 import { applyScannerIdentifierBackfill } from "@/lib/product-intake/catalog-enrichment/scanner-identifier-backfill"
 import { runScannerIdentifierBackfillPreflight } from "./scanner-identifier-backfill-preflight"
 
@@ -22,4 +24,4 @@ async function main() {
     )}\n`,
   )
 }
-void main()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main()

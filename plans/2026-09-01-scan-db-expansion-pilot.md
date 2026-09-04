@@ -35,7 +35,7 @@ Reviewed data manifests flowing through the **canonical transactional publicatio
 - Protocol templates: `plans/scan-db-expansion/protocol-templates.md` (content reference with stable IDs; stamped rows carry per-product sources).
 - Batch adapter: extends the **transactional publication boundary** (`supabase/migrations/20260813085151_personal_plan_catalog_closure.sql` family) rather than inserting into storage tables; runner `scripts/product-intake/expansion/{preflight,apply,verify}.ts`; ledger via `catalog_enrichment_applied_items` with **full-bundle readback on replay** (F-07; pattern: `20260810090000_*_heat_v1_executor.sql`).
 - Write guards inherited from coverage branch (F-05): canonical-owner validation, stable GTIN locks, global canonical-GTIN partial unique index, open-submission overlap checks, reviewed-head binding, immutable approved fingerprint, kill switch (`.worktrees/scanner-catalog-coverage-plan/supabase/migrations/20260826142*` + `20260826143000_*`).
-- Verification: `evaluateScanCatalogReadiness` (coverage branch `src/lib/scan/catalog-readiness.ts`) + `readiness-export.ts` strict definition.
+- Verification: `evaluateScanCatalogReadiness` (coverage branch `src/lib/product-intake/scan-catalog-readiness.ts`) + `readiness-export.ts` strict definition.
 - Docs: `docs/product-intake-research-ops.md` gains the `scan_result_ready` state definition (F-08).
 
 ## 5. Designed user journey
