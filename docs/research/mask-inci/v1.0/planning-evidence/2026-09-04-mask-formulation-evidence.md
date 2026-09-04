@@ -65,6 +65,10 @@ Rule adopted: `bond_route` strictly by named-INCI presence above the sub-1% tail
 and hydrolyzed proteins are never bond evidence; repair language stays comparative, never
 efficacy. Open risk: gluconamide bonding has zero independent literature; two secondary-source
 figures (Olaplex tensile numbers) remain unverified at one remove.
+*Correction (lexicon v0.1, 2026-09-04): independent peer-reviewed gluconamide literature does
+exist (ACS Crystal Growth & Design 2022) but is a crystallography/interaction study that states
+the hair mechanism is unknown — so the practical conclusion (no substantiated product-level
+efficacy at drugstore concentration) is unchanged, now better sourced.*
 
 ## 7. Gloss / lamination
 
