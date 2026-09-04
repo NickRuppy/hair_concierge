@@ -15,7 +15,7 @@ export function SiteFooter() {
           <Wordmark />
         </Link>
 
-        <nav aria-label="Rechtliches" className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+        <nav aria-label="Rechtliches" className="flex flex-wrap justify-center gap-x-3">
           {legalFooterLinks.map((item) => (
             <FooterLink key={item.href} {...item} />
           ))}

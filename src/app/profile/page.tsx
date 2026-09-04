@@ -2307,24 +2307,39 @@ export default function ProfilePage() {
 
           <nav
             aria-label="Rechtliches"
-            className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pb-4 pt-2 text-xs text-muted-foreground"
+            className="flex flex-wrap items-center justify-center gap-x-2 pb-2 text-xs text-muted-foreground"
           >
-            <Link href="/impressum" className="transition-colors hover:text-foreground">
+            <Link
+              href="/impressum"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
               Impressum
             </Link>
-            <Link href="/datenschutz" className="transition-colors hover:text-foreground">
+            <Link
+              href="/datenschutz"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
               Datenschutz
             </Link>
-            <Link href="/agb" className="transition-colors hover:text-foreground">
+            <Link
+              href="/agb"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
               AGB
             </Link>
-            <Link href="/widerruf" className="transition-colors hover:text-foreground">
+            <Link
+              href="/widerruf"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
               Widerruf
             </Link>
-            <Link href="/kontakt" className="transition-colors hover:text-foreground">
+            <Link
+              href="/kontakt"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
               Kontakt
             </Link>
-            <FooterCookieSettingsButton className="cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-xs text-muted-foreground transition-colors hover:text-foreground" />
+            <FooterCookieSettingsButton className="inline-flex min-h-11 cursor-pointer items-center border-0 bg-transparent px-1 py-0 font-[inherit] text-xs text-muted-foreground transition-colors hover:text-foreground" />
           </nav>
         </div>
       </main>
