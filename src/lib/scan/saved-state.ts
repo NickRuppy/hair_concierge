@@ -84,6 +84,10 @@ export type ScanSaveKind = "routine" | "merkliste"
  * Everything this helper adds is the call and a shape check: any RPC error or payload
  * that is not a recognised outcome throws rather than being reported as a save, so the
  * route can never answer 200 for a move that did not happen.
+ *
+ * Eligibility for the move itself (active lifecycle, not quarantined, no `origin` gate)
+ * lives in the RPC — see `catalog-eligibility.ts`'s header for how it differs from the
+ * narrower search/resolve rule.
  */
 export async function moveScanSavedProduct(
   client: SupabaseClient,

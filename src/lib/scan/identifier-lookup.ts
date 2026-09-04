@@ -95,9 +95,3 @@ export function validateEanInput(raw: string): ValidateEanInputResult {
   }
   return { ok: true, type: "ean", value: trimmed }
 }
-
-/**
- * GS1 mod-10 check digit: from the digit immediately left of the check digit, weights
- * alternate 3, 1, 3, 1, … moving further left. Uniform across EAN-8 and EAN-13 because
- * both are defined relative to the rightmost (check) digit.
- */

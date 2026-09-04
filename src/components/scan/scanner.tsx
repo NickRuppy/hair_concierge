@@ -443,15 +443,6 @@ export function Scanner({
   }, [active])
 
   /**
-   * Session restart without a camera restart. The effect above owns the camera and keys
-   * only on `active` — which stays `true` for the whole `/scan` visit, because the sheet
-   * slides up *over* a still-running camera so "Nochmal scannen" is instant. That leaves
-   * the session guards (`lastFiredValue`, `hasDecoded`, `timeoutFired`) set for the rest
-   * of the page's life, so this second effect resets them in place on every epoch bump.
-   * Remounting the Scanner instead would re-run `getUserMedia` and blank the viewfinder
-   * on every re-scan.
-   */
-  /**
    * Sheet open/close. Only the detection loop is affected — `getUserMedia` and the video
    * element are untouched, so nothing has to be re-acquired on resume. Independent of the
    * `visibilitychange` pause: each reason owns its own flag, so closing a sheet in a
@@ -468,6 +459,16 @@ export function Scanner({
     }
   }, [active, detectionPaused])
 
+  /**
+   * Session restart without a camera restart. The camera-acquisition effect further above
+   * owns the camera and keys only on `active` — which stays `true` for the whole `/scan`
+   * visit, because the sheet slides up *over* a still-running camera so "Nochmal scannen"
+   * is instant. That leaves the session guards (`lastFiredValue`, `hasDecoded`,
+   * `timeoutFired`) set for the rest of the page's life, so this second effect resets
+   * them in place on every epoch bump.
+   * Remounting the Scanner instead would re-run `getUserMedia` and blank the viewfinder
+   * on every re-scan.
+   */
   useEffect(() => {
     if (!active) return
     restartScanSessionState(sessionRef.current, performance.now())
