@@ -57,9 +57,12 @@ Open consequential assumptions: none for Phase 2.
   Parked out of scope (acknowledged): routine-level protein-stacking heads-up (production side);
   production's concentration-as-repair-proxy matching policy (outside research boundary).
 Undiscussed consequential assumptions affecting this handoff: none
-Coverage acknowledgement: Nick ruled D1–D4 on 2026-09-04 (D1 with iterate caveat); covers the
-  Phase 2 property-set checkpoint only. Phase 3 (standard v0 + evidence lexicon) and Phase 4
-  (calibration cohort — exact identities need approval before freezing) have their own checkpoints.
+Coverage acknowledgement: Nick ruled D1–D6 across 2026-09-04 (D1 with iterate caveat) and gave
+  the FINAL PROPERTY-SET HANDOFF ("we can work with that") on 2026-09-04, which included the
+  acknowledgment that curl_support/color_care focus values stay research-only (no production
+  consumer today). Undiscussed consequential assumptions affecting this handoff: none.
+  Phase 3 (standard v0 + evidence lexicon + proposed calibration cohort) runs next and ends at
+  its own checkpoint; the cohort freeze requires separate approval.
 ```
 
 ## Adjudication notes
