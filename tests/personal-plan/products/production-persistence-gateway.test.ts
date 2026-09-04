@@ -2126,6 +2126,232 @@ test("semantic decision batch evaluates every subject and persists one CAS revis
   }
 })
 
+test("a batch revalidates Heat Protectant against the projected planned leave-on Oil", async () => {
+  const base = authorityDraft()
+  const oilSubjectKey = "decision:oil:leave_on_fibre_conditioning:gap"
+  const heatSubjectKey = "decision:heat_protectant:pre_heat_protection:gap"
+  const draft: Stage3ProductDraft = {
+    ...base,
+    products: [],
+    roleAssignments: [],
+    decisions: [],
+    completedDecisionKeys: [],
+    uncoveredRoles: [
+      { category: "oil", role: "leave_on_fibre_conditioning", reason: "no_product_owned" },
+      { category: "heat_protectant", role: "pre_heat_protection", reason: "no_product_owned" },
+    ],
+    orderedCategories: ["oil", "heat_protectant"],
+    authorityVersions: Object.fromEntries(
+      Object.entries(CATEGORY_ROLE_POLICIES).map(([category, policy]) => [
+        category,
+        policy.authorityVersion,
+      ]),
+    ) as never,
+    authoritySnapshot: {
+      ...base.authoritySnapshot!,
+      orderedCategories: ["oil", "heat_protectant"],
+      categoryDecisions: [
+        {
+          category: "oil",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["leave_on_fibre_conditioning"],
+          target: {
+            category: "oil",
+            roles: ["leave_on_fibre_conditioning"],
+            roleTargets: [
+              {
+                role: "leave_on_fibre_conditioning",
+                tier: "basis",
+                weight: "light",
+                functionalBenefits: [],
+              },
+            ],
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+        {
+          category: "heat_protectant",
+          resolution: "resolved",
+          needTier: "basis",
+          roles: ["pre_heat_protection"],
+          target: {
+            category: "heat_protectant",
+            roles: ["pre_heat_protection"],
+            qualifyingRoutes: ["direct_contact_heat"],
+            carrierPolicy: "integrated_or_separate_verified_binary_capability",
+          },
+          frequency: null,
+          reasons: [],
+          executionState: "available",
+          executionPauseReason: null,
+          deferredFacts: [],
+        },
+      ],
+    },
+  }
+  const oilCandidate = {
+    productId: "planned-oil",
+    displayName: "Geplantes Öl",
+    category: "oil",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["normal"],
+    knownReaction: false,
+    protocols: [
+      {
+        role: "leave_on_fibre_conditioning",
+        status: "verified_complete",
+        fingerprint: "oil-protocol",
+      },
+    ],
+    factFingerprint: "oil-facts",
+    spec: {
+      weight: "light",
+      roleSupport: { leave_on_fibre_conditioning: true },
+      targetThicknessEligible: true,
+      providesHeatProtection: true,
+    },
+  }
+  const heatCandidate = {
+    productId: "planned-heat",
+    displayName: "Geplanter Hitzeschutz",
+    category: "heat_protectant",
+    isActive: true,
+    lifecycleStatus: "active",
+    recommendable: true,
+    suitableThicknesses: ["normal"],
+    knownReaction: false,
+    protocols: [
+      { role: "pre_heat_protection", status: "verified_complete", fingerprint: "heat-protocol" },
+    ],
+    factFingerprint: "heat-facts",
+    spec: { format: "spray", providesHeatProtection: true },
+  }
+  let saves = 0
+  let carrierVerified = true
+  const gateway = createProductionStage3ProductsGateway({
+    userId: "owner-a",
+    persistence: {
+      ...persistence(draft),
+      loadAuthorityFacts: async (input) => {
+        if (input.subject.category === "oil") {
+          return {
+            productFacts: null,
+            recommendationCandidates: [oilCandidate],
+            heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
+          } as never
+        }
+        const projectedOil = input.draft.decisions.some(
+          (decision) => decision.category === "oil" && decision.choiceState === "planned_purchase",
+        )
+        return {
+          productFacts: null,
+          recommendationCandidates: [heatCandidate],
+          heatCarrierCoverage:
+            projectedOil && carrierVerified
+              ? { carrierCategory: "oil", verifiedRoutes: ["direct_contact_heat"] }
+              : { carrierCategory: null, verifiedRoutes: [] },
+        } as never
+      },
+      save: async (input) => {
+        saves += 1
+        return { outcome: "saved", draft: input.draft }
+      },
+    },
+  })
+  const oilIntent = {
+    type: "resolve_decision" as const,
+    subjectKey: oilSubjectKey,
+    action: "plan_recommendation" as const,
+    selectedCandidateId: "planned-oil",
+  }
+
+  const preview = await gateway.previewDecisionBundles({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [oilIntent],
+  })
+  assert.equal(preview.status, "ready")
+  if (preview.status === "ready") {
+    assert.deepEqual(preview.autoResolvedIntents, [
+      {
+        type: "resolve_decision",
+        subjectKey: heatSubjectKey,
+        action: "leave_uncovered",
+      },
+    ])
+    assert.equal(
+      preview.bundles.some((bundle) => bundle.authorityEvaluation.subjectKey === heatSubjectKey),
+      false,
+    )
+  }
+  assert.equal(saves, 0)
+
+  carrierVerified = false
+  const partialPreview = await gateway.previewDecisionBundles({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [oilIntent],
+  })
+  assert.equal(partialPreview.status, "ready")
+  if (partialPreview.status === "ready") {
+    assert.deepEqual(partialPreview.autoResolvedIntents, [])
+    assert.equal(
+      partialPreview.bundles.some(
+        (bundle) => bundle.authorityEvaluation.subjectKey === heatSubjectKey,
+      ),
+      true,
+    )
+  }
+  assert.equal(saves, 0)
+  carrierVerified = true
+
+  await assert.rejects(
+    () =>
+      gateway.resolveDecisions({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intents: [
+          oilIntent,
+          {
+            type: "resolve_decision",
+            subjectKey: heatSubjectKey,
+            action: "plan_recommendation",
+            selectedCandidateId: "planned-heat",
+          },
+        ],
+      }),
+    (error: unknown) =>
+      error instanceof Stage3AuthorityMutationError &&
+      error.code === "stage3_authority_action_invalid",
+  )
+  assert.equal(saves, 0)
+
+  const result = await gateway.resolveDecisions({
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      oilIntent,
+      { type: "resolve_decision", subjectKey: heatSubjectKey, action: "leave_uncovered" },
+    ],
+  })
+  assert.equal(result.status, "saved")
+  assert.equal(saves, 1)
+  if (result.status === "saved") {
+    assert.equal(result.draft.revision, draft.revision + 1)
+    assert.deepEqual(
+      result.draft.decisions.map((decision) => decision.decisionKey),
+      [oilSubjectKey, heatSubjectKey],
+    )
+  }
+})
+
 test("semantic decision batch rejects duplicate subjects without a partial write", async () => {
   const draft = authorityDraft()
   let saves = 0

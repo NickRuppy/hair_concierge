@@ -278,8 +278,8 @@ das verbietet der Auftrag. `heat_protectant` liegt außerhalb des Pilot-/Wave-Te
 Umfangs (Template-Index §4: "Out of scope … heat_protectant"), daher kein Manifest-Eintrag.
 **Entscheidung für Nick:** in eine spätere heat_protectant-Wave aufnehmen (das
 `product_heat_protectant_specs`-Schema existiert bereits: format=spray,
-provides_heat_protection=true) oder bewusst als oil mit nur `pre_heat_protection`-Rolle
-führen (möglich, aber kategorisch unehrlich).
+provides_heat_protection=true). Eine Aufnahme als Oil wäre ohne belegte Oil-Care-Rolle
+kategorisch unehrlich.
 
 **EAN-Stand (falls später gebraucht):** 4015100813876 nur einquellig (Rossmann URL +
 Syndigo). GS1-Präfix 4015100 = Henkel/Schwarzkopf (identisch mit dem Pilot-Gliss-Öl

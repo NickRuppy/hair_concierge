@@ -33,6 +33,8 @@ A template is **never** evidence that a product _has_ this role. Role
 applicability is derived from the reviewed category facts
 (`deriveShampooProtocolRoles`, `product_oil_specs.role_support`,
 `product_leave_in_specs.provides_heat_protection`, …), never from this document.
+For oils, `role_support` contains only the three application purposes; the separate
+`provides_heat_protection` capability does not create another protocol.
 
 **Rule vs. fact.** A template constant is Chaarlie's rule and does not need a
 per-product source (placement, sequencing, the conditioner relationship, the
@@ -73,7 +75,7 @@ generated column will not match the V1 template you verified. The V1 fallback al
 silently rewrites out-of-set families: `post_wash_leave_in` → `post_wash_damp_conditioning`,
 `pre_heat_protection` → `pre_heat_damp`.
 
-### 2.3 Constants shared by all 12 templates
+### 2.3 Constants shared by all 11 templates
 
 | Field                                   | Value                                                                                                                                                                     |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -155,7 +157,6 @@ dominant live convention:
 | LEAVEIN-HEAT        | `product-leave-in-⟨productId⟩-pre-heat`  |
 | OIL-DRYFINISH       | `product-oil-⟨productId⟩-dry`            |
 | OIL-LEAVEON         | `product-oil-⟨productId⟩-leave-on`       |
-| OIL-HEAT            | `product-oil-⟨productId⟩-heat`           |
 | OIL-PREWASH         | `product-oil-⟨productId⟩-pre-wash`       |
 
 STD and TARGETED share a key because a shampoo is one or the other, never both.
@@ -164,7 +165,7 @@ diffs across research runs stay readable.
 
 ---
 
-## 3. The 12 templates
+## 3. The 11 templates
 
 Notation:
 
@@ -992,7 +993,7 @@ silently yields no V2 amount.
   "scope": { "kind": "product", "category": "oil", "productId": "⟨productId⟩" },
   "role": "leave_in",
   "applicationFamily": "post_wash_damp_conditioning",
-  "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day"],
+  "compatibleDayTypes": ["wash_day", "intensive_care_day", "bond_repair_day", "clarifying_wash_day"],
   "exactGuidanceRequired": true,
   "sequence": {
     "anchor": "damp_leave_on",
@@ -1044,97 +1045,12 @@ silently yields no V2 amount.
 
 ---
 
-### TPL-OIL-HEAT
-
-**Key:** `oil` × `pre_heat_protection` × `⟨pre_heat_damp | either_state_protection⟩`
-**Applies when:** `role_support` contains `pre_heat_protection`.
-
-**Rule (P7).** Reapplication before every separate heat session, same as the
-leave-in heat template.
-
-**Rule (P9).** One heat template for the oil category; the damp/either family value
-comes from the researched per-product fact, using the same mapping as
-TPL-LEAVEIN-HEAT:
-
-| Researched fact                           | `applicationFamily`       | `application_stage` | `application_state` | `sequence.anchor` |
-| ----------------------------------------- | ------------------------- | ------------------- | ------------------- | ----------------- |
-| Damp hair only                            | `pre_heat_damp`           | `damp_leave_on`     | `damp`              | `damp_leave_on`   |
-| Source explicitly permits damp **or** dry | `either_state_protection` | `dry_pre_heat`      | `either`            | `dry_pre_heat`    |
-
-| Column                 | Value                                |
-| ---------------------- | ------------------------------------ |
-| `application_stage`    | from the table above                 |
-| `application_state`    | from the table above                 |
-| `placement`            | `lengths_ends` (`ends` for rich oils) |
-| `contact_time_seconds` | `null`                               |
-| `rinse_action`         | `leave_in`                           |
-| `reapplication`        | `required`                           |
-
-```json
-{
-  "schemaVersion": 1,
-  "protocolVersion": 1,
-  "locale": "de",
-  "guidanceKey": "product-oil-⟨productId⟩-heat",
-  "scope": { "kind": "product", "category": "oil", "productId": "⟨productId⟩" },
-  "role": "heat_protection",
-  "applicationFamily": "⟨pre_heat_damp | either_state_protection⟩",
-  "compatibleDayTypes": ["styling_day"],
-  "exactGuidanceRequired": true,
-  "sequence": {
-    "anchor": "⟨damp_leave_on | dry_pre_heat⟩",
-    "before": ["heat_tool"],
-    "after": [],
-    "conflictsWith": []
-  },
-  "requirements": {
-    "requiredCatalogFacts": [],
-    "requiredProtocolFacts": [],
-    "requiredProfileFacts": []
-  },
-  "protocolFacts": {
-    "applicationArea": "⟨lengths_ends | ends⟩",
-    "rinse": "leave_in",
-    "contactTimeSeconds": null,
-    "conditionerRelationship": "not_applicable",
-    "reapplication": "each_separate_heat_event",
-    "amount": { "kind": "qualitative", "copyDe": "Wenige Tropfen verwenden." },
-    "cautions": []
-  },
-  "steps": [
-    {
-      "stepKey": "dose-heat",
-      "action": "apply_product",
-      "copyTemplateDe": "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verreiben und anwärmen."
-    },
-    {
-      "stepKey": "apply-heat",
-      "action": "apply_product",
-      "copyTemplateDe": "⟨damp: \"In die handtuchtrockenen Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz.\" | either: \"In handtuchtrockene oder trockene Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz.\"⟩"
-    },
-    {
-      "stepKey": "tool-heat",
-      "action": "tool",
-      "copyTemplateDe": "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
-    }
-  ],
-  "evidence": [{ "sourceUrl": "⟨url⟩", "sourceType": "retailer", "checkedAt": "⟨YYYY-MM-DD⟩" }]
-}
-```
-
-**Technique evidence**
-
-- Comb-through for coverage + iron only on fully dry hair → same film-coverage and bubble-hair evidence as TPL-LEAVEIN-HEAT (see there); for oils the dry-hair rule matters even more because an oil film over waterlogged fibre traps steam.
-- Fine-hair "nur die Spitzen" clause retained → oil weight vs. fine-hair limpness is settled practitioner consensus and already the repo's dosing pattern.
-
-**Typical deviations to watch for**
-
-- **Oils claiming heat protection without a stated temperature** — keep the copy free
-  of any implied °C limit.
-- **Fine-hair root-avoidance** is already in the template copy; keep it.
-- The V2 builder maps `applicationArea: "all_hair"` + `role: "heat_protection"` to
-  `root_to_tip_hair`, which is never what an oil source means — `all_hair` is not a
-  valid choice here.
+An oil with `provides_heat_protection=true` uses its ordinary
+`TPL-OIL-LEAVEON` protocol. Heat styling may happen immediately after that
+leave-on application on its reviewed compatible day types; there is deliberately
+no separate Oil Heat role or template. A `styling_day` context requires an
+explicit reviewed product protocol and must never be inferred from the heat
+capability binary.
 
 ---
 
@@ -1249,16 +1165,15 @@ step) to:
 | 8   | TPL-LEAVEIN-HEAT     | leave_in    | pre_heat_protection         | pre_heat_damp \| either_state_protection  | no                         |
 | 9   | TPL-OIL-DRYFINISH    | oil         | dry_finish                  | dry_finish                                | no                         |
 | 10  | TPL-OIL-LEAVEON      | oil         | leave_on_fibre_conditioning | post_wash_damp_conditioning               | no                         |
-| 11  | TPL-OIL-HEAT         | oil         | pre_heat_protection         | pre_heat_damp \| either_state_protection  | no                         |
-| 12  | TPL-OIL-PREWASH      | oil         | pre_wash_fibre_treatment    | pre_wash_lengths_treatment                | 15–20 min (P8)             |
+| 11  | TPL-OIL-PREWASH      | oil         | pre_wash_fibre_treatment    | pre_wash_lengths_treatment                | 15–20 min (P8)             |
 
 **Parked — no template (P6):** `leave_in` × `post_wash_leave_in` × `post_style_finish`.
 Products the research positions as an after-styling finish must be **flagged to Nick
 individually** and left unstamped until he rules on the family.
 
-**Dissolved in Rev 2:** the separate damp/either heat templates
-(`TPL-LEAVEIN-PREHEAT-DAMP` / `-EITHER`, `TPL-OIL-PREHEAT-DAMP` / `-EITHER`) are now
-one template per category with a family slot (P9).
+**Dissolved in Rev 2:** the separate damp/either Leave-in heat templates
+(`TPL-LEAVEIN-PREHEAT-DAMP` / `-EITHER`) are now one template with a family slot
+(P9). Oil heat protection is a capability on the ordinary leave-on oil purpose.
 
 **Out of scope for the pilot:** `pre_heat_dry`, and every family belonging to the
 other five categories (`dry_shampoo`, `deep_cleansing_shampoo`, `bondbuilder`,
@@ -1324,5 +1239,5 @@ Per product, per derived role:
 - **No packaging exceptions (R-C):** packaging can never override Chaarlie's category application guidance. The `deviation` mechanism is reserved for STRUCTURAL mismatches only (product researched into the wrong category, e.g. an overnight leave-on sold as "Haarkur"). Application-style differences on packaging (conditioner-after masks, roots-to-tips instructions) are ignored — the template guidance is stamped unchanged.
 - **Dry-use default (R-D), amends TPL-LEAVEIN-DRYCARE applicability:** a leave-in receives the DRYCARE stamp (in addition to DAMP) by DEFAULT when `format ∈ {spray, serum} ∧ weight ∈ {light, medium}` OR `format = lotion ∧ weight = light`. Creams and any `weight = rich` are damp-only. Explicit dry-use marketing always qualifies regardless of format. Existing rows contradicting this rule join the cleanup list (§5).
 - **EAN validity (R-B):** an EAN is verified when the same digits appear for the same product in ≥2 independent sources (two retailers, or retailer + manufacturer), or after one physical scan. Single-source EANs stay `excluded_from_apply`.
-- **Heat claims (R-E):** a manufacturer or retailer description claim of heat protection is sufficient for `provides_heat_protection`/heat template stamping; packaging-level claims are not required.
+- **Heat claims (R-E):** a manufacturer or retailer description claim of heat protection is sufficient for `provides_heat_protection`; packaging-level claims are not required. For Oil this capability never creates a fourth role or protocol template.
 - **Selection categories are provisional (R-A):** shelf placement from dm/Rossmann is a first guess; category is finalized by research.

@@ -5,8 +5,13 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type {
   PlanCategoryDecision,
   PlanCategoryTarget,
+  PlanHeatToolUseEvent,
   PlanProductRole,
 } from "@/lib/personal-plan/types"
+import {
+  heatEventsFromNeedSnapshot,
+  oilProtocolSupportsHeatEvent,
+} from "@/lib/personal-plan/oil-heat-context"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
@@ -123,7 +128,12 @@ export async function loadStage3AuthorityFactBundle(
       : loadRecommendationCandidates(client, input.subject.category, selectionContext),
     input.heatCarrierCoverage
       ? Promise.resolve(input.heatCarrierCoverage)
-      : loadStage3HeatCarrierCoverage(client, input.draft, input.heatRoutes),
+      : loadStage3HeatCarrierCoverage(
+          client,
+          input.draft,
+          input.heatRoutes,
+          heatEventsFromNeedSnapshot(input.context.refinedNeedSnapshot),
+        ),
   ])
 
   return {
@@ -694,9 +704,15 @@ function protocolsFromRows(
   guidanceRows: Row[],
 ): Stage3CategoryProductFacts["protocols"] {
   const roles = new Set<string>(CATEGORY_ROLE_POLICIES[category].allowedRoles)
-  if (category === "leave_in" || category === "oil") roles.add("pre_heat_protection")
+  if (category === "leave_in") roles.add("pre_heat_protection")
 
   return [...roles].map((role) => {
+    const compatibleDayTypes = compatibleDayTypesForProtocolRole(
+      category,
+      productId,
+      role,
+      protocolRows,
+    )
     const exactGuidanceRows = guidanceRows.filter((row) => row.role_key === role)
     const matchingGuidanceRows =
       exactGuidanceRows.length > 0
@@ -707,6 +723,7 @@ function protocolsFromRows(
         role: role as never,
         status: "verified_complete" as const,
         fingerprint: fingerprintProtocolRows(matchingGuidanceRows),
+        compatibleDayTypes,
       }
     }
     const sourceRole = role === "pre_heat_application" ? "pre_heat_protection" : role
@@ -728,8 +745,32 @@ function protocolsFromRows(
         ? ("verified_complete" as const)
         : ("verified_incomplete" as const),
       fingerprint: fingerprintProtocolRows(matchingProtocolRows),
+      compatibleDayTypes,
     }
   }) as Stage3CategoryProductFacts["protocols"]
+}
+
+function compatibleDayTypesForProtocolRole(
+  category: PersonalPlanCategory,
+  productId: string,
+  role: string,
+  protocolRows: Row[],
+): string[] | null {
+  const sourceRole = role === "pre_heat_application" ? "pre_heat_protection" : role
+  const compatibleDayTypes = protocolRows.flatMap((row) => {
+    if (row.role !== sourceRole) return []
+    const canonical = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
+    if (
+      !canonical.success ||
+      canonical.data.scope.kind !== "product" ||
+      canonical.data.scope.productId !== productId ||
+      canonical.data.scope.category !== category
+    ) {
+      return []
+    }
+    return canonical.data.compatibleDayTypes
+  })
+  return compatibleDayTypes.length > 0 ? [...new Set(compatibleDayTypes)].sort() : null
 }
 
 function fingerprintProtocolRows(rows: Row[]): string {
@@ -746,14 +787,25 @@ export async function loadStage3HeatCarrierCoverage(
   client: AdminClient,
   draft: Stage3ProductDraft,
   heatRoutes: string[],
+  heatEvents: readonly PlanHeatToolUseEvent[],
 ): Promise<Stage3AuthorityFactBundle["heatCarrierCoverage"]> {
+  const qualifyingEvents = heatEvents.filter((event) => heatRoutes.includes(event.route))
   for (const category of ["leave_in", "oil", "heat_protectant"] as const) {
+    const requiredRole =
+      category === "oil"
+        ? "leave_on_fibre_conditioning"
+        : category === "leave_in"
+          ? "pre_heat_application"
+          : "pre_heat_protection"
     const assignedIds = new Set(
       draft.roleAssignments
-        .filter((assignment) => assignment.category === category)
+        .filter(
+          (assignment) =>
+            assignment.category === category && assignment.roles.includes(requiredRole),
+        )
         .map((assignment) => assignment.capturedProductId),
     )
-    const productIds = draft.products
+    const ownedProductIds = draft.products
       .filter(
         (captured) =>
           assignedIds.has(captured.capturedProductId) &&
@@ -763,10 +815,34 @@ export async function loadStage3HeatCarrierCoverage(
         captured.identity.kind === "catalog_product" ? captured.identity.productId : null,
       )
       .filter((productId): productId is string => Boolean(productId))
+    const plannedDecisions = draft.decisions.filter(
+      (decision) =>
+        decision.category === category &&
+        decision.role === requiredRole &&
+        decision.choiceState === "planned_purchase" &&
+        (decision.resolutionAction === "plan_recommendation" ||
+          decision.resolutionAction === "select_replacement") &&
+        decision.recommendation?.category === category &&
+        decision.recommendation.role === requiredRole,
+    )
+    const plannedProductIds = plannedDecisions
+      .map((decision) => decision.recommendation?.productId)
+      .filter((productId): productId is string => Boolean(productId))
+    const replacementProductIds = plannedDecisions
+      .filter((decision) => decision.resolutionAction === "select_replacement")
+      .map((decision) => decision.recommendation?.productId)
+      .filter((productId): productId is string => Boolean(productId))
+    const productIds = [
+      ...new Set(
+        replacementProductIds.length > 0
+          ? replacementProductIds
+          : [...ownedProductIds, ...plannedProductIds],
+      ),
+    ]
     const products = await loadProductsByIds(client, category, productIds)
     const selectionContext: CategorySelectionContext = {
       hairThickness: "",
-      role: "pre_heat_protection",
+      role: requiredRole,
       shampooTarget: null,
       conditionerTarget: null,
     }
@@ -793,7 +869,7 @@ export async function loadStage3HeatCarrierCoverage(
         ? (factsByProductId.get(productId) ?? null)
         : await loadOneProduct(client, category, productId, {
             hairThickness: "",
-            role: "pre_heat_protection",
+            role: requiredRole,
             shampooTarget: null,
             conditionerTarget: null,
           })
@@ -804,10 +880,37 @@ export async function loadStage3HeatCarrierCoverage(
         facts.category === "heat_protectant"
           ? facts.spec.providesHeatProtection
           : false
-      const protocol = facts.protocols.find(
-        (item) => item.role === "pre_heat_protection" || item.role === "pre_heat_application",
+      const supportsLeaveOnOilUse =
+        facts.category !== "oil" || facts.spec.roleSupport.leave_on_fibre_conditioning === true
+      const protocol = facts.protocols.find((item) =>
+        facts.category === "oil"
+          ? item.role === "leave_on_fibre_conditioning"
+          : item.role === "pre_heat_protection" || item.role === "pre_heat_application",
       )
-      if (capability === true && protocol?.status === "verified_complete") {
+      if (
+        capability === true &&
+        supportsLeaveOnOilUse &&
+        protocol?.status === "verified_complete"
+      ) {
+        if (facts.category === "oil") {
+          const compatibleDayTypes = protocol.compatibleDayTypes ?? []
+          const verifiedEventIds = qualifyingEvents
+            .filter((event) => oilProtocolSupportsHeatEvent(compatibleDayTypes, event))
+            .map((event) => event.id)
+          const verifiedEventIdSet = new Set(verifiedEventIds)
+          const verifiedRoutes = [...new Set(qualifyingEvents.map((event) => event.route))].filter(
+            (route) =>
+              qualifyingEvents
+                .filter((event) => event.route === route)
+                .every((event) => verifiedEventIdSet.has(event.id)),
+          )
+          return {
+            carrierCategory: category,
+            verifiedRoutes,
+            qualifyingEventIds: qualifyingEvents.map((event) => event.id),
+            verifiedEventIds,
+          }
+        }
         return { carrierCategory: category, verifiedRoutes: [...heatRoutes] }
       }
     }
@@ -1009,7 +1112,6 @@ const OIL_EXPLICIT_ROLES = [
   "pre_wash_fibre_treatment",
   "leave_on_fibre_conditioning",
   "dry_finish",
-  "pre_heat_protection",
 ] as const satisfies readonly PlanProductRole[]
 
 function explicitOilRoleSupport(

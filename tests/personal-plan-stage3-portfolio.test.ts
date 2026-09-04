@@ -222,6 +222,78 @@ function completedDraft(): Stage3ProductDraft {
   }
 }
 
+test("portfolio omits only a persisted verified integrated Heat carrier resolution", () => {
+  const base = completedDraft()
+  const integratedHeat = {
+    ...base.decisions.find((decision) => decision.category === "heat_protectant")!,
+    verdict: "ideal" as const,
+    choiceState: "unassigned" as const,
+    resolutionAction: "leave_uncovered" as const,
+    criterionResults: [
+      {
+        criterionId: "heat_protectant.carrier.verified",
+        label: "Integrierter Hitzeschutz",
+        result: "pass" as const,
+        explanation: "Das ausgewählte Öl deckt den unmittelbaren Styling-Schritt ab.",
+      },
+    ],
+  }
+  const integratedDraft = {
+    ...base,
+    decisions: base.decisions.map((decision) =>
+      decision.category === "heat_protectant" ? integratedHeat : decision,
+    ),
+  }
+
+  const integrated = createProposedProductPortfolio(integratedDraft, requirements, {
+    portfolioVersionId: "portfolio-integrated-heat",
+    createdAt: now,
+  })
+  assert.equal(
+    integrated.categoryResolutions.some((resolution) => resolution.category === "heat_protectant"),
+    false,
+  )
+  assert.equal(
+    integrated.uncoveredRoles.some((role) => role.category === "heat_protectant"),
+    false,
+  )
+
+  const ordinary = createProposedProductPortfolio(base, requirements, {
+    portfolioVersionId: "portfolio-ordinary-heat-gap",
+    createdAt: now,
+  })
+  assert.equal(
+    ordinary.categoryResolutions.some((resolution) => resolution.category === "heat_protectant"),
+    true,
+  )
+  assert.equal(
+    ordinary.uncoveredRoles.some((role) => role.category === "heat_protectant"),
+    true,
+  )
+
+  const explicitlyDeferred = createProposedProductPortfolio(
+    {
+      ...integratedDraft,
+      decisions: integratedDraft.decisions.map((decision) =>
+        decision.category === "heat_protectant"
+          ? { ...decision, deferralReason: "no_product" as const }
+          : decision,
+      ),
+    },
+    requirements,
+    {
+      portfolioVersionId: "portfolio-explicitly-deferred-heat",
+      createdAt: now,
+    },
+  )
+  assert.equal(
+    explicitlyDeferred.categoryResolutions.some(
+      (resolution) => resolution.category === "heat_protectant",
+    ),
+    true,
+  )
+})
+
 test("portfolio keeps two suitable Conditioners executable and preserves planned or uncovered gaps", () => {
   const portfolio = createProposedProductPortfolio(completedDraft(), requirements, {
     portfolioVersionId: "portfolio-v1",

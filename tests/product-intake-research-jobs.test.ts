@@ -336,6 +336,7 @@ function validCategorySpecsForAudit(
         product_oil_specs: {
           weight: "light",
           role_support: ["dry_finish", "leave_on_fibre_conditioning"],
+          provides_heat_protection: false,
         },
         product_oil_eligibility: [
           {

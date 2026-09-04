@@ -269,7 +269,12 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
     }
     const adapted = factsFor(category, product)
     const reviewedProtocols = protocolRows.filter(
-      (row) => row.product_id === product.id && row.role === "pre_heat_protection",
+      (row) =>
+        row.product_id === product.id &&
+        (category === "oil"
+          ? adapted.facts.provides_heat_protection === true &&
+            row.role === "leave_on_fibre_conditioning"
+          : row.role === "pre_heat_protection"),
     )
     const reviewedStates = new Set(reviewedProtocols.map((row) => row.application_state))
     const reviewedApplicationState =

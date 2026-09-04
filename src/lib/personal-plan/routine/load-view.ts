@@ -7,6 +7,7 @@ import {
 } from "./contracts"
 import {
   loadActiveRoutineCatalogProductPresentation,
+  loadVerifiedLeaveOnOilHeatProtectionProductIds,
   loadOwnerRefinedNeedSnapshot,
   loadOwnerPendingRoutineProposal,
   loadOwnerRoutinePlan,
@@ -77,6 +78,19 @@ async function loadProductPresentation(input: {
   try {
     const rows = await loadActiveRoutineCatalogProductPresentation(input.client, productIds)
     const requested = new Set(productIds)
+    const oilProductIds = rows
+      .filter((row) => (row.category_key ?? row.category) === "oil")
+      .map((row) => row.id)
+    let verifiedLeaveOnHeatProtectionIds = new Set<string>()
+    try {
+      verifiedLeaveOnHeatProtectionIds = await loadVerifiedLeaveOnOilHeatProtectionProductIds(
+        input.client,
+        oilProductIds,
+      )
+    } catch {
+      // Presentation enrichment must not make a frozen Routine unavailable.
+      // If live capability facts cannot be proven, omit the confirmation.
+    }
     return {
       catalogProducts: rows
         .filter((row) => requested.has(row.id))
@@ -85,6 +99,7 @@ async function loadProductPresentation(input: {
           displayName: typeof row.name === "string" && row.name.trim() ? row.name : null,
           imageUrl:
             typeof row.image_url === "string" && row.image_url.trim() ? row.image_url : null,
+          verifiedLeaveOnHeatProtection: verifiedLeaveOnHeatProtectionIds.has(row.id),
         })),
     }
   } catch {

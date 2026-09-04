@@ -42,6 +42,7 @@ import {
 import {
   Stage3ProductsGatewayError,
   type Stage3CompleteResponse,
+  type Stage3DecisionReviewProjection,
   type Stage3DraftResponse,
   type Stage3IntakeClientPort,
   type Stage3MutationResponse,
@@ -104,6 +105,13 @@ import {
   type ProductFitComparisonSelection,
 } from "./product-fit-comparison"
 import { OilGroupReview, type OilGroupReviewCase } from "./oil-group-review"
+import {
+  clearDependentHeatReviewStateOnOilChange,
+  isCurrentStage3PreviewGeneration,
+  reconcileStage3PreviewProjection,
+  shouldRefreshStage3Preview,
+  stage3ProjectedFinalDecisionIntents,
+} from "./stage3-preview-projection"
 import {
   authorityDecisionIntent,
   hasUnresolvedDecisionSubjects,
@@ -189,6 +197,11 @@ type Stage3UiGateway = Stage3ProductsGateway & {
     expectedRevision: number
     intents: Stage3AuthoritySemanticIntent[]
   }) => Promise<Stage3MutationResponse>
+  previewDecisionBundles?: (input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }) => Promise<Stage3DecisionReviewProjection>
   reviewDecisionBundles?: (input: { draftId: string }) => Promise<Stage3DecisionReviewBundle[]>
 }
 
@@ -407,6 +420,12 @@ export function Stage3ProductsFlow({
   const [systemIssue, setSystemIssue] = useState<SystemIssue | null>(null)
   const [reviewBundles, setReviewBundles] =
     useState<Stage3DecisionReviewBundles>(initialReviewBundles)
+  const [locallyResolvedDecisionKeys, setLocallyResolvedDecisionKeys] = useState<
+    ReadonlySet<string>
+  >(() => new Set<string>())
+  const [autoResolvedIntents, setAutoResolvedIntents] = useState<Stage3AuthoritySemanticIntent[]>(
+    [],
+  )
   const [displayedAlternative, setDisplayedAlternative] = useState<{
     subjectKey: string | null
     index: number
@@ -450,18 +469,26 @@ export function Stage3ProductsFlow({
   const routineOpenedAnalyticsRecorded = useRef(false)
   const routineHandoffOpened = useRef(false)
   const viewedReviewSubjects = useRef(new Set<string>())
+  // A preview is advisory only. Ignore an older response when a later local
+  // selection has already superseded the projected draft it described.
+  const previewRequestGeneration = useRef(0)
 
   const allDecisionSubjects = useMemo(() => deriveStage3DecisionSubjects(draft), [draft])
   const decisionSubjects = useMemo(() => unresolvedDecisionSubjects(draft), [draft])
+  const visibleDecisionSubjects = useMemo(
+    () =>
+      decisionSubjects.filter((subject) => !locallyResolvedDecisionKeys.has(subject.decisionKey)),
+    [decisionSubjects, locallyResolvedDecisionKeys],
+  )
   const inventoryClarifications = useMemo(() => deriveStage3InventoryClarifications(draft), [draft])
   const displayedReviewSubject = useMemo(() => {
     if (phase !== "decisions") return null
     return (
-      decisionSubjects.find((subject) => subject.decisionKey === currentReviewSubjectKey) ??
-      decisionSubjects.find((subject) => !localReviewChoices[subject.decisionKey]) ??
+      visibleDecisionSubjects.find((subject) => subject.decisionKey === currentReviewSubjectKey) ??
+      visibleDecisionSubjects.find((subject) => !localReviewChoices[subject.decisionKey]) ??
       null
     )
-  }, [currentReviewSubjectKey, decisionSubjects, localReviewChoices, phase])
+  }, [currentReviewSubjectKey, localReviewChoices, phase, visibleDecisionSubjects])
   const displayedReviewDecisionKey = displayedReviewSubject?.decisionKey ?? null
   const displayedAlternativeIndex =
     displayedAlternative.subjectKey === displayedReviewDecisionKey ? displayedAlternative.index : 0
@@ -898,8 +925,8 @@ export function Stage3ProductsFlow({
       decisionSubmitStatus !== "idle" ||
       pendingRecoveryMode ||
       systemIssue ||
-      decisionSubjects.length === 0 ||
-      !decisionSubjects.every((subject) => localReviewChoices[subject.decisionKey])
+      visibleDecisionSubjects.length === 0 ||
+      !visibleDecisionSubjects.every((subject) => localReviewChoices[subject.decisionKey])
     ) {
       return
     }
@@ -909,7 +936,7 @@ export function Stage3ProductsFlow({
   }, [
     authorityStatus,
     decisionSubmitStatus,
-    decisionSubjects,
+    visibleDecisionSubjects,
     localReviewChoices,
     pendingRecoveryMode,
     phase,
@@ -1449,8 +1476,11 @@ export function Stage3ProductsFlow({
     const reviewDraftToRestore =
       initialReviewDraft?.expectedRevision === loadedDraft.revision ? initialReviewDraft : null
     if (initialReviewDraft && !reviewDraftToRestore) {
+      previewRequestGeneration.current += 1
       setLocalReviewChoices({})
       setReviewHistory([])
+      setLocallyResolvedDecisionKeys(new Set())
+      setAutoResolvedIntents([])
       setCommittedOilGroupKeys(new Set())
       setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
@@ -2615,6 +2645,9 @@ export function Stage3ProductsFlow({
     setReviewBundles(new Map())
     setReviewHistory([])
     setLocalReviewChoices({})
+    previewRequestGeneration.current += 1
+    setLocallyResolvedDecisionKeys(new Set())
+    setAutoResolvedIntents([])
     setCommittedOilGroupKeys(new Set())
     setOilGroupSelection({ anchorKey: null, deselected: [] })
     clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)
@@ -2843,20 +2876,113 @@ export function Stage3ProductsFlow({
   function rememberLocalReviewChoices(entries: Array<[string, Stage3LocalReviewChoice]>) {
     if (entries.length === 0) return
     const decisionKeys = entries.map(([decisionKey]) => decisionKey)
-    const nextChoices = { ...localReviewChoices, ...Object.fromEntries(entries) }
-    const nextOrder = [
-      ...reviewHistory.filter((candidate) => !decisionKeys.includes(candidate)),
-      ...decisionKeys,
-    ]
+    const leaveOnOilDecisionKeys = new Set(
+      decisionSubjects
+        .filter(
+          (subject) => subject.category === "oil" && subject.role === "leave_on_fibre_conditioning",
+        )
+        .map((subject) => subject.decisionKey),
+    )
+    const changedLeaveOnOil = decisionKeys.some((key) => leaveOnOilDecisionKeys.has(key))
+    const nextReviewState = clearDependentHeatReviewStateOnOilChange({
+      changedLeaveOnOil,
+      subjects: decisionSubjects,
+      choices: { ...localReviewChoices, ...Object.fromEntries(entries) },
+      order: [
+        ...reviewHistory.filter((candidate) => !decisionKeys.includes(candidate)),
+        ...decisionKeys,
+      ],
+    })
+    const nextChoices = nextReviewState.choices
+    const nextOrder = nextReviewState.order
+    // Every local choice invalidates a pending projection: it may otherwise
+    // restore an older choice/order after a later review action.
+    previewRequestGeneration.current += 1
+    if (changedLeaveOnOil) {
+      // Never keep either a server-projected or user-authored Heat resolution
+      // while its carrier choice is changing. The fresh projection may hide
+      // Heat again; until then the unanswered subject blocks auto-submit.
+      setLocallyResolvedDecisionKeys(new Set())
+      setAutoResolvedIntents([])
+    }
     setLocalReviewChoices(nextChoices)
     setReviewHistory(nextOrder)
     persistLocalReviewDraft(nextChoices, nextOrder)
-    const nextSubject = decisionSubjects.find(
-      (subject) =>
-        !decisionKeys.includes(subject.decisionKey) && !localReviewChoices[subject.decisionKey],
+    const nextVisibleDecisionSubjects = changedLeaveOnOil
+      ? decisionSubjects
+      : visibleDecisionSubjects
+    const nextSubject = nextVisibleDecisionSubjects.find(
+      (subject) => !decisionKeys.includes(subject.decisionKey) && !nextChoices[subject.decisionKey],
     )
     setCurrentReviewSubjectKey(nextSubject?.decisionKey ?? null)
     categoryCapture.setSaveLabel("Auswahl gemerkt")
+    if (
+      shouldRefreshStage3Preview({
+        choices: nextChoices,
+        leaveOnOilDecisionKeys,
+        changedDecisionKeys: decisionKeys,
+      })
+    ) {
+      void previewLocalDecisionBundles(nextChoices, nextOrder)
+    }
+  }
+
+  async function previewLocalDecisionBundles(
+    choices: Record<string, Stage3LocalReviewChoice>,
+    order: string[] = reviewHistory,
+  ) {
+    if (!gateway.previewDecisionBundles) return
+    const intents = Object.values(choices).flatMap((choice) =>
+      choice.kind === "decision" ? [choice.intent] : [],
+    )
+    if (intents.length === 0) return
+    const requestGeneration = ++previewRequestGeneration.current
+    try {
+      const projection = await gateway.previewDecisionBundles({
+        draftId: activeDraft.draftId,
+        expectedRevision: activeDraft.revision,
+        intents,
+      })
+      if (!isCurrentStage3PreviewGeneration(requestGeneration, previewRequestGeneration.current))
+        return
+      if (projection.status !== "ready") {
+        // A stale projection cannot keep an earlier server-authored Heat
+        // resolution hidden while the canonical draft is moving underneath it.
+        setLocallyResolvedDecisionKeys(new Set())
+        setAutoResolvedIntents([])
+        return
+      }
+      const reconciliation = reconcileStage3PreviewProjection({
+        subjects: decisionSubjects,
+        choices,
+        order,
+        previousAutoResolvedIntents: autoResolvedIntents,
+        projection,
+      })
+      setLocallyResolvedDecisionKeys(reconciliation.locallyResolvedDecisionKeys)
+      setAutoResolvedIntents(reconciliation.autoResolvedIntents)
+      setLocalReviewChoices(reconciliation.choices)
+      setReviewHistory(reconciliation.order)
+      persistLocalReviewDraft(reconciliation.choices, reconciliation.order)
+      setReviewBundles(
+        (current) =>
+          new Map([
+            ...current,
+            // This projection exists solely to re-evaluate Heat after the local
+            // Oil selection. Other review bundles remain the original server
+            // snapshot until the final atomic server validation.
+            ...projection.bundles
+              .filter((bundle) => bundle.authorityEvaluation.category === "heat_protectant")
+              .map((bundle) => [bundle.authorityEvaluation.subjectKey, bundle] as const),
+          ]),
+      )
+    } catch {
+      if (!isCurrentStage3PreviewGeneration(requestGeneration, previewRequestGeneration.current))
+        return
+      // Keep the original server bundle visible if the read-only projection is unavailable.
+      setLocallyResolvedDecisionKeys(new Set())
+      setAutoResolvedIntents([])
+    }
   }
 
   function persistLocalReviewDraft(
@@ -2897,6 +3023,14 @@ export function Stage3ProductsFlow({
       order: restored.order,
       updatedAt: Date.now(),
     })
+    const restoredOilSelection = Object.values(restored.choices).some(
+      (choice) =>
+        choice.kind === "decision" &&
+        (choice.intent.action === "plan_recommendation" ||
+          choice.intent.action === "select_replacement") &&
+        choice.intent.subjectKey.includes("decision:oil:leave_on_fibre_conditioning:"),
+    )
+    if (restoredOilSelection) void previewLocalDecisionBundles(restored.choices)
   }
 
   async function reconcileReviewedChoicesAfterConflict(
@@ -2933,6 +3067,9 @@ export function Stage3ProductsFlow({
     const retainedOrder = reviewHistory.filter((key) => retainedChoices[key])
     setLocalReviewChoices(retainedChoices)
     setReviewHistory(retainedOrder)
+    previewRequestGeneration.current += 1
+    setLocallyResolvedDecisionKeys(new Set())
+    setAutoResolvedIntents([])
     setCommittedOilGroupKeys(new Set())
     setOilGroupSelection({ anchorKey: null, deselected: [] })
     if (retainedOrder.length > 0) {
@@ -2970,15 +3107,17 @@ export function Stage3ProductsFlow({
 
   async function submitReviewedDecisions() {
     if (decisionSubmitInFlight.current) return
-    const orderedChoices = decisionSubjects.flatMap((subject) => {
+    const orderedChoices = visibleDecisionSubjects.flatMap((subject) => {
       const choice = localReviewChoices[subject.decisionKey]
       return choice ? [choice] : []
     })
-    if (orderedChoices.length !== decisionSubjects.length) return
+    if (orderedChoices.length !== visibleDecisionSubjects.length) return
     decisionSubmitInFlight.current = true
     setDecisionSubmitStatus("finalizing")
-    const decisionIntents = orderedChoices.flatMap((choice) =>
-      choice.kind === "decision" ? [choice.intent] : [],
+    const decisionIntents = stage3ProjectedFinalDecisionIntents(
+      localReviewChoices,
+      visibleDecisionSubjects.map((subject) => subject.decisionKey),
+      autoResolvedIntents,
     )
     const dispositionKeys = orderedChoices.flatMap((choice) =>
       choice.kind === "inventory_disposition" ? [choice.dispositionKey] : [],
@@ -3064,6 +3203,9 @@ export function Stage3ProductsFlow({
       analytics.track("personal_plan_stage3_save_outcome", { outcome: "saved" })
       setLocalReviewChoices({})
       setReviewHistory([])
+      previewRequestGeneration.current += 1
+      setLocallyResolvedDecisionKeys(new Set())
+      setAutoResolvedIntents([])
       setCommittedOilGroupKeys(new Set())
       setOilGroupSelection({ anchorKey: null, deselected: [] })
       clearStage3ReviewDraft(pendingRecoveryStorage, recoveryScope)

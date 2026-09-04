@@ -63,6 +63,24 @@ test("exact Heat adapter rejects rows without visible reviewed provenance", () =
   assert.deepEqual(adaptReviewedProductApplicationProtocols([{ ...base, source_url: null }]), [])
 })
 
+test("exact protocol adapter rejects the retired fourth Oil role", () => {
+  assert.deepEqual(
+    adaptReviewedProductApplicationProtocols([
+      {
+        product_id: productId,
+        category: "oil",
+        role: "pre_heat_protection",
+        application_state: "damp",
+        reapplication: "required",
+        source_url: "https://example.com/oil",
+        source_text: "In feuchtes Haar geben und anschließend mit Wärme stylen.",
+        updated_at: "2026-09-03T09:00:00.000Z",
+      },
+    ]),
+    [],
+  )
+})
+
 test("V2 adapter reads only the separate typed pointer payload and verifies indexed identity", () => {
   const pointer = {
     schemaVersion: 2,

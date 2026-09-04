@@ -4,7 +4,7 @@ import {
 } from "@/lib/product-intake/expansion-manifest"
 
 /**
- * Stamps the 12 reviewed protocol content templates from
+ * Stamps the 11 reviewed protocol content templates from
  * `docs/product-application-protocol-templates.md` (Rev 2) onto a single product,
  * producing the exact `product_application_protocols` row the Product Intake spec
  * operation expects (category-validators.ts:168-183).
@@ -40,9 +40,9 @@ import {
  *    (src/lib/product-intake/expansion-manifest.ts:301).
  *
  * 3. The markdown leaves `applicationFamily` as a per-product slot for the two
- *    heat templates (`⟨pre_heat_damp | either_state_protection⟩`,
- *    product-application-protocol-templates.md:832 and :1081), so no single constant can be exactly
- *    right for them. `EXPANSION_TEMPLATE_APPLICATION_FAMILY` therefore records
+ *    Leave-in heat template (`⟨pre_heat_damp | either_state_protection⟩`,
+ *    product-application-protocol-templates.md:832), so no single constant can be exactly
+ *    right for it. `EXPANSION_TEMPLATE_APPLICATION_FAMILY` therefore records
  *    the DEFAULT (damp-only) family, `pre_heat_damp` — which is also the V2
  *    builder's own default for `sourceRole: "pre_heat_protection"`
  *    (stage5-v2-builder.ts:47). With `usableOnDryHair: true` the stamped row and
@@ -69,7 +69,7 @@ export type ExpansionTemplateSlots = {
   contactTimeSeconds?: number | null
   /** TPL-MASK only: required. The German wait-step copy, e.g. "5–10 Minuten einwirken lassen." */
   waitCopyDe?: string
-  /** TPL-LEAVEIN-HEAT / TPL-OIL-HEAT only: required (see those templates' slots). */
+  /** TPL-LEAVEIN-HEAT only: required (see that template's slots). */
   usableOnDryHair?: boolean
 }
 
@@ -89,7 +89,7 @@ export type ExpansionProtocolRow = {
 }
 
 /**
- * The V1 `applicationFamily` each template stamps. For the two heat templates this
+ * The V1 `applicationFamily` each template stamps. For the Leave-in heat template this
  * is the damp-only default — see disagreement (3) in the module header.
  */
 export const EXPANSION_TEMPLATE_APPLICATION_FAMILY: Record<ExpansionTemplateId, string> = {
@@ -103,14 +103,12 @@ export const EXPANSION_TEMPLATE_APPLICATION_FAMILY: Record<ExpansionTemplateId, 
   "TPL-LEAVEIN-HEAT": "pre_heat_damp",
   "TPL-OIL-DRYFINISH": "dry_finish",
   "TPL-OIL-LEAVEON": "post_wash_damp_conditioning",
-  "TPL-OIL-HEAT": "pre_heat_damp",
   "TPL-OIL-PREWASH": "pre_wash_lengths_treatment",
 }
 
 const MASK_TEMPLATE_ID: ExpansionTemplateId = "TPL-MASK"
 const HEAT_TEMPLATE_IDS: ReadonlySet<ExpansionTemplateId> = new Set<ExpansionTemplateId>([
   "TPL-LEAVEIN-HEAT",
-  "TPL-OIL-HEAT",
 ])
 
 /**
@@ -129,7 +127,7 @@ type TemplateContext = {
   usableOnDryHair: boolean
 }
 
-/** P9 mapping table (product-application-protocol-templates.md:810-813 and :1059-1062). */
+/** P9 mapping table (product-application-protocol-templates.md:810-813). */
 function heatFamily(ctx: TemplateContext): string {
   return ctx.usableOnDryHair ? "either_state_protection" : "pre_heat_damp"
 }
@@ -674,7 +672,12 @@ const PAYLOAD_BUILDERS: Record<
     },
     role: "leave_in",
     applicationFamily: "post_wash_damp_conditioning",
-    compatibleDayTypes: ["wash_day", "intensive_care_day", "styling_day"],
+    compatibleDayTypes: [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day",
+    ],
     exactGuidanceRequired: true,
     sequence: {
       anchor: "damp_leave_on",
@@ -711,71 +714,6 @@ const PAYLOAD_BUILDERS: Record<
         action: "apply_product",
         copyTemplateDe:
           "Zuerst in die handtuchtrockenen Spitzen einarbeiten, dann den Rest über die Längen streichen. Den Ansatz aussparen, nicht ausspülen.",
-      },
-    ],
-    evidence: ctx.evidence.map((entry) => ({
-      sourceUrl: entry.sourceUrl,
-      sourceType: entry.sourceType,
-      checkedAt: entry.checkedAt,
-    })),
-  }),
-
-  "TPL-OIL-HEAT": (ctx: TemplateContext) => ({
-    schemaVersion: 1,
-    protocolVersion: 1,
-    locale: "de",
-    guidanceKey: `product-oil-${ctx.productId}-heat`,
-    scope: {
-      kind: "product",
-      category: "oil",
-      productId: ctx.productId,
-    },
-    role: "heat_protection",
-    applicationFamily: heatFamily(ctx),
-    compatibleDayTypes: ["styling_day"],
-    exactGuidanceRequired: true,
-    sequence: {
-      anchor: heatAnchor(ctx),
-      before: ["heat_tool"],
-      after: [],
-      conflictsWith: [],
-    },
-    requirements: {
-      requiredCatalogFacts: [],
-      requiredProtocolFacts: [],
-      requiredProfileFacts: [],
-    },
-    protocolFacts: {
-      applicationArea: OIL_APPLICATION_AREA_DEFAULT,
-      rinse: "leave_in",
-      contactTimeSeconds: null,
-      conditionerRelationship: "not_applicable",
-      reapplication: "each_separate_heat_event",
-      amount: {
-        kind: "qualitative",
-        copyDe: "Wenige Tropfen verwenden.",
-      },
-      cautions: [],
-    },
-    steps: [
-      {
-        stepKey: "dose-heat",
-        action: "apply_product",
-        copyTemplateDe:
-          "Vor dem Hitzestyling wenige Tropfen zwischen den Handflächen verreiben und anwärmen.",
-      },
-      {
-        stepKey: "apply-heat",
-        action: "apply_product",
-        copyTemplateDe: ctx.usableOnDryHair
-          ? "In handtuchtrockene oder trockene Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz."
-          : "In die handtuchtrockenen Längen und Spitzen einarbeiten und zum Verteilen durchkämmen; bei feinem Haar nur die Spitzen und nie den Ansatz.",
-      },
-      {
-        stepKey: "tool-heat",
-        action: "tool",
-        copyTemplateDe:
-          "Danach mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen.",
       },
     ],
     evidence: ctx.evidence.map((entry) => ({
@@ -919,11 +857,6 @@ const COLUMN_DEFINITIONS: Record<ExpansionTemplateId, ColumnDefinition> = {
     applicationState: () => null,
     reapplication: "not_stated",
   },
-  "TPL-OIL-HEAT": {
-    applicationStage: heatStage,
-    applicationState: heatState,
-    reapplication: "required",
-  },
   "TPL-OIL-PREWASH": {
     applicationStage: () => "pre_wash",
     applicationState: () => "dry",
@@ -991,7 +924,7 @@ function normalizeSlots(
     fail("contactTimeSeconds / waitCopyDe are only valid for TPL-MASK")
   }
   if (!isHeat && slots.usableOnDryHair !== undefined) {
-    fail("usableOnDryHair is only valid for TPL-LEAVEIN-HEAT / TPL-OIL-HEAT")
+    fail("usableOnDryHair is only valid for TPL-LEAVEIN-HEAT")
   }
 
   let contactTimeSeconds: number | null = null
@@ -1042,7 +975,7 @@ function normalizeSlots(
   if (isHeat) {
     if (typeof slots.usableOnDryHair !== "boolean") {
       fail(
-        'TPL-LEAVEIN-HEAT / TPL-OIL-HEAT require slots.usableOnDryHair (true only on an explicit "nass oder trocken" source statement)',
+        'TPL-LEAVEIN-HEAT requires slots.usableOnDryHair (true only on an explicit "nass oder trocken" source statement)',
       )
     }
     usableOnDryHair = slots.usableOnDryHair as boolean

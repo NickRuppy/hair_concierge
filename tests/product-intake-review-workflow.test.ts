@@ -236,6 +236,7 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
         product_oil_specs: {
           weight: "light",
           role_support: ["dry_finish", "leave_on_fibre_conditioning"],
+          provides_heat_protection: false,
         },
         product_oil_eligibility: [
           {
@@ -384,6 +385,38 @@ test("multi-role Leave-in requires an exact canonical protocol for every executa
       result.missingFields.includes("final.category_specs.product_application_protocols.role"),
     )
   }
+})
+
+test("heat-capable Oil keeps heat as a binary and requires only its leave-on protocol", () => {
+  const specs = validCategorySpecs("oil")
+  const oilSpecs = specs.product_oil_specs as {
+    provides_heat_protection: boolean
+    role_support: string[]
+  }
+  oilSpecs.provides_heat_protection = true
+  oilSpecs.role_support = ["leave_on_fibre_conditioning"]
+  specs.product_application_protocols = [exactProtocol("oil", "leave_on_fibre_conditioning")]
+
+  const result = validateProductIntakeApprovalPayload(reviewedPayload("oil", specs))
+
+  assert.equal(result.ok, true)
+  if (!result.ok) return
+  assert.deepEqual(
+    result.targetSpecOperations.find((operation) => operation.table === "product_oil_specs")
+      ?.rows[0],
+    {
+      product_id: PRODUCT_ID_PLACEHOLDER,
+      weight: "light",
+      role_support: ["leave_on_fibre_conditioning"],
+      provides_heat_protection: true,
+    },
+  )
+  assert.deepEqual(
+    result.targetSpecOperations
+      .find((operation) => operation.table === "product_application_protocols")
+      ?.rows.map((row) => (row as { role: string }).role),
+    ["leave_on_fibre_conditioning"],
+  )
 })
 
 test("treatment-only Shampoo is complete with its derived dandruff protocol", () => {

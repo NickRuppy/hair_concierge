@@ -1492,6 +1492,52 @@ test("Leave-in pre-heat always uses heat capability as its canonical third targe
   )
 })
 
+test("Oil leave-on uses the existing comparison rows to show heat capability only for a heat need", () => {
+  const heatInput = authorityInput("oil", "leave_on_fibre_conditioning", {
+    productFacts: factsFor("oil", "leave_on_fibre_conditioning", "owned", {
+      providesHeatProtection: true,
+    }),
+    candidates: [
+      factsFor("oil", "leave_on_fibre_conditioning", "candidate", {
+        providesHeatProtection: false,
+      }),
+    ],
+  })
+  heatInput.coverage = [
+    {
+      job: "heat_protection",
+      ruleId: "heat.required",
+      primaryCategories: ["heat_protectant"],
+      supportingCategories: ["oil"],
+      outcome: "shared",
+    },
+  ]
+
+  const withHeatNeed = buildStage3FitComparison(heatInput)
+  assert.equal(withHeatNeed.mode, "comparison")
+  assert.deepEqual(
+    withHeatNeed.dimensions.map((dimension) => dimension.dimensionId),
+    ["oil.role_support", "oil.heat_protection", "oil.weight", "oil.suitable_thicknesses"],
+  )
+  const heatDimension = withHeatNeed.dimensions.find(
+    (dimension) => dimension.dimensionId === "oil.heat_protection",
+  )
+  assert.deepEqual(
+    heatDimension?.productPositions.map(({ position }) => position),
+    [
+      { kind: "position", stopId: "true" },
+      { kind: "position", stopId: "false" },
+    ],
+  )
+
+  const withoutHeatNeed = buildStage3FitComparison({ ...heatInput, coverage: [] })
+  assert.equal(withoutHeatNeed.mode, "comparison")
+  assert.deepEqual(
+    withoutHeatNeed.dimensions.map((dimension) => dimension.dimensionId),
+    ["oil.role_support", "oil.weight", "oil.suitable_thicknesses"],
+  )
+})
+
 test("missing exact facts stay unavailable and do not produce placeholder dimensions", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
@@ -2062,7 +2108,7 @@ function factsFor<C extends PersonalPlanCategory>(
                 : "light",
           ),
           targetThicknessEligible: true,
-          providesHeatProtection: false,
+          providesHeatProtection: overrides.providesHeatProtection ?? false,
         },
       } as never
     case "mask":

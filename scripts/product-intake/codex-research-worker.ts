@@ -1124,12 +1124,9 @@ function oilApprovalContract(): JsonRecord {
     required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
     product_oil_specs: {
       weight: ["light", "medium", "rich"],
-      role_support: [
-        "pre_wash_fibre_treatment",
-        "leave_on_fibre_conditioning",
-        "dry_finish",
-        "pre_heat_protection",
-      ],
+      role_support: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+      provides_heat_protection:
+        "boolean; true only when a product source explicitly claims heat protection; false only after the reviewed producer/shop sources have been checked and make no heat-protection claim",
     },
     product_oil_eligibility:
       "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",
@@ -1141,13 +1138,8 @@ function oilApprovalContract(): JsonRecord {
     },
     product_application_protocols: applicationProtocolResearchContract(
       "oil",
-      [
-        "pre_wash_fibre_treatment",
-        "leave_on_fibre_conditioning",
-        "dry_finish",
-        "pre_heat_protection",
-      ],
-      "Include one exact protocol for every role declared in product_oil_specs.role_support.",
+      ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
+      "Include one exact protocol for every role declared in product_oil_specs.role_support. Heat protection is not a role: set provides_heat_protection=true and include a sourced leave_on_fibre_conditioning protocol when the oil protects from heat.",
     ),
   }
 }

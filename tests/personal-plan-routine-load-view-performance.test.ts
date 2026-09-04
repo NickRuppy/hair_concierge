@@ -480,10 +480,138 @@ test("routine view hydrates active catalog presentation in one bounded non-seman
         productId: "product-a",
         displayName: "Current Shampoo",
         imageUrl: "https://example.test/product-a.webp",
+        verifiedLeaveOnHeatProtection: false,
       },
     ],
   })
   assert.equal(routineView.activeVersion?.payload.items[0]?.product.displayName, "Frozen Shampoo")
+})
+
+test("routine view derives verified leave-on Oil heat capability from spec and exact guidance", async () => {
+  const calls: string[] = []
+  const oilItem = {
+    ...routineItem("shampoo"),
+    itemKey: "item:oil:leave-on:captured-a",
+    assignmentKey: "assignment:oil:leave-on:captured-a",
+    category: "oil",
+    role: "leave_on_fibre_conditioning",
+    purposeKey: "leave_on_fibre_conditioning",
+    product: {
+      kind: "owned",
+      capturedProductId: "captured-a",
+      productId: "product-oil",
+      displayName: "Frozen Oil",
+    },
+  }
+  const client = {
+    from(table: string) {
+      const filters = new Map<string, string>()
+      const query = {
+        select() {
+          return query
+        },
+        eq(column: string, value: unknown) {
+          filters.set(column, String(value))
+          return query
+        },
+        in(column: string, values: string[]) {
+          calls.push(`${table}.in:${column}:${values.join(",")}`)
+          const dataByTable: Record<string, unknown[]> = {
+            products: [
+              {
+                id: "product-oil",
+                name: "Current Oil",
+                image_url: null,
+                category_key: "oil",
+                is_active: true,
+                lifecycle_status: "active",
+              },
+            ],
+            product_oil_specs: [
+              {
+                product_id: "product-oil",
+                role_support: ["leave_on_fibre_conditioning"],
+                provides_heat_protection: true,
+              },
+            ],
+            application_guidance_protocols: [
+              {
+                product_id: "product-oil",
+                role_key: "leave_on_fibre_conditioning",
+                scope_kind: "product",
+                status: "active",
+                locale: "de",
+              },
+            ],
+          }
+          return {
+            then(resolve: (value: { data: unknown[]; error: null }) => void) {
+              resolve({ data: dataByTable[table] ?? [], error: null })
+            },
+          }
+        },
+        async maybeSingle() {
+          calls.push(table)
+          if (table === "personal_plans") {
+            return {
+              data: {
+                id: ids.plan,
+                revision: 4,
+                source_revision: 7,
+                active_routine_version_id: ids.active,
+                pending_routine_proposal_id: null,
+              },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_routine_versions") {
+            return {
+              data: { id: ids.active, payload: routinePayload(ids.active, [oilItem]) },
+              error: null,
+            }
+          }
+          if (table === "personal_plan_need_versions") {
+            return {
+              data: { id: ids.refined, output_snapshot: { renderedOrder: ["oil"] } },
+              error: null,
+            }
+          }
+          return { data: null, error: null }
+        },
+      }
+      return query
+    },
+  }
+
+  const view = await loadPersonalPlanRoutineView({
+    client: client as unknown as PersonalPlanRoutineReadClient,
+    userId: "owner-1",
+    enabled: true,
+  })
+
+  assert.notEqual(view.status, "no_personal_plan")
+  assert.deepEqual(calls, [
+    "personal_plans",
+    "personal_plan_routine_versions",
+    "personal_plan_need_versions",
+    "products.in:id:product-oil",
+    "product_oil_specs.in:product_id:product-oil",
+    "product_application_protocols.in:product_id:product-oil",
+    "application_guidance_protocols.in:product_id:product-oil",
+  ])
+  assert.deepEqual(
+    (view as Exclude<typeof view, { status: "no_personal_plan" }>).productPresentation,
+    {
+      catalogProducts: [
+        {
+          productId: "product-oil",
+          displayName: "Current Oil",
+          imageUrl: null,
+          verifiedLeaveOnHeatProtection: true,
+        },
+      ],
+    },
+  )
 })
 
 test("routine-attention refresh events use known canonical state without another read", () => {

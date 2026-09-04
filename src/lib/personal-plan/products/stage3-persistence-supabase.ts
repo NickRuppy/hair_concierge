@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { buildStage3EntryContext } from "./stage2-entry-adapter"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import { heatEventsFromNeedSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import { cleanProductDisplayName } from "@/lib/product-identity"
 import {
   mapLegacyRefinementPrefill,
@@ -614,11 +615,20 @@ export function createSupabaseStage3ProductionPersistence(
         revision: input.draft.revision,
         products: input.draft.products,
         roleAssignments: input.draft.roleAssignments,
+        carrierDecisions: input.draft.decisions.filter((decision) =>
+          ["leave_in", "oil", "heat_protectant"].includes(decision.category),
+        ),
         heatRoutes: input.heatRoutes,
+        heatEvents: heatEventsFromNeedSnapshot(input.context.refinedNeedSnapshot),
       })
       let heatCarrierCoverage = heatCarrierCoverageCache.get(heatCacheKey)
       if (!heatCarrierCoverage) {
-        heatCarrierCoverage = loadStage3HeatCarrierCoverage(client, input.draft, input.heatRoutes)
+        heatCarrierCoverage = loadStage3HeatCarrierCoverage(
+          client,
+          input.draft,
+          input.heatRoutes,
+          heatEventsFromNeedSnapshot(input.context.refinedNeedSnapshot),
+        )
         heatCarrierCoverageCache.set(heatCacheKey, heatCarrierCoverage)
       }
       const [resolvedRecommendationCandidates, resolvedHeatCarrierCoverage] = await Promise.all([

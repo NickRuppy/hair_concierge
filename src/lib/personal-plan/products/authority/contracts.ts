@@ -47,6 +47,7 @@ export type Stage3AuthorityProtocolFact = {
   role: PlanProductRole
   status: "verified_complete" | "verified_incomplete" | "missing"
   fingerprint: string | null
+  compatibleDayTypes?: string[] | null
 }
 
 export type Stage3AuthorityCommonProductFacts = {
@@ -209,7 +210,15 @@ export type Stage3AuthorityInput<C extends PersonalPlanCategory = PersonalPlanCa
   hairThickness?: PlanHairThickness
   heatCarrierCoverage: {
     carrierCategory: Extract<PersonalPlanCategory, "leave_in" | "oil" | "heat_protectant"> | null
+    /**
+     * Route summary retained for leave-in/standalone carriers and compatibility.
+     * When concrete event IDs are present (the Oil path), event coverage is the
+     * authority; a route is listed only when every qualifying event on it passed.
+     */
     verifiedRoutes: string[]
+    /** Present only when the carrier was evaluated against concrete refined heat events. */
+    qualifyingEventIds?: string[]
+    verifiedEventIds?: string[]
   }
 }
 
