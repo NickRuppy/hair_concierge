@@ -22,12 +22,33 @@
           {
             "type": "ean",
             "value": "3600542461030",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
               "https://www.dm.at/p/d/1670316/wahre-schaetze-reparierendes-shampoo-honig-schaetze"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
+          },
+          {
+            "type": "ean",
+            "value": "3600542462228",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+              "https://www.ohfeliz.de/garnier/wahre-schaetze-reparierendes-shampoo-honig-schaetze"
+            ],
+            "excluded_from_apply": false
+          },
+          {
+            "type": "ean",
+            "value": "3600542461511",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+              "https://www.dm.at/p/d/1880830/wahre-schaetze-reparierendes-shampoo-honig-schaetze",
+              "https://www.flaconi.de/haare/garnier/wahre-schaetze/garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze-haarshampoo.html"
+            ],
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -43,24 +64,11 @@
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
               "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -79,14 +87,32 @@
             "source_label": "dm DE/AT exact 400 ml GTIN fields",
             "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
             "source_type": "retailer",
-            "source_text": "Both dm DE and dm AT list GTIN 3600542461030 for the exact 400 ml package; they are one retailer organization, so agreement is not independent.",
-            "checked_at": "2026-09-02"
+            "source_text": "dm DE and dm AT list GTIN 3600542461030 for the exact 400 ml package. Nick accepted an exact official dm listing as sufficient identifier authority on 2026-09-04.",
+            "checked_at": "2026-09-04"
+          },
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542462228",
+            "source_label": "Müller and Oh Feliz exact 300 ml EAN fields",
+            "source_url": "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+            "source_type": "retailer",
+            "source_text": "Müller structured product data and Oh Feliz list EAN 3600542462228 for the exact 300 ml Honig Schätze shampoo. Müller's current INCI matches the selected current formula.",
+            "checked_at": "2026-09-04"
+          },
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542461511",
+            "source_label": "Rossmann, dm AT and Flaconi exact 250 ml EAN fields",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+            "source_type": "retailer",
+            "source_text": "Rossmann, dm AT and Flaconi list EAN 3600542461511 for the exact 250 ml Honig Schätze shampoo. Retailer INCI snapshots show that this EAN spans an older silicone formula and the current formula, so scans resolve to the current catalog record with that reformulation caveat.",
+            "checked_at": "2026-09-04"
           },
           {
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-02-wahre-schaetze-honig",
+              "production_light_product_id": "wahre-schaetze-honig-schaetze",
               "category_specs": {
                 "product_shampoo_specs": [
                   {
@@ -100,20 +126,16 @@
                     "scalp_route": "balanced",
                     "shampoo_bucket": "normal",
                     "thickness": "normal"
-                  },
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["fine", "normal"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
             "source_type": "retailer",
-            "source_text": "Exact 400 ml formula is coherent within dm sources; the 250 ml sibling has a materially different formula and is not merged.",
+            "source_text": "The selected current formula is documented for the 400 ml dm package and the current 300 ml Müller package. Size-specific EANs are aliases of the same marketed shampoo; historical retailer snapshots show older formula generations under the 250 ml and 300 ml EANs.",
             "checked_at": "2026-09-02"
           },
           {
@@ -145,20 +167,20 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: strong cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Strong: Sodium Lauryl Sulfate is the position-2 primary cleanser and is supported by CAPB plus later betaine, glucoside and glucamide routes. Refatting ingredients buffer feel but do not make the net chassis merely ordinary. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Strong cleansing with only moderate weight makes fine hair usable when damage care is desired, though repeated use may feel drying on already dry lengths. normal — Moderate conditioning and moderate weight balance the strong SLS-led cleanser for normal hair. Conditional (not emitted): coarse — Coarse or very dry hair may need more conditioning than this no-silicone, SLS-led repair shampoo provides.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: strong cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Strong: Sodium Lauryl Sulfate is the position-2 primary cleanser and is supported by CAPB plus later betaine, glucoside and glucamide routes. Refatting ingredients buffer feel but do not make the net chassis merely ordinary.",
+          "research.properties.conditioningLevel": "Moderate: honey materials, glycerin, glyceryl oleate, glycol distearate, lecithin and cationic guar provide several rinse-off softness routes, but there is no silicone stack, protein system or rich 2-in-1 architecture.",
+          "research.properties.dandruffSupport": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: revealed positioning is for stressed, damaged-looking hair, and the formula has compatible honey/humectant plus refatting/cationic care routes. Confidence stays moderate because the beeswax claim is not visible in INCI.",
+          "research.properties.focusSecondary": "Empty: no distinct v1.4 secondary focus is supported; honey/beeswax positioning serves the same damaged-looking hair care story rather than an independent route.",
+          "research.properties.scalpComfortTarget": "Not targeted: the packet is focused on stressed or damaged-looking hair, not sensitive, itchy, dry-feeling or uncomfortable scalp support.",
+          "research.properties.usageRole": "Regular: directions are normal wet-hair massage and rinse-out use and there is no treatment or explicit reset trigger.",
+          "research.properties.weightPotential": "Moderate: multiple lipid/refatting and cationic guar routes can leave bounded residue, while the SLS-led system and absence of silicone or confirmed beeswax keep the band below high.",
           "product.name": "Exact 400 ml dm product name; brand retains the source family naming.",
-          "product.identifiers": "Exact 400 ml EAN is GS1-valid but only corroborated within the dm organization, so it is excluded from apply.",
+          "product.identifiers": "Three GS1-valid size-specific EANs are retained for scan coverage: 400 ml (dm), 300 ml (Müller), and 250 ml (Rossmann/dm/Flaconi). The 250 ml and 300 ml identifiers have also appeared on older formula generations, an unavoidable reformulation caveat for stable retail barcodes.",
           "product.candidate_image": "Exact 400 ml dm PNG was visually checked as front-facing, product-only, transparent, and 987×2000 px.",
           "product.concern_eligibility": "Repair/care positioning supports normal and dryness shampoo concerns without treating cosmetic claims as hard efficacy.",
           "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
@@ -199,31 +221,12 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -249,21 +252,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-04-syoss-intense-keratin",
+              "production_light_product_id": "syoss-intense-keratin",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "normal"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -271,7 +262,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
@@ -308,18 +301,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The product is positioned for brittle hair repair rather than a named scalp concern; the ordinary balanced scalp route is the only supported target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES plus CAPB gives effective ordinary cleansing, but the early refatting/protein/silicone care stack prevents a strong-reset classification. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: coarse — High conditioning and repair positioning align with coarse hair, where the high deposition load is less likely to compromise useful movement. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: high conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES plus CAPB gives effective ordinary cleansing, but the early refatting/protein/silicone care stack prevents a strong-reset classification.",
+          "research.properties.conditioningLevel": "High: protein, dimethicone, amodimethicone, cationic guar and a waxy/lipid route appear before or near the fragrance/pH region, making substantial rinse-off softness and manageability likely.",
+          "research.properties.dandruffSupport": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: all revealed exact-product claims center on keratin, brittle/weak hair and repair, and the formula contains an early hydrolyzed keratin route plus substantive conditioning support.",
+          "research.properties.focusSecondary": "Empty: the packet shows one dominant repair/keratin positioning, and conditioning is already the route that supports that primary focus rather than a distinct secondary focus.",
+          "research.properties.scalpComfortTarget": "Not targeted: the packet is repair/hair-breakage positioned and includes no sensitive, itchy, dry-feeling or uncomfortable-scalp intent.",
+          "research.properties.usageRole": "Regular: directions are ordinary rinse-out use and follow-up conditioner guidance; there is no treatment, reset, alternating or daily-use trigger.",
+          "research.properties.weightPotential": "High: multiple persistent routes converge early enough to make movement/root-lift loss plausible despite moderate cleansing reset.",
           "product.name": "Exact current 440 ml product identity from manufacturer and retailer sources.",
           "product.identifiers": "Exact 440 ml EAN is corroborated by dm and Rossmann.",
           "product.candidate_image": "Exact 440 ml dm PNG was visually checked as front-facing, product-only, transparent, and 901×2500 px.",
@@ -362,12 +355,6 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "normal"
             },
             {
@@ -378,15 +365,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -412,15 +392,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-05-nivea-power-repair",
+              "production_light_product_id": "nivea-power-repair",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -434,7 +408,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["normal", "coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
@@ -471,18 +447,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Moderate cleansing with high repair conditioning and moderate weight is a good fit for normal damaged hair. coarse — Coarse hair can use the richer repair/oil/cationic care system without the same lift penalty. Conditional (not emitted): fine — High conditioning and moderate residue risk can reduce lift on fine hair, though the no-silicone and no-weigh-down counter-signals keep it conditional rather than excluded.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong.",
+          "research.properties.conditioningLevel": "High: squalane, panthenol, coconut oil, dicaprylyl ether, cationic guar, glyceryl oleate, glycerin, glycol distearate and hydrogenated castor oil create multiple complementary rinse-off care routes.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: exact-product positioning targets damaged or stressed hair, and the formula supports that with a broad oil, panthenol, cationic polymer and refatting care system.",
+          "research.properties.focusSecondary": "Empty: moisture/no-weight language is not a v1.4 secondary focus, and the care routes support the same repair positioning rather than an independent focus.",
+          "research.properties.scalpComfortTarget": "Not targeted: the packet targets damaged hair and repair/moisture care, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are ordinary wet-hair lather and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger.",
+          "research.properties.weightPotential": "Moderate: oils, squalane, cationic guar and waxy/refatting materials create noticeable residue potential, but SLES/CAPB/glucoside cleansing and the absence of silicone keep it below a high-weight call.",
           "product.name": "Exact manufacturer 250 ml product identity.",
           "product.identifiers": "Exact 250 ml EAN is corroborated by manufacturer structured data and dm.",
           "product.candidate_image": "Manufacturer transparent exact-product packshot was visually checked as product-only and 1010×1180 px.",
@@ -525,24 +501,12 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -551,10 +515,7 @@
               "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
               "text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
             },
-            "deviation": {
-              "reason": "Exact package says to let the shampoo act briefly before rinsing; the standard template has no wait step.",
-              "packaging_text": "kurz einwirken lassen. Dann gründlich ausspülen."
-            }
+            "deviation": null
           }
         ],
         "evidence": [
@@ -571,15 +532,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-10-schauma-repair-pflege",
+              "production_light_product_id": "schauma-repair-pflege",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "normal"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -587,7 +542,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
@@ -624,18 +581,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile.",
+          "category_specs.product_shampoo_specs": "The product is positioned for damaged/dry hair repair rather than a named scalp concern; the ordinary balanced scalp route is the only supported production target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: coarse — Coarse hair is the best default fit for the high-conditioning/high-weight repair profile; the richer deposition is less likely to compromise useful movement. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: high conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: high weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo.",
+          "research.properties.conditioningLevel": "High: early cationic guar, panthenol, apricot oil, coconut extract and later amodimethicone/dimethicone create multiple complementary rinse-off care routes.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: exact-product positioning targets damaged/dry hair and repair, and the formula supports that with polymer, panthenol, oil and silicone care routes.",
+          "research.properties.focusSecondary": "Empty: the dry-hair and smoothing claims support the same repair/care story rather than a distinct v1.4 secondary focus.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product targets damaged/dry hair fiber repair, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are ordinary wet-hair distribution, short contact and rinse-out, with no daily, alternating, reset or treatment trigger.",
+          "research.properties.weightPotential": "High: early cationic guar, plant oil, dual silicones and later waxy/refatting materials create converging persistent deposition potential despite SLES/CAPB reset.",
           "product.name": "Exact current 400 ml product identity from dm and Rossmann.",
           "product.identifiers": "Exact 400 ml EAN is corroborated by dm and Rossmann.",
           "product.candidate_image": "Exact dm packshot was visually checked as front-facing, product-only, and 1029×2400 px.",
@@ -694,14 +651,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "dehydriert-fettig"
-        ],
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["dehydriert-fettig"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -847,24 +798,11 @@
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
               "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -890,7 +828,7 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-12-herbal-essences-fiji",
+              "production_light_product_id": "herbal-essences-fiji",
               "category_specs": {
                 "product_shampoo_specs": [
                   {
@@ -904,15 +842,11 @@
                     "scalp_route": "balanced",
                     "shampoo_bucket": "normal",
                     "thickness": "normal"
-                  },
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["fine", "normal"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
@@ -949,18 +883,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The product is positioned for hair moisture, softness and no weight, not for dandruff, oily, dry-feeling sensitive scalp or irritation; ordinary balanced scalp route is supported.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: isethionate and sarcosinate anionic surfactants are paired with two betaines, giving ordinary effective cleansing without the sharper SLES/reset profile. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Low weight potential and no-weigh-down moisture positioning make this a good fine-hair default despite ordinary moderate cleansing. normal — Moderate cleansing, moderate conditioning and low weight produce a balanced moisture-leaning fit for normal hair. Conditional (not emitted): coarse — Coarse hair can use the moisture-leaning shampoo, but the low-weight/moderate-care formula may not be rich enough as an ideal coarse-hair default.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: gentle is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: low weight potential.",
+          "research.properties.cleansingStrength": "Moderate: isethionate and sarcosinate anionic surfactants are paired with two betaines, giving ordinary effective cleansing without the sharper SLES/reset profile.",
+          "research.properties.conditioningLevel": "Moderate: Polyquaternium-10 provides one meaningful conditioning route, while glycerin and coconut fruit juice are late supportive clues rather than a rich care system.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "General: the dominant claim is lightweight moisture, but moisture is not a v1.4 focus value; the formula supports light care rather than a distinct volume, shine, repair, clarifying, scalp-active or gentle role.",
+          "research.properties.focusSecondary": "Empty: no distinct secondary v1.4 focus has both a separate claim and independent formula route.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product is positioned for lightweight hair moisture/softness, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are standard wet-hair lather and rinse-out use, with no explicit daily/frequent, treatment, alternating or reset trigger.",
+          "research.properties.weightPotential": "Low: one mid-list cationic polymer and very late humectant/plant-juice clues create limited residue potential, while the surfactant system provides adequate reset and there is no silicone/oil payload.",
           "product.name": "dm and Rossmann agree on exact size, embedded/labeled EAN, product identity, usage, and complete ordered INCI.",
           "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
           "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 947×2800 px.",
@@ -1003,12 +937,6 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "normal"
             },
             {
@@ -1019,15 +947,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1053,15 +974,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-13-gliss-liquid-silk",
+              "production_light_product_id": "gliss-liquid-silk",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -1075,7 +990,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["normal", "coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html",
@@ -1112,18 +1029,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The exact product targets gloss, surface smoothing and manageability rather than a named scalp concern; ordinary balanced scalp route is supported.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — High rinse-off smoothness with only moderate weight is a strong shine/silk fit for normal hair. coarse — Coarse hair can use the high-conditioning shine/smoothing profile, while moderate weight avoids an overly light-only fit. Conditional (not emitted): fine — High conditioning and moderate residue potential can reduce lift on fine hair, even without a silicone stack, so fine fit is conditional rather than ideal.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: high conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: shine is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong.",
+          "research.properties.conditioningLevel": "High: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10 and several refatting/waxy clues create a broad smoothness and slip system.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Shine is the dominant role: the exact product claims surface smoothing plus shine and suppleness, and the formula has silk/protein, lipid-like and polymer routes compatible with smoothing and gloss.",
+          "research.properties.focusSecondary": "No secondary focus is assigned because the claims concentrate on surface smoothing, shine and suppleness; repair is only a neighboring care interpretation, not a distinct exact-product role.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product is positioned for hair-surface smoothness, shine and manageability, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are standard wet-hair distribution, rinse-out and regular hair-care use, with no daily/frequent, alternating, reset or treatment trigger.",
+          "research.properties.weightPotential": "Moderate: early lipid-like and silk/protein clues, Polyquaternium-10 and later refatting/waxy materials can leave bounded residue, while SLES/CAPB/glucoside cleansing and no silicone keep it below high.",
           "product.name": "Current German manufacturer page and dm agree on exact 250 ml identity and ordered INCI; Rossmann embeds the same EAN but publishes a likely older formula.",
           "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
           "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 1051×2800 px.",
@@ -1167,24 +1084,12 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1210,15 +1115,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-14-gliss-total-repair",
+              "production_light_product_id": "gliss-total-repair",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "normal"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -1226,7 +1125,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "PR #508 production-light projection (frozen source-backed input)",
             "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/total-repair/total-repair-shampoo.html",
@@ -1263,18 +1164,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile.",
+          "category_specs.product_shampoo_specs": "The product is positioned for dry/damaged hair repair and shine rather than a named scalp concern; ordinary balanced scalp route is the only supported production target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: coarse — Coarse hair is the best default fit for this high-conditioning/high-weight repair and shine profile. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: high conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: shine.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: high weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset.",
+          "research.properties.conditioningLevel": "High: dimethicone at position 5, keratin, amodimethicone, cationic guar and lipid/waxy refatting clues create a substantial rinse-off repair-care system.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: the revealed product positioning targets dry, damaged hair and liquid keratin, and the formula has a compatible silicone, keratin and cationic-polymer repair-care system.",
+          "research.properties.focusSecondary": "Shine secondary: the source explicitly promises glossy hair, and the silicone/smoothing system provides an independent route beyond the keratin-led repair positioning.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product targets dry/damaged hair fiber repair, softness and shine, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are standard wet-hair distribution, rinse-out and regular use; no daily/frequent, alternating, reset or treatment trigger is present.",
+          "research.properties.weightPotential": "High: early dimethicone, amodimethicone, cationic guar, keratin and waxy/refatting clues create a persistent multi-route deposition system despite ordinary SLES/CAPB reset.",
           "product.name": "Current German manufacturer and dm agree on the exact 250 ml formulation. Austrian/Swiss exact-EAN listings and the Rossmann 400 ml SKU expose a different likely older/regional formula and are preserved as conflicts, not merged.",
           "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
           "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 1051×2800 px.",
@@ -1317,12 +1218,6 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "normal"
             },
             {
@@ -1333,15 +1228,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1367,15 +1255,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-01-elvital-hydra-hyaluronic",
+              "production_light_product_id": "elvital-hydra-hyaluronic",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -1389,7 +1271,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["normal", "coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "Production Light projection from selected canonical formula",
             "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
@@ -1426,18 +1310,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The exact product is hydration-led but is not positioned for sensitive, itchy, dry-feeling or uncomfortable scalp, so the ordinary balanced route is the supported production target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES is the primary cleanser, but it is buffered by amphoteric betaines and a visibly conditioning/refatting chassis; helper emulsifiers are not counted as separate cleansing routes. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Moderate cleansing, high conditioning and moderate weight form a balanced care profile for normal-diameter hair. coarse — High rinse-off conditioning and hydration-led positioning support coarse hair, while moderate weight remains acceptable. Conditional (not emitted): fine — High conditioning plus silicone and cationic deposition routes can reduce lift on fine hair; moderate cleansing keeps it usable as a conditional rather than excluded fit.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: high conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: general is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: shine.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES is the primary cleanser, but it is buffered by amphoteric betaines and a visibly conditioning/refatting chassis; helper emulsifiers are not counted as separate cleansing routes.",
+          "research.properties.conditioningLevel": "High: early dimethicone, early cationic guar, late amodimethicone and early glycol distearate create several complementary rinse-off slip and manageability routes.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is explicitly not enough under v1.4.",
+          "research.properties.focusPrimary": "General: the dominant exact-product claim is hydration/moisture, which is compatible with sodium hyaluronate and conditioning routes but is not a v1.4 focus enum.",
+          "research.properties.focusSecondary": "Shine is a bounded secondary: the manufacturer separately promises shiny, lively hair, and the formula has silicone smoothing plus acid/pH clues independent from the moisture claim.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product mentions scalp hydration but is not positioned for sensitive, itchy or uncomfortable scalp, and fragrance exposure plus SLES prevent treating it as a comfort-targeted formula.",
+          "research.properties.usageRole": "Regular: the packet provides ordinary rinse-out directions and no explicit daily, treatment, alternating, clarifying or reset trigger.",
+          "research.properties.weightPotential": "Moderate: silicone plus cationic polymer deposition makes noticeable residue plausible, while SLES/betaine cleansing and late amodimethicone keep the band below high.",
           "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
           "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
           "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
@@ -1480,12 +1364,6 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "normal"
             },
             {
@@ -1496,15 +1374,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1530,15 +1401,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-03-garnier-fructis-locken-methode",
+              "production_light_product_id": "fructis-locken-methode",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -1552,7 +1417,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["normal", "coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "Production Light projection from selected canonical formula",
             "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo",
@@ -1589,18 +1456,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: strong cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Strong: olefin sulfonate at position 2 is reinforced by sodium lauroyl sarcosinate and other surfactants; sulfate-free positioning does not make this chassis mild. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Strong cleansing, high conditioning and moderate weight fit normal hair that wants moisture/curl care. coarse — High moisture/curl conditioning supports coarse hair while the strong cleanser prevents a heavy-only profile. Conditional (not emitted): fine — High curl-care conditioning and butter/polymer routes can weigh fine hair down, even though strong cleansing gives reset capacity.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: strong cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: general is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Strong: olefin sulfonate at position 2 is reinforced by sodium lauroyl sarcosinate and other surfactants; sulfate-free positioning does not make this chassis mild.",
+          "research.properties.conditioningLevel": "High: early glycerin, glycol distearate, shea butter, sodium hyaluronate and two cationic polymer routes form a broad curl/moisture care system.",
+          "research.properties.dandruffSupport": "Not supported: the complete INCI contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is not enough under v1.4.",
+          "research.properties.focusPrimary": "General: dominant positioning is curl-method moisture, but curl and moisture are not v1.4 focus values. The formula strongly supports moisture/curl care without fitting a more specific v1.4 focus cleanly.",
+          "research.properties.focusSecondary": "Empty: there is no distinct v1.4 secondary focus with its own independent claim route; sulfate-free, silicone-free and curl-method language all support the same moisture/curl positioning.",
+          "research.properties.scalpComfortTarget": "Not targeted: the scalp is named only as the application area; the claims target curly hair moisture, not sensitive, itchy or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are standard wet-scalp application and rinse-out, with no treatment or reset cadence trigger.",
+          "research.properties.weightPotential": "Moderate: shea butter, glycol distearate and cationic guar/polyquaternium routes can leave curl-care residue, while the strong olefin-sulfonate/sarcosinate chassis and lack of silicone keep it below high.",
           "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
           "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
           "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
@@ -1644,29 +1511,11 @@
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
               "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "normal"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["fine"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1692,7 +1541,7 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-06-being-big-hair",
+              "production_light_product_id": "being-big-hair",
               "category_specs": {
                 "product_shampoo_specs": [
                   {
@@ -1700,21 +1549,11 @@
                     "scalp_route": "balanced",
                     "shampoo_bucket": "normal",
                     "thickness": "fine"
-                  },
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "normal"
-                  },
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["fine"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "Production Light projection from selected canonical formula",
             "source_url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/",
@@ -1751,18 +1590,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: strong cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — The volume positioning is explicitly for thin/fine hair and the silicone-free formula has enough cleanser/texture support to keep fine hair in the ideal set. Conditional (not emitted): normal — Normal hair may use it for volume, but the moderate conditioning/weight route and fine-hair targeting make it less central.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: strong cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: volume is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis.",
+          "research.properties.conditioningLevel": "Moderate: macadamia oil, avocado oil, glycerin, panthenol, polyquaternium-10 and cationic guar provide real rinse-off care, but the product is not a rich 2-in-1 and has no silicone stack.",
+          "research.properties.dandruffSupport": "Not supported: the complete exact-GTIN formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Volume: the exact product identity centers on Big Hair and supporting positioning targets fullness/body for thin or fine hair; the silicone-free multi-surfactant formula is compatible with that role.",
+          "research.properties.focusSecondary": "Empty: the oil and humectant story supports care feel inside the volume product, not a separate exact-product secondary focus with an independent route.",
+          "research.properties.scalpComfortTarget": "Not targeted: revealed claims target volume/fullness, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are ordinary wet-hair lather and rinse-out use with no treatment, daily/frequent, alternating or reset trigger.",
+          "research.properties.weightPotential": "Moderate: two plant oils plus polyquaternium-10 and cationic guar create noticeable but bounded residue potential, while the multi-surfactant, silicone-free, volume-positioned architecture keeps this below high.",
           "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
           "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
           "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
@@ -1805,12 +1644,6 @@
               "cleansing_intensity": "regular",
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
-              "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
               "thickness": "normal"
             },
             {
@@ -1821,15 +1654,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1855,15 +1681,9 @@
             "fact_key": "product.category_specs.authority_facts",
             "fact_value": {
               "adapter_status": "property_lane_ready",
-              "production_light_product_id": "rank-07-gliss-sealing-miracle",
+              "production_light_product_id": "gliss-sealing-miracle",
               "category_specs": {
                 "product_shampoo_specs": [
-                  {
-                    "cleansing_intensity": "regular",
-                    "scalp_route": "balanced",
-                    "shampoo_bucket": "normal",
-                    "thickness": "fine"
-                  },
                   {
                     "cleansing_intensity": "regular",
                     "scalp_route": "balanced",
@@ -1877,7 +1697,9 @@
                     "thickness": "coarse"
                   }
                 ]
-              }
+              },
+              "suitable_thicknesses": ["normal", "coarse"],
+              "required_protocol_roles": ["shampoo_everyday"]
             },
             "source_label": "Production Light projection from selected canonical formula",
             "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
@@ -1914,18 +1736,18 @@
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No exact oily, dry, sensitive, or anti-dandruff scalp positioning is evidenced for this shampoo.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Frozen dual-lane/adjudicated result: moderate cleansing. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Conservative fine projection from the adjudicated cleansing, conditioning, and weight profile. normal — Conservative normal projection from the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative coarse projection from the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): none.",
+          "category_specs.product_shampoo_specs": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 gives effective ordinary cleansing, but CAPB, later coco-glucoside and early peptide/cationic-care signals prevent a strong-reset classification. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Moderate cleansing, high repair conditioning and moderate weight fit normal split-end-prone hair. coarse — Coarse hair benefits from the high care system while the moderate weight remains acceptable. Conditional (not emitted): fine — High conditioning plus peptide/cationic/refatting routes can reduce lift on fine hair, even without silicone.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "Frozen dual-lane/adjudicated result: moderate cleansing.",
-          "research.properties.conditioningLevel": "Frozen dual-lane/adjudicated result: moderate conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole is recorded in the reviewed formula evidence.",
-          "research.properties.focusPrimary": "Frozen dual-lane/adjudicated result: repair is the dominant supported focus.",
-          "research.properties.focusSecondary": "Frozen dual-lane/adjudicated secondary focus: none.",
-          "research.properties.scalpComfortTarget": "No sensitive, dry-scalp, oily-scalp, or anti-dandruff positioning supports scalp-comfort targeting.",
-          "research.properties.usageRole": "Frozen adjudication assigns regular usage; ordinary rinse-out use is not upgraded without a v1.4 trigger.",
-          "research.properties.weightPotential": "Frozen dual-lane/adjudicated result: moderate weight potential.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 gives effective ordinary cleansing, but CAPB, later coco-glucoside and early peptide/cationic-care signals prevent a strong-reset classification.",
+          "research.properties.conditioningLevel": "High: pea peptide at position 5, cationic guar at position 6 and several lipid/refatting/waxy routes create a substantial rinse-off care system for split-end/damage positioning.",
+          "research.properties.dandruffSupport": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Repair: revealed claims center on split-end and damaged-hair sealing, and the formula has a compatible early peptide, cationic polymer and refatting care architecture.",
+          "research.properties.focusSecondary": "Empty: split-end sealing and damaged-hair claims are one repair story, with no distinct secondary volume, shine, clarifying or scalp-active route.",
+          "research.properties.scalpComfortTarget": "Not targeted: the product is positioned for hair-fiber damage and split-end sealing, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are standard wet-hair distribution and rinse-out use; regular application wording confirms ordinary recurring use rather than treatment or reset usage.",
+          "research.properties.weightPotential": "Moderate: early cationic guar plus peptide, glyceryl oleate and hydrogenated castor oil can leave residue, but SLES/CAPB cleansing, no silicone and no-weight positioning keep this below high.",
           "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
           "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
           "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
@@ -1978,14 +1800,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -2105,9 +1921,9 @@
             "type": "ean",
             "value": "8700216212748",
             "cross_source_agreement": true,
-          "source_urls": [
-            "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
-            "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-bluetensanft/p/8700216212748"
+            "source_urls": [
+              "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+              "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-bluetensanft/p/8700216212748"
             ],
             "excluded_from_apply": false
           }
@@ -2128,14 +1944,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -2255,9 +2065,9 @@
             "type": "ean",
             "value": "8700216422413",
             "cross_source_agreement": true,
-          "source_urls": [
-            "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
-            "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-repair-care/p/8700216422413"
+            "source_urls": [
+              "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-repair-care/p/8700216422413"
             ],
             "excluded_from_apply": false
           }
@@ -2284,15 +2094,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal",
-          "dryness"
-        ],
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["normal", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",

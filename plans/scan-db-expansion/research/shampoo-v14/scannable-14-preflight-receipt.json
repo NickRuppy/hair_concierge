@@ -1,0 +1,43 @@
+{
+  "schema_version": "shampoo-scannability-preflight-v1",
+  "scope": "14 Nick-approved shampoo research products only",
+  "checked_at": "2026-09-04T06:52:43.000Z",
+  "manifest": "plans/scan-db-expansion/research/shampoo-manifest-scannable-14.json",
+  "supplement": "plans/scan-db-expansion/research/shampoo-v14/scannable-14-supplement.json",
+  "manifest_validation": {
+    "status": "pass",
+    "products_passed": 14,
+    "products_total": 14
+  },
+  "image_finalization": {
+    "nick_approved": 14,
+    "quality_gate_passed": 14,
+    "canonical_dimensions": "1200x1200 WebP",
+    "thumbnail_dimensions": "144x144 WebP",
+    "upload_dry_runs_passed": 14,
+    "uploaded": 14
+  },
+  "identity_snapshot": {
+    "source": "live read-only query",
+    "products": 334,
+    "identifiers": 381,
+    "dispositions": 2
+  },
+  "preflight": {
+    "engine_head": "3e5018eb72dfc3b46b6876041690642dee85a693",
+    "engine_source": "current main with shipped PR #510 protocol-slot fix",
+    "would_write_items": 14,
+    "strict_readiness_ready": 14,
+    "parked": 0,
+    "batch_fingerprint": "6636720b7d685c75041d6d2d650f7e71e26a29363e793645dafb5bacc402c85b",
+    "database_writes": 0
+  },
+  "parked_products": [],
+  "publication_boundaries": {
+    "operator_profile_id": "7b04cd65-c243-40b3-b4bd-509ec3ea6123",
+    "reviewed_head": "ad58f72ebb56d0fca453f9dd41522b40747ccd1c",
+    "images_must_be_uploaded_before_apply": false,
+    "exact_head_and_fingerprint_must_be_reapproved_before_apply": true,
+    "apply_authorized": false
+  }
+}

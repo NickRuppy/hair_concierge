@@ -2,7 +2,7 @@
   "schema_version": "shampoo-v14-administrative-snapshot-v1",
   "generated_at": "2026-09-03",
   "source_manifest_path": "plans/scan-db-expansion/research/shampoo-manifest-01.json",
-  "source_manifest_sha256": "e86d3c49d0ee669f18c7f42c148cee832890ddf41b82044907756ca7da62731b",
+  "source_manifest_sha256": "051c4eb6aa5155826b08ed69f6168cbf4c4fca40d1eabb80d0995b1d7ddedf2a",
   "classification_fields_omitted": [
     "final.category_specs",
     "final.thickness_eligibility",
@@ -31,12 +31,33 @@
           {
             "type": "ean",
             "value": "3600542461030",
-            "cross_source_agreement": false,
+            "cross_source_agreement": true,
             "source_urls": [
               "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
               "https://www.dm.at/p/d/1670316/wahre-schaetze-reparierendes-shampoo-honig-schaetze"
             ],
-            "excluded_from_apply": true
+            "excluded_from_apply": false
+          },
+          {
+            "type": "ean",
+            "value": "3600542462228",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+              "https://www.ohfeliz.de/garnier/wahre-schaetze-reparierendes-shampoo-honig-schaetze"
+            ],
+            "excluded_from_apply": false
+          },
+          {
+            "type": "ean",
+            "value": "3600542461511",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+              "https://www.dm.at/p/d/1880830/wahre-schaetze-reparierendes-shampoo-honig-schaetze",
+              "https://www.flaconi.de/haare/garnier/wahre-schaetze/garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze-haarshampoo.html"
+            ],
+            "excluded_from_apply": false
           }
         ],
         "protocols": [
@@ -57,8 +78,26 @@
             "source_label": "dm DE/AT exact 400 ml GTIN fields",
             "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
             "source_type": "retailer",
-            "source_text": "Both dm DE and dm AT list GTIN 3600542461030 for the exact 400 ml package; they are one retailer organization, so agreement is not independent.",
-            "checked_at": "2026-09-02"
+            "source_text": "dm DE and dm AT list GTIN 3600542461030 for the exact 400 ml package. Nick accepted an exact official dm listing as sufficient identifier authority on 2026-09-04.",
+            "checked_at": "2026-09-04"
+          },
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542462228",
+            "source_label": "Müller and Oh Feliz exact 300 ml EAN fields",
+            "source_url": "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+            "source_type": "retailer",
+            "source_text": "Müller structured product data and Oh Feliz list EAN 3600542462228 for the exact 300 ml Honig Schätze shampoo. Müller's current INCI matches the selected current formula.",
+            "checked_at": "2026-09-04"
+          },
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542461511",
+            "source_label": "Rossmann, dm AT and Flaconi exact 250 ml EAN fields",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+            "source_type": "retailer",
+            "source_text": "Rossmann, dm AT and Flaconi list EAN 3600542461511 for the exact 250 ml Honig Schätze shampoo. Retailer INCI snapshots show that this EAN spans an older silicone formula and the current formula, so scans resolve to the current catalog record with that reformulation caveat.",
+            "checked_at": "2026-09-04"
           },
           {
             "fact_key": "protocols.tpl_shampoo_std",
@@ -90,7 +129,7 @@
         ],
         "field_rationales": {
           "product.name": "Exact 400 ml dm product name; brand retains the source family naming.",
-          "product.identifiers": "Exact 400 ml EAN is GS1-valid but only corroborated within the dm organization, so it is excluded from apply.",
+          "product.identifiers": "Three GS1-valid size-specific EANs are retained for scan coverage: 400 ml (dm), 300 ml (Müller), and 250 ml (Rossmann/dm/Flaconi). The 250 ml and 300 ml identifiers have also appeared on older formula generations, an unavoidable reformulation caveat for stable retail barcodes.",
           "product.candidate_image": "Exact 400 ml dm PNG was visually checked as front-facing, product-only, transparent, and 987×2000 px.",
           "product.concern_eligibility": "Repair/care positioning supports normal and dryness shampoo concerns without treating cosmetic claims as hard efficacy.",
           "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
@@ -308,10 +347,7 @@
               "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
               "text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
             },
-            "deviation": {
-              "reason": "Exact package says to let the shampoo act briefly before rinsing; the standard template has no wait step.",
-              "packaging_text": "kurz einwirken lassen. Dann gründlich ausspülen."
-            }
+            "deviation": null
           }
         ],
         "evidence": [

@@ -20,7 +20,7 @@ Source context: `focus-v15-amendment-plan.md` is the approved policy and five-pr
 - Serve completed wave cells through a validated `?dataset=wave-01` URL option. The default remains the frozen pilot, the rendered UI does not change, and every dataset has an isolated review-state file. Nick's approval to reuse the same interface covers this config-only route; any visible selector or material workflow change requires a new evidence review.
 - Preserve the existing administrative evidence and remaining-product boundaries: 13 / 12 / 14 / 8. Work within them in cells of at most five.
 - Include the extension candidates because Nick explicitly approved expansion of the remaining wave on 2026-09-03.
-- Research Honig Schätze, but retain its EAN/apply exclusion until an independent exact-GTIN publisher confirms it.
+- Research Honig Schätze. This original identifier hold was superseded by Nick's 2026-09-04 decision to accept exact official dm/Rossmann retailer records and retain three verified size barcodes for scan coverage; historical formula-generation ambiguity remains documented in the research notes.
 - No existing manifest property classification is a prior. Only exact-SKU source packets, independent lanes, adjudication, and v1.5 overlays can regenerate classification-derived fields.
 
 ## Scope and non-goals

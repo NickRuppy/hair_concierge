@@ -1,6 +1,6 @@
 # Shampoo v1.4 classification recovery
 
-Status: administrative preservation and five-product pilot complete; formula-led Focus v1.5 amendment approved by Nick on 2026-09-03. Expansion to the remaining 47 products is authorized in staged cells.
+Status: administrative preservation, the five-product pilot, wave 01, and wave 02 are complete and approved. On 2026-09-04 Nick paused formula research for the remaining 38 unresolved products and limited the active scope to taking the existing 14 approved products through manifest reconciliation, local image finalization, and strict dry preflight preparation.
 
 ## 2026-09-03 focus-policy amendment
 
@@ -26,6 +26,8 @@ Sources of truth:
 
 ## Chosen direction
 
+Regular-shampoo protocol ruling (Nick, 2026-09-04): non-numeric wording such as “kurz einwirken lassen” remains ordinary `TPL-SHAMPOO-STD` rinse-out use and is not a deviation. A materially prescribed contact time (for example, a numeric two-minute instruction) or leave-in behavior remains a genuine deviation. Schauma Repair & Pflege is cleared under this ruling; the paused 38-product remainder is not reopened by it.
+
 Use two durable layers:
 
 1. classification-free administrative snapshots containing exact identity, size, EAN evidence, source URLs, price, raw image candidate, protocol source/deviation, and duplicate disposition;
@@ -33,7 +35,7 @@ Use two durable layers:
 
 The current manifest property projections are invalidated drafts. They may not be used as Lane A/B inputs, priors, adjudication targets, or reviewed output. Administrative evidence may be reused only after exact source binding is checked.
 
-Nick selected the higher-rigor route: two independent classification lanes for every one of the 52 products. The first five form an operator-quality pilot, not a method holdout. Nick reviewed and approved that pilot and the v1.5 focus amendment on 2026-09-03, authorizing expansion to the remaining 47 products.
+Nick selected the higher-rigor route: two independent classification lanes for every classified product. The first five form an operator-quality pilot, not a method holdout. Nick reviewed and approved that pilot and the v1.5 focus amendment on 2026-09-03. After approving wave 01 and wave 02, Nick paused the remaining formula work on 2026-09-04 because of usage limits. The 14 completed products are the only active products in the current handoff.
 
 ## Scope and non-goals
 
@@ -41,15 +43,17 @@ In scope:
 
 - preserve administrative facts for 52 new products and two existing-product updates;
 - correct the EAN evidence for ISANA Feuchtigkeit and Aussie Bouncy Curls;
-- retain Honig Schätze's EAN as excluded until an independent exact-GTIN publisher is found;
+- retain three verified Honig Schätze size barcodes for scan coverage under Nick's exact-retailer authority ruling, with the historical reformulation caveat documented;
 - run the complete five-product pilot;
-- after separate pilot sign-off, classify the remaining 47 products in the existing `15/15/14/8` new-product batch boundaries;
-- rebuild the four expansion manifests only from adjudicated Production Light outputs.
+- preserve the 14 approved formula packages from the pilot, wave 01, and wave 02;
+- rebuild only those 14 products' classification-derived manifest fields from adjudicated Production Light outputs;
+- research and locally finalize exact product images for those 14 products, with contact-sheet review and no upload;
+- prepare strict read-only preflight evidence and document the hosted-image hold.
 
 Non-goals:
 
 - no Supabase or database reads/writes;
-- no catalog apply, approval, recommendation activation, image processing/upload, commit, push, PR, merge, deployment, or cleanup;
+- no catalog apply, approval, recommendation activation, image upload, commit, push, PR, merge, deployment, or cleanup;
 - no changes under `docs/research/shampoo-inci/**`, `data/research/shampoo-inci/**`, `src/**`, `scripts/**`, `supabase/**`, selection ledgers, templates, or the frozen v1.4 policy;
 - no medical claims and no profile-result tuning of direct formula labels.
 
@@ -84,7 +88,7 @@ This is backend/operator research, so no UI mockup is required. The pilot itself
 
 ### 1. Preserve and quarantine
 
-Extract the reusable administrative fields into four snapshots with source URLs and SHA-256 receipts. Correct ISANA Feuchtigkeit `4068134071132` using Rossmann plus independent Drogas and Aussie `8006530325530` using dm plus official P&G/for-me evidence. Retain Honig Schätze `3600542461030` as EAN-excluded. Record that all existing manifest classification fields are invalidated pending regeneration.
+Extract the reusable administrative fields into four snapshots with source URLs and SHA-256 receipts. Correct ISANA Feuchtigkeit `4068134071132` using Rossmann plus independent Drogas and Aussie `8006530325530` using dm plus official P&G/for-me evidence. Initially retain Honig Schätze `3600542461030` as EAN-excluded; after Nick's 2026-09-04 ruling, add the verified 400 ml, 300 ml, and 250 ml size barcodes as apply-eligible aliases and document that stable EANs span formula generations. Record that all existing manifest classification fields are invalidated pending regeneration.
 
 Completion: 52 new products plus two existing updates preserved; 51/52 new-product EANs independently verified and one excluded; 52 identities, 51 prices, 52 raw image candidates, and 52 protocol packets accounted for; no current property value is described as reviewed.
 
@@ -112,9 +116,19 @@ Generate one concise review table with the complete formula source, Lane A/B val
 
 Completion: Nick can verify each conclusion against durable evidence without consulting chat or `/tmp`. Completed on 2026-09-03 when Nick approved the Lab presentation and requested expansion.
 
-### 6. Authorized expansion after pilot approval
+### 6. Completed approved expansion cells
 
-Process the other 47 products in cells of five while preserving the administrative `13/12/14/8` remaining-product boundaries. A source researcher owns the frozen packet; two independent labelers own disjoint lane records; the main session owns comparison, adjudication, the formula-led v1.5 focus overlay, projection, manifest integration, and readiness. Regenerate classification-derived manifest fields only from adjudicated adapter outputs plus the separately reviewed focus overlay, then rerun exact equality and all four expansion validators. Do not project a v1.5-only focus into Production Light until its adapter contract is explicitly versioned. The 15 extension entries are included by Nick's explicit 2026-09-03 approval to expand the full remaining wave.
+Wave 01 (five products) and wave 02 (four products) were processed with the same frozen-packet, independent-lane, adjudication, focus-overlay, and deterministic-adapter contract and were approved by Nick. Together with the pilot, these form the 14-product active set.
+
+### 7. Current 14-product scannability handoff
+
+Regenerate the classification-derived fields for the 14 approved products only, directly from their adjudicated Production Light outputs, while preserving administrative evidence and the separately reviewed focus overlay. Run exact adapter-to-manifest equality and manifest validation. Feed the 14 exact candidate packshots through the local batch image pipeline, inspect original/white/magenta renders, and finalize only approved cutouts to 1200×1200 WebP plus 144×144 thumbnail. Prepare operator supplements and strict read-only preflight evidence, but do not upload images or apply catalog data. Honig Schätze uses three verified size barcodes under Nick's exact-retailer authority ruling.
+
+Completion: all 14 products are locally image-finalized and structurally valid; identifier readiness is confirmed by refreshed strict read-only preflight. Any image that fails visual QA remains held rather than being forced through.
+
+### 8. Paused remainder
+
+The other 38 unresolved products, including Coco Water with its formula conflict, remain administratively preserved but out of scope. They are not to be classified, projected, image-processed, or moved toward apply until Nick explicitly resumes that work.
 
 ## Verification
 
@@ -126,8 +140,10 @@ Automated:
 - Lane A/B membership and evidence-shape checks;
 - agreement and confidence report;
 - shipped Production Light CLI and deterministic rerun;
-- exact adapter-to-manifest equality only after later regeneration;
-- four expansion validators only after later regeneration;
+- exact adapter-to-manifest equality for the 14 active products after regeneration;
+- expansion validators for every manifest touched by the 14-product reconciliation;
+- local image-pipeline results, contact sheet, magenta QA, final dimensions, and hashes;
+- strict read-only preflight preparation with hosted-image and identifier blockers reported separately;
 - `git diff --check` and changed-file scope audit.
 
 Evidence-sensitive:
@@ -142,7 +158,8 @@ Evidence-sensitive:
 Manual:
 
 - Nick reviews the five-product pilot, then each later completed batch summary;
-- raw image candidates remain candidates only; final image processing is deferred.
+- Nick reviews the local image contact sheet before any image upload;
+- no hosted asset or catalog row is written in this phase.
 
 Live/migration: none.
 
@@ -151,7 +168,7 @@ Live/migration: none.
 - Worktree: `/Users/nick/AI_work/hair_conscierge/.worktrees/db-expansion-scan`
 - Branch: `codex/db-expansion-scan`
 - Counterpart review: approved with revisions; roster/batch accounting, complete adapter-envelope fields, and validator/tooling boundaries were corrected.
-- Operator-journey sign-off: confirmed for administrative preservation, the five-product pilot, the v1.5 focus presentation, and staged expansion on 2026-09-03.
+- Operator-journey sign-off: confirmed for administrative preservation, the five-product pilot, the v1.5 focus presentation, wave 01, wave 02, and the 14-product scannability handoff on 2026-09-04.
 - Durable research artifacts: retain for later explicit commit authorization.
 - Transient source downloads and counterpart review: discard.
-- Stop: research artifacts and local review only; no database/catalog apply, approval, publication, commit, push, PR, merge, deployment, or cleanup.
+- Stop: reconciled research artifacts, locally finalized images, and dry preflight evidence only; no image upload, database/catalog apply, approval, publication, commit, push, PR, merge, deployment, or cleanup.

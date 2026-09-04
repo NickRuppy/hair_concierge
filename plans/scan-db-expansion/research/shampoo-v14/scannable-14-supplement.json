@@ -1,0 +1,105 @@
+{
+  "batch_id": "scan-db-expansion-shampoo-scannable-14-2026-09-04",
+  "operator_profile_id": "7b04cd65-c243-40b3-b4bd-509ec3ea6123",
+  "reviewed_head": "ad58f72ebb56d0fca453f9dd41522b40747ccd1c",
+  "products": {
+    "l-or-al-paris-elvital-hydra-hyaluronic-72h-feuchtigkeit-auff": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/elvital-hydra-hyaluronic/elvital-hydra-hyaluronic-a3ebe5dbfa0f.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 9.95
+    },
+    "head-shoulders-anti-schuppen-shampoo-classic-clean": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/head-shoulders-classic-clean/head-shoulders-classic-clean-80aea6481e39.webp",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 6.29
+    },
+    "isana-shampoo-spuelung-2-in-1-volumen-malve-acai": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/isana-2in1-volumen/isana-2in1-volumen-eefb8b43c927.webp",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 0.65
+    },
+    "isana-shampoo-sensitiv-baumwoll-kornblume": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/isana-sensitiv/isana-sensitiv-e9efb87c12da.webp",
+      "affiliate_link": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 0.65
+    },
+    "syoss-shampoo-intense-keratin": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/syoss-intense-keratin/syoss-intense-keratin-e5cc2b379d0c.webp",
+      "affiliate_link": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 3.95
+    },
+    "being-big-hair-shampoo": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/being-big-hair/being-big-hair-a5644dc778c3.webp",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 6.79
+    },
+    "garnier-fructis-locken-methode-feuchtigkeits-shampoo": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/fructis-locken-methode/fructis-locken-methode-41ea32130582.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 3.95
+    },
+    "schwarzkopf-gliss-sealing-miracle-versiegelndes-shampoo": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/gliss-sealing-miracle/gliss-sealing-miracle-d6ac7fd60187.webp",
+      "affiliate_link": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 3.49
+    },
+    "nivea-power-repair-reparatur-shampoo": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/nivea-power-repair/nivea-power-repair-b730dad739b4.webp",
+      "affiliate_link": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 2.95
+    },
+    "garnier-wahre-schaetze-shampoo-honig-schaetze": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/wahre-schaetze-honig-schaetze/wahre-schaetze-honig-schaetze-4880fb915993.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 3.45
+    },
+    "schwarzkopf-gliss-shampoo-liquid-silk": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/gliss-liquid-silk/gliss-liquid-silk-96e1dc6f9c82.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 2.95
+    },
+    "schwarzkopf-gliss-shampoo-total-repair": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/gliss-total-repair/gliss-total-repair-3d39813eb3c0.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 2.95
+    },
+    "herbal-essences-shampoo-fiji": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/herbal-essences-fiji/herbal-essences-fiji-4d1f0cc19328.webp",
+      "affiliate_link": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 3.95
+    },
+    "schauma-shampoo-repair-pflege": {
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/product-intake/2026-09-04/schauma-repair-pflege/schauma-repair-pflege-f4b1960c9142.webp",
+      "affiliate_link": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+      "purchase_link_status": "available",
+    "checked_at": "2026-09-04T12:00:00.000Z",
+      "price_eur": 1.95
+    }
+  }
+}

@@ -36,6 +36,12 @@
               "cleansing_intensity": "regular",
               "scalp_route": "dandruff",
               "shampoo_bucket": "schuppen",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "dandruff",
+              "shampoo_bucket": "schuppen",
               "thickness": "normal"
             },
             {
@@ -43,19 +49,41 @@
               "scalp_route": "dandruff",
               "shampoo_bucket": "schuppen",
               "thickness": "coarse"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "oily",
+              "shampoo_bucket": "dehydriert-fettig",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "oily",
+              "shampoo_bucket": "dehydriert-fettig",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "oily",
+              "shampoo_bucket": "dehydriert-fettig",
+              "thickness": "coarse"
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "schuppen"
-        ],
+        "thickness_eligibility": ["fine", "normal", "coarse"],
+        "concern_eligibility": ["schuppen"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-DANDRUFF",
+            "product_source": {
+              "label": "Rossmann",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
+              "text": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-SHAMPOO-TARGETED",
             "product_source": {
               "label": "Rossmann",
               "url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
@@ -67,9 +95,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "8001090896315"
-            ],
+            "fact_value": ["8001090896315"],
             "source_label": "Rossmann",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
             "source_type": "retailer",
@@ -111,21 +137,75 @@
             "source_type": "retailer",
             "source_text": "500 ml; 6.29 EUR.",
             "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.category_specs.authority_facts",
+            "fact_value": {
+              "adapter_status": "property_lane_ready",
+              "production_light_product_id": "head-shoulders-classic-clean",
+              "category_specs": {
+                "product_shampoo_specs": [
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "dandruff",
+                    "shampoo_bucket": "schuppen",
+                    "thickness": "fine"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "dandruff",
+                    "shampoo_bucket": "schuppen",
+                    "thickness": "normal"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "dandruff",
+                    "shampoo_bucket": "schuppen",
+                    "thickness": "coarse"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "oily",
+                    "shampoo_bucket": "dehydriert-fettig",
+                    "thickness": "fine"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "oily",
+                    "shampoo_bucket": "dehydriert-fettig",
+                    "thickness": "normal"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "oily",
+                    "shampoo_bucket": "dehydriert-fettig",
+                    "thickness": "coarse"
+                  }
+                ]
+              },
+              "suitable_thicknesses": ["fine", "normal", "coarse"],
+              "required_protocol_roles": ["shampoo_dandruff", "shampoo_everyday"]
+            },
+            "source_label": "Production Light projection from the selected exact formula",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
+            "source_type": "retailer",
+            "source_text": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen.",
+            "checked_at": "2026-09-02"
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "Exact anti-dandruff positioning plus Piroctone Olamine support the dandruff production route; scalp comfort remains not targeted.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "Strong: multiple anionic/reset-support routes keep the net cleansing chassis strong despite buffering. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: normal — Normal hair is the clearest fit for a strong scalp-active shampoo with moderate conditioning and weight. coarse — Coarse hair can usually tolerate the cleansing strength and moderate deposition while receiving the anti-dandruff route. Conditional (not emitted): fine — Strong anti-dandruff chassis can be useful for the scalp, but fine hair may feel coated by the silicone/polymer care system.",
-          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_dandruff.",
-          "research.properties.cleansingStrength": "Strong: multiple anionic/reset-support routes keep the net cleansing chassis strong despite buffering.",
-          "research.properties.conditioningLevel": "Moderate: silicone/polymer care is meaningful but bounded by the strong wash base.",
-          "research.properties.dandruffSupport": "Supported: complete INCI contains Piroctone Olamine.",
-          "research.properties.focusPrimary": "Scalp-active: recognized anti-dandruff active is present before claims are revealed.",
-          "research.properties.focusSecondary": "Empty: no distinct non-scalp role is justified from formula alone.",
-          "research.properties.scalpComfortTarget": "Unknown in blind pass: support and counter-signals exist, but comfort targeting requires positioning evidence.",
-          "research.properties.usageRole": "Treatment: the recognized anti-dandruff active makes the product problem-led at product-truth level.",
-          "research.properties.weightPotential": "Moderate: persistent silicone/polymer deposition can create bounded residue, while strong cleansing argues against high.",
+          "category_specs.product_shampoo_specs": "Exact anti-dandruff positioning and Piroctone Olamine at position 10 independently support the dandruff route. The exact manufacturer positioning separately names oily scalp, and SLES plus TEA-Dodecylbenzenesulfonate provide a cleansing route independent of Piroctone Olamine.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Strong: SLES is reinforced by a second anionic sulfonate route and an oily-scalp/problem-led architecture, while CAPB and care routes do not fully offset the reset chassis. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Moderate conditioning and weight offset some of the strong cleansing chassis without creating a heavy fine-hair default. normal — The treatment architecture combines recognized dandruff support with moderate conditioning and weight for normal-diameter hair. coarse — The anti-dandruff treatment role is diameter-independent, and the silicone/cationic care routes make the strong cleansing architecture usable for coarse hair. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_dandruff, shampoo_everyday.",
+          "research.properties.cleansingStrength": "Strong: SLES is reinforced by a second anionic sulfonate route and an oily-scalp/problem-led architecture, while CAPB and care routes do not fully offset the reset chassis.",
+          "research.properties.conditioningLevel": "Moderate: silicone gum, dimethicone, cationic guar and glycol distearate should provide noticeable slip, but the strong anti-dandruff cleansing chassis keeps care bounded.",
+          "research.properties.dandruffSupport": "Supported: the complete formula contains Piroctone Olamine, one of the two v1.4 recognized anti-dandruff actives.",
+          "research.properties.focusPrimary": "Scalp active: this is a problem-led anti-dandruff product and the formula contains Piroctone Olamine at position 10.",
+          "research.properties.focusSecondary": "Clarifying is a secondary: the packet separately names oily scalp, and the formula has a strong cleanser plus second anionic route independent from the dandruff active.",
+          "research.properties.scalpComfortTarget": "Targeted: the product explicitly addresses dandruff-related itching and scalp problems and includes a recognized active, with panthenol/niacinamide as comfort-adjacent support.",
+          "research.properties.usageRole": "Treatment: v1.4 routes problem-led recognized active formulas, especially anti-dandruff support, to treatment usage.",
+          "research.properties.weightPotential": "Moderate: silicone gum, dimethicone and cationic guar can leave bounded residue, while strong reset architecture argues against high weight.",
           "product.name": "Exakter Produktname laut den im Source-Paket dokumentierten Hersteller- bzw. Händlerseiten.",
           "concern_eligibility": "Konservativ auf dokumentierte, im Katalog erkannte Concern-Codes begrenzt; nicht abbildbare Marketingclaims wurden nicht als Concern erfasst.",
           "protocols.template": "TPL-SHAMPOO-DANDRUFF gemäß der dokumentierten Produktpositionierung und Anwendung; product_source zitiert die produktbezogene Anwendung."
@@ -176,13 +256,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -197,9 +272,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4015100860443"
-            ],
+            "fact_value": ["4015100860443"],
             "source_label": "Rossmann",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-men-intense-power/p/4015100860443",
             "source_type": "retailer",
@@ -306,13 +379,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -327,9 +395,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4015100860368"
-            ],
+            "fact_value": ["4015100860368"],
             "source_label": "Rossmann",
             "source_url": "https://www.syoss.net/care/shampoo/syoss-intense-color-deep-caring-shampoo.html",
             "source_type": "retailer",
@@ -437,15 +503,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "dryness",
-          "hair_damage",
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "hair_damage", "normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -460,9 +519,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4015100860382"
-            ],
+            "fact_value": ["4015100860382"],
             "source_label": "Rossmann",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-repair/p/4015100860382",
             "source_type": "retailer",
@@ -569,13 +626,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -706,15 +758,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "dryness",
-          "feuchtigkeit",
-          "normal"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["dryness", "feuchtigkeit", "normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -729,9 +774,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4262401738968"
-            ],
+            "fact_value": ["4262401738968"],
             "source_label": "Jean&Len official shop",
             "source_url": "https://www.jeanlen.de/shampoo-fuer-trockenes-haar-pfirsich-chiasamen",
             "source_type": "retailer",
@@ -838,13 +881,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-TARGETED",
@@ -859,9 +897,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4305615566184"
-            ],
+            "fact_value": ["4305615566184"],
             "source_label": "Rossmann Germany",
             "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
             "source_type": "retailer",
@@ -903,21 +939,51 @@
             "source_type": "retailer",
             "source_text": "300 ml; 0.65 EUR.",
             "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.category_specs.authority_facts",
+            "fact_value": {
+              "adapter_status": "property_lane_ready",
+              "production_light_product_id": "isana-sensitiv",
+              "category_specs": {
+                "product_shampoo_specs": [
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "irritated",
+                    "shampoo_bucket": "irritationen",
+                    "thickness": "fine"
+                  },
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "irritated",
+                    "shampoo_bucket": "irritationen",
+                    "thickness": "normal"
+                  }
+                ]
+              },
+              "suitable_thicknesses": ["fine", "normal"],
+              "required_protocol_roles": ["shampoo_everyday"]
+            },
+            "source_label": "Production Light projection from the selected exact formula",
+            "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+            "source_type": "retailer",
+            "source_text": "Masseres ind i fugtigt hår. Skylles grundigt ud.",
+            "checked_at": "2026-09-02"
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "Explicit sensitive-scalp positioning supports the sensitive production route despite SLES/fragrance counter-signals.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "SLES/CAPB is the leading chassis, with sodium chloride and acid adjustment but no extra strong reset surfactant system. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Sensitive positioning plus moderate cleansing and moderate weight can fit fine hair when scalp comfort matters. normal — Normal hair fits the targeted sensitive-scalp shampoo profile. Conditional (not emitted): coarse — Coarse hair may need more conditioning alongside this sensitive-scalp shampoo.",
+          "category_specs.product_shampoo_specs": "Exact sensitive-scalp and mild-care positioning is backed by buffered cleansing, panthenol, niacinamide and humectant support; fragrance remains a documented counter-signal rather than a veto.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES at position 2 makes this ordinary effective cleansing, while CAPB, coco-glucoside and refatting/protein care keep it from strong. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Moderate conditioning and weight avoid an excessively coating fine-hair profile, while the buffered cleansing system supports frequent gentle-positioned use. normal — Moderate cleansing, care and weight create a balanced sensitive-scalp option for normal-diameter hair. Conditional (not emitted): coarse — The formula has useful care routes but is not a rich coarse-hair default; coarse hair may need a separate conditioner.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "SLES/CAPB is the leading chassis, with sodium chloride and acid adjustment but no extra strong reset surfactant system.",
-          "research.properties.conditioningLevel": "Glyceryl oleate, coco-glucoside, PEG-3 distearate, wheat protein, panthenol, niacinamide and cationic guar give meaningful but not rich conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole in the complete INCI.",
-          "research.properties.focusPrimary": "Blind formula shows buffered care and comfort adjuncts, but no decisive active or structural role beyond everyday care.",
-          "research.properties.focusSecondary": "No blind formula route justifies a secondary focus without claims.",
-          "research.properties.scalpComfortTarget": "Panthenol/niacinamide/glycerin could support comfort, but SLES and fragrance/allergen routes prevent assigning targeted comfort from formula alone.",
-          "research.properties.usageRole": "Adjudicated Batch 02 final usageRole: \"frequent\". This value follows the written cell/batch adjudication and preserves the stated counter-signals.",
-          "research.properties.weightPotential": "Glyceryl oleate, PEG-3 distearate, cationic guar, protein and hydrogenated palm glycerides citrate create a plausible deposition package.",
+          "research.properties.cleansingStrength": "Moderate: SLES at position 2 makes this ordinary effective cleansing, while CAPB, coco-glucoside and refatting/protein care keep it from strong.",
+          "research.properties.conditioningLevel": "Moderate: several light-to-meaningful routes, including glyceryl oleate, protein, panthenol and cationic guar, should give bounded softness without a silicone-rich or 2-in-1 system.",
+          "research.properties.dandruffSupport": "Not supported: the complete formula contains neither Piroctone Olamine nor Climbazole; sensitive-scalp positioning does not upgrade dandruff support.",
+          "research.properties.focusPrimary": "Gentle: the exact-product claims are sensitive-scalp, mild-care and pH-neutral positioning, and the formula has CAPB/glucoside buffering plus panthenol/niacinamide support.",
+          "research.properties.focusSecondary": "Empty: sensitive/gentle positioning is dominant, and the normal-hair/care phrases do not create a distinct second focus with an independent route.",
+          "research.properties.scalpComfortTarget": "Targeted: the packet explicitly says sensitive scalp, calming ingredients, panthenol, dermatologically confirmed and pH-skin-neutral, with supportive formula routes.",
+          "research.properties.usageRole": "Frequent: the product is explicitly positioned as particularly gentle/mild-use and cleansing is not strong.",
+          "research.properties.weightPotential": "Moderate: interacting light deposition routes make bounded residue plausible, while no silicone stack and SLES-led cleansing keep it below high.",
           "product.name": "Exakter Produktname laut den im Source-Paket dokumentierten Hersteller- bzw. Händlerseiten.",
           "concern_eligibility": "Konservativ auf dokumentierte, im Katalog erkannte Concern-Codes begrenzt; nicht abbildbare Marketingclaims wurden nicht als Concern erfasst.",
           "protocols.template": "TPL-SHAMPOO-TARGETED gemäß der dokumentierten Produktpositionierung und Anwendung; product_source zitiert die produktbezogene Anwendung."
@@ -960,22 +1026,11 @@
               "scalp_route": "balanced",
               "shampoo_bucket": "normal",
               "thickness": "fine"
-            },
-            {
-              "cleansing_intensity": "regular",
-              "scalp_route": "balanced",
-              "shampoo_bucket": "normal",
-              "thickness": "normal"
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["fine"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -990,9 +1045,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4305615566115"
-            ],
+            "fact_value": ["4305615566115"],
             "source_label": "Rossmann Germany",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
             "source_type": "retailer",
@@ -1034,21 +1087,45 @@
             "source_type": "retailer",
             "source_text": "300 ml; 0.65 EUR.",
             "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.category_specs.authority_facts",
+            "fact_value": {
+              "adapter_status": "property_lane_ready",
+              "production_light_product_id": "isana-2in1-volumen",
+              "category_specs": {
+                "product_shampoo_specs": [
+                  {
+                    "cleansing_intensity": "regular",
+                    "scalp_route": "balanced",
+                    "shampoo_bucket": "normal",
+                    "thickness": "fine"
+                  }
+                ]
+              },
+              "suitable_thicknesses": ["fine"],
+              "required_protocol_roles": ["shampoo_everyday"]
+            },
+            "source_label": "Production Light projection from the selected exact formula",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
+            "source_type": "retailer",
+            "source_text": "In das nasse Haar einmassieren und gründlich ausspülen.",
+            "checked_at": "2026-09-02"
           }
         ],
         "field_rationales": {
-          "category_specs.product_shampoo_specs": "No independent scalp-condition positioning was adjudicated; ordinary balanced scalp route is used.",
-          "category_specs.product_shampoo_specs.cleansing_intensity": "SLES with CAPB and coco-glucoside is a normal shampoo chassis; no dandruff/reset surfactant reinforcement appears. Observed intensity: regular.",
-          "product.suitable_thicknesses": "Ideal: fine — Volume positioning and moderate rather than high weight keep fine hair eligible. normal — Normal hair fits the balanced 2-in-1 volume shampoo. Conditional (not emitted): coarse — Coarse hair may need more slip than a volume-leaning 2-in-1 shampoo provides.",
+          "category_specs.product_shampoo_specs": "The exact product is positioned for fine-hair volume and 2-in-1 care, not a named scalp concern; the ordinary balanced route is supported.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Moderate: SLES leads the formula, but CAPB, coco-glucoside and 2-in-1 care routes buffer the net cleansing below strong. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Exact fine-hair volume positioning and no silicone stack support fine hair; moderate weight keeps the high-conditioning 2-in-1 architecture from becoming an automatic exclusion. Conditional (not emitted): normal — The 2-in-1 can suit normal hair needing care, but high conditioning makes it less clearly volume-preserving as a diameter-level default. coarse — High rinse-off conditioning is useful, but the volume/fine-hair positioning and lack of a richer coarse-hair care system make this situational.",
           "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
-          "research.properties.cleansingStrength": "SLES with CAPB and coco-glucoside is a normal shampoo chassis; no dandruff/reset surfactant reinforcement appears.",
-          "research.properties.conditioningLevel": "Protein, niacinamide, panthenol, glyceryl oleate, cationic guar, PEG-3 distearate and hydrogenated palm glycerides citrate establish clear rinse-off conditioning.",
-          "research.properties.dandruffSupport": "No Piroctone Olamine or Climbazole in the complete INCI.",
-          "research.properties.focusPrimary": "Before claims, the formula reads as care/conditioning but does not prove volume, shine, repair, clarifying or scalp-active role.",
-          "research.properties.focusSecondary": "No secondary role is formula-decisive without product claims.",
-          "research.properties.scalpComfortTarget": "No sensitive/dry/oily scalp active; fragrance allergens are present.",
-          "research.properties.usageRole": "Ordinary rinse-off shampoo/conditioner hybrid without active treatment route.",
-          "research.properties.weightPotential": "Conditioner-like deposition routes are present but silicone-free and balanced by regular cleansing.",
+          "research.properties.cleansingStrength": "Moderate: SLES leads the formula, but CAPB, coco-glucoside and 2-in-1 care routes buffer the net cleansing below strong.",
+          "research.properties.conditioningLevel": "High: explicit 2-in-1 positioning is backed by protein, panthenol, glyceryl oleate, cationic guar and lipid/fatty ester routes, making substantial rinse-off care likely.",
+          "research.properties.dandruffSupport": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+          "research.properties.focusPrimary": "Volume: the exact German product name and claims target lifeless/fine hair volume, and the silicone-free formula keeps that role compatible despite 2-in-1 care.",
+          "research.properties.focusSecondary": "Empty: 2-in-1 care is not a distinct v1.4 focus value, and there is no separate gentle, shine, repair, clarifying or scalp-active claim with an independent route.",
+          "research.properties.scalpComfortTarget": "Not targeted: dermatological/pH-neutral wording is present, but the product is positioned for volume and 2-in-1 care rather than sensitive, itchy or uncomfortable scalp.",
+          "research.properties.usageRole": "Regular: directions are ordinary rinse-out use and no explicit daily, treatment, alternating, clarifying or reset trigger appears.",
+          "research.properties.weightPotential": "Moderate: 2-in-1 care routes can leave bounded residue, but silicone-free volume positioning and SLES/CAPB cleansing argue against high weight.",
           "product.name": "Exakter Produktname laut den im Source-Paket dokumentierten Hersteller- bzw. Händlerseiten.",
           "concern_eligibility": "Konservativ auf dokumentierte, im Katalog erkannte Concern-Codes begrenzt; nicht abbildbare Marketingclaims wurden nicht als Concern erfasst.",
           "protocols.template": "TPL-SHAMPOO-STD gemäß der dokumentierten Produktpositionierung und Anwendung; product_source zitiert die produktbezogene Anwendung."
@@ -1099,15 +1176,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "dryness",
-          "feuchtigkeit",
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["dryness", "feuchtigkeit", "normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1122,9 +1192,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4305615566160"
-            ],
+            "fact_value": ["4305615566160"],
             "source_label": "Rossmann Germany",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-seidenglanz/p/4305615566160",
             "source_type": "retailer",
@@ -1231,14 +1299,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "schuppen",
-          "dryness"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["schuppen", "dryness"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-DANDRUFF",
@@ -1253,9 +1315,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4305615566146"
-            ],
+            "fact_value": ["4305615566146"],
             "source_label": "Rossmann Germany",
             "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-anti-skaelshampoo-vandmynte-og-gron-te/p/4305615566146",
             "source_type": "retailer",
@@ -1362,13 +1422,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1499,13 +1554,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-TARGETED",
@@ -1630,12 +1680,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["normal"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-TARGETED",
@@ -1745,12 +1791,12 @@
           {
             "type": "ean",
             "value": "4068134071132",
-        "cross_source_agreement": true,
-        "source_urls": [
-          "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
-          "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724"
-        ],
-        "excluded_from_apply": false
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
+              "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724"
+            ],
+            "excluded_from_apply": false
           }
         ],
         "category_specs": {
@@ -1769,14 +1815,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "fine",
-          "normal"
-        ],
-        "concern_eligibility": [
-          "feuchtigkeit",
-          "normal"
-        ],
+        "thickness_eligibility": ["fine", "normal"],
+        "concern_eligibility": ["feuchtigkeit", "normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1791,26 +1831,22 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "4068134071132"
-            ],
-        "source_label": "Rossmann exact PDP (primary GTIN source)",
+            "fact_value": ["4068134071132"],
+            "source_label": "Rossmann exact PDP (primary GTIN source)",
             "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
             "source_type": "retailer",
-        "source_text": "Exact 300 ml ISANA Shampoo Feuchtigkeit product page; GTIN 4068134071132; price and rinse-out directions.",
-        "checked_at": "2026-09-02"
-      },
-      {
-        "fact_key": "product.identifiers.ean",
-        "fact_value": [
-          "4068134071132"
-        ],
-        "source_label": "Drogas Latvia exact product page (independent GTIN corroboration)",
-        "source_url": "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724",
-        "source_type": "retailer",
-        "source_text": "ISANA Feuchtigkeit moisturizing shampoo for dry and damaged hair, 300 ml; EAN 4068134071132.",
-        "checked_at": "2026-09-03"
-      },
+            "source_text": "Exact 300 ml ISANA Shampoo Feuchtigkeit product page; GTIN 4068134071132; price and rinse-out directions.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": ["4068134071132"],
+            "source_label": "Drogas Latvia exact product page (independent GTIN corroboration)",
+            "source_url": "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724",
+            "source_type": "retailer",
+            "source_text": "ISANA Feuchtigkeit moisturizing shampoo for dry and damaged hair, 300 ml; EAN 4068134071132.",
+            "checked_at": "2026-09-03"
+          },
           {
             "fact_key": "product.formula.inci",
             "fact_value": "Aqua, Sodium Laureth Sulfate, Glycerin, Sodium Chloride, Cocamidopropyl Betaine, PEG-4 Rapeseedamide, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Parfum, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Benzoic Acid, Cocos Nucifera Water, Pantolactone, Octadecyl Di-t-Butyl-4 Hydroxyhydrocinnamate, Propylene Glycol, Macrocystis Pyrifera Extract, Sodium Hydroxide, Tocopherol, Hydrogenated Palm Glycerides Citrate.",
@@ -1911,13 +1947,8 @@
             }
           ]
         },
-        "thickness_eligibility": [
-          "normal",
-          "coarse"
-        ],
-        "concern_eligibility": [
-          "normal"
-        ],
+        "thickness_eligibility": ["normal", "coarse"],
+        "concern_eligibility": ["normal"],
         "protocols": [
           {
             "template_id": "TPL-SHAMPOO-STD",
@@ -1935,9 +1966,7 @@
         "evidence": [
           {
             "fact_key": "product.identifiers.ean",
-            "fact_value": [
-              "5037156297133"
-            ],
+            "fact_value": ["5037156297133"],
             "source_label": "John Frieda DE manufacturer page",
             "source_url": "https://www.johnfrieda.com/de-de/produkte/blonde/violet-crush/intensiv-silber-shampoo/",
             "source_type": "manufacturer",
