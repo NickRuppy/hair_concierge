@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": "R2",
+  "role": "reserve",
+  "substitutesFor": "Pantene Bond Repair (archetype 5) if Pantene's EAN/SKU could not be pinned down or its chemistry turns out to be named after all",
+  "captureDepth": "lighter (per instructions: identity + INCI source check only, no full directions transcription required)",
+  "identity": {
+    "brand": "Balea Professional (dm own brand)",
+    "productName": "Plex Care 2in1 Haarmaske",
+    "packSize": "250 ml",
+    "gtinEan": "4066447378771",
+    "eanSourceNote": "Proposal figure, confirmed to resolve to this product via multiple database listings (incibeauty, hautschutzengel, skinsort) under the same name.",
+    "market": "DE (dm own brand)"
+  },
+  "rawInci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, PANTHENOL, HYDROLYZED PEA PROTEIN, ARGININE, SERINE, COCOS NUCIFERA OIL, PARFUM, ISOAMYL LAURATE, POLYGLYCERYL-3 CAPRATE, PCA, GLYCINE, HISTIDINE, BEHENTRIMONIUM CHLORIDE, SILICONE QUATERNIUM-22, CETRIMONIUM CHLORIDE, ISOPROPYL ALCOHOL, DIPROPYLENE GLYCOL, HYDROLYZED KERATIN, COCAMIDOPROPYL BETAINE, HYDROLYZED VEGETABLE PROTEIN, SODIUM PCA, PALMITAMIDOPROPYLTRIMONIUM CHLORIDE, PROPYLENE GLYCOL, ASPARTIC ACID, ALANINE, HYDROLYZED SILK, VALINE, ISOLEUCINE, PROLINE, THREONINE, PHENYLALANINE, SODIUM BENZOATE, POTASSIUM SORBATE, PHENOXYETHANOL, CITRIC ACID, SODIUM LACTATE, PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE, LACTIC ACID",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/balea-professional-haarmaske-plex-care-inhaltsstoffe/produkt/360735.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel",
+    "notes": "No gluconamide or maleate chemistry found in the list - confirms the proposal's characterization as an 'unnamed bond chemistry' stand-in (Distearoylethyl Hydroxyethylmonium Methosulfate-based, same conditioning-agent family as several other products in this cohort, not a named bond agent)."
+  },
+  "directions": {
+    "text": null,
+    "contactTimeFound": false,
+    "source": "not sourced this pass - lighter reserve capture per instructions",
+    "confidence": null
+  },
+  "claims": [
+    "Intense Repair Technology mit dreifachem Proteinkomplex und Aminosäuren",
+    "für chemisch behandeltes und geschädigtes Haar",
+    "füllt Lücken in der geschädigten Haarstruktur",
+    "als Haarmaske und als Pre-Wash-Behandlung verwendbar"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "Lighter reserve capture as instructed: identity and INCI source confirmed, directions/contact time intentionally not chased this pass."
+}

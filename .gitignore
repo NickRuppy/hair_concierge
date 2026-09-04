@@ -210,6 +210,8 @@ test-screenshots*/
 !/data/research/shampoo-production-light-v1/calibration-v1/report.md
 !/data/research/conditioner-inci/
 !/data/research/conditioner-inci/**
+!/data/research/mask-inci/
+!/data/research/mask-inci/**
 /data/research/conditioner-inci/**/lab-review-state.json
 /data/research/conditioner-inci/**/rework-queue.json
 !/data/research/leave-in-inci/

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 8,
+  "role": "primary",
+  "archetypeSlots": ["7 - silicone-free natural-positioned"],
+  "identity": {
+    "brand": "Sante Naturkosmetik",
+    "productName": "Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex",
+    "packSize": "150 ml (jar)",
+    "gtinEan": "4055297220682",
+    "eanSourceNote": "Confirmed via direct sante.de official product page fetch (product code 40628).",
+    "market": "DE (brand-direct sante.de, pro-biomarkt.de and other Naturkosmetik retailers)"
+  },
+  "rawInci": "Aqua (Water), Cetearyl Alcohol, Glycerin, Distearoylethyl Dimonium Chloride, Behenyl Alcohol, Betaine, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Lactic Acid, Arginine, Sodium Lactate, Sodium Hyaluronate, Aloe Barbadensis Leaf Juice Powder*, Leuconostoc/Radish Root Ferment Filtrate, Tocopherol, Helianthus Annuus (Sunflower) Seed Oil, Potassium Sorbate, Parfum (Fragrance)**, Linalool**, Benzyl Salicylate**",
+  "inciSource": {
+    "url": "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628",
+    "accessDate": "2026-09-04",
+    "tier": "brand-direct",
+    "notes": "Direct successful fetch of the official 150 ml jar product page (product code 40628), distinct from the 20 ml '1 Minute Wonder Mask' sachet (product code 40762, EAN 4025089005896). Page noted the 150 ml jar as currently out of stock ('In Kürze wieder verfügbar') but still an active, current SKU. No silicones in the INCI - confirms silicone-free archetype."
+  },
+  "directions": {
+    "text": "Maske in feuchten Haarlängen verteilen. 1 Minute einwirken lassen. Ausspülen. Fertig.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "1",
+    "source": "sante.de official product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "claims": [
+    "Feuchtigkeitsbooster für trockenes Haar",
+    "mit Aloe Vera und Bio-Mangoextrakt",
+    "glättet die Haarstruktur & wirkt Frizz entgegen",
+    "schützt langanhaltend vor dem Austrocknen",
+    "verbessert die Kämmbarkeit ohne zu beschweren",
+    "NATRUE-zertifizierte Naturkosmetik, vegan"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "This capture resolves the proposal's open item #5 (two pack formats): the 150 ml jar (this product) and the 20 ml sachet share the identical INCI list and the identical 1-minute contact time per both sources checked - not a formula conflict, just two pack sizes of one formula. High confidence overall (single verbatim brand-direct fetch for both INCI and directions)."
+}

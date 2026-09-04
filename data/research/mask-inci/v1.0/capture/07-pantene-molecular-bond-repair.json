@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 7,
+  "role": "primary",
+  "archetypeSlots": ["5 - 'bond'-branded without named chemistry (discrimination stress)"],
+  "identity": {
+    "brand": "Pantene Pro-V",
+    "productName": "Miracles Molecular Bond Repair Intensive Haarmaske",
+    "packSize": "300 ml",
+    "gtinEan": "8700216173476",
+    "eanSourceNote": "Confirmed by direct mueller.de fetch (exact product name and EAN both matched on-page). Proposal also noted an alternate EAN 8700216334525 seen for a differently-named product family ('Pantene Miracle Rescue Bond Repair Mask') - not the same SKU, not merged.",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA, STEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, CETYL ALCOHOL, BIS-AMINOPROPYL DIMETHICONE, GLUTAMIC ACID, PARFUM, BENZYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID, BEHENTRIMONIUM METHOSULFATE, DISODIUM EDTA, POLYSORBATE 20, HEXYL CINNAMAL, PANTHENOL, PANTHENYL ETHYL ETHER, ISOPROPYL ALCOHOL, HISTIDINE, BENZYL SALICYLATE, CI 77492, LIMONENE, BIOTIN, METHICONE",
+  "inciSource": {
+    "url": "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-intensive-haarmaske-IPN2964989/",
+    "accessDate": "2026-09-04",
+    "tier": "Müller (direct retailer fetch, verbatim)",
+    "notes": "HIGH CONFIDENCE - both INCI and directions came from the same direct, successful mueller.de page fetch. Active chemistry is Bis-Aminopropyl Dimethicone, a silicone-amine - NOT an established named bond agent (no gluconamide, no maleate) - confirming this product is a 'bond'-branded discrimination-stress case as intended by the archetype."
+  },
+  "directions": {
+    "text": "In den Händen verreiben, um die Pro-V Perlen aufzulösen. Auf das nasse Haar auftragen. 2 Minuten einwirken lassen. Ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2",
+    "source": "mueller.de official product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "claims": [
+    "5.000+ Pro-V Nutri-Pearls, lösen sich beim Auftragen auf",
+    "Molecular Repair Technology",
+    "mit Biotin"
+  ],
+  "conflicts": [
+    {
+      "type": "identity (distinct SKU, not merged)",
+      "description": "A separately-named product, 'PANTENE PRO-V Haarmaske Miracles Intense Hair Rescue' (160 ml, per codecheck.info), has an almost-but-not-identical INCI (missing Behentrimonium Methosulfate, Disodium EDTA, Polysorbate 20, Isopropyl Alcohol, Benzyl Salicylate, CI 77492, Methicone; includes additional Rubus Idaeus Fruit Extract and Hydrolyzed Silk not present in the 300 ml version). This is a genuinely different pack-size/market-variant SKU, not the calibration target, and was NOT merged into this record.",
+      "resolution": "kept separate, excluded from this product's rawInci"
+    }
+  ],
+  "status": "captured",
+  "statusNotes": "High-confidence capture - single verbatim retailer fetch for identity, INCI, and directions all agreeing with the proposal's EAN."
+}

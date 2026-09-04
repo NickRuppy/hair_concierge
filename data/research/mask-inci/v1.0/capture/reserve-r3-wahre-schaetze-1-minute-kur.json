@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": "R3",
+  "role": "reserve",
+  "substitutesFor": "Gliss 7 Sekunden Express-Repair (archetype 2) if Gliss 7sec's identity/sourcing fails",
+  "captureDepth": "lighter (per instructions: identity + INCI source check only, no full transcription needed) - however, full INCI transcription was NOT achievable this pass, see status",
+  "identity": {
+    "brand": "Garnier Wahre Schätze",
+    "productName": "1-Minute Haarkur, Kokosmilch & Macadamia",
+    "packSize": "340 ml",
+    "gtinEan": "3600542509350",
+    "eanSourceNote": "Proposal figure, confirmed via dm.de URL slug (dm.de/wahre-schaetze-haarkur-1-minute-kokosmilch-und-macadamia-p3600542509350.html) - page itself was JS-blocked on direct fetch, but the identifier is consistently used across multiple retailer/database sources for this exact product name.",
+    "market": "DE (dm.de)"
+  },
+  "rawInci": "AQUA/WATER, CETEARYL ALCOHOL, GLYCERIN, ISOPROPYL MYRISTATE, STEARAMIDOPROPYL DIMETHYLAMINE, GLYCINE SOJA OIL/SOYBEAN OIL, PARFUM/FRAGRANCE, MACADAMIA INTEGRIFOLIA SEED OIL, HELIANTHUS ANNUUS SEED OIL/SUNFLOWER SEED OIL, [REMAINDER OF LIST NOT CAPTURED THIS PASS - see status]",
+  "inciSource": {
+    "url": "https://incibeauty.com/it/produit/3600542509350 (direct fetch returned HTTP 403 Forbidden; the partial list above is from a web-search snippet citing this page, not a verified direct fetch)",
+    "accessDate": "2026-09-04",
+    "tier": "database fallback (incibeauty, unconfirmed by direct fetch)",
+    "notes": "dm.de direct fetch was JS-blocked (header-only). incibeauty.com direct fetch was blocked with HTTP 403. Only a partial, search-snippet-truncated INCI list was obtainable this pass."
+  },
+  "directions": {
+    "text": "Nach dem Haare waschen großzügig im nassen Haar verteilen, kurz einmassieren. Anschließend die Haarkur 1-3 Minuten einwirken lassen und danach gründlich auswaschen. Kann auch als Leave-in auf handtuchtrockenem oder trockenem Haar verwendet werden.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "1-3 (product branded '1-Minute Kur')",
+    "source": "Aggregated Garnier.de brand copy via web search",
+    "confidence": "moderate"
+  },
+  "claims": [
+    "geschmeidigkeitsspendend für trockenes, strohiges Haar",
+    "97% natürliche Inhaltsstoffe",
+    "vegane Formel"
+  ],
+  "conflicts": [],
+  "status": "capture_failed",
+  "statusNotes": "Reason: the full verbatim INCI list could not be obtained this pass - dm.de was JS-blocked and the incibeauty.com direct fetch returned HTTP 403. Only a partial, truncated list (first ~9 ingredients) is on record via a search snippet, which is below the bar for a reliable calibration input. Identity and directions are reasonably solid. Needs a follow-up direct fetch attempt (or a different mirror/source) before this reserve could be used to substitute into the cohort."
+}
