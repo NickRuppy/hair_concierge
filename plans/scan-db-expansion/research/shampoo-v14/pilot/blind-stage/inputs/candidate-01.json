@@ -1,0 +1,215 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-01",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "manufacturer_de",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "resolved_non_material_same_gtin_retailer_delta",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM LAURETH SULFATE",
+      "GLYCOL DISTEARATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "DIMETHICONE",
+      "CI 60730 / EXT. VIOLET 2",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "COCAMIDE MEA",
+      "COCO-BETAINE",
+      "SODIUM BENZOATE",
+      "SODIUM HYDROXIDE",
+      "SODIUM HYALURONATE",
+      "STEARETH-6",
+      "PHENOXYETHANOL",
+      "ACETIC ACID",
+      "PEG-100 STEARATE",
+      "TRIDECETH-10",
+      "TRIDECETH-3",
+      "SALICYLIC ACID",
+      "LIMONENE",
+      "FUMARIC ACID",
+      "AMODIMETHICONE",
+      "CARBOMER",
+      "CITRIC ACID",
+      "HEXYLENE GLYCOL",
+      "PARFUM / FRAGRANCE"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM LAURETH SULFATE, GLYCOL DISTEARATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, DIMETHICONE, CI 60730 / EXT. VIOLET 2, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDE MEA, COCO-BETAINE, SODIUM BENZOATE, SODIUM HYDROXIDE, SODIUM HYALURONATE, STEARETH-6, PHENOXYETHANOL, ACETIC ACID, PEG-100 STEARATE, TRIDECETH-10, TRIDECETH-3, SALICYLIC ACID, LIMONENE, FUMARIC ACID, AMODIMETHICONE, CARBOMER, CITRIC ACID, HEXYLENE GLYCOL, PARFUM / FRAGRANCE",
+    "formula_fingerprint_sha256": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 5,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.05"
+      },
+      {
+        "ingredient": "COCAMIDE MEA",
+        "position": 9,
+        "family": "nonionic alkanolamide foam/viscosity support",
+        "fact_id": "formula.surfactant.09"
+      },
+      {
+        "ingredient": "COCO-BETAINE",
+        "position": 10,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.10"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate appears at position 2."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Two amphoteric betaines appear before preservative/pH ingredients at positions 5 and 10."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "Pearlescent/refatting ester appears unusually early at position 3."
+      },
+      {
+        "fact_id": "formula.architecture.04",
+        "text": "Silicone and cationic polymer routes appear in the first eight ingredients."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion/solubilizer/hydrotrope facts are preserved in formula_function_facts_positions and excluded from independent cleansing-route count."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 6,
+        "route": "nonvolatile silicone deposition/slip clue",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 8,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.08"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 23,
+        "route": "amine-functional silicone deposition clue",
+        "fact_id": "formula.conditioning.23"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "GLYCOL DISTEARATE",
+        "position": 3,
+        "clue": "pearlizing/refatting wax ester"
+      },
+      {
+        "ingredient": "SODIUM HYALURONATE",
+        "position": 13,
+        "clue": "humectant/polymeric moisture-binding clue"
+      },
+      {
+        "ingredient": "PEG-100 STEARATE",
+        "position": 17,
+        "clue": "emulsifier/refatting support, not standalone persistent payload"
+      },
+      {
+        "ingredient": "ACETIC ACID",
+        "position": 16,
+        "clue": "acid/pH adjustment clue"
+      },
+      {
+        "ingredient": "FUMARIC ACID",
+        "position": 22,
+        "clue": "acid/pH adjustment clue"
+      },
+      {
+        "ingredient": "CITRIC ACID",
+        "position": 25,
+        "clue": "acid/pH adjustment clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "LIMONENE",
+        "position": 21,
+        "flag": "fragrance allergen"
+      },
+      {
+        "ingredient": "PARFUM / FRAGRANCE",
+        "position": 27,
+        "flag": "fragrance mixture"
+      },
+      {
+        "ingredient": "SALICYLIC ACID",
+        "position": 20,
+        "flag": "acid/exfoliation-adjacent clue; not a v1.4 recognized anti-dandruff active by itself"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "CI 60730 / EXT. VIOLET 2",
+        "position": 7,
+        "reason": "colorant; no expected conditioning or cleansing role"
+      },
+      {
+        "ingredient": "HEXYLENE GLYCOL",
+        "position": 26,
+        "reason": "solvent/humectant-like auxiliary; late and not material alone"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "STEARETH-6",
+        "position": 14,
+        "function": "nonionic_emulsifier_solubilizer_helper",
+        "fact_id": "formula.function.14",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-100 STEARATE",
+        "position": 17,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.17",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-10",
+        "position": 18,
+        "function": "nonionic_silicone_emulsion_helper",
+        "fact_id": "formula.function.18",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-3",
+        "position": 19,
+        "function": "nonionic_silicone_emulsion_helper",
+        "fact_id": "formula.function.19",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      }
+    ]
+  }
+}

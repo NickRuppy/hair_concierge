@@ -1,0 +1,456 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "fructis-locken-methode",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "packet_conflict_resolution": {
+    "status": "resolved_non_material_same_gtin_tail_delta",
+    "selected_canonical_source_tier": "manufacturer_de_exact_gtin",
+    "selected_formula_hash": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "conflicting_formula_hashes": [
+      "62ed94e9403088c30c6d9c423c36a3ff92aa2e22b54a2a9eafb4e0da42ef0827"
+    ],
+    "rationale": "The exact German manufacturer PDP carries GTIN 3600542571739 and is canonical under the hierarchy. dm DE publishes the same GTIN/DAN with a tail and low-order formula delta; the core surfactant, humectant, fatty/refatting and polymer architecture is retained, so the delta is recorded and not merged."
+  },
+  "identity": {
+    "market": "DE",
+    "brand": "Garnier Fructis",
+    "exact_current_de_name": "Locken Methode Feuchtigkeits-Shampoo",
+    "size": {
+      "value": 200,
+      "unit": "ml",
+      "display": "200 ml"
+    },
+    "gtin": "3600542571739",
+    "captured_at": "2026-09-03T15:35:00+02:00",
+    "current_sources": [
+      {
+        "id": "src-garnier-de-pdp",
+        "label": "Garnier DE exact PDP",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de_exact_gtin",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "image",
+          "claims",
+          "directions",
+          "formula"
+        ]
+      },
+      {
+        "id": "src-dm-de-detail-api",
+        "label": "dm DE product detail API",
+        "url": "https://products.dm.de/product/products/detail/DE/dan/1324798",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin_identity_price_image",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "price",
+          "image"
+        ]
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "label": "dm DE exact PDP",
+        "url": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin_formula_delta",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "formula_delta",
+          "claims",
+          "directions"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "explicit_conflicts": [
+      {
+        "field": "formula",
+        "description": "Same-GTIN dm DE formula adds TRIETHYL CITRATE, omits HEXYLENE GLYCOL, adds CARVONE and has a different F.I.L. code. Manufacturer DE formula remains canonical; formulas are not merged."
+      }
+    ]
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.gtin.manufacturer",
+      "fact_key": "identity.gtin",
+      "fact_value": "3600542571739",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Structured product data reports gtin13 3600542571739.",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "identity.size.manufacturer",
+      "fact_key": "identity.size",
+      "fact_value": "200 ml",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Manufacturer product data reports 200ml.",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "identity.price.dm_de",
+      "fact_key": "price_eur",
+      "fact_value": "3.95",
+      "source_id": "src-dm-de-detail-api",
+      "source_type": "retailer",
+      "source_text": "price: 3,95 EUR; gtin: 3600542571739",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_key": "formula.raw_inci",
+      "fact_value": "1285605 B - INGREDIENTS: AQUA / WATER, SODIUM C14-16 OLEFIN SULFONATE, COCAMIDE MEA, GLYCERIN, COCAMIDOPROPYL BETAINE, GLYCOL DISTEARATE, SODIUM LAUROYL SARCOSINATE, PARFUM / FRAGRANCE, HEXYLENE GLYCOL, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER, CARBOMER, PEG-55 PROPYLENE GLYCOL OLEATE, SODIUM CHLORIDE, SODIUM HYALURONATE, SODIUM HYDROXIDE, ARGININE, COCO-BETAINE, PROPYLENE GLYCOL, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, POLYQUATERNIUM-7, SODIUM BENZOATE, SALICYLIC ACID, BENZOIC ACID, LINALOOL, LIMONENE, CITRONELLOL, BENZYL ALCOHOL (F.I.L. Z70036100/1).",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "formula.same_gtin_delta",
+      "fact_key": "formula.conflicting_raw_inci",
+      "fact_value": "INGREDIENTS: AQUA / WATER • SODIUM C14-16 OLEFIN SULFONATE • COCAMIDE MEA • GLYCERIN • COCAMIDOPROPYL BETAINE • GLYCOL DISTEARATE • SODIUM LAUROYL SARCOSINATE • TRIETHYL CITRATE • PARFUM / FRAGRANCE • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • CARBOMER • PEG-55 PROPYLENE GLYCOL OLEATE • SODIUM CHLORIDE • SODIUM HYALURONATE • SODIUM HYDROXIDE • ARGININE • COCO-BETAINE • PROPYLENE GLYCOL • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • POLYQUATERNIUM-7 • SODIUM BENZOATE • SALICYLIC ACID • BENZOIC ACID • LINALOOL • LIMONENE • CITRONELLOL • CARVONE • BENZYL ALCOHOL (F.I.L. Z70076137/1).",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "directions.manufacturer",
+      "fact_key": "directions",
+      "fact_value": "Das N° 1 Shampoo auf die nasse Kopfhaut in den Ansatz auftragen und mit sanften Bewegungen einmassieren. Ausspülen.",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "claims.manufacturer",
+      "fact_key": "claims.positioning",
+      "fact_value": "Für lockiges Haar; 5% Moisture-Komplex mit Hyaluron und Sheabutter-Fettsäuren; bis zu 72h Feuchtigkeit; ohne Sulfate und Silikone.",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    }
+  ],
+  "formula": {
+    "status": "canonical_with_recorded_same_gtin_conflict",
+    "raw_inci": "1285605 B - INGREDIENTS: AQUA / WATER, SODIUM C14-16 OLEFIN SULFONATE, COCAMIDE MEA, GLYCERIN, COCAMIDOPROPYL BETAINE, GLYCOL DISTEARATE, SODIUM LAUROYL SARCOSINATE, PARFUM / FRAGRANCE, HEXYLENE GLYCOL, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER, CARBOMER, PEG-55 PROPYLENE GLYCOL OLEATE, SODIUM CHLORIDE, SODIUM HYALURONATE, SODIUM HYDROXIDE, ARGININE, COCO-BETAINE, PROPYLENE GLYCOL, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, POLYQUATERNIUM-7, SODIUM BENZOATE, SALICYLIC ACID, BENZOIC ACID, LINALOOL, LIMONENE, CITRONELLOL, BENZYL ALCOHOL (F.I.L. Z70036100/1).",
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM C14-16 OLEFIN SULFONATE",
+      "COCAMIDE MEA",
+      "GLYCERIN",
+      "COCAMIDOPROPYL BETAINE",
+      "GLYCOL DISTEARATE",
+      "SODIUM LAUROYL SARCOSINATE",
+      "PARFUM / FRAGRANCE",
+      "HEXYLENE GLYCOL",
+      "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+      "CARBOMER",
+      "PEG-55 PROPYLENE GLYCOL OLEATE",
+      "SODIUM CHLORIDE",
+      "SODIUM HYALURONATE",
+      "SODIUM HYDROXIDE",
+      "ARGININE",
+      "COCO-BETAINE",
+      "PROPYLENE GLYCOL",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "CITRIC ACID",
+      "POLYQUATERNIUM-7",
+      "SODIUM BENZOATE",
+      "SALICYLIC ACID",
+      "BENZOIC ACID",
+      "LINALOOL",
+      "LIMONENE",
+      "CITRONELLOL",
+      "BENZYL ALCOHOL"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM C14-16 OLEFIN SULFONATE, COCAMIDE MEA, GLYCERIN, COCAMIDOPROPYL BETAINE, GLYCOL DISTEARATE, SODIUM LAUROYL SARCOSINATE, PARFUM / FRAGRANCE, HEXYLENE GLYCOL, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER, CARBOMER, PEG-55 PROPYLENE GLYCOL OLEATE, SODIUM CHLORIDE, SODIUM HYALURONATE, SODIUM HYDROXIDE, ARGININE, COCO-BETAINE, PROPYLENE GLYCOL, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, POLYQUATERNIUM-7, SODIUM BENZOATE, SALICYLIC ACID, BENZOIC ACID, LINALOOL, LIMONENE, CITRONELLOL, BENZYL ALCOHOL",
+    "sha256_normalized_inci": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "canonical_source": {
+      "id": "src-garnier-de-pdp",
+      "tier": "manufacturer_de_exact_gtin",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {
+        "id": "src-garnier-de-pdp",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "canonical_current_exact_german_manufacturer_formula",
+        "formula_hash_if_normalized": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5"
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "recorded_same_gtin_low_order_tail_delta_not_merged",
+        "formula_hash_if_normalized": "62ed94e9403088c30c6d9c423c36a3ff92aa2e22b54a2a9eafb4e0da42ef0827"
+      },
+      {
+        "id": "src-dm-de-detail-api",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "formula_observed": false,
+        "formula_relation_to_canonical": "identity_gtin_price_image_corroboration_only"
+      }
+    ],
+    "version_or_reformulation_conflicts": [
+      "Same-GTIN dm DE formula inserts TRIETHYL CITRATE after SODIUM LAUROYL SARCOSINATE, omits HEXYLENE GLYCOL and adds CARVONE near the declared fragrance tail. Manufacturer DE formula selected as canonical by hierarchy and formulas are not merged."
+    ],
+    "normalization_notes": "Removed manufacturer batch/F.I.L. code and INGREDIENTS prefix; preserved comma-separated INCI spelling, case, slash aliases and order."
+  },
+  "blind_packet": {
+    "formula_source_tier": "manufacturer_de_exact_gtin",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "recorded_same_gtin_low_order_tail_delta_not_merged",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM C14-16 OLEFIN SULFONATE",
+      "COCAMIDE MEA",
+      "GLYCERIN",
+      "COCAMIDOPROPYL BETAINE",
+      "GLYCOL DISTEARATE",
+      "SODIUM LAUROYL SARCOSINATE",
+      "PARFUM / FRAGRANCE",
+      "HEXYLENE GLYCOL",
+      "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+      "CARBOMER",
+      "PEG-55 PROPYLENE GLYCOL OLEATE",
+      "SODIUM CHLORIDE",
+      "SODIUM HYALURONATE",
+      "SODIUM HYDROXIDE",
+      "ARGININE",
+      "COCO-BETAINE",
+      "PROPYLENE GLYCOL",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "CITRIC ACID",
+      "POLYQUATERNIUM-7",
+      "SODIUM BENZOATE",
+      "SALICYLIC ACID",
+      "BENZOIC ACID",
+      "LINALOOL",
+      "LIMONENE",
+      "CITRONELLOL",
+      "BENZYL ALCOHOL"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM C14-16 OLEFIN SULFONATE, COCAMIDE MEA, GLYCERIN, COCAMIDOPROPYL BETAINE, GLYCOL DISTEARATE, SODIUM LAUROYL SARCOSINATE, PARFUM / FRAGRANCE, HEXYLENE GLYCOL, BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER, CARBOMER, PEG-55 PROPYLENE GLYCOL OLEATE, SODIUM CHLORIDE, SODIUM HYALURONATE, SODIUM HYDROXIDE, ARGININE, COCO-BETAINE, PROPYLENE GLYCOL, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, POLYQUATERNIUM-7, SODIUM BENZOATE, SALICYLIC ACID, BENZOIC ACID, LINALOOL, LIMONENE, CITRONELLOL, BENZYL ALCOHOL",
+    "formula_fingerprint_sha256": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM C14-16 OLEFIN SULFONATE",
+        "position": 2,
+        "family": "anionic olefin sulfonate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDE MEA",
+        "position": 3,
+        "family": "nonionic alkanolamide foam/viscosity support",
+        "fact_id": "formula.surfactant.03"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 5,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.05"
+      },
+      {
+        "ingredient": "SODIUM LAUROYL SARCOSINATE",
+        "position": 7,
+        "family": "anionic amino-acid-derived surfactant",
+        "fact_id": "formula.surfactant.07"
+      },
+      {
+        "ingredient": "COCO-BETAINE",
+        "position": 17,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.17"
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "GLYCOL DISTEARATE",
+        "position": 6,
+        "route": "fatty ester pearlizer/refatting support",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+        "position": 10,
+        "route": "fatty butter/emollient",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 19,
+        "route": "cationic guar deposition polymer",
+        "fact_id": "formula.conditioning.19"
+      },
+      {
+        "ingredient": "POLYQUATERNIUM-7",
+        "position": 21,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.21"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic olefin sulfonate appears at position 2 with multiple secondary surfactants before position 8."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Humectant, fatty ester/butter and cationic polymer signals are all present before the preservative/fragrance tail."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "No sulfate-named surfactant and no silicone ingredient is present in the normalized INCI."
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 4,
+        "role": "humectant",
+        "fact_id": "formula.humectant.04"
+      },
+      {
+        "ingredient": "SODIUM HYALURONATE",
+        "position": 14,
+        "role": "film-forming humectant polymer/salt",
+        "fact_id": "formula.humectant.14"
+      },
+      {
+        "ingredient": "ARGININE",
+        "position": 16,
+        "role": "amino acid formula signal",
+        "fact_id": "formula.amino.16"
+      },
+      {
+        "ingredient": "PROPYLENE GLYCOL",
+        "position": 18,
+        "role": "humectant/solvent",
+        "fact_id": "formula.humectant.18"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "PARFUM / FRAGRANCE",
+        "position": 8,
+        "role": "fragrance declaration before several functional materials",
+        "fact_id": "formula.fragrance.08"
+      },
+      {
+        "ingredient": "LINALOOL",
+        "position": 25,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.25"
+      },
+      {
+        "ingredient": "LIMONENE",
+        "position": 26,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.26"
+      },
+      {
+        "ingredient": "CITRONELLOL",
+        "position": 27,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.27"
+      },
+      {
+        "ingredient": "BENZYL ALCOHOL",
+        "position": 28,
+        "role": "fragrance/preservative exposure declaration",
+        "fact_id": "formula.fragrance.28"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.same_gtin_delta",
+      "formula.surfactant.02",
+      "formula.surfactant.03",
+      "formula.surfactant.05",
+      "formula.surfactant.07",
+      "formula.surfactant.17",
+      "formula.conditioning.06",
+      "formula.conditioning.10",
+      "formula.conditioning.19",
+      "formula.conditioning.21",
+      "formula.architecture.01",
+      "formula.architecture.02",
+      "formula.architecture.03"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "CARBOMER",
+        "position": 11,
+        "role": "rheology support",
+        "fact_id": "formula.function.11"
+      },
+      {
+        "ingredient": "PEG-55 PROPYLENE GLYCOL OLEATE",
+        "position": 12,
+        "role": "solubilizing/refatting support",
+        "fact_id": "formula.function.12"
+      },
+      {
+        "ingredient": "SODIUM CHLORIDE",
+        "position": 13,
+        "role": "viscosity/ionic strength support",
+        "fact_id": "formula.function.13"
+      }
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {
+        "source_id": "src-garnier-de-pdp",
+        "text": "Positioned for curly hair with a 5% moisture complex, hyaluron and shea-butter fatty acids, up to 72h moisture, sulfate-free and silicone-free claims."
+      }
+    ],
+    "directions": [
+      {
+        "source_id": "src-garnier-de-pdp",
+        "text": "Das N° 1 Shampoo auf die nasse Kopfhaut in den Ansatz auftragen und mit sanften Bewegungen einmassieren. Ausspülen."
+      }
+    ],
+    "warnings": []
+  },
+  "provenance_checks": {
+    "gtin_check_digit_valid": true,
+    "formula_hash_recomputed": true,
+    "blind_packet_identity_terms_checked": true,
+    "old_manifest_labels_used": false,
+    "database_reads_or_writes": false,
+    "notes": [
+      "Manufacturer formula selected as canonical.",
+      "Same-GTIN dm DE formula delta retained as provenance evidence and not merged."
+    ]
+  },
+  "open_questions": []
+}

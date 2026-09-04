@@ -1,0 +1,357 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "gliss-liquid-silk",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic sulfate"
+        },
+        {
+          "ingredient": "SODIUM CHLORIDE",
+          "position": 3,
+          "factId": "formula.canonical_inci",
+          "observation": "early electrolyte/thickening context"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "amphoteric buffer"
+        },
+        {
+          "ingredient": "COCO-GLUCOSIDE",
+          "position": 13,
+          "factId": "formula.surfactant.13",
+          "observation": "later nonionic glucoside support"
+        },
+        {
+          "ingredient": "GLYCOSPHINGOLIPIDS",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "early care counter-signal"
+        }
+      ],
+      "counterSignal": "SLES and sodium chloride are early, so low would understate the cleansing chassis.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.surfactant.13",
+        "formula.conditioning.05",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10 and several refatting/waxy clues create a broad smoothness and slip system.",
+      "formulaFacts": [
+        {
+          "ingredient": "GLYCOSPHINGOLIPIDS",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "lipid-like care clue"
+        },
+        {
+          "ingredient": "HYDROLYZED SILK",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived care clue"
+        },
+        {
+          "ingredient": "SERICIN",
+          "position": 7,
+          "factId": "formula.canonical_inci",
+          "observation": "silk/protein-derived care clue"
+        },
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 10,
+          "factId": "formula.conditioning.10",
+          "observation": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 15,
+          "factId": "formula.canonical_inci",
+          "observation": "refatting lipid clue"
+        }
+      ],
+      "counterSignal": "There is no silicone in the canonical formula, but the early silk/lipid plus polymer/refatting breadth is beyond moderate.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early lipid-like and silk/protein clues, Polyquaternium-10 and later refatting/waxy materials can leave bounded residue, while SLES/CAPB/glucoside cleansing and no silicone keep it below high.",
+      "formulaFacts": [
+        {
+          "ingredient": "GLYCOSPHINGOLIPIDS",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "lipid-like care/deposition clue"
+        },
+        {
+          "ingredient": "HYDROLYZED SILK",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived film clue"
+        },
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 10,
+          "factId": "formula.conditioning.10",
+          "observation": "cationic polymer deposition route"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 15,
+          "factId": "formula.canonical_inci",
+          "observation": "refatting lipid clue"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 18,
+          "factId": "formula.canonical_inci",
+          "observation": "waxy/lipid-like payload clue"
+        }
+      ],
+      "counterSignal": "The product lacks a silicone stack, and PEG-120 Methyl Glucose Dioleate/Laureth-4 are helper facts rather than persistent conditioning routes.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.rossmann_stale_conflict",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.function.12",
+        "formula.function.20"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact glycosphingolipid/silk/polymer levels cannot be proven from INCI order alone.",
+          "A same-GTIN Rossmann formula conflict exists but is resolved in favor of current German manufacturer/dm agreement."
+        ],
+        "whyThisBand": "Multiple care routes occur early enough that low weight would understate the polymer/protein/lipid/refatting stack.",
+        "whyNotNeighborBand": "Not high because there is no silicone stack and the formula keeps meaningful anionic/amphoteric/glucoside reset."
+      }
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "high",
+      "rationale": "Shine is the dominant role: the exact product claims surface smoothing plus shine and suppleness, and the formula has silk/protein, lipid-like and polymer routes compatible with smoothing and gloss.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "GLYCOSPHINGOLIPIDS",
+          "position": 5
+        },
+        {
+          "ingredient": "HYDROLYZED SILK",
+          "position": 6
+        },
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 10
+        }
+      ],
+      "counterSignal": "Silk/protein and lipid-like clues could support a repair or shine focus after unblind.",
+      "neighboringAlternative": "repair",
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No secondary focus is assigned because the claims concentrate on surface smoothing, shine and suppleness; repair is only a neighboring care interpretation, not a distinct exact-product role.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "GLYCOSPHINGOLIPIDS",
+          "position": 5
+        },
+        {
+          "ingredient": "HYDROLYZED SILK",
+          "position": 6
+        }
+      ],
+      "counterSignal": "Multiple formula routes could later support one secondary focus if distinct exact-product positioning exists.",
+      "neighboringAlternative": [
+        "repair"
+      ],
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular hair-care use, with no daily/frequent, alternating, reset or treatment trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo cleanser"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "ordinary buffered shampoo route"
+        }
+      ],
+      "counterSignal": "Regularly apply wording confirms ordinary use, not a treatment role under v1.4.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "usage:manufacturer-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for hair-surface smoothness, shine and manageability, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {
+          "ingredient": "PARFUM (FRAGRANCE)",
+          "position": 8,
+          "factId": "formula.canonical_inci",
+          "observation": "fragrance exposure"
+        },
+        {
+          "ingredient": "BUTYLENE GLYCOL",
+          "position": 19,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant/solvent clue without scalp positioning"
+        }
+      ],
+      "counterSignal": "Some smoothing ingredients may feel gentle on lengths, but there is no scalp-comfort claim or targeted architecture.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "HYDROLYZED SILK",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "care protein clue, not a v1.4 dandruff active"
+        },
+        {
+          "ingredient": "POTASSIUM SORBATE",
+          "position": 26,
+          "factId": "formula.canonical_inci",
+          "observation": "preservative, not a recognized dandruff active"
+        }
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; SLES is buffered by CAPB, coco-glucoside and care/refatting counter-signals."
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneBValue": "high",
+      "finalValue": "high",
+      "outcome": "product_correction",
+      "rationale": "Adjudicated to high. Lane A was right that absence of silicone argues against the richest band, but v1.4 does not require silicone: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10, glyceryl oleate and waxy/refatting clues are multiple complementary rinse-off care routes."
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; the product has polymer/protein/lipid/refatting deposition clues but no silicone stack, so high weight would overstate persistence."
+    },
+    "focusPrimary": {
+      "laneAValue": "shine",
+      "laneBValue": "shine",
+      "finalValue": "shine",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected shine after unblind; exact positioning says gloss/surface smoothing and the silk/lipid/polymer formula route is compatible."
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneBValue": [],
+      "finalValue": [],
+      "outcome": "agreement",
+      "rationale": "Both lanes selected no secondary focus; smoothness is part of the shine role, not a distinct v1.4 secondary focus."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected regular; regular-use directions are ordinary shampoo use, not treatment or reset use."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected not_targeted; the product is hair-surface/shine positioned, not scalp-comfort positioned."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both lanes agree with the mechanical dandruff rule: no Piroctone Olamine or Climbazole in the complete INCI."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": "Liquid Silk clarifies that high conditioning can be reached by non-silicone breadth, while weight remains moderate because persistence is not as strong as a silicone stack.",
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. Claims were used only for claim-gated focus/usage/scalp intent, never to assign cleansing, conditioning or weight by themselves."
+}

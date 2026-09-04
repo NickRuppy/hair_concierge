@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "head-shoulders-classic-clean",
+  "run1InputSha256": "3925a394d5989e56ceb1188d420df6d31ad11c9bea14c443a20c1b05536ea854",
+  "run2InputSha256": "3925a394d5989e56ceb1188d420df6d31ad11c9bea14c443a20c1b05536ea854",
+  "outputSha256": "a48fae1980e760cd27374e874e3ecac2ed8bdd853fff8817c888eee3ad1b7604",
+  "summarySha256": "0b1919122bc0e8e3563f2300c16570921395d8cfb40762c76eec93d6bd0ac0a8",
+  "byteIdentical": true
+}

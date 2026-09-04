@@ -1,0 +1,164 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "adjudication:gliss-sealing-miracle:cleansingStrength",
+          "adjudication:gliss-sealing-miracle:scalpComfortTarget"
+        ],
+        "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.conditioning.05"
+        ],
+        "rationale": "Moderate: SLES at position 2 gives effective ordinary cleansing, but CAPB, later coco-glucoside and early peptide/cationic-care signals prevent a strong-reset classification. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:gliss-sealing-miracle:conditioningLevel",
+          "adjudication:gliss-sealing-miracle:weightPotential",
+          "adjudication:gliss-sealing-miracle:focusPrimary",
+          "adjudication:gliss-sealing-miracle:conditioningLevel",
+          "adjudication:gliss-sealing-miracle:weightPotential",
+          "adjudication:gliss-sealing-miracle:focusPrimary",
+          "adjudication:gliss-sealing-miracle:conditioningLevel",
+          "adjudication:gliss-sealing-miracle:weightPotential",
+          "adjudication:gliss-sealing-miracle:focusPrimary"
+        ],
+        "rationale": "Ideal: normal — Moderate cleansing, high repair conditioning and moderate weight fit normal split-end-prone hair. coarse — Coarse hair benefits from the high care system while the moderate weight remains acceptable. Conditional (not emitted): fine — High conditioning plus peptide/cationic/refatting routes can reduce lift on fine hair, even without silicone."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.conditioning.05"
+        ],
+        "rationale": "Moderate: SLES at position 2 gives effective ordinary cleansing, but CAPB, later coco-glucoside and early peptide/cationic-care signals prevent a strong-reset classification."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.conditioning.15"
+        ],
+        "rationale": "High: pea peptide at position 5, cationic guar at position 6 and several lipid/refatting/waxy routes create a substantial rinse-off care system for split-end/damage positioning."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:gliss-manufacturer-sealing-positioning",
+          "claim:rossmann-sealing-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06"
+        ],
+        "rationale": "Repair: revealed claims center on split-end and damaged-hair sealing, and the formula has a compatible early peptide, cationic polymer and refatting care architecture."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:gliss-manufacturer-sealing-positioning",
+          "claim:rossmann-sealing-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: split-end sealing and damaged-hair claims are one repair story, with no distinct secondary volume, shine, clarifying or scalp-active route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:gliss-manufacturer-sealing-positioning",
+          "claim:rossmann-sealing-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the product is positioned for hair-fiber damage and split-end sealing, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:gliss-back-pack-directions",
+          "usage:rossmann-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are standard wet-hair distribution and rinse-out use; regular application wording confirms ordinary recurring use rather than treatment or reset usage."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.conditioning.15",
+          "claim:rossmann-sealing-positioning"
+        ],
+        "rationale": "Moderate: early cationic guar plus peptide, glyceryl oleate and hydrogenated castor oil can leave residue, but SLES/CAPB cleansing, no silicone and no-weight positioning keep this below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "fine"
+    ],
+    "productId": "gliss-sealing-miracle",
+    "productName": "Sealing Miracle Versiegelndes Shampoo",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

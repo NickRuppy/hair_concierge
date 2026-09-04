@@ -1,0 +1,50 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "elvital-hydra-hyaluronic",
+  "formulaFingerprintSha256": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+  "priorV14": {
+    "primary": "general",
+    "secondary": ["shine"],
+    "adjudicationSha256": "80f15b33964acc7af0a692bec6b2a0e228febdd1cc5e707b2a83ecfbbc34a7b1"
+  },
+  "effectiveV15": {
+    "primary": "moisture",
+    "secondary": ["shine"],
+    "confidence": "moderate",
+    "rationale": "Feuchtigkeit ist das dominante exakte Produktversprechen. Sodium Hyaluronate plus mehrere substantiv konditionierende Ablagerungsrouten bilden eine stimmige Architektur für ein weicheres, geschmeidigeres und weniger trocken wirkendes Haargefühl; die Einordnung bleibt wegen Rinse-off und der späten Position des namensgebenden Humectants moderat.",
+    "formulaFacts": [
+      {
+        "ingredient": "Dimethicone",
+        "position": 6,
+        "observation": "frühe Glättungs- und Ablagerungsroute"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 8,
+        "observation": "kationische Konditionierungsroute"
+      },
+      { "ingredient": "Sodium Hyaluronate", "position": 13, "observation": "Humectant-Signal" },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 23,
+        "observation": "zusätzliche substantiv konditionierende Route"
+      }
+    ],
+    "counterSignal": "Sodium Hyaluronate steht nicht früh, die Formel ist rinse-off, und die Konditionierungsrouten können auch Glanz oder Reparaturgefühl unterstützen; deshalb kein hochsicherer Feuchtigkeitsnachweis aus INCI allein.",
+    "neighboringAlternative": "shine",
+    "evidenceRefs": [
+      "claim:loreal-hydration-positioning",
+      "claim:dm-hydration-positioning",
+      "formula.canonical_inci"
+    ]
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": ["Sodium Hyaluronate an Position 13", "kationisches Guar an Position 8"],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": ["Dimethicone an Position 6", "Amodimethicone an Position 23"],
+    "limitation": "Rinse-off-Produkt; INCI-Reihenfolge beweist keine Konzentration und gemeinsame Konditionierungsrouten unterscheiden Feuchtigkeit nicht allein von Reparatur."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Formel eröffnet und stützt eine Feuchtigkeitsrichtung, beweist sie aber nicht allein. Das dominante, exakte Hydration-Versprechen bestätigt diese kompatible Formelrichtung; Glanz bleibt sekundär."
+}

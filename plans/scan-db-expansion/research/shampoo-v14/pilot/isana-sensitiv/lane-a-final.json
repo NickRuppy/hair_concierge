@@ -1,0 +1,320 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "isana-sensitiv",
+  "candidateSlot": "candidate-04",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is supported by a classic SLES/CAPB/glucoside system with refatting and protein/polymer counter-signals, not a multi-anionic reset chassis.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "factId": "formula.surfactant.08"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "factId": "formula.conditioning.07"
+        }
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 keeps the formula above low despite buffering.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.08",
+        "formula.conditioning.07",
+        "formula.architecture.primary_secondary"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning fits several light-to-meaningful care routes: glyceryl oleate, fatty ester, hydrolyzed protein, panthenol and cationic guar.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "factId": "formula.conditioning.07"
+        },
+        {
+          "ingredient": "PEG-3 Distearate",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "factId": "formula.conditioning.15"
+        }
+      ],
+      "counterSignal": "No silicone or clearly rich 2-in-1 system is present, so high would overstate slip.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.07",
+        "formula.conditioning.09",
+        "formula.conditioning.10",
+        "formula.conditioning.15"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential is plausible from interacting refatting, protein, fatty ester and cationic guar routes, but the absence of silicone and the SLES chassis keep it bounded.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "factId": "formula.conditioning.07"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "factId": "formula.conditioning.15"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "No nonvolatile silicone route appears, and SLES at position 2 provides reset.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "formula.conditioning.07",
+        "formula.conditioning.09",
+        "formula.conditioning.10",
+        "formula.conditioning.15",
+        "formula.surfactant.02"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [],
+        "whyThisBand": "Several lighter routes interact, including refatter, protein and cationic guar, so some residue risk is plausible.",
+        "whyNotNeighborBand": "Low would understate the combined routes; high would require more persistent or richer deposition than this no-silicone formula shows."
+      }
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "Gentle is final because revealed positioning explicitly says particularly mild cleansing/care for sensitive scalp, and the formula has compatible panthenol, niacinamide, refatting and no-silicone care routes despite SLES presence.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "factId": "formula.conditioning.07"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 and Parfum at position 6 keep the formula from being low-cleansing or fragrance-free mildness.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.07",
+        "formula.surfactant.02"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because no distinct blind-visible route can be separated from the same balanced care architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "Protein and panthenol could later split into repair or gentle only if visible positioning distinguishes them.",
+      "neighboringAlternative": [
+        "gentle"
+      ],
+      "evidenceRefs": [
+        "formula.conditioning.10",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular is the default blind role because the formula is ordinary buffered sulfate cleansing without a treatment active or deep-reset architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "factId": "formula.surfactant.08"
+        }
+      ],
+      "counterSignal": "Comfort clues could later support frequent use, but frequent requires visible daily/mild positioning and non-strong cleansing.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.08"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "rationale": "Targeted is final because revealed German positioning explicitly says sensitive scalp and mild care with calming ingredients and panthenol, and the formula includes panthenol/niacinamide comfort clues.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 6,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "Parfum at position 6 and SLES at position 2 are plausible comfort counter-signals, so targeting does not imply universal tolerability.",
+      "neighboringAlternative": "not_targeted",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning",
+        "formula.canonical_inci",
+        "formula.surfactant.02"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "Niacinamide at position 13 is not a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "blindConfidence": "low",
+      "finalValue": "gentle",
+      "finalConfidence": "high",
+      "revealedEvidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning"
+      ],
+      "reason": "Revealed sensitive/mild positioning selects gentle over the blind-safe general fallback."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "unknown",
+      "blindConfidence": "low",
+      "finalValue": "targeted",
+      "finalConfidence": "high",
+      "revealedEvidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning"
+      ],
+      "reason": "Revealed claims explicitly target sensitive scalp and identify mild care with panthenol-compatible comfort support."
+    }
+  ],
+  "unchangedProperties": [
+    {
+      "property": "cleansingStrength",
+      "reason": "Mild claims do not assign cleansing strength; the SLES/CAPB/glucoside architecture remains moderate under v1.4."
+    },
+    {
+      "property": "conditioningLevel",
+      "reason": "Care claims corroborate existing formula routes but do not change moderate conditioning."
+    },
+    {
+      "property": "weightPotential",
+      "reason": "No-silicone positioning corroborates a counter-signal but does not change the formula-derived moderate weight band."
+    },
+    {
+      "property": "focusSecondary",
+      "reason": "Sensitive/gentle positioning is the primary role; no distinct second focus with an independent route is required."
+    },
+    {
+      "property": "usageRole",
+      "reason": "No explicit daily/frequent-use trigger is revealed; regular remains the default."
+    },
+    {
+      "property": "dandruffSupport",
+      "reason": "No Piroctone Olamine or Climbazole appears in the complete INCI, so the mechanical rule is unchanged."
+    }
+  ],
+  "receipt": {
+    "blindResultSha256": "9726ddd8aaaf14ab6320bf02c889feb94a488709041325884d74c22238965f0e",
+    "sourcePacketSha256": "0a00883109d724fe292ae27520c03a5314c01e5a29d3ef0de95fef240ed37f3c",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T08:06:19Z",
+    "laneBSeen": false,
+    "oldManifestSeen": false
+  }
+}

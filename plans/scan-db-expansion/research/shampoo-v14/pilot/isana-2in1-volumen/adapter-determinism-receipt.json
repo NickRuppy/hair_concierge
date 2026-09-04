@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "isana-2in1-volumen",
+  "run1InputSha256": "2c9f3d54fc7435f1a5313636126ea0f488111608de542a894c319f2cd8ad6433",
+  "run2InputSha256": "2c9f3d54fc7435f1a5313636126ea0f488111608de542a894c319f2cd8ad6433",
+  "outputSha256": "f42e1526fee98823f6bf3155541ee5b28b07902ad83bf8f7c37997d93acbfa18",
+  "summarySha256": "eec92e07f07d446e8805db90d65a20915f46ebe42415a180ecb6fb1d60f24650",
+  "byteIdentical": true
+}

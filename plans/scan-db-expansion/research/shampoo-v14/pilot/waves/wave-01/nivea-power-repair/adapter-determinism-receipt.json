@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "nivea-power-repair",
+  "run1InputSha256": "9c06fa989d8e0fecdd0021cedc72d7a1233d0e9dff9c589da5e6cd30b849b994",
+  "run2InputSha256": "9c06fa989d8e0fecdd0021cedc72d7a1233d0e9dff9c589da5e6cd30b849b994",
+  "outputSha256": "c3fc17d4bdab8924c94b87ffc9c8395e5bd500aef451d60bf88cfeded794988f",
+  "summarySha256": "5656475792d364bbf3d0e05ffd2b7c95ab00b31d24677918b95ddba65eec7c38",
+  "byteIdentical": true
+}

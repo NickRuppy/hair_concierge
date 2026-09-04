@@ -1,0 +1,150 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "gliss-sealing-miracle",
+  "candidateSlot": "wave01-candidate-05",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate remains final because SLES is buffered by betaine, glucoside and early care routes; regular-use directions do not change the formula-derived cleanser band.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04"},
+        {"ingredient": "COCO-GLUCOSIDE", "position": 9, "factId": "formula.surfactant.09"}
+      ],
+      "counterSignal": "The position-2 sulfate prevents a low call, but there is no second independent anionic reset route.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.09", "usage:gliss-back-pack-directions", "usage:rossmann-directions"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning remains plausible and is corroborated by sealing/split-end care positioning: peptide, cationic guar and multiple lipid-like/refatting routes appear early enough to matter.",
+      "formulaFacts": [
+        {"ingredient": "PISUM SATIVUM (PEA) PEPTIDE", "position": 5, "factId": "formula.conditioning.05"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 10, "factId": "formula.conditioning.10"},
+        {"ingredient": "PEG-7 GLYCERYL COCOATE", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "HYDROGENATED CASTOR OIL", "position": 15, "factId": "formula.conditioning.15"}
+      ],
+      "counterSignal": "No silicone appears and the formula remains sulfate-led, so high stays moderate-confidence.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10", "formula.conditioning.12", "formula.conditioning.15", "claim:gliss-manufacturer-sealing-positioning"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential remains final because peptide, cationic guar and lipid-like/waxy routes can deposit, while SLES reset and no silicone prevent a high-weight conclusion.",
+      "formulaFacts": [
+        {"ingredient": "PISUM SATIVUM (PEA) PEPTIDE", "position": 5, "factId": "formula.conditioning.05"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 10, "factId": "formula.conditioning.10"},
+        {"ingredient": "HYDROGENATED CASTOR OIL", "position": 15, "factId": "formula.conditioning.15"},
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02"}
+      ],
+      "counterSignal": "Rossmann says the product cares without weighing down, and the formula lacks silicone, but claims cannot assign the weight band.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10", "formula.conditioning.15", "formula.surfactant.02", "claim:rossmann-sealing-positioning"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "PEG-120 Methyl Glucose Dioleate is preserved as thickener/emulsifier and not counted as substantive conditioning."
+        ],
+        "whyThisBand": "Peptide, cationic guar and lipid-like routes can plausibly leave bounded residue.",
+        "whyNotNeighborBand": "High would overread no-silicone rinse-off deposition; low would ignore the early cationic/polymer and refatting convergence."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair is final because manufacturer and retailer positioning explicitly target split-end/damaged hair sealing, and peptide plus cationic guar gives a compatible formula route.",
+      "formulaFacts": [
+        {"ingredient": "PISUM SATIVUM (PEA) PEPTIDE", "position": 5, "factId": "formula.conditioning.05"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 10, "factId": "formula.conditioning.10"}
+      ],
+      "counterSignal": "The same route can create shine/smoothing, but the exact product positioning makes repair the dominant role.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": ["claim:gliss-manufacturer-sealing-positioning", "claim:rossmann-sealing-positioning", "formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because shine/smoothing would reuse the same peptide, polymer and refatting route as the repair primary.",
+      "formulaFacts": [
+        {"ingredient": "PEG-7 GLYCERYL COCOATE", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "HYDROGENATED CASTOR OIL", "position": 15, "factId": "formula.conditioning.15"}
+      ],
+      "counterSignal": "No distinct volume, clarifying or scalp-active secondary is revealed.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claim:gliss-manufacturer-sealing-positioning", "formula.conditioning.12", "formula.conditioning.15"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains final because directions say distribute in wet hair and rinse well, with regular use allowed but no treatment or reset contact-time protocol.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04"}
+      ],
+      "counterSignal": "Repair/sealing positioning does not create treatment use under the cosmetic v1.4 shampoo standard.",
+      "neighboringAlternative": "treatment",
+      "evidenceRefs": ["usage:gliss-back-pack-directions", "usage:rossmann-directions", "claim:gliss-manufacturer-sealing-positioning"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted remains final because revealed claims concern damaged/split-prone lengths, not sensitive, itchy or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "PARFUM (FRAGRANCE)", "position": 7, "factId": "formula.fragrance.07"},
+        {"ingredient": "BENZYL ALCOHOL", "position": 18, "factId": "formula.fragrance.18"}
+      ],
+      "counterSignal": "Peptide and propylene glycol are care/humectant-adjacent but not scalp-targeted.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.surfactant.02", "formula.fragrance.07", "formula.fragrance.18", "claim:rossmann-sealing-positioning"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "AQUA (WATER, EAU)", "position": 1, "factId": "formula.canonical_inci"}
+      ],
+      "counterSignal": "No revealed claim or ingredient changes the mechanical dandruff rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": ["formula.canonical_inci"]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "repair",
+      "blindConfidence": "moderate",
+      "finalValue": "repair",
+      "finalConfidence": "high",
+      "revealedEvidenceRefs": ["claim:gliss-manufacturer-sealing-positioning", "claim:rossmann-sealing-positioning"],
+      "reason": "Revealed split-end/damaged-hair sealing positioning confirms the formula-first repair read and raises confidence."
+    }
+  ],
+  "unchangedProperties": [
+    {"property": "cleansingStrength", "reason": "Regular-use directions do not change the SLES/betaine/glucoside architecture."},
+    {"property": "conditioningLevel", "reason": "Sealing claims corroborate but do not change the formula-derived high conditioning band."},
+    {"property": "weightPotential", "reason": "No-weigh-down wording is a counter-signal but does not alter the formula-derived moderate band."},
+    {"property": "focusSecondary", "reason": "No distinct secondary claim/route is separate from the repair route."},
+    {"property": "usageRole", "reason": "Regular use wording remains ordinary shampoo use, not treatment cadence."},
+    {"property": "scalpComfortTarget", "reason": "Revealed positioning targets damaged/split-prone hair, not scalp comfort."},
+    {"property": "dandruffSupport", "reason": "No Piroctone Olamine or Climbazole appears in the complete INCI."}
+  ],
+  "receipt": {
+    "blindResultSha256": "1c7cfe6c86aaf1ae05fffbc344de68ec362281096cc259584d209eb8214e0347",
+    "sourcePacketSha256": "b394eca723c385252218d6bc8332ddd4b1e52d046318b24432f51f5ab7c5acd7",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T17:36:00Z",
+    "laneBSeen": false,
+    "oldManifestSeen": false
+  }
+}

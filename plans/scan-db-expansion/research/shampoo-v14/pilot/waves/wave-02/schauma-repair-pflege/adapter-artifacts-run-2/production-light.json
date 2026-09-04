@@ -1,0 +1,159 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-repair-positioning",
+          "usage:dm-directions",
+          "adjudication:schauma-repair-pflege:cleansingStrength",
+          "adjudication:schauma-repair-pflege:scalpComfortTarget"
+        ],
+        "rationale": "The product is positioned for damaged/dry hair repair rather than a named scalp concern; the ordinary balanced scalp route is the only supported production target."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:schauma-repair-pflege:conditioningLevel",
+          "adjudication:schauma-repair-pflege:weightPotential",
+          "adjudication:schauma-repair-pflege:focusPrimary",
+          "adjudication:schauma-repair-pflege:conditioningLevel",
+          "adjudication:schauma-repair-pflege:weightPotential",
+          "adjudication:schauma-repair-pflege:focusPrimary"
+        ],
+        "rationale": "Ideal: coarse — Coarse hair is the best default fit for the high-conditioning/high-weight repair profile; the richer deposition is less likely to compromise useful movement. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-repair-positioning",
+          "usage:dm-directions"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.13",
+          "formula.conditioning.14",
+          "formula.architecture.02"
+        ],
+        "rationale": "High: early cationic guar, panthenol, apricot oil, coconut extract and later amodimethicone/dimethicone create multiple complementary rinse-off care routes."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-repair-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.13",
+          "formula.conditioning.14"
+        ],
+        "rationale": "Repair: exact-product positioning targets damaged/dry hair and repair, and the formula supports that with polymer, panthenol, oil and silicone care routes."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-repair-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.13",
+          "formula.conditioning.14"
+        ],
+        "rationale": "Empty: the dry-hair and smoothing claims support the same repair/care story rather than a distinct v1.4 secondary focus."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-repair-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the product targets damaged/dry hair fiber repair, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:dm-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are ordinary wet-hair distribution, short contact and rinse-out, with no daily, alternating, reset or treatment trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.13",
+          "formula.conditioning.14",
+          "formula.function.18",
+          "formula.function.22"
+        ],
+        "rationale": "High: early cationic guar, plant oil, dual silicones and later waxy/refatting materials create converging persistent deposition potential despite SLES/CAPB reset."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "normal"
+    ],
+    "productId": "schauma-repair-pflege",
+    "productName": "Shampoo Repair & Pflege",
+    "rows": 1
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

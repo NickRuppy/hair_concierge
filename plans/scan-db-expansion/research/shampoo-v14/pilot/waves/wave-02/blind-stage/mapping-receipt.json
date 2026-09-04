@@ -1,0 +1,51 @@
+{
+  "version": "shampoo-v14-blind-mapping-receipt-v1",
+  "mappedAt": "2026-09-03T18:00:00.000Z",
+  "method": "Candidate slots are assigned in ascending canonical formula-fingerprint order. Opaque inputs were copied only from frozen blind formula packets; product identity mapping is retained exclusively in this receipt.",
+  "members": [
+    {
+      "candidateSlot": "candidate-01",
+      "productId": "schauma-repair-pflege",
+      "blindInputSha256": "26e7d28a6d0a281b846b6b795e66ba6967865001ecc2bb9948bd08efba09da02",
+      "sourcePacketSha256": "b5e2f17f6f5a4800893666bc19ab899d24212ddf7b39a83ef36b6f555e71b60c",
+      "formulaFingerprintSha256": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+      "blindResultSha256": "4173ff2ade1f2ec5b1a8a17c8a956fd6dff1622e692fdb091fef070d735666c9",
+      "cleanRerunResultSha256": "53610cf0a07bc18c6feee698b988c09a6dd3ec2910a024600d678933ae6abd4c"
+    },
+    {
+      "candidateSlot": "candidate-02",
+      "productId": "gliss-total-repair",
+      "blindInputSha256": "4db8432b000698b7cbbfbc64bcba1152c9046475d1eae6c78063376c45356252",
+      "sourcePacketSha256": "b29eb34ab4482433f8fc982dae691c035ee84db1c248588c51b3c3ed9961187c",
+      "formulaFingerprintSha256": "209d35dcd3c52b9d8faf830439b361366fbdbb590d710efe89605857c756e027",
+      "blindResultSha256": "bbba8f7a512f58f01c02c8836803cbc33f60b718a26c9f8fec17d4d9d7e5a4e5",
+      "cleanRerunResultSha256": "e5b60c0307c778f79bc1086886ae79daee2ef6c3260ff0f6515dd0d90eaa13f0"
+    },
+    {
+      "candidateSlot": "candidate-03",
+      "productId": "gliss-liquid-silk",
+      "blindInputSha256": "d98f9b38029adf9dcbc68e0b42680935329ec4dd5a5e7940dfefaa50949e1d33",
+      "sourcePacketSha256": "a5c952f6d4a3952951163619fa18e410f0cdf8e7cbdc407237c724d2e54f6b75",
+      "formulaFingerprintSha256": "6832d1a0af15e97534cd859587f96295f9d652deb80ca3b4f683ae595fffe7f2",
+      "blindResultSha256": "38225dd5faae61fba4e348bc5004ad90ba815069e1b8ee8282169d2d841276c0",
+      "cleanRerunResultSha256": "e2eba75a1910ab108928f7accf2d5bf9ce6dc6ba23704719f4e84eb6103ef05b"
+    },
+    {
+      "candidateSlot": "candidate-04",
+      "productId": "herbal-essences-fiji",
+      "blindInputSha256": "c081abafa634ff8f18d04ec5e1dd4194538c368d8311c760506a5732a196e456",
+      "sourcePacketSha256": "4d722c88c4cc5faf34cac8b0cda6ec4b7a0a57dcdd35363c6cf1a6dad4951a9e",
+      "formulaFingerprintSha256": "bcec777ca479829587c7f5fdf9db5497b4b43d024de39c97830d78703cd3e71d",
+      "blindResultSha256": "dd89b335ed0275ca7fec6544a5a96f728052801d1634cb713a63312574ecfd3a",
+      "cleanRerunResultSha256": "035ea4801759882e6249837d6c083df5d5174453e7612829d5bcabc47ce822fc"
+    }
+  ],
+  "updatedAt": "2026-09-03T22:20:00.000Z",
+  "acceptedLaneARun": {
+    "acceptedFrom": "blind-stage/results-rerun",
+    "promotedTo": "blind-stage/results",
+    "promotionReason": "Clean rerun excluded product-directory names and is accepted as the canonical Lane A blind run.",
+    "canonicalResultProjection": "Each canonical results file is a schema-only projection of its clean rerun: the top-level provisionalProperties key is renamed to properties, string formulaFacts are bound to anonymous INCI ingredient/position objects, structuredWeightAssessment is renamed to weightAssessment, and scalar focusSecondary neighboring alternatives become singleton arrays. Property values, rationales, counter-signals, alternatives and evidence references are unchanged.",
+    "rejectedRunReceipt": "blind-stage/rejected-run-1-receipt.json"
+  }
+}

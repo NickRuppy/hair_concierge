@@ -1,0 +1,61 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "herbal-essences-fiji",
+  "formulaFingerprintSha256": "bcec777ca479829587c7f5fdf9db5497b4b43d024de39c97830d78703cd3e71d",
+  "priorV14": {
+    "primary": "general",
+    "secondary": [],
+    "adjudicationSha256": "2ac0c0306bcf1036398e538b3ed456378cea121bbd3b037b00d1a19f0972aaee"
+  },
+  "effectiveV15": {
+    "primary": "moisture",
+    "secondary": [],
+    "confidence": "moderate",
+    "rationale": "Moisture ist der beste v1.5-Fokus, weil das exakte Produkt als Feuchtigkeitsshampoo positioniert ist und die Formel dazu kompatible leichte Care-Signale hat: sulfatfreie SCI/Betaine/Sarcosinate-Reinigung, Polyquaternium-10 sowie spaete Glycerin- und Kokosjuice-Hinweise.",
+    "formulaFacts": [
+      {
+        "ingredient": "SODIUM COCOYL ISETHIONATE",
+        "position": 2,
+        "observation": "sulfatfreie, mildere anionische Reinigungsroute als Feuchtigkeits-kompatibles Chassis"
+      },
+      {
+        "ingredient": "POLYQUATERNIUM-10",
+        "position": 11,
+        "observation": "leichte kationische Conditioning-Route fuer weicheres Haargefuehl"
+      },
+      {
+        "ingredient": "GLYCERIN",
+        "position": 24,
+        "observation": "Humectant-Hinweis, aber sehr spaet in der INCI"
+      },
+      {
+        "ingredient": "COCOS NUCIFERA FRUIT JUICE",
+        "position": 25,
+        "observation": "claim-naher Kokos-/Feuchtigkeits-Hinweis, aber sehr spaet"
+      }
+    ],
+    "counterSignal": "Die eigentlichen Humectant-/Kokos-Signale stehen sehr spaet; ohne Positionierung waere die Formel eher general mit leichter Pflege als ein stark formula-getriebener Moisture-Spezialist.",
+    "neighboringAlternative": "general",
+    "evidenceRefs": [
+      "claim:dm-fiji-positioning",
+      "formula.canonical_inci",
+      "formula.corroborating_inci",
+      "formula.conditioning.11"
+    ]
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+      "GLYCERIN an Position 24",
+      "COCOS NUCIFERA FRUIT JUICE an Position 25",
+      "sulfatfreies SCI/Betaine/Sarcosinate-Chassis als kompatible milde Basis"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+      "POLYQUATERNIUM-10 an Position 11 stuetzt weicheres Haargefuehl, ist aber nicht spezifisch fuer Repair"
+    ],
+    "limitation": "Die Formel stuetzt Moisture nur moderat; Glycerin und Kokosjuice sind spaet, und ein rinse-off Shampoo kann Feuchtigkeit nur begrenzt belegen."
+  },
+  "claimRole": "candidate",
+  "decisionTrace": "v1.4 musste general ausgeben, weil moisture nicht verfuegbar war. v1.5 erlaubt moisture, aber hier mit claimRole=candidate: Die Positionierung gibt die Richtung, die Formel bleibt kompatibel und begrenzt die Sicherheit."
+}

@@ -1,0 +1,164 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-total-repair-positioning",
+          "usage:dm-directions",
+          "adjudication:gliss-total-repair:cleansingStrength",
+          "adjudication:gliss-total-repair:scalpComfortTarget"
+        ],
+        "rationale": "The product is positioned for dry/damaged hair repair and shine rather than a named scalp concern; ordinary balanced scalp route is the only supported production target."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:gliss-total-repair:conditioningLevel",
+          "adjudication:gliss-total-repair:weightPotential",
+          "adjudication:gliss-total-repair:focusPrimary",
+          "adjudication:gliss-total-repair:conditioningLevel",
+          "adjudication:gliss-total-repair:weightPotential",
+          "adjudication:gliss-total-repair:focusPrimary"
+        ],
+        "rationale": "Ideal: coarse — Coarse hair is the best default fit for this high-conditioning/high-weight repair and shine profile. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-total-repair-positioning",
+          "usage:dm-directions"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.12",
+          "formula.conditioning.13",
+          "formula.architecture.02"
+        ],
+        "rationale": "High: dimethicone at position 5, keratin, amodimethicone, cationic guar and lipid/waxy refatting clues create a substantial rinse-off repair-care system."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-total-repair-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.12",
+          "formula.conditioning.13"
+        ],
+        "rationale": "Repair: the revealed product positioning targets dry, damaged hair and liquid keratin, and the formula has a compatible silicone, keratin and cationic-polymer repair-care system."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:dm-total-repair-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.12"
+        ],
+        "rationale": "Shine secondary: the source explicitly promises glossy hair, and the silicone/smoothing system provides an independent route beyond the keratin-led repair positioning."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-total-repair-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the product targets dry/damaged hair fiber repair, softness and shine, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:dm-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular use; no daily/frequent, alternating, reset or treatment trigger is present."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.regional_conflict",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.12",
+          "formula.conditioning.13",
+          "formula.function.15",
+          "formula.function.16",
+          "formula.function.20"
+        ],
+        "rationale": "High: early dimethicone, amodimethicone, cationic guar, keratin and waxy/refatting clues create a persistent multi-route deposition system despite ordinary SLES/CAPB reset."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "normal"
+    ],
+    "productId": "gliss-total-repair",
+    "productName": "Shampoo Total Repair",
+    "rows": 1
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

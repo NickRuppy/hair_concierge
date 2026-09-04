@@ -1,0 +1,129 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "candidateSlot": "candidate-05",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is supported by SLES primary cleansing buffered by CAPB and glucoside plus early protein/humectant/refatting routes; there is no second independent anionic reset route.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 4, "factId": "formula.surfactant.04"},
+        {"ingredient": "Coco-Glucoside", "position": 11, "factId": "formula.surfactant.11"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 and Sodium Chloride at position 3 keep the formula from low cleansing.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.11", "formula.conditioning.12", "formula.architecture.primary_secondary"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning fits the protein, panthenol, glyceryl oleate, cationic guar and lipid/fatty ester clues; the no-silicone formula does not reach high slip.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13"}
+      ],
+      "counterSignal": "No dimethicone or amodimethicone route is present, and the sulfate chassis remains prominent.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.conditioning.07", "formula.conditioning.09", "formula.conditioning.12", "formula.conditioning.13", "formula.conditioning.16", "formula.conditioning.17"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential fits several interacting non-silicone care routes, especially protein, glyceryl oleate, cationic guar and lipid/fatty ester clues, while sulfate reset limits persistence.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13"},
+        {"ingredient": "Hydrogenated Palm Glycerides Citrate", "position": 16, "factId": "formula.conditioning.16"},
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"}
+      ],
+      "counterSignal": "No nonvolatile silicone route appears, and the SLES/CAPB/glucoside system supplies ordinary reset.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": ["formula.conditioning.07", "formula.conditioning.12", "formula.conditioning.13", "formula.conditioning.16", "formula.conditioning.17", "formula.surfactant.02", "formula.surfactant.04"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [],
+        "whyThisBand": "Several care routes can interact enough for noticeable but bounded residue, especially with cationic guar and refatting/lipid clues.",
+        "whyNotNeighborBand": "Low would understate the number and placement of care routes; high would require richer or more persistent deposition than this no-silicone, sulfate-buffered formula shows."
+      }
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "confidence": "low",
+      "rationale": "Gentle is a provisional formula-first direction because botanical, niacinamide, panthenol, pantolactone and refatting clues cluster early, but visible positioning would normally decide this field.",
+      "formulaFacts": [
+        {"ingredient": "Malva Sylvestris Flower Extract", "position": 5, "factId": "formula.canonical_inci"},
+        {"ingredient": "Niacinamide", "position": 8, "factId": "formula.canonical_inci"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 and fragrance allergens at positions 21 and 22 prevent a confident gentle call.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["formula.canonical_inci", "formula.conditioning.09", "formula.conditioning.12", "formula.surfactant.02"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because protein, humectant and refatting routes are not separable into a distinct role without visible positioning.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09"}
+      ],
+      "counterSignal": "Hydrolyzed Wheat Protein at position 7 could later support repair if distinct positioning exists.",
+      "neighboringAlternative": ["repair"],
+      "evidenceRefs": ["formula.conditioning.07", "formula.conditioning.09"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains the blind default because the formula has ordinary buffered sulfate cleansing and no recognized treatment active or deep-reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 4, "factId": "formula.surfactant.04"},
+        {"ingredient": "Coco-Glucoside", "position": 11, "factId": "formula.surfactant.11"}
+      ],
+      "counterSignal": "The comfort-leaning formula facts could later support frequent use only with visible daily/mild positioning.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.11"]
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "Unknown is the honest blind-stage call because early niacinamide and panthenol support comfort plausibility, but intentional scalp targeting cannot be confirmed from formula alone.",
+      "formulaFacts": [
+        {"ingredient": "Niacinamide", "position": 8, "factId": "formula.canonical_inci"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "Parfum", "position": 20, "factId": "formula.canonical_inci"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 plus fragrance allergens at positions 21 and 22 counter a confident targeted comfort call.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["formula.canonical_inci", "formula.conditioning.09", "formula.surfactant.02"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [{"ingredient": "Niacinamide", "position": 8, "factId": "formula.canonical_inci"}],
+      "counterSignal": "Niacinamide at position 8 is not a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": ["formula.canonical_inci"]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "8917cbf70aaa341af2b44372b9e52e391530911b3243d579cf0aea36ac890817",
+    "formulaFingerprintSha256": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T07:50:05Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false
+  }
+}

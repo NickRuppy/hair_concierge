@@ -1,0 +1,205 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "gliss-liquid-silk",
+    "market": "DE",
+    "exactProductName": "Shampoo Liquid Silk",
+    "exactPackSize": "250 ml",
+    "gtinAliases": [
+      "4015100813111"
+    ],
+    "capturedAt": "2026-09-03T18:00:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "resolved",
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      },
+      {
+        "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      },
+      {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-shampoo/p/4015100813111",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, GLYCOSPHINGOLIPIDS, HYDROLYZED SILK, SERICIN, PARFUM (FRAGRANCE), PEG-7 GLYCERYL COCOATE, POLYQUATERNIUM-10, SODIUM BENZOATE, PEG-120 METHYL GLUCOSE DIOLEATE, COCO-GLUCOSIDE, CITRIC ACID, GLYCERYL OLEATE, PEG-40 HYDROGENATED CASTOR OIL, GLYCOL DISTEARATE, HYDROGENATED CASTOR OIL, BUTYLENE GLYCOL, LAURETH-4, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, PROPYLENE GLYCOL, SODIUM HYDROXIDE, BENZYL ALCOHOL, PHENOXYETHANOL, POTASSIUM SORBATE, METHYLPARABEN",
+    "inciFingerprintSha256": "6832d1a0af15e97534cd859587f96295f9d652deb80ca3b4f683ae595fffe7f2",
+    "canonicalSource": "reputable_german_retailer",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:a5c952f6d4a3952951163619fa18e410f0cdf8e7cbdc407237c724d2e54f6b75"
+    ],
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.surfactant.13",
+        "formula.conditioning.05",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10 and several refatting/waxy clues create a broad smoothness and slip system.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early lipid-like and silk/protein clues, Polyquaternium-10 and later refatting/waxy materials can leave bounded residue, while SLES/CAPB/glucoside cleansing and no silicone keep it below high.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.rossmann_stale_conflict",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.function.12",
+        "formula.function.20"
+      ]
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "high",
+      "rationale": "Shine is the dominant role: the exact product claims surface smoothing plus shine and suppleness, and the formula has silk/protein, lipid-like and polymer routes compatible with smoothing and gloss.",
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No secondary focus is assigned because the claims concentrate on surface smoothing, shine and suppleness; repair is only a neighboring care interpretation, not a distinct exact-product role.",
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular hair-care use, with no daily/frequent, alternating, reset or treatment trigger.",
+      "evidenceRefs": [
+        "usage:manufacturer-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for hair-surface smoothness, shine and manageability, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "High conditioning and moderate residue potential can reduce lift on fine hair, even without a silicone stack, so fine fit is conditional rather than ideal.",
+      "evidenceRefs": [
+        "adjudication:gliss-liquid-silk:conditioningLevel",
+        "adjudication:gliss-liquid-silk:weightPotential",
+        "adjudication:gliss-liquid-silk:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "High rinse-off smoothness with only moderate weight is a strong shine/silk fit for normal hair.",
+      "evidenceRefs": [
+        "adjudication:gliss-liquid-silk:conditioningLevel",
+        "adjudication:gliss-liquid-silk:weightPotential",
+        "adjudication:gliss-liquid-silk:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Coarse hair can use the high-conditioning shine/smoothing profile, while moderate weight avoids an overly light-only fit.",
+      "evidenceRefs": [
+        "adjudication:gliss-liquid-silk:conditioningLevel",
+        "adjudication:gliss-liquid-silk:weightPotential",
+        "adjudication:gliss-liquid-silk:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "high",
+      "rationale": "The exact product targets gloss, surface smoothing and manageability rather than a named scalp concern; ordinary balanced scalp route is supported.",
+      "positioningEvidenceRefs": [
+        "claim:dm-liquid-silk-positioning",
+        "usage:manufacturer-directions"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:gliss-liquid-silk:cleansingStrength",
+        "adjudication:gliss-liquid-silk:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "claim:dm-liquid-silk-positioning",
+      "usage:manufacturer-directions"
+    ]
+  }
+}

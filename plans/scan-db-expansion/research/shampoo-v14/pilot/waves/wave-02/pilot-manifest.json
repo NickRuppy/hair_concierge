@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-pilot-manifest-v1",
+  "products": [
+    { "id": "schauma-repair-pflege", "path": "schauma-repair-pflege" },
+    { "id": "herbal-essences-fiji", "path": "herbal-essences-fiji" },
+    { "id": "gliss-liquid-silk", "path": "gliss-liquid-silk" },
+    { "id": "gliss-total-repair", "path": "gliss-total-repair" }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "elvital-hydra-hyaluronic",
+  "candidateSlot": "candidate-01",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is the best whole-formula band: the position-2 sulfate chassis is materially buffered by two betaines plus early refatting and deposition routes, and the corrected helper facts do not add independent cleansing routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        },
+        {
+          "ingredient": "COCO-BETAINE",
+          "position": 10,
+          "factId": "formula.surfactant.10"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 3,
+          "factId": "formula.architecture.03"
+        }
+      ],
+      "counterSignal": "SODIUM LAURETH SULFATE at position 2 remains a strong anionic primary route, so low would understate reset capacity.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.05",
+        "formula.surfactant.10",
+        "formula.architecture.03",
+        "formula.architecture.helper_functions_preserved"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning is supported by early silicone plus cationic polymer deposition with additional late amodimethicone, making substantial slip more likely than a merely light care effect.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23"
+        }
+      ],
+      "counterSignal": "The late AMODIMETHICONE placement at position 23 and the sulfate primary route keep this from being a certain rich 2-in-1 call.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23",
+        "formula.architecture.04"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential fits the interaction of nonvolatile silicone and cationic guar, while sulfate cleansing and late amodimethicone argue against a clearly heavy band.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23"
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "SODIUM LAURETH SULFATE at position 2 plus betaine buffering gives meaningful reset, and AMODIMETHICONE is late.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23",
+        "formula.surfactant.02",
+        "formula.architecture.04"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [
+          "Exact deposition level of DIMETHICONE at position 6 is not inferable from INCI order alone."
+        ],
+        "whyThisBand": "A silicone plus cationic polymer system can leave noticeable residue, but the same formula has a strong anionic reset chassis.",
+        "whyNotNeighborBand": "High would overread the late amodimethicone and ignore the position-2 sulfate reset; low would ignore two substantive early deposition routes."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General is the final primary because the revealed dominant positioning is hydration/moisture, which is not a v1.4 focus enum; the formula supports care but not a clearer repair, shine, gentle, clarifying or scalp-active primary role.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        }
+      ],
+      "counterSignal": "The claims mention shine and dry/strained hair, and the formula has silicone and acid clues, but those are secondary to the moisture-led product identity.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "claim:dm-hydration-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.06",
+        "formula.conditioning.08"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "confidence": "moderate",
+      "rationale": "Shine is a valid secondary because the revealed manufacturer claim names healthy shiny hair and the formula has smoothing silicone plus acid/pH routes independent of the hydration-led primary.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "ACETIC ACID",
+          "position": 16,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "FUMARIC ACID",
+          "position": 22,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "The shine wording is part of a broader moisture claim set rather than the product name itself.",
+      "neighboringAlternative": [],
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "formula.conditioning.06",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular is the default blind role: the formula is an ordinary buffered sulfate shampoo and lacks a formula-only deep-reset or treatment trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        },
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SALICYLIC ACID at position 20 is exfoliation-adjacent, but it is not a v1.4 treatment trigger by itself.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.05",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted is now supported because revealed manufacturer positioning explicitly says the formula provides moisture to scalp and lengths, with sodium hyaluronate as a compatible comfort/moisture route.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "PARFUM / FRAGRANCE",
+          "position": 27,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SLES at position 2 and fragrance exposure keep this at moderate rather than high confidence for comfort targeting.",
+      "neighboringAlternative": "not_targeted",
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "formula.canonical_inci",
+        "formula.surfactant.02"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SALICYLIC ACID at position 20 is not a v1.4 recognized anti-dandruff active by itself.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "repair",
+      "blindConfidence": "low",
+      "finalValue": "general",
+      "finalConfidence": "moderate",
+      "revealedEvidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "claim:dm-hydration-positioning"
+      ],
+      "reason": "Claims revealed a moisture-led product role; because moisture is not a direct focus enum, the blind repair guess was replaced by general."
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "blindConfidence": "moderate",
+      "finalValue": [
+        "shine"
+      ],
+      "finalConfidence": "moderate",
+      "revealedEvidenceRefs": [
+        "claim:loreal-hydration-positioning"
+      ],
+      "reason": "Revealed shine wording plus silicone/acid route supports a distinct secondary focus."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "blindConfidence": "moderate",
+      "finalValue": "targeted",
+      "finalConfidence": "moderate",
+      "revealedEvidenceRefs": [
+        "claim:loreal-hydration-positioning"
+      ],
+      "reason": "Revealed manufacturer positioning explicitly includes scalp moisture, which is allowed to corroborate scalp-comfort intent."
+    }
+  ],
+  "unchangedProperties": [
+    {
+      "property": "cleansingStrength",
+      "reason": "Claims describe cleansing generally but do not assign cleansing strength; the buffered SLES architecture remains decisive."
+    },
+    {
+      "property": "conditioningLevel",
+      "reason": "Moisture claims corroborate care positioning but do not change the formula-derived high conditioning call."
+    },
+    {
+      "property": "weightPotential",
+      "reason": "Claims cannot assign weight; the silicone/cationic polymer plus sulfate reset assessment remains unchanged."
+    },
+    {
+      "property": "usageRole",
+      "reason": "Directions describe ordinary rinse-off use and do not provide daily, reset, alternating, or treatment trigger."
+    },
+    {
+      "property": "dandruffSupport",
+      "reason": "No Piroctone Olamine or Climbazole appears in the complete INCI, so the mechanical rule is unchanged."
+    }
+  ],
+  "receipt": {
+    "blindResultSha256": "4b86f21e12798f9399901d01c663ed51e03448d993e81ba324fd806231d52f69",
+    "sourcePacketSha256": "b14e92aa65f963deb9e1f1f1fa62b44d22c86026499f6b07064af33cb7dff192",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T08:06:19Z",
+    "laneBSeen": false,
+    "oldManifestSeen": false
+  }
+}

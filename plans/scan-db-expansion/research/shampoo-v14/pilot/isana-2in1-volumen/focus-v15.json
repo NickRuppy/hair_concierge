@@ -1,0 +1,52 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "isana-2in1-volumen",
+  "formulaFingerprintSha256": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6",
+  "priorV14": {
+    "primary": "volume",
+    "secondary": [],
+    "adjudicationSha256": "f856a5fb2a1d80c061a828b1a1b5acb95a0d3b0fa54192ec179ab5b937cdc84f"
+  },
+  "effectiveV15": {
+    "primary": "volume",
+    "secondary": [],
+    "confidence": "high",
+    "rationale": "Die silikonfreie, klar reinigungsgeführte Formel ist mit einem Volumenjob vereinbar, während eine begrenzte kationische und rückfettende Pflege den 2-in-1-Trade-off erklärt. Hydrolyzed Wheat Protein allein macht daraus kein Repair-Shampoo.",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "observation": "reinigungsgeführte Lift-Architektur"
+      },
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "position": 7,
+        "observation": "Protein- und Pflegehinweis, aber allein kein Repair-Beleg"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "observation": "begrenzte kationische Pflege für den 2-in-1-Trade-off"
+      }
+    ],
+    "counterSignal": "Als Shampoo und Spülung 2-in-1 enthält es relevante Pflege- und Rückfettungsrouten, die bei feinem Haar trotzdem Beschwerung erzeugen können.",
+    "neighboringAlternative": "general",
+    "evidenceRefs": [
+      "claim-rossmann-de-positioning",
+      "claim-rossmann-hu-positioning",
+      "formula.canonical_inci"
+    ]
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": ["Panthenol an Position 9", "Glycerin an Position 20"],
+    "repairRoutes": ["Hydrolyzed Wheat Protein an Position 7"],
+    "sharedConditioningRoutes": [
+      "Glyceryl Oleate an Position 12",
+      "kationisches Guar an Position 13"
+    ],
+    "limitation": "Die Pflegerouten sind zwischen Feuchtigkeit und Reparatur nicht trennscharf; ein einzelnes Protein-Signal darf die klare Volumenarchitektur nicht überstimmen."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Formel unterstützt Volumen durch ihre reinigungsgeführte, silikonfreie Architektur. Gemischte Pflegehinweise erklären den 2-in-1-Charakter, unterscheiden aber Feuchtigkeit und Repair nicht zuverlässig."
+}

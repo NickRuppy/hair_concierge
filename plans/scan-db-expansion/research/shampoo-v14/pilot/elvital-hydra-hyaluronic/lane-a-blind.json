@@ -1,0 +1,267 @@
+{
+  "version": "shampoo-v14-lane-a-blind-mapped-v1",
+  "productId": "elvital-hydra-hyaluronic",
+  "candidateSlot": "candidate-01",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is the best whole-formula band: the position-2 sulfate chassis is materially buffered by two betaines plus early refatting and deposition routes, and the corrected helper facts do not add independent cleansing routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        },
+        {
+          "ingredient": "COCO-BETAINE",
+          "position": 10,
+          "factId": "formula.surfactant.10"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 3,
+          "factId": "formula.architecture.03"
+        }
+      ],
+      "counterSignal": "SODIUM LAURETH SULFATE at position 2 remains a strong anionic primary route, so low would understate reset capacity.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.05",
+        "formula.surfactant.10",
+        "formula.architecture.03",
+        "formula.architecture.helper_functions_preserved"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning is supported by early silicone plus cationic polymer deposition with additional late amodimethicone, making substantial slip more likely than a merely light care effect.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23"
+        }
+      ],
+      "counterSignal": "The late AMODIMETHICONE placement at position 23 and the sulfate primary route keep this from being a certain rich 2-in-1 call.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23",
+        "formula.architecture.04"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential fits the interaction of nonvolatile silicone and cationic guar, while sulfate cleansing and late amodimethicone argue against a clearly heavy band.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23"
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "SODIUM LAURETH SULFATE at position 2 plus betaine buffering gives meaningful reset, and AMODIMETHICONE is late.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23",
+        "formula.surfactant.02",
+        "formula.architecture.04"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [
+          "Exact deposition level of DIMETHICONE at position 6 is not inferable from INCI order alone."
+        ],
+        "whyThisBand": "A silicone plus cationic polymer system can leave noticeable residue, but the same formula has a strong anionic reset chassis.",
+        "whyNotNeighborBand": "High would overread the late amodimethicone and ignore the position-2 sulfate reset; low would ignore two substantive early deposition routes."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "low",
+      "rationale": "Repair is only a provisional formula-first direction because silicone, cationic polymer and acid/pH clues form a damage-care-compatible route, but hidden positioning is normally needed for this property.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "ACETIC ACID",
+          "position": 16,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "CI 60730 / EXT. VIOLET 2 at position 7 and acidic clues could support a different positioned role after unblind.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.canonical_inci"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is the blind-safe result because the formula shows several possible care routes but no visible distinct positioning to separate a second role.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "ACETIC ACID",
+          "position": 16,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SODIUM HYALURONATE at position 13 and acidic clues could later corroborate a distinct route if positioning supports it.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.06",
+        "formula.conditioning.08"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular is the default blind role: the formula is an ordinary buffered sulfate shampoo and lacks a formula-only deep-reset or treatment trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        },
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SALICYLIC ACID at position 20 is exfoliation-adjacent, but it is not a v1.4 treatment trigger by itself.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.05",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted is the best blind call because there is no recognized scalp-active route, while fragrance exposure and a sulfate chassis outweigh late comfort-adjacent clues.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "LIMONENE",
+          "position": 21,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "PARFUM / FRAGRANCE",
+          "position": 27,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SODIUM HYALURONATE at position 13 and SALICYLIC ACID at position 20 leave a small route for later positioning to change this.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "SALICYLIC ACID at position 20 is not a v1.4 recognized anti-dandruff active by itself.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "c3866da47c0c35da9ef4a6c9e90555f3570823782776ee7c41bda5b173d4a2f0",
+    "formulaFingerprintSha256": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T07:50:05Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false,
+    "sourcePacketSha256": "b14e92aa65f963deb9e1f1f1fa62b44d22c86026499f6b07064af33cb7dff192",
+    "blindResultSha256": "4b86f21e12798f9399901d01c663ed51e03448d993e81ba324fd806231d52f69",
+    "mappedAfterBlindFreeze": true,
+    "mappedAt": "2026-09-03T08:04:29.373Z"
+  }
+}

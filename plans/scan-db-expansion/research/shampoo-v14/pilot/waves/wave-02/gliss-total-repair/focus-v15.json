@@ -1,0 +1,76 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "gliss-total-repair",
+  "formulaFingerprintSha256": "209d35dcd3c52b9d8faf830439b361366fbdbb590d710efe89605857c756e027",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [
+      "shine"
+    ],
+    "adjudicationSha256": "b66ae40a937b044ffa25b8dae8467ae33caa393d93384c56305678c18d6e5878"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [
+      "shine"
+    ],
+    "confidence": "high",
+    "rationale": "Repair bleibt der dominante v1.5-Fokus und Shine bleibt sekundär: Die exakte Positionierung nennt trockenes, geschaedigtes Haar und fluessiges Keratin, waehrend Dimethicone, Hydrolyzed Keratin, Amodimethicone, kationisches Guar und wachsige/refettende Routen die kosmetische Repair-/Glanz-Erzaehlung deutlich stuetzen.",
+    "formulaFacts": [
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 5,
+        "observation": "fruehe persistente Smoothing-/Filmroute"
+      },
+      {
+        "ingredient": "HYDROLYZED KERATIN",
+        "position": 6,
+        "observation": "claim-naher proteinbasierter Repair-Hinweis"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 12,
+        "observation": "substantive Silikon-Conditioning-Route"
+      },
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 13,
+        "observation": "kationische Polymerroute"
+      },
+      {
+        "ingredient": "HYDROGENATED CASTOR OIL",
+        "position": 18,
+        "observation": "wachsige/refettende Pflege-Route"
+      }
+    ],
+    "counterSignal": "Glycerin ist vorhanden und trockenes Haar kann mit Moisture ueberlappen, aber die Formel ist klarer protein-/silikon-/polymergetrieben als humectant-getrieben.",
+    "neighboringAlternative": "moisture",
+    "evidenceRefs": [
+      "claim:dm-total-repair-positioning",
+      "formula.canonical_inci",
+      "formula.manufacturer_corroborating_inci",
+      "formula.conditioning.05",
+      "formula.conditioning.06",
+      "formula.conditioning.12",
+      "formula.conditioning.13"
+    ]
+  },
+  "careDirection": {
+    "verdict": "repair_supported",
+    "moistureRoutes": [
+      "GLYCERIN an Position 17"
+    ],
+    "repairRoutes": [
+      "DIMETHICONE an Position 5",
+      "HYDROLYZED KERATIN an Position 6",
+      "AMODIMETHICONE an Position 12",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE an Position 13"
+    ],
+    "sharedConditioningRoutes": [
+      "Refatting-/Film-Routen koennen Geschmeidigkeit, Glanz und Damage-Care zugleich tragen"
+    ],
+    "limitation": "Repair meint hier kosmetische Pflege/Glanz/Kaemmbarkeit fuer geschaedigt wirkendes Haar; die INCI beweist keine dauerhafte Faserreparatur."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Formel ist nicht nur claim-led: Keratin plus fruehe Silikon- und Polymerrouten geben eine eigene Repair-Spur. Moisture bleibt Nachbar, aber Glycerin allein reicht nicht gegen die Repair-Dominanz."
+}

@@ -1,0 +1,74 @@
+{
+  "version": "shampoo-v14-comparison-v1",
+  "productId": "schauma-repair-pflege",
+  "laneAProductId": "schauma-repair-pflege",
+  "laneBProductId": "schauma-repair-pflege",
+  "judgmentProperties": [
+    "cleansingStrength",
+    "conditioningLevel",
+    "weightPotential",
+    "focusPrimary",
+    "focusSecondary",
+    "usageRole",
+    "scalpComfortTarget"
+  ],
+  "propertyComparison": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "moderate",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "conditioningLevel": {
+      "laneAValue": "high",
+      "laneAConfidence": "high",
+      "laneBValue": "high",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "moderate",
+      "laneBValue": "high",
+      "laneBConfidence": "moderate",
+      "exactAgreement": false
+    },
+    "focusPrimary": {
+      "laneAValue": "repair",
+      "laneAConfidence": "high",
+      "laneBValue": "repair",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneAConfidence": "high",
+      "laneBValue": [],
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneAConfidence": "high",
+      "laneBValue": "regular",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneAConfidence": "high",
+      "laneBValue": "not_targeted",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneAConfidence": "high",
+      "laneBValue": "not_supported",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    }
+  },
+  "dandruffAgreement": true
+}

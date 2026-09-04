@@ -1,0 +1,53 @@
+{
+  "version": "shampoo-v14-pilot-agreement-v1",
+  "products": 4,
+  "judgmentDecisions": 28,
+  "exactMatches": 26,
+  "overallAgreement": 0.9285714285714286,
+  "byProperty": {
+    "cleansingStrength": {
+      "exactMatches": 4,
+      "decisions": 4,
+      "agreement": 1
+    },
+    "conditioningLevel": {
+      "exactMatches": 3,
+      "decisions": 4,
+      "agreement": 0.75
+    },
+    "weightPotential": {
+      "exactMatches": 3,
+      "decisions": 4,
+      "agreement": 0.75
+    },
+    "focusPrimary": {
+      "exactMatches": 4,
+      "decisions": 4,
+      "agreement": 1
+    },
+    "focusSecondary": {
+      "exactMatches": 4,
+      "decisions": 4,
+      "agreement": 1
+    },
+    "usageRole": {
+      "exactMatches": 4,
+      "decisions": 4,
+      "agreement": 1
+    },
+    "scalpComfortTarget": {
+      "exactMatches": 4,
+      "decisions": 4,
+      "agreement": 1
+    }
+  },
+  "dandruffAgreement": 1,
+  "disagreements": 2,
+  "thresholds": {
+    "overall": 0.75,
+    "perProperty": 0.6,
+    "dandruff": 1
+  },
+  "pass": true,
+  "note": "Wave 02 is a four-product cell because Fructis Coco Water is held for an unresolved exact-GTIN formula conflict; do not substitute a replacement into this frozen cell."
+}

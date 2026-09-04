@@ -1,0 +1,159 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "nivea-power-repair",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "packet_conflict_resolution": {
+    "status": "resolved_agreement",
+    "selected_canonical_source_tier": "manufacturer_de",
+    "selected_formula_hash": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "conflicting_formula_hashes": [],
+    "rationale": "Current NIVEA DE and dm DE sources expose the same ordered exact-GTIN INCI. The manufacturer source is canonical under the v1.4 hierarchy."
+  },
+  "identity": {
+    "market": "DE",
+    "brand": "NIVEA",
+    "exact_current_de_name": "Power Repair Reparatur Shampoo",
+    "size": {
+      "value": 250,
+      "unit": "ml",
+      "display": "250 ml"
+    },
+    "gtin": "4006000192543",
+    "captured_at": "2026-09-03T12:00:00+02:00",
+    "current_sources": [
+      {
+        "id": "src-nivea-de-pdp",
+        "label": "NIVEA DE exact PDP",
+        "url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de",
+        "captured_at": "2026-09-03T12:00:00+02:00",
+        "facts": ["exact_current_de_name", "size", "gtin", "claims", "directions", "formula"]
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "label": "dm DE exact PDP",
+        "url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin",
+        "captured_at": "2026-09-03T12:00:00+02:00",
+        "facts": ["exact_current_de_name", "size", "gtin", "price", "claims", "directions", "formula"]
+      }
+    ],
+    "confidence": "high",
+    "explicit_conflicts": []
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.name_size_gtin",
+      "fact_key": "identity.exact_current_de_name_size_gtin",
+      "fact_value": "Power Repair Reparatur Shampoo, 250 ml, GTIN 4006000192543",
+      "source_id": "src-nivea-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Power Repair Reparatur Shampoo 250ml; product identifier 4006000192543.",
+      "captured_at": "2026-09-03T12:00:00+02:00"
+    },
+    {
+      "fact_id": "identity.dm_size_gtin",
+      "fact_key": "identity.size_gtin",
+      "fact_value": "250 ml; 4006000192543",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "source_text": "Shampoo Power Repair, 250 ml; GTIN: 4006000192543.",
+      "captured_at": "2026-09-03T12:00:00+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_key": "formula.raw_inci",
+      "fact_value": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+      "source_id": "src-nivea-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T12:00:00+02:00"
+    },
+    {
+      "fact_id": "formula.corroborating_inci",
+      "fact_key": "formula.corroborating_raw_inci",
+      "fact_value": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T12:00:00+02:00"
+    }
+  ],
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+    "normalized_ordered_inci": ["Aqua", "Sodium Laureth Sulfate", "Cocamidopropyl Betaine", "Decyl Glucoside", "Coco-Glucoside", "Sodium Chloride", "Citric Acid", "Gardenia Taitensis Flower Extract", "Squalane", "Panthenol", "Cocos Nucifera Oil", "Dicaprylyl Ether", "Guar Hydroxypropyltrimonium Chloride", "Glyceryl Oleate", "Glycerin", "Pantolactone", "Glycol Distearate", "Hydrogenated Castor Oil", "Sodium Benzoate", "Tocopherol", "Benzoic Acid", "Parfum"],
+    "normalized_inci_string": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+    "sha256_normalized_inci": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "canonical_source": {"id": "src-nivea-de-pdp", "tier": "manufacturer_de", "captured_at": "2026-09-03T12:00:00+02:00"},
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {"id": "src-nivea-de-pdp", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "canonical_current_exact_german_manufacturer_formula", "formula_hash_if_normalized": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf"},
+      {"id": "src-dm-de-pdp", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "agrees_with_canonical_exact_gtin_retailer_formula", "formula_hash_if_normalized": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf"}
+    ],
+    "version_or_reformulation_conflicts": [],
+    "normalization_notes": "No content changes beyond trimming whitespace; the current manufacturer and dm DE ordered lists agree exactly."
+  },
+  "blind_packet": {
+    "formula_source_tier": "manufacturer_de",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none",
+    "policy_hashes": {"classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24", "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"},
+    "normalized_ordered_inci": ["Aqua", "Sodium Laureth Sulfate", "Cocamidopropyl Betaine", "Decyl Glucoside", "Coco-Glucoside", "Sodium Chloride", "Citric Acid", "Gardenia Taitensis Flower Extract", "Squalane", "Panthenol", "Cocos Nucifera Oil", "Dicaprylyl Ether", "Guar Hydroxypropyltrimonium Chloride", "Glyceryl Oleate", "Glycerin", "Pantolactone", "Glycol Distearate", "Hydrogenated Castor Oil", "Sodium Benzoate", "Tocopherol", "Benzoic Acid", "Parfum"],
+    "normalized_inci_string": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+    "formula_fingerprint_sha256": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "surfactant_families_positions": [
+      {"ingredient": "Sodium Laureth Sulfate", "position": 2, "family": "ethoxylated_anionic_sulfate", "fact_id": "formula.surfactant.02"},
+      {"ingredient": "Cocamidopropyl Betaine", "position": 3, "family": "amphoteric_betaine", "fact_id": "formula.surfactant.03"},
+      {"ingredient": "Decyl Glucoside", "position": 4, "family": "nonionic_glucoside", "fact_id": "formula.surfactant.04"},
+      {"ingredient": "Coco-Glucoside", "position": 5, "family": "nonionic_glucoside", "fact_id": "formula.surfactant.05"}
+    ],
+    "architecture_facts": [
+      {"fact_id": "formula.architecture.01", "text": "An ethoxylated anionic sulfate is at position 2, followed by amphoteric and two nonionic glucoside routes at positions 3 through 5."},
+      {"fact_id": "formula.architecture.02", "text": "Sodium Chloride is at position 6 and Citric Acid at position 7."},
+      {"fact_id": "formula.architecture.helper_functions_preserved", "text": "Non-cleansing helpers remain separately represented and are not counted as independent cleansing routes."}
+    ],
+    "conditioning_deposition_routes_positions": [
+      {"ingredient": "Squalane", "position": 9, "route": "emollient_lipid_clue", "fact_id": "formula.conditioning.09"},
+      {"ingredient": "Cocos Nucifera Oil", "position": 11, "route": "nonvolatile_plant_oil_clue", "fact_id": "formula.conditioning.11"},
+      {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "route": "cationic_guar_polymer", "fact_id": "formula.conditioning.13"},
+      {"ingredient": "Glyceryl Oleate", "position": 14, "route": "refatting_lipid", "fact_id": "formula.conditioning.14"},
+      {"ingredient": "Hydrogenated Castor Oil", "position": 18, "route": "waxy_lipid_clue", "fact_id": "formula.conditioning.18"}
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {"ingredient": "Squalane", "position": 9, "clue": "emollient_lipid"},
+      {"ingredient": "Panthenol", "position": 10, "clue": "humectant_or_hair_feel_support"},
+      {"ingredient": "Cocos Nucifera Oil", "position": 11, "clue": "plant_oil"},
+      {"ingredient": "Glyceryl Oleate", "position": 14, "clue": "refatting_lipid"},
+      {"ingredient": "Glycerin", "position": 15, "clue": "humectant"},
+      {"ingredient": "Glycol Distearate", "position": 17, "clue": "pearlizing_or_refatting_wax_ester"}
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [{"ingredient": "Parfum", "position": 22, "flag": "fragrance_mixture"}],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": ["formula.canonical_inci", "formula.corroborating_inci"],
+    "formula_function_facts_positions": [
+      {"ingredient": "Dicaprylyl Ether", "position": 12, "function": "emollient_helper", "fact_id": "formula.function.12", "note": "Preserved as a formula-function clue, not an independent cleansing route."},
+      {"ingredient": "Pantolactone", "position": 16, "function": "humectant_or_stabilizer_helper", "fact_id": "formula.function.16", "note": "Preserved as a formula-function clue, not a direct conditioning conclusion."}
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {"id": "claim:nivea-de-positioning", "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html", "source_type": "manufacturer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Mit Squalan-Serum und Monoi-Öl; für geschädigtes Haar; reinigt sanft und pflegt intensiv ohne zu beschweren."},
+      {"id": "claim:dm-de-positioning", "source_url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Spendet langanhaltende Feuchtigkeit, pflegt intensiv ohne zu beschweren und reinigt sanft; Haartyp: Geschädigt/Strapaziert."}
+    ],
+    "directions": [
+      {"id": "usage:nivea-de", "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html", "source_type": "manufacturer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmem Wasser ausspülen."},
+      {"id": "usage:dm-de", "source_url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Shampoo im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmen Wasser ausspülen."}
+    ],
+    "warnings": []
+  }
+}

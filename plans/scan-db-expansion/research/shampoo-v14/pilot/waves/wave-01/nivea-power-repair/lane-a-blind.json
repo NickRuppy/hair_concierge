@@ -1,0 +1,282 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "productId": "nivea-power-repair",
+  "candidateSlot": "wave01-candidate-03",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is supported by SLES at position 2 buffered immediately by betaine plus two glucosides and a broad care system; there is no second independent anionic reset route.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 4,
+          "factId": "formula.surfactant.04"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        }
+      ],
+      "counterSignal": "A position-2 sulfate keeps low cleansing off the table, even though the formula is strongly buffered.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.04",
+        "formula.surfactant.05",
+        "formula.architecture.01"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning is plausible because multiple emollient, oil, cationic and refatting routes appear from positions 9 through 18, but confidence stays moderate because the formula is still a rinse-off shampoo without silicone.",
+      "formulaFacts": [
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "factId": "formula.conditioning.14"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "factId": "formula.conditioning.18"
+        }
+      ],
+      "counterSignal": "No silicone is present and the SLES/glucoside cleanser system limits the expected deposit versus a true conditioner.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High weight potential is plausible because several nonvolatile oil/waxy/emollient routes plus cationic guar converge in the middle of the formula, while the sulfate/glucoside reset keeps the call at moderate confidence.",
+      "formulaFacts": [
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "factId": "formula.conditioning.14"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "factId": "formula.conditioning.18"
+        }
+      ],
+      "counterSignal": "SLES with betaine and glucosides gives moderate reset capacity and the formula has no silicone.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18",
+        "formula.surfactant.02"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact payload levels for Squalane, Cocos Nucifera Oil and Hydrogenated Castor Oil are not inferable from INCI order."
+        ],
+        "whyThisBand": "Several oil, waxy and cationic routes appear close enough to support noticeable weight risk.",
+        "whyNotNeighborBand": "Moderate would understate the number of mid-list nonvolatile care routes; a lower band would ignore the cationic and lipid convergence."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "General is the blind-safe focus because the formula shows rich care and humectant support but no formula-only marker specific enough to name a v1.4 role without product positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11"
+        }
+      ],
+      "counterSignal": "The rich care system could later support repair or moisture positioning, but blind formula evidence alone does not distinguish those directions.",
+      "neighboringAlternative": "repair",
+      "evidenceRefs": [
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.canonical_inci"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because the oil, humectant and cationic routes form one broad care cluster rather than a distinct second role in the blind evidence.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "factId": "formula.conditioning.14"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "A revealed exact-product claim could distinguish a secondary care role later.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "formula.conditioning.14",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular is the blind default because the formula is a buffered ordinary shampoo without recognized anti-dandruff actives or explicit reset architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        }
+      ],
+      "counterSignal": "Care richness does not create treatment use, and moderate cleansing without reset positioning does not create alternating use.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.05",
+        "formula.architecture.01"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted is the best blind call because there is no recognized scalp-active or sensitive-scalp route; panthenol/glycerin are comfort-adjacent but not enough to infer intentional scalp targeting.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 22,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "Fragrance is present and the cleanser system is not a dedicated low-irritation chassis.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "Aqua",
+          "position": 1,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "No ingredient in the complete INCI is a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "60677c08caabe9ae9c45d1d002dae4aa2b91a8418ee9d5dd1243a74b51c1cc8b",
+    "formulaFingerprintSha256": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T16:55:00Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false,
+    "sourcePacketSha256": "60677c08caabe9ae9c45d1d002dae4aa2b91a8418ee9d5dd1243a74b51c1cc8b",
+    "blindResultSha256": "b69db088386b74b0312f2a0dd325ef7fdadfd8e5498b108737ce4271f45a0ed9",
+    "mappedAfterBlindFreeze": false,
+    "mappedAt": null
+  }
+}

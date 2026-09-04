@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "elvital-hydra-hyaluronic",
+  "run1InputSha256": "5f47552046a9e54ab73b8c45283b43b5371a5e44a8d700222a8c70507d568a28",
+  "run2InputSha256": "5f47552046a9e54ab73b8c45283b43b5371a5e44a8d700222a8c70507d568a28",
+  "outputSha256": "df6dfa853908933f19165de05e8fe0e9d61bf2a39d789deb0dd5e4b5a58b6e66",
+  "summarySha256": "08edd312d66d41dadb10e87bc69924ec06f471b4ab4313af06479a370424ab8e",
+  "byteIdentical": true
+}

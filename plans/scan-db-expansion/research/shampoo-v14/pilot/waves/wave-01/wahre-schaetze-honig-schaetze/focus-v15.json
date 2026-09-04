@@ -1,0 +1,72 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "wahre-schaetze-honig-schaetze",
+  "formulaFingerprintSha256": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [],
+    "adjudicationSha256": "339e2d3ea9753b7c1820b2d639ca3dd88c02c2ff6c4f6347c05bfa100ecc8adb"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [],
+    "confidence": "moderate",
+    "rationale": "Repair bleibt in v1.5 der beste Fokus: Die genaue Positionierung zielt auf strapaziert wirkendes Haar, und die Formel hat mit Glyceryl Oleate, Lecithin und kationischem Guar mehrere reparatur- bzw. schadenspflege-kompatible Ablagerungsrouten. Honey und Glycerin stuetzen zugleich eine Feuchtigkeitsrichtung, aber der Beeswax-Claim ist in der INCI nicht als Beeswax/Cera Alba sichtbar; deshalb kein harter Repair- oder Moisture-Alleinentscheid.",
+    "formulaFacts": [
+      {
+        "ingredient": "MEL / HONEY",
+        "position": 5,
+        "observation": "honigbasierter Feuchtigkeits- und Pflegehinweis"
+      },
+      {
+        "ingredient": "GLYCERIN",
+        "position": 8,
+        "observation": "Humectant-Route fuer Feuchtigkeit"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 9,
+        "observation": "refettende Damage-Care-kompatible Route"
+      },
+      {
+        "ingredient": "LECITHIN",
+        "position": 12,
+        "observation": "lipidische Pflege-/Filmroute"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 17,
+        "observation": "kationische Konditionierungsroute"
+      }
+    ],
+    "counterSignal": "Die Feuchtigkeits- und Repair-Signale ueberlappen deutlich, und der Bienenwachs-Claim ist in der Formel nicht bestaetigt; die Entscheidung bleibt kosmetisch und moderate-confidence.",
+    "neighboringAlternative": "moisture",
+    "evidenceRefs": [
+      "claims.beeswax_mismatch",
+      "formula.humectant.05",
+      "formula.humectant.08",
+      "formula.conditioning.09",
+      "formula.conditioning.12",
+      "formula.conditioning.17"
+    ]
+  },
+  "careDirection": {
+    "verdict": "dual_supported",
+    "moistureRoutes": [
+      "MEL / HONEY an Position 5",
+      "GLYCERIN an Position 8"
+    ],
+    "repairRoutes": [
+      "GLYCERYL OLEATE an Position 9 als refettende Damage-Care-Route",
+      "LECITHIN an Position 12 als lipidische Pflege-/Filmroute",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE an Position 17 als kationische Konditionierungsroute"
+    ],
+    "sharedConditioningRoutes": [
+      "Honey/Glycerin koennen auch weicheres Haargefuehl stuetzen",
+      "Glyceryl Oleate/Lecithin/Guar koennen sowohl Repair-Erzaehlung als auch allgemeine Pflege tragen"
+    ],
+    "limitation": "Die INCI beweist keine echte strukturelle Reparatur und bestaetigt kein Beeswax/Cera Alba; die v1.5-Einordnung ist eine kosmetische, formula-kompatible Pflege-Richtung mit klar benannter Ueberlappung."
+  },
+  "claimRole": "tie_breaker",
+  "decisionTrace": "Die Formel allein wuerde Moisture und Repair zulassen. Distinkte Moisture-Routen sind Honey/Glycerin; repair-leaning Routen sind Glyceryl Oleate, Lecithin und kationisches Guar. Die strapaziert-Haar-Positionierung bricht den Gleichstand zu Repair, waehrend die Beeswax-Luecke die Sicherheit begrenzt."
+}

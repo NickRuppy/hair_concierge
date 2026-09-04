@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "gliss-total-repair",
+  "run1InputSha256": "7023ba20d328ef15a2b8aaa08e11885818495d2b7fa9134c20e42b0bb0e0f674",
+  "run2InputSha256": "7023ba20d328ef15a2b8aaa08e11885818495d2b7fa9134c20e42b0bb0e0f674",
+  "outputSha256": "a2ca173eef9d4cfa2aa453ac2755294788c537d56870acff860e8d749b4e0440",
+  "summarySha256": "fcc94e0509154fe728f72e0ef1b8eca959659cce27289563ee51047b6986e498",
+  "byteIdentical": true
+}

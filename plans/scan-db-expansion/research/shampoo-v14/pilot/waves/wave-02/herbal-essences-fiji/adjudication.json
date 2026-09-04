@@ -1,0 +1,309 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "herbal-essences-fiji",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: isethionate and sarcosinate anionic surfactants are paired with two betaines, giving ordinary effective cleansing without the sharper SLES/reset profile.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic isethionate"
+        },
+        {
+          "ingredient": "LAURAMIDOPROPYL BETAINE",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "amphoteric betaine buffer"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "second amphoteric betaine buffer"
+        },
+        {
+          "ingredient": "SODIUM LAUROYL SARCOSINATE",
+          "position": 5,
+          "factId": "formula.surfactant.05",
+          "observation": "secondary anionic sarcosinate"
+        }
+      ],
+      "counterSignal": "Two early anionic routes make low/genuinely mild too soft, even though the system is sulfate-free and well buffered.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.04",
+        "formula.surfactant.05",
+        "formula.architecture.01"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: Polyquaternium-10 provides one meaningful conditioning route, while glycerin and coconut fruit juice are late supportive clues rather than a rich care system.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 24,
+          "factId": "formula.canonical_inci",
+          "observation": "late humectant clue"
+        },
+        {
+          "ingredient": "COCOS NUCIFERA FRUIT JUICE",
+          "position": 25,
+          "factId": "formula.canonical_inci",
+          "observation": "late plant juice clue"
+        }
+      ],
+      "counterSignal": "The care system is light and contains no silicone, fatty alcohol/oil stack or early refatter, so high would overstate it.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.11",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one mid-list cationic polymer and very late humectant/plant-juice clues create limited residue potential, while the surfactant system provides adequate reset and there is no silicone/oil payload.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "single cationic polymer route"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 24,
+          "factId": "formula.canonical_inci",
+          "observation": "late humectant clue"
+        },
+        {
+          "ingredient": "COCOS NUCIFERA FRUIT JUICE",
+          "position": 25,
+          "factId": "formula.canonical_inci",
+          "observation": "late plant juice clue"
+        }
+      ],
+      "counterSignal": "Polyquaternium-10 can deposit, but it is a single route and the product is explicitly positioned as not weighing hair down.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.11",
+        "claim:dm-fiji-positioning"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "light",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact Polyquaternium-10 level cannot be proven from INCI order alone.",
+          "Late glycerin and coconut fruit juice are preserved as support clues, not persistent coating routes."
+        ],
+        "whyThisBand": "Residue evidence is limited to one cationic polymer route and late non-persistent support ingredients.",
+        "whyNotNeighborBand": "Not moderate because there is no silicone, oil, waxy payload or multi-route care stack to make noticeable weight likely."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General: the dominant claim is lightweight moisture, but moisture is not a v1.4 focus value; the formula supports light care rather than a distinct volume, shine, repair, clarifying, scalp-active or gentle role.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "light conditioning support"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 24,
+          "factId": "formula.canonical_inci",
+          "observation": "late moisture/humectant clue"
+        },
+        {
+          "ingredient": "COCOS NUCIFERA FRUIT JUICE",
+          "position": 25,
+          "factId": "formula.canonical_inci",
+          "observation": "late plant moisture-positioning clue"
+        }
+      ],
+      "counterSignal": "The exact claim is moisture-led, but v1.4 does not yet expose moisture as a focus and claims cannot create a new enum value.",
+      "neighboringAlternative": "gentle",
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.11"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: no distinct secondary v1.4 focus has both a separate claim and independent formula route.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "same light-care route as the primary moisture-positioned story"
+        }
+      ],
+      "counterSignal": "No-weight language is present, but that informs weight potential rather than a separate focus value.",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair lather and rinse-out use, with no explicit daily/frequent, treatment, alternating or reset trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo cleanser"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "ordinary buffered shampoo route"
+        }
+      ],
+      "counterSignal": "The formula is not strong-cleansing, but v1.4 requires explicit daily/frequent/mild-use positioning for frequent.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "usage:rossmann-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for lightweight hair moisture/softness, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {
+          "ingredient": "PARFUM",
+          "position": 8,
+          "factId": "formula.canonical_inci",
+          "observation": "fragrance exposure"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 24,
+          "factId": "formula.canonical_inci",
+          "observation": "late humectant without scalp-comfort positioning"
+        }
+      ],
+      "counterSignal": "The buffered sulfate-free surfactant system may be comparatively mild, but no scalp-comfort intent is documented.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.canonical_inci",
+        "formula.fragrance.08"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM SALICYLATE",
+          "position": 10,
+          "factId": "formula.canonical_inci",
+          "observation": "preservative-related salicylate, not a v1.4 dandruff active"
+        }
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; SCI/sarcosinate/betaine architecture gives effective ordinary cleansing without a sulfate reset chassis."
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; Polyquaternium-10 and late glycerin/coconut juice support bounded softness, not a rich care system."
+    },
+    "weightPotential": {
+      "laneAValue": "low",
+      "laneBValue": "low",
+      "finalValue": "low",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected low; deposition is light and no silicone/oil-heavy stack offsets movement, with no-weight positioning as compatible counter-evidence only."
+    },
+    "focusPrimary": {
+      "laneAValue": "general",
+      "laneBValue": "general",
+      "finalValue": "general",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected general under v1.4. Moisture is prominent positioning, but v1.4 has no moisture focus and the formula routes are not clarifying, repair, shine, volume or scalp-active dominant."
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneBValue": [],
+      "finalValue": [],
+      "outcome": "agreement",
+      "rationale": "Both lanes selected no secondary focus; moisture language is parked for v1.5 and cannot be encoded as v1.4 secondary."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected regular; ordinary rinse-out directions do not create a non-default usage role."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected not_targeted; hair moisture positioning is not scalp-comfort targeting."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both lanes agree with the mechanical dandruff rule: no Piroctone Olamine or Climbazole in the complete INCI."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": "Fiji is a v1.4 vocabulary limitation rather than a lane disagreement: it is the clearest Wave 02 candidate for the v1.5 moisture overlay.",
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. Claims were used only for claim-gated focus/usage/scalp intent, never to assign cleansing, conditioning or weight by themselves."
+}

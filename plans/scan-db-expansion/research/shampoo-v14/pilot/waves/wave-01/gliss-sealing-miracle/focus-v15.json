@@ -1,0 +1,65 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "gliss-sealing-miracle",
+  "formulaFingerprintSha256": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [],
+    "adjudicationSha256": "e5e0bba2ff9fe56f680beba938b6e82a6947cb33193636b356f7a7853d15e6ca"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [],
+    "confidence": "high",
+    "rationale": "Repair ist der passende v1.5-Fokus: Die exakte Positionierung nennt splissgeschaedigtes bzw. geschaedigtes Haar, und die Formel hat mit Pea Peptide, kationischem Guar, Glyceryl Oleate und Hydrogenated Castor Oil eine kosmetisch repair-kompatible Pflegearchitektur.",
+    "formulaFacts": [
+      {
+        "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+        "position": 5,
+        "observation": "peptid-/proteinabgeleiteter Pflegehinweis"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 6,
+        "observation": "fruehes kationisches Conditioning-Polymer"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 10,
+        "observation": "refettende Pflegeunterstuetzung"
+      },
+      {
+        "ingredient": "HYDROGENATED CASTOR OIL",
+        "position": 15,
+        "observation": "wachs-/lipidartige Payload-Route"
+      }
+    ],
+    "counterSignal": "Zip & Seal ist kosmetische Marketing-Sprache und wird nicht als echte strukturelle Reparatur gelesen; ein separater Moisture-Fokus hat keine ausreichend eigenstaendige Route.",
+    "neighboringAlternative": "shine",
+    "evidenceRefs": [
+      "claim:gliss-manufacturer-sealing-positioning",
+      "claim:rossmann-sealing-positioning",
+      "formula.conditioning.05",
+      "formula.conditioning.06",
+      "formula.conditioning.10",
+      "formula.conditioning.15"
+    ]
+  },
+  "careDirection": {
+    "verdict": "repair_supported",
+    "moistureRoutes": [],
+    "repairRoutes": [
+      "Split-End-/geschaedigtes-Haar-Positionierung",
+      "PISUM SATIVUM (PEA) PEPTIDE an Position 5",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE an Position 6"
+    ],
+    "sharedConditioningRoutes": [
+      "GLYCERYL OLEATE an Position 10",
+      "PEG-7 GLYCERYL COCOATE an Position 12",
+      "HYDROGENATED CASTOR OIL an Position 15"
+    ],
+    "limitation": "Der Repair-Entscheid ist kosmetisch und formula-kompatibel; er behauptet keine biologische Reparatur oder medizinische Wirkung."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Blindformel zeigte bereits repair-kompatible Pflege. Die exakten Split-End-/Damage-Claims erhoehen die Sicherheit, ohne die kosmetische Grenze zu verlassen."
+}

@@ -1,0 +1,132 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "schauma-repair-pflege",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate"},
+        {"ingredient": "SODIUM CHLORIDE", "position": 3, "factId": "formula.canonical_inci", "observation": "early electrolyte/thickening context, not counted as a separate cleanser"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04", "observation": "amphoteric buffer"},
+        {"ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 5, "factId": "formula.conditioning.05", "observation": "early cationic care counter-signal"}
+      ],
+      "counterSignal": "No second anionic/reset route is identified beyond SLES; however the SLES/salt chassis is too cleansing-led for low.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.surfactant.02", "formula.surfactant.04", "formula.conditioning.05", "formula.architecture.01", "formula.architecture.02"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: early cationic guar, panthenol, apricot oil, coconut extract and later amodimethicone/dimethicone create multiple complementary rinse-off care routes.",
+      "formulaFacts": [
+        {"ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 5, "factId": "formula.conditioning.05", "observation": "early cationic conditioning polymer"},
+        {"ingredient": "PANTHENOL", "position": 6, "factId": "formula.canonical_inci", "observation": "humectant/hair-feel support"},
+        {"ingredient": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL", "position": 7, "factId": "formula.canonical_inci", "observation": "plant oil care clue"},
+        {"ingredient": "AMODIMETHICONE", "position": 13, "factId": "formula.conditioning.13", "observation": "amine-functional silicone conditioning route"},
+        {"ingredient": "DIMETHICONE", "position": 14, "factId": "formula.conditioning.14", "observation": "silicone film-forming route"}
+      ],
+      "counterSignal": "The product remains a rinse-off SLES shampoo, but the breadth and position of care routes make moderate too low.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conditioning.05", "formula.conditioning.13", "formula.conditioning.14", "formula.architecture.02"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: early cationic guar, plant oil, dual silicones and later waxy/refatting materials create converging persistent deposition potential despite SLES/CAPB reset.",
+      "formulaFacts": [
+        {"ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 5, "factId": "formula.conditioning.05", "observation": "cationic polymer deposition route"},
+        {"ingredient": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL", "position": 7, "factId": "formula.canonical_inci", "observation": "nonvolatile plant oil clue"},
+        {"ingredient": "AMODIMETHICONE", "position": 13, "factId": "formula.conditioning.13", "observation": "persistent silicone conditioning route"},
+        {"ingredient": "DIMETHICONE", "position": 14, "factId": "formula.conditioning.14", "observation": "silicone film-forming route"},
+        {"ingredient": "HYDROGENATED CASTOR OIL", "position": 21, "factId": "formula.canonical_inci", "observation": "waxy/lipid-like payload clue"}
+      ],
+      "counterSignal": "The formula has a real SLES/CAPB cleanser chassis and PEG-40 Hydrogenated Castor Oil is not counted as persistent payload under v1.4.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conditioning.05", "formula.conditioning.13", "formula.conditioning.14", "formula.function.18", "formula.function.22"],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact silicone/polymer/oil levels cannot be proven from INCI order alone.", "PEG-40 Hydrogenated Castor Oil, Laureth-4, Laureth-23 and Trideceth-10 are preserved as helper/emulsion facts rather than independent persistent payload routes."],
+        "whyThisBand": "The formula combines early cationic polymer with dual silicones and plant/waxy care materials, so the residue picture is broader than one bounded route.",
+        "whyNotNeighborBand": "Not moderate because the persistent silicone plus cationic-polymer architecture is too convergent to treat as only ordinary rinse-off softness."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: exact-product positioning targets damaged/dry hair and repair, and the formula supports that with polymer, panthenol, oil and silicone care routes.",
+      "formulaFacts": [
+        {"ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 5, "factId": "formula.conditioning.05", "observation": "repair-care compatible conditioning polymer"},
+        {"ingredient": "PANTHENOL", "position": 6, "factId": "formula.canonical_inci", "observation": "care/hair-feel support"},
+        {"ingredient": "AMODIMETHICONE", "position": 13, "factId": "formula.conditioning.13", "observation": "silicone smoothing route"},
+        {"ingredient": "DIMETHICONE", "position": 14, "factId": "formula.conditioning.14", "observation": "silicone film route"}
+      ],
+      "counterSignal": "Dry-hair language is also present, but moisture is not a v1.4 focus and the repair/damaged-hair claim dominates.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claim:dm-repair-positioning", "formula.canonical_inci", "formula.conditioning.05", "formula.conditioning.13", "formula.conditioning.14"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the dry-hair and smoothing claims support the same repair/care story rather than a distinct v1.4 secondary focus.",
+      "formulaFacts": [
+        {"ingredient": "PANTHENOL", "position": 6, "factId": "formula.canonical_inci", "observation": "moisture-adjacent clue not available as v1.4 focus"},
+        {"ingredient": "AMODIMETHICONE", "position": 13, "factId": "formula.conditioning.13", "observation": "smoothing route serving the repair focus"}
+      ],
+      "counterSignal": "Silicones can support shine/smoothness, but the source packet does not provide a distinct shine-led product positioning.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claim:dm-repair-positioning", "formula.canonical_inci", "formula.conditioning.13", "formula.conditioning.14"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair distribution, short contact and rinse-out, with no daily, alternating, reset or treatment trigger.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "Repair positioning changes focus, not product-level usage cadence.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["usage:dm-directions", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product targets damaged/dry hair fiber repair, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "PANTHENOL", "position": 6, "factId": "formula.canonical_inci", "observation": "comfort-adjacent humectant without scalp positioning"},
+        {"ingredient": "PARFUM (FRAGRANCE)", "position": 15, "factId": "formula.canonical_inci", "observation": "fragrance exposure"}
+      ],
+      "counterSignal": "Dry-hair positioning is present, but v1.4 requires scalp-comfort intent/support, not hair dryness alone.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claim:dm-repair-positioning", "formula.canonical_inci"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM SALICYLATE", "position": 27, "factId": "formula.canonical_inci", "observation": "preservative-related salicylate, not a v1.4 dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-02/schauma-repair-pflege/source-packet.json",
+    "sourcePacketSha256": "b5e2f17f6f5a4800893666bc19ab899d24212ddf7b39a83ef36b6f555e71b60c",
+    "formulaFingerprint": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T21:37:30+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

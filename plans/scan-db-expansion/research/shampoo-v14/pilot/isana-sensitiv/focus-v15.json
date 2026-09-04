@@ -1,0 +1,53 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "isana-sensitiv",
+  "formulaFingerprintSha256": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52",
+  "priorV14": {
+    "primary": "gentle",
+    "secondary": [],
+    "adjudicationSha256": "1323a655359873141c0aed47ea6648c0df330b084e96e55c8e10141b43c8e641"
+  },
+  "effectiveV15": {
+    "primary": "scalp_active",
+    "secondary": [],
+    "confidence": "moderate",
+    "rationale": "Das Produkt adressiert ausdrücklich empfindliche Kopfhaut. Cocamidopropyl Betaine und Coco-Glucoside puffern das SLES-System, während Panthenol, Niacinamide und Glycerin eine Kopfhaut-Komfortrichtung stützen; `gentle` bleibt eine Reinigungsinterpretation und ist kein Fokus mehr.",
+    "formulaFacts": [
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "observation": "amphotere Pufferroute"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 8,
+        "observation": "nichtionische Tensidunterstützung"
+      },
+      { "ingredient": "Panthenol", "position": 12, "observation": "Komfort- und Humectant-Signal" },
+      {
+        "ingredient": "Niacinamide",
+        "position": 13,
+        "observation": "hautpflegebezogenes Unterstützungssignal"
+      }
+    ],
+    "counterSignal": "Sodium Laureth Sulfate steht an Position 2; die Formel rechtfertigt daher kein pauschales Versprechen außergewöhnlicher Milde.",
+    "neighboringAlternative": "general",
+    "evidenceRefs": [
+      "claim-rossmann-de-positioning",
+      "claim-rossmann-dk-positioning",
+      "formula.canonical_inci"
+    ]
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": ["Panthenol an Position 12", "Glycerin an Position 18"],
+    "repairRoutes": ["Hydrolyzed Wheat Protein an Position 10"],
+    "sharedConditioningRoutes": [
+      "Glyceryl Oleate an Position 7",
+      "kationisches Guar an Position 15"
+    ],
+    "limitation": "Die Richtungen sind generische Unterstützungssignale; entscheidend ist das explizite empfindliche Kopfhaut-Ziel, nicht Feuchtigkeit oder Reparatur."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Formel ist mit einem kosmetischen Kopfhaut-Komfortziel kompatibel, enthält aber ein frühes SLES-Gegensignal. Deshalb Kopfhaut-Ziel mit moderater Sicherheit statt des gestrichenen Fokuswerts gentle."
+}
