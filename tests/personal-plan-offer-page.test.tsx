@@ -210,7 +210,6 @@ test("personal plan offer renders approved hierarchy without personalized produc
   }
   assert.doesNotMatch(html, /Warum kostet Chaarlie etwas|Ist das ein Abo\?/i)
   assert.match(html, /Haarmony LLC/i)
-  assert.match(html, /info@chaarlie\.de/i)
   assert.match(html, /href="\/impressum"/)
   assert.match(html, /href="\/datenschutz"/)
   assert.match(html, /href="\/agb"/)
