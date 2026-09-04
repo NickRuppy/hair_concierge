@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
+import { createScanRoute, scanOk } from "@/lib/scan/route"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -41,40 +41,18 @@ export type ScanWishlistRouteDeps = {
   captureScanException?: typeof captureScanException
 }
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
-  return async function GET() {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
-
-    // Same shared per-user scan budget as the other scan routes (`SCAN_RATE_LIMIT`).
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
-      )
-    }
-
-    try {
+  return createScanRoute<undefined>({
+    route: "wishlist",
+    deps,
+    parse: async () => ({ ok: true, body: undefined }),
+    failureReason: "wishlist_list_failed",
+    handler: async (ctx) => {
       const client = deps.createAdminClient()
-      const entries = await deps.listWishlist(client, userId)
-      return NextResponse.json({ entries }, { headers: { "Cache-Control": "no-store" } })
-    } catch (error) {
-      console.error("[scan] wishlist list failed", error)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "wishlist",
-        status: 503,
-        reason: "wishlist_list_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
+      const entries = await deps.listWishlist(client, ctx.userId)
+      return scanOk({ entries })
+    },
+  })
 }
 
 export async function listScanWishlist(

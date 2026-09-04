@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
@@ -7,9 +6,10 @@ import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
 import { loadQuarantinedProductIds } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
+import { createScanRoute, scanOk } from "@/lib/scan/route"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -60,46 +60,26 @@ const querySchema = z
   .object({ q: z.string().trim().min(MIN_QUERY_LENGTH).max(MAX_QUERY_LENGTH) })
   .strict()
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanSearchRouteHandler(deps: ScanSearchRouteDeps) {
-  return async function GET(request: Request) {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
+  return createScanRoute<string>({
+    route: "search",
+    deps,
+    // A too-short (or missing) query is a normal typing state, not a client error — the
+    // handler answers it with empty results rather than parse rejecting the request.
+    parse: async (request) => ({
+      ok: true,
+      body: new URL(request.url).searchParams.get("q") ?? "",
+    }),
+    failureReason: "search_failed",
+    handler: async (ctx) => {
+      const parsed = querySchema.safeParse({ q: ctx.body })
+      if (!parsed.success) return scanOk({ results: [] })
 
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
-      )
-    }
-
-    const parsed = querySchema.safeParse({ q: new URL(request.url).searchParams.get("q") ?? "" })
-    if (!parsed.success) {
-      // A too-short query is a normal typing state, not a client error — empty results,
-      // German copy for that state lives client-side per the brief.
-      return NextResponse.json({ results: [] }, { headers: { "Cache-Control": "no-store" } })
-    }
-
-    try {
       const client = deps.createAdminClient()
       const results = await deps.search(client, parsed.data.q)
-      return NextResponse.json({ results }, { headers: { "Cache-Control": "no-store" } })
-    } catch (error) {
-      console.error("[scan] search failed", error)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "search",
-        status: 503,
-        reason: "search_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
+      return scanOk({ results })
+    },
+  })
 }
 
 export async function searchScanCatalog(

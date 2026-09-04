@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { createScanSaveRouteHandlers, type ScanSaveRouteDeps } from "../src/app/api/scan/save/route"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
+import { fixedWindowRetryAfterSeconds, SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
@@ -49,7 +50,10 @@ test("scan save POST: rate limited returns 429 with Retry-After, before any writ
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 429)
-  assert.equal(response.headers.get("Retry-After"), "60")
+  assert.equal(
+    response.headers.get("Retry-After"),
+    String(fixedWindowRetryAfterSeconds(SCAN_RATE_LIMIT)),
+  )
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
