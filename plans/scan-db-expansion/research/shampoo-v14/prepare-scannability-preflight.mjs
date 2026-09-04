@@ -54,6 +54,22 @@ function sourceType(url) {
 }
 
 const receipt = readJson(receiptPath)
+const existingSupplement = readJson(supplementPath)
+const existingImageReceipt = readJson(imageReceiptPath)
+const existingFinalizedImages = new Map(
+  existingImageReceipt.products.map((product) => [product.product_id, product]),
+)
+const operatorProfileId =
+  process.env.SHAMPOO_SCANNABLE_OPERATOR_PROFILE_ID ?? existingSupplement.operator_profile_id
+if (
+  !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    operatorProfileId,
+  )
+) {
+  throw new Error(
+    "A valid operator profile ID is required in the existing supplement or SHAMPOO_SCANNABLE_OPERATOR_PROFILE_ID",
+  )
+}
 const manifests = new Map()
 const products = []
 const supplementProducts = {}
@@ -88,8 +104,6 @@ for (const selected of receipt.products) {
     notes:
       "Nick approved this exact product image in the 14-product contact sheet on 2026-09-04. Local quality gate passed. Not uploaded to Supabase Storage.",
   }
-  writeJson(decisionPath, normalizedDecision)
-
   const finalFile = resolve(packageDir, normalizedDecision.final_file)
   const thumbnailFile = resolve(packageDir, normalizedDecision.thumbnail_final_file)
   if (sha256(finalFile) !== normalizedDecision.asset_sha256) {
@@ -99,13 +113,26 @@ for (const selected of receipt.products) {
     throw new Error(`Thumbnail checksum mismatch for ${selected.product_id}`)
   }
 
+  const previousImage = existingFinalizedImages.get(selected.product_id)
+  const uploaded =
+    previousImage?.uploaded === true &&
+    previousImage.asset_sha256 === normalizedDecision.asset_sha256 &&
+    previousImage.thumbnail_asset_sha256 === normalizedDecision.thumbnail_asset_sha256 &&
+    previousImage.storage_path === normalizedDecision.storage_path &&
+    previousImage.thumbnail_storage_path === normalizedDecision.thumbnail_storage_path
+  normalizedDecision.notes = uploaded
+    ? "Nick approved this exact product image in the 14-product contact sheet on 2026-09-04. Local quality gate passed. Canonical and thumbnail assets were checksum-verified after upload to Supabase Storage."
+    : "Nick approved this exact product image in the 14-product contact sheet on 2026-09-04. Local quality gate passed. Not uploaded to Supabase Storage."
+  writeJson(decisionPath, normalizedDecision)
+
   const product = entry.final.product
   const key = itemKey(product.brand, product.name)
+  const existingProductSupplement = existingSupplement.products?.[key]
   supplementProducts[key] = {
     image_url: normalizedDecision.public_url,
     affiliate_link: selected.candidate_image_source_url,
     purchase_link_status: "available",
-    checked_at: researchCheckedAt,
+    checked_at: existingProductSupplement?.checked_at ?? researchCheckedAt,
     ...(product.price_eur == null ? {} : { price_eur: product.price_eur }),
   }
   finalizedImages.push({
@@ -126,7 +153,7 @@ for (const selected of receipt.products) {
     user_approved: normalizedDecision.user_approved,
     reviewed_by: normalizedDecision.reviewed_by,
     reviewed_at: normalizedDecision.reviewed_at,
-    uploaded: false,
+    uploaded,
   })
 }
 
@@ -139,7 +166,7 @@ writeJson(scopedManifestPath, {
 
 writeJson(supplementPath, {
   batch_id: "scan-db-expansion-shampoo-scannable-14-2026-09-04",
-  operator_profile_id: "pending-final-apply-operator-profile-id",
+  operator_profile_id: operatorProfileId,
   reviewed_head: reviewedHead,
   products: supplementProducts,
 })
@@ -149,7 +176,7 @@ writeJson(imageReceiptPath, {
   scope: "14 approved shampoos only",
   approved_at: reviewedAt,
   reviewed_by: "nick",
-  uploaded: false,
+  uploaded: finalizedImages.every((image) => image.uploaded),
   products: finalizedImages,
 })
 

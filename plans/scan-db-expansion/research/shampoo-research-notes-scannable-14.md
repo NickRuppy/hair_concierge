@@ -2,7 +2,7 @@
 
 > **STATUS: RESEARCH DRAFT — not approved production data.** This pass finalized local image assets and ran read-only preflight. No images were uploaded and no catalog/database write was performed.
 
-Checked: 2026-09-04  
+Checked: 2026-09-04
 Scoped manifest: `shampoo-manifest-scannable-14.json`
 
 ## Result
