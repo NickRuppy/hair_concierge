@@ -20,10 +20,16 @@ Confirmed with Nick (2026-09-04):
     property. Confirmed parked: routine-level protein-stacking heads-up → production/fit layer,
     own later decision.
   - D5 Focus vocabulary (2026-09-04, follow-up session): conditioner's eight values + `moisture`,
-    guarded by a distinctive humectant-architecture threshold (baseline intensive conditioning
-    never qualifies; richer special-purpose routes outrank). Precedent: production leave-in
-    care_benefits carries `moisture` live (30 products); no prior research engine focus
-    vocabulary had it. Projects via balance_direction; no adapter change.
+    guarded by the tested humectant-architecture threshold (glycerin alone never qualifies;
+    ≥2 further distinct humectants above the tail; richer routes outrank). Precedent
+    (corrected): Shampoo Focus v1.5 research overlay already carries `moisture`
+    (Nick-approved 2026-09-03; Production Light stays frozen on v1.4 and rejects it — a
+    deliberate research/production boundary that Mask mirrors, since the moisture focus
+    projects only via balance_direction). Leave-in production care_benefits also carries
+    moisture live (30 products).
+  - Parked (Nick, 2026-09-04): extend the CONDITIONER focus vocabulary with `moisture` later
+    for cross-engine consistency — a conditioner v1.7 semantic change with its own
+    guidance-synchronization and review obligations; outside this project's scope.
   - Thickness priors (2026-09-04): Nick accepted the broad weight-derived priors for mask
     ("makes sense to be a bit more broad here"); any narrowing/softening is a later
     production-policy decision, not research.

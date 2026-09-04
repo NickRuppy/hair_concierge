@@ -50,11 +50,20 @@ baseline). Discrimination evidence: Balea Aqua Hyaluron 3in1 (4 humectants above
 protein/bond/silicone routes) and Guhl 30 sek Feuchtigkeit (3 humectants, no competing route)
 clear it; Gliss Bonding (glycerin #3 but repair routes win) and Pantene Bond (no cluster)
 correctly fail. E2 wording: "humectant-forward comparative direction", never proven hydration.
-Provenance note: Mask is the first engine with `moisture` as a focus value. Shampoo explicitly
-declined one (holdout-v3 operator clarification folds moisture into repair/general — correct
-for a cleanser, where humectant presence is weak evidence); conditioner v1.6 and the leave-in
-v0.3 draft have none. Production precedent: leave-in `care_benefits` carries `moisture` live on
-30 products, plus `care_direction: moisture`.
+Provenance (corrected 2026-09-04): **Shampoo Focus v1.5** already carries `moisture` as a
+primary/secondary focus in its research overlay — approved by Nick 2026-09-03
+(`plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md`,
+`src/lib/shampoo/focus-v15.ts`); the v1.4 holdout-v3 clarification folding moisture into
+repair/general is superseded by it at research level. Production Light stays frozen on v1.4
+and rejects `moisture` — a deliberate scope boundary, symmetric with Mask, where the moisture
+focus also does not project into `functional_benefits` and reaches production only via
+`balance_direction`. Conditioner v1.6 and the leave-in v0.3 draft still have no moisture
+focus; leave-in production `care_benefits` carries `moisture` live on 30 products.
+Phase 3 input: adopt the v1.5 formula-first repair/moisture boundary discipline — coherent
+cluster over hero token; exact-product claims may break a genuinely dual-supported tie but can
+never convert nonspecific formula evidence into a specialist focus. The v1.5 pilot's Elvital
+Hydra Hyaluronic call (moisture, moderate confidence, humectant not early) is consistent with
+this guard's above-the-tail requirement.
 Adapter note: `moisture` focus has no counterpart in `functional_benefits` (fixed vocabulary);
 the moisture identity projects through `balance_direction`, so no adapter change is needed.
 
