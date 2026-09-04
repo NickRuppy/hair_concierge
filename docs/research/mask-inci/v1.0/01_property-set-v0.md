@@ -16,8 +16,8 @@ Phase 3 standard; nothing is copied silently.
 | 2 | `weight_potential` | low / moderate / high | structured judgment | `weight` (light/medium/rich) |
 | 3 | `care_direction` | protein / moisture / balanced | structured judgment | `balance_direction` |
 | 4 | `repair_support_level` | low / medium / high | structured judgment; `high` gated on deterministic named bond chemistry | `repair_support_level` |
-| 5 | `primary_focus` | conditioner focus vocabulary | structured judgment (forced headline) | via benefits mapping |
-| 6 | `secondary_focus` | 0–2 values | structured judgment | via benefits mapping |
+| 5 | `primary_focus` | conditioner focus vocabulary **+ `moisture`** (ruled by Nick 2026-09-04) | structured judgment (forced headline) | via benefits mapping |
+| 6 | `secondary_focus` | 0–2 values from the same vocabulary | structured judgment | via benefits mapping |
 | 7 | `hair_thickness_fit` | subset of fine/normal/coarse | derived deterministic policy from weight | `suitable_thicknesses` |
 | 8 | `damage_fit` | subset of healthy/moderately_damaged/highly_damaged | derived policy (specialist-route rule) | research-only (no current consumer) |
 | 9 | `texture_fit` | subset of straight/wavy/curly/coily | derived policy | research-only (no current consumer) |
@@ -37,6 +37,20 @@ research): matching currently consumes `concentration` as a repair-need proxy
 (`mask_concentration_is_temporary_repair_level_proxy`); whether production later matches
 repair need against `repair_support_level` instead is a production-policy question outside
 this project.
+
+### D5 ruling — `moisture` focus value (Nick, 2026-09-04)
+
+The mask focus vocabulary is Conditioner v1.6's eight values plus `moisture`:
+`moisture / lightness / detangling / smoothing / repair / shine / curl_support / color_care / general`.
+Guard: `moisture` as a focus requires a distinctive humectant-forward architecture above the
+tail (e.g. a prominent glycerin/hyaluronate/urea/polyol cluster) — intensive conditioning alone
+never qualifies, because it is the category baseline — and any richer special-purpose route
+that clears its own threshold outranks it. This keeps `moisture` from becoming `general`
+renamed. Verification note: no research engine's focus vocabulary carried moisture before this
+(conditioner v1.6, shampoo, leave-in v0.3 draft); the precedent is production's leave-in
+`care_benefits`, where `moisture` is live on 30 products, plus `care_direction: moisture`.
+Adapter note: `moisture` focus has no counterpart in `functional_benefits` (fixed vocabulary);
+the moisture identity projects through `balance_direction`, so no adapter change is needed.
 
 ### D2 ruling — benefits via hierarchy
 

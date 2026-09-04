@@ -19,6 +19,16 @@ Confirmed with Nick (2026-09-04):
   - D4 Overload: per-product = internal counter-signal + trace evidence only; never a visible
     property. Confirmed parked: routine-level protein-stacking heads-up → production/fit layer,
     own later decision.
+  - D5 Focus vocabulary (2026-09-04, follow-up session): conditioner's eight values + `moisture`,
+    guarded by a distinctive humectant-architecture threshold (baseline intensive conditioning
+    never qualifies; richer special-purpose routes outrank). Precedent: production leave-in
+    care_benefits carries `moisture` live (30 products); no prior research engine focus
+    vocabulary had it. Projects via balance_direction; no adapter change.
+  - Thickness priors (2026-09-04): Nick accepted the broad weight-derived priors for mask
+    ("makes sense to be a bit more broad here"); any narrowing/softening is a later
+    production-policy decision, not research.
+  - texture_fit retained (2026-09-04): needed down the line for user-profile matching despite
+    no current consumer; removed from the pruning watch-list.
 Inherited from evidence or contract:
   - Projection targets fixed (kickoff handover); adapter writes nothing else
   - Dwell/heat/cadence = protocol metadata with zero classification credit (evidence §3–4; P5; F2)
