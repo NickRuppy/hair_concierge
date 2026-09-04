@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "isana-sensitiv",
+  "run1InputSha256": "254b1a5dd4493c399b23b3e9225b05f24b4b3677c53ecb93ee810a271c375c83",
+  "run2InputSha256": "254b1a5dd4493c399b23b3e9225b05f24b4b3677c53ecb93ee810a271c375c83",
+  "outputSha256": "272c34fd53483369114571d3a7586f6128d99ddfa971b49f8529922cd6585e91",
+  "summarySha256": "c4dc11c62161cff7888acea88324853e35633bbc6076f230450523eb5792c8ce",
+  "byteIdentical": true
+}

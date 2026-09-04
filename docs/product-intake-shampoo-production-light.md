@@ -37,11 +37,11 @@ production.
 
 ## Source-of-truth stack
 
-| Layer | Owning source | What it controls |
-| --- | --- | --- |
-| Full formula research | `docs/research/shampoo-inci/v1.4/classification-standard.md` and `new-product-research-runbook.md` | Exact identity, canonical INCI, eight direct properties, confidence and evidence. |
-| Production projection | `src/lib/shampoo/production-light-adapter.ts` | Deterministic projection from reviewed v1.4 truth into current Shampoo fields. |
-| Catalog/product handoff | `docs/product-intake-research-ops.md` | Brand identity, image, price, purchase URL, protocols, approval and guarded apply. |
+| Layer                   | Owning source                                                                                      | What it controls                                                                   |
+| ----------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Full formula research   | `docs/research/shampoo-inci/v1.4/classification-standard.md` and `new-product-research-runbook.md` | Exact identity, canonical INCI, eight direct properties, confidence and evidence.  |
+| Production projection   | `src/lib/shampoo/production-light-adapter.ts`                                                      | Deterministic projection from reviewed v1.4 truth into current Shampoo fields.     |
+| Catalog/product handoff | `docs/product-intake-research-ops.md`                                                              | Brand identity, image, price, purchase URL, protocols, approval and guarded apply. |
 
 Fixture and calibration evidence:
 
@@ -290,6 +290,50 @@ The fixture manifest at
 `tests/fixtures/shampoo-production-light/batch-manifest.json` is the reference
 shape.
 
+## Focus v1.5 research overlay
+
+Focus v1.5 is a separate research layer over a completed v1.4 adjudication. It
+is not a Production Light output and must never be inserted into a v1 adapter
+input. This separation keeps the reviewed PR #508 projection byte-compatible
+while allowing later shampoo research to distinguish moisture from generic care.
+
+The forward research taxonomy is:
+
+- `volume`;
+- `shine`;
+- `repair`;
+- `moisture`;
+- `clarifying`;
+- `scalp_active`;
+- `general`.
+
+`gentle` remains valid cleansing language and a legacy v1.4 focus value, but it
+is not a Focus v1.5 value. A v1.5 overlay is valid only when it is bound to the
+exact product ID, canonical formula fingerprint, exact adjudication-file bytes,
+and the adjudicated v1.4 primary/secondary focus values. Every displayed
+formula fact must also match the canonical ingredient at its exact one-based
+INCI position, and every evidence reference must resolve to the source packet
+or adjudication evidence graph.
+
+Claims identify or confirm a candidate job. The complete formula must support
+or remain compatible with it, and the overlay must retain a counter-signal. For
+the repair/moisture boundary, record one formula verdict:
+`repair_supported`, `moisture_supported`, `dual_supported`, `nonspecific`, or
+`not_applicable`. Claims may break a genuinely `dual_supported` tie, but cannot
+turn `nonspecific` formula evidence into a confident specialist focus.
+
+The research validator and local Lab can consume the overlay. The unchanged
+Production Light v1 adapter continues to accept only its frozen v1.4 input enum;
+in particular, `moisture` in a Production Light input is intentionally invalid.
+
+Validate one completed research directory or a same-shape dataset without
+modifying its artifacts:
+
+```bash
+npm run research:shampoo:focus-v15 -- --product-dir <product-directory>
+npm run research:shampoo:focus-v15 -- --root <dataset-root>
+```
+
 ## Copyable future invocations
 
 Single product:
@@ -314,11 +358,11 @@ Batch:
 
 ## Output statuses
 
-| Status | Meaning | Next step |
-| --- | --- | --- |
-| `property_lane_ready` | The ingredient research is complete enough to propose current production Shampoo properties. | Nick can review the property package. Product Intake still owns identity/image/price/protocols/apply. |
-| `needs_research` | A required input, property, projection assessment or confidence gate is missing, contradictory or unsupported. | Rework the research envelope, then rerun the adapter. Do not hand-edit the output. |
-| `routed_deep_cleansing` | The product is a true reset/deep-cleansing product, not a regular Shampoo item. | Use the existing deep-cleansing category workflow instead. No regular Shampoo payload is emitted. |
+| Status                  | Meaning                                                                                                        | Next step                                                                                             |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `property_lane_ready`   | The ingredient research is complete enough to propose current production Shampoo properties.                   | Nick can review the property package. Product Intake still owns identity/image/price/protocols/apply. |
+| `needs_research`        | A required input, property, projection assessment or confidence gate is missing, contradictory or unsupported. | Rework the research envelope, then rerun the adapter. Do not hand-edit the output.                    |
+| `routed_deep_cleansing` | The product is a true reset/deep-cleansing product, not a regular Shampoo item.                                | Use the existing deep-cleansing category workflow instead. No regular Shampoo payload is emitted.     |
 
 `property_lane_ready` is not `catalog_intake_ready` and not
 `global_recommendation_ready`. It only says the Shampoo property lane is
@@ -369,13 +413,13 @@ The adapter chooses one primary scalp target by default. A secondary target is
 valid only when the exact-product positioning and the formula independently
 support a second real use case.
 
-| Research target | Production bucket | Production route |
-| --- | --- | --- |
-| ordinary/general | `normal` | `balanced` |
-| oily or sebum-led | `dehydriert-fettig` | `oily` |
-| dry scalp or dry flakes | `trocken` | `dry` |
-| sensitive, itchy or uncomfortable scalp | `irritationen` | `irritated` |
-| true dandruff | `schuppen` | `dandruff` |
+| Research target                         | Production bucket   | Production route |
+| --------------------------------------- | ------------------- | ---------------- |
+| ordinary/general                        | `normal`            | `balanced`       |
+| oily or sebum-led                       | `dehydriert-fettig` | `oily`           |
+| dry scalp or dry flakes                 | `trocken`           | `dry`            |
+| sensitive, itchy or uncomfortable scalp | `irritationen`      | `irritated`      |
+| true dandruff                           | `schuppen`          | `dandruff`       |
 
 Dry flakes do not create a dandruff row. A dandruff row requires
 `dandruffSupport: supported` and exact anti-dandruff positioning. Under v1.4,

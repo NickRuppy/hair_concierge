@@ -1,0 +1,335 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "gliss-total-repair",
+  "candidateSlot": "candidate-02",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "The formula is SLES-led and therefore clearly effective, but CAPB at position 3 plus early silicone/protein and later polymer/silicone care routes make ordinary balanced cleansing more likely than a strong reset label.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12
+        }
+      ],
+      "counterSignal": "The anionic sulfate appears very early and there is no extra mild-anionic replacement for the primary cleansing role.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "candidate-02.json:formula.surfactant.02",
+        "candidate-02.json:formula.surfactant.03",
+        "candidate-02.json:formula.conditioning.05",
+        "candidate-02.json:formula.conditioning.12",
+        "candidate-02.json:formula.conditioning.13"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "A substantial rinse-off conditioning effect is likely because dimethicone is unusually prominent and is joined by protein, amodimethicone, cationic guar and glycerin.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5
+        },
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 13
+        }
+      ],
+      "counterSignal": "SLES/CAPB cleansing and rinse-off exposure prevent assuming leave-on repair or mask-level conditioning.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-02.json:formula.conditioning.05",
+        "candidate-02.json:formula.conditioning.06",
+        "candidate-02.json:formula.conditioning.12",
+        "candidate-02.json:formula.conditioning.13",
+        "candidate-02.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "Noticeable loss of movement/root lift is plausible because an early dimethicone route is reinforced by amodimethicone, cationic guar and hydrogenated castor oil despite meaningful sulfate reset.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 13
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The same formula has a conventional SLES/CAPB cleansing base, so high is not based on ingredient count alone.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-02.json:formula.conditioning.05",
+        "candidate-02.json:formula.conditioning.12",
+        "candidate-02.json:formula.conditioning.13",
+        "candidate-02.json:formula.surfactant.02",
+        "candidate-02.json:formula.surfactant.03"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "PEG-120 METHYL GLUCOSE DIOLEATE at position 16 is unresolved only as a helper/thickener and is not counted as a substantive conditioning route."
+        ],
+        "whyThisBand": "The deposition system is not light: dimethicone appears at position 5, with amodimethicone and cationic guar later, making persistent coating plausible even in rinse-off use.",
+        "whyNotNeighborBand": "Not moderate because the early silicone position plus multiple reinforcing persistent routes exceed a bounded one-route residue signal; the SLES/CAPB base is a counterweight but does not erase deposition."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair is dominant because the exact product is Total Repair for dry/damaged hair and the formula contains keratin, prominent silicone, amodimethicone and cationic guar routes compatible with repair/care positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5
+        },
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12
+        }
+      ],
+      "counterSignal": "Protein and silicone routes make a later repair or shine focus plausible if supported by exact-product claims.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "confidence": "moderate",
+      "rationale": "A secondary shine role is supported by explicit shiny-hair wording and an independent silicone smoothing route, while repair remains the product-dominant role.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12
+        }
+      ],
+      "counterSignal": "Separate protein and silicone/polymer routes could later support a distinct secondary focus if exact claims require it.",
+      "neighboringAlternative": [],
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.12"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "The product says regular use with standard rinse-out directions and has no reset, alternating or treatment trigger under v1.4.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3
+        }
+      ],
+      "counterSignal": "The formula has a rich care system that could affect practical cadence, but usage role is product-level and claim-triggered.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "usage:dm-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.03"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "The positioning is dry/damaged hair plus softness/shine, not sensitive or uncomfortable scalp; there are no recognized scalp-comfort actives and fragrance is present.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "Glycerin and buffered cleansing are comfort-compatible but do not establish targeted scalp-comfort positioning by themselves.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "The complete formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "SODIUM SALICYLATE at position 26 does not qualify under the exact mechanical rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "candidate-02.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "Repair is dominant because the exact product is Total Repair for dry/damaged hair and the formula contains keratin, prominent silicone, amodimethicone and cationic guar routes compatible with repair/care positioning.",
+      "revealedEvidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13"
+      ]
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "finalValue": [
+        "shine"
+      ],
+      "blindConfidence": "low",
+      "finalConfidence": "moderate",
+      "reason": "A secondary shine role is supported by explicit shiny-hair wording and an independent silicone smoothing route, while repair remains the product-dominant role.",
+      "revealedEvidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.12"
+      ]
+    },
+    {
+      "property": "usageRole",
+      "blindValue": "regular",
+      "finalValue": "regular",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "The product says regular use with standard rinse-out directions and has no reset, alternating or treatment trigger under v1.4.",
+      "revealedEvidenceRefs": [
+        "usage:dm-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.03"
+      ]
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "blindConfidence": "moderate",
+      "finalConfidence": "high",
+      "reason": "The positioning is dry/damaged hair plus softness/shine, not sensitive or uncomfortable scalp; there are no recognized scalp-comfort actives and fragrance is present.",
+      "revealedEvidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    }
+  ],
+  "unchangedProperties": [
+    {
+      "property": "cleansingStrength",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "conditioningLevel",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "weightPotential",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "dandruffSupport",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    }
+  ],
+  "receipt": {
+    "candidateSlot": "candidate-02",
+    "sourcePacketSha256": "b29eb34ab4482433f8fc982dae691c035ee84db1c248588c51b3c3ed9961187c",
+    "blindInputSha256": "4db8432b000698b7cbbfbc64bcba1152c9046475d1eae6c78063376c45356252",
+    "blindResultSha256": "bbba8f7a512f58f01c02c8836803cbc33f60b718a26c9f8fec17d4d9d7e5a4e5",
+    "cleanRerunResultSha256": "e5b60c0307c778f79bc1086886ae79daee2ef6c3260ff0f6515dd0d90eaa13f0",
+    "canonicalResultProjection": "schema-only: provisionalProperties renamed to properties; formulaFacts normalized to anonymous INCI ingredient/position objects; structuredWeightAssessment renamed to weightAssessment",
+    "sourcePacketPath": "gliss-total-repair/source-packet.json",
+    "postUnblindEvidence": "gliss-total-repair/source-packet.json:post_unblind_evidence",
+    "consumedLaneB": false,
+    "consumedOldManifest": false
+  }
+}

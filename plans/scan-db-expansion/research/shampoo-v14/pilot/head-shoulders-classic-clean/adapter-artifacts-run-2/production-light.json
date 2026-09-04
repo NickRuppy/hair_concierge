@@ -1,0 +1,192 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dandruff",
+          "shampoo_bucket": "schuppen",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dandruff",
+          "shampoo_bucket": "schuppen",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "dandruff",
+          "shampoo_bucket": "schuppen",
+          "thickness": "coarse"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "oily",
+          "shampoo_bucket": "dehydriert-fettig",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "claim:rossmann-scalp-positioning",
+          "formula.canonical_inci",
+          "formula.active.10",
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "formula.surfactant.02",
+          "formula.surfactant.16"
+        ],
+        "rationale": "Exact anti-dandruff positioning and Piroctone Olamine at position 10 independently support the dandruff route. The exact manufacturer positioning separately names oily scalp, and SLES plus TEA-Dodecylbenzenesulfonate provide a cleansing route independent of Piroctone Olamine."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.16",
+          "claim:headshoulders-manufacturer-scalp-positioning"
+        ],
+        "rationale": "Strong: SLES is reinforced by a second anionic sulfonate route and an oily-scalp/problem-led architecture, while CAPB and care routes do not fully offset the reset chassis. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:head-shoulders-classic-clean:conditioningLevel",
+          "adjudication:head-shoulders-classic-clean:weightPotential",
+          "adjudication:head-shoulders-classic-clean:focusPrimary",
+          "adjudication:head-shoulders-classic-clean:conditioningLevel",
+          "adjudication:head-shoulders-classic-clean:weightPotential",
+          "adjudication:head-shoulders-classic-clean:focusPrimary",
+          "adjudication:head-shoulders-classic-clean:conditioningLevel",
+          "adjudication:head-shoulders-classic-clean:weightPotential",
+          "adjudication:head-shoulders-classic-clean:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — Moderate conditioning and weight offset some of the strong cleansing chassis without creating a heavy fine-hair default. normal — The treatment architecture combines recognized dandruff support with moderate conditioning and weight for normal-diameter hair. coarse — The anti-dandruff treatment role is diameter-independent, and the silicone/cationic care routes make the strong cleansing architecture usable for coarse hair. Conditional (not emitted): none."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "claim:rossmann-scalp-positioning",
+          "claim:headshoulders-manufacturer-scalp-positioning"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_dandruff, shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.16",
+          "claim:headshoulders-manufacturer-scalp-positioning"
+        ],
+        "rationale": "Strong: SLES is reinforced by a second anionic sulfonate route and an oily-scalp/problem-led architecture, while CAPB and care routes do not fully offset the reset chassis."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.09",
+          "formula.conditioning.11",
+          "formula.conditioning.13",
+          "formula.conditioning.14"
+        ],
+        "rationale": "Moderate: silicone gum, dimethicone, cationic guar and glycol distearate should provide noticeable slip, but the strong anti-dandruff cleansing chassis keeps care bounded."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.anti_dandruff_active.10"
+        ],
+        "rationale": "Supported: the complete formula contains Piroctone Olamine, one of the two v1.4 recognized anti-dandruff actives."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "claim:rossmann-scalp-positioning",
+          "formula.anti_dandruff_active.10"
+        ],
+        "rationale": "Scalp active: this is a problem-led anti-dandruff product and the formula contains Piroctone Olamine at position 10."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "formula.surfactant.02",
+          "formula.surfactant.16"
+        ],
+        "rationale": "Clarifying is a secondary: the packet separately names oily scalp, and the formula has a strong cleanser plus second anionic route independent from the dandruff active."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "formula.scalp_active.10",
+          "formula.exposure.06"
+        ],
+        "rationale": "Targeted: the product explicitly addresses dandruff-related itching and scalp problems and includes a recognized active, with panthenol/niacinamide as comfort-adjacent support."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:headshoulders-manufacturer-scalp-positioning",
+          "claim:rossmann-scalp-positioning",
+          "formula.anti_dandruff_active.10"
+        ],
+        "rationale": "Treatment: v1.4 routes problem-led recognized active formulas, especially anti-dandruff support, to treatment usage."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.11",
+          "formula.conditioning.13",
+          "formula.conditioning.14",
+          "formula.surfactant.16"
+        ],
+        "rationale": "Moderate: silicone gum, dimethicone and cationic guar can leave bounded residue, while strong reset architecture argues against high weight."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_dandruff",
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [],
+    "productId": "head-shoulders-classic-clean",
+    "productName": "Anti-Schuppen Shampoo Classic Clean",
+    "rows": 6
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

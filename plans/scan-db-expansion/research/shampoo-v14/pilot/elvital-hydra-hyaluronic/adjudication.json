@@ -1,0 +1,345 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "elvital-hydra-hyaluronic",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES is the primary cleanser, but it is buffered by amphoteric betaines and a visibly conditioning/refatting chassis; helper emulsifiers are not counted as separate cleansing routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic sulfate"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05",
+          "observation": "amphoteric buffer"
+        },
+        {
+          "ingredient": "COCO-BETAINE",
+          "position": 10,
+          "factId": "formula.surfactant.10",
+          "observation": "second amphoteric buffer"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 3,
+          "factId": "formula.architecture.03",
+          "observation": "early refatting counter-signal"
+        }
+      ],
+      "counterSignal": "SLES at position 2 and sodium chloride at position 4 keep the formula from a low-cleansing call.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.05",
+        "formula.surfactant.10",
+        "formula.architecture.helper_functions_preserved"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: early dimethicone, early cationic guar, late amodimethicone and early glycol distearate create several complementary rinse-off slip and manageability routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "nonvolatile silicone slip clue"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08",
+          "observation": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23",
+          "observation": "amine-functional silicone clue"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 3,
+          "factId": "formula.architecture.03",
+          "observation": "early wax ester/refatting clue"
+        }
+      ],
+      "counterSignal": "The product is still a rinse-off SLES shampoo, and the dm conflict shifts amodimethicone later rather than strengthening the care call.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conflict_inci",
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone plus cationic polymer deposition makes noticeable residue plausible, while SLES/betaine cleansing and late amodimethicone keep the band below high.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "persistent silicone deposition clue"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "factId": "formula.conditioning.08",
+          "observation": "cationic polymer deposition clue"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 23,
+          "factId": "formula.conditioning.23",
+          "observation": "late amine-functional silicone clue"
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "reset capacity from primary anionic cleanser"
+        }
+      ],
+      "counterSignal": "The same formula has meaningful cleansing reset and no heavy oil/butter stack; the dm conflict moves amodimethicone only from late to later.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conflict_inci",
+        "formula.conditioning.06",
+        "formula.conditioning.08",
+        "formula.conditioning.23"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact silicone/polymer concentrations are not knowable from INCI order alone.",
+          "Same-GTIN dm formula changes color/fragrance exposure and shifts amodimethicone from late position 23 to late position 25 without changing the weight-bearing routes."
+        ],
+        "whyThisBand": "One early nonvolatile silicone route plus cationic guar can plausibly reduce movement over repeated use.",
+        "whyNotNeighborBand": "Not high because SLES/betaine cleansing provides real reset and the additional amodimethicone route is late in both preserved formulas."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General: the dominant exact-product claim is hydration/moisture, which is compatible with sodium hyaluronate and conditioning routes but is not a v1.4 focus enum.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.humectant.13",
+          "observation": "moisture-binding clue"
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "smoothing route compatible with cosmetic hydration positioning"
+        }
+      ],
+      "counterSignal": "There is a shine phrase, but hydration is the range/name-dominant positioning.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "claim:dm-hydration-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "confidence": "moderate",
+      "rationale": "Shine is a bounded secondary: the manufacturer separately promises shiny, lively hair, and the formula has silicone smoothing plus acid/pH clues independent from the moisture claim.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "smoothing/slip route"
+        },
+        {
+          "ingredient": "ACETIC ACID",
+          "position": 16,
+          "factId": "formula.humectant_refatting.16",
+          "observation": "acid/pH clue"
+        },
+        {
+          "ingredient": "FUMARIC ACID",
+          "position": 22,
+          "factId": "formula.humectant_refatting.22",
+          "observation": "acid/pH clue"
+        }
+      ],
+      "counterSignal": "Shine is not the product-name dominant promise and should not replace the primary general mapping for hydration.",
+      "neighboringAlternative": [],
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "formula.conditioning.06"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: the packet provides ordinary rinse-out directions and no explicit daily, treatment, alternating, clarifying or reset trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo cleanser"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "factId": "formula.surfactant.05",
+          "observation": "ordinary buffered shampoo route"
+        }
+      ],
+      "counterSignal": "SLES makes cleansing meaningful, but v1.4 says strong cleansing alone would still not create an alternating role.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "usage:loreal-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted: the product mentions scalp hydration but is not positioned for sensitive, itchy or uncomfortable scalp, and fragrance exposure plus SLES prevent treating it as a comfort-targeted formula.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.humectant.13",
+          "observation": "moisture clue"
+        },
+        {
+          "ingredient": "LIMONENE",
+          "position": 21,
+          "factId": "formula.exposure.21",
+          "observation": "fragrance allergen"
+        },
+        {
+          "ingredient": "PARFUM / FRAGRANCE",
+          "position": 27,
+          "factId": "formula.exposure.27",
+          "observation": "fragrance mixture"
+        }
+      ],
+      "counterSignal": "The manufacturer says the formula moisturizes scalp and lengths, so the absence of a sensitive-scalp claim is the limiting factor rather than absent scalp wording.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:loreal-hydration-positioning",
+        "claim:dm-hydration-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is explicitly not enough under v1.4.",
+      "formulaFacts": [
+        {
+          "ingredient": "SALICYLIC ACID",
+          "position": 20,
+          "factId": "formula.exposure.20",
+          "observation": "acid clue, not a v1.4 dandruff active"
+        },
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "factId": "formula.humectant.13",
+          "observation": "moisture clue, not a dandruff active"
+        }
+      ],
+      "counterSignal": "No Piroctone Olamine or Climbazole appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conflict_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "conditioningLevel": {
+      "laneAValue": "high",
+      "laneBValue": "high",
+      "finalValue": "high",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "focusPrimary": {
+      "laneAValue": "general",
+      "laneBValue": "general",
+      "finalValue": "general",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "focusSecondary": {
+      "laneAValue": [
+        "shine"
+      ],
+      "laneBValue": [
+        "shine"
+      ],
+      "finalValue": [
+        "shine"
+      ],
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "product_correction",
+      "rationale": "Use not_targeted. Scalp hydration wording is not explicit sensitive, itchy, dry-feeling, or uncomfortable-scalp positioning under section 10; SLES and fragrance are counter-signals. Lane A extended a general moisture claim beyond the target definition."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": false,
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. Every disagreement remains visible in comparison.json."
+}

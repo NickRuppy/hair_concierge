@@ -1,0 +1,397 @@
+{
+  "version": "shampoo-v14-pilot-review-state-v1",
+  "products": {
+    "schauma-repair-pflege": {
+      "hash": "dda35cb8a3e6dd0836a4ba2bef8ca83a961eec09c915819aad99ab77cf18ce75",
+      "review": {
+        "formula": {
+          "status": "approved"
+        },
+        "properties": {
+          "cleansingStrength": {
+            "status": "approved"
+          },
+          "conditioningLevel": {
+            "status": "approved"
+          },
+          "weightPotential": {
+            "status": "approved"
+          },
+          "focusPrimary": {
+            "status": "approved"
+          },
+          "focusSecondary": {
+            "status": "approved"
+          },
+          "usageRole": {
+            "status": "approved"
+          },
+          "scalpComfortTarget": {
+            "status": "approved"
+          },
+          "dandruffSupport": {
+            "status": "approved"
+          }
+        },
+        "projection": {
+          "status": "approved"
+        },
+        "product": {
+          "status": "approved"
+        },
+        "history": [
+          {
+            "action": "approve_formula",
+            "scope": "formula",
+            "at": "2026-09-04T06:04:18.240Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "cleansingStrength",
+            "at": "2026-09-04T06:04:18.244Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "conditioningLevel",
+            "at": "2026-09-04T06:04:18.247Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "weightPotential",
+            "at": "2026-09-04T06:04:18.250Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusPrimary",
+            "at": "2026-09-04T06:04:18.253Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusSecondary",
+            "at": "2026-09-04T06:04:18.256Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "usageRole",
+            "at": "2026-09-04T06:04:18.258Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "scalpComfortTarget",
+            "at": "2026-09-04T06:04:18.261Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "dandruffSupport",
+            "at": "2026-09-04T06:04:18.265Z"
+          },
+          {
+            "action": "approve_projection",
+            "scope": "projection",
+            "at": "2026-09-04T06:04:18.268Z"
+          },
+          {
+            "action": "approve_product",
+            "scope": "product",
+            "at": "2026-09-04T06:04:18.271Z"
+          }
+        ],
+        "archived": []
+      }
+    },
+    "herbal-essences-fiji": {
+      "hash": "56c60185637a4f2c0a16ad0029f182b65ec95cba6c91c0a3f6200b8269f530f0",
+      "review": {
+        "formula": {
+          "status": "approved"
+        },
+        "properties": {
+          "cleansingStrength": {
+            "status": "approved"
+          },
+          "conditioningLevel": {
+            "status": "approved"
+          },
+          "weightPotential": {
+            "status": "approved"
+          },
+          "focusPrimary": {
+            "status": "approved"
+          },
+          "focusSecondary": {
+            "status": "approved"
+          },
+          "usageRole": {
+            "status": "approved"
+          },
+          "scalpComfortTarget": {
+            "status": "approved"
+          },
+          "dandruffSupport": {
+            "status": "approved"
+          }
+        },
+        "projection": {
+          "status": "approved"
+        },
+        "product": {
+          "status": "approved"
+        },
+        "history": [
+          {
+            "action": "approve_formula",
+            "scope": "formula",
+            "at": "2026-09-04T06:04:18.273Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "cleansingStrength",
+            "at": "2026-09-04T06:04:18.276Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "conditioningLevel",
+            "at": "2026-09-04T06:04:18.279Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "weightPotential",
+            "at": "2026-09-04T06:04:18.283Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusPrimary",
+            "at": "2026-09-04T06:04:18.286Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusSecondary",
+            "at": "2026-09-04T06:04:18.289Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "usageRole",
+            "at": "2026-09-04T06:04:18.293Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "scalpComfortTarget",
+            "at": "2026-09-04T06:04:18.297Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "dandruffSupport",
+            "at": "2026-09-04T06:04:18.299Z"
+          },
+          {
+            "action": "approve_projection",
+            "scope": "projection",
+            "at": "2026-09-04T06:04:18.303Z"
+          },
+          {
+            "action": "approve_product",
+            "scope": "product",
+            "at": "2026-09-04T06:04:18.306Z"
+          }
+        ],
+        "archived": []
+      }
+    },
+    "gliss-liquid-silk": {
+      "hash": "660b0db771147a3c68c40c97f90bd61e1bdf9da22e9954e2081e09a48ddbfcf2",
+      "review": {
+        "formula": {
+          "status": "approved"
+        },
+        "properties": {
+          "cleansingStrength": {
+            "status": "approved"
+          },
+          "conditioningLevel": {
+            "status": "approved"
+          },
+          "weightPotential": {
+            "status": "approved"
+          },
+          "focusPrimary": {
+            "status": "approved"
+          },
+          "focusSecondary": {
+            "status": "approved"
+          },
+          "usageRole": {
+            "status": "approved"
+          },
+          "scalpComfortTarget": {
+            "status": "approved"
+          },
+          "dandruffSupport": {
+            "status": "approved"
+          }
+        },
+        "projection": {
+          "status": "approved"
+        },
+        "product": {
+          "status": "approved"
+        },
+        "history": [
+          {
+            "action": "approve_formula",
+            "scope": "formula",
+            "at": "2026-09-04T06:04:18.310Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "cleansingStrength",
+            "at": "2026-09-04T06:04:18.314Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "conditioningLevel",
+            "at": "2026-09-04T06:04:18.317Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "weightPotential",
+            "at": "2026-09-04T06:04:18.319Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusPrimary",
+            "at": "2026-09-04T06:04:18.323Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusSecondary",
+            "at": "2026-09-04T06:04:18.326Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "usageRole",
+            "at": "2026-09-04T06:04:18.329Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "scalpComfortTarget",
+            "at": "2026-09-04T06:04:18.332Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "dandruffSupport",
+            "at": "2026-09-04T06:04:18.335Z"
+          },
+          {
+            "action": "approve_projection",
+            "scope": "projection",
+            "at": "2026-09-04T06:04:18.338Z"
+          },
+          {
+            "action": "approve_product",
+            "scope": "product",
+            "at": "2026-09-04T06:04:18.341Z"
+          }
+        ],
+        "archived": []
+      }
+    },
+    "gliss-total-repair": {
+      "hash": "5f055ae57f4f11755dda57112f72300721338f1add7944f48ddb47c7f4fa660f",
+      "review": {
+        "formula": {
+          "status": "approved"
+        },
+        "properties": {
+          "cleansingStrength": {
+            "status": "approved"
+          },
+          "conditioningLevel": {
+            "status": "approved"
+          },
+          "weightPotential": {
+            "status": "approved"
+          },
+          "focusPrimary": {
+            "status": "approved"
+          },
+          "focusSecondary": {
+            "status": "approved"
+          },
+          "usageRole": {
+            "status": "approved"
+          },
+          "scalpComfortTarget": {
+            "status": "approved"
+          },
+          "dandruffSupport": {
+            "status": "approved"
+          }
+        },
+        "projection": {
+          "status": "approved"
+        },
+        "product": {
+          "status": "approved"
+        },
+        "history": [
+          {
+            "action": "approve_formula",
+            "scope": "formula",
+            "at": "2026-09-04T06:04:18.344Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "cleansingStrength",
+            "at": "2026-09-04T06:04:18.346Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "conditioningLevel",
+            "at": "2026-09-04T06:04:18.349Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "weightPotential",
+            "at": "2026-09-04T06:04:18.352Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusPrimary",
+            "at": "2026-09-04T06:04:18.356Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "focusSecondary",
+            "at": "2026-09-04T06:04:18.359Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "usageRole",
+            "at": "2026-09-04T06:04:18.362Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "scalpComfortTarget",
+            "at": "2026-09-04T06:04:18.365Z"
+          },
+          {
+            "action": "approve_property",
+            "scope": "dandruffSupport",
+            "at": "2026-09-04T06:04:18.367Z"
+          },
+          {
+            "action": "approve_projection",
+            "scope": "projection",
+            "at": "2026-09-04T06:04:18.370Z"
+          },
+          {
+            "action": "approve_product",
+            "scope": "product",
+            "at": "2026-09-04T06:04:18.373Z"
+          }
+        ],
+        "archived": []
+      }
+    }
+  }
+}

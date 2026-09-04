@@ -1,0 +1,1333 @@
+{
+  "schema_version": "shampoo-v14-administrative-snapshot-v1",
+  "generated_at": "2026-09-03",
+  "source_manifest_path": "plans/scan-db-expansion/research/shampoo-manifest-01.json",
+  "source_manifest_sha256": "e86d3c49d0ee669f18c7f42c148cee832890ddf41b82044907756ca7da62731b",
+  "classification_fields_omitted": [
+    "final.category_specs",
+    "final.thickness_eligibility",
+    "final.concern_eligibility",
+    "formula-classification field rationales"
+  ],
+  "products": [
+    {
+      "source_product_index": 0,
+      "final": {
+        "product": {
+          "name": "Shampoo Honig Schätze",
+          "brand": "Garnier Wahre Schätze",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.45,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2000,w_2000/v1747420189/assets/pas/images/67007a63-6878-4cb0-a2e9-e1548d424b50/wahre-schaetze-shampoo-honig-schaetze",
+            "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542461030",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+              "https://www.dm.at/p/d/1670316/wahre-schaetze-reparierendes-shampoo-honig-schaetze"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de product page (usage)",
+              "url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+              "text": "Sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542461030",
+            "source_label": "dm DE/AT exact 400 ml GTIN fields",
+            "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+            "source_type": "retailer",
+            "source_text": "Both dm DE and dm AT list GTIN 3600542461030 for the exact 400 ml package; they are one retailer organization, so agreement is not independent.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+            "source_label": "dm.de product page (usage)",
+            "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+            "source_type": "retailer",
+            "source_text": "Sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.45,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.45 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2000,w_2000/v1747420189/assets/pas/images/67007a63-6878-4cb0-a2e9-e1548d424b50/wahre-schaetze-shampoo-honig-schaetze",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exact 400 ml dm product name; brand retains the source family naming.",
+          "product.identifiers": "Exact 400 ml EAN is GS1-valid but only corroborated within the dm organization, so it is excluded from apply.",
+          "product.candidate_image": "Exact 400 ml dm PNG was visually checked as front-facing, product-only, transparent, and 987×2000 px.",
+          "product.concern_eligibility": "Repair/care positioning supports normal and dryness shampoo concerns without treating cosmetic claims as hard efficacy.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 1,
+      "final": {
+        "product": {
+          "name": "Shampoo Intense Keratin",
+          "brand": "Syoss",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.95,
+          "net_content_value": 440,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2500,w_2500/v1785280811/assets/pas/images/b38ef6ee-cc6a-499a-8d2c-a1bd15cd382b/syoss-shampoo-intense-keratin",
+            "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100860344",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+              "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-keratin/p/4015100860344"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de product page (usage)",
+              "url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+              "text": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100860344",
+            "source_label": "dm.de and Rossmann exact 440 ml GTIN",
+            "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+            "source_type": "retailer",
+            "source_text": "dm GTIN and independent Rossmann product URL agree on 4015100860344.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung.",
+            "source_label": "dm.de product page (usage)",
+            "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+            "source_type": "retailer",
+            "source_text": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2500,w_2500/v1785280811/assets/pas/images/b38ef6ee-cc6a-499a-8d2c-a1bd15cd382b/syoss-shampoo-intense-keratin",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exact current 440 ml product identity from manufacturer and retailer sources.",
+          "product.identifiers": "Exact 440 ml EAN is corroborated by dm and Rossmann.",
+          "product.candidate_image": "Exact 440 ml dm PNG was visually checked as front-facing, product-only, transparent, and 901×2500 px.",
+          "product.concern_eligibility": "Repair-care positioning conservatively supports normal and dryness shampoo concerns.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 2,
+      "final": {
+        "product": {
+          "name": "Power Repair Reparatur Shampoo",
+          "brand": "NIVEA",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://assets.beiersdorf.com/-/media/images/a/a/d/4/7b9275c7637f46af9c84e1ddd6a221bd-web_1010x1180_transparent_png.png?db=web&ctx=DE&hash=B6AFA04A58984A084A9C16B3B98E25A8",
+            "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4006000192543",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+              "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "NIVEA product page (usage)",
+              "url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+              "text": "Im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmem Wasser ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4006000192543",
+            "source_label": "NIVEA and dm exact 250 ml GTIN",
+            "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+            "source_type": "retailer",
+            "source_text": "Manufacturer structured data and dm GTIN agree on 4006000192543.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmem Wasser ausspülen.",
+            "source_label": "NIVEA product page (usage)",
+            "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+            "source_type": "manufacturer",
+            "source_text": "Im nassen Haar verteilen und aufschäumen. Danach gründlich mit warmem Wasser ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair",
+            "source_type": "retailer",
+            "source_text": "Price shown as €2.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://assets.beiersdorf.com/-/media/images/a/a/d/4/7b9275c7637f46af9c84e1ddd6a221bd-web_1010x1180_transparent_png.png?db=web&ctx=DE&hash=B6AFA04A58984A084A9C16B3B98E25A8",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+            "source_type": "manufacturer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exact manufacturer 250 ml product identity.",
+          "product.identifiers": "Exact 250 ml EAN is corroborated by manufacturer structured data and dm.",
+          "product.candidate_image": "Manufacturer transparent exact-product packshot was visually checked as product-only and 1010×1180 px.",
+          "product.concern_eligibility": "Repair-care positioning conservatively supports normal and dryness shampoo concerns.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 3,
+      "final": {
+        "product": {
+          "name": "Shampoo Repair & Pflege",
+          "brand": "schauma",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.95,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1781187747/assets/pas/images/a41e3ef5-bdcb-4f71-bbae-a4cdcf7b739a/schauma-shampoo-repair-und-pflege",
+            "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100890372",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+              "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-repair-und-pflege/p/4015100890372"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de product page (usage)",
+              "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+              "text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+            },
+            "deviation": {
+              "reason": "Exact package says to let the shampoo act briefly before rinsing; the standard template has no wait step.",
+              "packaging_text": "kurz einwirken lassen. Dann gründlich ausspülen."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100890372",
+            "source_label": "dm.de and Rossmann exact 400 ml GTIN",
+            "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+            "source_type": "retailer",
+            "source_text": "dm GTIN and Rossmann exact product URL agree on 4015100890372.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "source_label": "dm.de product page (usage)",
+            "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+            "source_type": "retailer",
+            "source_text": "Price shown as €1.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1781187747/assets/pas/images/a41e3ef5-bdcb-4f71-bbae-a4cdcf7b739a/schauma-shampoo-repair-und-pflege",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exact current 400 ml product identity from dm and Rossmann.",
+          "product.identifiers": "Exact 400 ml EAN is corroborated by dm and Rossmann.",
+          "product.candidate_image": "Exact dm packshot was visually checked as front-facing, product-only, and 1029×2400 px.",
+          "product.concern_eligibility": "Damaged/dry-hair care positioning supports normal and dryness shampoo concerns.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 4,
+      "final": {
+        "product": {
+          "name": "Shampoo Coco Water, fettiger Ansatz & trockene Spitzen",
+          "brand": "Garnier Fructis",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.45,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1774993493/assets/pas/images/dbaf1f61-81b2-48dd-8059-4ecf3214fc03/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600541970533",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-coco-water-klaerendes-shampoo/p/3600541970533"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Exact product usage source",
+              "url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+              "text": "Garnier Fructis Coco Water Kräftigendes Shampoo auf das nasse Haar auftragen und sanft auf der gesamten Kopfhaut einmassieren. Anschließend gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600541970533",
+            "source_label": "Exact product EAN evidence",
+            "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_type": "retailer",
+            "source_text": "dm labels GTIN 3600541970533 for 400 ml. Rossmann page JSON-LD embeds sku 3600541970533 for the exact 400 ml product.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Garnier Fructis Coco Water Kräftigendes Shampoo auf das nasse Haar auftragen und sanft auf der gesamten Kopfhaut einmassieren. Anschließend gründlich ausspülen.",
+            "source_label": "Exact product usage source",
+            "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_type": "retailer",
+            "source_text": "Garnier Fructis Coco Water Kräftigendes Shampoo auf das nasse Haar auftragen und sanft auf der gesamten Kopfhaut einmassieren. Anschließend gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.45,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.45 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1774993493/assets/pas/images/dbaf1f61-81b2-48dd-8059-4ecf3214fc03/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "The three title variants resolve to the same current German 400 ml SKU via dm GTIN plus Rossmann embedded SKU. The manufacturer page covers 250/300/400 ml but does not bind its displayed formula to the selected 400 ml GTIN.",
+          "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
+          "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 1040×2800 px.",
+          "product.concern_eligibility": "Concern eligibility is conservative and follows the exact reviewed product/scalp positioning.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 5,
+      "final": {
+        "product": {
+          "name": "Shampoo Fiji",
+          "brand": "Herbal Essences",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.95,
+          "net_content_value": 350,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1773867112/assets/pas/images/1cbddc2d-00a6-4154-9727-f626992bc65c/herbal-essences-shampoo-fiji",
+            "source_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530290012",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+              "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Exact product usage source",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012",
+              "text": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530290012",
+            "source_label": "Exact product EAN evidence",
+            "source_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+            "source_type": "retailer",
+            "source_text": "dm labels GTIN 8006530290012 for 350 ml. Rossmann JSON-LD embeds sku 8006530290012 for the exact 350 ml product.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden.",
+            "source_label": "Exact product usage source",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012",
+            "source_type": "retailer",
+            "source_text": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1773867112/assets/pas/images/1cbddc2d-00a6-4154-9727-f626992bc65c/herbal-essences-shampoo-fiji",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "dm and Rossmann agree on exact size, embedded/labeled EAN, product identity, usage, and complete ordered INCI.",
+          "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
+          "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 947×2800 px.",
+          "product.concern_eligibility": "Concern eligibility is conservative and follows the exact reviewed product/scalp positioning.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 6,
+      "final": {
+        "product": {
+          "name": "Shampoo Liquid Silk",
+          "brand": "Schwarzkopf GLISS",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1781187739/assets/pas/images/7b8d579d-fdb1-4119-b764-7a20c49f80df/schwarzkopf-gliss-shampoo-liquid-silk",
+            "source_url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813111",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+              "https://www.rossmann.de/de/pflege-und-duft-gliss-liquid-silk-shampoo/p/4015100813111"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Exact product usage source",
+              "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html",
+              "text": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813111",
+            "source_label": "Exact product EAN evidence",
+            "source_url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+            "source_type": "retailer",
+            "source_text": "dm labels GTIN 4015100813111 for 250 ml. Rossmann JSON-LD embeds sku 4015100813111 for the exact 250 ml product.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden.",
+            "source_label": "Exact product usage source",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html",
+            "source_type": "manufacturer",
+            "source_text": "Sanft im feuchten Haar verteilen und gut ausspülen. Regelmäßig zur Haarpflege anwenden und für optimale Ergebnisse anschließend die Liquid Silk Spülung verwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+            "source_type": "retailer",
+            "source_text": "Price shown as €2.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1781187739/assets/pas/images/7b8d579d-fdb1-4119-b764-7a20c49f80df/schwarzkopf-gliss-shampoo-liquid-silk",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current German manufacturer page and dm agree on exact 250 ml identity and ordered INCI; Rossmann embeds the same EAN but publishes a likely older formula.",
+          "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
+          "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 1051×2800 px.",
+          "product.concern_eligibility": "Concern eligibility is conservative and follows the exact reviewed product/scalp positioning.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 7,
+      "final": {
+        "product": {
+          "name": "Shampoo Total Repair",
+          "brand": "Schwarzkopf GLISS",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.95,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1755073142/assets/pas/images/6c7d0991-7f50-4a02-9ab6-d1759da7b7f3/schwarzkopf-gliss-shampoo-total-repair",
+            "source_url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100812435",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+              "https://www.brack.ch/gliss-shampoo-total-repair-250-ml-1691996",
+              "https://www.dm.at/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Exact product usage source",
+              "url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+              "text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100812435",
+            "source_label": "Exact product EAN evidence",
+            "source_url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+            "source_type": "retailer",
+            "source_text": "dm labels GTIN 4015100812435 for 250 ml. Independent Swiss retailer lists manufacturer number 4015100812435 for the exact 250 ml product. dm Austria labels GTIN 4015100812435 for 250 ml; not counted as the independent corroborator because it is the same retailer group as dm Germany.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "source_label": "Exact product usage source",
+            "source_url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+            "source_type": "retailer",
+            "source_text": "Price shown as €2.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1755073142/assets/pas/images/6c7d0991-7f50-4a02-9ab6-d1759da7b7f3/schwarzkopf-gliss-shampoo-total-repair",
+            "source_label": "Retailer/manufacturer product page packshot",
+            "source_url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+            "source_type": "retailer",
+            "source_text": "Front-facing, exact product-only candidate packshot passed recorded visual QA.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current German manufacturer and dm agree on the exact 250 ml formulation. Austrian/Swiss exact-EAN listings and the Rossmann 400 ml SKU expose a different likely older/regional formula and are preserved as conflicts, not merged.",
+          "product.identifiers": "Exact selected EAN is GS1-valid and corroborated by the recorded independent product sources.",
+          "product.candidate_image": "Recorded visual QA: pass_front_facing_exact_product_only_transparent_no_external_overlay; 1051×2800 px.",
+          "product.concern_eligibility": "Concern eligibility is conservative and follows the exact reviewed product/scalp positioning.",
+          "protocols.tpl_shampoo_std": "Exakte Produktanweisung belegt ein normales Rinse-out-Shampoo; keine strukturelle Abweichung vom Standard-Template."
+        }
+      }
+    },
+    {
+      "source_product_index": 8,
+      "final": {
+        "product": {
+          "name": "Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 1000,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2000,w_2000/v1759959737/assets/pas/images/977e021b-7b49-4e37-9098-ac0886a77e16/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+            "source_url": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524099299",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+              "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+              "text": "Auf nassem Haar auftragen, sanft in die Kopfhaut einmassieren und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524099299",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+            "source_type": "manufacturer",
+            "source_text": "Exact selected GTIN 3600524099299.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Auf nassem Haar auftragen, sanft in die Kopfhaut einmassieren und ausspülen.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+            "source_type": "manufacturer",
+            "source_text": "Auf nassem Haar auftragen, sanft in die Kopfhaut einmassieren und ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+            "source_type": "retailer",
+            "source_text": "Price shown as €9.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_png,q_100,c_fit,h_2000,w_2000/v1759959737/assets/pas/images/977e021b-7b49-4e37-9098-ac0886a77e16/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 9,
+      "final": {
+        "product": {
+          "name": "Locken Methode Feuchtigkeits-Shampoo",
+          "brand": "Garnier Fructis",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/locken-methode/shampoo/240108_gar_fru-curls_method_sh_3600542571739_1350x1800.jpg",
+            "source_url": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542571739",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+              "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo",
+              "text": "Das N° 1 Shampoo auf die nasse Kopfhaut in den Ansatz auftragen und mit sanften Bewegungen einmassieren."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542571739",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo",
+            "source_type": "manufacturer",
+            "source_text": "Exact selected GTIN 3600542571739.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Das N° 1 Shampoo auf die nasse Kopfhaut in den Ansatz auftragen und mit sanften Bewegungen einmassieren.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo",
+            "source_type": "manufacturer",
+            "source_text": "Das N° 1 Shampoo auf die nasse Kopfhaut in den Ansatz auftragen und mit sanften Bewegungen einmassieren.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/locken-methode/shampoo/240108_gar_fru-curls_method_sh_3600542571739_1350x1800.jpg",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 10,
+      "final": {
+        "product": {
+          "name": "Big Hair Shampoo",
+          "brand": "Being",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://beinghaircare.com/wp-content/uploads/2024/06/BIG-HAIR-SHAMPOO-CAROUSEL-4.jpg",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005872",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+              "https://bebe-tei.ro/en/products/being-big-hair-volumizing-shampoo-354ml"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/",
+              "text": "Apply to wet hair, lather, and rinse thoroughly."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005872",
+            "source_label": "Current exact product identity",
+            "source_url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Exact selected GTIN 4895248005872.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Apply to wet hair, lather, and rinse thoroughly.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather, and rinse thoroughly.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+            "source_type": "retailer",
+            "source_text": "Price shown as €6.79 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://beinghaircare.com/wp-content/uploads/2024/06/BIG-HAIR-SHAMPOO-CAROUSEL-4.jpg",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 11,
+      "final": {
+        "product": {
+          "name": "Sealing Miracle Versiegelndes Shampoo",
+          "brand": "Schwarzkopf GLISS",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.49,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C1N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_front-DE?hei=3004&fmt=png-alpha&qlt=100",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100895025",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+              "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+              "text": "Sanft im feuchten Haar verteilen und gut ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100895025",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+            "source_type": "manufacturer",
+            "source_text": "Exact selected GTIN 4015100895025.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Sanft im feuchten Haar verteilen und gut ausspülen.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+            "source_type": "manufacturer",
+            "source_text": "Sanft im feuchten Haar verteilen und gut ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.49,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.49 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C1N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_front-DE?hei=3004&fmt=png-alpha&qlt=100",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+            "source_type": "manufacturer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 12,
+      "final": {
+        "product": {
+          "name": "Dream Length Super Aufbau Shampoo",
+          "brand": "L'Oréal Paris Elvital",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 9.95,
+          "net_content_value": 1000,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1747569458/assets/pas/images/aa051a64-3d20-4054-ba15-f405764a3944/l-oreal-paris-elvital-shampoo-dream-length",
+            "source_url": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524062637",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+              "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml",
+              "text": "Auf das nasse Haar auftragen, sanft einmassieren und anschließend gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524062637",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml",
+            "source_type": "manufacturer",
+            "source_text": "Exact selected GTIN 3600524062637.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Auf das nasse Haar auftragen, sanft einmassieren und anschließend gründlich ausspülen.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml",
+            "source_type": "manufacturer",
+            "source_text": "Auf das nasse Haar auftragen, sanft einmassieren und anschließend gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 9.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+            "source_type": "retailer",
+            "source_text": "Price shown as €9.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1747569458/assets/pas/images/aa051a64-3d20-4054-ba15-f405764a3944/l-oreal-paris-elvital-shampoo-dream-length",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 13,
+      "final": {
+        "product": {
+          "name": "Blütensanft Rosenduft Shampoo",
+          "brand": "Herbal Essences",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.95,
+          "net_content_value": 350,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1754985082/assets/pas/images/95a07fc6-e0eb-4aa7-b969-a9dd0ddc6ce0/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216212748",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+              "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-bluetensanft/p/8700216212748"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+              "text": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216212748",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_type": "retailer",
+            "source_text": "Exact selected GTIN 8700216212748.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_type": "retailer",
+            "source_text": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 3.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_type": "retailer",
+            "source_text": "Price shown as €3.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1754985082/assets/pas/images/95a07fc6-e0eb-4aa7-b969-a9dd0ddc6ce0/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    },
+    {
+      "source_product_index": 14,
+      "final": {
+        "product": {
+          "name": "Repair & Care XXL Shampoo",
+          "brand": "Pantene Pro-V",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.95,
+          "net_content_value": 500,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1747529817/assets/pas/images/31c7c870-f44c-40f8-abed-6e61a2959807/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl"
+          }
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8700216422413",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-repair-care/p/8700216422413"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Current exact product source (usage)",
+              "url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+              "text": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8700216422413",
+            "source_label": "Current exact product identity",
+            "source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_type": "retailer",
+            "source_text": "Exact selected GTIN 8700216422413.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.tpl_shampoo_std",
+            "fact_value": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen.",
+            "source_label": "Current exact product source (usage)",
+            "source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_type": "retailer",
+            "source_text": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.95,
+            "source_label": "Retailer product page",
+            "source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_type": "retailer",
+            "source_text": "Price shown as €5.95 on 2026-09-02.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1747529817/assets/pas/images/31c7c870-f44c-40f8-abed-6e61a2959807/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_label": "Exact current packshot",
+            "source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+            "source_type": "retailer",
+            "source_text": "Exact front-facing product-only candidate image.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Current exact-SKU identity selected under Nick-approved evidence precedence.",
+          "product.identifiers": "Exact GTIN is GS1-valid and tied to the selected pack.",
+          "product.candidate_image": "Exact product-only candidate packshot meets the canonical roughly 800px-long-side intake bar.",
+          "product.concern_eligibility": "Conservative shampoo concern eligibility from the selected exact-SKU positioning.",
+          "protocols.tpl_shampoo_std": "Exact product directions support ordinary rinse-out use; no structural deviation is stated."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "rename": {
+        "from": "Ultimate Shampoo",
+        "to": "Elvital Glycolic Gloss Shampoo",
+        "reason": "Same existing formulation/catalog row; the frozen roster confirms GTIN 3600524128005 already belongs to this row, so no identifier action is repeated."
+      }
+    }
+  ]
+}

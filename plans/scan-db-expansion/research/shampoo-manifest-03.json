@@ -1,0 +1,1959 @@
+{
+  "batch_id": "scan-db-expansion-shampoo-03-2026-09-02",
+  "generated_at": "2026-09-02T20:30:00.000+02:00",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "DMG Clinical Shampoo",
+          "brand": "Dr. Wolff Plantur",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 19.95,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1755036815/assets/pas/images/2389094d-844e-4fd1-aea6-8adf2c460d1a/plantur-shampoo-dmg-clinical",
+            "source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4008666770004",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+              "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-dmg-clinical-shampoo/p/4008666770004"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+              "text": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden"
+            },
+            "deviation": {
+              "reason": "Die Packungsanweisung schreibt eine konkrete zweiminütige Einwirkzeit vor; das STD-Template hat keine Wartezeit.",
+              "packaging_text": "2 Minuten einwirken lassen"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4008666770004",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+            "source_type": "retailer",
+            "source_text": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 19.95,
+              "net_content_value": 250,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+            "source_type": "retailer",
+            "source_text": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as treatment; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+            "source_type": "retailer",
+            "source_text": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as treatment; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Anti-Schuppen Shampoo Apple Fresh",
+          "brand": "head&shoulders",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 500,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://images.ctfassets.net/ee6cq8u2y2es/5EaDxdGqglkZ6exC0GHMFq/d0f8d6b8f24425e6235501d7caec2711/0__80861057__8001090896049_C1N1.png?fm=webp&w=1200&q=80",
+            "source_url": "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8001090896049",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+              "https://www.dm.at/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "dandruff",
+              "shampoo_bucket": "schuppen",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "dandruff",
+              "shampoo_bucket": "schuppen",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dandruff",
+          "schuppen"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-DANDRUFF",
+            "product_source": {
+              "label": "Head & Shoulders DE Produktseite",
+              "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/",
+              "text": "Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8001090896049",
+            "source_label": "Head & Shoulders DE Produktseite",
+            "source_url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/",
+            "source_type": "manufacturer",
+            "source_text": "Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.95,
+              "net_content_value": 500,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+            "source_type": "retailer",
+            "source_text": "Auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "dandruff",
+                  "shampoo_bucket": "schuppen",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "dandruff",
+                  "shampoo_bucket": "schuppen",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+            "source_type": "retailer",
+            "source_text": "Exact anti-dandruff positioning and Piroctone Olamine support a dandruff target. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_dandruff. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Parent adjudication selected moderate conditioning: the silicone/guar care system is offset by the strong multi-anionic cleanser and is not a rich 2-in-1 architecture. The frozen dual-lane adjudication classifies dandruffSupport as supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as treatment; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung.",
+            "source_label": "Head & Shoulders DE Produktseite",
+            "source_url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/",
+            "source_type": "manufacturer",
+            "source_text": "Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "Exact anti-dandruff positioning and Piroctone Olamine support a dandruff target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_dandruff.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "Parent adjudication selected moderate conditioning: the silicone/guar care system is offset by the strong multi-anionic cleanser and is not a rich 2-in-1 architecture.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as treatment; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Max Moisture Shampoo",
+          "brand": "Being",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/174/MAM_17491008/MAM_17491008_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005902",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+              "https://www.superdrug.com/hair/shampoo/being-shampoo-max-moisture-354ml/p/847877"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Being Haircare Produktseite",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+              "text": "Apply to wet hair, lather and rinse well."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005902",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.79,
+              "net_content_value": 354,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Apply to wet hair, lather and rinse well.",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Bye Bye Anti-Frizz Shampoo",
+          "brand": "Being",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://beinghaircare.com/wp-content/uploads/2024/06/BYE-BYE-FRIZZ-SHAMPOO-CAROUSEL-4.jpg",
+            "source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005889",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+              "https://www.auchan.fr/being-bye-bye-frizz-shampoing-lissant-huile-de-jojoba-et-amande/pr-C1845912"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Being Haircare Produktseite",
+              "url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+              "text": "Apply to wet hair, lather and rinse well."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005889",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.79,
+              "net_content_value": 354,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as shine; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Apply to wet hair, lather and rinse well.",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as shine; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Curl Power Locken Shampoo",
+          "brand": "Being",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/174/MAM_17492646/MAM_17492646_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005896",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+              "https://www.dm.de/p/d/3118561/being-shampoo-curl-power"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Being Haircare Produktseite",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+              "text": "Apply to wet hair, lather and rinse well."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005896",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.79,
+              "net_content_value": 354,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Apply to wet hair, lather and rinse well.",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+            "source_type": "retailer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "NOURISH + SHINE Daily Clean Shampoo",
+          "brand": "Being",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 7.95,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://beinghaircare.com/wp-content/uploads/2024/06/NOURISH-SHINE-SHAMPOO-CAROUSEL-4.jpg",
+            "source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005865",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+              "https://www.apotea.se/being-shampoo-nourish-shine-354ml"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Being Haircare Produktseite",
+              "url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+              "text": "Apply to wet hair, lather and rinse well."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005865",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 7.95,
+              "net_content_value": 354,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as shine; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Apply to wet hair, lather and rinse well.",
+            "source_label": "Being Haircare Produktseite",
+            "source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+            "source_type": "manufacturer",
+            "source_text": "Apply to wet hair, lather and rinse well.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as shine; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as frequent; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Moisture Shampoo",
+          "brand": "IDA WARG Beauty",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 12.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/559/MAM_55946331/MAM_55946331_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "7340074775217",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+              "https://www.apotea.se/ida-warg-moisture-shampoo-250-ml-1"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann Produktseite",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+              "text": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "7340074775217",
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+            "source_type": "retailer",
+            "source_text": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 12.99,
+              "net_content_value": 250,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+            "source_type": "retailer",
+            "source_text": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "fine"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen.",
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+            "source_type": "retailer",
+            "source_text": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as general; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Coffein Activator Shampoo",
+          "brand": "Bali Gents",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.99,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/569/MAM_56919406/MAM_56919406_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4262391993507",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+              "https://www.ohfeliz.com/bali-curls/bali-gents-coffein-activator-shampoo"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Galaxus Produktseite",
+              "url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+              "text": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen."
+            },
+            "deviation": {
+              "reason": "Die Packungsanweisung nennt 2 Minuten Einwirkzeit; Koffein-/Wurzelmarketing ist keine scalp-condition für das TARGETED-Template.",
+              "packaging_text": "für 2 Minuten einwirken lassen"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4262391993507",
+            "source_label": "Galaxus Produktseite",
+            "source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+            "source_type": "retailer",
+            "source_text": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.99,
+              "net_content_value": 200,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Galaxus Produktseite",
+            "source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+            "source_type": "retailer",
+            "source_text": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "fine"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular. Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as low; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as low; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen.",
+            "source_label": "Galaxus Produktseite",
+            "source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+            "source_type": "retailer",
+            "source_text": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as low; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as scalp_active; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as none; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as low; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Full Hair Magic Fülle-Shampoo",
+          "brand": "Schwarzkopf Gliss",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/156/MAM_15663505/MAM_15663505_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100861723",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+              "https://www.budni.de/sortiment/produkte/6536528005"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann Produktseite",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+              "text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100861723",
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 2.99,
+              "net_content_value": 250,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "fine"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular. Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as volume; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as repair; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "source_label": "Rossmann Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as moderate; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as volume; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as repair; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Bond Repair Shampoo Anti-Haarschäden",
+          "brand": "L’Oréal Paris Elvital",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/160/MAM_16016282/MAM_16016282_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600524074654",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+              "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden/p/3600524074654"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+              "text": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600524074654",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "source_text": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 6.95,
+              "net_content_value": 200,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "source_text": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling. The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusPrimary as repair; this projection preserves that ruling. The frozen dual-lane adjudication classifies focusSecondary as shine; this projection preserves that ruling. The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling. The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling. The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen.",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+            "source_type": "retailer",
+            "source_text": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The frozen dual-lane adjudication classifies cleansingStrength as strong; this projection preserves that ruling.",
+          "research.properties.conditioningLevel": "The frozen dual-lane adjudication classifies conditioningLevel as moderate; this projection preserves that ruling.",
+          "research.properties.dandruffSupport": "The frozen dual-lane adjudication classifies dandruffSupport as not_supported; this projection preserves that ruling.",
+          "research.properties.focusPrimary": "The frozen dual-lane adjudication classifies focusPrimary as repair; this projection preserves that ruling.",
+          "research.properties.focusSecondary": "The frozen dual-lane adjudication classifies focusSecondary as shine; this projection preserves that ruling.",
+          "research.properties.scalpComfortTarget": "The frozen dual-lane adjudication classifies scalpComfortTarget as not_targeted; this projection preserves that ruling.",
+          "research.properties.usageRole": "The frozen dual-lane adjudication classifies usageRole as regular; this projection preserves that ruling.",
+          "research.properties.weightPotential": "The frozen dual-lane adjudication classifies weightPotential as moderate; this projection preserves that ruling."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo For Men",
+          "brand": "schauma",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.95,
+          "net_content_value": 400,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781187820/assets/pas/images/0c78d631-45b7-4197-9c74-e364fda710d5/schauma-shampoo-for-men",
+            "source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100890792",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+              "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-for-men/p/4015100890792"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+              "text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+            },
+            "deviation": {
+              "reason": "Die Quelle enthält eine Warteanweisung ohne Dauer; das STD-Template enthält keinen Wait-Schritt.",
+              "packaging_text": "kurz einwirken lassen"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100890792",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 1.95,
+              "net_content_value": 400,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "fine"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. Effective ordinary cleansing is more likely than a clarifying chassis because the strong anionic route is buffered and the claims are daily/normal hair rather than reset. Observed intensity: regular. Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. Effective ordinary cleansing is more likely than a clarifying chassis because the strong anionic route is buffered and the claims are daily/normal hair rather than reset. Noticeable but bounded slip/support is plausible; not enough converging rich deposition for high. Formula-derived negative. Volume is the most specific product-positioning claim and is formula-compatible because the formula is silicone-free with only moderate weight. No secondary focus emitted. Ordinary men's shampoo. Parent adjudication selected frequent use: exact current sources position it for everyday use and the final cleansing classification is non-strong. Residue risk is bounded but real for fine hair because one cationic polymer is early and multiple refatting routes appear.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+            "source_type": "retailer",
+            "source_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Effective ordinary cleansing is more likely than a clarifying chassis because the strong anionic route is buffered and the claims are daily/normal hair rather than reset. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): coarse — Conservative production projection: coarse is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Effective ordinary cleansing is more likely than a clarifying chassis because the strong anionic route is buffered and the claims are daily/normal hair rather than reset.",
+          "research.properties.conditioningLevel": "Noticeable but bounded slip/support is plausible; not enough converging rich deposition for high.",
+          "research.properties.dandruffSupport": "Formula-derived negative.",
+          "research.properties.focusPrimary": "Volume is the most specific product-positioning claim and is formula-compatible because the formula is silicone-free with only moderate weight.",
+          "research.properties.focusSecondary": "No secondary focus emitted.",
+          "research.properties.scalpComfortTarget": "Ordinary men's shampoo.",
+          "research.properties.usageRole": "Parent adjudication selected frequent use: exact current sources position it for everyday use and the final cleansing classification is non-strong.",
+          "research.properties.weightPotential": "Residue risk is bounded but real for fine hair because one cationic polymer is early and multiple refatting routes appear."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Grow Abundant Shampoo Anti-Haarverlust",
+          "brand": "Pantene Pro-V",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 7.95,
+          "net_content_value": 290,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1770334746/assets/pas/images/ccc7901e-c5d8-4e37-b31a-d2ad0bc75cd3/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530060042",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+              "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-grow-abundant-anti-haarverlust/p/8006530060042"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+              "text": "Ins nasse Haar einmassieren. Ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530060042",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "source_type": "retailer",
+            "source_text": "Ins nasse Haar einmassieren. Ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 7.95,
+              "net_content_value": 290,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "source_type": "retailer",
+            "source_text": "Ins nasse Haar einmassieren. Ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "fine"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": [
+                "A supported anti-dandruff active is documented, but no exact anti-dandruff positioning supports a dandruff treatment row."
+              ]
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. The extra xylenesulfonate/dodecylbenzenesulfonate routes make strong more defensible than ordinary moderate. Observed intensity: regular. Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): normal — Conservative production projection: normal is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. The extra xylenesulfonate/dodecylbenzenesulfonate routes make strong more defensible than ordinary moderate. Parent adjudication selected moderate conditioning: the silicone/guar care system is offset by the strong multi-anionic cleanser and is not a rich 2-in-1 architecture. Formula-derived positive; projection should not emit dandruff bucket without exact anti-dandruff positioning. Use scalp_active as a product-truth descriptor only, with medical boundary warnings. No secondary focus emitted. Scalp-active does not equal scalp-comfort targeted. Regular is conservative for the shampoo row because no anti-dandruff positioning or contact protocol is stated. Weight risk is real, especially for fine hair, but the cleansing chassis prevents a high call.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Ins nasse Haar einmassieren. Ausspülen.",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+            "source_type": "retailer",
+            "source_text": "Ins nasse Haar einmassieren. Ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "The extra xylenesulfonate/dodecylbenzenesulfonate routes make strong more defensible than ordinary moderate. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Conservative production projection: fine is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): normal — Conservative production projection: normal is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "The extra xylenesulfonate/dodecylbenzenesulfonate routes make strong more defensible than ordinary moderate.",
+          "research.properties.conditioningLevel": "Parent adjudication selected moderate conditioning: the silicone/guar care system is offset by the strong multi-anionic cleanser and is not a rich 2-in-1 architecture.",
+          "research.properties.dandruffSupport": "Formula-derived positive; projection should not emit dandruff bucket without exact anti-dandruff positioning.",
+          "research.properties.focusPrimary": "Use scalp_active as a product-truth descriptor only, with medical boundary warnings.",
+          "research.properties.focusSecondary": "No secondary focus emitted.",
+          "research.properties.scalpComfortTarget": "Scalp-active does not equal scalp-comfort targeted.",
+          "research.properties.usageRole": "Regular is conservative for the shampoo row because no anti-dandruff positioning or contact protocol is stated.",
+          "research.properties.weightPotential": "Weight risk is real, especially for fine hair, but the cleansing chassis prevents a high call."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Nutri-Coffein Shampoo #langehaare",
+          "brand": "Plantur 21",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 7.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1752477804/assets/pas/images/f586dcab-4166-4833-a5e7-b0ed983a1e97/plantur-21-shampoo-nutri-coffein-langehaare",
+            "source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4008666755520",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+              "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-21-nutri-coffein-shampoo/p/4008666755520"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "normal"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite",
+              "url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+              "text": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen."
+            },
+            "deviation": {
+              "reason": "Die exakte Anweisung schreibt mindestens 2 Minuten Kontaktzeit vor; Koffein-/Wurzelmarketing ist keine scalp-condition für das TARGETED-Template.",
+              "packaging_text": "mindestens 2 Minuten einwirken lassen"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4008666755520",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+            "source_type": "retailer",
+            "source_text": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 7.95,
+              "net_content_value": 200,
+              "net_content_unit": "ml"
+            },
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+            "source_type": "retailer",
+            "source_text": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+            "source_type": "retailer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. No reset architecture; ordinary cleansing is the best fit. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. No reset architecture; ordinary cleansing is the best fit. Several care routes support noticeable softness but not a rich 2-in-1 level. Formula-derived negative. Scalp_active is used only as a cautious product-truth descriptor, not as efficacy endorsement. A distinct shine/smoothness claim with independent conditioning route exists. Not a scalp-comfort product. Treatment is a method label for contact-time, scalp-active positioning; manifest copy must keep it cosmetic. Moderate residue potential is plausible for fine hair, but not a high-weight formula.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen.",
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+            "source_type": "retailer",
+            "source_text": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "No reset architecture; ordinary cleansing is the best fit. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "No reset architecture; ordinary cleansing is the best fit.",
+          "research.properties.conditioningLevel": "Several care routes support noticeable softness but not a rich 2-in-1 level.",
+          "research.properties.dandruffSupport": "Formula-derived negative.",
+          "research.properties.focusPrimary": "Scalp_active is used only as a cautious product-truth descriptor, not as efficacy endorsement.",
+          "research.properties.focusSecondary": "A distinct shine/smoothness claim with independent conditioning route exists.",
+          "research.properties.scalpComfortTarget": "Not a scalp-comfort product.",
+          "research.properties.usageRole": "Treatment is a method label for contact-time, scalp-active positioning; manifest copy must keep it cosmetic.",
+          "research.properties.weightPotential": "Moderate residue potential is plausible for fine hair, but not a high-weight formula."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Keratin Sleek Shampoo",
+          "brand": "Garnier Fructis",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 3.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/keratin-sleek/shampoo/241213_garnier_keratin-sleek_sh_pack.png?rev=f67858d6b60643a6ade9cbea86617fae",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo"
+          },
+          "description": "Kuratiertes Shampoo; die Produkt- und Formulierungseinstufung ist research-only und nicht als Wirksamkeitsversprechen zu lesen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542638777",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-keratin-sleek-shampoo/p/3600542638777"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Garnier Produktseite",
+              "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+              "text": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542638777",
+            "source_label": "Garnier Produktseite",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+            "source_type": "manufacturer",
+            "source_text": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.commercial",
+            "fact_value": {
+              "price_eur": 3.95,
+              "net_content_value": 200,
+              "net_content_unit": "ml"
+            },
+            "source_label": "Garnier Produktseite",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+            "source_type": "manufacturer",
+            "source_text": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "product_shampoo_specs": [
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "normal"
+                },
+                {
+                  "cleansing_intensity": "regular",
+                  "scalp_route": "balanced",
+                  "shampoo_bucket": "normal",
+                  "thickness": "coarse"
+                }
+              ],
+              "adapter_status": "property_lane_ready",
+              "adapter_warnings": []
+            },
+            "source_label": "Shampoo Production Light v1 projection from frozen exact-product evidence",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+            "source_type": "manufacturer",
+            "source_text": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target. Not clarifying/reset; moderate is best. Observed intensity: regular. Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile. Roles derived from reviewed buckets: shampoo_everyday. Not clarifying/reset; moderate is best. The formula is unusually care-heavy for a shampoo. Formula-derived negative. Repair is the closest supported v1.4 focus for the Keratin Sleek positioning. Parent adjudication rejects a secondary shine focus because the frozen packet did not preserve a distinct exact shine claim separate from sleek/smoothing. Not targeted. Default regular. Moderate is conservative; high is plausible for very fine hair but not required.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.application",
+            "fact_value": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen.",
+            "source_label": "Garnier Produktseite",
+            "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+            "source_type": "manufacturer",
+            "source_text": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No verified sensitive, dry, oily, or exact anti-dandruff scalp positioning supports another production scalp target.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Not clarifying/reset; moderate is best. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Conservative production projection: normal is ideal given the adjudicated cleansing, conditioning, and weight profile. coarse — Conservative production projection: coarse is ideal given the adjudicated cleansing, conditioning, and weight profile. Conditional (not emitted): fine — Conservative production projection: fine is conditional given the adjudicated cleansing, conditioning, and weight profile.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Not clarifying/reset; moderate is best.",
+          "research.properties.conditioningLevel": "The formula is unusually care-heavy for a shampoo.",
+          "research.properties.dandruffSupport": "Formula-derived negative.",
+          "research.properties.focusPrimary": "Repair is the closest supported v1.4 focus for the Keratin Sleek positioning.",
+          "research.properties.focusSecondary": "Parent adjudication rejects a secondary shine focus because the frozen packet did not preserve a distinct exact shine claim separate from sleek/smoothing.",
+          "research.properties.scalpComfortTarget": "Not targeted.",
+          "research.properties.usageRole": "Default regular.",
+          "research.properties.weightPotential": "Moderate is conservative; high is plausible for very fine hair but not required."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "add_identifiers": [
+        {
+          "type": "ean",
+          "value": "4015100893007",
+          "cross_source_agreement": true,
+          "source_urls": [
+            "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+            "https://www.schwarzkopf.de/marken/haarpflege/gliss/scalp-balance/tiefenreinigungs-shampoo.html"
+          ],
+          "excluded_from_apply": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "nivea-power-repair",
+  "formulaFingerprintSha256": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [],
+    "adjudicationSha256": "b7cfaea78723b064420a65d5eb07931a60ec7e44d8a4ee313da1493aab982f32"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [
+      "moisture"
+    ],
+    "confidence": "moderate",
+    "rationale": "Repair bleibt primaer, weil Name und Positionierung auf geschaedigtes bzw. strapaziertes Haar zielen und die Formel Squalane, Panthenol, Cocos Nucifera Oil, kationisches Guar und refettende Routen zeigt. Moisture ist als Sekundaerfokus vertretbar durch Panthenol/Glycerin und die Feuchtigkeitsclaims, aber die Formel- und Claim-Signale ueberlappen stark; deshalb nur moderate confidence.",
+    "formulaFacts": [
+      {
+        "ingredient": "Squalane",
+        "position": 9,
+        "observation": "emolliente Repair-/Damage-Care-kompatible Route"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 10,
+        "observation": "Humectant- und Haargefuehl-Support"
+      },
+      {
+        "ingredient": "Cocos Nucifera Oil",
+        "position": 11,
+        "observation": "nichtfluechtige Oelpflege"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "observation": "kationisches Conditioning-Polymer"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 15,
+        "observation": "Humectant-Signal fuer den Moisture-Sekundaerfokus"
+      }
+    ],
+    "counterSignal": "Feuchtigkeit und Repair nutzen dieselben Pflegewege, und die Claims nennen zugleich Feuchtigkeit und nicht beschwerende Pflege; die Primaerentscheidung darf daher nicht als INCI-allein bewiesen dargestellt werden.",
+    "neighboringAlternative": "moisture",
+    "evidenceRefs": [
+      "claim:nivea-de-positioning",
+      "claim:dm-de-positioning",
+      "formula.conditioning.09",
+      "formula.conditioning.11",
+      "formula.conditioning.13",
+      "formula.canonical_inci"
+    ]
+  },
+  "careDirection": {
+    "verdict": "dual_supported",
+    "moistureRoutes": [
+      "Panthenol an Position 10",
+      "Glycerin an Position 15",
+      "explizite langanhaltende Feuchtigkeitspositionierung"
+    ],
+    "repairRoutes": [
+      "Power-Repair-Name und Positionierung fuer geschaedigtes/strapaziertes Haar",
+      "Squalane an Position 9",
+      "Cocos Nucifera Oil an Position 11",
+      "Guar Hydroxypropyltrimonium Chloride an Position 13"
+    ],
+    "sharedConditioningRoutes": [
+      "Glyceryl Oleate an Position 14",
+      "Hydrogenated Castor Oil an Position 18"
+    ],
+    "limitation": "Moisture und Repair sind hier schwer sauber zu trennen, weil dieselben Emollient-/Polymer-Routen beide Erzaehlungen tragen; die Entscheidung ist formula-first mit Claims als Tie-Breaker, nicht claim-only."
+  },
+  "claimRole": "tie_breaker",
+  "decisionTrace": "Die Formel stuetzt beide Care-Richtungen. Die exakte Repair-Identitaet entscheidet primaer fuer repair; moisture bleibt als begrenzter Sekundaerfokus erhalten, weil Humectants und Feuchtigkeitsclaim real sind."
+}

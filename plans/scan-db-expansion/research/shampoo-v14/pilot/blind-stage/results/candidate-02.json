@@ -1,0 +1,127 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "candidateSlot": "candidate-02",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is the best band: SLES is the primary cleanser, but CAPB directly follows and PEG-7 Glyceryl Cocoate adds early refatting/buffering while later helpers are not counted as independent cleansing routes.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03"},
+        {"ingredient": "PEG-7 Glyceryl Cocoate", "position": 5, "factId": "formula.surfactant.05"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 means the formula is not genuinely low cleansing.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.03", "formula.surfactant.05", "formula.architecture.helper_functions_preserved"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High conditioning is strongly supported by protein, dimethicone, amodimethicone, cationic guar and waxy/lipid payload appearing before or near the fragrance/pH region.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "Hydrogenated Castor Oil", "position": 13, "factId": "formula.conditioning.13"}
+      ],
+      "counterSignal": "The formula is rinse-off and SLES-led, so cleansing offset still exists.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.conditioning.06", "formula.conditioning.07", "formula.conditioning.11", "formula.conditioning.12", "formula.conditioning.13", "formula.architecture.04"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High weight potential is plausible because multiple persistent systems converge early: protein film, nonvolatile silicone, amodimethicone, cationic guar and waxy/lipid payload.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "Hydrogenated Castor Oil", "position": 13, "factId": "formula.conditioning.13"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 and PEG-7 Glyceryl Cocoate at position 5 give the formula both cleansing and rinse-off offset.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.conditioning.06", "formula.conditioning.07", "formula.conditioning.11", "formula.conditioning.12", "formula.conditioning.13", "formula.surfactant.02", "formula.surfactant.05"],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["PEG-120 Methyl Glucose Dioleate at position 17 is left unresolved as thickener/emulsifier rather than substantive care."],
+        "whyThisBand": "Several independent, hair-substantive routes appear close enough to matter and include silicone, amodimethicone, cationic polymer, protein and waxy/lipid payload.",
+        "whyNotNeighborBand": "Moderate would understate the number and persistence of early deposition routes; a lower band would depend on assuming concentrations not available from INCI."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair is the strongest formula-first direction because hydrolyzed keratin, silicone, amodimethicone and cationic guar form a coherent damage-care route.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06"},
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11"}
+      ],
+      "counterSignal": "Positioning is hidden, and the same slip system could later be framed as softness or shine rather than repair.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": ["formula.conditioning.06", "formula.conditioning.07", "formula.conditioning.11", "formula.conditioning.12"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained at blind stage because the formula routes overlap heavily with the primary repair-compatible care system.",
+      "formulaFacts": [
+        {"ingredient": "Prunus Armeniaca (Apricot) Kernel Oil", "position": 20, "factId": "formula.canonical_inci"},
+        {"ingredient": "Glycol Distearate", "position": 14, "factId": "formula.canonical_inci"}
+      ],
+      "counterSignal": "Late oil and ester clues could corroborate a separate softness or shine route only after positioning is visible.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["formula.canonical_inci", "formula.conditioning.13"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains the blind default: the formula is buffered and care-heavy but contains no recognized treatment active or explicit reset architecture.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03"},
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06"}
+      ],
+      "counterSignal": "The richer deposition system could lead to alternating use for some users later, but direct usage role is not personalized cadence.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.03", "formula.conditioning.06"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted is supported because the formula lacks recognized scalp actives and is dominated by hair-feel deposition plus fragrance exposure.",
+      "formulaFacts": [
+        {"ingredient": "Parfum (Fragrance)", "position": 9, "factId": "formula.canonical_inci"},
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06"}
+      ],
+      "counterSignal": "PEG-7 Glyceryl Cocoate at position 5 is a refatting clue, but it does not establish intentional scalp comfort.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.surfactant.05", "formula.conditioning.06"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [{"ingredient": "Sodium Salicylate", "position": 28, "factId": "formula.canonical_inci"}],
+      "counterSignal": "Sodium Salicylate at position 28 is not a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": ["formula.canonical_inci"]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "e67411eb73b07311887e072d506b8426303b313fcf184584210ac8e6e1e0ddf9",
+    "formulaFingerprintSha256": "9d68e3abce11e8e7af0982a2ee376633bdc8b4990df3e5d4b2808bef943dcc1a",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T07:50:05Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false
+  }
+}

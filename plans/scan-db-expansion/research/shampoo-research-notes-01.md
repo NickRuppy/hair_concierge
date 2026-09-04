@@ -1,0 +1,52 @@
+# Shampoo Research Notes — Batch 01
+
+> **STATUS: RESEARCH-DRAFT — not approved data.** File-only research: no catalog or database change has been applied.
+>
+> **CLASSIFICATION INVALIDATED 2026-09-03:** identity, EAN, commercial, raw-image,
+> source, and protocol research is being preserved. The current Shampoo property
+> projections and prior `property_lane_ready` claim are not v1.4-reviewed output and
+> must not be applied or used as classification priors. They will be regenerated only
+> from the approved `shampoo-v14/` research packages.
+
+Checked: 2026-09-02
+Manifest: `shampoo-manifest-01.json`
+
+## Result and evidence rule
+
+All 15 candidates are staged as new products, plus one existing-product correction. The approved recovery rule is: a current manufacturer formula bound to the exact GTIN prevails; otherwise, two current reputable exact-EAN retailers may establish the canonical formula. Competing regional, stale, or different-size records remain documented, never silently merged.
+
+- Validator: **PASS**, 15/15 products and 1/1 existing-product update.
+- Adapter-to-manifest equality: **PASS**, 15/15 exact projected category-spec rows, thickness sets, roles, and rationales.
+- Recovered adapter run: 7/7 `property_lane_ready`, 0 `needs_research`; deterministic rerun comparison empty.
+- Candidate-image standard is roughly 800 px on the **long side**, replacing the superseded short-axis interpretation. Gliss Sealing Miracle's official 761×3004 transparent asset passes.
+- Only Honig Schätze 400 ml EAN `3600542461030` is excluded from apply (`cross_source_agreement:false`). The only deviation is schauma’s explicit short contact time.
+
+Confidence: **solid** = direct current exact-SKU support; **inferred** = conservative formula/claim assessment; **guessed-conservative** = mixed/incomplete evidence, never a hard rule.
+
+## Candidate ledger
+
+| # | Candidate and sources | Confidence | Disposition, conflict resolution, deviation/open gap |
+| ---: | --- | --- | --- |
+| 1 | Elvital Hydra Hyaluronic 1,000 ml — [L'Oréal](https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml), [dm](https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend) | Identity/EAN `3600524099299` **solid**; specs **inferred**. | **Manifest.** Current exact manufacturer formula selected over conflicting retailer text. STD; no deviation or hold. |
+| 2 | Wahre Schätze Honig Schätze 400 ml — [dm DE](https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze), [dm AT](https://www.dm.at/p/d/1670316/wahre-schaetze-reparierendes-shampoo-honig-schaetze) | Identity **solid**; EAN **guessed-conservative**; specs **inferred**. | **Manifest, apply-excluded.** Keep exact 400 ml `3600542461030`; independent EAN corroboration remains required. STD; no deviation. |
+| 3 | Fructis Locken Methode 200 ml — [Garnier](https://www.garnier.de/haarpflege/haarpflege-marken/fructis/locken-methode/feuchtigkeitsauffuellendes-shampoo), [dm](https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit) | Identity/EAN `3600542571739` **solid**; specs **inferred**. | **Manifest.** Exact manufacturer formula selected over conflicting retailer formula. STD; no deviation or hold. |
+| 4 | Syoss Intense Keratin 440 ml — [Syoss](https://www.syoss.net/care/shampoo/syoss-intense-keratin-deep-caring-shampoo.html), [dm](https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** Secondary concern intentionally empty. STD; no deviation. |
+| 5 | NIVEA Power Repair 250 ml — [NIVEA](https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html), [dm](https://www.dm.de/p/d/1620988/nivea-shampoo-power-repair) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** STD; no deviation or gap. |
+| 6 | Being Big Hair 354 ml — [Being](https://beinghaircare.com/product/big-hair-volumizing-shampoo/), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872), [exact-EAN retail](https://bebe-tei.ro/en/products/being-big-hair-volumizing-shampoo-354ml) | Brand formula/size **solid**, EAN `4895248005872` **solid**; specs **inferred**. | **Manifest.** Brand and retailer formulas differ; selected current brand 354 ml formula under approved precedence. STD; no deviation or hold. |
+| 7 | GLISS Sealing Miracle 200 ml — [Schwarzkopf](https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025), [Kruidvat formula](https://www.kruidvat.nl/gliss-sealing-miracle-sealing-shampoo/p/6626849) | Identity/EAN `4015100895025` and official packshot **solid**; specs **inferred**. | **Manifest.** Current exact-EAN retailer formula; official identity/image. Asset: `4015100895025_C1N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_front-DE?hei=3004&fmt=png-alpha&qlt=100`. STD; no deviation or hold. |
+| 8 | Elvital Dream Length 1,000 ml — [L'Oréal](https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml), [dm](https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524062637) | Identity/EAN `3600524062637` **solid**; specs **inferred**. | **Manifest.** Exact manufacturer formula selected; no 300 ml alias. STD; no deviation or hold. |
+| 9 | Herbal Essences Blütensanft 350 ml — [dm](https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft), [Shop Apotheke](https://www.shop-apotheke.com/beauty/CH01124495/herbal-essences-rosenwasser-shampoo.htm), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-bluetensanft/p/8700216212748) | Identity/EAN `8700216212748` **solid** from independent dm/Rossmann exact-EAN records; specs **guessed-conservative**. | **Manifest.** Exact-EAN dm/Shop formula conflict retained; current dm German formula selected. STD; no deviation or hold. |
+| 10 | schauma Repair & Pflege 400 ml — [dm](https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-repair-und-pflege/p/4015100890372) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** STD deviation: “kurz einwirken lassen. Dann gründlich ausspülen.” |
+| 11 | Fructis Coco Water 400 ml — [Garnier](https://www.garnier.de/haarpflege/haarpflege-marken/fructis/coco-water/kraeftigendes-shampoo), [dm](https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** STD; no deviation. Minor fragrance variance not merged. |
+| 12 | Herbal Essences Fiji 350 ml — [dm](https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** STD; no deviation. |
+| 13 | GLISS Liquid Silk 250 ml — [Schwarzkopf](https://www.schwarzkopf.de/marken/haarpflege/gliss/liquid-silk/liquid-silk-shampoo.html), [dm](https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** Current German formula selected; older regional formula non-canonical. STD; no deviation. |
+| 14 | GLISS Total Repair 250 ml — [Schwarzkopf](https://www.schwarzkopf.de/marken/haarpflege/gliss/total-repair/total-repair-shampoo.html), [dm](https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair) | Identity/EAN **solid**; specs **inferred**. | **Manifest.** Current German formula selected; regional/older records non-canonical. STD; no deviation. |
+| 15 | Pantene Repair & Care XXL 500 ml — [dm DE](https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl), [Rossmann](https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-repair-care/p/8700216422413), current dm AT record | Identity/EAN `8700216422413` and 500 ml **solid** from independent dm/Rossmann exact-EAN records; specs **inferred**. | **Manifest.** 500 ml frozen; current dm DE+AT formula matches. Never infer 1,000 or 300 ml aliases. STD; no deviation or hold. |
+
+## Existing-product correction — Elvital Glycolic Gloss Shampoo
+
+Existing row `88c230c5-1020-4648-a10e-c2a1e8c87e0e` (`Ultimate Shampoo`) is the same formulation/catalog row. It is staged only as an `existing_product_updates` rename to `Elvital Glycolic Gloss Shampoo`. Existing GTIN `3600524128005` is not re-added; the suggested 300 ml EAN remains unsupported and notes-only.
+
+## Apply boundary
+
+This is research draft data. Any future operation remains exact reviewed manifest → preflight → explicit human-gated apply → verification.

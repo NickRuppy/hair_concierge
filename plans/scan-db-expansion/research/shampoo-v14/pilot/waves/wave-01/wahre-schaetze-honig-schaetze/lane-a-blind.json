@@ -1,0 +1,276 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "productId": "wahre-schaetze-honig-schaetze",
+  "candidateSlot": "wave01-candidate-01",
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong is the conservative whole-formula band because Sodium Lauryl Sulfate is the position-2 primary cleanser and is followed by several additional surfactant routes; amphoteric/nonionic buffering and refatting routes keep confidence moderate rather than high.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURYL SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "COCO-BETAINE",
+          "position": 14,
+          "factId": "formula.surfactant.14"
+        },
+        {
+          "ingredient": "COCO-GLUCOSIDE",
+          "position": 15,
+          "factId": "formula.surfactant.15"
+        },
+        {
+          "ingredient": "LAUROYL/MYRISTOYL METHYL GLUCAMIDE",
+          "position": 19,
+          "factId": "formula.surfactant.19"
+        }
+      ],
+      "counterSignal": "Glyceryl Oleate, Glycol Distearate, Lecithin and cationic guar add buffering/refatting, so this is not a simple unbuffered high-strip formula.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.14",
+        "formula.surfactant.15",
+        "formula.surfactant.19",
+        "formula.architecture.01"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning is supported by several rinse-off care routes: mid-list Glyceryl Oleate, Glycol Distearate and Lecithin plus cationic guar; the absence of silicone or a richer cream base argues against high.",
+      "formulaFacts": [
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "LECITHIN",
+          "position": 12,
+          "factId": "formula.conditioning.12"
+        },
+        {
+          "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 17,
+          "factId": "formula.conditioning.17"
+        }
+      ],
+      "counterSignal": "The position-2 SLS chassis limits how rich or slip-heavy the rinse-off feel is likely to be.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.09",
+        "formula.conditioning.10",
+        "formula.conditioning.12",
+        "formula.conditioning.17",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential fits the combination of refatting lipids and cationic guar, while the strong sulfate-led reset chassis prevents a high-weight conclusion.",
+      "formulaFacts": [
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "LECITHIN",
+          "position": 12,
+          "factId": "formula.conditioning.12"
+        },
+        {
+          "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 17,
+          "factId": "formula.conditioning.17"
+        },
+        {
+          "ingredient": "SODIUM LAURYL SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "No silicone or heavy butter/oil route appears, and SLS gives strong same-wash reset capacity.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "formula.conditioning.09",
+        "formula.conditioning.10",
+        "formula.conditioning.12",
+        "formula.conditioning.17",
+        "formula.surfactant.02"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [],
+        "whyThisBand": "Several mid-list refatting/deposition clues can plausibly leave bounded softness or residue, especially with cationic guar.",
+        "whyNotNeighborBand": "Low would ignore the combined lipid/polymer routes; high would overread a no-silicone, strong-cleansing formula."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "General is the blind-safe primary because the formula shows ordinary cleansing plus humectant/refatting care, but no blind-visible route is specific enough to name repair, shine, volume, clarifying, scalp_active or gentle.",
+      "formulaFacts": [
+        {
+          "ingredient": "MEL / HONEY",
+          "position": 5,
+          "factId": "formula.humectant.05"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 8,
+          "factId": "formula.humectant.08"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        }
+      ],
+      "counterSignal": "The same care clues could support a positioned moisture/nourish story after unblinding, but moisture is not a v1.4 focus value and no claim is visible.",
+      "neighboringAlternative": "gentle",
+      "evidenceRefs": [
+        "formula.humectant.05",
+        "formula.humectant.08",
+        "formula.conditioning.09",
+        "formula.architecture.02"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained in the blind pass because the humectant and refatting signals are part of the same broad care route rather than a separable second product role.",
+      "formulaFacts": [
+        {
+          "ingredient": "MEL EXTRACT / HONEY EXTRACT",
+          "position": 6,
+          "factId": "formula.humectant.06"
+        },
+        {
+          "ingredient": "LECITHIN",
+          "position": 12,
+          "factId": "formula.conditioning.12"
+        }
+      ],
+      "counterSignal": "A revealed exact-product shine or repair claim could later create a distinct secondary if an independent route is shown.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "formula.humectant.06",
+        "formula.conditioning.12",
+        "formula.conditioning.17"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains the blind default: strong cleansing alone is not enough for alternating or occasional_reset without reset/oily-root/deep-cleansing intent, and there is no recognized treatment active.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURYL SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        }
+      ],
+      "counterSignal": "The cleanser is strong enough that unblinded reset positioning would matter, but no such trigger exists in the blind packet.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.architecture.01"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted is the best blind call because there is no recognized scalp-active or sensitive-scalp architecture, while SLS and fragrance allergen declarations are comfort counter-signals.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURYL SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COUMARIN",
+          "position": 26,
+          "factId": "formula.fragrance.26"
+        },
+        {
+          "ingredient": "LIMONENE",
+          "position": 27,
+          "factId": "formula.fragrance.27"
+        }
+      ],
+      "counterSignal": "Glycerin and refatting routes can support hair feel, but they do not show intentional scalp-comfort targeting by themselves.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.fragrance.26",
+        "formula.fragrance.27",
+        "formula.humectant.08"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "AQUA / WATER",
+          "position": 1,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "No ingredient in the blind packet is a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "a67571d03ad4fc366d7e39a62abcc880efa272959ee3f53989bab4ed120314b3",
+    "formulaFingerprintSha256": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T16:45:00Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false,
+    "sourcePacketSha256": "a67571d03ad4fc366d7e39a62abcc880efa272959ee3f53989bab4ed120314b3",
+    "blindResultSha256": "d5562998e6162f5d6c0cdc98099e8ff8364933b3dda9227819a0f414f9382f7a",
+    "mappedAfterBlindFreeze": false,
+    "mappedAt": null
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:syoss-manufacturer-repair-positioning",
+          "claim:dm-repair-positioning",
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03"
+        ],
+        "rationale": "The product is positioned for brittle hair repair rather than a named scalp concern; the ordinary balanced scalp route is the only supported target."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.architecture.helper_functions_preserved"
+        ],
+        "rationale": "Moderate: SLES plus CAPB gives effective ordinary cleansing, but the early refatting/protein/silicone care stack prevents a strong-reset classification. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:syoss-intense-keratin:conditioningLevel",
+          "adjudication:syoss-intense-keratin:weightPotential",
+          "adjudication:syoss-intense-keratin:focusPrimary",
+          "adjudication:syoss-intense-keratin:conditioningLevel",
+          "adjudication:syoss-intense-keratin:weightPotential",
+          "adjudication:syoss-intense-keratin:focusPrimary"
+        ],
+        "rationale": "Ideal: coarse — High conditioning and repair positioning align with coarse hair, where the high deposition load is less likely to compromise useful movement. Conditional (not emitted): normal — The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:syoss-manufacturer-repair-positioning",
+          "claim:dm-repair-positioning"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.architecture.helper_functions_preserved"
+        ],
+        "rationale": "Moderate: SLES plus CAPB gives effective ordinary cleansing, but the early refatting/protein/silicone care stack prevents a strong-reset classification."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.06",
+          "formula.conditioning.07",
+          "formula.conditioning.11",
+          "formula.conditioning.12"
+        ],
+        "rationale": "High: protein, dimethicone, amodimethicone, cationic guar and a waxy/lipid route appear before or near the fragrance/pH region, making substantial rinse-off softness and manageability likely."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:syoss-manufacturer-repair-positioning",
+          "claim:dm-repair-positioning",
+          "claim:rossmann-repair-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Repair: all revealed exact-product claims center on keratin, brittle/weak hair and repair, and the formula contains an early hydrolyzed keratin route plus substantive conditioning support."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:syoss-manufacturer-repair-positioning",
+          "claim:dm-repair-positioning",
+          "claim:rossmann-repair-positioning"
+        ],
+        "rationale": "Empty: the packet shows one dominant repair/keratin positioning, and conditioning is already the route that supports that primary focus rather than a distinct secondary focus."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:syoss-manufacturer-repair-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the packet is repair/hair-breakage positioned and includes no sensitive, itchy, dry-feeling or uncomfortable-scalp intent."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:syoss-directions",
+          "usage:dm-directions",
+          "claim:syoss-manufacturer-repair-positioning"
+        ],
+        "rationale": "Regular: directions are ordinary rinse-out use and follow-up conditioner guidance; there is no treatment, reset, alternating or daily-use trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.07",
+          "formula.conditioning.11",
+          "formula.conditioning.12",
+          "formula.conditioning.13",
+          "formula.function.16"
+        ],
+        "rationale": "High: multiple persistent routes converge early enough to make movement/root-lift loss plausible despite moderate cleansing reset."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "normal"
+    ],
+    "productId": "syoss-intense-keratin",
+    "productName": "Shampoo Intense Keratin",
+    "rows": 1
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

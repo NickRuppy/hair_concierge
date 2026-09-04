@@ -1,0 +1,207 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "gliss-total-repair",
+    "market": "DE",
+    "exactProductName": "Shampoo Total Repair",
+    "exactPackSize": "250 ml",
+    "gtinAliases": [
+      "4015100812435"
+    ],
+    "capturedAt": "2026-09-03T18:00:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "resolved",
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      },
+      {
+        "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/total-repair/total-repair-shampoo.html",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, DIMETHICONE, HYDROLYZED KERATIN, COMBRETUM FARINOSUM FLOWER NECTAR, PARFUM (FRAGRANCE), SODIUM BENZOATE, PEG-7 GLYCERYL COCOATE, CITRIC ACID, AMODIMETHICONE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCOL DISTEARATE, LAURETH-4, PEG-120 METHYL GLUCOSE DIOLEATE, GLYCERIN, HYDROGENATED CASTOR OIL, LAURETH-23, TRIDECETH-10, SODIUM HYDROXIDE, CITRUS AURANTIUM PEEL OIL, LIMONENE, PHENOXYETHANOL, PROPYLENE GLYCOL, SODIUM SALICYLATE, BENZYL ALCOHOL, POTASSIUM SORBATE",
+    "inciFingerprintSha256": "209d35dcd3c52b9d8faf830439b361366fbdbb590d710efe89605857c756e027",
+    "canonicalSource": "reputable_german_retailer",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:b29eb34ab4482433f8fc982dae691c035ee84db1c248588c51b3c3ed9961187c"
+    ],
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.conditioning.05",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: dimethicone at position 5, keratin, amodimethicone, cationic guar and lipid/waxy refatting clues create a substantial rinse-off repair-care system.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: early dimethicone, amodimethicone, cationic guar, keratin and waxy/refatting clues create a persistent multi-route deposition system despite ordinary SLES/CAPB reset.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.regional_conflict",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13",
+        "formula.function.15",
+        "formula.function.16",
+        "formula.function.20"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: the revealed product positioning targets dry, damaged hair and liquid keratin, and the formula has a compatible silicone, keratin and cationic-polymer repair-care system.",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "confidence": "moderate",
+      "rationale": "Shine secondary: the source explicitly promises glossy hair, and the silicone/smoothing system provides an independent route beyond the keratin-led repair positioning.",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.12"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular use; no daily/frequent, alternating, reset or treatment trigger is present.",
+      "evidenceRefs": [
+        "usage:dm-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product targets dry/damaged hair fiber repair, softness and shine, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "not_suited",
+      "confidence": "moderate",
+      "rationale": "Early dimethicone plus keratin, amodimethicone, cationic guar and high weight potential make loss of lift too plausible for fine hair.",
+      "evidenceRefs": [
+        "adjudication:gliss-total-repair:conditioningLevel",
+        "adjudication:gliss-total-repair:weightPotential",
+        "adjudication:gliss-total-repair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default.",
+      "evidenceRefs": [
+        "adjudication:gliss-total-repair:conditioningLevel",
+        "adjudication:gliss-total-repair:weightPotential",
+        "adjudication:gliss-total-repair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Coarse hair is the best default fit for this high-conditioning/high-weight repair and shine profile.",
+      "evidenceRefs": [
+        "adjudication:gliss-total-repair:conditioningLevel",
+        "adjudication:gliss-total-repair:weightPotential",
+        "adjudication:gliss-total-repair:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "high",
+      "rationale": "The product is positioned for dry/damaged hair repair and shine rather than a named scalp concern; ordinary balanced scalp route is the only supported production target.",
+      "positioningEvidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "usage:dm-directions"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:gliss-total-repair:cleansingStrength",
+        "adjudication:gliss-total-repair:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "claim:dm-total-repair-positioning",
+      "usage:dm-directions"
+    ]
+  }
+}

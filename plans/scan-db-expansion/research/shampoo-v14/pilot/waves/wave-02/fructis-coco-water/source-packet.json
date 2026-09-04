@@ -1,0 +1,48 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "fructis-coco-water",
+  "research_method": { "policy_id": "shampoo-classification-v1.4", "model_version": "shampoo-inci-v1.4" },
+  "status": "material_conflict",
+  "identity": {
+    "market": "DE",
+    "brand": "Garnier Fructis",
+    "exact_current_de_name": "Shampoo Coco Water, fettiger Ansatz & trockene Spitzen",
+    "size": { "value": 400, "unit": "ml", "display": "400 ml" },
+    "gtin": "3600541970533",
+    "captured_at": "2026-09-03T18:00:00+02:00",
+    "confidence": "blocked",
+    "current_sources": [
+      { "id": "src-dm-de-exact-gtin", "label": "dm DE exact GTIN PDP", "url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen", "source_type": "retailer", "tier": "german_retailer_exact_gtin_formula", "captured_at": "2026-09-03T18:00:00+02:00", "facts": ["exact_current_de_name", "size", "gtin", "formula", "claims", "directions"] },
+      { "id": "src-garnier-de-manufacturer", "label": "Garnier DE Coco Water manufacturer formula", "url": "https://www.garnier.de/sonnenschutz/marken/fructis/coco-water/shampoo", "source_type": "manufacturer", "tier": "manufacturer_de_formula_conflict", "captured_at": "2026-09-03T18:00:00+02:00", "facts": ["formula", "claims", "directions"] },
+      { "id": "src-rossmann-de-exact-gtin", "label": "Rossmann DE exact GTIN PDP", "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-coco-water-klaerendes-shampoo/p/3600541970533", "source_type": "retailer", "tier": "german_retailer_exact_gtin_identity", "captured_at": "2026-09-03T18:00:00+02:00", "facts": ["exact_current_de_name", "size", "gtin", "claims"] }
+    ],
+    "explicit_conflicts": [
+      { "id": "block:dm-vs-manufacturer-exact-gtin-formula", "status": "unresolved", "severity": "material", "summary": "The selected 400 ml German GTIN is corroborated by dm/Rossmann, but the dm exact-GTIN formula and manufacturer formula disagree materially. The manufacturer formula source does not safely resolve the selected pack version.", "resolution": "Do not choose, merge, normalize, classify, or project either formula until a current pack-bound manufacturer source or an independently corroborating exact-GTIN formula resolves the conflict." }
+    ]
+  },
+  "source_facts": [
+    { "fact_id": "identity.gtin", "fact_key": "identity.gtin", "fact_value": "3600541970533", "source_id": "src-dm-de-exact-gtin", "source_type": "retailer", "source_text": "dm lists the selected 400 ml Coco Water pack with GTIN 3600541970533; Rossmann exact product URL corroborates the GTIN.", "captured_at": "2026-09-03T18:00:00+02:00" },
+    { "fact_id": "formula.dm_exact_gtin", "fact_key": "formula.raw_inci", "fact_value": "Exact-GTIN dm formula recorded in the administrative source packet; it conflicts materially with the manufacturer formula and is intentionally not canonicalized here.", "source_id": "src-dm-de-exact-gtin", "source_type": "retailer", "source_text": "Selected exact-GTIN German retailer formula captured for conflict comparison only.", "captured_at": "2026-09-03T18:00:00+02:00" },
+    { "fact_id": "formula.manufacturer_conflict", "fact_key": "formula.manufacturer_raw_inci", "fact_value": "Manufacturer formula differs materially from the selected dm exact-GTIN formula; it is not safely pack-bound to the selected 400 ml GTIN.", "source_id": "src-garnier-de-manufacturer", "source_type": "manufacturer", "source_text": "Manufacturer formula captured for conflict comparison only; no canonical formula is selected.", "captured_at": "2026-09-03T18:00:00+02:00" }
+  ],
+  "formula": {
+    "status": "material_conflict",
+    "completeness": "complete_inci_observed_but_unresolved_between_sources",
+    "canonical_source": null,
+    "version_or_reformulation_conflicts": [
+      { "id": "block:dm-vs-manufacturer-exact-gtin-formula", "status": "unresolved", "severity": "material", "summary": "dm exact-GTIN and manufacturer formula sources disagree materially.", "resolution": "Blocked pending pack-bound corroboration." }
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      { "id": "claim:dm-coco-water-positioning", "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen", "source_type": "retailer", "captured_at": "2026-09-03T18:00:00+02:00", "source_text": "Coco Water for oily roots and dry lengths; retained for identity only, not formula adjudication." }
+    ],
+    "directions": [
+      { "id": "usage:dm-directions", "source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen", "source_type": "retailer", "captured_at": "2026-09-03T18:00:00+02:00", "source_text": "Auf das nasse Haar auftragen, sanft auf der Kopfhaut einmassieren und gründlich ausspülen." }
+    ]
+  },
+  "provenance_checks": { "gtin_check_digit_valid": true, "old_manifest_labels_used": false, "database_reads_or_writes": false, "notes": ["This is a blocked source record, intentionally excluded from pilot-manifest.json and all classification lanes."] },
+  "open_questions": [
+    { "id": "open:resolve-coco-water-exact-gtin-formula", "severity": "blocking", "question": "Which current formula is pack-bound to GTIN 3600541970533? Obtain an exact-pack manufacturer asset or independent exact-GTIN corroboration before reopening." }
+  ]
+}

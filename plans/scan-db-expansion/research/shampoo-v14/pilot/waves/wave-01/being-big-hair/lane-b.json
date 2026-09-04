@@ -1,0 +1,131 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "being-big-hair",
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: amphoteric CAPB sits first after water, but the formula quickly adds olefin sulfonate, coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate, giving a broad cleansing architecture suitable for a volume shampoo.",
+      "formulaFacts": [
+        {"ingredient": "Cocamidopropyl Betaine", "position": 2, "factId": "formula.surfactant.02", "observation": "early amphoteric cleanser/buffer"},
+        {"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 3, "factId": "formula.surfactant.03", "observation": "strong anionic olefin sulfonate"},
+        {"ingredient": "Sodium Cocoyl Isethionate", "position": 7, "factId": "formula.surfactant.07", "observation": "additional anionic isethionate route"},
+        {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 15, "factId": "formula.surfactant.15", "observation": "later anionic sulfosuccinate route"}
+      ],
+      "counterSignal": "CAPB leads the surfactant system and oils appear at positions 8 and 9, so the strength confidence is moderate rather than high.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conflicting_global_manufacturer_inci", "formula.surfactant.02", "formula.surfactant.03", "formula.surfactant.05", "formula.surfactant.07", "formula.surfactant.15"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: macadamia oil, avocado oil, glycerin, panthenol, polyquaternium-10 and cationic guar provide real care, but the volume positioning and cleanser breadth keep it from a high-conditioning shampoo.",
+      "formulaFacts": [
+        {"ingredient": "Glycerin", "position": 6, "factId": "formula.canonical_inci", "observation": "humectant"},
+        {"ingredient": "Macadamia Integrifolia Seed Oil", "position": 8, "factId": "formula.conditioning.08", "observation": "nonvolatile plant oil clue"},
+        {"ingredient": "Persea Gratissima Oil", "position": 9, "factId": "formula.conditioning.09", "observation": "nonvolatile plant oil clue"},
+        {"ingredient": "Polyquaternium-10", "position": 17, "factId": "formula.conditioning.17", "observation": "cationic polymer"}
+      ],
+      "counterSignal": "The product is explicitly for fullness/body and is silicone-free; the global manufacturer variant is preserved but not merged.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conflicting_global_manufacturer_inci", "formula.conditioning.08", "formula.conditioning.09", "formula.conditioning.17", "formula.conditioning.18", "claim:being-global-positioning"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: two plant oils plus polyquaternium-10 and cationic guar create residue potential, while the strong multi-surfactant/volume/silicone-free architecture argues against high weight.",
+      "formulaFacts": [
+        {"ingredient": "Macadamia Integrifolia Seed Oil", "position": 8, "factId": "formula.conditioning.08", "observation": "nonvolatile plant oil deposition clue"},
+        {"ingredient": "Persea Gratissima Oil", "position": 9, "factId": "formula.conditioning.09", "observation": "nonvolatile plant oil deposition clue"},
+        {"ingredient": "Polyquaternium-10", "position": 17, "factId": "formula.conditioning.17", "observation": "cationic polymer"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 18, "factId": "formula.conditioning.18", "observation": "cationic guar polymer"}
+      ],
+      "counterSignal": "The exact-GTIN formula has a broad cleanser system and the product is positioned for thin/fine hair fullness, so high weight would conflict with both architecture and positioning.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conflicting_global_manufacturer_inci", "formula.conditioning.08", "formula.conditioning.09", "formula.conditioning.17", "formula.conditioning.18", "formula.surfactant.03", "formula.surfactant.07", "formula.surfactant.15"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": ["Exact oil and cationic polymer concentrations are not knowable from INCI order alone.", "A distinct global manufacturer formula variant is preserved and not merged into the exact-GTIN retail formula.", "Acrylates Copolymer, Cyclodextrin and Hydroxypropyl Starch Phosphate remain helper/texture clues rather than substantive conditioning routes."],
+        "whyThisBand": "Two nonvolatile oils plus cationic polymers make low residue implausible even for a volume product.",
+        "whyNotNeighborBand": "Not high because the formula is silicone-free, has strong reset capacity, and is explicitly positioned for fullness/body rather than rich care."
+      }
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "rationale": "Volume: the exact German name and supporting global positioning center on Big Hair, fullness and body for thin/fine hair, and the formula's silicone-free multi-surfactant architecture is compatible with that role.",
+      "formulaFacts": [
+        {"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 3, "factId": "formula.surfactant.03", "observation": "cleansing/lift-compatible anionic route"},
+        {"ingredient": "Sodium Cocoyl Isethionate", "position": 7, "factId": "formula.surfactant.07", "observation": "additional cleanser route"},
+        {"ingredient": "Polyquaternium-10", "position": 17, "factId": "formula.conditioning.17", "observation": "late conditioning polymer bounded enough for volume positioning"}
+      ],
+      "counterSignal": "Avocado and macadamia oils add weight/care tradeoff, but they do not override the dominant volume positioning.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claim:rossmann-de-positioning", "claim:being-global-positioning", "formula.canonical_inci", "formula.architecture.variant"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: oils and humectants support care feel inside the volume product, but there is no separate exact-product repair, shine, clarifying, gentle or scalp-active claim with an independent route.",
+      "formulaFacts": [
+        {"ingredient": "Macadamia Integrifolia Seed Oil", "position": 8, "factId": "formula.conditioning.08", "observation": "care support inside the volume formula"},
+        {"ingredient": "Persea Gratissima Oil", "position": 9, "factId": "formula.conditioning.09", "observation": "care support inside the volume formula"}
+      ],
+      "counterSignal": "Sulfate-free/silicone-free wording is not a distinct v1.4 focus.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claim:rossmann-de-positioning", "claim:being-global-positioning", "formula.canonical_inci"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: the available directions are ordinary wet-hair lather and rinse-out use, with no daily/frequent, treatment, alternating or reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "Cocamidopropyl Betaine", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo surfactant"},
+        {"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 3, "factId": "formula.surfactant.03", "observation": "cleansing strength captured separately from usage role"}
+      ],
+      "counterSignal": "The cleanser system is strong, but v1.4 says strong cleansing alone is not an alternating-use trigger.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": ["usage:being-global", "usage:superdrug", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for fine/thin hair fullness and body, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "Glycerin", "position": 6, "factId": "formula.canonical_inci", "observation": "humectant without scalp-comfort positioning"},
+        {"ingredient": "Panthenol", "position": 16, "factId": "formula.canonical_inci", "observation": "comfort-adjacent support without scalp claim"},
+        {"ingredient": "Parfum (Fragrance)", "position": 12, "factId": "formula.canonical_inci", "observation": "fragrance exposure"}
+      ],
+      "counterSignal": "Humectant and panthenol clues exist, but v1.4 requires intentional scalp-comfort positioning for targeted.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claim:rossmann-de-positioning", "claim:being-global-positioning", "formula.canonical_inci", "formula.fragrance.12"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete exact-GTIN formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "Panthenol", "position": 16, "factId": "formula.canonical_inci", "observation": "hair-feel/comfort clue, not a v1.4 dandruff active"},
+        {"ingredient": "Polyquaternium-10", "position": 17, "factId": "formula.conditioning.17", "observation": "conditioning polymer, not a dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conflicting_global_manufacturer_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/being-big-hair/source-packet.json",
+    "sourcePacketSha256": "7e56fd05827182a056dc6e24e8503a87d5ed5762056495b499a5c0f8447b9cd0",
+    "formulaFingerprint": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T15:46:55+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

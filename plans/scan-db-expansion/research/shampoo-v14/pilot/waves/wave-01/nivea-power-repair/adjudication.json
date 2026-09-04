@@ -1,0 +1,364 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "nivea-power-repair",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic sulfate"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "amphoteric buffer"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "early nonionic glucoside support"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "factId": "formula.surfactant.05",
+          "observation": "second early nonionic glucoside support"
+        }
+      ],
+      "counterSignal": "SLES and sodium chloride are still high enough that low or truly gentle cleansing would be too soft.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.04",
+        "formula.surfactant.05",
+        "claim:nivea-de-positioning"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: squalane, panthenol, coconut oil, dicaprylyl ether, cationic guar, glyceryl oleate, glycerin, glycol distearate and hydrogenated castor oil create multiple complementary rinse-off care routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "emollient lipid clue"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant and hair-feel support"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "plant oil route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic guar polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "factId": "formula.conditioning.14",
+          "observation": "refatting route"
+        }
+      ],
+      "counterSignal": "This is still a rinse-off shampoo with SLES-led cleansing, but the breadth of care routes is stronger than ordinary moderate conditioning.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: oils, squalane, cationic guar and waxy/refatting materials create noticeable residue potential, but SLES/CAPB/glucoside cleansing and the absence of silicone keep it below a high-weight call.",
+      "formulaFacts": [
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "emollient lipid clue"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "plant oil deposition clue"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic polymer deposition clue"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "factId": "formula.conditioning.14",
+          "observation": "refatting route"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "factId": "formula.conditioning.18",
+          "observation": "waxy lipid clue"
+        }
+      ],
+      "counterSignal": "The formula is not silicone-based and both commercial sources claim intensive care without weighing down; claims do not assign the band, but they are compatible with bounded residue.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18",
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact oil, squalane and polymer levels cannot be proven from INCI order alone.",
+          "Dicaprylyl Ether and Pantolactone are preserved as function clues rather than standalone high-persistence deposition routes."
+        ],
+        "whyThisBand": "Several nonvolatile care routes are present in the middle of the list, so low weight would understate the oil/polymer/refatter load.",
+        "whyNotNeighborBand": "Not high because the formula has meaningful anionic/amphoteric/glucoside reset and lacks silicone or a dense early butter/polymer stack."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: exact-product positioning targets damaged or stressed hair, and the formula supports that with a broad oil, panthenol, cationic polymer and refatting care system.",
+      "formulaFacts": [
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "repair-care compatible emollient clue"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci",
+          "observation": "hair-feel and humectant support"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "oil care route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "conditioning polymer support"
+        }
+      ],
+      "counterSignal": "The same claims also mention moisture and no-weight care, but repair/damaged-hair positioning is the dominant v1.4-compatible focus.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: moisture/no-weight language is not a v1.4 secondary focus, and the care routes support the same repair positioning rather than an independent focus.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci",
+          "observation": "moisture or hair-feel support not available as v1.4 focus"
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "repair-care route"
+        }
+      ],
+      "counterSignal": "The formula has humectants and oils, but they are not a distinct secondary focus under v1.4.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo cleanser"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "ordinary buffered shampoo route"
+        }
+      ],
+      "counterSignal": "Repair wording changes product focus, not usage role.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "usage:nivea-de",
+        "usage:dm-de",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the packet targets damaged hair and repair/moisture care, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "factId": "formula.canonical_inci",
+          "observation": "comfort-adjacent humectant without scalp positioning"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant without scalp-comfort claim"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 22,
+          "factId": "formula.canonical_inci",
+          "observation": "fragrance mixture"
+        }
+      ],
+      "counterSignal": "Gentle-cleansing wording is present, but v1.4 requires intentional sensitive or uncomfortable-scalp support for targeted.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "Benzoic Acid",
+          "position": 21,
+          "factId": "formula.canonical_inci",
+          "observation": "preservation or pH-adjacent acid, not a recognized dandruff active"
+        }
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; SLES is materially buffered by CAPB, glucosides and care routes."
+    },
+    "conditioningLevel": {
+      "laneAValue": "high",
+      "laneBValue": "high",
+      "finalValue": "high",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected high; the care-route breadth is above ordinary moderate conditioning."
+    },
+    "weightPotential": {
+      "laneAValue": "high",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "product_correction",
+      "rationale": "Adjudicated to moderate. Lane A correctly saw many care routes, but section 6 warns against deriving weight from route count; no silicone stack, moderate reset capacity and no-weight positioning make high too strong."
+    },
+    "focusPrimary": {
+      "laneAValue": "repair",
+      "laneBValue": "repair",
+      "finalValue": "repair",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected repair; exact positioning and formula support converge."
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneBValue": [],
+      "finalValue": [],
+      "outcome": "agreement",
+      "rationale": "Both lanes selected no secondary focus; moisture wording is not a separate v1.4 focus."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected regular; there is no non-default usage trigger."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected not_targeted; comfort-adjacent ingredients are not scalp-comfort positioning."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both lanes agree with the mechanical dandruff rule."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": false,
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. The no-weight claim was used only as a counter-signal, not as a claims-only weight assignment."
+}

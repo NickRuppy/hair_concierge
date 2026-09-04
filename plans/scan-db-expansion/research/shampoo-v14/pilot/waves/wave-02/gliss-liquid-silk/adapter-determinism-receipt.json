@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "gliss-liquid-silk",
+  "run1InputSha256": "c27341b4b9452621f2fa6bf7c242fc39b030dd6259094286e302c8850ca2f25e",
+  "run2InputSha256": "c27341b4b9452621f2fa6bf7c242fc39b030dd6259094286e302c8850ca2f25e",
+  "outputSha256": "6f472da8d667a82e6285510897ff1e8ca84447ab6821227772f8007973127701",
+  "summarySha256": "70c7551e9c5e28ab109d149a37b68bad0836967ec2c2db09b5c94b87ad6dce78",
+  "byteIdentical": true
+}

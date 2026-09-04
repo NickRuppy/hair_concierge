@@ -1,0 +1,361 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "being-big-hair",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis.",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "early amphoteric cleanser and buffer"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "strong anionic cleansing driver"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "factId": "formula.surfactant.05",
+          "observation": "additional nonionic surfactant route"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "factId": "formula.surfactant.07",
+          "observation": "additional anionic surfactant route"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 15,
+          "factId": "formula.surfactant.15",
+          "observation": "later anionic surfactant route"
+        }
+      ],
+      "counterSignal": "CAPB appears before olefin sulfonate and oils occur at positions 8 and 9, so this is not high-confidence clarifying-style strength.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conflicting_global_manufacturer_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.07",
+        "formula.surfactant.15"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: macadamia oil, avocado oil, glycerin, panthenol, polyquaternium-10 and cationic guar provide real rinse-off care, but the product is not a rich 2-in-1 and has no silicone stack.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 6,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant"
+        },
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08",
+          "observation": "plant oil care clue"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "plant oil care clue"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17",
+          "observation": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "factId": "formula.conditioning.18",
+          "observation": "cationic guar polymer"
+        }
+      ],
+      "counterSignal": "The exact product role is fullness/body and the formula has a broad cleanser system, so high conditioning would overstate the care load.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "claim:being-global-positioning"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: two plant oils plus polyquaternium-10 and cationic guar create noticeable but bounded residue potential, while the multi-surfactant, silicone-free, volume-positioned architecture keeps this below high.",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08",
+          "observation": "nonvolatile plant oil deposition clue"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "nonvolatile plant oil deposition clue"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17",
+          "observation": "cationic polymer"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "factId": "formula.conditioning.18",
+          "observation": "cationic guar polymer"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "reset-capacity counterweight"
+        }
+      ],
+      "counterSignal": "The product is explicitly for fullness/body, has no silicone, and retains meaningful reset capacity from olefin sulfonate and secondary anionics.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "formula.surfactant.03",
+        "claim:being-global-positioning"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [
+          "Exact oil and polymer concentrations cannot be inferred from INCI order alone.",
+          "The distinct global manufacturer formula variant remains provenance, not merged classification evidence."
+        ],
+        "whyThisBand": "Oil plus cationic-polymer routes make a low-weight call too soft even for a volume shampoo.",
+        "whyNotNeighborBand": "Not high because the formula is silicone-free, cleanser breadth is meaningful, and the exact role is fullness/body rather than rich care."
+      }
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "rationale": "Volume: the exact product identity centers on Big Hair and supporting positioning targets fullness/body for thin or fine hair; the silicone-free multi-surfactant formula is compatible with that role.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "cleansing and lift-compatible route"
+        },
+        {
+          "ingredient": "Acrylates Copolymer",
+          "position": 14,
+          "factId": "formula.function.14",
+          "observation": "styling or texture-helper clue"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17",
+          "observation": "bounded care route"
+        }
+      ],
+      "counterSignal": "Macadamia and avocado oils add a care/weight tradeoff, but they do not override the dominant volume positioning.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the oil and humectant story supports care feel inside the volume product, not a separate exact-product secondary focus with an independent route.",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08",
+          "observation": "care support inside the volume formula"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "care support inside the volume formula"
+        }
+      ],
+      "counterSignal": "No distinct repair, shine, clarifying or scalp-active positioning is established for the exact German product.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use with no treatment, daily/frequent, alternating or reset trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo surfactant"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "cleansing strength captured separately from usage"
+        }
+      ],
+      "counterSignal": "Strong cleansing is not by itself an alternating-use trigger under v1.4.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "usage:being-global",
+        "usage:superdrug",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: revealed claims target volume/fullness, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 6,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant without scalp-comfort positioning"
+        },
+        {
+          "ingredient": "Parfum (Fragrance)",
+          "position": 12,
+          "factId": "formula.fragrance.12",
+          "observation": "fragrance exposure"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "factId": "formula.canonical_inci",
+          "observation": "comfort-adjacent clue without scalp claim"
+        }
+      ],
+      "counterSignal": "Humectant and panthenol clues exist, but v1.4 requires intentional scalp-comfort positioning for targeted.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci",
+        "formula.fragrance.12"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete exact-GTIN formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17",
+          "observation": "conditioning polymer, not a v1.4 dandruff active"
+        }
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "strong",
+      "finalValue": "strong",
+      "outcome": "product_correction",
+      "rationale": "Adjudicated to strong. Lane A correctly weighed CAPB and oils as buffers, but under section 4 the multiple reinforcing cleansing routes plus volume-compatible architecture make moderate too soft."
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate. Final keeps the shared conclusion after verifying that the oils and cationic polymers are real but bounded."
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate. Final preserves the shared bounded-residue call."
+    },
+    "focusPrimary": {
+      "laneAValue": "volume",
+      "laneBValue": "volume",
+      "finalValue": "volume",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected volume; formula and positioning converge enough for high final confidence."
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneBValue": [],
+      "finalValue": [],
+      "outcome": "agreement",
+      "rationale": "Both lanes selected no secondary focus; care signals are tradeoffs inside the volume product."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected regular; there is no non-default usage trigger."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected not_targeted; the product is volume-positioned, not scalp-comfort-positioned."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both lanes agree with the mechanical dandruff rule."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": false,
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. The exact-GTIN versus global formula difference remains a provenance constraint, not a blocking identity failure."
+}

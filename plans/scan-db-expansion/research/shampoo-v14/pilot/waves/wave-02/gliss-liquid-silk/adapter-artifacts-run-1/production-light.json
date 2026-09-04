@@ -1,0 +1,170 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-liquid-silk-positioning",
+          "usage:manufacturer-directions",
+          "adjudication:gliss-liquid-silk:cleansingStrength",
+          "adjudication:gliss-liquid-silk:scalpComfortTarget"
+        ],
+        "rationale": "The exact product targets gloss, surface smoothing and manageability rather than a named scalp concern; ordinary balanced scalp route is supported."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.13",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:gliss-liquid-silk:conditioningLevel",
+          "adjudication:gliss-liquid-silk:weightPotential",
+          "adjudication:gliss-liquid-silk:focusPrimary",
+          "adjudication:gliss-liquid-silk:conditioningLevel",
+          "adjudication:gliss-liquid-silk:weightPotential",
+          "adjudication:gliss-liquid-silk:focusPrimary",
+          "adjudication:gliss-liquid-silk:conditioningLevel",
+          "adjudication:gliss-liquid-silk:weightPotential",
+          "adjudication:gliss-liquid-silk:focusPrimary"
+        ],
+        "rationale": "Ideal: normal — High rinse-off smoothness with only moderate weight is a strong shine/silk fit for normal hair. coarse — Coarse hair can use the high-conditioning shine/smoothing profile, while moderate weight avoids an overly light-only fit. Conditional (not emitted): fine — High conditioning and moderate residue potential can reduce lift on fine hair, even without a silicone stack, so fine fit is conditional rather than ideal."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-liquid-silk-positioning",
+          "usage:manufacturer-directions"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.13",
+          "formula.conditioning.05",
+          "formula.architecture.01",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.architecture.02"
+        ],
+        "rationale": "High: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10 and several refatting/waxy clues create a broad smoothness and slip system."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-liquid-silk-positioning",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.10"
+        ],
+        "rationale": "Shine is the dominant role: the exact product claims surface smoothing plus shine and suppleness, and the formula has silk/protein, lipid-like and polymer routes compatible with smoothing and gloss."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-liquid-silk-positioning",
+          "formula.conditioning.05",
+          "formula.conditioning.06"
+        ],
+        "rationale": "No secondary focus is assigned because the claims concentrate on surface smoothing, shine and suppleness; repair is only a neighboring care interpretation, not a distinct exact-product role."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-liquid-silk-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the product is positioned for hair-surface smoothness, shine and manageability, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:manufacturer-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular hair-care use, with no daily/frequent, alternating, reset or treatment trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.manufacturer_corroborating_inci",
+          "formula.rossmann_stale_conflict",
+          "formula.conditioning.05",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.function.12",
+          "formula.function.20"
+        ],
+        "rationale": "Moderate: early lipid-like and silk/protein clues, Polyquaternium-10 and later refatting/waxy materials can leave bounded residue, while SLES/CAPB/glucoside cleansing and no silicone keep it below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "fine"
+    ],
+    "productId": "gliss-liquid-silk",
+    "productName": "Shampoo Liquid Silk",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

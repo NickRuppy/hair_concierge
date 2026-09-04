@@ -1,0 +1,49 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "head-shoulders-classic-clean",
+  "formulaFingerprintSha256": "b1eb663939749d93f580c84af491006c685245d5df30f7826039a1adb96379c6",
+  "priorV14": {
+    "primary": "scalp_active",
+    "secondary": ["clarifying"],
+    "adjudicationSha256": "49ae280a8228146378125d7397a47d53d7f61a2d14017cb15c46fdf75296b4f9"
+  },
+  "effectiveV15": {
+    "primary": "scalp_active",
+    "secondary": ["clarifying"],
+    "confidence": "high",
+    "rationale": "Piroctone Olamine und die eindeutige Anti-Schuppen-Positionierung ergeben ein formelkompatibles kosmetisches Kopfhaut-Ziel. Das kräftige anionische Reinigungssystem stützt Tiefenreinigung nur als sekundären Fokus.",
+    "formulaFacts": [
+      {
+        "ingredient": "Piroctone Olamine",
+        "position": 10,
+        "observation": "anerkannter Anti-Schuppen-Wirkstoff im v1.4-Regelwerk"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "observation": "starke primäre Reinigung"
+      },
+      {
+        "ingredient": "TEA-Dodecylbenzenesulfonate",
+        "position": 16,
+        "observation": "zweite anionische Reinigungsroute"
+      }
+    ],
+    "counterSignal": "Classic Clean ist auch breit alltagstauglich positioniert; ohne explizites Reset- oder Tiefenreinigungsversprechen bleibt clarifying sekundär.",
+    "neighboringAlternative": "clarifying",
+    "evidenceRefs": [
+      "claim:headshoulders-manufacturer-scalp-positioning",
+      "claim:rossmann-scalp-positioning",
+      "formula.anti_dandruff_active.10"
+    ]
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": ["Dimethiconol an Position 11", "Dimethicone an Position 14"],
+    "limitation": "Die Fokusentscheidung betrifft ein gezieltes Kopfhautbedürfnis, nicht die Abgrenzung Feuchtigkeit versus Reparatur."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Die Formel liefert mit Piroctone Olamine das unterscheidende Kopfhaut-Signal; die Anti-Schuppen-Positionierung bestätigt den primären Fokus."
+}

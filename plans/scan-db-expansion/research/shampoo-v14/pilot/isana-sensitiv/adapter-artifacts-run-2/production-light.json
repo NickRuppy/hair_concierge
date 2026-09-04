@@ -1,0 +1,163 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "irritated",
+          "shampoo_bucket": "irritationen",
+          "thickness": "normal"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning",
+          "formula.canonical_inci",
+          "formula.scalp.12",
+          "formula.scalp.13"
+        ],
+        "rationale": "Exact sensitive-scalp and mild-care positioning is backed by buffered cleansing, panthenol, niacinamide and humectant support; fragrance remains a documented counter-signal rather than a veto."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.08",
+          "claim-rossmann-de-positioning"
+        ],
+        "rationale": "Moderate: SLES at position 2 makes this ordinary effective cleansing, while CAPB, coco-glucoside and refatting/protein care keep it from strong. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:isana-sensitiv:conditioningLevel",
+          "adjudication:isana-sensitiv:weightPotential",
+          "adjudication:isana-sensitiv:focusPrimary",
+          "adjudication:isana-sensitiv:conditioningLevel",
+          "adjudication:isana-sensitiv:weightPotential",
+          "adjudication:isana-sensitiv:focusPrimary",
+          "adjudication:isana-sensitiv:conditioningLevel",
+          "adjudication:isana-sensitiv:weightPotential",
+          "adjudication:isana-sensitiv:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — Moderate conditioning and weight avoid an excessively coating fine-hair profile, while the buffered cleansing system supports frequent gentle-positioned use. normal — Moderate cleansing, care and weight create a balanced sensitive-scalp option for normal-diameter hair. Conditional (not emitted): coarse — The formula has useful care routes but is not a rich coarse-hair default; coarse hair may need a separate conditioner."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.08",
+          "claim-rossmann-de-positioning"
+        ],
+        "rationale": "Moderate: SLES at position 2 makes this ordinary effective cleansing, while CAPB, coco-glucoside and refatting/protein care keep it from strong."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.07",
+          "formula.conditioning.10",
+          "formula.conditioning.15"
+        ],
+        "rationale": "Moderate: several light-to-meaningful routes, including glyceryl oleate, protein, panthenol and cationic guar, should give bounded softness without a silicone-rich or 2-in-1 system."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "claim-rossmann-de-positioning"
+        ],
+        "rationale": "Not supported: the complete formula contains neither Piroctone Olamine nor Climbazole; sensitive-scalp positioning does not upgrade dandruff support."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Gentle: the exact-product claims are sensitive-scalp, mild-care and pH-neutral positioning, and the formula has CAPB/glucoside buffering plus panthenol/niacinamide support."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning"
+        ],
+        "rationale": "Empty: sensitive/gentle positioning is dominant, and the normal-hair/care phrases do not create a distinct second focus with an independent route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning",
+          "formula.canonical_inci",
+          "formula.exposure.06",
+          "formula.exposure.17"
+        ],
+        "rationale": "Targeted: the packet explicitly says sensitive scalp, calming ingredients, panthenol, dermatologically confirmed and pH-skin-neutral, with supportive formula routes."
+      },
+      "research.properties.usageRole": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-dk-positioning",
+          "directions-rossmann-de"
+        ],
+        "rationale": "Frequent: the product is explicitly positioned as particularly gentle/mild-use and cleansing is not strong."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "claim-rossmann-de-positioning",
+          "formula.conditioning.07",
+          "formula.conditioning.09",
+          "formula.conditioning.10",
+          "formula.conditioning.15"
+        ],
+        "rationale": "Moderate: interacting light deposition routes make bounded residue plausible, while no silicone stack and SLES-led cleansing keep it below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "coarse"
+    ],
+    "productId": "isana-sensitiv",
+    "productName": "Shampoo Sensitiv",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

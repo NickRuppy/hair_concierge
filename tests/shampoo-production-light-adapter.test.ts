@@ -138,6 +138,18 @@ test("projects a complete regular shampoo into ideal thickness and normal route 
   assert.ok(outcome.payload.field_rationales.required_protocol_roles)
 })
 
+test("keeps the frozen v1.4 focus enum while v1.5 moisture stays overlay-only", () => {
+  const legacyGentle = completeInput()
+  legacyGentle.properties.focusPrimary = property("gentle")
+  assert.equal(projectShampooProductionLight(legacyGentle).status, "property_lane_ready")
+
+  const v15Moisture = completeInput() as unknown as {
+    properties: { focusPrimary: ReturnType<typeof property> }
+  }
+  v15Moisture.properties.focusPrimary = property("moisture")
+  assert.equal(projectShampooProductionLight(v15Moisture).status, "needs_research")
+})
+
 test("routes a true explicitly positioned reset shampoo away from regular shampoo", () => {
   const input = completeInput()
   input.properties.cleansingStrength = property("strong")

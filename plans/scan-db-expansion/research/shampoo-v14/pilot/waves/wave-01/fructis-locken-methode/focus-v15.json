@@ -1,0 +1,69 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "fructis-locken-methode",
+  "formulaFingerprintSha256": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+  "priorV14": {
+    "primary": "general",
+    "secondary": [],
+    "adjudicationSha256": "7c05325d699ab1298a2e0d2fc544ce7af095a8aaf57aa01c2426876eb4c5b304"
+  },
+  "effectiveV15": {
+    "primary": "moisture",
+    "secondary": [],
+    "confidence": "moderate",
+    "rationale": "Moisture ist der beste v1.5-Fokus, weil Glycerin frueh, Shea Butter, Sodium Hyaluronate und kationische Polymere eine Feuchtigkeits-/Curl-Care-Architektur bilden und die genaue Positionierung einen Moisture-Komplex mit Hyaluron nennt. Die Sicherheit bleibt moderat, weil es ein rinse-off Shampoo mit starker Olefin-Sulfonate/Sarcosinate-Reinigung ist.",
+    "formulaFacts": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 4,
+        "observation": "frueher Humectant"
+      },
+      {
+        "ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+        "position": 10,
+        "observation": "emolliente Curl-Care-Route"
+      },
+      {
+        "ingredient": "SODIUM HYALURONATE",
+        "position": 14,
+        "observation": "namensnaher Humectant-Hinweis"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 19,
+        "observation": "kationische Conditioning-Route"
+      },
+      {
+        "ingredient": "POLYQUATERNIUM-7",
+        "position": 21,
+        "observation": "Conditioning-Polymer fuer Haargefuehl"
+      }
+    ],
+    "counterSignal": "Sodium C14-16 Olefin Sulfonate an Position 2 plus Sodium Lauroyl Sarcosinate an Position 7 machen die Reinigung stark; dadurch ist Moisture plausibel, aber nicht hochsicher.",
+    "neighboringAlternative": "general",
+    "evidenceRefs": [
+      "claims.manufacturer",
+      "formula.humectant.04",
+      "formula.humectant.14",
+      "formula.conditioning.10",
+      "formula.conditioning.19",
+      "formula.conditioning.21"
+    ]
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+      "GLYCERIN an Position 4",
+      "SODIUM HYALURONATE an Position 14",
+      "Shea-Butter-Emollientroute an Position 10"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE an Position 19",
+      "POLYQUATERNIUM-7 an Position 21"
+    ],
+    "limitation": "Curl-Feuchtigkeit und Repair koennen Conditioning-Routen teilen, aber hier fehlen ein Damage-/Repair-Claim und ein Protein-/Bond-Marker; die starke Reinigung begrenzt die Sicherheit."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "v1.4 musste auf general ausweichen, weil moisture nicht verfuegbar war. v1.5 kann aus Formel plus exakter Moisture/Curl-Positionierung moisture ableiten, aber nur moderate wegen rinse-off und starkem Reinigungschassis."
+}

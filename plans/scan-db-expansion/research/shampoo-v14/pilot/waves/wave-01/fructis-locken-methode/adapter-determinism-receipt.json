@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "fructis-locken-methode",
+  "run1InputSha256": "92527c57b553ab3827350c7e9d4d7a19e05c3cec2f5bf6d9dca4c464befcda47",
+  "run2InputSha256": "92527c57b553ab3827350c7e9d4d7a19e05c3cec2f5bf6d9dca4c464befcda47",
+  "outputSha256": "25bd3e9decfdd0009dbe73777728b7a35f7b220db05f2cfaa0cd60f2323971e9",
+  "summarySha256": "1356cc3bd32f246e2ddb44678e2a3f3a11b23264a0eb18fab4452bea36a7e77d",
+  "byteIdentical": true
+}

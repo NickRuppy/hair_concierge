@@ -1,0 +1,393 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "isana-sensitiv",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "identity": {
+    "market": "DE",
+    "brand": "ISANA",
+    "exact_current_de_name": "Shampoo Sensitiv",
+    "admin_manifest_name": "Shampoo Sensitiv Baumwoll- & Kornblume",
+    "variant_descriptor": "Baumwollblumen- und Kornblumen-Extrakt",
+    "size": {
+      "value": 300,
+      "unit": "ml",
+      "display": "300 ml"
+    },
+    "gtin": "4305615566184",
+    "captured_at": "2026-09-03T09:24:28+02:00",
+    "current_sources": [
+      {
+        "id": "src-identity-rossmann-de",
+        "label": "Rossmann DE exact PDP",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "facts": [
+          "brand",
+          "exact_current_de_name",
+          "size",
+          "price",
+          "claims",
+          "directions",
+          "formula",
+          "warnings"
+        ]
+      },
+      {
+        "id": "src-formula-rossmann-dk",
+        "label": "Rossmann DK exact PDP",
+        "url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "tier": "same_company_eu_retailer_exact_gtin_formula_corrob",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "facts": [
+          "size",
+          "claims",
+          "directions",
+          "formula"
+        ]
+      },
+      {
+        "id": "src-formula-rossmann-hu",
+        "label": "Rossmann HU exact PDP",
+        "url": "https://shop.rossmann.hu/termek/isana-hair-sensitiv-sampon-300-ml",
+        "source_type": "retailer",
+        "tier": "same_company_eu_retailer_exact_gtin_formula_corrob",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "facts": [
+          "mpn_or_article_number",
+          "size",
+          "directions",
+          "formula"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "explicit_conflicts": [
+      {
+        "field": "name",
+        "description": "Selection/admin manifest expands the title with Baumwoll-/Kornblume; the current German PDP title is the shorter saleable name. The descriptor is present in German PDP positioning, so this is a naming-style difference, not an identity conflict."
+      },
+      {
+        "field": "formula",
+        "description": "No material conflict found between current Rossmann DE and Rossmann DK ingredient order. Rossmann HU text extraction truncates the final ingredient display after Gossypium Herbaceum Flower but still matches the prefix and exact article number."
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract.",
+    "normalized_ordered_inci": [
+      "Aqua",
+      "Sodium Laureth Sulfate",
+      "Cocamidopropyl Betaine",
+      "Sodium Chloride",
+      "Citric Acid",
+      "Parfum",
+      "Glyceryl Oleate",
+      "Coco-Glucoside",
+      "PEG-3 Distearate",
+      "Hydrolyzed Wheat Protein",
+      "Sodium Benzoate",
+      "Panthenol",
+      "Niacinamide",
+      "Potassium Sorbate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Benzoic Acid",
+      "Terpineol",
+      "Glycerin",
+      "Propylene Glycol",
+      "Pantolactone",
+      "Sodium Hydroxide",
+      "Phenoxyethanol",
+      "Tocopherol",
+      "Centaurea Cyanus Flower Extract",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Gossypium Herbaceum Flower Extract"
+    ],
+    "normalized_inci_string": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract",
+    "sha256_normalized_inci": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52",
+    "canonical_source": {
+      "id": "src-identity-rossmann-de",
+      "tier": "preferred_german_retailer_exact_gtin",
+      "captured_at": "2026-09-03T09:24:28+02:00"
+    },
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {
+        "id": "src-identity-rossmann-de",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "canonical_source"
+      },
+      {
+        "id": "src-formula-rossmann-dk",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "matches_canonical_order"
+      },
+      {
+        "id": "src-formula-rossmann-hu",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "prefix_matches_but_rendered_text_truncated_before_final_ingredient_completion"
+      }
+    ],
+    "version_or_reformulation_conflicts": []
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.market",
+      "fact_value": "DE",
+      "source_id": "src-identity-rossmann-de",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T09:24:28+02:00"
+    },
+    {
+      "fact_id": "identity.gtin",
+      "fact_value": "4305615566184",
+      "source_id": "src-identity-rossmann-de",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T09:24:28+02:00"
+    },
+    {
+      "fact_id": "identity.size",
+      "fact_value": "300 ml",
+      "source_id": "src-identity-rossmann-de",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T09:24:28+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_value": {
+        "raw_inci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract.",
+        "normalized_inci_string": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract",
+        "sha256_normalized_inci": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52"
+      },
+      "source_id": "src-identity-rossmann-de",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T09:24:28+02:00"
+    }
+  ],
+  "blind_packet": {
+    "formula_source_tier": "preferred_german_retailer_exact_gtin",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "normalized_ordered_inci": [
+      "Aqua",
+      "Sodium Laureth Sulfate",
+      "Cocamidopropyl Betaine",
+      "Sodium Chloride",
+      "Citric Acid",
+      "Parfum",
+      "Glyceryl Oleate",
+      "Coco-Glucoside",
+      "PEG-3 Distearate",
+      "Hydrolyzed Wheat Protein",
+      "Sodium Benzoate",
+      "Panthenol",
+      "Niacinamide",
+      "Potassium Sorbate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Benzoic Acid",
+      "Terpineol",
+      "Glycerin",
+      "Propylene Glycol",
+      "Pantolactone",
+      "Sodium Hydroxide",
+      "Phenoxyethanol",
+      "Tocopherol",
+      "Centaurea Cyanus Flower Extract",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Gossypium Herbaceum Flower Extract"
+    ],
+    "formula_fingerprint_sha256": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_sulfate_surfactant",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant",
+        "fact_id": "formula.surfactant.03"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 8,
+        "family": "nonionic_glucoside_surfactant",
+        "fact_id": "formula.surfactant.08"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.primary_secondary",
+        "text": "Primary anionic surfactant at position 2 is paired with amphoteric surfactant at position 3 and nonionic glucoside at position 8."
+      },
+      {
+        "fact_id": "formula.architecture.electrolyte_ph",
+        "text": "Sodium Chloride appears at position 4; Citric Acid at position 5 and Sodium Hydroxide at position 21 are pH-adjustment clues."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 7,
+        "route": "refatting_or_lipid_replenishment",
+        "fact_id": "formula.conditioning.07"
+      },
+      {
+        "ingredient": "PEG-3 Distearate",
+        "position": 9,
+        "route": "fatty_ester_opacifier_or_softness_clue",
+        "fact_id": "formula.conditioning.09"
+      },
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "position": 10,
+        "route": "protein_film_or_hair-feel_clue",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 15,
+        "route": "cationic_guar_polymer",
+        "fact_id": "formula.conditioning.15"
+      },
+      {
+        "ingredient": "Hydrogenated Palm Glycerides Citrate",
+        "position": 25,
+        "route": "late_lipid_or_emulsifier_clue",
+        "fact_id": "formula.conditioning.25"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "Panthenol",
+        "position": 12,
+        "clue": "humectant_or_hair-feel_support"
+      },
+      {
+        "ingredient": "Niacinamide",
+        "position": 13,
+        "clue": "skin-care-active_presence"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 18,
+        "clue": "humectant"
+      },
+      {
+        "ingredient": "Pantolactone",
+        "position": 20,
+        "clue": "panthenol-related_humectant_or_stabilizer_clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [
+      {
+        "ingredient": "Panthenol",
+        "position": 12,
+        "role_clue": "comfort_or_humectant_support"
+      },
+      {
+        "ingredient": "Niacinamide",
+        "position": 13,
+        "role_clue": "skin-care-active_presence"
+      }
+    ],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "Parfum",
+        "position": 6,
+        "flag": "fragrance"
+      },
+      {
+        "ingredient": "Terpineol",
+        "position": 17,
+        "flag": "fragrance_allergen_or_fragrance_component"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.surfactant.02",
+      "formula.surfactant.03",
+      "formula.surfactant.08",
+      "formula.conditioning.07",
+      "formula.conditioning.09",
+      "formula.conditioning.10",
+      "formula.conditioning.15",
+      "formula.conditioning.25"
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {
+        "id": "claim-rossmann-de-positioning",
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "source_text": "reinigt und pflegt besonders sanft; milde Pflege-Formel mit beruhigenden Inhaltsstoffen sowie Panthenol; für empfindliche Kopfhaut & normales Haar; ohne Silikone; dermatologisch bestätigt und pH-hautneutral"
+      },
+      {
+        "id": "claim-rossmann-dk-positioning",
+        "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "source_text": "renser og plejer særligt mildt; milde plejeformel med beroligende ingredienser og panthenol; til følsom hovedbund og normalt hår; uden silikoner"
+      }
+    ],
+    "directions": [
+      {
+        "id": "directions-rossmann-de",
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "source_text": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+      },
+      {
+        "id": "directions-rossmann-dk",
+        "source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "source_text": "Masseres ind i fugtigt hår. Skylles grundigt ud."
+      }
+    ],
+    "warnings": [
+      {
+        "id": "warning-rossmann-de",
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:28+02:00",
+        "source_text": "Augenkontakt vermeiden."
+      }
+    ]
+  },
+  "provenance_checks": {
+    "gtin_check_digit_valid": true,
+    "formula_hash_recomputed": true,
+    "blind_packet_identity_terms_checked": true,
+    "old_manifest_labels_used": false,
+    "database_reads_or_writes": false,
+    "notes": [
+      "Administrative manifest was used only to locate the candidate and starting URLs.",
+      "Validation receipt 2026-09-03: every blind_packet.source_fact_identifiers entry resolves to top-level source_facts or an embedded blind_packet record fact_id."
+    ]
+  },
+  "open_questions": []
+}

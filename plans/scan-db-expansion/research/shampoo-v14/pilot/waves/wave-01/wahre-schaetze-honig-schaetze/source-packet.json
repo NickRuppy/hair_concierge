@@ -1,0 +1,426 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "wahre-schaetze-honig-schaetze",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "packet_conflict_resolution": {
+    "status": "formula_ready_identity_apply_hold_retained",
+    "selected_canonical_source_tier": "manufacturer_de_exact_gtin_formula",
+    "selected_formula_hash": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+    "rationale": "Garnier DE and dm DE bind the current 400 ml product and GTIN to the same complete INCI. The formula packet is usable for blind architecture research, but the earlier apply exclusion for EAN corroboration remains explicitly preserved."
+  },
+  "identity": {
+    "market": "DE",
+    "brand": "Garnier Wahre Schätze",
+    "exact_current_de_name": "Shampoo Honig Schätze",
+    "size": {
+      "value": 400,
+      "unit": "ml",
+      "display": "400 ml"
+    },
+    "gtin": "3600542461030",
+    "captured_at": "2026-09-03T15:35:00+02:00",
+    "current_sources": [
+      {
+        "id": "src-garnier-de-pdp",
+        "label": "Garnier DE exact PDP",
+        "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/shampoo",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de_exact_gtin_formula",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "formula",
+          "claims",
+          "directions"
+        ]
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "label": "dm DE exact PDP",
+        "url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin_formula_price_image",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "price",
+          "image",
+          "formula",
+          "claims",
+          "directions"
+        ]
+      }
+    ],
+    "confidence": "moderate_high",
+    "explicit_conflicts": [
+      {
+        "field": "gtin_apply_status",
+        "description": "GTIN 3600542461030 is valid and appears on Garnier DE and dm DE evidence, but the existing administrative research marked cross_source_agreement=false and excluded_from_apply=true. This packet preserves that apply hold; it is not approval to apply the EAN."
+      },
+      {
+        "field": "claim_vs_formula",
+        "description": "The positioning names beeswax alongside honey, but the published INCI contains MEL / HONEY and MEL EXTRACT / HONEY EXTRACT and does not contain a beeswax INCI such as CERA ALBA / BEESWAX. Treat as a claim/formula mismatch, not as inferred formula content."
+      }
+    ]
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.gtin.dm_de",
+      "fact_key": "identity.gtin",
+      "fact_value": "3600542461030",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "gtin: 3600542461030",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "identity.gtin.dm_de",
+      "fact_key": "identity.gtin",
+      "fact_value": "3600542461030",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "source_text": "gtin: 3600542461030",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "identity.price.dm_de",
+      "fact_key": "price_eur",
+      "fact_value": "3.45",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "source_text": "price: 3,45 EUR; volume: 400 ml",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_key": "formula.raw_inci",
+      "fact_value": "AQUA / WATER • SODIUM LAURYL SULFATE • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • CARBOMER • GLYCERIN • GLYCERYL OLEATE • GLYCOL DISTEARATE • TRIETHYL CITRATE • LECITHIN • SODIUM HYDROXIDE • COCO-BETAINE • COCO-GLUCOSIDE • HYDROGENATED PALM GLYCERIDES CITRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • LAUROYL/MYRISTOYL METHYL GLUCAMIDE • TOCOPHEROL • ASCORBYL PALMITATE • POTASSIUM SORBATE • SORBIC ACID • SODIUM BENZOATE • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "formula.dm_de_matching_inci",
+      "fact_key": "formula.raw_inci_corroboration",
+      "fact_value": "AQUA / WATER • SODIUM LAURYL SULFATE • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • CARBOMER • GLYCERIN • GLYCERYL OLEATE • GLYCOL DISTEARATE • TRIETHYL CITRATE • LECITHIN • SODIUM HYDROXIDE • COCO-BETAINE • COCO-GLUCOSIDE • HYDROGENATED PALM GLYCERIDES CITRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • LAUROYL/MYRISTOYL METHYL GLUCAMIDE • TOCOPHEROL • ASCORBYL PALMITATE • POTASSIUM SORBATE • SORBIC ACID • SODIUM BENZOATE • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "claims.beeswax_mismatch",
+      "fact_key": "claims.positioning",
+      "fact_value": "Mit Bienenwachs und Akazienhonig",
+      "source_id": "src-garnier-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Claim names beeswax; canonical INCI has honey materials but no beeswax INCI.",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    {
+      "fact_id": "directions.standard_rinse",
+      "fact_key": "directions",
+      "fact_value": "Sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    }
+  ],
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "AQUA / WATER • SODIUM LAURYL SULFATE • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • CARBOMER • GLYCERIN • GLYCERYL OLEATE • GLYCOL DISTEARATE • TRIETHYL CITRATE • LECITHIN • SODIUM HYDROXIDE • COCO-BETAINE • COCO-GLUCOSIDE • HYDROGENATED PALM GLYCERIDES CITRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • LAUROYL/MYRISTOYL METHYL GLUCAMIDE • TOCOPHEROL • ASCORBYL PALMITATE • POTASSIUM SORBATE • SORBIC ACID • SODIUM BENZOATE • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM LAURYL SULFATE",
+      "COCAMIDOPROPYL BETAINE",
+      "SODIUM CHLORIDE",
+      "MEL / HONEY",
+      "MEL EXTRACT / HONEY EXTRACT",
+      "CARBOMER",
+      "GLYCERIN",
+      "GLYCERYL OLEATE",
+      "GLYCOL DISTEARATE",
+      "TRIETHYL CITRATE",
+      "LECITHIN",
+      "SODIUM HYDROXIDE",
+      "COCO-BETAINE",
+      "COCO-GLUCOSIDE",
+      "HYDROGENATED PALM GLYCERIDES CITRATE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "CITRIC ACID",
+      "LAUROYL/MYRISTOYL METHYL GLUCAMIDE",
+      "TOCOPHEROL",
+      "ASCORBYL PALMITATE",
+      "POTASSIUM SORBATE",
+      "SORBIC ACID",
+      "SODIUM BENZOATE",
+      "CARAMEL",
+      "COUMARIN",
+      "LIMONENE",
+      "BENZYL ALCOHOL",
+      "BENZYL SALICYLATE",
+      "PARFUM / FRAGRANCE"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM LAURYL SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, MEL / HONEY, MEL EXTRACT / HONEY EXTRACT, CARBOMER, GLYCERIN, GLYCERYL OLEATE, GLYCOL DISTEARATE, TRIETHYL CITRATE, LECITHIN, SODIUM HYDROXIDE, COCO-BETAINE, COCO-GLUCOSIDE, HYDROGENATED PALM GLYCERIDES CITRATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, LAUROYL/MYRISTOYL METHYL GLUCAMIDE, TOCOPHEROL, ASCORBYL PALMITATE, POTASSIUM SORBATE, SORBIC ACID, SODIUM BENZOATE, CARAMEL, COUMARIN, LIMONENE, BENZYL ALCOHOL, BENZYL SALICYLATE, PARFUM / FRAGRANCE",
+    "sha256_normalized_inci": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+    "canonical_source": {
+      "id": "src-garnier-de-pdp",
+      "tier": "manufacturer_de_exact_gtin_formula",
+      "captured_at": "2026-09-03T15:35:00+02:00"
+    },
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {
+        "id": "src-garnier-de-pdp",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "canonical_current_exact_german_manufacturer_formula",
+        "formula_hash_if_normalized": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce"
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "captured_at": "2026-09-03T15:35:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "matching_exact_gtin_german_retailer_formula",
+        "formula_hash_if_normalized": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce"
+      }
+    ],
+    "version_or_reformulation_conflicts": [],
+    "normalization_notes": "Converted bullet separators to comma-space; preserved INCI spelling, case, slash aliases and order."
+  },
+  "blind_packet": {
+    "formula_source_tier": "manufacturer_de_exact_gtin_formula",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "moderate_high",
+    "formula_conflict_status": "no_formula_conflict_observed_for_canonical_source",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM LAURYL SULFATE",
+      "COCAMIDOPROPYL BETAINE",
+      "SODIUM CHLORIDE",
+      "MEL / HONEY",
+      "MEL EXTRACT / HONEY EXTRACT",
+      "CARBOMER",
+      "GLYCERIN",
+      "GLYCERYL OLEATE",
+      "GLYCOL DISTEARATE",
+      "TRIETHYL CITRATE",
+      "LECITHIN",
+      "SODIUM HYDROXIDE",
+      "COCO-BETAINE",
+      "COCO-GLUCOSIDE",
+      "HYDROGENATED PALM GLYCERIDES CITRATE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "CITRIC ACID",
+      "LAUROYL/MYRISTOYL METHYL GLUCAMIDE",
+      "TOCOPHEROL",
+      "ASCORBYL PALMITATE",
+      "POTASSIUM SORBATE",
+      "SORBIC ACID",
+      "SODIUM BENZOATE",
+      "CARAMEL",
+      "COUMARIN",
+      "LIMONENE",
+      "BENZYL ALCOHOL",
+      "BENZYL SALICYLATE",
+      "PARFUM / FRAGRANCE"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM LAURYL SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, MEL / HONEY, MEL EXTRACT / HONEY EXTRACT, CARBOMER, GLYCERIN, GLYCERYL OLEATE, GLYCOL DISTEARATE, TRIETHYL CITRATE, LECITHIN, SODIUM HYDROXIDE, COCO-BETAINE, COCO-GLUCOSIDE, HYDROGENATED PALM GLYCERIDES CITRATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CITRIC ACID, LAUROYL/MYRISTOYL METHYL GLUCAMIDE, TOCOPHEROL, ASCORBYL PALMITATE, POTASSIUM SORBATE, SORBIC ACID, SODIUM BENZOATE, CARAMEL, COUMARIN, LIMONENE, BENZYL ALCOHOL, BENZYL SALICYLATE, PARFUM / FRAGRANCE",
+    "formula_fingerprint_sha256": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURYL SULFATE",
+        "position": 2,
+        "family": "anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 3,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.03"
+      },
+      {
+        "ingredient": "COCO-BETAINE",
+        "position": 14,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.14"
+      },
+      {
+        "ingredient": "COCO-GLUCOSIDE",
+        "position": 15,
+        "family": "nonionic alkyl polyglucoside",
+        "fact_id": "formula.surfactant.15"
+      },
+      {
+        "ingredient": "LAUROYL/MYRISTOYL METHYL GLUCAMIDE",
+        "position": 19,
+        "family": "nonionic sugar-amide surfactant",
+        "fact_id": "formula.surfactant.19"
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 9,
+        "route": "refatting lipid/emollient",
+        "fact_id": "formula.conditioning.09"
+      },
+      {
+        "ingredient": "GLYCOL DISTEARATE",
+        "position": 10,
+        "route": "fatty ester pearlizer/refatting support",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "LECITHIN",
+        "position": 12,
+        "route": "amphiphilic lipid conditioning support",
+        "fact_id": "formula.conditioning.12"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 17,
+        "route": "cationic guar deposition polymer",
+        "fact_id": "formula.conditioning.17"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate appears at position 2 with amphoteric support at position 3."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Humectant and lipid/refatting signals appear in the mid-list rather than only at fragrance-tail positions."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "No silicone ingredient is present in the normalized INCI."
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 8,
+        "role": "humectant",
+        "fact_id": "formula.humectant.08"
+      },
+      {
+        "ingredient": "MEL / HONEY",
+        "position": 5,
+        "role": "sugar-rich botanical/animal-derived material",
+        "fact_id": "formula.humectant.05"
+      },
+      {
+        "ingredient": "MEL EXTRACT / HONEY EXTRACT",
+        "position": 6,
+        "role": "sugar-rich extract",
+        "fact_id": "formula.humectant.06"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "COUMARIN",
+        "position": 26,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.26"
+      },
+      {
+        "ingredient": "LIMONENE",
+        "position": 27,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.27"
+      },
+      {
+        "ingredient": "BENZYL ALCOHOL",
+        "position": 28,
+        "role": "fragrance/preservative exposure declaration",
+        "fact_id": "formula.fragrance.28"
+      },
+      {
+        "ingredient": "BENZYL SALICYLATE",
+        "position": 29,
+        "role": "fragrance allergen declaration",
+        "fact_id": "formula.fragrance.29"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.surfactant.02",
+      "formula.surfactant.03",
+      "formula.surfactant.14",
+      "formula.surfactant.15",
+      "formula.surfactant.19",
+      "formula.conditioning.09",
+      "formula.conditioning.10",
+      "formula.conditioning.12",
+      "formula.conditioning.17",
+      "formula.architecture.01",
+      "formula.architecture.02",
+      "formula.architecture.03"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "SODIUM CHLORIDE",
+        "position": 4,
+        "role": "viscosity/ionic strength support",
+        "fact_id": "formula.function.04"
+      },
+      {
+        "ingredient": "CARBOMER",
+        "position": 7,
+        "role": "rheology support",
+        "fact_id": "formula.function.07"
+      }
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {
+        "source_id": "src-garnier-de-pdp",
+        "text": "Positioned around honey and beeswax for stressed, damaged-looking hair; claim/formula mismatch retained because beeswax is not visible in INCI."
+      }
+    ],
+    "directions": [
+      {
+        "source_id": "src-dm-de-pdp",
+        "text": "Sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+      }
+    ],
+    "warnings": []
+  },
+  "provenance_checks": {
+    "gtin_check_digit_valid": true,
+    "formula_hash_recomputed": true,
+    "blind_packet_identity_terms_checked": true,
+    "old_manifest_labels_used": false,
+    "database_reads_or_writes": false,
+    "notes": [
+      "EAN apply hold preserved separately from formula packet readiness.",
+      "Beeswax was not inferred into the formula from claim text."
+    ]
+  },
+  "open_questions": [
+    {
+      "severity": "non_blocking_for_pilot",
+      "question": "Keep GTIN 3600542461030 excluded from apply until Nick accepts the EAN corroboration route; formula packet itself is ready for v1.4 blind architecture review."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": "shampoo-v14-pilot-manifest-v1",
+  "products": [
+    { "id": "elvital-hydra-hyaluronic", "path": "elvital-hydra-hyaluronic" },
+    { "id": "syoss-intense-keratin", "path": "syoss-intense-keratin" },
+    { "id": "head-shoulders-classic-clean", "path": "head-shoulders-classic-clean" },
+    { "id": "isana-sensitiv", "path": "isana-sensitiv" },
+    { "id": "isana-2in1-volumen", "path": "isana-2in1-volumen" }
+  ]
+}

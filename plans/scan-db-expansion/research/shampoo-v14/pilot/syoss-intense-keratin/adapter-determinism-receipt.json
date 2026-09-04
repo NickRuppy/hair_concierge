@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "syoss-intense-keratin",
+  "run1InputSha256": "2358207abe749d41c5621f3d832461dcf8c9f2ae39e8e6d57cde2cbeb3f5304f",
+  "run2InputSha256": "2358207abe749d41c5621f3d832461dcf8c9f2ae39e8e6d57cde2cbeb3f5304f",
+  "outputSha256": "46c4c3f99d4a0fc06f69746ba09f60eaec0abec81fb75324c6059935b57be697",
+  "summarySha256": "2c7d41f1badd36a770b40827d6ce7e83a25cfd84b11211f00b2f7dc9f82b158b",
+  "byteIdentical": true
+}

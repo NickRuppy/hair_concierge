@@ -1,0 +1,74 @@
+{
+  "version": "shampoo-v14-comparison-v1",
+  "productId": "isana-sensitiv",
+  "laneAProductId": "isana-sensitiv",
+  "laneBProductId": "isana-sensitiv",
+  "judgmentProperties": [
+    "cleansingStrength",
+    "conditioningLevel",
+    "weightPotential",
+    "focusPrimary",
+    "focusSecondary",
+    "usageRole",
+    "scalpComfortTarget"
+  ],
+  "propertyComparison": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "high",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "high",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "moderate",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "focusPrimary": {
+      "laneAValue": "gentle",
+      "laneAConfidence": "high",
+      "laneBValue": "gentle",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneAConfidence": "moderate",
+      "laneBValue": [],
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneAConfidence": "high",
+      "laneBValue": "frequent",
+      "laneBConfidence": "moderate",
+      "exactAgreement": false
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "targeted",
+      "laneAConfidence": "high",
+      "laneBValue": "targeted",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneAConfidence": "high",
+      "laneBValue": "not_supported",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    }
+  },
+  "dandruffAgreement": true
+}

@@ -1,0 +1,160 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:loreal-hydration-positioning",
+          "claim:dm-hydration-positioning",
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.05"
+        ],
+        "rationale": "The exact product is hydration-led but is not positioned for sensitive, itchy, dry-feeling or uncomfortable scalp, so the ordinary balanced route is the supported production target."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.05",
+          "formula.surfactant.10",
+          "formula.architecture.helper_functions_preserved"
+        ],
+        "rationale": "Moderate: SLES is the primary cleanser, but it is buffered by amphoteric betaines and a visibly conditioning/refatting chassis; helper emulsifiers are not counted as separate cleansing routes. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:elvital-hydra-hyaluronic:conditioningLevel",
+          "adjudication:elvital-hydra-hyaluronic:weightPotential",
+          "adjudication:elvital-hydra-hyaluronic:focusPrimary",
+          "adjudication:elvital-hydra-hyaluronic:conditioningLevel",
+          "adjudication:elvital-hydra-hyaluronic:weightPotential",
+          "adjudication:elvital-hydra-hyaluronic:focusPrimary",
+          "adjudication:elvital-hydra-hyaluronic:conditioningLevel",
+          "adjudication:elvital-hydra-hyaluronic:weightPotential",
+          "adjudication:elvital-hydra-hyaluronic:focusPrimary"
+        ],
+        "rationale": "Ideal: normal — Moderate cleansing, high conditioning and moderate weight form a balanced care profile for normal-diameter hair. coarse — High rinse-off conditioning and hydration-led positioning support coarse hair, while moderate weight remains acceptable. Conditional (not emitted): fine — High conditioning plus silicone and cationic deposition routes can reduce lift on fine hair; moderate cleansing keeps it usable as a conditional rather than excluded fit."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:loreal-hydration-positioning",
+          "claim:dm-hydration-positioning"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.05",
+          "formula.surfactant.10",
+          "formula.architecture.helper_functions_preserved"
+        ],
+        "rationale": "Moderate: SLES is the primary cleanser, but it is buffered by amphoteric betaines and a visibly conditioning/refatting chassis; helper emulsifiers are not counted as separate cleansing routes."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conflict_inci",
+          "formula.conditioning.06",
+          "formula.conditioning.08",
+          "formula.conditioning.23"
+        ],
+        "rationale": "High: early dimethicone, early cationic guar, late amodimethicone and early glycol distearate create several complementary rinse-off slip and manageability routes."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conflict_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is explicitly not enough under v1.4."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:loreal-hydration-positioning",
+          "claim:dm-hydration-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "General: the dominant exact-product claim is hydration/moisture, which is compatible with sodium hyaluronate and conditioning routes but is not a v1.4 focus enum."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:loreal-hydration-positioning",
+          "formula.conditioning.06"
+        ],
+        "rationale": "Shine is a bounded secondary: the manufacturer separately promises shiny, lively hair, and the formula has silicone smoothing plus acid/pH clues independent from the moisture claim."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:loreal-hydration-positioning",
+          "claim:dm-hydration-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the product mentions scalp hydration but is not positioned for sensitive, itchy or uncomfortable scalp, and fragrance exposure plus SLES prevent treating it as a comfort-targeted formula."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:loreal-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: the packet provides ordinary rinse-out directions and no explicit daily, treatment, alternating, clarifying or reset trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conflict_inci",
+          "formula.conditioning.06",
+          "formula.conditioning.08",
+          "formula.conditioning.23"
+        ],
+        "rationale": "Moderate: silicone plus cationic polymer deposition makes noticeable residue plausible, while SLES/betaine cleansing and late amodimethicone keep the band below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "fine"
+    ],
+    "productId": "elvital-hydra-hyaluronic",
+    "productName": "Elvital Hydra [Hyaluronic] 72H Feuchtigkeit-Auffüllendes Shampoo",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

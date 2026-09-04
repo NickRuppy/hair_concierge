@@ -1,0 +1,47 @@
+{
+  "version": "shampoo-v14-blind-mapping-receipt-v1",
+  "mappedAt": "2026-09-03T08:04:29.373Z",
+  "method": "Opaque candidate outputs were hashed before product identity mapping; property payloads were copied without modification.",
+  "members": [
+    {
+      "candidateSlot": "candidate-01",
+      "productId": "elvital-hydra-hyaluronic",
+      "blindInputSha256": "c3866da47c0c35da9ef4a6c9e90555f3570823782776ee7c41bda5b173d4a2f0",
+      "blindResultSha256": "4b86f21e12798f9399901d01c663ed51e03448d993e81ba324fd806231d52f69",
+      "sourcePacketSha256": "b14e92aa65f963deb9e1f1f1fa62b44d22c86026499f6b07064af33cb7dff192",
+      "formulaFingerprintSha256": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c"
+    },
+    {
+      "candidateSlot": "candidate-02",
+      "productId": "syoss-intense-keratin",
+      "blindInputSha256": "e67411eb73b07311887e072d506b8426303b313fcf184584210ac8e6e1e0ddf9",
+      "blindResultSha256": "2bf2844b37c42790b413b6b2011f958b8611a12e51f42aac06c28174051045f0",
+      "sourcePacketSha256": "774d663fce9c5317d6868e1f5d23b0d8662c57c57e125d590bca0ff5a2dfdcd1",
+      "formulaFingerprintSha256": "9d68e3abce11e8e7af0982a2ee376633bdc8b4990df3e5d4b2808bef943dcc1a"
+    },
+    {
+      "candidateSlot": "candidate-03",
+      "productId": "head-shoulders-classic-clean",
+      "blindInputSha256": "ec19c666d76489b45c7a65b7af93a4b6ed0db2b3d3a1daba0cf3a3f7010203e3",
+      "blindResultSha256": "b46487e2b4b4178588adb8ed90c4005c43c8a94974dc4f5a6c84b4f26c3399d4",
+      "sourcePacketSha256": "f1d40ac53c2f3de6d5e26aa2f0cac99a5bc40be3d64912efab76a2abc63da693",
+      "formulaFingerprintSha256": "b1eb663939749d93f580c84af491006c685245d5df30f7826039a1adb96379c6"
+    },
+    {
+      "candidateSlot": "candidate-04",
+      "productId": "isana-sensitiv",
+      "blindInputSha256": "443a13f3f35e1fcfc33d30365791358a7d08fb5f97434cc6e3a6efa4bcd476da",
+      "blindResultSha256": "9726ddd8aaaf14ab6320bf02c889feb94a488709041325884d74c22238965f0e",
+      "sourcePacketSha256": "0a00883109d724fe292ae27520c03a5314c01e5a29d3ef0de95fef240ed37f3c",
+      "formulaFingerprintSha256": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52"
+    },
+    {
+      "candidateSlot": "candidate-05",
+      "productId": "isana-2in1-volumen",
+      "blindInputSha256": "8917cbf70aaa341af2b44372b9e52e391530911b3243d579cf0aea36ac890817",
+      "blindResultSha256": "a39857646538543dd7d7b923e27281431e8686cf843240d2df8e23359a1598d4",
+      "sourcePacketSha256": "ec93111803b40743af9c8b261a7ddb46ea83518307c47d23f186adcd7242a578",
+      "formulaFingerprintSha256": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6"
+    }
+  ]
+}

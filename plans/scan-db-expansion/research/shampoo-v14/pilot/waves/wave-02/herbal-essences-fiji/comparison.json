@@ -1,0 +1,74 @@
+{
+  "version": "shampoo-v14-comparison-v1",
+  "productId": "herbal-essences-fiji",
+  "laneAProductId": "herbal-essences-fiji",
+  "laneBProductId": "herbal-essences-fiji",
+  "judgmentProperties": [
+    "cleansingStrength",
+    "conditioningLevel",
+    "weightPotential",
+    "focusPrimary",
+    "focusSecondary",
+    "usageRole",
+    "scalpComfortTarget"
+  ],
+  "propertyComparison": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "high",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "moderate",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "weightPotential": {
+      "laneAValue": "low",
+      "laneAConfidence": "high",
+      "laneBValue": "low",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "focusPrimary": {
+      "laneAValue": "general",
+      "laneAConfidence": "moderate",
+      "laneBValue": "general",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneAConfidence": "high",
+      "laneBValue": [],
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneAConfidence": "high",
+      "laneBValue": "regular",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneAConfidence": "high",
+      "laneBValue": "not_targeted",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneAConfidence": "high",
+      "laneBValue": "not_supported",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    }
+  },
+  "dandruffAgreement": true
+}

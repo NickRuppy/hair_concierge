@@ -1,0 +1,245 @@
+{
+  "version": "shampoo-v14-lane-a-blind-result-rerun-v1",
+  "candidateSlot": "candidate-01",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "inputEvidence": {
+    "inputPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-02/blind-stage/inputs/candidate-01.json",
+    "formula_fingerprint_sha256": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none"
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Effective ordinary cleansing is most consistent with a SLES-led chassis that is buffered by amphoteric betaine and several care/refatting routes rather than reinforced into a clarifying/reset system.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        }
+      ],
+      "counterSignal": "SLES at position 2 is a strong anionic cleansing signal, with sodium chloride at position 3 suggesting a conventional surfactant base.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "candidate-01.json:formula.surfactant.02",
+        "candidate-01.json:formula.surfactant.04",
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "Substantial rinse-off softness and slip are likely because a cationic polymer, panthenol/oil care clues and two silicone routes converge within the complete formula.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The product remains a rinse-off shampoo with SLES/CAPB cleansing, so conditioning is not leave-on or mask-like.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14",
+        "candidate-01.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Noticeable but bounded residue is plausible from cationic polymer plus silicone and lipid/refatting clues, while the SLES/CAPB cleansing chassis gives meaningful reset capacity.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The cleansing system is not weak, and the silicone routes occur after the mid-formula care/oil region rather than as the earliest non-water ingredients.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14",
+        "candidate-01.json:formula.surfactant.02",
+        "candidate-01.json:formula.surfactant.04",
+        "candidate-01.json:formula.function.18"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [],
+        "whyThisBand": "The formula has more than a single light polymer: cationic guar, amodimethicone, dimethicone and nonvolatile lipid clues can plausibly leave noticeable residue over repeated use.",
+        "whyNotNeighborBand": "Not high because the SLES/CAPB shampoo chassis should remove or offset part of that residue, and the rich/persistent routes are not paired with a limited-reset base."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "No claims or product positioning are visible in the blind packet, so the provisional claim-gated default is general despite formula-compatible care routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        }
+      ],
+      "counterSignal": "Silicone, cationic polymer and panthenol/oil routes could later support a care, shine or repair-positioned focus if unblind claims are compatible.",
+      "neighboringAlternative": "repair",
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Secondary focus requires distinct secondary positioning plus an independent formula route; the blind packet contains formula routes but no claim positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "Multiple care routes could support a secondary focus after post-unblind positioning review.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Regular is the blind default because there is no visible product-level trigger for daily/frequent, alternating, occasional reset or treatment use.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "Cleansing may be too care-rich for a reset role, but unblind claims could still introduce a non-default usage trigger.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "candidate-01.json:formula.surfactant.02",
+        "candidate-01.json:formula.surfactant.04",
+        "candidate-01.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "The complete formula has no recognized scalp-comfort active or sensitive-skin intent in the blind packet, and fragrance is present.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "Panthenol and buffered cleansing could be compatible with comfort positioning if later claims explicitly target sensitive or uncomfortable scalp.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "candidate-01.json:formula.recognized_scalp_actives_positions",
+        "candidate-01.json:formula.fragrance_cooling_exposure_flags",
+        "candidate-01.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "The complete INCI contains neither Piroctone Olamine nor Climbazole under the mechanical v1.4 rule.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "SODIUM SALICYLATE at position 27 is not a recognized anti-dandruff active under this rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "candidate-01.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    }
+  }
+}
