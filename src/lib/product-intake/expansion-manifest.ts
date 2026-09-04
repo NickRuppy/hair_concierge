@@ -25,13 +25,9 @@ import { validateProductIntakeCategorySpecs } from "@/lib/product-intake/categor
  *  - EAN GS1 check-digit validation reuses `validateEanInput` from
  *    src/lib/scan/identifier-lookup.ts verbatim (no server-only dependency).
  *
- * Known disagreement between the plan's field list and the live code (followed
- * here, not guessed): the plan's T2 text lists "oil ... provides_heat_protection"
- * as a runtime-consumed oil spec field. `product_oil_specs` (category-validators.ts)
- * has NO such boolean column — an oil's heat-protection role is carried entirely by
- * `role_support` containing `"pre_heat_protection"`. This module follows the code:
- * there is no oil `provides_heat_protection` field to validate, and the
- * heat-protection role requirement for oils is derived from `role_support` instead.
+ * Oil purpose and capability stay separate: `role_support` contains only the three
+ * oil application purposes. `provides_heat_protection` records the independent
+ * heat-protection claim and does not create another protocol role.
  */
 
 // ---------------------------------------------------------------------------
@@ -59,13 +55,12 @@ export const EXPANSION_TEMPLATE_IDS = [
   "TPL-LEAVEIN-HEAT",
   "TPL-OIL-DRYFINISH",
   "TPL-OIL-LEAVEON",
-  "TPL-OIL-HEAT",
   "TPL-OIL-PREWASH",
 ] as const
 
 export type ExpansionTemplateId = (typeof EXPANSION_TEMPLATE_IDS)[number]
 
-const HEAT_TEMPLATE_IDS = new Set<ExpansionTemplateId>(["TPL-LEAVEIN-HEAT", "TPL-OIL-HEAT"])
+const HEAT_TEMPLATE_IDS = new Set<ExpansionTemplateId>(["TPL-LEAVEIN-HEAT"])
 const MASK_TEMPLATE_ID: ExpansionTemplateId = "TPL-MASK"
 
 /** Maps each template to the (category, derived protocol role) it stamps — docs/product-application-protocol-templates.md §4. */
@@ -83,7 +78,6 @@ export const EXPANSION_TEMPLATE_META: Record<
   "TPL-LEAVEIN-HEAT": { category: "leave_in", role: "pre_heat_protection" },
   "TPL-OIL-DRYFINISH": { category: "oil", role: "dry_finish" },
   "TPL-OIL-LEAVEON": { category: "oil", role: "leave_on_fibre_conditioning" },
-  "TPL-OIL-HEAT": { category: "oil", role: "pre_heat_protection" },
   "TPL-OIL-PREWASH": { category: "oil", role: "pre_wash_fibre_treatment" },
 }
 
@@ -128,7 +122,9 @@ export function deriveRequiredProtocolRoles(
     }
     case "oil": {
       const specs = categorySpecs.product_oil_specs as { role_support?: unknown } | undefined
-      return Array.isArray(specs?.role_support) ? (specs.role_support as string[]) : []
+      return Array.isArray(specs?.role_support)
+        ? (specs.role_support as string[]).filter((role) => role !== "pre_heat_protection")
+        : []
     }
     default:
       return []
@@ -274,14 +270,14 @@ export const expansionProtocolSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["usable_on_dry_hair"],
-        message: "TPL-LEAVEIN-HEAT / TPL-OIL-HEAT protocols require usable_on_dry_hair",
+        message: "TPL-LEAVEIN-HEAT protocols require usable_on_dry_hair",
       })
     }
     if (!isHeat && protocol.usable_on_dry_hair !== undefined) {
       ctx.addIssue({
         code: "custom",
         path: ["usable_on_dry_hair"],
-        message: "usable_on_dry_hair is only valid for TPL-LEAVEIN-HEAT / TPL-OIL-HEAT",
+        message: "usable_on_dry_hair is only valid for TPL-LEAVEIN-HEAT",
       })
     }
   })

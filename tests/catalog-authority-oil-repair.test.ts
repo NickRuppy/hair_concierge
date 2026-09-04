@@ -235,70 +235,14 @@ test("the SQL executor fix resolves output-column ambiguity without widening its
   assert.doesNotMatch(sql, /catalog_product_dispositions/)
 })
 
-test("the CLI apply gate requires explicit project, fingerprint, approval, reviewed head, and clean state", () => {
+test("the historical Oil authority CLI remains available for inspection but cannot apply", () => {
   assert.doesNotThrow(() =>
     assertOilRepairApplyCliGate({
       apply: false,
-      confirm: false,
-      confirmProject: null,
-      reviewedHead: null,
-      expectedFingerprint: null,
-      actualFingerprint: EXPECTED_FINGERPRINT,
-      manifestReady: false,
     }),
   )
   assert.throws(
-    () =>
-      assertOilRepairApplyCliGate({
-        apply: true,
-        confirm: true,
-        confirmProject: PROJECT_ID_FOR_TEST,
-        reviewedHead: "abc",
-        expectedFingerprint: EXPECTED_FINGERPRINT,
-        actualFingerprint: EXPECTED_FINGERPRINT,
-        manifestReady: false,
-        gitHead: "abc",
-        gitStatus: "",
-      }),
-    /oil_repair_manifest_not_approved/,
+    () => assertOilRepairApplyCliGate({ apply: true }),
+    /oil_repair_apply_retired_use_oil_heat_capability_migration/,
   )
-
-  const ready = {
-    apply: true,
-    confirm: true,
-    confirmProject: PROJECT_ID_FOR_TEST,
-    reviewedHead: "reviewed-head",
-    expectedFingerprint: EXPECTED_FINGERPRINT,
-    actualFingerprint: EXPECTED_FINGERPRINT,
-    manifestReady: true,
-    gitHead: "reviewed-head",
-    gitStatus: "",
-  } as const
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, confirm: false }),
-    /oil_repair_apply_confirmation_missing/,
-  )
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, confirmProject: "wrong-project" }),
-    /oil_repair_project_confirmation_mismatch/,
-  )
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, reviewedHead: null }),
-    /oil_repair_reviewed_head_missing/,
-  )
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, expectedFingerprint: "0".repeat(64) }),
-    /oil_repair_expected_fingerprint_mismatch/,
-  )
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, gitHead: "different-head" }),
-    /oil_repair_reviewed_head_mismatch/,
-  )
-  assert.throws(
-    () => assertOilRepairApplyCliGate({ ...ready, gitStatus: " M proposal" }),
-    /oil_repair_worktree_not_clean/,
-  )
-  assert.doesNotThrow(() => assertOilRepairApplyCliGate(ready))
 })
-
-const PROJECT_ID_FOR_TEST = "pqdkhefxsxkyeqelqegq"

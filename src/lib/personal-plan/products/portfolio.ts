@@ -55,6 +55,11 @@ export function createProposedProductPortfolio(
           : 1
 
   for (const decision of draft.decisions) {
+    // The authority has already proved that a planned/owned Oil is the exact
+    // carrier for this heat need. This is not a user-deferred heat gap: the
+    // persisted criterion result is the sole reason it may disappear from the
+    // standalone portfolio projection.
+    if (isVerifiedIntegratedHeatCarrierResolution(decision)) continue
     const product = decision.capturedProductId
       ? productsById.get(decision.capturedProductId)
       : undefined
@@ -179,6 +184,23 @@ export function createProposedProductPortfolio(
 
 function isReplacementSelection(decision: Stage3ProductDecision): boolean {
   return decision.resolutionAction === "select_replacement"
+}
+
+function isVerifiedIntegratedHeatCarrierResolution(decision: Stage3ProductDecision): boolean {
+  return (
+    decision.category === "heat_protectant" &&
+    decision.role === "pre_heat_protection" &&
+    decision.choiceState === "unassigned" &&
+    decision.resolutionAction === "leave_uncovered" &&
+    decision.verdict === "ideal" &&
+    decision.capturedProductId === null &&
+    decision.recommendation === null &&
+    decision.deferralReason === undefined &&
+    decision.criterionResults.some(
+      (criterion) =>
+        criterion.criterionId === "heat_protectant.carrier.verified" && criterion.result === "pass",
+    )
+  )
 }
 
 function hasV3ResolutionAction(draft: Stage3ProductDraft): boolean {

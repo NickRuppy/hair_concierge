@@ -1347,6 +1347,87 @@ test("Stage 3 PATCH accepts one revision-safe semantic decision batch", async ()
   })
 })
 
+test("Stage 3 POST validates and forwards a read-only decision preview", async () => {
+  const previewBody = {
+    draftId: draft.draftId,
+    expectedRevision: draft.revision,
+    intents: [
+      {
+        type: "resolve_decision",
+        subjectKey: "decision:shampoo:shampoo_everyday:capture-a",
+        action: "keep_owned",
+      },
+    ],
+  }
+  let received: unknown = null
+  const response = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          previewDecisionBundles: async (input: unknown) => {
+            received = input
+            return { status: "ready", bundles: [], autoResolvedIntents: [] }
+          },
+        }) as never,
+    }),
+  ).POST(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "POST",
+      body: JSON.stringify(previewBody),
+    }),
+  )
+  assert.equal(response!.status, 200)
+  assert.deepEqual(received, previewBody)
+  assert.deepEqual(await response!.json(), {
+    status: "ready",
+    bundles: [],
+    autoResolvedIntents: [],
+  })
+
+  const invalid = await createStage3RouteHandlers(deps()).POST(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "POST",
+      body: JSON.stringify({
+        draftId: draft.draftId,
+        expectedRevision: draft.revision,
+        intents: [],
+      }),
+    }),
+  )
+  assert.deepEqual([invalid!.status, await invalid!.json()], [400, { error: "invalid_request" }])
+
+  const unauthorized = await createStage3RouteHandlers(deps({ getUserId: async () => null })).POST(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "POST",
+      body: JSON.stringify(previewBody),
+    }),
+  )
+  assert.deepEqual(
+    [unauthorized!.status, await unauthorized!.json()],
+    [401, { error: "unauthorized" }],
+  )
+
+  const conflict = await createStage3RouteHandlers(
+    deps({
+      gatewayFor: (userId) =>
+        ({
+          ...deps().gatewayFor(userId),
+          previewDecisionBundles: async () => ({ status: "conflict", latestDraft: draft }),
+        }) as never,
+    }),
+  ).POST(
+    new Request("http://test/api/personal-plan/stage-3", {
+      method: "POST",
+      body: JSON.stringify(previewBody),
+    }),
+  )
+  assert.deepEqual(
+    [conflict!.status, await conflict!.json()],
+    [409, { error: "revision_conflict", latestDraft: draft }],
+  )
+})
+
 test("Stage 3 PATCH accepts one atomic complete category-role replacement", async () => {
   let received: unknown = null
   const response = await createStage3RouteHandlers(

@@ -4,6 +4,7 @@ import {
   type Stage3BootstrapResponse,
   type Stage3CompletionReceiptResponse,
   type Stage3CompleteResponse,
+  type Stage3DecisionReviewProjection,
   type Stage3IntakeClientPort,
   type Stage3MutationResponse,
   type Stage3ProductsGateway,
@@ -84,6 +85,13 @@ export function createHttpStage3ProductsGateway({
         fetcher,
         "/api/personal-plan/stage-3",
         jsonRequest("PATCH", input),
+        { allowRevisionConflict: true },
+      ),
+    previewDecisionBundles: async (input) =>
+      request<Stage3DecisionReviewProjection>(
+        fetcher,
+        "/api/personal-plan/stage-3",
+        jsonRequest("POST", input),
         { allowRevisionConflict: true },
       ),
     resolveNeedRevision: async (input) =>

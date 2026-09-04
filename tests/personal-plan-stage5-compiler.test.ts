@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { compileApplicationView } from "../src/lib/routines/personal-plan/application/compiler"
+import { heatEventMatchesOilCarrierDay } from "../src/lib/routines/personal-plan/application/day-type-registry"
 import type {
   ApplicationGuidanceProtocolV1,
   NormalizedApplicationInput,
@@ -162,6 +163,215 @@ test("compiler carries a catalog image as presentation data without changing pro
   assert.deepEqual(
     result.days[0]?.productBlocks.map((block) => block.productName),
     ["Shampoo"],
+  )
+})
+
+test("a heat-capable leave-on oil appends heat wording only on mapped compatible days", () => {
+  const oil = {
+    ...leaveInAndHeat,
+    itemId: "oil-leave-on",
+    productName: "Haaröl",
+    category: "oil" as const,
+    sourceRoutineRole: "leave_on_fibre_conditioning" as const,
+    catalogFacts: { provides_heat_protection: true },
+  }
+  const exactLeaveOn = {
+    ...protocol("oil", "leave_in", "post_wash_damp_conditioning", "wash_day", "damp_leave_on"),
+    guidanceKey: "oil-exact-leave-on",
+    scope: { kind: "product" as const, category: "oil" as const, productId: ids[2] },
+  }
+
+  const washInput = {
+    ...input([shampoo, oil]),
+    profile: {
+      thickness: "normal" as const,
+      heatEvents: [
+        { id: "heat:dryer", tool: "hair_dryer" as const, route: "airflow_shaping" as const },
+      ],
+    },
+  }
+  const washResult = compileApplicationView({
+    input: washInput,
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      exactLeaveOn,
+    ],
+  })
+  const washDay = washResult.days.find((day) => day.key === "wash_day")
+  const oilBlock = washDay?.productBlocks.find((block) => block.category === "oil")
+
+  assert.ok(washDay)
+  assert.ok(oilBlock)
+  assert.deepEqual(oilBlock.roles, ["leave_in"])
+  assert.equal(oilBlock.noteDe, null)
+  assert.equal(
+    oilBlock.steps[0]?.copyDe,
+    "Gleichmäßig verteilen. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+  )
+
+  const noEvent = compileApplicationView({
+    input: input([shampoo, oil]),
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      exactLeaveOn,
+    ],
+  })
+  const noEventOil = noEvent.days
+    .find((day) => day.key === "wash_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(noEventOil)
+  assert.equal(noEventOil.noteDe, null)
+  assert.equal(noEventOil.steps[0]?.copyDe, "Gleichmäßig verteilen.")
+
+  const wrongDay = compileApplicationView({
+    input: {
+      ...input([shampoo, oil]),
+      profile: {
+        thickness: "normal" as const,
+        heatEvents: [
+          { id: "heat:iron", tool: "straightener", route: "direct_contact_heat" as const },
+        ],
+      },
+    },
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      exactLeaveOn,
+    ],
+  })
+  const wrongDayOil = wrongDay.days
+    .find((day) => day.key === "wash_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(wrongDayOil)
+  assert.equal(wrongDayOil.noteDe, null)
+  assert.equal(wrongDayOil.steps[0]?.copyDe, "Gleichmäßig verteilen.")
+  assert.equal(
+    wrongDay.days
+      .find((day) => day.key === "styling_day")
+      ?.productBlocks.some((block) => block.category === "oil") ?? false,
+    false,
+  )
+
+  const unmappedDayProtocol = {
+    ...exactLeaveOn,
+    guidanceKey: "oil-exact-unmapped-day",
+    compatibleDayTypes: ["refresh_day"] as ApplicationGuidanceProtocolV1["compatibleDayTypes"],
+  }
+  const unmappedDay = compileApplicationView({
+    input: { ...washInput, routineItems: [oil] } as never,
+    protocols: [unmappedDayProtocol],
+  })
+  const unmappedDayOil = unmappedDay.days
+    .find((day) => day.key === "refresh_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(unmappedDayOil)
+  assert.equal(unmappedDayOil.noteDe, null)
+  assert.equal(unmappedDayOil.steps[0]?.copyDe, "Gleichmäßig verteilen.")
+
+  const stylingHeat = {
+    ...leaveInAndHeat,
+    itemId: "separate-styling-heat",
+    productId: ids[1],
+    category: "heat_protectant" as const,
+    role: "heat_protection" as const,
+    sourceRoutineRole: "pre_heat_protection" as const,
+    catalogFacts: { applicationState: "dry", reapplication: "not_stated" },
+  }
+  const stylingOilProtocol = {
+    ...exactLeaveOn,
+    guidanceKey: "oil-exact-styling-leave-on",
+    compatibleDayTypes: ["styling_day"] as ApplicationGuidanceProtocolV1["compatibleDayTypes"],
+  }
+  const stylingHeatProtocol = {
+    ...protocol(
+      "heat_protectant",
+      "heat_protection",
+      "dry_hair_protection",
+      "styling_day",
+      "dry_pre_heat",
+    ),
+    scope: { kind: "product" as const, category: "heat_protectant" as const, productId: ids[1] },
+  }
+  const stylingResult = compileApplicationView({
+    input: {
+      ...input([oil, stylingHeat]),
+      profile: {
+        thickness: "normal" as const,
+        heatEvents: [
+          { id: "heat:brush", tool: "dryer_brush", route: "airflow_shaping" as const },
+          { id: "heat:iron", tool: "straightener", route: "direct_contact_heat" as const },
+        ],
+      },
+    },
+    protocols: [stylingOilProtocol, stylingHeatProtocol],
+  })
+  const stylingOil = stylingResult.days
+    .find((day) => day.key === "styling_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(stylingOil)
+  assert.equal(stylingOil.noteDe, null)
+  assert.equal(
+    stylingOil.steps[0]?.copyDe,
+    "Gleichmäßig verteilen. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+  )
+  assert.equal(
+    stylingResult.days
+      .find((day) => day.key === "styling_day")
+      ?.productBlocks.filter((block) => block.category === "oil").length,
+    1,
+  )
+
+  const integratedStylingResult = compileApplicationView({
+    input: {
+      ...input([oil]),
+      profile: {
+        thickness: "normal" as const,
+        heatEvents: [
+          { id: "heat:iron", tool: "straightener", route: "direct_contact_heat" as const },
+        ],
+      },
+    },
+    protocols: [stylingOilProtocol],
+  })
+  const integratedStylingOil = integratedStylingResult.days
+    .find((day) => day.key === "styling_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(integratedStylingOil)
+  assert.equal(
+    integratedStylingOil.steps[0]?.copyDe,
+    "Gleichmäßig verteilen. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+  )
+
+  const dryFinishOnly = {
+    ...oil,
+    itemId: "oil-finish",
+    role: "finish" as const,
+    sourceRoutineRole: "dry_finish" as const,
+  }
+  const dryFinishProtocol = {
+    ...protocol("oil", "finish", "dry_finish", "wash_day", "dry_finish"),
+    scope: { kind: "product" as const, category: "oil" as const, productId: ids[2] },
+  }
+  const dryFinishResult = compileApplicationView({
+    input: { ...washInput, routineItems: [shampoo, dryFinishOnly] } as never,
+    protocols: [
+      protocol("shampoo", "cleanse", "standard_rinse_out_cleanse", "wash_day", "wet_cleanse"),
+      dryFinishProtocol,
+    ],
+  })
+  const dryFinishOil = dryFinishResult.days
+    .find((day) => day.key === "wash_day")
+    ?.productBlocks.find((block) => block.category === "oil")
+  assert.ok(dryFinishOil)
+  assert.equal(dryFinishOil.noteDe, null)
+  assert.equal(dryFinishOil.steps[0]?.copyDe, "Gleichmäßig verteilen.")
+})
+
+test("an unclassified dryer-brush event cannot activate styling-day Oil heat wording", () => {
+  assert.equal(
+    heatEventMatchesOilCarrierDay("styling_day", [
+      { id: "heat:brush", tool: "dryer_brush", route: "ordinary_airflow" },
+    ] as never),
+    false,
   )
 })
 

@@ -1,4 +1,10 @@
-import type { ApplicationDayTypeKey, NormalizedRoutineItem, SemanticRole } from "./contracts"
+import type {
+  ApplicationDayTypeKey,
+  NormalizedProfile,
+  NormalizedRoutineItem,
+  SemanticRole,
+} from "./contracts"
+import { oilHeatEventMatchesDay } from "@/lib/personal-plan/oil-heat-context"
 
 export const CANONICAL_APPLICATION_DAY_RULES: Record<
   ApplicationDayTypeKey,
@@ -93,4 +99,20 @@ export function isAlwaysRelevantRoleForDay(
   role: SemanticRole,
 ): boolean {
   return CANONICAL_APPLICATION_DAY_RULES[key].alwaysRelevantRoles.includes(role)
+}
+
+export function heatEventMatchesOilCarrierDay(
+  key: ApplicationDayTypeKey,
+  heatEvents: NonNullable<NormalizedProfile["heatEvents"]>,
+): boolean {
+  if (
+    key !== "wash_day" &&
+    key !== "intensive_care_day" &&
+    key !== "bond_repair_day" &&
+    key !== "clarifying_wash_day" &&
+    key !== "styling_day"
+  ) {
+    return false
+  }
+  return heatEvents.some((event) => oilHeatEventMatchesDay(key, event))
 }
