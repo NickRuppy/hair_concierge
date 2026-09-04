@@ -27,6 +27,10 @@ Confirmed with Nick (2026-09-04):
     deliberate research/production boundary that Mask mirrors, since the moisture focus
     projects only via balance_direction). Leave-in production care_benefits also carries
     moisture live (30 products).
+  - D6 care_direction always populated (2026-09-04): strict v1.6 semantics — balanced stays
+    "both routes substantive", never a neither-bucket; gloss/lamination masks classify by their
+    real conditioning base (typically moisture; formulas verified: Glycolic Gloss treatment,
+    Balea Laminier-Kur). Proposed `none` value withdrawn.
   - Parked (Nick, 2026-09-04): extend the CONDITIONER focus vocabulary with `moisture` later
     for cross-engine consistency — a conditioner v1.7 semantic change with its own
     guidance-synchronization and review obligations; outside this project's scope.

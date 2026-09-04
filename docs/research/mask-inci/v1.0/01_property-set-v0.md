@@ -67,6 +67,19 @@ this guard's above-the-tail requirement.
 Adapter note: `moisture` focus has no counterpart in `functional_benefits` (fixed vocabulary);
 the moisture identity projects through `balance_direction`, so no adapter change is needed.
 
+### D6 ruling — `care_direction` is always populated (Nick, 2026-09-04)
+
+Strict conditioner-v1.6 semantics, no empty value and no redefinition: `protein` needs a
+material protein/peptide/keratin film route, `moisture` covers a coherent conditioning/
+humectant/emollient base without a dominant protein route, and `balanced` remains reserved for
+a substantive mixed protein-plus-moisture architecture — never a "neither" middle bucket
+(shared production vocabulary; `balanced` bridge-matches in the fit layer). Gloss/lamination
+masks classify by the care base they actually carry — evidence: L'Oréal Glycolic Gloss
+treatment and Balea Glow & Shine Laminier-Kur both run a conventional cetearyl/behentrimonium/
+amodimethicone conditioning base under the acid route, so they land in `moisture` (or higher if
+a protein route is material, e.g. Balea's keratin) with the gloss identity carried by the
+`shine` focus. A `none` value was considered and withdrawn as unnecessary.
+
 ### D2 ruling — benefits via hierarchy
 
 `primary_focus`/`secondary_focus` are researched with the Conditioner focus discipline
