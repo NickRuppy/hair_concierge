@@ -139,6 +139,7 @@ import {
 } from "./quiz-data"
 import {
   PersonalPlanQuizFrame,
+  PersonalPlanQuizLegalLine,
   PersonalPlanQuizTextureQuestion,
 } from "./personal-plan-quiz-first-screen"
 import type { FreshPersonalPlanQuizEntry } from "./progressive-entry-contract"
@@ -2983,22 +2984,25 @@ export function PersonalPlanQuiz({
   )
 
   return (
-    <PersonalPlanQuizFrame
-      canGoBack={history.length > 0}
-      clientReady={draftReady}
-      currentSectionIndex={currentSectionIndex}
-      fieldTest={fieldTest}
-      onBack={handleHeaderBack}
-      progress={progress}
-      settledSectionIndices={settledSectionIndices}
-    >
-      <PersonalPlanScreenTransition
-        activeLayerRef={transitionActiveLayerRef}
-        onOutgoingComplete={completeOutgoingLayer}
-        outgoing={outgoingLayer}
+    <>
+      <PersonalPlanQuizFrame
+        canGoBack={history.length > 0}
+        clientReady={draftReady}
+        currentSectionIndex={currentSectionIndex}
+        fieldTest={fieldTest}
+        onBack={handleHeaderBack}
+        progress={progress}
+        settledSectionIndices={settledSectionIndices}
       >
-        {renderScreen()}
-      </PersonalPlanScreenTransition>
-    </PersonalPlanQuizFrame>
+        <PersonalPlanScreenTransition
+          activeLayerRef={transitionActiveLayerRef}
+          onOutgoingComplete={completeOutgoingLayer}
+          outgoing={outgoingLayer}
+        >
+          {renderScreen()}
+        </PersonalPlanScreenTransition>
+      </PersonalPlanQuizFrame>
+      {screen === "texture" ? <PersonalPlanQuizLegalLine /> : null}
+    </>
   )
 }

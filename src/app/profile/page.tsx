@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { signOutAction } from "@/app/auth/actions"
+import { FooterCookieSettingsButton } from "@/components/landing/footer-links"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -2302,6 +2304,43 @@ export default function ProfilePage() {
               </form>
             </CardContent>
           </Card>
+
+          <nav
+            aria-label="Rechtliches"
+            className="flex flex-wrap items-center justify-center gap-x-2 pb-2 text-xs text-muted-foreground"
+          >
+            <Link
+              href="/impressum"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Impressum
+            </Link>
+            <Link
+              href="/datenschutz"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Datenschutz
+            </Link>
+            <Link
+              href="/agb"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              AGB
+            </Link>
+            <Link
+              href="/widerruf"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Widerruf
+            </Link>
+            <Link
+              href="/kontakt"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Kontakt
+            </Link>
+            <FooterCookieSettingsButton className="inline-flex min-h-11 cursor-pointer items-center border-0 bg-transparent px-1 py-0 font-[inherit] text-xs text-muted-foreground transition-colors hover:text-foreground" />
+          </nav>
         </div>
       </main>
     </div>

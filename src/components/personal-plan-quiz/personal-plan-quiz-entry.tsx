@@ -11,6 +11,7 @@ import {
 } from "./personal-plan-quiz-continuation"
 import {
   PersonalPlanQuizFrame,
+  PersonalPlanQuizLegalLine,
   PersonalPlanQuizTextureQuestion,
 } from "./personal-plan-quiz-first-screen"
 import type { FreshPersonalPlanQuizEntry } from "./progressive-entry-contract"
@@ -230,23 +231,26 @@ export function PersonalPlanQuizEntry({
   }
 
   const shell = (
-    <PersonalPlanQuizFrame
-      canGoBack={false}
-      clientReady={clientReady}
-      currentSectionIndex={0}
-      fieldTest={fieldTest}
-      onBack={() => {}}
-      progress={4}
-      settledSectionIndices={new Set()}
-    >
-      <PersonalPlanQuizTextureQuestion
-        onSelect={selectTexture}
-        recoveryVisible={Boolean(
-          (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
-        )}
-        selected={selected}
-      />
-    </PersonalPlanQuizFrame>
+    <>
+      <PersonalPlanQuizFrame
+        canGoBack={false}
+        clientReady={clientReady}
+        currentSectionIndex={0}
+        fieldTest={fieldTest}
+        onBack={() => {}}
+        progress={4}
+        settledSectionIndices={new Set()}
+      >
+        <PersonalPlanQuizTextureQuestion
+          onSelect={selectTexture}
+          recoveryVisible={Boolean(
+            (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
+          )}
+          selected={selected}
+        />
+      </PersonalPlanQuizFrame>
+      <PersonalPlanQuizLegalLine />
+    </>
   )
 
   if (!showQuiz) return shell
