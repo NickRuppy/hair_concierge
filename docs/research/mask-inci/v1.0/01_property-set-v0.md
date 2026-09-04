@@ -42,13 +42,19 @@ this project.
 
 The mask focus vocabulary is Conditioner v1.6's eight values plus `moisture`:
 `moisture / lightness / detangling / smoothing / repair / shine / curl_support / color_care / general`.
-Guard: `moisture` as a focus requires a distinctive humectant-forward architecture above the
-tail (e.g. a prominent glycerin/hyaluronate/urea/polyol cluster) — intensive conditioning alone
-never qualifies, because it is the category baseline — and any richer special-purpose route
-that clears its own threshold outranks it. This keeps `moisture` from becoming `general`
-renamed. Verification note: no research engine's focus vocabulary carried moisture before this
-(conditioner v1.6, shampoo, leave-in v0.3 draft); the precedent is production's leave-in
-`care_benefits`, where `moisture` is live on 30 products, plus `care_direction: moisture`.
+Guard (tested 2026-09-04 on four real formulas): glycerin alone never qualifies — `moisture`
+requires at least two further distinct humectants above the fragrance/preservative tail
+(panthenol, hyaluronate, aloe, urea, glycols, betaine, sodium PCA, …) and no richer
+special-purpose route winning. Intensive conditioning alone never qualifies (category
+baseline). Discrimination evidence: Balea Aqua Hyaluron 3in1 (4 humectants above tail, no
+protein/bond/silicone routes) and Guhl 30 sek Feuchtigkeit (3 humectants, no competing route)
+clear it; Gliss Bonding (glycerin #3 but repair routes win) and Pantene Bond (no cluster)
+correctly fail. E2 wording: "humectant-forward comparative direction", never proven hydration.
+Provenance note: Mask is the first engine with `moisture` as a focus value. Shampoo explicitly
+declined one (holdout-v3 operator clarification folds moisture into repair/general — correct
+for a cleanser, where humectant presence is weak evidence); conditioner v1.6 and the leave-in
+v0.3 draft have none. Production precedent: leave-in `care_benefits` carries `moisture` live on
+30 products, plus `care_direction: moisture`.
 Adapter note: `moisture` focus has no counterpart in `functional_benefits` (fixed vocabulary);
 the moisture identity projects through `balance_direction`, so no adapter change is needed.
 
