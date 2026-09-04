@@ -3,6 +3,10 @@
 **Worktree:** `.worktrees/scan-hardening` on `codex/scan-hardening` (base `11a99692` = origin/main tip, verified).
 **Status:** evidence review confirmed, journey signed off, decision coverage `confirmed` — Nick, 2026-09-04. Camera-retry: Variante 1 (button inside the tile).
 
+**PR 1 (server side, tasks 1-7) — implemented 2026-09-04.** SDD per-task reviews clean; Codex whole-branch review (effort high) → 2 Important + 3 Minor, all fixed in one wave and re-reviewed clean. `ci:verify` green; 690 scan/scanner/product-intake node tests green; resolve/search/wishlist/save driven locally via dev login (telemetry rows verified in `scan_resolve_events` with `outcome` null and `lookup_outcome`/`terminal_outcome` populated). Deviations from §5: F12 (single candidate load) parked — needs a seam inside `catalog-facts.ts` (follow-up task chip); the multi-connection advisory-lock test is replaced by a structural test (lock precedes every read/write, key uses both ids) because PGlite is single-connection; migration renumbered to `20260904150000` after a version collision with the wave-3 approval migration on main. Additional fixes beyond §5 from review: concurrent submits of one EAN now get-or-create on `idx_product_submissions_one_open_scan` (was a 503); attempt-log Sentry captures at warning level; NULL `p_kind` guard; explicit `created_at` on attempt records (the deferred drain otherwise stamps `created_at` after `completed_at`).
+
+**Deploy order for PR 1:** apply `20260904150000_scan_move_saved_product.sql` to production BEFORE the code deploys — `POST /api/scan/save` returns 503 until the RPC exists (verified locally).
+
 ## 1. Context
 
 Nick's brief (2026-09-04): "get all scanner-related stuff to an excellent technical standard — proper code review, bugs identified and fixed, streamline, simplify, make the architecture more robust." Approach B ruled: fix every confirmed bug AND reshape the structures that bred them, so the race class cannot recur.
