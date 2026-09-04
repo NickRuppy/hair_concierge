@@ -429,6 +429,12 @@ WHERE evidence.product_id = spec.product_id
   )
   AND evidence.fact_key = 'oil.authority_facts';
 
+-- The curated-publication dependency guard is a DEFERRABLE INITIALLY DEFERRED
+-- constraint trigger on both mutated product tables. Flush its queued checks
+-- before replacing table constraints; PostgreSQL refuses ALTER TABLE while
+-- those trigger events are pending.
+SET CONSTRAINTS ALL IMMEDIATE;
+
 ALTER TABLE public.product_oil_specs
   DROP CONSTRAINT product_oil_specs_role_support_check,
   ADD CONSTRAINT product_oil_specs_role_support_check CHECK (

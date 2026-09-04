@@ -97,6 +97,17 @@ async function database(t: TestContext, count: number = oils.length) {
         ]::text[]
       )
     );
+    CREATE FUNCTION public.test_curated_publication_dependency_trigger()
+    RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      RETURN NULL;
+    END;
+    $$;
+    CREATE CONSTRAINT TRIGGER validate_personal_plan_curated_publication_dependency
+      AFTER UPDATE ON public.product_oil_specs
+      DEFERRABLE INITIALLY DEFERRED
+      FOR EACH ROW
+      EXECUTE FUNCTION public.test_curated_publication_dependency_trigger();
     CREATE FUNCTION public.personal_plan_application_family_identity_v1(
       p_role text,
       p_guidance_payload jsonb,
@@ -138,6 +149,11 @@ async function database(t: TestContext, count: number = oils.length) {
         )
       )
     );
+    CREATE CONSTRAINT TRIGGER validate_personal_plan_curated_publication_protocol_dependency
+      AFTER UPDATE OR DELETE ON public.product_application_protocols
+      DEFERRABLE INITIALLY DEFERRED
+      FOR EACH ROW
+      EXECUTE FUNCTION public.test_curated_publication_dependency_trigger();
     CREATE UNIQUE INDEX idx_product_application_protocols_product_category_role_family
       ON public.product_application_protocols (product_id, category, role, application_family);
     CREATE TABLE public.personal_plan_catalog_fact_evidence (

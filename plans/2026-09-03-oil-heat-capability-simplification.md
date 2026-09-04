@@ -479,6 +479,7 @@ Findings ledger:
 | F20 | future-data safety | Stage 3 credited a wash-family event when an Oil protocol covered any one wash-family day, although Anwendung requires the exact rendered day | accepted from final counterpart review | Shared `oil-heat-context` authority | partial wash-family protocol gets no integrated credit; complete four-day protocol does |
 | F21 | copy safety | The immediate-heat sentence fell back to the last protocol step when a malformed leave-on protocol had no `apply_product` step | accepted from final counterpart review | Task 4 compiler | no application step means no appended capability sentence |
 | F22 | interactive race | Changing an already answered leave-on Oil cleared the projected Heat resolution but retained a user-authored Heat choice, allowing auto-submit to send a now-invalid Oil/Heat pair before the fresh projection returned | accepted from ship review | Task 2 preview lifecycle | dependent Heat choice and review order are cleared synchronously when leave-on Oil changes; the unanswered Heat subject blocks auto-submit until projection or user review |
+| F23 | production migration ordering | The first guarded apply updated tables with an initially deferred curated-publication constraint trigger and then attempted `ALTER TABLE`, which PostgreSQL rejects while trigger events are pending | accepted from production apply | Task 5 migration | flush deferred constraint triggers with `SET CONSTRAINTS ALL IMMEDIATE` before replacing constraints; fixture now includes the production-shaped deferred trigger |
 
 Counterpart-review reconciliation:
 
@@ -546,6 +547,10 @@ Counterpart-review reconciliation:
   already answered leave-on Oil now synchronously removes both server-projected
   and user-authored dependent Heat state before rendering. Auto-submit therefore
   cannot send the stale pair while the replacement projection is in flight.
+- Accept the production apply finding: the data transaction remains atomic, but
+  its deferred curated-publication trigger checks are forced before the two
+  constraint replacements. The failed first attempt rolled back completely and
+  created no migration-history entry.
 - Accept the future partial-day finding conservatively. Because Stage 3 knows a
   wash-family route but not its eventual exact day, an Oil earns integrated
   wash-family coverage only when its reviewed protocol supports all four
