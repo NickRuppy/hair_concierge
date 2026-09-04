@@ -1,0 +1,2180 @@
+{
+  "batch_id": "scan-db-expansion-wave3-conditioner-2026-09-03",
+  "generated_at": "2026-09-03T18:00:00+02:00",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Spülung Seidenglanz",
+          "brand": "ISANA",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 0.65,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/572/MAM_57247596/MAM_57247596_SHOP_IMAGE_1.4.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207"
+          },
+          "description": "Die ISANA SPÜLUNG SEIDENGLANZ gibt glanzlosem und trockenem Haar intensive Pflege, seidigen Glanz und unterstützt eine ausgeglichene Feuchtigkeitsbalance. Die Pflegeformel mit wertvollem Panthenol wirkt effektiv auf das Haar ein. Das Haar wird besonders leicht kämmbar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615566207",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "light",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "humectants",
+              "proteins"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+              "text": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615566207",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+            "source_text": "\"sku\":\"4305615566207\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "humectants",
+                "proteins"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+            "source_text": "Aqua, Cetearyl Alcohol, Glyceryl Stearate SE, Propylene Glycol, Stearamidopropyl Dimethylamine, Behentrimonium Chloride, Phenoxyethanol, Panthenol, Dipropylene Glycol, Citric Acid, Niacinamide, Parfum, Hydrolyzed Wheat Protein, Pantolactone, Tetramethyl Acetyloctahydronaphthalenes, Sodium Benzoate, Glycerin, Nelumbium Speciosum Flower Extract, Magnolia Liliflora Flower Extract, Potassium Sorbate",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Einwirkzeit und keine Platzierung angegeben; Template-Guidance (Längen und Spitzen, 1–3 Min) unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+            "source_text": "In das feuchte Haar einmassieren. Gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.65,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+            "source_text": "0,65 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture",
+            "fact_value": "Für glanzloses & trockenes Haar, mit Magnolie & Lotus, ohne Silikone, dermatologisch bestätigte Hautverträglichkeit.",
+            "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+            "source_text": "für glanzloses & trockenes Haar\nmit Magnolie & Lotus\nohne Silikone\nHautverträglichkeit dermatologisch bestätigt",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Panthenol, ausgeglichene Feuchtigkeitsbalance) → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "light: silikonfreie, einfache Formel ohne Öle/Butter (Cetearyl Alcohol + Glyceryl Stearate SE als einzige Texturgeber).",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: Hydrolyzed Wheat Protein steht weit hinten in der INCI (Pos. 13/20), kein Repair-Claim — reines Glanz-/Feuchtigkeitsprodukt.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: 'glanzlosem und trockenem Haar', 'ausgeglichene Feuchtigkeitsbalance', Panthenol.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "humectants: Propylene Glycol, Dipropylene Glycol, Glycerin. proteins: Hydrolyzed Wheat Protein (echtes hydrolysiertes Protein, auch wenn weit hinten in der INCI — Konvention aus Wave 2 für echte Hydrolysate statt Einzel-Aminosäuren).",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=light ist für feines Haar unkritisch.",
+          "concern_eligibility": "feuchtigkeit + dryness: einzige belastbaren Claims.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungs- oder Zeitangabe auf der Verpackung; Template-Guidance (Längen und Spitzen, Ansatz aussparen, 1–3 Min) wird unverändert gestampt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Spülung Feuchtigkeit",
+          "brand": "ISANA",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 0.65,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/567/MAM_56756477/MAM_56756477_SHOP_IMAGE_1.4.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149"
+          },
+          "description": "Die ISANA SPÜLUNG FEUCHTIGKEIT mit Kokoswasser pflegt das Haar besonders mild. Die besondere Pflegeformel mit Panthenol und Vitamin B3 hilft, den Feuchtigkeitshaushalt von Kopfhaut und Haar auszugleichen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4068134071149",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "light",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+              "text": "In das feuchte Haar einmassieren. Gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4068134071149",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+            "source_text": "\"sku\":\"4068134071149\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+            "source_text": "Aqua, Cetearyl Alcohol, Glycerin, Glyceryl Stearate SE, Distearoylethyl Hydroxyethylmonium Methosulfate, Behentrimonium Chloride, Phenoxyethanol, Panthenol, Hydrogenated Coconut Oil, Propylene Glycol, C12-15 Alkyl Benzoate, Dipropylene Glycol, Parfum, Niacinamide, Citric Acid, Pantolactone, Cocos Nucifera Water, Sodium Hydroxide, Macrocystis Pyrifera Extract, Sodium Benzoate, Potassium Sorbate.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Einwirkzeit und keine Platzierung angegeben; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+            "source_text": "In das feuchte Haar einmassieren. Gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.65,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+            "source_text": "0,65 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.availability",
+            "fact_value": "Auf rossmann.de am 2026-09-03 als 'OutOfStock' markiert (Bestandslücke, kein Delisting-Beleg).",
+            "source_label": "rossmann.de Produktseite (schema.org offers.availability)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+            "source_text": "\"availability\":\"https://schema.org/OutOfStock\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Kokoswasser, Feuchtigkeitshaushalt) → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "light: Hydrogenated Coconut Oil erst auf Pos. 9, keine Butter, silikonfrei.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe, reines Feuchtigkeitsprodukt.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Kokoswasser + Panthenol + Vitamin B3, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Hydrogenated Coconut Oil. humectants: Glycerin, Propylene Glycol, Dipropylene Glycol, Panthenol.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
+          "concern_eligibility": "feuchtigkeit + dryness: einzige belastbaren Claims.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungs- oder Zeitangabe; Template-Guidance unverändert gestampt.",
+          "product.availability_note": "Produkt zeigte am Research-Datum 'OutOfStock' bei rossmann.de — für Nick geflaggt in den Notes, kein Ausschlussgrund per se (Bestandsschwankung)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Spülung Keratin & Repair",
+          "brand": "ISANA PROFESSIONAL",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.29,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/202/MAM_20254267/MAM_20254267_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957"
+          },
+          "description": "Die ISANA PROFESSIONAL SPÜLUNG KERATIN & REPAIR pflegt und nährt das Haar intensiv und sorgt für einen natürlichen Glanz und Geschmeidigkeit. Die speziell für die Bedürfnisse von stark geschädigtem und brüchigem Haar entwickelte Formel regeneriert das Haar intensiv."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615830957",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "stretches_stays"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "proteins",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "split_ends",
+          "protein"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+              "text": "Nach dem Shampoonieren sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Anwendung geeignet."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615830957",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+            "source_text": "\"sku\":\"4305615830957\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "protein",
+              "repair_level": "high",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "proteins",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+            "source_text": "Aqua, Cetearyl Alcohol, Propylene Glycol, Behentrimonium Chloride, Glyceryl Stearate, Panthenol, Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin, Butyrospermum Parkii Butter, Sclerocarya Birrea Seed Oil, Distearoylethyl Hydroxyethylmonium Methosulfate, Stearamidopropyl Dimethylamine, Isopropyl Alcohol, Quaternium-87, Parfum, Citric Acid, Benzoic Acid, Dehydroacetic Acid, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "'Kurz einwirken lassen' ohne Platzierungsangabe; Template-Guidance (1–3 Min, Längen und Spitzen) unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+            "source_text": "Nach dem Shampoonieren sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Anwendung geeignet.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.29,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+            "source_text": "1,29 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Protein-/Repair-Richtung (drei Keratin-Formen in der INCI) → stretches_stays (Proteinmangel) für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: Butyrospermum Parkii Butter (Shea) + Sclerocarya Birrea Seed Oil (Marula) auf Pos. 10–11, silikonfrei aber butterhaltig.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "QA-Audit M1: high→medium — Programm-Messlatte: max. medium ohne Bond-System (Wave-2-Präzedenz: Syoss Intense Repair, Gliss Total Repair = medium); INCI ohne Bond-Chemie; konsistent mit Plex Maske (medium) derselben Linie. Zur Bestätigung an Nick.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "protein: dreifaches Keratin-System + 'Repair'-Positionierung, keine Feuchtigkeits-Kernclaims.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "proteins: Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin. oils: Butyrospermum Parkii Butter, Sclerocarya Birrea Seed Oil. polymers: Quaternium-87. humectants: Propylene Glycol, Panthenol.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "hair_damage + split_ends + protein: passend zur Keratin-Repair-Positionierung.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): 'kurz einwirken lassen' ist eine vage Zeitangabe ohne konkretes Zeitfenster und keine Platzierungsangabe — Template-Guidance (1–3 Min, Ansatz aussparen) bleibt Chaarlies Regel, nicht die Packungsangabe."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Spülung Oil Repair Marulaöl",
+          "brand": "ISANA",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 0.65,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/565/MAM_56578368/MAM_56578368_SHOP_IMAGE_1.4.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125"
+          },
+          "description": "Die ISANA Spülung Oil Repair mit Marulaöl, Vitamin B3 und Panthenol sorgt dafür, dass trockenes und geschädigtes Haar bis in die Spitzen geschmeidig und glänzend wird."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4068134071125",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Produktbeschreibung — keine separate Anwendungs-Sektion vorhanden)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+              "text": "Die ISANA Spülung Oil Repair mit Marulaöl, Vitamin B3 und Panthenol sorgt dafür, dass trockenes und geschädigtes Haar bis in die Spitzen geschmeidig und glänzend wird."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4068134071125",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+            "source_text": "\"sku\":\"4068134071125\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+            "source_text": "Aqua, Cetearyl Alcohol, Glycerin, Glyceryl Stearate SE, Distearoylethyl Hydroxyethylmonium Methosulfate, Behentrimonium Chloride, Phenoxyethanol, Panthenol, Hydrogenated Coconut Oil, C12-15 Alkyl Benzoate, Dipropylene Glycol, Parfum, Cetrimonium Chloride, Niacinamide, Citric Acid, Tetramethyl Acetyloctahydronaphthalenes, Pantolactone, Linalyl Acetate, Sclerocarya Birrea Seed Oil, Sodium Hydroxide",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Diese Produktseite hat keine separate 'Anwendung und Gebrauch'-Sektion (ungewöhnlich für Isana); nur Produktbeschreibung vorhanden. Template-Guidance unverändert gestampt (R-C), Beschreibungssatz als Quelle für Kategorie/Fokus (Spitzen) verwendet.",
+            "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+            "source_text": "Die ISANA Spülung Oil Repair mit Marulaöl, Vitamin B3 und Panthenol sorgt dafür, dass trockenes und geschädigtes Haar bis in die Spitzen geschmeidig und glänzend wird.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.65,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+            "source_text": "0,65 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.repair_marketing",
+            "fact_value": "'Oil Repair' und 'für trockenes & geschädigtestes Haar' sind Marketing-Positionierung ohne belegte Protein-/Bond-Aktivstoffe in der INCI — repair_level bleibt low (ehrlich).",
+            "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+            "source_text": "für trockenes & geschädigtestes Haar\nIntensivpflege, repariert bis in die Spitzen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Marulaöl, Panthenol, keine Protein-Aktivstoffe) → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "medium: Hydrogenated Coconut Oil + Sclerocarya Birrea Seed Oil (Marula) vorhanden, aber keine Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low (ehrlich): 'Oil Repair'-Name ist Marketing; INCI enthält keine Protein-/Bond-Aktivstoffe — gleiche Konvention wie Wave-2-Pantene-Fall.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: 'trockenes... Haar', Panthenol, Glycerin, zwei Öle für Geschmeidigkeit.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Hydrogenated Coconut Oil, Sclerocarya Birrea Seed Oil. humectants: Glycerin, Dipropylene Glycol, Panthenol.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
+          "concern_eligibility": "feuchtigkeit + dryness (Kernclaims) + hair_damage (explizit 'geschädigtes Haar' beworben, auch ohne belegte Repair-Aktivstoffe — Positionierung, nicht Formulierungsstärke).",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine separate Anwendungssektion auf der Seite vorhanden; Template-Guidance unverändert gestampt."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Plex Spülung",
+          "brand": "ISANA PROFESSIONAL",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.99,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/119/MAM_11966339/MAM_11966339_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924"
+          },
+          "description": "Die ISANA Professional PLEX SPÜLUNG pflegt das Haar intensiv. Die Rezeptur mit einem Phytoprotein-Komplex aus Reis, Soja und Weizen stärkt die Elastizität und repariert die Haarstruktur. Die Formel zähmt Spliss und glättet die Haarstruktur."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615975924",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "stretches_stays"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "split_ends",
+          "protein"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+              "text": "Nach dem Waschen ins feuchte Haar auftragen, kurz einwirken lassen und anschließend sorgfältig ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615975924",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+            "source_text": "\"sku\":\"4305615975924\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "protein",
+              "repair_level": "high",
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+            "source_text": "Aqua, Glycerin, Cetearyl Alcohol, Behentrimonium Chloride, Isopropyl Palmitate, Panthenol, Oryza Sativa Seed Protein, Phytic Acid, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Cocos Nucifera Oil, Parfum, Calcium Gluconate, Isopropyl Alcohol, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Sodium Benzoate, Potassium Sorbate, Citric Acid, Gluconolactone",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "'Kurz einwirken lassen' ohne Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+            "source_text": "Nach dem Waschen ins feuchte Haar auftragen, kurz einwirken lassen und anschließend sorgfältig ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.99,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+            "source_text": "1,99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Protein-/Bond-Repair-Richtung (Phytoprotein-Komplex aus Reis, Soja, Weizen) → stretches_stays für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "medium: Cocos Nucifera Oil auf Pos. 11, keine Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "QA-Audit M1: high→medium — Programm-Messlatte: max. medium ohne Bond-System (Wave-2-Präzedenz: Syoss Intense Repair, Gliss Total Repair = medium); INCI ohne Bond-Chemie; konsistent mit Plex Maske (medium) derselben Linie. Zur Bestätigung an Nick.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "protein: Phytoprotein-Komplex ist der Kernclaim, keine Feuchtigkeits-Kernaussage.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "proteins: Oryza Sativa Seed Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein. oils: Cocos Nucifera Oil. humectants: Glycerin, Panthenol.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
+          "concern_eligibility": "hair_damage + split_ends + protein: passend zur Plex-/Bond-Repair-Positionierung.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): 'kurz einwirken lassen' ohne Platzierung — Template-Guidance bleibt maßgeblich."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Spülung Locken Traum",
+          "brand": "ISANA PROFESSIONAL",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.29,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/202/MAM_20254013/MAM_20254013_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958"
+          },
+          "description": "Die ISANA PROFESSIONAL SPÜLUNG LOCKEN TRAUM pflegt und nährt das Haar intensiv und ohne zu beschweren. Die speziell für die Bedürfnisse von lockigem und welligem Haar entwickelte Formel mit Sheabutter und Curly Shape Komplex unterstützt Sprungkraft und Elastizität der Locken."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615846958",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+              "text": "Nach der Haarwäsche sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Anwendung geeignet."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615846958",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+            "source_text": "\"sku\":\"4305615846958\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+            "source_text": "AQUA, CETEARYL ALCOHOL, GLYCERYL STEARATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, TRITICUM VULGARE GERM OIL, TRITICUM VULGARE BRAN EXTRACT, TRITICUM VULGARE GERM EXTRACT, CAMELLIA OLEIFERA SEED OIL, LINOLEIC ACID, CETYL ESTERS, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE, STEARAMIDOPROPYL DIMETHYLAMINE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CETEARYL NONANOATE, ISOPROPYL ALCOHOL, LAURYL ALCOHOL, DICAPRYLYL ETHER, CAPRYLIC/CAPRIC TRIGLYCERIDE, QUARTZ POWDER, XANTHAN GUM, LACTIC ACID, CITRIC ACID, TOCOPHERYL ACETATE, TOCOPHEROL, PARFUM, LINALOOL, HEXYL CINNAMAL, LIMONENE, POTASSIUM SORBATE, SODIUM BENZOATE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "'Kurz einwirken lassen' ohne Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+            "source_text": "Nach der Haarwäsche sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Anwendung geeignet.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.29,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+            "source_text": "1,29 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeits-/Locken-Definitionsprodukt ohne Protein-Aktivstoffe → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: Butyrospermum Parkii Butter (Shea) + Triticum Vulgare Germ Oil + Camellia Oleifera Seed Oil auf Pos. 7–11, mehrere Öle/Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: Triticum-Vulgare-Extrakte sind botanische Extrakte, kein hydrolysiertes Protein; keine Bond-Aktivstoffe.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Sprungkraft/Elastizität via Öle/Feuchtigkeit, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Butyrospermum Parkii Butter, Triticum Vulgare Germ Oil, Camellia Oleifera Seed Oil. polymers: Guar Hydroxypropyltrimonium Chloride, Xanthan Gum. humectants: Panthenol, Glycerin.",
+          "thickness_eligibility": "Alle Stärken: Locken-Fokus ist kein Dicken-Kriterium; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "feuchtigkeit + dryness + frizz (Sprungkraft/Elastizität der Locken, Anti-Frizz-Wirkung reichhaltiger Öle).",
+          "protocols.tpl_conditioner.deviation": "null (R-C): 'kurz einwirken lassen' ohne Platzierung — Template-Guidance bleibt maßgeblich."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Bye Bye Frizz Conditioner",
+          "brand": "Being",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/174/MAM_17483684/MAM_17483684_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933"
+          },
+          "description": "Der BYE BYE FRIZZ Anti-Frizz Conditioner mit Jojoba- und Mandelöl ist besonders für welliges und krauses Haar geeignet. Dank Anti-Frizz-Effekt fühlt sich das Haar seidig-weich an."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005933",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+              "https://world.openfoodfacts.org/product/4895248005933/bye-bye-frizz-conditioner-being"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+              "text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005933",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+            "source_text": "\"sku\":\"4895248005933\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_corroboration",
+            "fact_value": "4895248005933",
+            "source_label": "world.openfoodfacts.org Produktseite",
+            "source_url": "https://world.openfoodfacts.org/product/4895248005933/bye-bye-frizz-conditioner-being",
+            "source_text": "Barcode/EAN: 4895248005933 (EAN / EAN-13) — Bye bye frizz conditioner — being",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+            "source_text": "AQUA/WATER/EAU, CETEARYL ALCOHOL, ISOPROPYL MYRISTATE, BEHENTRIMONIUM CHLORIDE, GLYCERIN, PRUNUS AMYGDALUS DULCIS OIL, SIMMONDSIA CHINENSIS SEED OIL, BUTYROSPERMUM PARKII BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, PHENOXYETHANOL, POLYQUATERNIUM-10, ISOSTEARYL ISOSTEARATE, ISOPROPYL ALCOHOL, POLYQUATERNIUM-37, PEG-100 STEARATE, GLYCERYL STEARATE, PARFUM (FRAGRANCE), PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, SALICYLIC ACID, HYDROXYETHYLCELLULOSE, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, PPG-1 TRIDECETH-6, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, POLYSORBATE 60, DISODIUM PHOSPHATE, SODIUM PHOSPHATE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+            "source_text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-frizz-conditioner/p/4895248005933",
+            "source_text": "6,79 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite (Marke 'Being', Hersteller Zuru Germany GmbH).",
+          "category_specs.product_conditioner_specs": "Feuchtigkeits-/Anti-Frizz-Produkt ohne Protein-Aktivstoffe → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: Prunus Amygdalus Dulcis Oil (Mandel), Simmondsia Chinensis Seed Oil (Jojoba) und Butyrospermum Parkii Butter (Shea) alle in den ersten neun INCI-Positionen.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe, reine Anti-Frizz-/Feuchtigkeitsformel.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Anti-Frizz via Öle/Feuchtigkeit, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Mandelöl, Jojobaöl, Sheabutter. polymers: Polyquaternium-10, Polyquaternium-37, Acrylates/Stearyl Methacrylate Copolymer, Hydroxyethylcellulose. humectants: Glycerin.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben ('welliges und krauses Haar' ist Textur, kein Dicken-Kriterium); weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "feuchtigkeit + dryness + frizz: Kernclaims des Anti-Frizz-Conditioners.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "Being ist NICHT retailer-exklusiv (international via Zuru vertrieben) — R-B-Bestätigung über world.openfoodfacts.org, unabhängige Produktdatenbank mit identischer EAN."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Curl Power Locken Conditioner",
+          "brand": "Being",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/566/MAM_56608489/MAM_56608489_SHOP_IMAGE_1.4.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940"
+          },
+          "description": "Unser CURL POWER Locken Conditioner mit feuchtigkeitsspendendem Kokos- und Traubenkernöl entwirrt und schützt das Haar. Die Locken fühlen sich weich und definiert an."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005940",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+              "https://comenzi.bebetei.ro/ingrijire-personala/ingrijirea-parului/balsam/balsam-par-pentru-definire-bucle-cu-ulei-de-cocos-curl-power-354-ml-being-p470772"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+              "text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005940",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+            "source_text": "\"sku\":\"4895248005940\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_corroboration",
+            "fact_value": "4895248005940",
+            "source_label": "bebetei.ro Produktseite (Cod produs)",
+            "source_url": "https://comenzi.bebetei.ro/ingrijire-personala/ingrijirea-parului/balsam/balsam-par-pentru-definire-bucle-cu-ulei-de-cocos-curl-power-354-ml-being-p470772",
+            "source_text": "Cod produs: 4895248005940",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+            "source_text": "AQUA/WATER/EAU, CETEARYL ALCOHOL, ISOPROPYL MYRISTATE, BEHENTRIMONIUM CHLORIDE, GLYCERIN, COCOS NUCIFERA OIL, VITIS VINIFERA SEED OIL, BUTYROSPERMUM PARKII BUTTER, STEARAMIDOPROPYL DIMETHYLAMINE, PHENOXYETHANOL, POLYQUATERNIUM-10, ISOSTEARYL ISOSTEARATE, ISOPROPYL ALCOHOL, POLYQUATERNIUM-37, PEG-100 STEARATE, GLYCERYL STEARATE, PARFUM (FRAGRANCE), PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, SALICYLIC ACID, HYDROXYETHYLCELLULOSE, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, PPG-1 TRIDECETH-6, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, POLYSORBATE 60, DISODIUM PHOSPHATE, SODIUM PHOSPHATE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+            "source_text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+            "source_text": "6,79 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite (Marke 'Being').",
+          "category_specs.product_conditioner_specs": "Feuchtigkeits-/Locken-Produkt ohne Protein-Aktivstoffe → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: Cocos Nucifera Oil (Kokos), Vitis Vinifera Seed Oil (Traubenkern) und Butyrospermum Parkii Butter (Shea) alle in den ersten neun INCI-Positionen — gleiche Formelbasis wie Bye Bye Frizz.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Feuchtigkeitsspendende Öle, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Kokosöl, Traubenkernöl, Sheabutter. polymers: Polyquaternium-10, Polyquaternium-37, Acrylates/Stearyl Methacrylate Copolymer, Hydroxyethylcellulose. humectants: Glycerin.",
+          "thickness_eligibility": "Alle Stärken: 'für alle lockigen Haartypen' ist Textur, kein Dicken-Kriterium; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "feuchtigkeit + dryness + frizz: Kernclaims des Locken-Conditioners.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "Being ist NICHT retailer-exklusiv — R-B-Bestätigung über bebetei.ro (rumänischer Online-Händler, unabhängig von Zuru/Rossmann) mit identischer EAN."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Nourish + Shine Spülung",
+          "brand": "Being",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.79,
+          "net_content_value": 345,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/236/MAM_23670099/MAM_23670099_SHOP_IMAGE_3.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919"
+          },
+          "description": "Der Being NOURISH + SHINE Daily Clean Conditioner ist ein Allround-Conditioner für die tägliche Haarwäsche. Er ist für alle Haartypen geeignet, pflegt und schenkt dem Haar Glanz. Die dermatologisch getestete, sulfat- und silikonfreie Formel enthält natürliche Inhaltsstoffe wie Sheabutter und Aloe-Extrakt für eine sanfte und dennoch gründliche Haarwäsche."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005919",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+              "https://world.openbeautyfacts.org/product/4895248005919"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "light",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+              "text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005919",
+            "source_label": "rossmann.de Produktseite (Product JSON-LD sku)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+            "source_text": "\"sku\":\"4895248005919\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_corroboration",
+            "fact_value": "4895248005919",
+            "source_label": "world.openbeautyfacts.org Produktseite",
+            "source_url": "https://world.openbeautyfacts.org/product/4895248005919",
+            "source_text": "Barcode/EAN: 4895248005919 (EAN / EAN-13)",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+            "source_text": "Aqua (Water), Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Glycol Distearate, Sodium Cocoyl Isethionate, Aloe Barbadensis Leaf Juice, Butyrospermum Parkii (Shea) Butter, Tapioca Starch, Polyquaternium-6, Polyquaternium-10, Disodium Laureth Sulfosuccinate, Acrylates Copolymer, Propylene Glycol, Sodium Benzoate, Panthenol, Guar Hydroxypropyltrimonium Chloride, Disodium Edta, Citric Acid, Trehalose, Phenoxyethanol, Ethylhexylglycerin, Parfum (Fragrance).",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+            "source_text": "Nach der Haarwäsche in das nasse Haar sanft einmassieren, einwirken lassen und ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.79,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+            "source_text": "6,79 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.formula_note.surfactant_rich",
+            "fact_value": "INCI-Auffälligkeit für Nick: enthält reinigende Tenside (Sodium C14-16 Olefin Sulfonate, Sodium Cocoyl Isethionate, Disodium Laureth Sulfosuccinate) auf Pos. 3/8/13 — untypisch reinigungsstark für einen reinen Rinse-out-Conditioner ('Co-Wash'-artige Formel). Produkt bleibt als Conditioner kategorisiert (dm/Rossmann-Führung, Anwendung nach der Haarwäsche, kein struktureller Fehl-Fund per R-A), aber Formel-Einstufung (weight/repair_level) ist mit geringerer Konfidenz belegt.",
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-nourish--shine-spuelung/p/4895248005919",
+            "source_text": "Aqua (Water), Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Glycol Distearate, Sodium Cocoyl Isethionate, ...",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite (Marke 'Being').",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt ('optimale Feuchtigkeit und Glanz') → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "light: überwiegend wässrige/tensidbasierte Formel, Sheabutter erst auf Pos. 10 in geringer Menge — NIEDRIGE KONFIDENZ, siehe formula_note.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: 'optimale Feuchtigkeit und Glanz', Aloe-Extrakt, Panthenol, Glycerin.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Butyrospermum Parkii (Shea) Butter. polymers: Polyquaternium-6, Polyquaternium-10, Guar Hydroxypropyltrimonium Chloride, Acrylates Copolymer. humectants: Glycerin, Propylene Glycol, Panthenol, Trehalose.",
+          "thickness_eligibility": "Alle Stärken: explizit 'für alle Haartypen' beworben.",
+          "concern_eligibility": "feuchtigkeit + dryness: Kernclaims.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "Being ist NICHT retailer-exklusiv — R-B-Bestätigung über world.openbeautyfacts.org (unabhängige Produktdatenbank) mit identischer EAN, wenn auch mit unvollständigem Produkteintrag dort.",
+          "category_specs.NOTE_FOR_NICK": "INCI ist ungewöhnlich tensidreich für einen Rinse-out-Conditioner (siehe evidence 'product.formula_note.surfactant_rich'). Kategorisierung als 'conditioner' beibehalten (R-A: Anwendung/Vertrieb spricht dafür), aber weight/repair_level-Einstufung ist mit geringerer Konfidenz belegt und sollte von Nick gegengeprüft werden.",
+          "identifiers.0.excluded_from_apply": "QA-Audit M3+M7 (2026-09-03): Reinigungsformel (4 Tenside, keine kationischen Conditioner-Agents; Rossmann: \"Daily Clean Conditioner … Haarwäsche\") — Kategoriefrage an Nick (Co-Wash passt in keine offene Kategorie); Zweitbeleg openbeautyfacts ist barcode-only ohne Produktname (R-B nicht erfüllt)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Conditioner Feuchtigkeit",
+          "brand": "alverde NATURKOSMETIK",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.25,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1777294392/assets/pas/images/566065bd-4703-4ead-985b-bfc705331197/alverde-naturkosmetik-conditioner-feuchtigkeit",
+            "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit"
+          },
+          "description": "Der alverde NATURKOSMETIK Conditioner Feuchtigkeit Aloe Vera & Hyaluron ist speziell für die Bedürfnisse von trockenem und sprödem Haar entwickelt worden. Die pflegende Rezeptur mit einem Feuchtigkeitskomplex aus Hyaluron, Bio-Aloe Vera und pflanzlichem Glycerin kann die Haarstruktur glätten und für eine verbesserte Kämmbarkeit sorgen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447919028",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "light",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+              "text": "In das feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447919028",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+            "source_text": "GTIN: 4066447919028",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ]
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+            "source_text": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Alcohol**, Brassica Alcohol, Helianthus Annuus Seed Oil**, Decyl Oleate, Inulin, Betaine, Cocos Nucifera Oil**, Brassicyl Isoleucinate Esylate, Simmondsia Chinensis Seed Oil**, Parfum***, Levulinic Acid, Coco-Glucoside, Glyceryl Oleate, Glyceryl Caprylate, Arginine, Sodium PCA, p-Anisic Acid, Sodium Levulinate, Hydrolyzed Wheat Protein, Aloe Barbadensis Leaf Juice Powder**, Benzyl Alcohol***, Citronellol***, Cedrus Atlantica Oil/Extract***, Menthol***, Citric Acid, Sodium Hyaluronate, Vanillin***, Hydrogenated Vegetable Glycerides Citrate.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+            "source_text": "In das feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.25,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit",
+            "source_text": "1,25 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm.de-Produktseite (ohne Größensuffix).",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Hyaluron, Aloe Vera, 'trockenes und sprödes Haar') → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "light: Naturkosmetik-Formel mit einfachen Ölen (Sonnenblume, Kokos, Jojoba), keine Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: Hydrolyzed Wheat Protein vorhanden (Pos. ~19/28), aber Kernpositionierung ist reine Feuchtigkeitspflege ('Feuchtigkeit'-Name, kein Repair-Claim).",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Hyaluron + Aloe Vera als Kernclaim, 'trockenes und sprödes Haar'.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Helianthus Annuus Seed Oil, Cocos Nucifera Oil, Simmondsia Chinensis Seed Oil. proteins: Hydrolyzed Wheat Protein (echtes Hydrolysat). humectants: Glycerin, Inulin, Betaine, Sodium PCA, Sodium Hyaluronate.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; eine dm-Rezension bestätigt Eignung für 'dünnes und welliges Haar'.",
+          "concern_eligibility": "feuchtigkeit + dryness: Kernclaims.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "alverde NATURKOSMETIK ist dm-exklusive Eigenmarke (analog zur Isana/Rossmann-Ausnahme W5) — Einzelquelle dm.de wird als ausreichend behandelt. Dies ist eine Erweiterung von W5 per Analogie, nicht explizit von Nick geruled — als offene Frage in den Notes markiert."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Conditioner Nutri Care",
+          "brand": "alverde NATURKOSMETIK",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 1.25,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1780533785/assets/pas/images/f9f58272-8424-44d0-938e-3a629bd408b0/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care"
+          },
+          "description": "Die alverde NATURKOSMETIK Spülung Nutri Care wurde speziell für die Bedürfnisse von strapaziertem Haar entwickelt. Ihre Rezeptur mit Bio-Mandel-Öl, Inulin und pflanzlichem Glycerin sorgt für eine verbesserte Kämmbarkeit und spürbare Geschmeidigkeit. Ein Pflegekomplex aus hydrolysiertem Weizenprotein und Arginin kann die Widerstandskraft des Haares unterstützen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447975321",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "stretches_bounces"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "stretches_bounces"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "stretches_bounces"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "medium",
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+              "text": "In das feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447975321",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_text": "GTIN: 4066447975321",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "balanced",
+              "repair_level": "medium",
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ]
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_text": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Prunus Amygdalus Dulcis Oil, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Inulin, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Benzoic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide, Vanillin",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_text": "In das feuchte Haar einmassieren und kurz einwirken lassen. Anschließend gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.25,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_text": "1,25 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.protein_repair",
+            "fact_value": "Ein Pflegekomplex aus hydrolysiertem Weizenprotein und Arginin kann die Widerstandskraft des Haares unterstützen; kann Lücken in der Haarstruktur auffüllen und Haarbruch reduzieren.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care",
+            "source_text": "Ein Pflegekomplex aus hydrolysiertem Weizenprotein und Arginin kann die Widerstandskraft des Haares unterstützen. Zudem kann die zertifizierte Naturkosmetik Lücken in der Haarstruktur auffüllen und Haarbruch reduzieren.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Gemischte Protein-/Feuchtigkeits-Richtung (Bio-Mandel-Öl + hydrolysiertes Weizenprotein) → stretches_bounces (balanced) für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "medium: Prunus Amygdalus Dulcis Oil (Bio-Mandelöl) auf Pos. 8, keine Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "medium: expliziter Protein-Repair-Claim ('Haarbruch reduzieren', 'Lücken auffüllen') mit Hydrolyzed Wheat Protein auf Pos. 7 — stärker als reine Marketing-Positionierung, aber nur eine Proteinquelle ohne Bond-Builder-System.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "balanced: sowohl Öl-/Feuchtigkeitskomponente (Mandelöl, Inulin, Glycerin) als auch Protein-Repair-Komplex (Weizenprotein, Arginin) — kein eindeutig dominanter Fokus.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Helianthus Annuus Hybrid Oil, Prunus Amygdalus Dulcis Oil. proteins: Hydrolyzed Wheat Protein. humectants: Glycerin, Betaine, Inulin.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben ('strapaziertes Haar' ist Zustand, kein Dicken-Kriterium).",
+          "concern_eligibility": "hair_damage + breakage: passend zum expliziten 'Haarbruch reduzieren'-Claim.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "alverde NATURKOSMETIK ist dm-exklusive Eigenmarke (Analogie zu W5/Isana) — Einzelquelle dm.de als ausreichend behandelt; offene Frage für Nick in den Notes."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Conditioner Traube Hydraboost",
+          "brand": "Garnier Wahre Schätze",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.75,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1764672776/assets/pas/images/ace0695b-8653-4421-90b2-231a0c224913/wahre-schaetze-conditioner-traube-hydraboost",
+            "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html"
+          },
+          "description": "Für eine Extraportion Feuchtigkeit sorgt die Regenerierende Feuchtigkeitsspendende Spülung Traube Hydraboost von Garnier Wahre Schätze bei feuchtigkeitsbedürftigem Haar. Ihre Formel, angereichert mit Traubenwasser und Traubenkernöl, spendet intensive Feuchtigkeit und kann dabei helfen, das Haar sanft zu entwirren."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542656320",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html"
+            ],
+            "excluded_from_apply": true
+          },
+          {
+            "type": "ean",
+            "value": "3600542656412",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.flaconi.de/haare/garnier/wahre-schaetze/garnier-wahre-schaetze-hydra-boost-conditioner.html",
+              "https://www.mytime.de/"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "oils"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+              "text": "Die Wahre Schätze Regenerierende Feuchtigkeitsspendende Spülung Traube Hydraboost von Garnier nach der Haarwäsche auf die feuchten Längen und Spitzen auftragen und vorsichtig einarbeiten. Anschließend kurz einwirken lassen. Danach die Haare gründlich unter klarem und warmem Wasser ausspülen, bis keinerlei Rückstände mehr im Haar verblieben sind."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542656320",
+            "source_label": "dm.de Produktseite (GTIN-Feld)",
+            "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+            "source_text": "GTIN: 3600542656320",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_no_cross_source",
+            "fact_value": "Kein zweiter unabhängiger Beleg für exakt diese 250-ml-EAN gefunden. flaconi.de und mytime.de führen dieselbe Traube-Hydraboost-Spülung nur als 200-ml-Variante mit ABWEICHENDER EAN 3600542656412 (2 unabhängige Quellen bestätigen DIESE 200-ml-EAN). Die 250-ml-Größe scheint eine dm-exklusive Füllmenge zu sein.",
+            "source_label": "flaconi.de Produktseite (ProductGroup JSON-LD, 200-ml-Variante)",
+            "source_url": "https://www.flaconi.de/haare/garnier/wahre-schaetze/garnier-wahre-schaetze-traube-hydraboost-conditioner.html",
+            "source_text": "\"name\":\"GARNIER Wahre Schätze Traube Hydraboost Conditioner 200 ml\",\"size\":\"200 ml\",\"gtin13\":\"3600542656412\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+            "source_text": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER • VITIS VINIFERA SEED OIL / GRAPE SEED OIL • ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT • SODIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • TOCOPHEROL • BENZOIC ACID • CI 17200 / RED 33 • LINALOOL • LINALYL ACETATE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Quelle nennt explizit 'feuchten Längen und Spitzen' — deckungsgleich mit Template-Platzierung; keine 'Ansatz aussparen'-Formulierung, aber kein Widerspruch (R-C).",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+            "source_text": "auf die feuchten Längen und Spitzen auftragen und vorsichtig einarbeiten. Anschließend kurz einwirken lassen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.75,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+            "source_text": "2,75 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Traubenwasser, Traubenkernöl) → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "medium: Sonnenblumenöl + Traubenkernöl auf Pos. 6/8, keine Butter.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: 'feuchtigkeitsbedürftiges Haar', Traubenwasser, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "oils: Helianthus Annuus Seed Oil, Vitis Vinifera Seed Oil. Kein Humectants-Flag: Caprylyl Glycol ist primär Konservierungsmittel/Emollient, kein klassischer Feuchthaltestoff, und es liegt kein Glycerin/Panthenol/Hyaluronat in der INCI vor.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
+          "concern_eligibility": "feuchtigkeit + dryness: Kernclaims.",
+          "protocols.tpl_conditioner.deviation": "null (R-C): Quelle nennt Platzierung konform zum Template; keine Ansatz-Aussparen-Formulierung ist stilistisch, kein Widerspruch.",
+          "identifiers.cross_source_agreement": "false/excluded_from_apply=true (R-B): kein zweiter Beleg für die exakte 250-ml/3600542656320-Kombination gefunden — siehe evidence 'ean_no_cross_source' und offene Frage in den Notes.",
+          "identifiers": "Ruling D2 (Nick, 2026-09-03): eine Produktzeile, beide Groessen-EANs — 200 ml (3600542656412, flaconi+mytime 2-Quellen-bestaetigt) apply-ready; 250-ml-dm-EAN (3600542656320) bleibt excluded bis Zweitbeleg/physischer Scan. Praezedenz: Multi-Barcode-pro-Zeile-Ruling aus dem Pilot + Wave-2 GTIN-Varianten."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Smooth Antifrizz Conditioner",
+          "brand": "MONDAY Haircare",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.99,
+          "net_content_value": 350,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/883/MAM_8837274/MAM_8837274_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398"
+          },
+          "description": "MONDAY Haircare bietet luxuriöse, preisgekrönte Haarpflege in Salonqualität zu erschwinglichen Preisen. Der Smooth Antifrizz Conditioner ist ideal für lockiges oder gewelltes Haar, mit nährender Sheabutter, sulfatfrei und ohne Parabene."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4897097266398",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398",
+              "text": "Nach der Haarwäsche auf das nasse Haar auftragen, einmassieren und den Ansatz aussparen. Ein paar Minuten einwirken lassen und gründlich mit Wasser abspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4897097266398",
+            "source_label": "rossmann.de Produktseite (Produkt-URL/Artikelcode)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398",
+            "source_text": "URL-Pfadsegment /p/4897097266398 (Rossmann führt EAN als Produkt-ID im URL-Pfad)",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_no_cross_source",
+            "fact_value": "Kein unabhängiger zweiter Beleg gefunden trotz Recherche über INCI Beauty (Cloudflare-Blockade), Superdrug UK (keine Barcode-Anzeige), MONDAY Haircares eigene Seite (keine Barcode-Anzeige, aber identische INCI bestätigt die Formel) und Barcode-Datenbanken (ean-search.org, go-upc.com — beide blockiert/fehlgeschlagen). MONDAY Haircare ist laut Auftrag NICHT retailer-exklusiv.",
+            "source_label": "mondayhaircare.com Produktseite (Repair-Formel-Abgleich, kein Smooth-Barcode)",
+            "source_url": "https://mondayhaircare.com/product/smooth-shampoo-conditioner/",
+            "source_text": "Kein Barcode/EAN/GTIN/UPC auf der Herstellerseite angezeigt.",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398",
+            "source_text": "Aqua (Water), Cetearyl Alcohol, Glycerin, Behentrimonium Chloride, Amodimethicone, Stearamidopropyl Dimethylamine, Phenoxyethanol, Isopropyl Alcohol, Hydroxyethylcellulose, Sodium Benzoate, Butyrospermum Parkii (Shea) Butter, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Isododecane, Sodium PCA, Citric Acid, Cocos Nucifera (Coconut) Oil, Benzyl Alcohol, Panthenol, Ethylhexylglycerin, Cetrimonium Chloride, Trideceth-12, Parfum (Fragrance), Tetrasodium EDTA, Tocopheryl Acetate, Hexyl Cinnamal, Sodium Hydroxide, Tocopherol",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Quelle nennt explizit 'Ansatz aussparen' — deckungsgleich mit Template-Regel P2.",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398",
+            "source_text": "Nach der Haarwäsche auf das nasse Haar auftragen, einmassieren und den Ansatz aussparen. Ein paar Minuten einwirken lassen und gründlich mit Wasser abspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.99,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398",
+            "source_text": "4.99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Feuchtigkeits-/Anti-Frizz-Produkt ohne Protein-Aktivstoffe → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: Amodimethicone (Silikon) + Shea Butter + Kokosöl — reichste Formel der MONDAY-Paarung neben Repair.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low: keine Protein-/Bond-Aktivstoffe, reine Smoothing-/Anti-Frizz-Formel.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: Glättung via Silikon+Öle, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "silicones: Amodimethicone. oils: Shea Butter, Coconut Oil. polymers: Hydroxyethylcellulose, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride. humectants: Glycerin, Sodium PCA, Panthenol.",
+          "thickness_eligibility": "Alle Stärken: 'lockiges oder gewelltes Haar' ist Textur, kein Dicken-Kriterium; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "feuchtigkeit + dryness + frizz: Kernclaims des Anti-Frizz-Conditioners.",
+          "protocols.tpl_conditioner.deviation": "null: Quelle bestätigt Template-Platzierung explizit ('Ansatz aussparen').",
+          "identifiers.cross_source_agreement": "false/excluded_from_apply=true (R-B): MONDAY Haircare ist laut Auftrag NICHT retailer-exklusiv, aber trotz mehrerer Versuche (INCI Beauty, Superdrug, MONDAY-Herstellerseite, Barcode-Datenbanken) kein unabhängiger zweiter EAN-Beleg gefunden. Offene Frage für Nick in den Notes."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Repair Conditioner",
+          "brand": "MONDAY Haircare",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.99,
+          "net_content_value": 354,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/434/MAM_43441059/MAM_43441059_SHOP_IMAGE_2.0.png?width=1600&height=1600&fit=bounds&canvas=1600,1600&quality=90&auto=webp&format=webp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160"
+          },
+          "description": "MONDAY Haircare Repair Conditioner mit Keratin, Kokosöl, Sheabutter, Arganöl und Kakaobutter für trockenes bis geschädigtes und strapaziertes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4897097269160",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "stretches_stays"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "stretches_stays"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "rich",
+            "repair_level": "medium",
+            "balance_direction": "protein",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "split_ends",
+          "protein"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160",
+              "text": "Auf nassem Haar sanft einmassieren, einwirken lassen und ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4897097269160",
+            "source_label": "rossmann.de Produktseite (Produkt-URL/Artikelcode)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160",
+            "source_text": "URL-Pfadsegment /p/4897097269160 (Rossmann führt EAN als Produkt-ID im URL-Pfad)",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_no_cross_source",
+            "fact_value": "Kein unabhängiger zweiter Beleg für diese exakte EAN gefunden. mondayhaircare.com (Herstellerseite) bestätigt eine praktisch identische INCI-Liste für 'Repair Conditioner' (starke Formel-Übereinstimmung), zeigt aber keinen Barcode. Mehrere Barcode-Datenbanken (ean-search.org, go-upc.com) waren nicht erreichbar.",
+            "source_label": "mondayhaircare.com Produktseite (Repair)",
+            "source_url": "https://mondayhaircare.com/product/repair/",
+            "source_text": "Aqua (Water), Cetearyl Alcohol, Dimethicone, Behentrimonium Chloride, Glycerin, Dimethiconol, Hydrolyzed Keratin, Argania Spinosa Kernel Oil, Theobroma Cacao (Cocoa) Seed Butter, Butyrospermum Parkii (Shea) Butter, Cocos Nucifera (Coconut) Oil, ... (kein Barcode angezeigt)",
+            "source_type": "manufacturer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "rich",
+              "balance_direction": "protein",
+              "repair_level": "medium",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "proteins",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160",
+            "source_text": "AQUA/WATER/EAU, CETEARYL ALCOHOL, GLYCERIN, BEHENTRIMONIUM CHLORIDE, DIMETHICONE, DIMETHICONOL, STEARAMIDOPROPYL DIMETHYLAMINE, BUTYROSPERMUM PARKII (SHEA) BUTTER, COCOS NUCIFERA (COCONUT) OIL, ARGANIA SPINOSA KERNEL OIL, THEOBROMA CACAO (COCOA) SEED BUTTER, PHENOXYETHANOL, HYDROLYZED KERATIN, ISOPROPYL ALCOHOL, HYDROXYETHYLCELLULOSE, SALICYLIC ACID, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDOPROPYL BETAINE, TEA-DODECYLBENZENESULFONATE, CITRIC ACID, DISODIUM EDTA, C12-13 PARETH-3, TEA-SULFATE, SODIUM BENZOATE, POLYSORBATE 60, DISODIUM PHOSPHATE, SODIUM PHOSPHATE, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Keine Platzierungsangabe; Template-Guidance unverändert gestampt (R-C).",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160",
+            "source_text": "Auf nassem Haar sanft einmassieren, einwirken lassen und ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.99,
+            "source_label": "rossmann.de Produktseite",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160",
+            "source_text": "5.99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de-Produktseite.",
+          "category_specs.product_conditioner_specs": "Protein-/Repair-Richtung (Hydrolyzed Keratin + 'Repair'-Positionierung) → stretches_stays für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "rich: zwei Silikone (Dimethicone, Dimethiconol) plus vier Öle/Butter (Shea, Kokos, Argan, Kakao) — reichste Formel der gesamten Wave-3-Konditionierer-Kohorte.",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "medium: Hydrolyzed Keratin auf Pos. 12 (einzelne Proteinquelle, kein Mehrfach-Bond-System) — gleiche Messlatte wie Isana Keratin & Repair (dort medium, da 3 Keratinformen; hier nur 1) bzw. Wave-2-Gliss-Präzedenzfall.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "protein: 'Repair'-Name + Hydrolyzed Keratin als Kernclaim, trotz reichhaltiger Öl-/Butterbasis überwiegt die Keratin-Repair-Positionierung.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Shea Butter, Coconut Oil, Argan Oil, Cocoa Butter. proteins: Hydrolyzed Keratin. polymers: Hydroxyethylcellulose, Guar Hydroxypropyltrimonium Chloride. humectants: Glycerin.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben; weight=rich trägt die Feinhaar-Vorsicht im Ranking.",
+          "concern_eligibility": "hair_damage + split_ends + protein: passend zur Keratin-Repair-Positionierung ('für Dry to Damaged & Depleted Hair').",
+          "protocols.tpl_conditioner.deviation": "null (R-C): keine Platzierungsangabe auf der Verpackung.",
+          "identifiers.cross_source_agreement": "false/excluded_from_apply=true (R-B): kein unabhängiger zweiter EAN-Beleg gefunden (Herstellerseite bestätigt Formel, aber keinen Barcode). Offene Frage für Nick in den Notes."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Conditioner Coconut Miracle Oil",
+          "brand": "OGX",
+          "category_key": "conditioner",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 385,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_3000,w_3000/v1761552801/assets/pas/images/4857b745-3c97-4ffa-a658-8b9446197165/ogx-conditioner-coconut-miracle-oil",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil"
+          },
+          "description": "Der OGX Coconut Miracle Conditioner ist die Soforthilfe für ausgetrocknetes und geschädigtes Haar. Die ultra-nährende und regenerierende Mischung mit besonders reichhaltigem Coconut-Oil, verführerischem Vanilla Bean-Extrakt und tahitianischen Tiare-Essenzen nährt, repariert und belebt das Haar ab der ersten Anwendung. Der Conditioner bändigt Frizz und störrisches Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "0022796972217",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+              "https://www.ebay.co.uk/itm/365601989300"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_conditioner_specs": [
+            {
+              "thickness": "fine",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "normal",
+              "protein_moisture_balance": "snaps"
+            },
+            {
+              "thickness": "coarse",
+              "protein_moisture_balance": "snaps"
+            }
+          ],
+          "product_conditioner_rerank_specs": {
+            "weight": "medium",
+            "repair_level": "low",
+            "balance_direction": "moisture",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "polymers",
+              "humectants"
+            ]
+          }
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "feuchtigkeit",
+          "dryness",
+          "frizz",
+          "hair_damage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-CONDITIONER",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+              "text": "Conditioner nach der Haarwäsche großzügig im gesamten Haar bis in die Spitzen verteilen. 3 bis 5 Minuten einwirken lassen, dann das Haar gründlich ausspülen. Für ein optimales Ergebnis zusammen mit anderen Haarpflegeprodukten von OGX verwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "0022796972217",
+            "source_label": "dm.de Produktseite (gtin-Feld, 11-stellig ohne führende Nullen gespeichert)",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "\"gtin\":\"22796972217\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_normalization",
+            "fact_value": "dm liefert die GTIN als '22796972217' (11 Ziffern) — dies ist die US-UPC 022796972217 mit abgeschnittener(n) führender(n) Null(en). Auf volle EAN-13 mit führenden Nullen normalisiert: 0022796972217 (GS1-Prüfziffer verifiziert, siehe field_rationales).",
+            "source_label": "dm.de Produktseite (gtin-Feld)",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "\"gtin\":\"22796972217\"",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.identifiers.ean_corroboration",
+            "fact_value": "022796972217",
+            "source_label": "eBay UK Angebot",
+            "source_url": "https://www.ebay.co.uk/itm/365601989300",
+            "source_text": "022796972217 OGX Damage Remedy + Coconut Miracle Oil Conditioner odżywka do włos",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_conditioner_rerank_specs.authority_facts",
+            "fact_value": {
+              "weight": "medium",
+              "balance_direction": "moisture",
+              "repair_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "polymers",
+                "humectants"
+              ]
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "Ingredients: Aqua/Water/Eau, Cetyl Alcohol, Cetearyl Alcohol, Behentrimonium Chloride, Glycerin, Cocos Nucifera (Coconut) Oil, Gardenia Taitensis (Tiare) Flower Extract, Vanilla Planifolia Fruit Extract, PPG-3 Benzyl Ether Myristate, Dimethicone, Polyquaternium-47, Steareth-20, Disodium EDTA, Isopropyl Alcohol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate, Phenoxyethanol, Parfum/Fragrance, Linalool, Benzyl Salicylate.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_conditioner.application",
+            "fact_value": "Quelle nennt 'im gesamten Haar' (all_hair) statt Längen/Spitzen und eine längere Einwirkzeit (3–5 Min statt 1–3 Min). Beides sind Anwendungsstil-Unterschiede, keine strukturellen Kategorie-Widersprüche — Template-Guidance (Längen und Spitzen, Ansatz aussparen, 1–3 Min) bleibt per R-C unverändert; das Conditioner-Schema erlaubt ohnehin keine per-Produkt-Kontaktzeit außerhalb TPL-MASK.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "Conditioner nach der Haarwäsche großzügig im gesamten Haar bis in die Spitzen verteilen. 3 bis 5 Minuten einwirken lassen, dann das Haar gründlich ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.95,
+            "source_label": "dm.de Produktseite",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "6,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.repair_marketing",
+            "fact_value": "'nährt, repariert und belebt' ist Marketing-Sprache ohne belegte Protein-/Bond-Aktivstoffe in der INCI — repair_level bleibt low (ehrlich).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil",
+            "source_text": "nährt, repariert und belebt das Haar ab der ersten Anwendung. Der Conditioner bändigt Frizz und störrisches Haar.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm.de-Produktseite (dm führt keinen 'Damage Remedy +'-Zusatz im Titel, siehe EAN-Abgleich).",
+          "category_specs.product_conditioner_specs": "Feuchtigkeitsprodukt (Coconut Oil, 'ausgetrocknetes Haar') ohne Protein-Aktivstoffe → snaps für alle Stärken.",
+          "category_specs.product_conditioner_rerank_specs.weight": "medium: Coconut Oil auf Pos. 6 + Dimethicone, aber nur ein Öl (kein Butter-Mix).",
+          "category_specs.product_conditioner_rerank_specs.repair_level": "low (ehrlich): 'repariert'-Sprache ist Marketing; keine Protein-/Bond-Aktivstoffe in der INCI.",
+          "category_specs.product_conditioner_rerank_specs.balance_direction": "moisture: 'ausgetrocknetes... Haar', Coconut Oil, Glycerin, kein Protein-Claim.",
+          "category_specs.product_conditioner_rerank_specs.ingredient_flags": "silicones: Dimethicone. oils: Cocos Nucifera (Coconut) Oil. polymers: Polyquaternium-47. humectants: Glycerin.",
+          "thickness_eligibility": "Alle Stärken: keine Einschränkung beworben.",
+          "concern_eligibility": "feuchtigkeit + dryness + frizz (Kernclaims) + hair_damage ('geschädigtes Haar' explizit beworben, Positionierung statt belegter Formulierungsstärke — analog Isana-Marulaöl-Fall).",
+          "protocols.tpl_conditioner.deviation": "null (R-C): 'im gesamten Haar' und '3–5 Minuten' sind Anwendungsstil-Fakten der Packung, keine strukturellen Kategorie-Widersprüche — Chaarlies Regel (Längen/Spitzen, 1–3 Min) bleibt maßgeblich; siehe evidence-Zeile für Details.",
+          "identifiers.ean_zero_pad": "dm liefert 'gtin':'22796972217' (11 Ziffern) — auf 13-stellige EAN mit führenden Nullen normalisiert (0022796972217), GS1-Prüfziffer verifiziert (Skript-Check bestanden). Cross-Source-Beleg über eBay-UK-Angebot mit identischem 12-stelligem UPC 022796972217."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}
