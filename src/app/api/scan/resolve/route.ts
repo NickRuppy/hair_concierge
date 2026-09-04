@@ -370,6 +370,13 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
        * `product-previews.ts`: one shared load for every other category, one load per role
        * for a role-sensitive one — otherwise e.g. the dandruff role would be graded against
        * facts loaded for the everyday role.
+       *
+       * F12 asked whether the candidate pool could be loaded once and re-specced per role.
+       * It cannot from here: `selectShampooSpec` is private to `catalog-facts.ts` and reads
+       * the raw `product_shampoo_specs` rows, which `Stage3CategoryProductFacts` does not
+       * retain (it keeps only the already-selected spec, and a `factFingerprint` derived
+       * from it). Collapsing the load needs a seam in that module, not a second selector
+       * here.
        */
       const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
       const roleSensitive = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
