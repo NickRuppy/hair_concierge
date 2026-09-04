@@ -22,7 +22,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
  *      ))
  *
  * 2. Saving a product (the `scan_move_saved_product` RPC behind `src/lib/scan/saved-state.ts`,
- *    migration `20260904120000_scan_move_saved_product.sql`) is deliberately wider: active
+ *    migration `20260904150000_scan_move_saved_product.sql`) is deliberately wider: active
  *    lifecycle status + not quarantined, with NO `origin` gate — the 2026-09-01 relaxation
  *    lets a user save any active, non-quarantined product, not only curated or already-owned
  *    ones. `filterScanEligibleProductIds` below implements this half (paired with

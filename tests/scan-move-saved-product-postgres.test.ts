@@ -33,7 +33,7 @@ const MIGRATIONS = [
   "supabase/migrations/20260811205500_personal_plan_product_search_dispositions.sql",
   // Real `scan_wishlist`, including its UNIQUE (user_id, product_id).
   "supabase/migrations/20260820100200_scan_wishlist.sql",
-  "supabase/migrations/20260904120000_scan_move_saved_product.sql",
+  "supabase/migrations/20260904150000_scan_move_saved_product.sql",
 ] as const
 
 // Minimal FK targets and project-wide utilities. Column shapes only.
