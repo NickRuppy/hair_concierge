@@ -230,23 +230,44 @@ export function PersonalPlanQuizEntry({
   }
 
   const shell = (
-    <PersonalPlanQuizFrame
-      canGoBack={false}
-      clientReady={clientReady}
-      currentSectionIndex={0}
-      fieldTest={fieldTest}
-      onBack={() => {}}
-      progress={4}
-      settledSectionIndices={new Set()}
-    >
-      <PersonalPlanQuizTextureQuestion
-        onSelect={selectTexture}
-        recoveryVisible={Boolean(
-          (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
-        )}
-        selected={selected}
-      />
-    </PersonalPlanQuizFrame>
+    <>
+      <PersonalPlanQuizFrame
+        canGoBack={false}
+        clientReady={clientReady}
+        currentSectionIndex={0}
+        fieldTest={fieldTest}
+        onBack={() => {}}
+        progress={4}
+        settledSectionIndices={new Set()}
+      >
+        <PersonalPlanQuizTextureQuestion
+          onSelect={selectTexture}
+          recoveryVisible={Boolean(
+            (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
+          )}
+          selected={selected}
+        />
+      </PersonalPlanQuizFrame>
+      <p className="pb-6 pt-3 text-center text-xs text-muted-foreground">
+        <a
+          href="/impressum"
+          target="_blank"
+          rel="noopener"
+          className="transition-colors hover:text-foreground"
+        >
+          Impressum
+        </a>{" "}
+        ·{" "}
+        <a
+          href="/datenschutz"
+          target="_blank"
+          rel="noopener"
+          className="transition-colors hover:text-foreground"
+        >
+          Datenschutz
+        </a>
+      </p>
+    </>
   )
 
   if (!showQuiz) return shell

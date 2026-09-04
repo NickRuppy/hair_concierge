@@ -15,11 +15,7 @@ import {
   ResultOfferPricing,
   type ResultOfferPricingCheckoutSummary,
 } from "@/components/quiz/result-offer-pricing"
-import {
-  FooterCookieSettingsButton,
-  FooterLink,
-  offerFooterLinks,
-} from "@/components/landing/footer-links"
+import { SiteFooter } from "@/components/landing/site-footer"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import {
   clearPersonalPlanPreparedPlanClaim,
@@ -335,27 +331,6 @@ function TestimonialsSection() {
         </div>
       </div>
     </section>
-  )
-}
-
-function PersonalPlanOfferFooter() {
-  return (
-    <footer className="border-t border-[rgba(var(--brand-plum-rgb),0.10)] bg-white/70 px-4 py-8 text-[rgba(var(--brand-plum-rgb),0.68)]">
-      <div className="mx-auto flex max-w-4xl flex-col gap-4 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <p className="font-semibold text-[var(--brand-plum-darkest)]">
-          Haarmony LLC ·{" "}
-          <a className="underline underline-offset-4" href="mailto:info@chaarlie.de">
-            info@chaarlie.de
-          </a>
-        </p>
-        <nav aria-label="Rechtliches und Kontakt" className="flex flex-wrap gap-x-4 gap-y-2">
-          {offerFooterLinks.map((item) => (
-            <FooterLink key={item.href} {...item} />
-          ))}
-          <FooterCookieSettingsButton />
-        </nav>
-      </div>
-    </footer>
   )
 }
 
@@ -1061,7 +1036,7 @@ export function PersonalPlanOffer({
             {showQuizRestart ? <PersonalPlanQuizRestart className="mt-5" /> : null}
           </div>
         </section>
-        <PersonalPlanOfferFooter />
+        <SiteFooter />
       </main>
     </OfferTrackingProvider>
   )

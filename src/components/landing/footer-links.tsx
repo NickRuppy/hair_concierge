@@ -1,27 +1,11 @@
 import Link from "next/link"
 
-export const footerProductLinks = [
-  { href: "/quiz", label: "Haaranalyse starten", prefetch: false },
-  { href: "/methodik", label: "Methodik" },
-] as const
-
-export const footerCompanyLinks = [
-  { href: "/impressum", label: "Impressum" },
+export const legalFooterLinks = [
   { href: "/kontakt", label: "Kontakt" },
-] as const
-
-export const footerLegalLinks = [
-  { href: "/datenschutz", label: "Datenschutz" },
-  { href: "/agb", label: "AGB" },
-  { href: "/widerruf", label: "Widerruf" },
-] as const
-
-export const offerFooterLinks = [
   { href: "/impressum", label: "Impressum" },
   { href: "/datenschutz", label: "Datenschutz" },
   { href: "/agb", label: "AGB" },
   { href: "/widerruf", label: "Widerruf" },
-  { href: "/kontakt", label: "Kontakt" },
 ] as const
 
 export const footerLinkClass =
@@ -43,25 +27,6 @@ export function FooterLink({
     <Link href={href} prefetch={prefetch} className={footerLinkClass}>
       {label}
     </Link>
-  )
-}
-
-export function FooterButton({
-  label,
-  onClick,
-}: {
-  label: string
-  onClick: (trigger: HTMLButtonElement) => void
-}) {
-  return (
-    <button
-      type="button"
-      data-quiz-gate-trigger
-      className={`${footerLinkClass} text-left`}
-      onClick={(event) => onClick(event.currentTarget)}
-    >
-      {label}
-    </button>
   )
 }
 
