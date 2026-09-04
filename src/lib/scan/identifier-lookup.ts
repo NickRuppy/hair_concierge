@@ -11,8 +11,11 @@ import { SCAN_ACTIVE_LIFECYCLE_STATUS } from "./catalog-eligibility"
  * an EAN read, but the lookup treats them as interchangeable — mirrors
  * `BARCODE_IDENTIFIER_TYPES` in `src/lib/product-intake/product-matching.ts` (not exported
  * there, so re-declared here rather than reached into).
+ *
+ * Deliberately not exported: it belongs to the DB matcher below, not to any API or client
+ * contract, which are `"ean"`-only (ruling R9).
  */
-export type ScanIdentifierType = "ean" | "gtin" | "barcode"
+type ScanIdentifierType = "ean" | "gtin" | "barcode"
 const BARCODE_IDENTIFIER_TYPES: readonly ScanIdentifierType[] = ["ean", "gtin", "barcode"]
 
 export type ScanIdentifierInput = {

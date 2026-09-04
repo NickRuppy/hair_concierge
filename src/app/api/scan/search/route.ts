@@ -25,10 +25,16 @@ const MIN_QUERY_LENGTH = 2
 const MAX_QUERY_LENGTH = 120
 const MAX_RESULTS = 8
 // Catalog sits around 256 active products today, well under this cap, so an in-Node
-// filter over one page is fine. If the catalog ever approaches 1000 rows this silently
-// truncates instead of erroring — worth adding a `totalCapped`-style truncation signal
-// (mirroring inventory-search.ts's `totalCapped`) before that happens.
-const CANDIDATE_LOAD_LIMIT = 1000
+// filter over one page is fine. A full page means the catalog outgrew the cap and results
+// are computed over a partial catalog — reported as `truncated` (mirroring
+// inventory-search.ts's `totalCapped`) rather than silently swallowed.
+export const CANDIDATE_LOAD_LIMIT = 1000
+
+export type ScanSearchResponse = {
+  results: ScanSearchResult[]
+  /** The candidate page came back full, so matching ran over a partial catalog. */
+  truncated: boolean
+}
 
 export type ScanSearchResult = {
   id: string
@@ -52,7 +58,7 @@ export type ScanSearchRouteDeps = {
   getUserId: () => Promise<string | null>
   checkRateLimit: typeof checkRateLimit
   createAdminClient: typeof createAdminClient
-  search: (client: SupabaseClient, query: string) => Promise<ScanSearchResult[]>
+  search: (client: SupabaseClient, query: string) => Promise<ScanSearchResponse>
   captureScanException?: typeof captureScanException
 }
 
@@ -73,11 +79,10 @@ export function createScanSearchRouteHandler(deps: ScanSearchRouteDeps) {
     failureReason: "search_failed",
     handler: async (ctx) => {
       const parsed = querySchema.safeParse({ q: ctx.body })
-      if (!parsed.success) return scanOk({ results: [] })
+      if (!parsed.success) return scanOk({ results: [], truncated: false })
 
       const client = deps.createAdminClient()
-      const results = await deps.search(client, parsed.data.q)
-      return scanOk({ results })
+      return scanOk(await deps.search(client, parsed.data.q))
     },
   })
 }
@@ -85,7 +90,7 @@ export function createScanSearchRouteHandler(deps: ScanSearchRouteDeps) {
 export async function searchScanCatalog(
   client: SupabaseClient,
   query: string,
-): Promise<ScanSearchResult[]> {
+): Promise<ScanSearchResponse> {
   const [{ data, error }, quarantinedIds] = await Promise.all([
     client
       .from("products")
@@ -98,11 +103,12 @@ export async function searchScanCatalog(
   ])
   if (error) throw new Error("scan_search_catalog_unavailable")
 
+  const rows = (data ?? []) as CandidateRow[]
   const normalizedQuery = query.toLocaleLowerCase()
   // Ruling R7: a disposition-quarantined product (personal_plan_product_search_dispositions)
   // never surfaces via scan search — same predicate personal_plan_create_or_reuse_user_product
   // enforces server-side (see catalog-eligibility.ts).
-  const matches = ((data ?? []) as CandidateRow[]).filter(
+  const matches = rows.filter(
     (row) =>
       !quarantinedIds.has(row.id) &&
       `${row.brand ?? ""} ${row.name}`.toLocaleLowerCase().includes(normalizedQuery),
@@ -120,14 +126,17 @@ export async function searchScanCatalog(
     )
   })
 
-  return matches.slice(0, MAX_RESULTS).map((row) => ({
-    id: row.id,
-    name: row.name,
-    brand: row.brand,
-    category: row.category_key as PersonalPlanCategory,
-    categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
-    imageUrl: row.image_url,
-  }))
+  return {
+    results: matches.slice(0, MAX_RESULTS).map((row) => ({
+      id: row.id,
+      name: row.name,
+      brand: row.brand,
+      category: row.category_key as PersonalPlanCategory,
+      categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
+      imageUrl: row.image_url,
+    })),
+    truncated: rows.length === CANDIDATE_LOAD_LIMIT,
+  }
 }
 
 function isExactMatch(row: CandidateRow, normalizedQuery: string): boolean {
