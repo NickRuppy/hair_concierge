@@ -1,6 +1,35 @@
 # Mask v1.0 — calibration cohort proposal
 
-Status: **PROPOSAL — nothing frozen.** No product is classified, no INCI has been analyzed in depth, no catalog value or Product Intake rule is affected. This document exists to get Nick's approval on *which 12 + reserves* to calibrate against before Phase 2 (INCI reading) begins.
+Status: **APPROVED by Nick 2026-09-04 with three modifications — freeze authorized, freeze itself still pending execution.**
+
+## Approval record (interview rulings, 2026-09-04)
+
+1. **Set approved:** 12 primaries + 4 reserves with the deterministic substitution rule.
+2. **Named-bond coverage = gluconamide only** (archetype 4b maleate gap accepted): no maleate
+   mask exists at dm/Rossmann/Müller (Olaplex sells via Douglas/Flaconi/salons), and maleate
+   carriers are bondbuilder-category products with pre-shampoo protocols — outside the mask
+   boundary by Nick's own F3/charter rulings. A future maleate drugstore mask lands on an
+   uncalibrated enum value and triggers human review; accepted.
+3. **Modification A — product #13 added: Olaplex No. 3 Hair Perfector as a refuse-test.** The
+   engine's correct output is a G0 exclusion (bondbuilder category, pre-shampoo protocol, not
+   post-shampoo rinse-out mask). It is included to prove the F3/boundary fence, never to classify.
+4. **Modification B — Hask SKU corrected:** the 355 ml bottle (dm titles it "Conditioner",
+   [dm.de/p/d/1475001](https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil)) is
+   replaced by the **HASK Haarkur Argan Oil Sachet, 50 ml**
+   ([dm.de p71164333068](https://www.dm.de/hask-haarkur-argan-oil-sachet-p71164333068.html)):
+   post-wash, ~10-minute dwell, rinse-out, 1–2×/week — the actual mask-form product. Its sachet
+   INCI must be captured independently; never merged from the bottle's list (§4.2 conflict is
+   thereby resolved rather than kept as a stress case — refuse-tests are covered by #12 and #13).
+5. **Bali Curls kept** (both products) despite below-tier sourcing; substitution rule + flag to
+   Nick applies if their exact formulas cannot be verified at freeze time.
+6. **Correction:** the "new-to-system count: 2" below is wrong — Isana 3in1 Milchprotein & Mandel
+   is in the existing catalog. True new-to-system count: 1 (MONDAY Smooth Anti-Frizz).
+
+Original proposal below, retained unchanged as provenance.
+
+---
+
+Original status line: **PROPOSAL — nothing frozen.** No product is classified, no INCI has been analyzed in depth, no catalog value or Product Intake rule is affected. This document exists to get Nick's approval on *which 12 + reserves* to calibrate against before Phase 2 (INCI reading) begins.
 
 Scope note per `00_category_charter.md`: research artifacts only, no production changes.
 
