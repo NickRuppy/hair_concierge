@@ -11,6 +11,7 @@ import {
 } from "./personal-plan-quiz-continuation"
 import {
   PersonalPlanQuizFrame,
+  PersonalPlanQuizLegalLine,
   PersonalPlanQuizTextureQuestion,
 } from "./personal-plan-quiz-first-screen"
 import type { FreshPersonalPlanQuizEntry } from "./progressive-entry-contract"
@@ -248,25 +249,7 @@ export function PersonalPlanQuizEntry({
           selected={selected}
         />
       </PersonalPlanQuizFrame>
-      <p className="pb-6 pt-3 text-center text-xs text-muted-foreground">
-        <a
-          href="/impressum"
-          target="_blank"
-          rel="noopener"
-          className="transition-colors hover:text-foreground"
-        >
-          Impressum
-        </a>{" "}
-        ·{" "}
-        <a
-          href="/datenschutz"
-          target="_blank"
-          rel="noopener"
-          className="transition-colors hover:text-foreground"
-        >
-          Datenschutz
-        </a>
-      </p>
+      <PersonalPlanQuizLegalLine />
     </>
   )
 

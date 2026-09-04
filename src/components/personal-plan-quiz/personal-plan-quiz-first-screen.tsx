@@ -253,3 +253,27 @@ export function PersonalPlanQuizTextureQuestion({
     </section>
   )
 }
+
+export function PersonalPlanQuizLegalLine() {
+  return (
+    <p className="pb-6 pt-3 text-center text-xs text-muted-foreground">
+      <a
+        href="/impressum"
+        target="_blank"
+        rel="noopener"
+        className="transition-colors hover:text-foreground"
+      >
+        Impressum
+      </a>{" "}
+      ·{" "}
+      <a
+        href="/datenschutz"
+        target="_blank"
+        rel="noopener"
+        className="transition-colors hover:text-foreground"
+      >
+        Datenschutz
+      </a>
+    </p>
+  )
+}
