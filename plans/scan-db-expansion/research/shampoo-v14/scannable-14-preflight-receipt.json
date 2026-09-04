@@ -35,7 +35,7 @@
   "parked_products": [],
   "publication_boundaries": {
     "operator_profile_id": "7b04cd65-c243-40b3-b4bd-509ec3ea6123",
-    "reviewed_head": "ad58f72ebb56d0fca453f9dd41522b40747ccd1c",
+    "reviewed_head": "c899b434d951f48190173044cfb1354452008e1f",
     "images_must_be_uploaded_before_apply": false,
     "exact_head_and_fingerprint_must_be_reapproved_before_apply": true,
     "apply_authorized": false
