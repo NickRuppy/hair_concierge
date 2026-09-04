@@ -25,8 +25,10 @@ import type { SupabaseClient } from "@supabase/supabase-js"
  *    migration `20260904150000_scan_move_saved_product.sql`) is deliberately wider: active
  *    lifecycle status + not quarantined, with NO `origin` gate — the 2026-09-01 relaxation
  *    lets a user save any active, non-quarantined product, not only curated or already-owned
- *    ones. `filterScanEligibleProductIds` below implements this half (paired with
- *    `SCAN_ACTIVE_LIFECYCLE_STATUS`).
+ *    ones. The RPC enforces that rule in SQL and calls nothing in this file;
+ *    `filterScanEligibleProductIds` below (paired with `SCAN_ACTIVE_LIFECYCLE_STATUS`) is the
+ *    TypeScript statement of the same rule, used by the submit route to decide whether a
+ *    catalog match is answerable — the two are parallel and must be changed together.
  *
  * A row in `personal_plan_product_search_dispositions` quarantines a product out of every
  * Personal Plan-facing surface without touching global catalog visibility or recommendation

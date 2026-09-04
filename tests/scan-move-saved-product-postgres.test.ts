@@ -130,7 +130,7 @@ async function seed(pg: PGlite) {
 
 async function move(
   pg: PGlite,
-  input: { userId?: string; productId?: string; kind: string },
+  input: { userId?: string; productId?: string; kind: string | null },
 ): Promise<MoveResult> {
   const { rows } = await pg.query<{ result: MoveResult }>(
     `SELECT public.scan_move_saved_product($1::uuid, $2::uuid, $3) AS result`,
@@ -161,6 +161,20 @@ async function readSavedState(
   )
   if (owned[0]!.total === 0) return { state: null, managedByScan: false }
   return { state: "routine", managedByScan: owned[0]!.scan > 0 }
+}
+
+/** Both save destinations for one product, for the refusal paths' "nothing was written". */
+async function countsForProduct(pg: PGlite, productId: string, userId = USER) {
+  const { rows } = await pg.query<{ wishlist: number; routine: number }>(
+    `SELECT
+       (SELECT count(*)::int FROM public.scan_wishlist
+         WHERE user_id = $1 AND product_id = $2) AS wishlist,
+       (SELECT count(*)::int FROM public.user_products
+         WHERE user_id = $1 AND catalog_product_id = $2
+           AND identity_status = 'matched' AND ownership_status = 'owned') AS routine`,
+    [userId, productId],
+  )
+  return rows[0]!
 }
 
 async function counts(pg: PGlite, userId = USER) {
@@ -287,11 +301,8 @@ test("scan_move_saved_product: a non-active-lifecycle product is product_not_fou
       outcome: "product_not_found",
     })
   }
-  const { rows } = await pg.query<{ count: number }>(
-    `SELECT count(*)::int AS count FROM public.scan_wishlist WHERE product_id = $1`,
-    [INACTIVE_PRODUCT],
-  )
-  assert.equal(rows[0]!.count, 0)
+  // Neither destination was written: a refusal is a refusal in both tables.
+  assert.deepEqual(await countsForProduct(pg, INACTIVE_PRODUCT), { wishlist: 0, routine: 0 })
 })
 
 test("scan_move_saved_product: a disposition-quarantined product is product_not_saveable (ruling R7)", async (t) => {
@@ -301,11 +312,7 @@ test("scan_move_saved_product: a disposition-quarantined product is product_not_
       outcome: "product_not_saveable",
     })
   }
-  const { rows } = await pg.query<{ count: number }>(
-    `SELECT count(*)::int AS count FROM public.scan_wishlist WHERE product_id = $1`,
-    [QUARANTINED_PRODUCT],
-  )
-  assert.equal(rows[0]!.count, 0)
+  assert.deepEqual(await countsForProduct(pg, QUARANTINED_PRODUCT), { wishlist: 0, routine: 0 })
 })
 
 test("scan_move_saved_product: an unknown kind raises invalid_parameter_value", async (t) => {
@@ -322,13 +329,54 @@ test("scan_move_saved_product: an unknown kind raises invalid_parameter_value", 
   )
 })
 
+test("scan_move_saved_product: a NULL kind raises instead of falling through the guard", async (t) => {
+  const pg = await migratedDatabase(t)
+  // `NULL NOT IN ('routine','merkliste')` is NULL, not true: without the explicit IS NULL
+  // arm a NULL kind would pass the guard and reach the move branches unhandled.
+  await assert.rejects(
+    () => move(pg, { kind: null }),
+    (error: unknown) => {
+      const raised = error as { message?: string; code?: string }
+      assert.match(String(raised.message), /unknown kind/)
+      assert.equal(raised.code, "22023")
+      return true
+    },
+  )
+  assert.deepEqual(await counts(pg), { wishlist: 0, routine: 0 })
+})
+
 test("scan_move_saved_product: serialises concurrent moves with a per user+product advisory lock", async (t) => {
   const pg = await migratedDatabase(t)
-  // PGlite runs a single connection, so the lock cannot be raced here. Assert it is
-  // in the deployed function body instead — without it two opposite concurrent
-  // moves can delete each other's freshly inserted row (finding F6).
+  // PGlite runs a single connection, so the lock cannot be raced here. Assert its
+  // presence AND its two load-bearing properties in the deployed function body instead —
+  // without them two opposite concurrent moves can delete each other's freshly inserted
+  // row (finding F6). A bare /pg_advisory_xact_lock/ match would still pass if the lock
+  // were taken after the first read/write, or keyed on something that does not separate
+  // one user+product pair from another.
   const { rows } = await pg.query<{ definition: string }>(
     `SELECT pg_catalog.pg_get_functiondef('public.scan_move_saved_product(uuid,uuid,text)'::regprocedure) AS definition`,
   )
-  assert.match(rows[0]!.definition, /pg_advisory_xact_lock/)
+  const definition = rows[0]!.definition
+  assert.match(definition, /pg_advisory_xact_lock/)
+
+  // 1. The lock is taken before anything it is supposed to protect.
+  const lockIndex = definition.search(/pg_advisory_xact_lock/)
+  for (const [label, pattern] of [
+    ["product read", /FROM\s+public\.products/i],
+    ["destination insert", /INSERT\s+INTO/i],
+    ["source delete", /DELETE\s+FROM/i],
+  ] as const) {
+    const index = definition.search(pattern)
+    assert.ok(index > 0, `expected the function body to contain the ${label}`)
+    assert.ok(
+      lockIndex < index,
+      `expected the advisory lock (at ${lockIndex}) before the ${label} (at ${index})`,
+    )
+  }
+
+  // 2. The key separates user+product pairs, so unrelated moves do not serialise on each
+  //    other and two moves for the same pair always do.
+  const lockStatement = definition.slice(lockIndex, definition.indexOf(";", lockIndex))
+  assert.match(lockStatement, /p_user_id/)
+  assert.match(lockStatement, /p_product_id/)
 })

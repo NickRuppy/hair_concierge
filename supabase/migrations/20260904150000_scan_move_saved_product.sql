@@ -38,8 +38,10 @@ DECLARE
   v_owned_by_scan integer;
 BEGIN
   -- The route validates `kind` with zod before calling; this is the guard that
-  -- keeps a direct service_role call from silently doing the wrong move.
-  IF p_kind NOT IN ('routine', 'merkliste') THEN
+  -- keeps a direct service_role call from silently doing the wrong move. NULL is
+  -- spelled out because `NULL NOT IN (...)` is NULL, not true, so a NULL kind would
+  -- otherwise fall past this check and reach the CASE below as an unhandled branch.
+  IF p_kind IS NULL OR p_kind NOT IN ('routine', 'merkliste') THEN
     RAISE EXCEPTION 'scan_move_saved_product: unknown kind %', p_kind
       USING ERRCODE = '22023';
   END IF;

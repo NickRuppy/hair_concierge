@@ -114,6 +114,8 @@ type ScanAfter = (task: () => Promise<void> | void) => void
  */
 type ResolveAttemptTracker = {
   attemptId: string | null
+  /** Request start, written as the attempt row's `created_at` — see `ScanResolveAttempt`. */
+  startedAt: string
   lookupOutcome: ScanResolveLookupOutcome | null
   matchedProductId: string | null
   failureStage: ScanResolveFailureStage
@@ -221,6 +223,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           client: deps.createAdminClient(),
           attempt: {
             attemptId: null,
+            startedAt: new Date().toISOString(),
             lookupOutcome: null,
             matchedProductId: null,
             failureStage: "identifier_lookup",
@@ -277,6 +280,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               userId,
               identifierType: identifier.type,
               rawValue: identifier.value,
+              createdAt: attempt.startedAt,
             },
             deps.captureScanException ?? captureScanException,
           ),

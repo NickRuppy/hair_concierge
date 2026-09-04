@@ -83,6 +83,8 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
         userId: ctx.userId,
         input,
         repository,
+        // Batch-shaped helper (one query for many ids), deliberately called with a single
+        // id: a submit has at most one catalog match to gate.
         isMatchScanEligible: async (id) =>
           (await deps.filterScanEligibleProductIds(admin, [id])).has(id),
       })

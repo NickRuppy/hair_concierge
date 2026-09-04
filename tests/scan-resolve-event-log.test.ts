@@ -199,6 +199,36 @@ test("fail-open: a completion error never propagates", async () => {
   )
 })
 
+test("an explicit createdAt is written as the row's created_at", async () => {
+  const { client, inserted } = stubClient({ error: null })
+
+  await recordScanResolveAttempt(client as never, {
+    attemptId: "00000000-0000-4000-8000-000000000001",
+    userId: "user-1",
+    identifierType: "ean",
+    rawValue: "0022796976116",
+    createdAt: "2026-09-04T10:00:00.000Z",
+  })
+
+  // The insert runs in the route's deferred `after` drain, so the column default would
+  // stamp the drain time — after the completion's own completed_at. The route passes the
+  // request-start timestamp instead.
+  assert.equal((inserted() as { created_at?: string }).created_at, "2026-09-04T10:00:00.000Z")
+})
+
+test("without an explicit createdAt the row keeps the column default", async () => {
+  const { client, inserted } = stubClient({ error: null })
+
+  await recordScanResolveAttempt(client as never, {
+    attemptId: "00000000-0000-4000-8000-000000000001",
+    userId: "user-1",
+    identifierType: "ean",
+    rawValue: "0022796976116",
+  })
+
+  assert.equal("created_at" in (inserted() as Record<string, unknown>), false)
+})
+
 test("a start-write failure captures once to Sentry with the attempt_log_write_failed reason", async () => {
   resetAttemptLogCaptureThrottleForTests()
   const { client } = stubClient({ error: { message: "boom" } })
@@ -220,6 +250,8 @@ test("a start-write failure captures once to Sentry with the attempt_log_write_f
     route: "resolve",
     status: 200,
     reason: "attempt_log_write_failed",
+    // Fail-open telemetry: warning, not error (plan §5 task 5).
+    level: "warning",
   })
 })
 

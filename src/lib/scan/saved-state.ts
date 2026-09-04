@@ -76,7 +76,7 @@ export type ScanSaveKind = "routine" | "merkliste"
 /**
  * The save sheet's two destinations are exclusive, so saving is a MOVE: write the
  * destination, drop the source. Both halves plus the post-write state read happen
- * inside `scan_move_saved_product` (migration 20260904120000), i.e. one transaction
+ * inside `scan_move_saved_product` (migration 20260904150000), i.e. one transaction
  * serialised per user+product. Doing it as two client calls let two concurrent
  * opposite moves delete each other's freshly inserted row, and made a failed cleanup
  * indistinguishable from a failed save.

@@ -579,14 +579,15 @@ test("attempt telemetry: catalog hit starts before lookup and completes only aft
   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
   assert.equal(response.status, 200)
   await attempts.flush()
-  assert.deepEqual(attempts.starts, [
-    {
-      attemptId: "attempt-1",
-      userId,
-      identifierType: "ean",
-      rawValue: "4006381333931",
-    },
-  ])
+  assert.equal(attempts.starts.length, 1)
+  const { createdAt, ...start } = attempts.starts[0] as Record<string, unknown>
+  assert.deepEqual(start, {
+    attemptId: "attempt-1",
+    userId,
+    identifierType: "ean",
+    rawValue: "4006381333931",
+  })
+  assert.match(String(createdAt), /^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/)
   assert.deepEqual(attempts.completions, [
     {
       attemptId: "attempt-1",
@@ -596,6 +597,38 @@ test("attempt telemetry: catalog hit starts before lookup and completes only aft
       failureStage: null,
     },
   ])
+})
+
+test("attempt telemetry: created_at is the request start, never later than the completion", async () => {
+  const attempts = collectAttempts()
+  const completionStamps: string[] = []
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      completeScanResolveAttempt: (async () => {
+        // The real helper stamps completed_at when it runs — i.e. inside the `after` drain.
+        completionStamps.push(new Date().toISOString())
+      }) as never,
+    }),
+  )
+
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const beforeDrain = new Date().toISOString()
+  // The drain runs after the response; make that gap observable.
+  await new Promise((resolve) => setTimeout(resolve, 5))
+  await attempts.flush()
+
+  const createdAt = (attempts.starts[0] as { createdAt?: string }).createdAt
+  assert.ok(createdAt, "expected the attempt to carry an explicit created_at")
+  // Captured while the request was still in flight, so the deferred INSERT cannot stamp a
+  // created_at that sits after the completed_at written moments later in the same drain.
+  assert.ok(createdAt <= beforeDrain, `${createdAt} should not be later than ${beforeDrain}`)
+  assert.equal(completionStamps.length, 1)
+  assert.ok(
+    createdAt <= completionStamps[0]!,
+    `${createdAt} should not be later than ${completionStamps[0]}`,
+  )
 })
 
 test("attempt telemetry: an unknown fit verdict is completed but not counted as resolved", async () => {
@@ -880,7 +913,8 @@ test("attempt telemetry: an attempt-log write failure reaches Sentry through the
   assert.equal(response.status, 200)
   await Promise.all(queued.splice(0).map((task) => task()))
   assert.deepEqual(captured, [
-    { route: "resolve", status: 200, reason: "attempt_log_write_failed" },
+    // Fail-open telemetry: warning, not error (plan §5 task 5).
+    { route: "resolve", status: 200, reason: "attempt_log_write_failed", level: "warning" },
   ])
 })
 

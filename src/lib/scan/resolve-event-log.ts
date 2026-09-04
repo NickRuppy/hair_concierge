@@ -31,6 +31,12 @@ export type ScanResolveAttempt = {
   userId: string
   identifierType: string
   rawValue: string
+  /**
+   * Request-start timestamp. The INSERT is deferred to the route's `after` drain, where the
+   * column default would stamp the drain time — after the completed_at written right behind
+   * it. Writers that are not on the deferred path omit this and keep the column default.
+   */
+  createdAt?: string
 }
 
 export type ScanResolveAttemptCompletion = {
@@ -75,6 +81,9 @@ function reportAttemptLogFailure(
     route: "resolve",
     status: 200,
     reason: "attempt_log_write_failed",
+    // The scan itself succeeded — both writers are fail-open — so this is a degraded
+    // telemetry path, not a failed request: warning, not error.
+    level: "warning",
   })
 }
 
@@ -91,6 +100,7 @@ export async function recordScanResolveAttempt(
       identifier_type: attempt.identifierType,
       raw_value: attempt.rawValue,
       canonical_value: canonicalizeGtin(attempt.rawValue),
+      ...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),
     })
     if (error) {
       console.warn("scan_resolve_attempt_start_failed", { message: error.message })
