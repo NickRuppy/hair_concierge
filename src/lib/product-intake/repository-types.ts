@@ -196,6 +196,15 @@ export type ProductIntakeRepository = {
     submission: ProductIntakeSubmissionRow
   }>
   findProductSubmission: (id: string, userId: string) => Promise<ProductIntakeSubmissionRow | null>
+  /**
+   * The single open scan submission `idx_product_submissions_one_open_scan` (migration
+   * 20260820103000) permits for this user + normalized scanned identifier, if there is one.
+   * `submitScanProductIntake` uses it to answer a lost insert race with the row that won it.
+   */
+  findOpenScanSubmissionByIdentifier: (params: {
+    userId: string
+    identifierValue: string
+  }) => Promise<{ id: string } | null>
   insertProductSubmission: (
     row: Partial<ProductIntakeSubmissionRow> & {
       user_id: string

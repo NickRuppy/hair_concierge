@@ -5,6 +5,10 @@ import {
   createScanSubmitRouteHandler,
   type ScanSubmitRouteDeps,
 } from "../src/app/api/scan/submit/route"
+import {
+  submitScanProductIntake,
+  type ProductIntakeRepository,
+} from "../src/lib/product-intake/submissions"
 import { validateEanInput } from "../src/lib/scan/identifier-lookup"
 
 const userId = "11111111-1111-4111-8111-111111111111"
@@ -269,4 +273,44 @@ test("scan submit: an unexpected error maps to 503 and captures to Sentry", asyn
   const response = await handler(request(validBody))
   assert.equal(response.status, 503)
   assert.deepEqual(captured, [{ route: "submit", status: 503, reason: "submit_failed", userId }])
+})
+
+test("scan submit: a lost race on the one-open-submission index answers 202 with the existing submission", async () => {
+  // End-to-end over the real submitScanProductIntake: the second concurrent submit for the
+  // same user+EAN is rejected by idx_product_submissions_one_open_scan, and must still get
+  // the pending-submission answer (not the 503 the dropped SQLSTATE used to produce).
+  const existingSubmissionId = "44444444-4444-4444-8444-444444444444"
+  const reloads: Array<{ userId: string; identifierValue: string }> = []
+  const repository = {
+    loadCatalog: async () => ({ products: [], identifiers: [] }),
+    loadBrandResolutionCatalog: async () => ({ brands: [] }),
+    insertProductSubmission: async () => {
+      throw Object.assign(
+        new Error(
+          'duplicate key value violates unique constraint "idx_product_submissions_one_open_scan"',
+        ),
+        { code: "23505" },
+      )
+    },
+    findOpenScanSubmissionByIdentifier: async (params: {
+      userId: string
+      identifierValue: string
+    }) => {
+      reloads.push(params)
+      return { id: existingSubmissionId }
+    },
+  } as unknown as ProductIntakeRepository
+
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({ createRepository: () => repository, submit: submitScanProductIntake }),
+  )
+  const response = await handler(request(validBody))
+
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), {
+    kind: "pending_submission",
+    submissionId: existingSubmissionId,
+    headline: "Eingereicht!",
+  })
+  assert.deepEqual(reloads, [{ userId, identifierValue: "4006381333931" }])
 })

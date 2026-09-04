@@ -926,7 +926,7 @@ function buildScanIntakeHistory(input: ScanProductIntakeSubmissionInput, now: st
   return [
     {
       at: now,
-      source: "scan" as const,
+      source: "scan",
       intake_method: input.intake_method,
       category: input.category,
       frequency_range: input.frequency_range,
@@ -1024,7 +1024,7 @@ export async function submitScanProductIntake(
   }
 
   const now = params.now?.() ?? new Date().toISOString()
-  const submission = await params.repository.insertProductSubmission({
+  const insertRow: Parameters<ProductIntakeRepository["insertProductSubmission"]>[0] = {
     id: randomUUID(),
     user_id: params.userId,
     user_product_usage_id: null,
@@ -1050,18 +1050,55 @@ export async function submitScanProductIntake(
     approved_product_id: null,
     scanned_identifier_type: scannedIdentifier?.type ?? null,
     scanned_identifier_value: scannedIdentifier?.value ?? null,
-  })
+  }
+
+  let submissionId: string
+  try {
+    submissionId = (await params.repository.insertProductSubmission(insertRow)).id
+  } catch (error) {
+    // Two concurrent submits for the same user+EAN: the loser trips
+    // idx_product_submissions_one_open_scan (migration 20260820103000). The research
+    // request the user asked for exists either way, so this is a get-or-create — reload
+    // the winner and answer with it instead of turning the race into a 503.
+    const existing =
+      scannedIdentifier && isOpenScanSubmissionConflict(error)
+        ? await params.repository.findOpenScanSubmissionByIdentifier({
+            userId: params.userId,
+            identifierValue: scannedIdentifier.value,
+          })
+        : null
+    // Nothing to reload (a different index, or the winner closed in between): the failure
+    // stays a failure rather than a success with no submission behind it.
+    if (!existing) throw error
+    submissionId = existing.id
+  }
 
   return {
     kind: "pending_review",
     category: params.input.category,
     submission: {
-      id: submission.id,
+      // `status` is a fixed literal on ProductIntakeSubmittedSubmission ("this submission is
+      // open"); the reloaded row may sit in any OPEN_SUBMISSION_STATUSES value. Only the
+      // resolve route reports a scan submission's live status, and it reads the row itself.
+      id: submissionId,
       status: "pending_review",
-      category: submission.category,
+      category: params.input.category,
     },
     match,
   }
+}
+
+/**
+ * A `product_submissions` insert rejected by a unique index. Matches on SQLSTATE first;
+ * the message fallbacks cover clients that surface the constraint name but drop the code.
+ */
+function isOpenScanSubmissionConflict(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+  if ((error as { code?: unknown }).code === "23505") return true
+  const message = (error as { message?: unknown }).message
+  return (
+    typeof message === "string" && /idx_product_submissions_one_open_scan|duplicate/i.test(message)
+  )
 }
 
 export async function cancelProductIntakeUsage(params: {
