@@ -2,17 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
+import { SCAN_HINT_DEFAULT, type ScanHint } from "@/lib/scan/guidance"
 import {
-  SCAN_CONFIRM_LABEL,
-  SCAN_HINT_DEFAULT,
-  SCAN_HINT_SPOTTED,
-  type ScanHint,
-} from "@/lib/scan/guidance"
-import {
+  INITIAL_VIEWFINDER_ANNOUNCEMENT,
   deriveViewfinderPresentation,
   mapBoxToCover,
+  nextViewfinderAnnouncement,
   type NormalizedBox,
   type ScanDetectionState,
+  type ScanVisualState,
 } from "@/lib/scan/scanner-session"
 
 import { ScannerView } from "./scanner-view"
@@ -54,6 +52,13 @@ type ScannerProps = {
 // sheet slides up. Mirrors `SCAN_CONFIRM_DELAY_MS` in scan-flow.tsx — the flow delays the
 // sheet by the same amount so the confirmation is actually visible.
 const CONFIRM_DURATION_MS = 400
+
+/**
+ * How often the accessible status may change. The pill can flip several times a second
+ * on a barcode at the edge of readability; a polite live region that follows it that
+ * closely is unusable, and screen readers drop most of it anyway.
+ */
+const ANNOUNCE_INTERVAL_MS = 1000
 
 /** The video's intrinsic size and the viewfinder's rendered size, in CSS pixels. */
 type ViewfinderMetrics = {
@@ -105,6 +110,16 @@ export function Scanner({
   // The box the accepted decode was read at — frozen for the confirm window (see
   // `deriveViewfinderPresentation`). Only ever read while `confirmActive`.
   const [confirmBox, setConfirmBox] = useState<NormalizedBox | null>(null)
+  // The accessible status, rate-limited away from the pill it mirrors (see below).
+  const [announcement, setAnnouncement] = useState<string>(
+    INITIAL_VIEWFINDER_ANNOUNCEMENT.announcement,
+  )
+  const announcementStateRef = useRef(INITIAL_VIEWFINDER_ANNOUNCEMENT)
+  const announcementInputRef = useRef<{ visual: ScanVisualState; hint: ScanHint }>({
+    visual: "searching",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  const announceTimerRef = useRef<number | null>(null)
   const [metrics, setMetrics] = useState<ViewfinderMetrics>(ZERO_METRICS)
   // The confirm-off timeout is owned here so an epoch reset or a newer decode cancels the
   // stale callback — otherwise a previous scan's timer clears the new confirm early.
@@ -156,7 +171,21 @@ export function Scanner({
     clearConfirmTimer()
     setConfirmActive(false)
     setConfirmBox(null)
+    // A fresh attempt re-arms the once-per-attempt announcements.
+    announcementStateRef.current = INITIAL_VIEWFINDER_ANNOUNCEMENT
+    setAnnouncement(INITIAL_VIEWFINDER_ANNOUNCEMENT.announcement)
   }, [clearConfirmTimer])
+
+  /** Hand the latest state to the policy and publish whatever it decides is worth saying. */
+  const publishAnnouncement = useCallback(() => {
+    announceTimerRef.current = null
+    const next = nextViewfinderAnnouncement(
+      announcementStateRef.current,
+      announcementInputRef.current,
+    )
+    announcementStateRef.current = next
+    setAnnouncement(next.announcement)
+  }, [])
 
   const handleDecoded = useCallback(
     (value: string) => onDecoded({ type: "ean", value }),
@@ -179,8 +208,36 @@ export function Scanner({
     onAttemptStart: handleAttemptStart,
   })
 
-  // Unmount only: never leave a confirm timer pointing at a dead component.
+  const { visual, outlineBox } = deriveViewfinderPresentation({
+    detection,
+    confirmBox,
+    confirmActive,
+    detectionPaused,
+  })
+
+  /**
+   * The rate limit on the accessible status: one update per `ANNOUNCE_INTERVAL_MS` at
+   * most, carrying the LATEST state when it fires (trailing). The effect only records
+   * the input and arms a timer — the `setState` happens in the timer, never while
+   * committing.
+   */
+  useEffect(() => {
+    announcementInputRef.current = { visual, hint }
+    // A timer is already armed: it will publish whatever the state is when it fires, so
+    // everything that happens in between is coalesced into that one update.
+    if (announceTimerRef.current !== null) return
+    announceTimerRef.current = window.setTimeout(publishAnnouncement, ANNOUNCE_INTERVAL_MS)
+  }, [hint, publishAnnouncement, visual])
+
+  // Unmount only: never leave a timer pointing at a dead component.
   useEffect(() => clearConfirmTimer, [clearConfirmTimer])
+  useEffect(
+    () => () => {
+      if (announceTimerRef.current !== null) window.clearTimeout(announceTimerRef.current)
+      announceTimerRef.current = null
+    },
+    [],
+  )
 
   // The video's intrinsic size only becomes known once the stream delivers metadata.
   // The out-of-band initial measure covers a resume onto an element that already has it
@@ -209,12 +266,6 @@ export function Scanner({
 
   if (!active) return null
 
-  const { visual, outlineBox } = deriveViewfinderPresentation({
-    detection,
-    confirmBox,
-    confirmActive,
-    detectionPaused,
-  })
   const outlineRect = outlineBox
     ? mapBoxToCover(
         outlineBox,
@@ -222,9 +273,6 @@ export function Scanner({
         { width: metrics.elementWidth, height: metrics.elementHeight },
       )
     : null
-  const announcement =
-    visual === "read" ? SCAN_CONFIRM_LABEL : visual === "spotted" ? SCAN_HINT_SPOTTED : hint
-
   return (
     <ScannerView
       visual={visual}

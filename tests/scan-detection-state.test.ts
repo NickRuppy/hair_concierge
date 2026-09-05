@@ -2,15 +2,25 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  SCAN_CONFIRM_LABEL,
+  SCAN_HINT_DEFAULT,
+  SCAN_HINT_MORE_LIGHT,
+  SCAN_HINT_SPOTTED,
+} from "../src/lib/scan/guidance"
+
+import {
   BOX_MOVE_TOLERANCE,
+  INITIAL_VIEWFINDER_ANNOUNCEMENT,
   REARM_EMPTY_DETECTIONS,
   deriveViewfinderPresentation,
   isSameDetectionState,
   mapBoxToCover,
   nextDetectionState,
+  nextViewfinderAnnouncement,
   normalizeDetectionBox,
   unrotateDetectionBox,
   type ScanDetectionState,
+  type ViewfinderAnnouncementState,
 } from "../src/lib/scan/scanner-session"
 
 /**
@@ -330,4 +340,73 @@ test("deriveViewfinderPresentation: the confirm outline survives the barcode lea
 
   assert.equal(presentation.visual, "read")
   assert.deepEqual(presentation.outlineBox, boxA)
+})
+
+// --- nextViewfinderAnnouncement ---------------------------------------------
+
+/** Play a sequence of viewfinder states through the policy and collect what it says. */
+function announcements(
+  steps: Array<{
+    visual: "searching" | "spotted" | "read"
+    hint?: typeof SCAN_HINT_DEFAULT | typeof SCAN_HINT_MORE_LIGHT
+  }>,
+  from: ViewfinderAnnouncementState = INITIAL_VIEWFINDER_ANNOUNCEMENT,
+): { spoken: string[]; state: ViewfinderAnnouncementState } {
+  let state = from
+  const spoken: string[] = []
+  for (const step of steps) {
+    const next = nextViewfinderAnnouncement(state, {
+      visual: step.visual,
+      hint: step.hint ?? SCAN_HINT_DEFAULT,
+    })
+    if (next.announcement !== state.announcement) spoken.push(next.announcement)
+    state = next
+  }
+  return { spoken, state }
+}
+
+test("nextViewfinderAnnouncement: the idle hint starts in the region rather than being announced", () => {
+  assert.equal(INITIAL_VIEWFINDER_ANNOUNCEMENT.announcement, SCAN_HINT_DEFAULT)
+
+  const { spoken } = announcements([{ visual: "searching" }, { visual: "searching" }])
+  assert.deepEqual(spoken, [])
+})
+
+test("nextViewfinderAnnouncement: a barcode found and lost again announces once each way", () => {
+  const { spoken } = announcements([
+    { visual: "spotted" },
+    { visual: "searching" },
+    { visual: "spotted" },
+    { visual: "searching" },
+    { visual: "spotted" },
+  ])
+
+  // The flicker of a barcode at the edge of readability must not become a metronome.
+  assert.deepEqual(spoken, [SCAN_HINT_SPOTTED, SCAN_HINT_DEFAULT])
+})
+
+test("nextViewfinderAnnouncement: an accepted decode always announces", () => {
+  const { spoken } = announcements([{ visual: "spotted" }, { visual: "read" }])
+
+  assert.deepEqual(spoken, [SCAN_HINT_SPOTTED, SCAN_CONFIRM_LABEL])
+})
+
+test("nextViewfinderAnnouncement: a situational hint announces even after the flip budget is spent", () => {
+  const { spoken } = announcements([
+    { visual: "spotted" },
+    { visual: "searching" },
+    { visual: "searching", hint: SCAN_HINT_MORE_LIGHT },
+  ])
+
+  // It asks the user to do something, so it is never rationed away.
+  assert.deepEqual(spoken, [SCAN_HINT_SPOTTED, SCAN_HINT_DEFAULT, SCAN_HINT_MORE_LIGHT])
+})
+
+test("nextViewfinderAnnouncement: a fresh attempt re-arms both flips", () => {
+  const { state } = announcements([{ visual: "spotted" }, { visual: "searching" }])
+  assert.equal(state.spottedAnnounced, true)
+  assert.equal(state.searchingAnnounced, true)
+
+  const restarted = announcements([{ visual: "spotted" }], INITIAL_VIEWFINDER_ANNOUNCEMENT)
+  assert.deepEqual(restarted.spoken, [SCAN_HINT_SPOTTED])
 })

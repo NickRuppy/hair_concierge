@@ -1,4 +1,9 @@
-import type { ScanHint } from "@/lib/scan/guidance"
+import {
+  SCAN_CONFIRM_LABEL,
+  SCAN_HINT_DEFAULT,
+  SCAN_HINT_SPOTTED,
+  type ScanHint,
+} from "@/lib/scan/guidance"
 
 /**
  * All mutable, per-scan-session state the scan loop tracks between camera start and
@@ -476,4 +481,60 @@ export function isSameDetectionState(a: ScanDetectionState, b: ScanDetectionStat
 
 function withinBoxTolerance(a: number, b: number): boolean {
   return Math.abs(a - b) <= BOX_MOVE_TOLERANCE
+}
+
+/**
+ * What the viewfinder's polite live region should say, and what it has already said this
+ * scan attempt. The visual pill and the announced text are deliberately NOT the same
+ * thing: the pill flips as fast as the detector does, and a screen reader that reads
+ * every flip out loud makes the scanner unusable.
+ */
+export type ViewfinderAnnouncementState = {
+  /** The text the live region holds. */
+  announcement: string
+  /** "Barcode gefunden" is worth saying once per attempt, not once per flicker. */
+  spottedAnnounced: boolean
+  /** Neither is the fall back to "Suche Barcode …". */
+  searchingAnnounced: boolean
+}
+
+/**
+ * The state every scan attempt starts from. The idle hint is already in the region
+ * rather than announced into it: a polite live region does not read its initial
+ * content, so the first thing a user hears is a real change.
+ */
+export const INITIAL_VIEWFINDER_ANNOUNCEMENT: ViewfinderAnnouncementState = {
+  announcement: SCAN_HINT_DEFAULT,
+  spottedAnnounced: false,
+  searchingAnnounced: false,
+}
+
+/**
+ * The announcement policy. Pure, and separate from the rate limit that drives it (the
+ * component decides WHEN this runs; this decides WHAT is worth saying):
+ *
+ * - an accepted decode always announces — it is the one moment the user must not miss;
+ * - a situational hint ("Mehr Licht hilft") always announces — it asks for an action;
+ * - the `spotted` / `searching` flip announces once each per attempt, so a barcode at
+ *   the edge of readability cannot turn the live region into a metronome.
+ */
+export function nextViewfinderAnnouncement(
+  previous: ViewfinderAnnouncementState,
+  input: { visual: ScanVisualState; hint: ScanHint },
+): ViewfinderAnnouncementState {
+  const { visual, hint } = input
+  if (visual === "read") {
+    return previous.announcement === SCAN_CONFIRM_LABEL
+      ? previous
+      : { ...previous, announcement: SCAN_CONFIRM_LABEL }
+  }
+  if (visual === "spotted") {
+    if (previous.spottedAnnounced) return previous
+    return { ...previous, announcement: SCAN_HINT_SPOTTED, spottedAnnounced: true }
+  }
+  if (hint !== SCAN_HINT_DEFAULT) {
+    return previous.announcement === hint ? previous : { ...previous, announcement: hint }
+  }
+  if (previous.searchingAnnounced) return previous
+  return { ...previous, announcement: hint, searchingAnnounced: true }
 }
