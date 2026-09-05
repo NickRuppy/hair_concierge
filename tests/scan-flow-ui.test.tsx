@@ -361,6 +361,28 @@ test("ScanFlow: a second decode inside the confirm window is ignored", async () 
   await flow.settle()
 })
 
+test("ScanFlow: two different decodes fired back-to-back without a settle between them only resolve once", async () => {
+  // `stateRef` (the mirror `handleDecoded` reads `activeRequest` from) only catches up
+  // once the passive effect runs after a render — deliberately not awaiting `settle()`
+  // between the two decodes reproduces the one-frame window where the mirror still says
+  // "no active request" even though the first decode already started a resolve.
+  const bodies: string[] = []
+  const gate = deferred<Response>()
+  const flow = await mountFlow(async (_url, init) => {
+    bodies.push(String(init?.body))
+    return gate.promise
+  })
+
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4005808298389" })
+  await flow.settle()
+
+  assert.equal(bodies.length, 1)
+  assert.equal(flow.events.filter((event) => event.name === "scan_decoded").length, 1)
+  gate.resolve(json(verdictResult()))
+  await flow.settle()
+})
+
 // --- closing the sheet ------------------------------------------------------
 
 test("ScanFlow: closing the result sheet returns to scanning and bumps the scanner epoch", async () => {
@@ -409,12 +431,11 @@ test("ScanFlow: dismissing the unknown sheet before the submit lands leaves no p
   )
   await flow.settle()
 
-  // The response arrived for a request the user walked away from: no sheet, no receipt.
+  // The response arrived for a request the user walked away from: no sheet reopens over
+  // the live viewfinder — but the submission exists server-side regardless of whether the
+  // sheet is still open, so it must still be tracked, exactly once.
   assert.equal(sheetProps(flow.tree).open, false)
-  assert.equal(
-    flow.events.some((event) => event.name === "scan_submission_created"),
-    false,
-  )
+  assert.equal(flow.events.filter((event) => event.name === "scan_submission_created").length, 1)
 })
 
 test("ScanFlow: a failed submission keeps the unknown sheet open with its error (F17)", async () => {

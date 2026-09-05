@@ -130,6 +130,15 @@ export function ScanFlow({
   useEffect(() => {
     stateRef.current = state
   }, [state])
+  /**
+   * `stateRef`'s mirror only updates once the passive effect above runs after a render —
+   * a decode that fires a second time before that render (the scanner's frame loop is
+   * outside React's commit cycle) would still read the stale `activeRequest: null` and
+   * slip through `handleDecoded`'s guard. This ref is set the instant `resolve()` claims
+   * a token, so the guard has a synchronous source of truth for "a resolve is in flight"
+   * with no such window.
+   */
+  const resolveInFlightRef = useRef(false)
 
   const clearSheetTimer = useCallback(() => {
     if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current)
@@ -157,6 +166,7 @@ export function ScanFlow({
     // own; this is what also stops the `already_in_catalog` chain from starting a resolve
     // for a sheet the user just dismissed.
     requests.invalidateAll()
+    resolveInFlightRef.current = false
     dispatch({ type: "return_to_scanning" })
     scanSessionStartRef.current = performance.now()
     analytics.track("scan_started", {})
@@ -171,6 +181,7 @@ export function ScanFlow({
       // scanner's green "✓ Barcode erkannt" state stays visible before the sheet slides
       // up — the fetch below still starts immediately, so no time-to-verdict is lost.
       const token = requests.begin()
+      resolveInFlightRef.current = true
       dispatch({
         type: "resolve_started",
         token,
@@ -198,6 +209,7 @@ export function ScanFlow({
         if (!response.ok) {
           const payload = (await response.json().catch(() => null)) as { error?: string } | null
           if (!requests.isCurrent(token)) return
+          resolveInFlightRef.current = false
           dispatch({ type: "resolve_failed", token })
           toast({
             title: RESOLVE_ERRORS[payload?.error ?? ""] ?? GENERIC_ERROR,
@@ -212,6 +224,7 @@ export function ScanFlow({
           if (remaining > 0) await new Promise((done) => window.setTimeout(done, remaining))
         }
         if (!requests.isCurrent(token)) return
+        resolveInFlightRef.current = false
         if (result.kind === "unknown_product") {
           analytics.track("scan_not_found", {})
         } else if (result.kind !== "pending_submission") {
@@ -225,6 +238,7 @@ export function ScanFlow({
         dispatch({ type: "resolved", token, result })
       } catch {
         if (!requests.isCurrent(token)) return
+        resolveInFlightRef.current = false
         dispatch({ type: "resolve_failed", token })
         toast({ title: GENERIC_ERROR, variant: "destructive" })
         returnToScanning()
@@ -239,7 +253,11 @@ export function ScanFlow({
       if (isDetectionPaused(current)) return
       // During the 400ms confirm window the step is still "scanning", so detection keeps
       // running and a second, different EAN could fire. The first one owns the flow.
-      if (current.activeRequest) return
+      // `stateRef.current` only catches up after the next render's passive effect, so a
+      // second decode fired before that render would see a stale `activeRequest: null` —
+      // `resolveInFlightRef` is set synchronously inside `resolve()` and closes that
+      // window.
+      if (current.activeRequest || resolveInFlightRef.current) return
       analytics.track("scan_decoded", {
         msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
         format: identifier.value.length === 8 ? "ean_8" : "ean_13",
@@ -314,9 +332,10 @@ export function ScanFlow({
           await resolve({ productId: result.productId })
           return
         }
-        if (requests.isCurrent(token)) {
-          analytics.track("scan_submission_created", { category: input.category })
-        }
+        // The submission exists server-side the moment this response lands, whether or
+        // not the user is still looking at the sheet — tracked unconditionally. Only the
+        // `submitted` dispatch (which would repaint the step) stays token-guarded.
+        analytics.track("scan_submission_created", { category: input.category })
         dispatch({
           type: "submitted",
           token,
