@@ -506,6 +506,9 @@ export function useScannerLoop({
         if (!isCurrent()) return
         trackMuted = false
         clearMuteGrace()
+        // The other half of "leave it to the next resume/unmute": a recovery that kept
+        // this stream may have left the loop stopped because the element would not play.
+        resumeAndSync()
       }
       const tracks = stream.getVideoTracks()
       for (const track of tracks) {
@@ -549,13 +552,45 @@ export function useScannerLoop({
       }
     }
 
-    function resumePlayback() {
+    /**
+     * F8(a): a `play()` rejected at start (autoplay blocked before any user gesture, or
+     * the tab was never in front) gets its retry here. `play()` on an already playing
+     * element resolves immediately, so this is safe on every resume (F8c).
+     *
+     * Reports whether the element is actually playing afterwards: a frame callback on a
+     * PAUSED video never fires, so `recover()`'s keep branch must not start a loop that
+     * would then pend forever.
+     */
+    async function resumePlayback(): Promise<boolean> {
       const video = videoRef.current
-      if (!video) return
-      // F8(a): a `play()` rejected at start (autoplay blocked before any user gesture,
-      // or the tab was never in front) gets its retry here. `play()` on an already
-      // playing element resolves immediately, so this is safe on every resume (F8c).
-      void video.play().catch(() => {})
+      if (!video) return false
+      try {
+        await video.play()
+        return true
+      } catch {
+        return false
+      }
+    }
+
+    /**
+     * Restart a loop that a failed `play()` left stopped (see `recover()`'s keep branch).
+     * The stream and the detector are the ones we already own, so this is a loop restart,
+     * never a re-acquire — and it deliberately does nothing while a start or a recovery
+     * is still in flight, or after a stall latched.
+     */
+    function resumeLoopIfSuspended() {
+      if (cancelled || stalled || recovering) return
+      if (controller.running) return
+      if (!streamRef.current || !detectorRef.current) return
+      beginLoop()
+    }
+
+    /** The ordinary resume: replay the element, and pick a suspended loop back up. */
+    function resumeAndSync() {
+      void resumePlayback().then((playing) => {
+        if (playing) resumeLoopIfSuspended()
+      })
+      syncLoop()
     }
 
     function handleVisibilityChange() {
@@ -574,8 +609,7 @@ export function useScannerLoop({
         void recover("visibility")
         return
       }
-      resumePlayback()
-      syncLoop()
+      resumeAndSync()
     }
 
     function handlePageShow(event: PageTransitionEvent) {
@@ -584,8 +618,7 @@ export function useScannerLoop({
         void recover("pageshow")
         return
       }
-      resumePlayback()
-      syncLoop()
+      resumeAndSync()
     }
 
     function attachPageListeners() {
@@ -730,8 +763,26 @@ export function useScannerLoop({
             return
           }
           // The old stream is still alive and may still unmute: keep scanning on it and
-          // let the next `ended`/`mute` decide.
-          beginLoop()
+          // let the next `ended`/`mute` decide. But a bfcache restore or a foreground
+          // mute can leave the ELEMENT paused, and a frame callback on a paused video
+          // never fires — so the loop only restarts once playback really resumed.
+          const playing = await resumePlayback()
+          if (cancelled) return
+          if (playing) {
+            beginLoop()
+            return
+          }
+          if (isVideoStreamDead(previous)) {
+            // It will not play and the tracks are gone after all: the dead viewfinder
+            // `onStalled` exists for.
+            stalled = true
+            latestRef.current.onStalled()
+            return
+          }
+          // Neither dead nor playable right now (autoplay blocked, still backgrounded):
+          // leave the loop stopped rather than pending a frame that can never arrive.
+          // `resumeAndSync` picks it back up on the next visibility resume, `pageshow`
+          // or `unmute`.
           return
         }
         if (previous && previous !== next) releaseStream(previous)
