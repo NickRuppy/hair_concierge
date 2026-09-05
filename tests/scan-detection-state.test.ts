@@ -12,6 +12,7 @@ import {
   BOX_MOVE_TOLERANCE,
   INITIAL_VIEWFINDER_ANNOUNCEMENT,
   REARM_EMPTY_DETECTIONS,
+  detectionEventForPauseChange,
   deriveViewfinderPresentation,
   isSameDetectionState,
   mapBoxToCover,
@@ -409,4 +410,28 @@ test("nextViewfinderAnnouncement: a fresh attempt re-arms both flips", () => {
 
   const restarted = announcements([{ visual: "spotted" }], INITIAL_VIEWFINDER_ANNOUNCEMENT)
   assert.deepEqual(restarted.spoken, [SCAN_HINT_SPOTTED])
+})
+
+// --- detectionEventForPauseChange -------------------------------------------
+
+test("detectionEventForPauseChange: closing the sheet drops what the loop last saw", () => {
+  const event = detectionEventForPauseChange(true, false)
+  assert.deepEqual(event, { kind: "restart" })
+
+  // ... and a restart is what actually clears the outline.
+  assert.deepEqual(
+    nextDetectionState({ kind: "spotted", box: boxA }, { kind: "restart" }, 0),
+    searching,
+  )
+})
+
+test("detectionEventForPauseChange: opening the sheet reports nothing", () => {
+  // The component already draws the static searching look for as long as the sheet is
+  // up; re-reporting would only cost a render.
+  assert.equal(detectionEventForPauseChange(false, true), null)
+})
+
+test("detectionEventForPauseChange: an unchanged pause state reports nothing", () => {
+  assert.equal(detectionEventForPauseChange(false, false), null)
+  assert.equal(detectionEventForPauseChange(true, true), null)
 })

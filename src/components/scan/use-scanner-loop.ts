@@ -22,6 +22,7 @@ import {
 import {
   applyRawDetection,
   createScanSessionState,
+  detectionEventForPauseChange,
   isSameDetectionState,
   nextDetectionState,
   normalizeDetectionBox,
@@ -901,9 +902,15 @@ export function useScannerLoop({
    */
   useLayoutEffect(() => {
     if (!active) return
-    setPauseReason(controllerRef.current, "sheet", detectionPaused)
+    const controller = controllerRef.current
+    const wasPaused = controller.pauseReasons.has("sheet")
+    setPauseReason(controller, "sheet", detectionPaused)
+    // Before the loop picks frames back up, not after: the barcode may have moved while
+    // the sheet was up, so the last thing reported is not evidence any more.
+    const resumeEvent = detectionEventForPauseChange(wasPaused, detectionPaused)
+    if (resumeEvent) reportDetection(resumeEvent, 0)
     syncLoop()
-  }, [active, detectionPaused, syncLoop])
+  }, [active, detectionPaused, reportDetection, syncLoop])
 
   /**
    * Session restart without a camera restart. The camera effect keys only on `active`,

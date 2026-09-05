@@ -448,6 +448,22 @@ export function nextDetectionState(
 }
 
 /**
+ * Which viewfinder event a change to the sheet pause produces. Leaving the pause is the
+ * only transition that carries one: the loop stopped looking while the sheet was up, so
+ * whatever it last reported describes a frame from before — the bottle may have been put
+ * down, turned round or swapped since. The viewfinder goes back to `searching` BEFORE
+ * the loop resumes, so the first thing the user sees on a reopened viewfinder is never a
+ * stale amber outline. Entering the pause reports nothing: the component already draws
+ * the static searching look for the duration (see `deriveViewfinderPresentation`).
+ */
+export function detectionEventForPauseChange(
+  wasPaused: boolean,
+  paused: boolean,
+): ScanDetectionEvent | null {
+  return wasPaused && !paused ? { kind: "restart" } : null
+}
+
+/**
  * How far a box edge has to move before the UI is told about it, as a fraction of the
  * frame. Detector boxes jitter every frame on a bottle that is being held still; half a
  * percent of the frame is well under what the eye reads as a moving outline, and well
