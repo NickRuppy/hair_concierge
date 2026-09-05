@@ -128,6 +128,10 @@ export function Scanner({
     if (confirmTimerRef.current !== null) window.clearTimeout(confirmTimerRef.current)
     confirmTimerRef.current = null
   }, [])
+  const clearAnnounceTimer = useCallback(() => {
+    if (announceTimerRef.current !== null) window.clearTimeout(announceTimerRef.current)
+    announceTimerRef.current = null
+  }, [])
 
   /**
    * Re-measure the video and the viewfinder. Called on mount, when the stream reports
@@ -171,10 +175,14 @@ export function Scanner({
     clearConfirmTimer()
     setConfirmActive(false)
     setConfirmBox(null)
-    // A fresh attempt re-arms the once-per-attempt announcements.
+    // A fresh attempt re-arms the once-per-attempt announcements. Also drop any announce
+    // timer already armed from the attempt that just ended — left alone, it would fire
+    // after this reset and publish a candidate computed against the stale pre-reset input,
+    // clobbering the just-reset INITIAL state.
+    clearAnnounceTimer()
     announcementStateRef.current = INITIAL_VIEWFINDER_ANNOUNCEMENT
     setAnnouncement(INITIAL_VIEWFINDER_ANNOUNCEMENT.announcement)
-  }, [clearConfirmTimer])
+  }, [clearAnnounceTimer, clearConfirmTimer])
 
   /** Hand the latest state to the policy and publish whatever it decides is worth saying. */
   const publishAnnouncement = useCallback(() => {
@@ -226,18 +234,18 @@ export function Scanner({
     // A timer is already armed: it will publish whatever the state is when it fires, so
     // everything that happens in between is coalesced into that one update.
     if (announceTimerRef.current !== null) return
+    // Cheap: the policy is pure, so check whether it would actually say anything before
+    // arming a timer for it. Skips the mount publish (searching + default hint, same text
+    // the region already starts with) so the once-per-attempt budget stays unspent until
+    // there is a real change to announce.
+    const candidate = nextViewfinderAnnouncement(announcementStateRef.current, { visual, hint })
+    if (candidate === announcementStateRef.current) return
     announceTimerRef.current = window.setTimeout(publishAnnouncement, ANNOUNCE_INTERVAL_MS)
   }, [hint, publishAnnouncement, visual])
 
   // Unmount only: never leave a timer pointing at a dead component.
   useEffect(() => clearConfirmTimer, [clearConfirmTimer])
-  useEffect(
-    () => () => {
-      if (announceTimerRef.current !== null) window.clearTimeout(announceTimerRef.current)
-      announceTimerRef.current = null
-    },
-    [],
-  )
+  useEffect(() => clearAnnounceTimer, [clearAnnounceTimer])
 
   // The video's intrinsic size only becomes known once the stream delivers metadata.
   // The out-of-band initial measure covers a resume onto an element that already has it

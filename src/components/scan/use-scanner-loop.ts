@@ -894,11 +894,18 @@ export function useScannerLoop({
    * Sheet open/close. Only the detection loop is affected — the stream and the video
    * element are untouched, so nothing has to be re-acquired on resume.
    *
-   * A LAYOUT effect on purpose (it only writes controller state — no setState — so the
-   * React Compiler rules are satisfied): the frame loop and a pending `detect()`
-   * continuation run outside React's commit cycle, so a passive effect would leave a
-   * window after the commit that opened the sheet in which a decode could still be
-   * accepted. The pause is in place before the browser can hand us another frame.
+   * A LAYOUT effect on purpose: the frame loop and a pending `detect()` continuation run
+   * outside React's commit cycle, so a passive effect would leave a window after the
+   * commit that opened the sheet in which a decode could still be accepted. The pause is
+   * in place before the browser can hand us another frame.
+   *
+   * On the unpause edge this also reaches a `setState`, indirectly: `reportDetection`
+   * forwards the `restart` event to `onDetectionState`, which is the parent's `setDetection`.
+   * That is still fine inside a layout effect — it is a synchronous, pre-paint re-render,
+   * not one deferred to a passive effect — and it is the whole point of firing here rather
+   * than after commit: "searching before the loop resumes" only holds if the viewfinder
+   * has already dropped the stale outline by the time the browser paints the reopened
+   * frame, not one tick later.
    */
   useLayoutEffect(() => {
     if (!active) return

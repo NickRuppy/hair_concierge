@@ -552,5 +552,11 @@ export function nextViewfinderAnnouncement(
     return previous.announcement === hint ? previous : { ...previous, announcement: hint }
   }
   if (previous.searchingAnnounced) return previous
+  // The candidate text is identical to what the region already holds — most often the
+  // very first publish, which fires with the initial "searching" + default hint state it
+  // already started from. Spending the once-per-attempt budget here would mean nothing
+  // was ever actually said, and the real flip back to idle (after a spotted/read
+  // announcement) would then find the budget gone and get stuck on stale text.
+  if (previous.announcement === hint) return previous
   return { ...previous, announcement: hint, searchingAnnounced: true }
 }

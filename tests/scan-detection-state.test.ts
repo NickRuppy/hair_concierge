@@ -412,6 +412,54 @@ test("nextViewfinderAnnouncement: a fresh attempt re-arms both flips", () => {
   assert.deepEqual(restarted.spoken, [SCAN_HINT_SPOTTED])
 })
 
+test("nextViewfinderAnnouncement: the mount publish does not spend the searching budget, so a later return-to-idle still announces", () => {
+  // Step 1: the very first publish a mounted scanner ever runs — searching + the default
+  // hint, which is exactly the text the live region already starts with. Nothing actually
+  // changed, so this must not touch the state at all (same reference back).
+  const afterMount = nextViewfinderAnnouncement(INITIAL_VIEWFINDER_ANNOUNCEMENT, {
+    visual: "searching",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  assert.equal(afterMount, INITIAL_VIEWFINDER_ANNOUNCEMENT)
+  assert.equal(afterMount.searchingAnnounced, false)
+  assert.equal(afterMount.announcement, SCAN_HINT_DEFAULT)
+
+  // Step 2: the barcode is spotted.
+  const afterSpotted = nextViewfinderAnnouncement(afterMount, {
+    visual: "spotted",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  assert.equal(afterSpotted.announcement, SCAN_HINT_SPOTTED)
+  assert.equal(afterSpotted.spottedAnnounced, true)
+
+  // Step 3: lost again. The searching budget was never spent by the mount publish, so
+  // this is the flip that actually announces the return to idle.
+  const afterSearchingAgain = nextViewfinderAnnouncement(afterSpotted, {
+    visual: "searching",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  assert.equal(afterSearchingAgain.announcement, SCAN_HINT_DEFAULT)
+  assert.equal(afterSearchingAgain.searchingAnnounced, true)
+
+  // Step 4: still searching within the same attempt — the budget is spent now, so the
+  // live region holds its text instead of being asked to say the same thing twice. This
+  // is the state that used to stay stuck on "Barcode gefunden – kurz stillhalten" forever.
+  const stillSearching = nextViewfinderAnnouncement(afterSearchingAgain, {
+    visual: "searching",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  assert.equal(stillSearching, afterSearchingAgain)
+  assert.equal(stillSearching.announcement, SCAN_HINT_DEFAULT)
+
+  // Step 5: an epoch restart re-arms the budget from scratch.
+  const restarted = nextViewfinderAnnouncement(INITIAL_VIEWFINDER_ANNOUNCEMENT, {
+    visual: "spotted",
+    hint: SCAN_HINT_DEFAULT,
+  })
+  assert.equal(restarted.announcement, SCAN_HINT_SPOTTED)
+  assert.equal(restarted.spottedAnnounced, true)
+})
+
 // --- detectionEventForPauseChange -------------------------------------------
 
 test("detectionEventForPauseChange: closing the sheet drops what the loop last saw", () => {
