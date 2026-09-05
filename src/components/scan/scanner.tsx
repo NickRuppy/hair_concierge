@@ -10,7 +10,12 @@ import {
   type ScanTelemetry,
 } from "@/lib/scan/guidance"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
-import { createScanSessionState, restartScanSessionState } from "@/lib/scan/scanner-session"
+import {
+  SCAN_TIMEOUT_MS,
+  STABLE_READ_REQUIRED_MATCHES,
+  createScanSessionState,
+  restartScanSessionState,
+} from "@/lib/scan/scanner-session"
 import { cn } from "@/lib/utils"
 
 // Type-only import: erased at build time, so this does NOT pull the zxing-wasm ponyfill
@@ -49,8 +54,6 @@ const DETECTOR_FORMATS = ["ean_13", "ean_8"] as const
 
 const DETECTION_FRAME_INTERVAL = 3 // run detection on ~every 3rd frame callback
 const ROTATION_RETRY_INTERVAL = 5 // every ~5th detection attempt with no raw hit, try rotated
-const STABLE_READ_REQUIRED_MATCHES = 2
-const SCAN_TIMEOUT_MS = 3000
 const LUMA_SAMPLE_INTERVAL_MS = 500 // ~2x/second
 const LUMA_SAMPLE_SIZE = 16
 // Decode-confirm moment (Variante A): corners + pill turn green for this long before the
