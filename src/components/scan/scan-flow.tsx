@@ -364,7 +364,24 @@ export function ScanFlow({
         : null
 
   return (
-    <div className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5">
+    <div
+      /**
+       * Debug surface for the dev-only `/labs/scan` harness and its Playwright spec
+       * (`tests/scan-flow.spec.ts`): the reducer's whole observable state as data
+       * attributes, so an end-to-end assertion can name a transition instead of guessing
+       * it from copy. Cheaper than a debug prop (nothing to thread through, nothing the
+       * production caller has to pass) and inert in production — six attributes on one
+       * div, no behaviour attached.
+       */
+      data-scan-flow=""
+      data-scan-step={step.kind}
+      data-scan-auxiliary={state.auxiliary}
+      data-scan-camera={state.camera.status}
+      data-scan-camera-reason={cameraTileReason ?? "none"}
+      data-scan-save-open={state.saveOpen ? "true" : "false"}
+      data-scan-epoch={state.epoch}
+      className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5"
+    >
       <div className="flex items-center justify-between py-2">
         <h1 className="text-[17px] font-bold text-foreground">Scan</h1>
         <ScanWishlistTrigger
