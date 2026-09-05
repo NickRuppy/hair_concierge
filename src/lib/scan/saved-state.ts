@@ -1,7 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { isProductSearchQuarantined } from "./catalog-eligibility"
-
 /**
  * Where a scanned/matched catalog product currently sits for this user, outside the
  * evaluated-verdict question itself. `"merkliste"` = saved to the scan wishlist
@@ -10,7 +8,8 @@ import { isProductSearchQuarantined } from "./catalog-eligibility"
  *
  * Both states are independent tables a product could in principle occupy at once; when
  * that happens this reports `"merkliste"` first (matches the brief's listed check order).
- * That priority is a minor UX call, not a hard invariant.
+ * That priority is a minor UX call, not a hard invariant — but `scan_move_saved_product`
+ * deliberately repeats it, so the state a move returns never contradicts the next read.
  */
 export type ScanSavedState = "merkliste" | "routine" | null
 
@@ -71,38 +70,54 @@ async function loadOwnedRoutineRows(
   return (data ?? []) as OwnedRoutineRow[]
 }
 
+/** Which of the two exclusive save destinations the user picked. */
+export type ScanSaveKind = "routine" | "merkliste"
+
 /**
- * A Merkliste entry points at a catalog product the scan surface will later re-resolve
- * and offer to buy, so it gets the same front gate as the routine save: the product must
- * still be active, and ruling R7's disposition quarantine applies here too. Both save
- * kinds are lifecycle-active-and-not-quarantined gates only (2026-09-01) — the routine
- * save's "already owned" branch below is a reporting concern, not an extra eligibility
- * check bookmarking would need.
+ * The save sheet's two destinations are exclusive, so saving is a MOVE: write the
+ * destination, drop the source. Both halves plus the post-write state read happen
+ * inside `scan_move_saved_product` (migration 20260904150000), i.e. one transaction
+ * serialised per user+product. Doing it as two client calls let two concurrent
+ * opposite moves delete each other's freshly inserted row, and made a failed cleanup
+ * indistinguishable from a failed save.
+ *
+ * Everything this helper adds is the call and a shape check: any RPC error or payload
+ * that is not a recognised outcome throws rather than being reported as a save, so the
+ * route can never answer 200 for a move that did not happen.
+ *
+ * Eligibility for the move itself (active lifecycle, not quarantined, no `origin` gate)
+ * lives in the RPC — see `catalog-eligibility.ts`'s header for how it differs from the
+ * narrower search/resolve rule.
  */
-export async function saveScanWishlistProduct(
+export async function moveScanSavedProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
+  kind: ScanSaveKind,
 ): Promise<ScanSaveResult> {
-  const { data: product, error: productError } = await client
-    .from("products")
-    .select("id")
-    .eq("id", productId)
-    .eq("is_active", true)
-    .eq("lifecycle_status", "active")
-    .maybeSingle()
-  if (productError) throw new Error("scan_wishlist_save_failed")
-  if (!product) return { outcome: "product_not_found" }
+  const { data, error } = await client.rpc("scan_move_saved_product", {
+    p_user_id: userId,
+    p_product_id: productId,
+    p_kind: kind,
+  })
+  if (error) throw new Error("scan_move_failed")
+  return parseMoveResult(data)
+}
 
-  if (await isProductSearchQuarantined(client, productId)) {
-    return { outcome: "product_not_saveable" }
-  }
+function parseMoveResult(payload: unknown): ScanSaveResult {
+  if (!payload || typeof payload !== "object") throw new Error("scan_move_failed")
+  const { outcome, savedState } = payload as { outcome?: unknown; savedState?: unknown }
+  if (outcome === "product_not_found" || outcome === "product_not_saveable") return { outcome }
+  if (outcome !== "saved") throw new Error("scan_move_failed")
+  return { outcome, savedState: parseSavedState(savedState) }
+}
 
-  const { error } = await client
-    .from("scan_wishlist")
-    .insert({ user_id: userId, product_id: productId })
-  if (error && !isUniqueViolation(error)) throw new Error("scan_wishlist_save_failed")
-  return { outcome: "saved", savedState: { state: "merkliste", managedByScan: true } }
+function parseSavedState(payload: unknown): ScanSavedStatePayload {
+  if (!payload || typeof payload !== "object") throw new Error("scan_move_failed")
+  const { state, managedByScan } = payload as { state?: unknown; managedByScan?: unknown }
+  const isState = state === null || state === "merkliste" || state === "routine"
+  if (!isState || typeof managedByScan !== "boolean") throw new Error("scan_move_failed")
+  return { state, managedByScan }
 }
 
 /** Every `scan_wishlist` row belongs to the scan surface, so this can never be refused. */
@@ -121,10 +136,10 @@ export async function removeScanWishlistProduct(
 }
 
 /**
- * Outcome of either save kind: 404 on `product_not_found`, 409 on `product_not_saveable`.
- * `saved` carries the resulting state so the caller never has to guess — in particular
- * "already owned via Stage-3" reports the truthful `managedByScan: false` instead of
- * pretending the scan flow just created the row.
+ * Outcome of a move: 404 on `product_not_found`, 409 on `product_not_saveable`. `saved`
+ * carries the state read back after the writes, so the caller never has to guess — in
+ * particular "already owned via Stage-3" reports the truthful `managedByScan: false`
+ * instead of pretending the scan flow just created the row.
  */
 export type ScanSaveResult =
   | { outcome: "saved"; savedState: ScanSavedStatePayload }
@@ -136,80 +151,6 @@ export type ScanSaveResult =
  * intake). The scan sheet must say so rather than run a delete that matches nothing.
  */
 export type ScanRemoveResult = { outcome: "removed" } | { outcome: "not_removable_here" }
-
-type ActiveProductRow = {
-  id: string
-  name: string | null
-  brand: string | null
-  category_key: string
-}
-
-/**
- * "Ich benutze das schon" for a scanned catalog product. Mirrors the fields the
- * `personal_plan_create_or_reuse_user_product` RPC writes (identity_status: "matched",
- * ownership_status: "owned") but is a direct insert rather than that RPC, so the created
- * row can carry `intake_source: "scan"` — the RPC hardcodes `"catalog_search"`, which
- * would make a scan-created row indistinguishable from a Stage-3 catalog-search row and
- * defeat the scan-scoped DELETE below. The category schema allows several owned products
- * per category (see migration 20260808062620's opening comment), so this never needs to
- * touch or replace an existing different product in the same category — it only ever
- * adds this exact product, or no-ops if it's already owned.
- *
- * Ruling R7 (relaxed 2026-09-01, product ruling: users must never hit a save dead end
- * — 18 active `user_submitted` products were being blocked here): a disposition-
- * quarantined product is refused, same as the RPC, but `origin` no longer gates a
- * first-time save — any lifecycle-active, non-quarantined product is saveable
- * regardless of who submitted it. This is intentionally wider than the RPC's own
- * `origin = 'curated' OR already owned` predicate (`catalog-eligibility.ts`'s doc
- * comment still describes that narrower RPC rule; scan no longer mirrors it here).
- */
-export async function saveScanRoutineProduct(
-  client: SupabaseClient,
-  userId: string,
-  productId: string,
-): Promise<ScanSaveResult> {
-  const { data: product, error: productError } = await client
-    .from("products")
-    .select("id, name, brand, category_key")
-    .eq("id", productId)
-    .eq("is_active", true)
-    .eq("lifecycle_status", "active")
-    .maybeSingle()
-  if (productError) throw new Error("scan_routine_save_failed")
-  const activeProduct = product as ActiveProductRow | null
-  if (!activeProduct) return { outcome: "product_not_found" }
-
-  if (await isProductSearchQuarantined(client, productId)) {
-    return { outcome: "product_not_saveable" }
-  }
-
-  const existing = await loadOwnedRoutineRows(client, userId, productId)
-  if (existing.length > 0) {
-    // Already in the routine. Report the state that actually exists — inserting a second
-    // scan-owned row just to make `managedByScan` true would fake a save that never
-    // happened and hand the user an "Entfernen" that deletes half of the truth.
-    return {
-      outcome: "saved",
-      savedState: {
-        state: "routine",
-        managedByScan: existing.some((row) => row.intake_source === "scan"),
-      },
-    }
-  }
-
-  const { error: insertError } = await client.from("user_products").insert({
-    user_id: userId,
-    category: activeProduct.category_key,
-    catalog_product_id: productId,
-    brand_text: activeProduct.brand,
-    product_name_text: activeProduct.name,
-    identity_status: "matched",
-    ownership_status: "owned",
-    intake_source: "scan",
-  })
-  if (insertError && !isUniqueViolation(insertError)) throw new Error("scan_routine_save_failed")
-  return { outcome: "saved", savedState: { state: "routine", managedByScan: true } }
-}
 
 /**
  * Only ever removes a row this same helper created (`intake_source: "scan"`) — a routine
@@ -237,11 +178,4 @@ export async function removeScanRoutineProduct(
     .eq("ownership_status", "owned")
   if (error) throw new Error("scan_routine_remove_failed")
   return { outcome: "removed" }
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  if (!error || typeof error !== "object") return false
-  const err = error as { code?: unknown; message?: unknown }
-  const text = String(err.message ?? "").toLowerCase()
-  return err.code === "23505" || text.includes("duplicate") || text.includes("unique")
 }

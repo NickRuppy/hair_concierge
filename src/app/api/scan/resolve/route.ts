@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { after } from "next/server"
 import { z } from "zod"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
@@ -15,9 +15,9 @@ import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
-import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
 import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
@@ -37,7 +37,8 @@ import {
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
-import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
+import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
+import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import { loadScanSavedState } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanVerdictPayload } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
@@ -68,6 +69,8 @@ const resolveBodySchema = z
     message: "exactly_one_of_identifier_or_product_id",
   })
 
+type ResolveInput = z.infer<typeof resolveBodySchema>
+
 type ActiveProductLookup = { id: string; category: PersonalPlanCategory } | null
 
 export type ScanResolveRouteDeps = {
@@ -93,109 +96,201 @@ export type ScanResolveRouteDeps = {
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
   captureScanException?: typeof captureScanException
+  /**
+   * Injection seam for Next's `after`, which throws outside a request scope. Tests pass a
+   * runner that holds the task until they drain it, mirroring post-response execution.
+   */
+  after?: ScanAfter
+}
+
+type ScanAfter = (task: () => Promise<void> | void) => void
+
+/**
+ * Mutable attempt-telemetry bookkeeping for one request, created fresh per parse() call
+ * and threaded through the wrapper's ctx.body so both the handler (normal completion) and
+ * `onError` (the catch-all's completeAttempt("temporarily_unavailable", ...) call) see the
+ * same state. Task 4 owns the telemetry semantics themselves — this is scaffolding-removal
+ * only, carrying the same fields the old inline `let`s held.
+ */
+type ResolveAttemptTracker = {
+  attemptId: string | null
+  /** Request start, written as the attempt row's `created_at` — see `ScanResolveAttempt`. */
+  startedAt: string
+  lookupOutcome: ScanResolveLookupOutcome | null
+  matchedProductId: string | null
+  failureStage: ScanResolveFailureStage
+  /** Deferred telemetry writes, drained in FIFO order — see `scheduleAttemptWrite`. */
+  telemetryWrites: Array<() => Promise<void>>
+  telemetryDrainScheduled: boolean
+}
+
+type ResolveRouteBody = {
+  input: ResolveInput
+  attempt: ResolveAttemptTracker
+  /** One admin client per request, shared by the handler and the `onError` hook. */
+  client: SupabaseClient
+}
+
+type ResolveTerminalOutcome =
+  | "invalid_identifier"
+  | "unknown_product"
+  | "pending_submission"
+  | "resolved"
+  | "verdict_unknown"
+  | "profile_ineligible"
+  | "temporarily_unavailable"
+
+/**
+ * Attempt telemetry must not sit on the response path (F11), but the attempt row is
+ * INSERTed by `recordScanResolveAttempt` and then UPDATEd by `completeScanResolveAttempt`,
+ * so the two writes still have to run in order. Two separate `after` calls would NOT give
+ * that: `AfterContext.addCallback` pushes each callback into a p-queue constructed with
+ * p-queue's default `concurrency: Infinity`
+ * (node_modules/next/dist/server/after/after-context.js), so callbacks are only *started*
+ * in enqueue order and then run concurrently — the UPDATE could overtake its INSERT and
+ * the completion would be silently lost (both helpers are fail-open).
+ *
+ * So the writes are collected here and drained by a single `after` callback that awaits
+ * them one at a time. Registering that drain on the first write is safe because `after`
+ * callbacks only run once the response has been sent
+ * (`AfterContext.runCallbacksOnClose`), by which point the completion is already queued.
+ */
+function scheduleAttemptWrite(
+  attempt: ResolveAttemptTracker,
+  runAfter: ScanAfter,
+  write: () => Promise<void>,
+) {
+  attempt.telemetryWrites.push(write)
+  if (attempt.telemetryDrainScheduled) return
+  attempt.telemetryDrainScheduled = true
+  try {
+    runAfter(async () => {
+      for (let index = 0; index < attempt.telemetryWrites.length; index += 1) {
+        await attempt.telemetryWrites[index]()
+      }
+    })
+  } catch (error) {
+    // `after()` throws synchronously when there is no request store or `waitUntil` (e.g. a
+    // misconfigured runtime) — telemetry scheduling must stay fail-open like the writes
+    // themselves, never turn an otherwise-resolved scan into a 503.
+    console.warn("[scan] telemetry scheduling failed", error)
+  }
 }
 
 /**
- * A category with no target to compare against — genuinely not needed, or not decided
- * yet. Duplicated (not imported) from `resolve-verdict.ts`'s private `isNotNeeded`: that
- * predicate isn't exported (Task 1's settled interface), and this route only needs it to
- * skip an unnecessary full-catalog `recommendationCandidates` load — `buildScanVerdict`
- * itself re-derives the real branch internally regardless of what this route decides here.
+ * Shared by the handler's normal-completion calls and the wrapper's `onError` hook (the
+ * catch-all's own completion, for a throw mid-handler) — same guard, same shape, one place.
  */
-function isDecisionWithoutTarget(decision: PlanCategoryDecision): boolean {
-  if (decision.needTier === "not_needed") return true
-  return (
-    decision.target === null && decision.needTier !== "basis" && decision.needTier !== "optional"
+function completeResolveAttempt(
+  deps: ScanResolveRouteDeps,
+  runAfter: ScanAfter,
+  client: SupabaseClient,
+  attempt: ResolveAttemptTracker,
+  terminalOutcome: ResolveTerminalOutcome,
+  stage: ScanResolveFailureStage | null,
+) {
+  if (!attempt.attemptId) return
+  const completion = {
+    attemptId: attempt.attemptId,
+    lookupOutcome: attempt.lookupOutcome,
+    terminalOutcome,
+    matchedProductId: attempt.matchedProductId,
+    failureStage: stage,
+  }
+  scheduleAttemptWrite(attempt, runAfter, () =>
+    deps.completeScanResolveAttempt(
+      client,
+      completion,
+      deps.captureScanException ?? captureScanException,
+    ),
   )
 }
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
-  return async function POST(request: Request) {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
+  const parseBody = parseJsonBody(resolveBodySchema)
+  const runAfter: ScanAfter = deps.after ?? after
 
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
+  return createScanRoute<ResolveRouteBody>({
+    route: "resolve",
+    deps,
+    parse: async (request) => {
+      const parsed = await parseBody(request)
+      if (!parsed.ok) return parsed
+      return {
+        ok: true,
+        body: {
+          input: parsed.body,
+          client: deps.createAdminClient(),
+          attempt: {
+            attemptId: null,
+            startedAt: new Date().toISOString(),
+            lookupOutcome: null,
+            matchedProductId: null,
+            failureStage: "identifier_lookup",
+            telemetryWrites: [],
+            telemetryDrainScheduled: false,
+          },
+        },
+      }
+    },
+    failureReason: "resolve_failed",
+    onError: async (_error, ctx) => {
+      const { attempt, client } = ctx.body
+      completeResolveAttempt(
+        deps,
+        runAfter,
+        client,
+        attempt,
+        "temporarily_unavailable",
+        attempt.failureStage,
       )
-    }
+    },
+    handler: async (ctx) => {
+      const { input, attempt, client } = ctx.body
+      const userId = ctx.userId
 
-    let body: unknown
-    try {
-      body = await request.json()
-    } catch {
-      return fail("invalid_request", 400)
-    }
-    const parsed = resolveBodySchema.safeParse(body)
-    if (!parsed.success) return fail("invalid_request", 400)
-
-    const client = deps.createAdminClient()
-    const ok = (result: ScanResolveResult) =>
-      NextResponse.json(result, { headers: { "Cache-Control": "no-store" } })
-
-    const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
-      kind: "unknown_product",
-      identifier: { type, value },
-      categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
-        key,
-        label: CATEGORY_COPY[key].label,
-      })),
-    })
-
-    let attemptId: string | null = null
-    let lookupOutcome: ScanResolveLookupOutcome | null = null
-    let matchedProductId: string | null = null
-    let failureStage: ScanResolveFailureStage = "identifier_lookup"
-
-    const completeAttempt = async (
-      terminalOutcome:
-        | "invalid_identifier"
-        | "unknown_product"
-        | "pending_submission"
-        | "resolved"
-        | "verdict_unknown"
-        | "profile_ineligible"
-        | "temporarily_unavailable",
-      stage: ScanResolveFailureStage | null,
-    ) => {
-      if (!attemptId) return
-      await deps.completeScanResolveAttempt(client, {
-        attemptId,
-        lookupOutcome,
-        terminalOutcome,
-        matchedProductId,
-        failureStage: stage,
+      const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
+        kind: "unknown_product",
+        identifier: { type, value },
+        categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
+          key,
+          label: CATEGORY_COPY[key].label,
+        })),
       })
-    }
 
-    try {
+      const completeAttempt = (
+        terminalOutcome: ResolveTerminalOutcome,
+        stage: ScanResolveFailureStage | null,
+      ) => completeResolveAttempt(deps, runAfter, client, attempt, terminalOutcome, stage)
+
       let productId: string
       let category: PersonalPlanCategory
 
-      if (parsed.data.identifier) {
-        const identifier = parsed.data.identifier
+      if (input.identifier) {
+        const identifier = input.identifier
         // Barcode attempts are started before validation; productId resolution below
         // originates in the search sheet and intentionally has no barcode telemetry.
-        attemptId = deps.createScanResolveAttemptId()
-        await deps.recordScanResolveAttempt(client, {
-          attemptId,
-          userId,
-          identifierType: identifier.type,
-          rawValue: identifier.value,
-        })
+        const attemptId = deps.createScanResolveAttemptId()
+        attempt.attemptId = attemptId
+        scheduleAttemptWrite(attempt, runAfter, () =>
+          deps.recordScanResolveAttempt(
+            client,
+            {
+              attemptId,
+              userId,
+              identifierType: identifier.type,
+              rawValue: identifier.value,
+              createdAt: attempt.startedAt,
+            },
+            deps.captureScanException ?? captureScanException,
+          ),
+        )
 
         const validation = deps.validateEanInput(identifier.value)
         if (!validation.ok) {
-          lookupOutcome = "invalid"
-          await completeAttempt("invalid_identifier", "identifier_lookup")
-          return fail("invalid_identifier", 400)
+          attempt.lookupOutcome = "invalid"
+          completeAttempt("invalid_identifier", "identifier_lookup")
+          return scanFail("invalid_identifier", 400)
         }
         const normalizedValue = normalizeIdentifierValue(validation.value)
 
@@ -204,56 +299,60 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           value: identifier.value,
         })
 
+        // F15: bind the match to the attempt before the quarantine await below, so a
+        // failure in there still completes with the product the identifier matched.
+        attempt.matchedProductId = hit?.productId ?? null
+        attempt.lookupOutcome = hit ? "hit" : "miss"
+
         // Ruling R7: a disposition-quarantined product (identity_ambiguous, retired, or
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
-        failureStage = "quarantine_lookup"
+        attempt.failureStage = "quarantine_lookup"
         const quarantined =
           hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
-        matchedProductId = hit?.productId ?? null
-        lookupOutcome = quarantined ? "quarantined" : hit ? "hit" : "miss"
+        if (quarantined) attempt.lookupOutcome = "quarantined"
 
         if (!hit || quarantined) {
           // The catalog is the authority: an open research submission only decides what
           // this scan shows once the EAN is genuinely not (usably) in the catalog. A
           // cataloged product must still reach its verdict while a submission is open.
-          failureStage = "submission_lookup"
+          attempt.failureStage = "submission_lookup"
           const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
           if (pending) {
-            await completeAttempt("pending_submission", null)
-            return ok({
+            completeAttempt("pending_submission", null)
+            return scanOk({
               kind: "pending_submission",
               submissionId: pending.submissionId,
               headline: SCAN_PENDING_SUBMISSION_HEADLINE,
               status: pending.status,
-            })
+            } satisfies ScanResolveResult)
           }
-          await completeAttempt("unknown_product", null)
-          return ok(unknownProduct(identifier.type, normalizedValue))
+          completeAttempt("unknown_product", null)
+          return scanOk(unknownProduct(identifier.type, normalizedValue))
         }
 
         productId = hit.productId
         category = hit.category
       } else {
         // Schema refine() guarantees productId is set on this branch.
-        const active = await deps.loadActiveProductById(client, parsed.data.productId as string)
-        if (!active) return fail("product_not_found", 404)
+        const active = await deps.loadActiveProductById(client, input.productId as string)
+        if (!active) return scanFail("product_not_found", 404)
         if (await deps.isProductSearchQuarantined(client, active.id)) {
-          return fail("product_not_found", 404)
+          return scanFail("product_not_found", 404)
         }
         productId = active.id
         category = active.category
       }
 
-      failureStage = "profile_context"
+      attempt.failureStage = "profile_context"
       const context = await deps.loadScanEvaluationContext(client, userId)
       if (!context) {
-        await completeAttempt("profile_ineligible", null)
-        return fail("profile_missing", 409)
+        completeAttempt("profile_ineligible", null)
+        return scanFail("profile_missing", 409)
       }
 
-      failureStage = "decision"
+      attempt.failureStage = "decision"
       const decision = context.snapshot.decisions.find((entry) => entry.category === category)
       if (!decision) throw new Error("scan_resolve_decision_missing")
 
@@ -271,10 +370,10 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           shampooTarget,
           conditionerTarget,
         }
-        failureStage = "product_facts"
+        attempt.failureStage = "product_facts"
         const [productFacts, recommendationCandidates] = await Promise.all([
           deps.loadScanProductFacts(client, category, productId, selectionContext),
-          isDecisionWithoutTarget(decision)
+          isNotNeeded(decision)
             ? Promise.resolve<Stage3CategoryProductFacts[]>([])
             : deps.loadRecommendationCandidates(client, {
                 category,
@@ -295,6 +394,13 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
        * `product-previews.ts`: one shared load for every other category, one load per role
        * for a role-sensitive one — otherwise e.g. the dandruff role would be graded against
        * facts loaded for the everyday role.
+       *
+       * F12 asked whether the candidate pool could be loaded once and re-specced per role.
+       * It cannot from here: `selectShampooSpec` is private to `catalog-facts.ts` and reads
+       * the raw `product_shampoo_specs` rows, which `Stage3CategoryProductFacts` does not
+       * retain (it keeps only the already-selected spec, and a `factFingerprint` derived
+       * from it). Collapsing the load needs a seam in that module, not a second selector
+       * here.
        */
       const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
       const roleSensitive = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
@@ -308,7 +414,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       )
       const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
 
-      failureStage = "verdict"
+      attempt.failureStage = "verdict"
       const verdict = deps.buildScanVerdict({
         category,
         decision,
@@ -330,7 +436,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         verdict.kind === "in_catalog"
           ? verdict.alternatives.map((alternative) => alternative.productId)
           : []
-      failureStage = "post_verdict_load"
+      attempt.failureStage = "post_verdict_load"
       const [savedState, presentationRows] = await Promise.all([
         deps.loadScanSavedState(client, userId, productId),
         deps.loadPresentationRows(client, [productId, ...alternativeIds]),
@@ -344,37 +450,27 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       // be offered as an alternative on a surface that refuses to resolve or save it. Done
       // on the final (≤3) list rather than on the candidate pool: same outcome, one small
       // keyed query instead of filtering the whole catalog.
-      failureStage = "alternative_filter"
+      attempt.failureStage = "alternative_filter"
       const eligibleVerdict = await withEligibleAlternatives(verdict, (ids) =>
         deps.loadQuarantinedProductIdsAmong(client, ids),
       )
 
-      failureStage = "response_build"
+      attempt.failureStage = "response_build"
       const result = {
         ...presentScanVerdictPayload(eligibleVerdict, presentationRows),
         product: toScanProductHeader(scannedRow),
         snapshotSource: context.snapshotSource,
         savedState,
       }
-      await completeAttempt(
+      completeAttempt(
         eligibleVerdict.kind === "in_catalog" && eligibleVerdict.verdict === "unknown"
           ? "verdict_unknown"
           : "resolved",
         null,
       )
-      return ok(result)
-    } catch (error) {
-      console.error("[scan] resolve failed", error)
-      await completeAttempt("temporarily_unavailable", failureStage)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "resolve",
-        status: 503,
-        reason: "resolve_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
+      return scanOk(result)
+    },
+  })
 }
 
 /**

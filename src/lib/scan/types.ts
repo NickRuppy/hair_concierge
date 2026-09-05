@@ -4,7 +4,6 @@ import type {
 } from "@/lib/personal-plan/products/contracts"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
 
-import type { ScanIdentifierType } from "./identifier-lookup"
 import type { ScanOpenSubmissionStatus } from "./pending-submission"
 import type { ScanSnapshotSource } from "./profile-context"
 import type { ScanSavedStatePayload } from "./saved-state"
@@ -154,7 +153,11 @@ export type ScanPendingSubmissionResult = {
 
 export type ScanUnknownProductResult = {
   kind: "unknown_product"
-  identifier: { type: ScanIdentifierType; value: string }
+  /**
+   * Ruling R9: the v1 API only ever emits an EAN. `identifier-lookup.ts` still matches
+   * `ean|gtin|barcode` DB-side, but that 3-way type never reaches a client contract.
+   */
+  identifier: { type: "ean"; value: string }
   categories: Array<{ key: PersonalPlanCategory; label: string }>
 }
 

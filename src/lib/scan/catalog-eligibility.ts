@@ -1,24 +1,39 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 /**
- * Mirrors the eligibility predicate `personal_plan_create_or_reuse_user_product` enforces
- * server-side (migration `20260811212000_personal_plan_curated_publication_gate.sql:267-280`):
+ * Two different eligibility rules live in this file, for two different scan surfaces —
+ * both built from the same disposition-quarantine primitive below, neither one "the"
+ * scan eligibility rule:
  *
- *   WHERE ... AND NOT EXISTS (
- *     SELECT 1 FROM personal_plan_product_search_dispositions disposition
- *     WHERE disposition.product_id = p_catalog_product_id
- *   )
- *   AND (origin = 'curated' OR EXISTS (
- *     SELECT 1 FROM user_products owned
- *     WHERE owned.user_id = p_user_id AND owned.category = p_category
- *       AND owned.catalog_product_id = p_catalog_product_id
- *       AND owned.identity_status = 'matched' AND owned.ownership_status = 'owned'
- *   ))
+ * 1. Search / resolve / wishlist (`isProductSearchQuarantined`, `loadQuarantinedProductIds`,
+ *    `loadQuarantinedProductIdsAmong`, and `filterScanEligibleProductIds`'s quarantine half)
+ *    mirror the predicate `personal_plan_create_or_reuse_user_product` enforces server-side
+ *    (migration `20260811212000_personal_plan_curated_publication_gate.sql:267-280`):
+ *
+ *      WHERE ... AND NOT EXISTS (
+ *        SELECT 1 FROM personal_plan_product_search_dispositions disposition
+ *        WHERE disposition.product_id = p_catalog_product_id
+ *      )
+ *      AND (origin = 'curated' OR EXISTS (
+ *        SELECT 1 FROM user_products owned
+ *        WHERE owned.user_id = p_user_id AND owned.category = p_category
+ *          AND owned.catalog_product_id = p_catalog_product_id
+ *          AND owned.identity_status = 'matched' AND owned.ownership_status = 'owned'
+ *      ))
+ *
+ * 2. Saving a product (the `scan_move_saved_product` RPC behind `src/lib/scan/saved-state.ts`,
+ *    migration `20260904150000_scan_move_saved_product.sql`) is deliberately wider: active
+ *    lifecycle status + not quarantined, with NO `origin` gate — the 2026-09-01 relaxation
+ *    lets a user save any active, non-quarantined product, not only curated or already-owned
+ *    ones. The RPC enforces that rule in SQL and calls nothing in this file;
+ *    `filterScanEligibleProductIds` below (paired with `SCAN_ACTIVE_LIFECYCLE_STATUS`) is the
+ *    TypeScript statement of the same rule, used by the submit route to decide whether a
+ *    catalog match is answerable — the two are parallel and must be changed together.
  *
  * A row in `personal_plan_product_search_dispositions` quarantines a product out of every
  * Personal Plan-facing surface without touching global catalog visibility or recommendation
  * flags (see that table's migration, `20260811205500_...`) — controller ruling R7: scan must
- * respect this everywhere a product could be surfaced or saved.
+ * respect this everywhere a product could be surfaced or saved, under both rules above.
  */
 
 /** Search/resolve only need the disposition half — no `origin`/ownership involved there. */

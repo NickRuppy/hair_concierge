@@ -6,6 +6,7 @@ import {
   listScanWishlist,
   type ScanWishlistRouteDeps,
 } from "../src/app/api/scan/wishlist/route"
+import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 
@@ -19,9 +20,13 @@ function baseDeps(overrides: Partial<ScanWishlistRouteDeps> = {}): ScanWishlistR
   }
 }
 
+function request() {
+  return new Request("http://test/api/scan/wishlist")
+}
+
 test("scan wishlist GET: unauthenticated is rejected", async () => {
   const handler = createScanWishlistRouteHandler(baseDeps({ getUserId: async () => null }))
-  const response = await handler()
+  const response = await handler(request())
   assert.equal(response.status, 401)
 })
 
@@ -34,9 +39,9 @@ test("scan wishlist GET: rate limited returns 429 with Retry-After, before any l
       },
     }),
   )
-  const response = await handler()
+  const response = await handler(request())
   assert.equal(response.status, 429)
-  assert.equal(response.headers.get("Retry-After"), "60")
+  assertRetryAfter(response)
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
@@ -50,7 +55,7 @@ test("scan wishlist GET: rate limiter unavailable fails closed with 503, without
       },
     }),
   )
-  const response = await handler()
+  const response = await handler(request())
   assert.equal(response.status, 503)
   assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
   assert.deepEqual(captured, [])
@@ -66,7 +71,7 @@ test("scan wishlist GET: returns the injected entries", async () => {
     purchaseUrl: "https://example.com/p",
   }
   const handler = createScanWishlistRouteHandler(baseDeps({ listWishlist: async () => [entry] }))
-  const response = await handler()
+  const response = await handler(request())
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { entries: [entry] })
 })
@@ -85,7 +90,7 @@ test("scan wishlist GET: an unexpected error maps to 503 and captures to Sentry"
       },
     }),
   )
-  const response = await handler()
+  const response = await handler(request())
   assert.equal(response.status, 503)
   assert.deepEqual(captured, [
     { route: "wishlist", status: 503, reason: "wishlist_list_failed", userId },
@@ -208,3 +213,14 @@ test("listScanWishlist: drops a disposition-quarantined product (ruling R7)", as
     ["prod-1"],
   )
 })
+
+/**
+ * The header is computed inside the handler, so recomputing `fixedWindowRetryAfterSeconds`
+ * here can straddle a second boundary and flake. Assert the bound instead (precedent:
+ * tests/personal-plan-api-stage3.test.ts).
+ */
+function assertRetryAfter(response: Response) {
+  const header = response.headers.get("Retry-After") ?? ""
+  assert.match(header, /^[1-9][0-9]?$/)
+  assert.ok(Number(header) <= SCAN_RATE_LIMIT.windowMs / 1000)
+}

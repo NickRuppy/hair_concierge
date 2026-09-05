@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server"
 import { z } from "zod"
 
 import {
@@ -11,10 +10,12 @@ import {
   type ProductIntakeRepository,
 } from "@/lib/product-intake/submissions"
 import type { ScanProductIntakeSubmissionResult } from "@/lib/product-intake/types"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
+import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { captureScanException } from "@/lib/observability/scan"
+import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -43,77 +44,55 @@ export type ScanSubmitRouteDeps = {
   validateEanInput: typeof validateEanInput
   createAdminClient: typeof createAdminClient
   createRepository: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
+  filterScanEligibleProductIds: typeof filterScanEligibleProductIds
   submit: typeof submitScanProductIntake
   captureScanException?: typeof captureScanException
 }
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
-  return async function POST(request: Request) {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
+  return createScanRoute<z.infer<typeof submitBodySchema>>({
+    route: "submit",
+    deps,
+    parse: parseJsonBody(submitBodySchema),
+    failureReason: "submit_failed",
+    handler: async (ctx) => {
+      // Same gate as `POST /api/scan/resolve`: the zod schema only proves the string is
+      // non-empty, so without this a hand-rolled request could open a research submission
+      // for a value that is not an EAN at all — and the submission is the row a reviewer
+      // later attaches to the catalog. 400 `invalid_identifier` mirrors resolve exactly.
+      const validation = deps.validateEanInput(ctx.body.identifier.value)
+      if (!validation.ok) return scanFail("invalid_identifier", 400)
 
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
-      )
-    }
+      const input: ScanProductIntakeSubmissionInput = {
+        intake_method: "manual",
+        category: ctx.body.category,
+        // No invented data (ruling R8): scan's UI never asks for a use-frequency, and
+        // submitScanProductIntake never reads/writes user_product_usage, so this stays a
+        // genuine null all the way to product_submissions.frequency_range (migration
+        // 20260820110000 relaxes that column's constraint for source='scan' only).
+        frequency_range: null,
+        brand_text: ctx.body.brandText,
+        product_name_text: ctx.body.productNameText,
+        scannedIdentifier: { type: "ean", value: validation.value },
+        replace_existing_confirmed: false,
+      }
 
-    let body: unknown
-    try {
-      body = await request.json()
-    } catch {
-      return fail("invalid_request", 400)
-    }
-    const parsed = submitBodySchema.safeParse(body)
-    if (!parsed.success) return fail("invalid_request", 400)
-
-    // Same gate as `POST /api/scan/resolve`: the zod schema only proves the string is
-    // non-empty, so without this a hand-rolled request could open a research submission
-    // for a value that is not an EAN at all — and the submission is the row a reviewer
-    // later attaches to the catalog. 400 `invalid_identifier` mirrors resolve exactly.
-    const validation = deps.validateEanInput(parsed.data.identifier.value)
-    if (!validation.ok) return fail("invalid_identifier", 400)
-
-    const input: ScanProductIntakeSubmissionInput = {
-      intake_method: "manual",
-      category: parsed.data.category,
-      // No invented data (ruling R8): scan's UI never asks for a use-frequency, and
-      // submitScanProductIntake never reads/writes user_product_usage, so this stays a
-      // genuine null all the way to product_submissions.frequency_range (migration
-      // 20260820110000 relaxes that column's constraint for source='scan' only).
-      frequency_range: null,
-      brand_text: parsed.data.brandText,
-      product_name_text: parsed.data.productNameText,
-      scannedIdentifier: { type: "ean", value: validation.value },
-      replace_existing_confirmed: false,
-    }
-
-    try {
       const admin = deps.createAdminClient()
       const repository = deps.createRepository(admin)
-      const result = await deps.submit({ userId, input, repository })
-      return NextResponse.json(toResponse(result), {
+      const result = await deps.submit({
+        userId: ctx.userId,
+        input,
+        repository,
+        // Batch-shaped helper (one query for many ids), deliberately called with a single
+        // id: a submit has at most one catalog match to gate.
+        isMatchScanEligible: async (id) =>
+          (await deps.filterScanEligibleProductIds(admin, [id])).has(id),
+      })
+      return scanOk(toResponse(result), {
         status: result.kind === "already_in_catalog" ? 200 : 202,
-        headers: { "Cache-Control": "no-store" },
       })
-    } catch (error) {
-      console.error("[scan] submit failed", error)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "submit",
-        status: 503,
-        reason: "submit_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
+    },
+  })
 }
 
 function toResponse(result: ScanProductIntakeSubmissionResult) {
@@ -133,5 +112,6 @@ export const POST = createScanSubmitRouteHandler({
   validateEanInput,
   createAdminClient,
   createRepository: createSupabaseProductIntakeRepository,
+  filterScanEligibleProductIds,
   submit: submitScanProductIntake,
 })

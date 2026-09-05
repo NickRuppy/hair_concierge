@@ -47,6 +47,45 @@ test("captureScanException tags and scopes the event under scan.*", () => {
   })
 })
 
+test("captureScanException honours an explicit warning level, without leaking it into tags/context", () => {
+  const tags: Record<string, string> = {}
+  let context: Record<string, unknown> | null = null
+  let level: string | null = null
+
+  captureScanException(
+    new Error("attempt log unavailable"),
+    { route: "resolve", status: 200, reason: "attempt_log_write_failed", level: "warning" },
+    {
+      captureException: () => {},
+      withScope: (callback) =>
+        callback({
+          setContext: (_name, value) => {
+            context = value
+          },
+          setLevel: (value) => {
+            level = value
+          },
+          setTag: (key, value) => {
+            tags[key] = value
+          },
+        }),
+    },
+  )
+
+  // A fail-open telemetry write must not read as a scan error in Sentry.
+  assert.equal(level, "warning")
+  assert.deepEqual(tags, {
+    "scan.route": "resolve",
+    "scan.status": "200",
+    "scan.reason": "attempt_log_write_failed",
+  })
+  assert.deepEqual(context, {
+    route: "resolve",
+    status: 200,
+    reason: "attempt_log_write_failed",
+  })
+})
+
 test("buildScanSentryPayload omits reason/userId when absent, never emits empty tag values", () => {
   const payload = buildScanSentryPayload({ route: "wishlist", status: 500 })
   assert.deepEqual(payload.tags, { "scan.route": "wishlist", "scan.status": "500" })

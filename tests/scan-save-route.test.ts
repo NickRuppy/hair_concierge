@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { createScanSaveRouteHandlers, type ScanSaveRouteDeps } from "../src/app/api/scan/save/route"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
+import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 const productId = "22222222-2222-4222-8222-222222222222"
@@ -17,9 +18,11 @@ function baseDeps(overrides: Partial<ScanSaveRouteDeps> = {}): ScanSaveRouteDeps
     getUserId: async () => userId,
     checkRateLimit: async () => ({ allowed: true }),
     createAdminClient: () => ({}) as never,
-    saveWishlist: async () => ({ outcome: "saved", savedState: MERKLISTE }),
+    moveSavedProduct: async (_client, _userId, _productId, kind) => ({
+      outcome: "saved",
+      savedState: kind === "merkliste" ? MERKLISTE : SCAN_ROUTINE,
+    }),
     removeWishlist: async () => ({ outcome: "removed" }),
-    saveRoutine: async () => ({ outcome: "saved", savedState: SCAN_ROUTINE }),
     removeRoutine: async () => ({ outcome: "removed" }),
     loadSavedState: async () => NOT_SAVED,
     ...overrides,
@@ -40,14 +43,14 @@ test("scan save POST: rate limited returns 429 with Retry-After, before any writ
   const handlers = createScanSaveRouteHandlers(
     baseDeps({
       checkRateLimit: async () => ({ allowed: false }),
-      saveWishlist: async () => {
+      moveSavedProduct: async () => {
         throw new Error("must not be called")
       },
     }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 429)
-  assert.equal(response.headers.get("Retry-After"), "60")
+  assertRetryAfter(response)
   assert.deepEqual(await response.json(), { error: "rate_limited" })
 })
 
@@ -87,36 +90,6 @@ test("scan save POST: invalid body is rejected", async () => {
   assert.equal(response.status, 400)
 })
 
-test("scan save POST merkliste: calls the wishlist saver, not the routine saver", async () => {
-  const calls: string[] = []
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({
-      saveWishlist: async () => {
-        calls.push("save:wishlist")
-        return { outcome: "saved", savedState: MERKLISTE }
-      },
-      saveRoutine: async () => {
-        calls.push("save:routine")
-        return { outcome: "saved", savedState: SCAN_ROUTINE }
-      },
-      removeRoutine: async () => {
-        calls.push("remove:routine")
-        return { outcome: "removed" }
-      },
-    }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
-  assert.equal(response.status, 200)
-  // The move happens inside this one request: save the new kind, drop the other one.
-  assert.deepEqual(calls, ["save:wishlist", "remove:routine"])
-  assert.deepEqual(await response.json(), {
-    ok: true,
-    kind: "merkliste",
-    productId,
-    savedState: MERKLISTE,
-  })
-})
-
 test("scan save POST: the move spends exactly one rate-limit charge", async () => {
   let charges = 0
   const handlers = createScanSaveRouteHandlers(
@@ -131,16 +104,26 @@ test("scan save POST: the move spends exactly one rate-limit charge", async () =
   assert.equal(charges, 1)
 })
 
-test("scan save POST: a refused cleanup is not a failure, the save still stands", async () => {
+test("scan save POST: the move is one RPC call carrying the requested kind", async () => {
+  const calls: Array<{ userId: string; productId: string; kind: string }> = []
   const handlers = createScanSaveRouteHandlers(
     baseDeps({
-      saveWishlist: async () => ({ outcome: "saved", savedState: MERKLISTE }),
-      // A Stage-3 routine row is not the scan surface's to move.
-      removeRoutine: async () => ({ outcome: "not_removable_here" }),
+      moveSavedProduct: async (_client, movedUserId, movedProductId, kind) => {
+        calls.push({ userId: movedUserId, productId: movedProductId, kind })
+        return { outcome: "saved", savedState: MERKLISTE }
+      },
+      removeRoutine: async () => {
+        throw new Error("must not be called")
+      },
+      removeWishlist: async () => {
+        throw new Error("must not be called")
+      },
     }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
   assert.equal(response.status, 200)
+  // One transactional move, no follow-up cleanup call: F6's two-write window is gone.
+  assert.deepEqual(calls, [{ userId, productId, kind: "merkliste" }])
   assert.deepEqual(await response.json(), {
     ok: true,
     kind: "merkliste",
@@ -149,65 +132,29 @@ test("scan save POST: a refused cleanup is not a failure, the save still stands"
   })
 })
 
-test("scan save POST: a failed cleanup reports save_incomplete, never a silent success, and captures to Sentry", async () => {
-  const thrown = new Error("cleanup boom")
-  const captured: unknown[] = []
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({
-      removeWishlist: async () => {
-        throw thrown
-      },
-      captureScanException: (error, details) => {
-        assert.equal(error, thrown)
-        captured.push(details)
-      },
-    }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
-  assert.equal(response.status, 500)
-  assert.deepEqual(await response.json(), { error: "save_incomplete" })
-  assert.deepEqual(captured, [
-    { route: "save", status: 500, reason: "save_move_cleanup_failed", userId },
-  ])
+test("scan save POST: a refused product maps to 409, either kind", async () => {
+  for (const kind of ["merkliste", "routine"]) {
+    const handlers = createScanSaveRouteHandlers(
+      baseDeps({ moveSavedProduct: async () => ({ outcome: "product_not_saveable" }) }),
+    )
+    const response = await handlers.POST(request("POST", { productId, kind }))
+    assert.equal(response.status, 409)
+    assert.deepEqual(await response.json(), { error: "product_not_saveable" })
+  }
 })
 
-test("scan save POST merkliste: a refused product maps to 409, same as routine", async () => {
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({ saveWishlist: async () => ({ outcome: "product_not_saveable" }) }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
-  assert.equal(response.status, 409)
-  assert.deepEqual(await response.json(), { error: "product_not_saveable" })
+test("scan save POST: an inactive/unknown product maps to 404, either kind", async () => {
+  for (const kind of ["merkliste", "routine"]) {
+    const handlers = createScanSaveRouteHandlers(
+      baseDeps({ moveSavedProduct: async () => ({ outcome: "product_not_found" }) }),
+    )
+    const response = await handlers.POST(request("POST", { productId, kind }))
+    assert.equal(response.status, 404)
+    assert.deepEqual(await response.json(), { error: "product_not_found" })
+  }
 })
 
-test("scan save POST merkliste: an inactive/unknown product maps to 404", async () => {
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({ saveWishlist: async () => ({ outcome: "product_not_found" }) }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
-  assert.equal(response.status, 404)
-  assert.deepEqual(await response.json(), { error: "product_not_found" })
-})
-
-test("scan save POST routine: product_not_found from the helper maps to 404", async () => {
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({ saveRoutine: async () => ({ outcome: "product_not_found" }) }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
-  assert.equal(response.status, 404)
-  assert.deepEqual(await response.json(), { error: "product_not_found" })
-})
-
-test("scan save POST routine: product_not_saveable from the helper (search-quarantined) maps to 409", async () => {
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({ saveRoutine: async () => ({ outcome: "product_not_saveable" }) }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
-  assert.equal(response.status, 409)
-  assert.deepEqual(await response.json(), { error: "product_not_saveable" })
-})
-
-test("scan save POST routine: success", async () => {
+test("scan save POST routine: success reports the state the move returned", async () => {
   const handlers = createScanSaveRouteHandlers(baseDeps())
   const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
   assert.equal(response.status, 200)
@@ -221,7 +168,7 @@ test("scan save POST routine: success", async () => {
 
 test("scan save POST routine: an already-owned foreign row reports managedByScan false", async () => {
   const handlers = createScanSaveRouteHandlers(
-    baseDeps({ saveRoutine: async () => ({ outcome: "saved", savedState: FOREIGN_ROUTINE }) }),
+    baseDeps({ moveSavedProduct: async () => ({ outcome: "saved", savedState: FOREIGN_ROUTINE }) }),
   )
   const response = await handlers.POST(request("POST", { productId, kind: "routine" }))
   assert.equal(response.status, 200)
@@ -231,6 +178,26 @@ test("scan save POST routine: an already-owned foreign row reports managedByScan
     productId,
     savedState: FOREIGN_ROUTINE,
   })
+})
+
+test("scan save POST: a failed move maps to 503 and captures to Sentry", async () => {
+  const thrown = new Error("boom")
+  const captured: unknown[] = []
+  const handlers = createScanSaveRouteHandlers(
+    baseDeps({
+      moveSavedProduct: async () => {
+        throw thrown
+      },
+      captureScanException: (error, details) => {
+        assert.equal(error, thrown)
+        captured.push(details)
+      },
+    }),
+  )
+  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.deepEqual(captured, [{ route: "save", status: 503, reason: "save_failed", userId }])
 })
 
 test("scan save DELETE: unauthenticated is rejected", async () => {
@@ -309,25 +276,6 @@ test("scan save DELETE routine: calls the routine remover, is idempotent on repe
   assert.deepEqual(calls, ["routine", "routine"])
 })
 
-test("scan save POST: an unexpected error maps to 503 and captures to Sentry", async () => {
-  const thrown = new Error("boom")
-  const captured: unknown[] = []
-  const handlers = createScanSaveRouteHandlers(
-    baseDeps({
-      saveWishlist: async () => {
-        throw thrown
-      },
-      captureScanException: (error, details) => {
-        assert.equal(error, thrown)
-        captured.push(details)
-      },
-    }),
-  )
-  const response = await handlers.POST(request("POST", { productId, kind: "merkliste" }))
-  assert.equal(response.status, 503)
-  assert.deepEqual(captured, [{ route: "save", status: 503, reason: "save_failed", userId }])
-})
-
 test("scan save DELETE: an unexpected error maps to 503 and captures to Sentry", async () => {
   const thrown = new Error("boom")
   const captured: unknown[] = []
@@ -348,3 +296,14 @@ test("scan save DELETE: an unexpected error maps to 503 and captures to Sentry",
     { route: "save", status: 503, reason: "save_removal_failed", userId },
   ])
 })
+
+/**
+ * The header is computed inside the handler, so recomputing `fixedWindowRetryAfterSeconds`
+ * here can straddle a second boundary and flake. Assert the bound instead (precedent:
+ * tests/personal-plan-api-stage3.test.ts).
+ */
+function assertRetryAfter(response: Response) {
+  const header = response.headers.get("Retry-After") ?? ""
+  assert.match(header, /^[1-9][0-9]?$/)
+  assert.ok(Number(header) <= SCAN_RATE_LIMIT.windowMs / 1000)
+}

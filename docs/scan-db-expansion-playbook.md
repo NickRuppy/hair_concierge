@@ -14,7 +14,7 @@ Engine shampoo wave (54 SKUs) still in flight in `.worktrees/db-expansion-scan`.
 - Protocol templates + rulings ledger (P1–P9, R-A–R-E, W1–W6): `docs/product-application-protocol-templates.md`
 - Program plan of record: `plans/2026-09-01-scan-db-expansion-pilot.md`
 - Research-engine spec (external engine lane): `plans/scan-db-expansion/research/shampoo-research-handoff.md`
-- Readiness oracle: `src/lib/scan/catalog-readiness.ts`
+- Readiness oracle: `src/lib/product-intake/scan-catalog-readiness.ts`
 
 ---
 
