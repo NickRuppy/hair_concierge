@@ -285,7 +285,9 @@ export function ScanFlow({
       // Only the FIRST failure pops the search sheet. After a retry the user has already
       // seen (and dismissed) it once — re-opening it over their deliberate retry would
       // just be the pop-open they closed a moment ago.
-      if (cameraRetries === 0) dispatch({ type: "auxiliary_opened", sheet: "search" })
+      if (cameraRetries === 0) {
+        dispatch({ type: "auxiliary_opened", sheet: "search", searchReason: "camera" })
+      }
       // Pass the real reason through ("denied" | "no_camera" | "insecure") — `trigger`
       // is a plain string in the event map, so the finer-grained value costs nothing.
       analytics.track("scan_fallback_search_used", { trigger: reason })
@@ -304,7 +306,7 @@ export function ScanFlow({
 
   const handleTimeout = useCallback(() => {
     if (isDetectionPaused(stateRef.current)) return
-    dispatch({ type: "auxiliary_opened", sheet: "search" })
+    dispatch({ type: "auxiliary_opened", sheet: "search", searchReason: "timeout" })
     analytics.track("scan_fallback_search_used", { trigger: "timeout" })
   }, [analytics])
 
@@ -463,7 +465,7 @@ export function ScanFlow({
         <button
           type="button"
           onClick={() => {
-            dispatch({ type: "auxiliary_opened", sheet: "search" })
+            dispatch({ type: "auxiliary_opened", sheet: "search", searchReason: "manual" })
             analytics.track("scan_fallback_search_used", { trigger: "manual" })
           }}
           className="font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
@@ -537,9 +539,12 @@ export function ScanFlow({
 
       <ScanSearchSheet
         open={state.auxiliary === "search"}
+        reason={state.searchReason}
         onOpenChange={(open) =>
           dispatch(
-            open ? { type: "auxiliary_opened", sheet: "search" } : { type: "auxiliary_closed" },
+            open
+              ? { type: "auxiliary_opened", sheet: "search", searchReason: "manual" }
+              : { type: "auxiliary_closed" },
           )
         }
         onSelectProduct={openFromProductId}
