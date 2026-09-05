@@ -187,7 +187,10 @@ const g0Schema = z
   .object({
     value: z.union([z.string(), z.boolean()]),
     modeScoped: z.boolean().nullable().optional(),
-    multiUse: z.boolean().nullable().optional(),
+    multiUse: z
+      .union([z.boolean(), z.record(z.string(), z.unknown())])
+      .nullable()
+      .optional(),
     rationale: z.string().nullable().optional(),
     evidenceSignals: evidenceListSchema,
   })
@@ -257,7 +260,10 @@ const referenceRecordSchema = z
     profile: profileSchema.optional(),
     bondRoute: bondRouteSchema.optional(),
     focusCareVerdict: z.union([z.string(), focusCareVerdictSchema]).nullable().optional(),
-    overloadCounterSignal: z.string().nullable().optional(),
+    overloadCounterSignal: z
+      .union([z.string(), z.record(z.string(), z.unknown())])
+      .nullable()
+      .optional(),
     blindToFinalChanges: z.array(z.union([z.string(), blindToFinalChangeSchema])).default([]),
     projectedOutputs: projectedOutputsSchema.optional(),
     adjudicationPoints: z.array(adjudicationPointSchema).default([]),
@@ -550,7 +556,7 @@ function buildProperties(
       counterSignals: [],
       limitations: [],
       modeScoped: record.g0.modeScoped ?? null,
-      multiUse: record.g0.multiUse ?? null,
+      multiUse: record.g0.multiUse == null ? null : Boolean(record.g0.multiUse),
       disagreement: findAgreementCell(agreement, productId, "g0"),
       humanReviewStatus: statusFor("g0"),
     },
@@ -663,7 +669,13 @@ function buildDetail(
     ) ?? []),
     ...(focusCareVerdictNote ? [focusCareVerdictNote] : []),
     ...(record?.overloadCounterSignal
-      ? [`Overload-Gegensignal: ${record.overloadCounterSignal}`]
+      ? [
+          `Overload-Gegensignal: ${
+            typeof record.overloadCounterSignal === "string"
+              ? record.overloadCounterSignal
+              : JSON.stringify(record.overloadCounterSignal)
+          }`,
+        ]
       : []),
     ...(product.verificationNote ? [product.verificationNote] : []),
   ]
