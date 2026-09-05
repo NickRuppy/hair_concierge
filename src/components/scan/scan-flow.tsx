@@ -56,6 +56,11 @@ type ScanFlowStep =
 // decode so the green "✓ Barcode erkannt" state is actually visible (Variante A).
 const SCAN_CONFIRM_DELAY_MS = 400
 
+// TODO(task 10): wire the real stalled-camera state (the `camera_stalled` action already
+// exists in `scan-flow-state.ts`). Until then a stream that dies and cannot be
+// re-acquired leaves the viewfinder as it is, exactly as it did before.
+const handleCameraStalled = () => {}
+
 const RESOLVE_ERRORS: Record<string, string> = {
   profile_missing: "Für den Scan brauchen wir zuerst deine Haaranalyse.",
   product_not_found: "Dieses Produkt können wir gerade nicht öffnen.",
@@ -335,6 +340,7 @@ export function ScanFlow({
           onDecoded={handleDecoded}
           onUnavailable={handleUnavailable}
           onTimeout={handleTimeout}
+          onStalled={handleCameraStalled}
         />
       ) : (
         <div className="flex aspect-[3/4] w-full items-center justify-center rounded-2xl bg-muted px-6 text-center">

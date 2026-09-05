@@ -16,8 +16,6 @@ import {
 
 test("createScanSessionState: returns the fully-reset default shape", () => {
   assert.deepEqual(createScanSessionState(), {
-    paused: false,
-    sheetPaused: false,
     detecting: false,
     frameCounter: 0,
     blockedValue: null,
@@ -42,7 +40,7 @@ test("createScanSessionState: returns the fully-reset default shape", () => {
 
 test("createScanSessionState: returns a fresh object each call — mutating one does not leak into the next", () => {
   const first = createScanSessionState()
-  first.paused = true
+  first.detecting = true
   first.lastFiredValue = "4006381333931"
   first.frameCounter = 42
   first.hint = "Mehr Licht hilft"
@@ -50,7 +48,7 @@ test("createScanSessionState: returns a fresh object each call — mutating one 
   const second = createScanSessionState()
 
   assert.notEqual(first, second)
-  assert.equal(second.paused, false)
+  assert.equal(second.detecting, false)
   assert.equal(second.lastFiredValue, null)
   assert.equal(second.frameCounter, 0)
   assert.equal(second.hint, null)
@@ -108,20 +106,15 @@ test("restartScanSessionState: mutates in place so the running detection loop se
   assert.equal(loopReference.lastFiredValue, null)
 })
 
-test("restartScanSessionState: keeps camera/loop lifecycle flags, not scan-attempt state", () => {
-  const paused = createScanSessionState()
-  paused.paused = true
-  paused.sheetPaused = true
-  paused.detecting = true
+test("restartScanSessionState: keeps loop lifecycle flags, not scan-attempt state", () => {
+  const session = createScanSessionState()
+  session.detecting = true
 
-  restartScanSessionState(paused, 10)
+  restartScanSessionState(session, 10)
 
-  // Clearing `paused` would leave the loop stopped with no visibilitychange left to
-  // restart it; clearing `sheetPaused` would restart detection behind an open sheet;
-  // clearing `detecting` could overlap a `detect()` still in flight.
-  assert.equal(paused.paused, true)
-  assert.equal(paused.sheetPaused, true)
-  assert.equal(paused.detecting, true)
+  // Clearing `detecting` could overlap a `detect()` that is still in flight. Why the
+  // loop is paused is no longer session state at all — see `./scanner-loop`.
+  assert.equal(session.detecting, true)
 })
 
 // ---------------------------------------------------------------------------

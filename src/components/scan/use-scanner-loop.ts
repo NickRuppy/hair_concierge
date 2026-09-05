@@ -66,6 +66,12 @@ export type UseScannerLoopArgs = {
   onHint: (hint: ScanHint) => void
   /** A stable decode was accepted; the component shows the green confirm state. */
   onConfirm: () => void
+  /**
+   * A fresh scan attempt started (mount, or an `sessionEpoch` bump). The component
+   * resets its pill back to the default hint and drops any confirm state. Owned by the
+   * hook because the hook is what actually restarts the session.
+   */
+  onAttemptStart: () => void
 }
 
 // EAN-only per the resolve API's identifier scope (Task 5).
@@ -217,6 +223,7 @@ export function useScannerLoop({
   onStalled,
   onHint,
   onConfirm,
+  onAttemptStart,
 }: UseScannerLoopArgs): void {
   const sessionRef = useRef(createScanSessionState())
   const controllerRef = useRef(createScanLoopController())
@@ -239,6 +246,7 @@ export function useScannerLoop({
     onStalled,
     onHint,
     onConfirm,
+    onAttemptStart,
   })
   useEffect(() => {
     latestRef.current = {
@@ -249,8 +257,9 @@ export function useScannerLoop({
       onStalled,
       onHint,
       onConfirm,
+      onAttemptStart,
     }
-  }, [runtime, onDecoded, onUnavailable, onTimeout, onStalled, onHint, onConfirm])
+  }, [runtime, onDecoded, onUnavailable, onTimeout, onStalled, onHint, onConfirm, onAttemptStart])
 
   /**
    * The one place frames are scheduled or cancelled. Idempotent by construction: it acts
@@ -551,7 +560,12 @@ export function useScannerLoop({
         // Autoplay can be blocked without a user gesture; playsInline+muted covers the
         // common iOS case, and `resumePlayback` retries on the next resume (F8a).
       }
-      if (cancelled) return false
+      // From here on the stream is ours, so every bail-out has to hand it back: teardown
+      // may have run while an await was pending, and its `releaseStream()` saw nothing.
+      if (cancelled) {
+        releaseStream()
+        return false
+      }
 
       // Kept across a re-acquire: the detector is stateless and re-creating it would
       // re-enter the wasm module for nothing.
@@ -560,13 +574,17 @@ export function useScannerLoop({
         try {
           detector = await (currentRuntime?.detectorFactory ?? defaultDetectorFactory)()
         } catch {
+          releaseStream()
           if (cancelled) return false
           // The camera works but nothing can decode: same dead end for the user as no
           // camera at all, so the flow falls back to the search sheet.
           if (reportUnavailable) latestRef.current.onUnavailable("no_camera")
           return false
         }
-        if (cancelled) return false
+        if (cancelled) {
+          releaseStream()
+          return false
+        }
         detectorRef.current = detector
       }
       return true
@@ -654,6 +672,7 @@ export function useScannerLoop({
     restartScanSessionState(sessionRef.current, performance.now())
     bumpLoopGeneration(controller)
     controller.lastTickAt = null
+    latestRef.current.onAttemptStart()
     syncLoop()
   }, [active, sessionEpoch, syncLoop])
 }

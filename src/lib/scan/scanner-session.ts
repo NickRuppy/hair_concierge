@@ -1,27 +1,19 @@
 import type { ScanHint } from "@/lib/scan/guidance"
 
 /**
- * All mutable, per-scan-session state the `Scanner` component tracks between camera
- * start and stop: detection debounce/dedupe counters, telemetry inputs for
- * `nextScanHint`, the pause flag, and the timeout/decode guards.
+ * All mutable, per-scan-session state the scan loop tracks between camera start and
+ * stop: detection debounce/dedupe counters, telemetry inputs for `nextScanHint`, and
+ * the timeout/decode guards. Why the loop is or is not running is NOT in here — that
+ * belongs to the loop controller in `./scanner-loop`.
  *
  * Bundled into one object (held in a single ref) so a fresh scan session — the camera
  * reopened after being closed, or restarted after a background/visibility cycle —
  * always starts from a clean, fully-reset state in one place. `createScanSessionState()`
  * must be called once at the start of every session (never partially reset individual
- * fields), otherwise state from a prior session (e.g. a `paused` flag left `true` by a
- * visibilitychange that never resolved, or a `lastFiredValue` that would silently
- * suppress re-firing `onDecoded` for the same barcode on a later session) leaks forward.
+ * fields), otherwise state from a prior session (e.g. a `lastFiredValue` that would
+ * silently suppress re-firing `onDecoded` for the same barcode) leaks forward.
  */
 export type ScanSessionState = {
-  /** Detection loop is paused (tab hidden) and not scheduling frame callbacks. */
-  paused: boolean
-  /**
-   * Detection loop is paused because a sheet covers the viewfinder. Tracked separately
-   * from `paused` so the two reasons can never clear each other: closing a sheet while the
-   * tab is hidden must not restart the loop, and vice versa.
-   */
-  sheetPaused: boolean
   /** True while a `detector.detect()` call is in flight, to prevent overlapping calls. */
   detecting: boolean
   frameCounter: number
@@ -87,21 +79,17 @@ export const SCAN_TIMEOUT_MS = 3000
  * Mutates in place on purpose: the detection loop closed over this exact object when the
  * camera started, so assigning a replacement object to the ref would never reach it.
  *
- * Deliberately NOT reset: `paused`, `sheetPaused` and `detecting` are camera/loop
- * lifecycle state rather than scan-attempt state. Clearing a pause flag here would leave
- * the loop stopped with nothing left to restart it (or restart it behind a still-open
- * sheet); clearing `detecting` could let a second `detect()` start while one is in flight.
+ * Deliberately NOT reset: `detecting` is loop lifecycle state rather than scan-attempt
+ * state — clearing it could let a second `detect()` start while one is still in flight.
  */
 export function restartScanSessionState(session: ScanSessionState, now: number): void {
-  const { paused, sheetPaused, detecting } = session
+  const { detecting } = session
   // D6: whatever fired in the attempt that just ended is presumed to still be in frame
   // (the sheet slid up over a live camera), so it becomes the blocked value instead of
   // being forgotten. An attempt that fired nothing keeps whatever block it inherited —
   // three empty detections, not a restart, are what release it.
   const blockedValue = session.lastFiredValue ?? session.blockedValue
   Object.assign(session, createScanSessionState(), {
-    paused,
-    sheetPaused,
     detecting,
     blockedValue,
     startTime: now,
@@ -112,8 +100,6 @@ export function restartScanSessionState(session: ScanSessionState, now: number):
 
 export function createScanSessionState(): ScanSessionState {
   return {
-    paused: false,
-    sheetPaused: false,
     detecting: false,
     frameCounter: 0,
     detectionAttempts: 0,
