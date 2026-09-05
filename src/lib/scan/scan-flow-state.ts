@@ -99,6 +99,12 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         // 400ms window and only then raises the skeleton via `resolving_sheet_due`;
         // every other entry point shows it at once.
         step: action.showResolvingImmediately ? { kind: "resolving" } : state.step,
+        // A resolve takes over the in-flight slot, so any submit that was still running
+        // is structurally dead from here on and its terminal action will be dropped.
+        // Clearing the busy flag with it is what keeps the `already_in_catalog` chain
+        // (submit -> resolve) from leaving `submitting` stuck true forever.
+        submitting: false,
+        submitError: null,
         activeRequest: { kind: "resolve", token: action.token },
       }
 

@@ -98,6 +98,24 @@ test("resolve_started: with showResolvingImmediately shows the skeleton at once"
   assert.deepEqual(state.activeRequest, { kind: "resolve", token: 1 })
 })
 
+test("resolve_started: taking over from a submit clears the busy flag it superseded", () => {
+  // The `already_in_catalog` chain: a submit is in flight, its response says the EAN was
+  // catalogued meanwhile, and the component chains straight into a resolve. The submit's
+  // terminal action is dropped by the token guard, so `resolve_started` is the only place
+  // left that can unstick `submitting` — without it the unknown sheet would stay frozen
+  // if the chained resolve came back `unknown_product` again.
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: unknownResult },
+    { type: "submit_started", token: 2 },
+    { type: "resolve_started", token: 3, showResolvingImmediately: true },
+  )
+
+  assert.equal(state.submitting, false)
+  assert.equal(state.submitError, null)
+  assert.deepEqual(state.activeRequest, { kind: "resolve", token: 3 })
+})
+
 test("resolve_started: without showResolvingImmediately keeps scanning for the confirm window", () => {
   const state = run({ type: "resolve_started", token: 1, showResolvingImmediately: false })
 
