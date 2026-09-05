@@ -11,6 +11,7 @@ import {
   noteEmptyDetection,
   restartScanSessionState,
   shouldFireTimeout,
+  unfireDetection,
   type ScanSessionState,
 } from "../src/lib/scan/scanner-session"
 
@@ -405,4 +406,45 @@ test("STABLE_READ_REQUIRED_MATCHES / REARM_EMPTY_DETECTIONS / SCAN_TIMEOUT_MS: p
   assert.equal(STABLE_READ_REQUIRED_MATCHES, 2)
   assert.equal(REARM_EMPTY_DETECTIONS, 3)
   assert.equal(SCAN_TIMEOUT_MS, 3000)
+})
+
+// ---------------------------------------------------------------------------
+// unfireDetection — a decode the flow refused must not be consumed (C3)
+// ---------------------------------------------------------------------------
+
+test("unfireDetection: a refused decode fires again from a fresh pair of reads", () => {
+  const session = createScanSessionState()
+  read(session, EAN_A, 100)
+  assert.equal(read(session, EAN_A, 200), EAN_A)
+
+  // The flow was busy (an auxiliary sheet covered the viewfinder), so it refused it.
+  unfireDetection(session, EAN_A)
+
+  assert.equal(session.lastFiredValue, null)
+  assert.equal(session.hasDecoded, false)
+  // Still needs to re-earn two consecutive reads — the streak stays consumed.
+  assert.equal(read(session, EAN_A, 300), null)
+  assert.equal(read(session, EAN_A, 400), EAN_A)
+})
+
+test("unfireDetection: only the value that actually fired is reverted", () => {
+  const session = createScanSessionState()
+  read(session, EAN_A, 100)
+  assert.equal(read(session, EAN_A, 200), EAN_A)
+
+  unfireDetection(session, EAN_B)
+
+  assert.equal(session.lastFiredValue, EAN_A)
+  assert.equal(session.hasDecoded, true)
+})
+
+test("unfireDetection: leaves the D6 block alone", () => {
+  const session = createScanSessionState()
+  session.blockedValue = EAN_B
+  read(session, EAN_A, 100)
+  assert.equal(read(session, EAN_A, 200), EAN_A)
+
+  unfireDetection(session, EAN_A)
+
+  assert.equal(session.blockedValue, EAN_B)
 })

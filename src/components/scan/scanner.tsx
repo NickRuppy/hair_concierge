@@ -26,7 +26,12 @@ type ScannerProps = {
   detectionPaused?: boolean
   /** Test seam for the camera + detector; production leaves it undefined. */
   runtime?: ScannerRuntime
-  onDecoded: (identifier: ScanDecodedIdentifier) => void
+  /**
+   * A stable, validated read. The parent answers whether it TOOK the decode: `false`
+   * (a sheet is still up, a resolve is already running) leaves the value unconsumed, so
+   * the loop can fire the very same barcode again once the flow is ready for it.
+   */
+  onDecoded: (identifier: ScanDecodedIdentifier) => boolean
   onUnavailable: (reason: ScanUnavailableReason) => void
   /** Fires once after 3s of active scanning without a stable read. Scanner keeps running. */
   onTimeout: () => void
@@ -84,9 +89,7 @@ export function Scanner({
   }, [clearConfirmTimer])
 
   const handleDecoded = useCallback(
-    (value: string) => {
-      onDecoded({ type: "ean", value })
-    },
+    (value: string) => onDecoded({ type: "ean", value }),
     [onDecoded],
   )
 

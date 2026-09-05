@@ -383,6 +383,40 @@ test("ScanFlow: two different decodes fired back-to-back without a settle betwee
   await flow.settle()
 })
 
+test("ScanFlow: a decode behind an auxiliary sheet is refused and the same barcode is taken after it closes (C3)", async () => {
+  const bodies: string[] = []
+  const flow = await mountFlow(async (_url, init) => {
+    bodies.push(String(init?.body))
+    return json(verdictResult())
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(scannerProps(flow.tree).detectionPaused, true)
+
+  // `false` is the contract the loop needs: the value was NOT consumed, so the scanner
+  // rewinds its dedupe guards (`unfireDetection`) instead of burning the barcode.
+  assert.equal(scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" }), false)
+  await flow.settle()
+  assert.equal(bodies.length, 0)
+  assert.equal(
+    flow.events.some((event) => event.name === "scan_decoded"),
+    false,
+  )
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+  assert.equal(scannerProps(flow.tree).detectionPaused, false)
+
+  // The very same barcode, still in frame: now it is taken.
+  assert.equal(scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" }), true)
+  await delay(450)
+  await flow.settle()
+
+  assert.equal(bodies.length, 1)
+  assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-a)")
+})
+
 // --- closing the sheet ------------------------------------------------------
 
 test("ScanFlow: closing the result sheet returns to scanning and bumps the scanner epoch", async () => {

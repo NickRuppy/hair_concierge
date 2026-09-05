@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useReducer, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -125,14 +125,19 @@ export function ScanFlow({
    * Latest state for the handlers the scanner calls from its frame loop. Synced in an
    * effect rather than during render: those callbacks are stable across renders, so a
    * closure over `state` would read the value from the render that created them.
+   *
+   * A LAYOUT effect (it only writes a ref — no setState, so the React Compiler rules are
+   * satisfied): the scanner's frame loop runs outside React's commit cycle, so a passive
+   * effect would leave a window after a commit in which the mirror still describes the
+   * previous state and a decode could pass a guard the new state closes.
    */
   const stateRef = useRef<ScanFlowState>(state)
-  useEffect(() => {
+  useLayoutEffect(() => {
     stateRef.current = state
   }, [state])
   /**
-   * `stateRef`'s mirror only updates once the passive effect above runs after a render —
-   * a decode that fires a second time before that render (the scanner's frame loop is
+   * `stateRef`'s mirror only updates once the effect above runs after a render — a
+   * decode that fires a second time before that render (the scanner's frame loop is
    * outside React's commit cycle) would still read the stale `activeRequest: null` and
    * slip through `handleDecoded`'s guard. This ref is set the instant `resolve()` claims
    * a token, so the guard has a synchronous source of truth for "a resolve is in flight"
@@ -247,22 +252,29 @@ export function ScanFlow({
     [analytics, clearSheetTimer, requests, returnToScanning, toast],
   )
 
+  /**
+   * Answers the scanner: `true` only when this decode actually started a resolve. A
+   * refusal leaves the value unconsumed in the loop's session (see `unfireDetection`), so
+   * the same barcode fires again as soon as the flow can take it — the user does not have
+   * to move the bottle out of frame and back (controller ruling C3).
+   */
   const handleDecoded = useCallback(
-    (identifier: ScanDecodedIdentifier) => {
+    (identifier: ScanDecodedIdentifier): boolean => {
       const current = stateRef.current
-      if (isDetectionPaused(current)) return
+      if (isDetectionPaused(current)) return false
       // During the 400ms confirm window the step is still "scanning", so detection keeps
       // running and a second, different EAN could fire. The first one owns the flow.
       // `stateRef.current` only catches up after the next render's passive effect, so a
       // second decode fired before that render would see a stale `activeRequest: null` —
       // `resolveInFlightRef` is set synchronously inside `resolve()` and closes that
       // window.
-      if (current.activeRequest || resolveInFlightRef.current) return
+      if (current.activeRequest || resolveInFlightRef.current) return false
       analytics.track("scan_decoded", {
         msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
         format: identifier.value.length === 8 ? "ean_8" : "ean_13",
       })
       void resolve({ identifier }, { sheetDelayMs: SCAN_CONFIRM_DELAY_MS })
+      return true
     },
     [analytics, resolve],
   )

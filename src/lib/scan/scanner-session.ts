@@ -182,6 +182,23 @@ export function applyRawDetection(
 }
 
 /**
+ * Give back a decode the flow refused (controller ruling C3): `onDecoded` answers whether
+ * it actually started a resolve, and a `false` means the value was never consumed — a
+ * decode that lands while a sheet still covers the viewfinder must be able to fire again
+ * the moment the sheet closes, without the user having to move the bottle out of frame.
+ *
+ * Only the two guards `applyRawDetection` set for THIS value are reverted. The consumed
+ * streak (`consecutiveMatch` / `lastRawValue`) stays consumed on purpose: the value
+ * re-earns two fresh consecutive reads, which is one detection cycle, not a re-scan. The
+ * D6 `blockedValue` is untouched — it belongs to a previous attempt, not to this fire.
+ */
+export function unfireDetection(session: ScanSessionState, value: string): void {
+  if (session.lastFiredValue !== value) return
+  session.lastFiredValue = null
+  session.hasDecoded = false
+}
+
+/**
  * One detection attempt that found no barcode at all. Once `REARM_EMPTY_DETECTIONS` of
  * them have run back to back, the frame is considered empty and the D6 block is released
  * — including `lastFiredValue`, so the same product can be scanned again the moment the

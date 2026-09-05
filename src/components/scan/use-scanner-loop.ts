@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, type RefObject } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from "react"
 
 import { nextScanHint, type ScanHint, type ScanTelemetry } from "@/lib/scan/guidance"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
@@ -24,6 +24,7 @@ import {
   createScanSessionState,
   noteEmptyDetection,
   restartScanSessionState,
+  unfireDetection,
   type ScanSessionState,
 } from "@/lib/scan/scanner-session"
 
@@ -63,7 +64,14 @@ export type UseScannerLoopArgs = {
   detectionPaused: boolean
   runtime?: ScannerRuntime
   videoRef: RefObject<HTMLVideoElement | null>
-  onDecoded: (value: string) => void
+  /**
+   * A stable, validated read. The consumer answers whether it actually TOOK the decode:
+   * `false` (a sheet still covers the viewfinder, a resolve is already in flight) means
+   * the value was never consumed, so the loop rewinds its dedupe guards and the same
+   * barcode fires again as soon as the flow can take it — without the user having to move
+   * the bottle out of frame first (controller ruling C3).
+   */
+  onDecoded: (value: string) => boolean
   onUnavailable: (reason: ScanUnavailableReason) => void
   /** Fires once per attempt after 3s of *active* scanning without a stable read. */
   onTimeout: () => void
@@ -378,8 +386,13 @@ export function useScannerLoop({
           validateEanInput,
         )
         if (fire !== null) {
-          latestRef.current.onConfirm()
-          latestRef.current.onDecoded(fire)
+          // The confirm state is the *accepted* decode's green moment: a refused value
+          // never reached the flow, so it gets neither the pill nor the consumed guards.
+          if (latestRef.current.onDecoded(fire)) {
+            latestRef.current.onConfirm()
+          } else {
+            unfireDetection(session, fire)
+          }
         }
       } finally {
         session.detecting = false
@@ -759,8 +772,14 @@ export function useScannerLoop({
   /**
    * Sheet open/close. Only the detection loop is affected — the stream and the video
    * element are untouched, so nothing has to be re-acquired on resume.
+   *
+   * A LAYOUT effect on purpose (it only writes controller state — no setState — so the
+   * React Compiler rules are satisfied): the frame loop and a pending `detect()`
+   * continuation run outside React's commit cycle, so a passive effect would leave a
+   * window after the commit that opened the sheet in which a decode could still be
+   * accepted. The pause is in place before the browser can hand us another frame.
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!active) return
     setPauseReason(controllerRef.current, "sheet", detectionPaused)
     syncLoop()
