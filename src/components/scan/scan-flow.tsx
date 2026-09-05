@@ -55,7 +55,7 @@ import {
 type ScanIdentifier = { type: "ean"; value: string }
 
 // Mirrors `CONFIRM_DURATION_MS` in scanner.tsx: the sheet waits this long after a camera
-// decode so the green "✓ Barcode erkannt" state is actually visible (Variante A).
+// decode so the green "✓ Gelesen – wird geprüft" state is actually visible.
 const SCAN_CONFIRM_DELAY_MS = 400
 
 const RESOLVE_ERRORS: Record<string, string> = {
@@ -183,7 +183,7 @@ export function ScanFlow({
       options?: { sheetDelayMs?: number },
     ) => {
       // Decode-confirm moment (Variante A): a camera decode passes `sheetDelayMs` so the
-      // scanner's green "✓ Barcode erkannt" state stays visible before the sheet slides
+      // scanner's green "✓ Gelesen – wird geprüft" state stays visible before the sheet slides
       // up — the fetch below still starts immediately, so no time-to-verdict is lost.
       const token = requests.begin()
       resolveInFlightRef.current = true

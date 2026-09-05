@@ -119,7 +119,7 @@ test("resolve_started: taking over from a submit clears the busy flag it superse
 test("resolve_started: without showResolvingImmediately keeps scanning for the confirm window", () => {
   const state = run({ type: "resolve_started", token: 1, showResolvingImmediately: false })
 
-  // The green "✓ Barcode erkannt" moment stays visible; the fetch is already running.
+  // The green "✓ Gelesen – wird geprüft" moment stays visible; the fetch is already running.
   assert.deepEqual(state.step, { kind: "scanning" })
   assert.deepEqual(state.activeRequest, { kind: "resolve", token: 1 })
 })

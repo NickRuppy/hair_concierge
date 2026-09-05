@@ -253,7 +253,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
 
     // Started before the emit so the poll is already running when the 400ms window opens.
     const confirmSeen = page.waitForFunction(
-      () => document.body.textContent?.includes("✓ Barcode erkannt") ?? false,
+      () => document.body.textContent?.includes("✓ Gelesen – wird geprüft") ?? false,
       undefined,
       { polling: "raf", timeout: 10_000 },
     )
