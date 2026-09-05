@@ -76,6 +76,7 @@ export function ScanWishlistSheet({
     const index = entries.findIndex((entry) => entry.productId === productId)
     if (index < 0) return
     const removed = entries[index]
+    const precededBy = entries.slice(0, index).map((entry) => entry.productId)
     setEntries((current) => current.filter((entry) => entry.productId !== productId))
     try {
       const response = await fetch("/api/scan/save", {
@@ -85,14 +86,19 @@ export function ScanWishlistSheet({
       })
       if (!response.ok) throw new Error("remove_failed")
     } catch {
-      // Re-insert THIS entry only, at the index it held. Restoring the whole array as it
-      // looked before the request would also resurrect every other removal that happened
-      // meanwhile, and would undo a reload that landed in between (F13).
-      setEntries((current) =>
-        current.some((entry) => entry.productId === productId)
-          ? current
-          : [...current.slice(0, index), removed, ...current.slice(index)],
-      )
+      // Re-insert THIS entry only. Restoring the whole array as it looked before the
+      // request would also resurrect every other removal that happened meanwhile, and
+      // would undo a reload that landed in between (F13). The row goes back behind the
+      // last of its former predecessors that is still listed, so a plain failure puts it
+      // exactly where it was and a concurrent removal cannot shuffle it to the end.
+      setEntries((current) => {
+        if (current.some((entry) => entry.productId === productId)) return current
+        let at = 0
+        current.forEach((entry, position) => {
+          if (precededBy.includes(entry.productId)) at = position + 1
+        })
+        return [...current.slice(0, at), removed, ...current.slice(at)]
+      })
     }
   }
 

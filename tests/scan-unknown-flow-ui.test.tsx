@@ -221,3 +221,38 @@ test("ScanUnknownFlow: the tapped card alone shows the submitting label while ot
     categoryButton(tree.value, CATEGORY_COPY[key].label)
   }
 })
+
+test("ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)", () => {
+  // The parent settles the request: `submitting` goes back to false and an error line
+  // appears. The card the user tapped must stop claiming it is still being submitted.
+  const parentState = { submitting: false, error: null as string | null }
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown: unknownResult(),
+      submitting: parentState.submitting,
+      error: parentState.error,
+      onSubmit: () => undefined,
+    }),
+  )
+
+  const oilLabel = CATEGORY_COPY.oil.label
+  categoryButton(tree.value, oilLabel).props.onClick()
+  parentState.submitting = true
+  tree.value = tree.rerender()
+  assert.equal(
+    findAll(tree.value, (element) => textContent(element) === "Wird eingereicht").length > 0,
+    true,
+  )
+
+  parentState.submitting = false
+  parentState.error = "Hat nicht geklappt – versuch's nochmal."
+  tree.value = tree.rerender()
+
+  const markup = renderToStaticMarkup(tree.value)
+  assert.doesNotMatch(markup, /Wird eingereicht/)
+  assert.match(markup, /Hat nicht geklappt/)
+  // …and the card is no longer rendered as the selected one.
+  const card = categoryButton(tree.value, oilLabel)
+  assert.equal(card.props["aria-pressed"], false)
+  assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)
+})
