@@ -207,6 +207,28 @@ async function loadRecommendationCandidates(
   category: PersonalPlanCategory,
   selectionContext: CategorySelectionContext,
 ): Promise<Stage3CategoryProductFacts[]> {
+  const pool = await loadStage3RecommendationCandidatePool(client, category)
+  return deriveStage3RecommendationCandidates(pool, selectionContext)
+}
+
+/**
+ * The role-independent half of a category's recommendation candidates: the recommendable
+ * product rows plus a batch snapshot of their spec and protocol rows. Everything the
+ * selection context influences — Shampoo's per-role spec row (`selectShampooSpec`), and
+ * therefore `spec` and `factFingerprint` — is applied afterwards by
+ * `deriveStage3RecommendationCandidates`, so one pool can serve several roles (F12 in
+ * plans/2026-09-04-scan-hardening.md). Treat it as immutable once loaded.
+ */
+export type Stage3RecommendationCandidatePool = {
+  category: PersonalPlanCategory
+  products: Row[]
+  snapshot: BatchSnapshot
+}
+
+export async function loadStage3RecommendationCandidatePool(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+): Promise<Stage3RecommendationCandidatePool> {
   const products = await pagedRows(
     () =>
       client
@@ -225,17 +247,89 @@ async function loadRecommendationCandidates(
     "stage3_authority_catalog_unavailable",
   )
   const productIds = products.map((row) => text(row.id)).filter((id): id is string => Boolean(id))
-  const snapshot = await loadBatchSnapshot(client, category, productIds)
-  const facts = snapshot
-    ? products.map((row) =>
-        normalizeProductFactsFromSnapshot(category, row, selectionContext, snapshot),
-      )
-    : await Promise.all(
-        products.map((row) => normalizeProductFacts(client, category, row, selectionContext)),
-      )
-  return facts
+  const snapshot =
+    (await loadBatchSnapshot(client, category, productIds)) ??
+    (await loadBatchSnapshotPerProduct(client, category, products))
+  return { category, products, snapshot }
+}
+
+/**
+ * Pure: applies one selection context to a loaded pool. Calling it once per role is
+ * exactly what the per-role loader used to do, minus the repeated catalog round trips.
+ */
+export function deriveStage3RecommendationCandidates(
+  pool: Stage3RecommendationCandidatePool,
+  selectionContext: CategorySelectionContext,
+): Stage3CategoryProductFacts[] {
+  return pool.products
+    .map((row) =>
+      normalizeProductFactsFromSnapshot(pool.category, row, selectionContext, pool.snapshot),
+    )
     .filter((value): value is Stage3CategoryProductFacts => value !== null)
     .sort(compareRecommendationFacts)
+}
+
+export type Stage3RecommendationCandidatesByRoleInput = Omit<
+  Stage3RecommendationCandidateSelection,
+  "role" | "completeCatalog"
+> & { roles: readonly PlanProductRole[] }
+
+/**
+ * Complete-catalog candidates for several roles of one category from a single pool load.
+ * Every requested role is present in the result, even when the catalog is empty.
+ */
+export async function loadStage3RecommendationCandidatesByRole(
+  client: AdminClient,
+  input: Stage3RecommendationCandidatesByRoleInput,
+): Promise<Partial<Record<PlanProductRole, Stage3CategoryProductFacts[]>>> {
+  const { category, roles, ...selection } = input
+  const pool = await loadStage3RecommendationCandidatePool(client, category)
+  return Object.fromEntries(
+    roles.map((role) => [role, deriveStage3RecommendationCandidates(pool, { ...selection, role })]),
+  )
+}
+
+/**
+ * Fallback for clients that cannot batch (`loadCatalogBatchSnapshot` returned null):
+ * assemble the same snapshot shape from the per-product spec and protocol queries that
+ * `loadOneProduct` issues, so `deriveStage3RecommendationCandidates` needs one path only.
+ * Rows that `normalizeProductFactsFromSnapshot` would reject anyway are not queried.
+ */
+async function loadBatchSnapshotPerProduct(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+  products: Row[],
+): Promise<BatchSnapshot> {
+  const snapshot: BatchSnapshot = new Map()
+  const productIds = products
+    .filter((product) => product.category_key === category)
+    .map((product) => text(product.id))
+    .filter((id): id is string => Boolean(id))
+  const perProduct = await Promise.all(
+    productIds.map(async (productId) => {
+      const [specSnapshot, protocolRows] = await Promise.all([
+        loadCategorySpecSnapshot(client, category, productId),
+        loadProtocolRows(client, productId),
+      ])
+      return { productId, specSnapshot, protocolRows }
+    }),
+  )
+  for (const { productId, specSnapshot, protocolRows } of perProduct) {
+    for (const [table, byProduct] of specSnapshot) {
+      const rowsByProduct = snapshot.get(table) ?? new Map<string, Row[]>()
+      rowsByProduct.set(productId, byProduct.get(productId) ?? [])
+      snapshot.set(table, rowsByProduct)
+    }
+    for (const [table, rows] of [
+      ["product_application_protocols", protocolRows.protocolRows],
+      ["application_guidance_protocols", protocolRows.guidanceRows],
+    ] as const) {
+      const rowsByProduct = snapshot.get(table) ?? new Map<string, Row[]>()
+      rowsByProduct.set(productId, rows)
+      snapshot.set(table, rowsByProduct)
+    }
+  }
+  return snapshot
 }
 
 async function loadOneProduct(
@@ -504,6 +598,16 @@ async function loadCategorySpec(
   productId: string,
   selectionContext: CategorySelectionContext,
 ): Promise<LoadedCategorySpec> {
+  const snapshot = await loadCategorySpecSnapshot(client, category, productId)
+  return categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+}
+
+/** One product's spec-source rows in batch-snapshot shape, via the per-product queries. */
+async function loadCategorySpecSnapshot(
+  client: AdminClient,
+  category: PersonalPlanCategory,
+  productId: string,
+): Promise<BatchSnapshot> {
   const snapshot: BatchSnapshot = new Map()
   await Promise.all(
     categorySpecSources(category).map(async (source) => {
@@ -516,7 +620,7 @@ async function loadCategorySpec(
       snapshot.set(source.table, new Map([[productId, rows]]))
     }),
   )
-  return categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+  return snapshot
 }
 
 function categorySpecFromSnapshot(
@@ -668,6 +772,14 @@ async function loadProtocols(
   category: PersonalPlanCategory,
   productId: string,
 ) {
+  const { protocolRows, guidanceRows } = await loadProtocolRows(client, productId)
+  return protocolsFromRows(category, productId, protocolRows, guidanceRows)
+}
+
+async function loadProtocolRows(
+  client: AdminClient,
+  productId: string,
+): Promise<{ protocolRows: Row[]; guidanceRows: Row[] }> {
   const [{ data: rawProtocols, error: protocolError }, { data: guidance, error: guidanceError }] =
     await Promise.all([
       client
@@ -689,12 +801,7 @@ async function loadProtocols(
         .order("id", { ascending: true }),
     ])
   if (protocolError || guidanceError) throw new Error("stage3_authority_protocol_unavailable")
-  return protocolsFromRows(
-    category,
-    productId,
-    (rawProtocols ?? []) as Row[],
-    (guidance ?? []) as Row[],
-  )
+  return { protocolRows: (rawProtocols ?? []) as Row[], guidanceRows: (guidance ?? []) as Row[] }
 }
 
 function protocolsFromRows(
