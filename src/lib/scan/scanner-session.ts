@@ -182,6 +182,34 @@ export function applyRawDetection(
 }
 
 /**
+ * Which barcode of one frame to fold into the session. A frame can carry more than one —
+ * the bottle that was just scanned is still lying next to the one the user picked up —
+ * and always reading `results[0]` meant the new code was never even looked at while the
+ * old one held the D6 block.
+ *
+ * So: the first result that validates to something other than the blocked value, and
+ * `results[0]` when there is none. The fallback is deliberate — a blocked read is a
+ * *clean* read (ruling C1) that keeps resetting the active clock, which is what stops the
+ * search fallback from popping over a bottle we are simply ignoring on purpose.
+ *
+ * `validate` is injected for the same reason as in `applyRawDetection`: no identifier
+ * policy lives in this module.
+ */
+export function selectDetectionCandidate<T extends { rawValue: string }>(
+  results: readonly T[],
+  session: Pick<ScanSessionState, "blockedValue">,
+  validate: (raw: string) => { ok: true; value: string } | { ok: false },
+): T | null {
+  if (results.length === 0) return null
+  if (session.blockedValue === null) return results[0]
+  const unblocked = results.find((result) => {
+    const validated = validate(result.rawValue)
+    return validated.ok && validated.value !== session.blockedValue
+  })
+  return unblocked ?? results[0]
+}
+
+/**
  * Give back a decode the flow refused (controller ruling C3): `onDecoded` answers whether
  * it actually started a resolve, and a `false` means the value was never consumed — a
  * decode that lands while a sheet still covers the viewfinder must be able to fire again

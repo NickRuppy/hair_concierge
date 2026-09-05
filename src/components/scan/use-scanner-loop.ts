@@ -24,6 +24,7 @@ import {
   createScanSessionState,
   noteEmptyDetection,
   restartScanSessionState,
+  selectDetectionCandidate,
   unfireDetection,
   type ScanSessionState,
 } from "@/lib/scan/scanner-session"
@@ -371,7 +372,10 @@ export function useScannerLoop({
           return
         }
 
-        const primary = results[0]
+        // Not `results[0]`: a frame holding the blocked bottle AND a new one must look at
+        // the new one, or it would never be read while the old block stands.
+        const primary = selectDetectionCandidate(results, session, validateEanInput)
+        if (!primary) return
         const frameArea = video.videoWidth * video.videoHeight
         const { fire } = applyRawDetection(
           session,

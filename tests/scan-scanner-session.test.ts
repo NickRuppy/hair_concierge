@@ -10,6 +10,7 @@ import {
   createScanSessionState,
   noteEmptyDetection,
   restartScanSessionState,
+  selectDetectionCandidate,
   shouldFireTimeout,
   unfireDetection,
   type ScanSessionState,
@@ -447,4 +448,74 @@ test("unfireDetection: leaves the D6 block alone", () => {
   unfireDetection(session, EAN_A)
 
   assert.equal(session.blockedValue, EAN_B)
+})
+
+// ---------------------------------------------------------------------------
+// selectDetectionCandidate — which of several barcodes in one frame to read
+// ---------------------------------------------------------------------------
+
+test("selectDetectionCandidate: with one result, that result", () => {
+  const session = createScanSessionState()
+  assert.deepEqual(selectDetectionCandidate([{ rawValue: EAN_A }], session, fakeValidate()), {
+    rawValue: EAN_A,
+  })
+})
+
+test("selectDetectionCandidate: no result at all", () => {
+  const session = createScanSessionState()
+  assert.equal(selectDetectionCandidate([], session, fakeValidate()), null)
+})
+
+test("selectDetectionCandidate: skips the blocked value for a new one in the same frame", () => {
+  const session = createScanSessionState()
+  session.blockedValue = EAN_A
+
+  // The just-scanned bottle is still in shot next to the one the user picked up.
+  const picked = selectDetectionCandidate(
+    [{ rawValue: EAN_A }, { rawValue: EAN_B }],
+    session,
+    fakeValidate(),
+  )
+
+  assert.deepEqual(picked, { rawValue: EAN_B })
+})
+
+test("selectDetectionCandidate: everything blocked falls back to the first result", () => {
+  const session = createScanSessionState()
+  session.blockedValue = EAN_A
+
+  const picked = selectDetectionCandidate(
+    [{ rawValue: EAN_A }, { rawValue: EAN_A }],
+    session,
+    fakeValidate(),
+  )
+
+  // Deliberate: a blocked read is a clean read (ruling C1) and must keep resetting the
+  // active clock, so the frame is not reported as "nothing readable here".
+  assert.deepEqual(picked, { rawValue: EAN_A })
+})
+
+test("selectDetectionCandidate: an unreadable second code does not beat the blocked one", () => {
+  const session = createScanSessionState()
+  session.blockedValue = EAN_A
+
+  const picked = selectDetectionCandidate(
+    [{ rawValue: EAN_A }, { rawValue: "1234567890123" }],
+    session,
+    fakeValidate("1234567890123"),
+  )
+
+  assert.deepEqual(picked, { rawValue: EAN_A })
+})
+
+test("selectDetectionCandidate: with nothing blocked the first result wins", () => {
+  const session = createScanSessionState()
+
+  const picked = selectDetectionCandidate(
+    [{ rawValue: EAN_B }, { rawValue: EAN_A }],
+    session,
+    fakeValidate(),
+  )
+
+  assert.deepEqual(picked, { rawValue: EAN_B })
 })
