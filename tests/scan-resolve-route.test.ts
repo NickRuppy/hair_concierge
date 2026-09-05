@@ -81,7 +81,8 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
     loadScanProductFacts: async () => null,
-    loadRecommendationCandidates: async () => [],
+    loadRecommendationCandidates: async (_client, input) =>
+      Object.fromEntries(input.roles.map((role) => [role, []])),
     loadScanSavedState: async () => ({ state: null, managedByScan: false }),
     buildScanVerdict: () => inCatalogVerdict,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
@@ -446,9 +447,9 @@ const twoRoleShampooContext = {
 /** Facts stubbed to carry the role they were loaded for, so misuse is visible. */
 const factsLoadedFor = (role: string) => ({ productId, role }) as never
 
-test("scan resolve: a role-sensitive category loads facts and candidates per role", async () => {
+test("scan resolve: a role-sensitive category loads product facts per role and the candidate pool once", async () => {
   const factsRoles: string[] = []
-  const candidateRoles: string[] = []
+  const candidateLoads: Array<{ category: string; roles: readonly string[] }> = []
   let received: { perRoleFacts?: Record<string, unknown> } | null = null
 
   const handler = createScanResolveRouteHandler(
@@ -458,11 +459,9 @@ test("scan resolve: a role-sensitive category loads facts and candidates per rol
         factsRoles.push(selection.role)
         return factsLoadedFor(selection.role)
       },
-      loadRecommendationCandidates: async (_client, selection) => {
-        // The loader's input is a union; the scan route only ever passes the selection form.
-        const { role } = selection as { role: string }
-        candidateRoles.push(role)
-        return [factsLoadedFor(role)]
+      loadRecommendationCandidates: async (_client, input) => {
+        candidateLoads.push({ category: input.category, roles: input.roles })
+        return Object.fromEntries(input.roles.map((role) => [role, [factsLoadedFor(role)]]))
       },
       buildScanVerdict: (input) => {
         received = input as never
@@ -474,7 +473,11 @@ test("scan resolve: a role-sensitive category loads facts and candidates per rol
   assert.equal(response.status, 200)
 
   assert.deepEqual(factsRoles.sort(), ["shampoo_dandruff", "shampoo_everyday"])
-  assert.deepEqual(candidateRoles.sort(), ["shampoo_dandruff", "shampoo_everyday"])
+  // F12: the candidate pool is role-independent, so two roles must cost ONE load that is
+  // asked for both roles — not one full catalog load per role.
+  assert.equal(candidateLoads.length, 1)
+  assert.equal(candidateLoads[0]!.category, "shampoo")
+  assert.deepEqual([...candidateLoads[0]!.roles].sort(), ["shampoo_dandruff", "shampoo_everyday"])
 
   const perRoleFacts = received!.perRoleFacts as Record<
     string,
@@ -485,6 +488,40 @@ test("scan resolve: a role-sensitive category loads facts and candidates per rol
   assert.equal(perRoleFacts.shampoo_dandruff.productFacts.role, "shampoo_dandruff")
   assert.equal(perRoleFacts.shampoo_everyday.recommendationCandidates[0].role, "shampoo_everyday")
   assert.equal(perRoleFacts.shampoo_dandruff.recommendationCandidates[0].role, "shampoo_dandruff")
+})
+
+test("scan resolve: a candidate load that omits a requested role fails closed as 503", async () => {
+  const attempts = collectAttempts()
+  let verdictCalls = 0
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      loadScanEvaluationContext: async () => twoRoleShampooContext,
+      // Only the first role comes back — a loader bug must not grade the second role
+      // against empty or borrowed candidates.
+      loadRecommendationCandidates: async (_client, input) => ({
+        [input.roles[0]!]: [factsLoadedFor(input.roles[0]!)],
+      }),
+      buildScanVerdict: () => {
+        verdictCalls += 1
+        return inCatalogVerdict
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "temporarily_unavailable" })
+  assert.equal(verdictCalls, 0)
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
+    {
+      attemptId: "attempt-1",
+      lookupOutcome: "hit",
+      terminalOutcome: "temporarily_unavailable",
+      matchedProductId: productId,
+      failureStage: "product_facts",
+    },
+  ])
 })
 
 test("scan resolve: a category whose facts do not vary by role loads exactly once", async () => {

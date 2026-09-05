@@ -7,10 +7,9 @@ import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import {
   loadScanProductFacts,
-  loadStage3RecommendationCandidates,
+  loadStage3RecommendationCandidatesByRole,
   type CategorySelectionContext,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
-import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
@@ -87,7 +86,7 @@ export type ScanResolveRouteDeps = {
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
   loadScanEvaluationContext: typeof loadScanEvaluationContext
   loadScanProductFacts: typeof loadScanProductFacts
-  loadRecommendationCandidates: typeof loadStage3RecommendationCandidates
+  loadRecommendationCandidates: typeof loadStage3RecommendationCandidatesByRole
   loadScanSavedState: typeof loadScanSavedState
   buildScanVerdict: typeof buildScanVerdict
   loadActiveProductById: (client: SupabaseClient, productId: string) => Promise<ActiveProductLookup>
@@ -363,54 +362,63 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           ? decision.target
           : null
 
-      const loadFactsForRole = async (role: PlanProductRole): Promise<ScanRoleFacts> => {
-        const selectionContext: CategorySelectionContext = {
-          hairThickness: context.snapshot.profile.hair.thickness,
-          role,
-          shampooTarget,
-          conditionerTarget,
-        }
-        attempt.failureStage = "product_facts"
-        const [productFacts, recommendationCandidates] = await Promise.all([
-          deps.loadScanProductFacts(client, category, productId, selectionContext),
-          isNotNeeded(decision)
-            ? Promise.resolve<Stage3CategoryProductFacts[]>([])
-            : deps.loadRecommendationCandidates(client, {
-                category,
-                hairThickness: selectionContext.hairThickness,
-                role,
-                shampooTarget,
-                conditionerTarget,
-                completeCatalog: true,
-              }),
-        ])
-        return { productFacts, recommendationCandidates }
-      }
-
       /**
        * `buildScanVerdict` evaluates EVERY role of the decision, but a category's derived
        * facts are identical for all of its roles except Shampoo, where `selectShampooSpec`
        * picks the spec row by the role's expected bucket/scalp route. So mirror
-       * `product-previews.ts`: one shared load for every other category, one load per role
-       * for a role-sensitive one — otherwise e.g. the dandruff role would be graded against
+       * `product-previews.ts`: one shared load for every other category, per-role facts for
+       * a role-sensitive one — otherwise e.g. the dandruff role would be graded against
        * facts loaded for the everyday role.
        *
-       * F12 asked whether the candidate pool could be loaded once and re-specced per role.
-       * It cannot from here: `selectShampooSpec` is private to `catalog-facts.ts` and reads
-       * the raw `product_shampoo_specs` rows, which `Stage3CategoryProductFacts` does not
-       * retain (it keeps only the already-selected spec, and a `factFingerprint` derived
-       * from it). Collapsing the load needs a seam in that module, not a second selector
-       * here.
+       * The candidate POOL is role-independent, so it is loaded exactly once for all roles
+       * and only re-specced per role inside `loadStage3RecommendationCandidatesByRole` (F12).
+       * The scanned product's own facts are still one small load per role.
        */
       const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
       const roleSensitive = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
       const rolesToLoad = roleSensitive
         ? [...new Set<PlanProductRole>([primaryRole, ...decision.roles])]
         : [primaryRole]
-      const loadedFacts = new Map<PlanProductRole, ScanRoleFacts>(
-        await Promise.all(
-          rolesToLoad.map(async (role) => [role, await loadFactsForRole(role)] as const),
+      const hairThickness = context.snapshot.profile.hair.thickness
+      const selectionContextFor = (role: PlanProductRole): CategorySelectionContext => ({
+        hairThickness,
+        role,
+        shampooTarget,
+        conditionerTarget,
+      })
+
+      attempt.failureStage = "product_facts"
+      const [productFactsByRole, candidatesByRole] = await Promise.all([
+        Promise.all(
+          rolesToLoad.map(
+            async (role) =>
+              [
+                role,
+                await deps.loadScanProductFacts(
+                  client,
+                  category,
+                  productId,
+                  selectionContextFor(role),
+                ),
+              ] as const,
+          ),
         ),
+        isNotNeeded(decision)
+          ? Promise.resolve(Object.fromEntries(rolesToLoad.map((role) => [role, []])))
+          : deps.loadRecommendationCandidates(client, {
+              category,
+              hairThickness,
+              shampooTarget,
+              conditionerTarget,
+              roles: rolesToLoad,
+            }),
+      ])
+      const loadedFacts = new Map<PlanProductRole, ScanRoleFacts>(
+        productFactsByRole.map(([role, productFacts]) => {
+          const recommendationCandidates = candidatesByRole[role]
+          if (!recommendationCandidates) throw new Error("scan_resolve_candidates_role_missing")
+          return [role, { productFacts, recommendationCandidates }]
+        }),
       )
       const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
 
@@ -566,7 +574,7 @@ export const POST = createScanResolveRouteHandler({
   loadQuarantinedProductIdsAmong,
   loadScanEvaluationContext,
   loadScanProductFacts,
-  loadRecommendationCandidates: loadStage3RecommendationCandidates,
+  loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
   loadScanSavedState,
   buildScanVerdict,
   loadActiveProductById,
