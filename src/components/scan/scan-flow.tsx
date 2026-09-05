@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useReducer, useRef } from "react"
+import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -78,6 +78,18 @@ const CAMERA_NOTICE_COPY: Record<ScanCameraTileReason, string> = {
 }
 
 /**
+ * `insecure` is the one reason with no retry: nothing the user can do inside the page
+ * turns an http:// origin into a secure context, so offering the button would only
+ * promise a recovery that cannot happen.
+ */
+const CAMERA_RETRY_LABEL: Record<ScanCameraTileReason, string | null> = {
+  denied: "Kamera erneut versuchen",
+  no_camera: "Kamera erneut versuchen",
+  insecure: null,
+  stalled: "Kamera neu starten",
+}
+
+/**
  * `analytics` defaults to the safe no-op port (matches `Stage3ProductsFlow`'s default of
  * `noOpStage3Analytics`) — a bare `<ScanFlow />` never live-tracks. Production wiring
  * happens one layer up in `scan-page-client.tsx`, the thin client boundary that supplies
@@ -94,6 +106,13 @@ export function ScanFlow({
   const { toast } = useToast()
   const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
   const requests = useLatestRequest()
+  /**
+   * Counts "Kamera erneut versuchen" taps. It keys the `<Scanner>` so a retry really
+   * re-runs `getUserMedia` (after `onStalled` the loop stops retrying for that camera
+   * cycle, so nothing short of a fresh mount recovers), and `> 0` tells the fallback
+   * apart from the first failure — see `handleUnavailable`.
+   */
+  const [cameraRetries, setCameraRetries] = useState(0)
 
   // Reset at the start of every scanning window (mount + each "Nochmal scannen") so
   // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
@@ -233,13 +252,21 @@ export function ScanFlow({
   const handleUnavailable = useCallback(
     (reason: ScanUnavailableReason) => {
       dispatch({ type: "camera_unavailable", reason })
-      dispatch({ type: "auxiliary_opened", sheet: "search" })
+      // Only the FIRST failure pops the search sheet. After a retry the user has already
+      // seen (and dismissed) it once — re-opening it over their deliberate retry would
+      // just be the pop-open they closed a moment ago.
+      if (cameraRetries === 0) dispatch({ type: "auxiliary_opened", sheet: "search" })
       // Pass the real reason through ("denied" | "no_camera" | "insecure") — `trigger`
       // is a plain string in the event map, so the finer-grained value costs nothing.
       analytics.track("scan_fallback_search_used", { trigger: reason })
     },
-    [analytics],
+    [analytics, cameraRetries],
   )
+
+  const retryCamera = useCallback(() => {
+    setCameraRetries((count) => count + 1)
+    dispatch({ type: "camera_retry" })
+  }, [])
 
   const handleStalled = useCallback(() => {
     dispatch({ type: "camera_stalled" })
@@ -328,6 +355,9 @@ export function ScanFlow({
 
       {cameraTileReason === null ? (
         <Scanner
+          // A retry must re-mount: `useScannerLoop` gives up on a camera cycle once it
+          // has reported `onStalled`, so only a fresh mount re-acquires the stream.
+          key={cameraRetries}
           active
           detectionPaused={isDetectionPaused(state)}
           sessionEpoch={state.epoch}
@@ -342,6 +372,15 @@ export function ScanFlow({
           <p className="text-sm leading-6 text-muted-foreground">
             {CAMERA_NOTICE_COPY[cameraTileReason]}
           </p>
+          {CAMERA_RETRY_LABEL[cameraTileReason] ? (
+            <button
+              type="button"
+              onClick={retryCamera}
+              className="mt-4 min-h-[48px] w-auto min-w-[220px] rounded-[12px] border-[1.5px] border-[var(--brand-plum-light)] bg-transparent px-6 text-[15px] font-semibold text-[var(--brand-plum-dark)] transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+            >
+              {CAMERA_RETRY_LABEL[cameraTileReason]}
+            </button>
+          ) : null}
         </div>
       )}
 
