@@ -373,6 +373,49 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     expect(api.resolveBodies).toHaveLength(1)
   })
 
+  test("F3 (in-flight): a detect() that resolves after the search sheet opened does not consume the barcode", async ({
+    page,
+  }) => {
+    const api = await installScanApi(page)
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    // Bank the FIRST of the two reads a stable decode needs (one frame with the code,
+    // then an empty one, in a single task so the resting frame cannot fire it early).
+    // The cycle frozen below is then the one that would complete the read — a cycle that
+    // could only ever have banked a first read would prove nothing about consuming it.
+    const answered = await page.evaluate(() => window.__scanLab!.detections)
+    await page.evaluate((ean) => {
+      window.__scanLab?.emit(ean, 1)
+      window.__scanLab?.emitNone(1)
+    }, EAN_PRODUCT_A)
+    await expect
+      .poll(() => page.evaluate(() => window.__scanLab!.detections))
+      .toBeGreaterThan(answered + 1)
+
+    // The real race, not a simulated one: freeze a detection cycle mid-`await`, THEN put
+    // the barcode in front of the lens, so the frozen cycle comes back with a result
+    // describing a frame from before the sheet went up.
+    await page.evaluate(() => window.__scanLab?.holdDetection())
+    await emit(page, EAN_PRODUCT_A, 6)
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
+
+    await page.evaluate(() => window.__scanLab?.releaseDetection())
+    await expectStable(
+      async () => ({ step: (await labState(page)).step, calls: api.resolveBodies.length }),
+      (sample) => sample.step === "scanning" && sample.calls === 0,
+    )
+
+    // And it was not consumed either: the same code, never moved, still resolves once.
+    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await emit(page, EAN_PRODUCT_A)
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
+    await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
+    expect(api.resolveBodies).toHaveLength(1)
+  })
+
   test("F4: dismissing the unknown sheet before the submit lands re-opens nothing", async ({
     page,
   }) => {

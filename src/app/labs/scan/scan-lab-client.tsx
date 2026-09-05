@@ -49,6 +49,14 @@ export type ScanLab = {
   emitNone(times?: number): void
   /** Drop everything queued and leave the frame empty. */
   clear(): void
+  /**
+   * Freeze the NEXT `detect()` call mid-await: it answers only once `releaseDetection()`
+   * runs. That is the one way to build the real F3 race — a detection cycle that started
+   * while the viewfinder was live and comes back after a sheet went up over it.
+   */
+  holdDetection(): void
+  /** Let a held `detect()` answer (a no-op when nothing is held). */
+  releaseDetection(): void
   /** One-shot: the NEXT camera acquisition rejects with a `DOMException` of this name. */
   denyCamera(reason?: string): void
   /** Kill the live stream (`stop()` + an `ended` event) so the recovery path runs. */
@@ -145,6 +153,9 @@ function createScanLab(): ScanLabInternals {
    */
   let restingFrame: ScanLabFrame = null
   let pendingFailure: string | null = null
+  /** Armed by `holdDetection()`, consumed by the first `detect()` that reaches it. */
+  let detectionGate: Promise<void> | null = null
+  let releaseDetectionGate: (() => void) | null = null
   let liveStream: MediaStream | null = null
   let streams = 0
   let detections = 0
@@ -177,7 +188,15 @@ function createScanLab(): ScanLabInternals {
 
   const detectorFactory = async (): Promise<ScanBarcodeDetector> => ({
     async detect() {
+      if (detectionGate) {
+        const gate = detectionGate
+        // Consumed by this call only: `holdDetection()` freezes exactly one cycle.
+        detectionGate = null
+        await gate
+      }
       detections += 1
+      // Read AFTER the gate, so a barcode put in front of the lens while the cycle was
+      // frozen is what the frozen cycle comes back with.
       const frame = queue.length > 0 ? (queue.shift() as ScanLabFrame) : restingFrame
       if (frame === null) return []
       return [
@@ -210,6 +229,16 @@ function createScanLab(): ScanLabInternals {
     clear() {
       queue.length = 0
       restingFrame = null
+    },
+    holdDetection() {
+      if (detectionGate) return
+      detectionGate = new Promise<void>((resolve) => {
+        releaseDetectionGate = resolve
+      })
+    },
+    releaseDetection() {
+      releaseDetectionGate?.()
+      releaseDetectionGate = null
     },
     denyCamera(reason = "NotAllowedError") {
       pendingFailure = reason

@@ -78,7 +78,9 @@ page fabricates its own scenario. Useful ones under `src/app/labs/`:
   `window.__scanLab`: `emit("4006381333931")` scans a barcode (two detections = one stable
   read; it then stays in frame), `emitNone(3)` takes it back out, `denyCamera("NotAllowedError")`
   makes the next camera acquisition fail, `stall()` kills the live stream, `startCamera()`
-  releases a camera held by the `__SCAN_LAB_HOLD_CAMERA` boot flag, and `events` /
+  releases a camera held by the `__SCAN_LAB_HOLD_CAMERA` boot flag, `holdDetection()` /
+  `releaseDetection()` freeze one detection cycle mid-await (so a decode can be made to
+  land while a sheet is open), and `events` /
   `transitions` / `state` expose what the flow tracked and where it is. The `/api/scan/*`
   calls are NOT mocked by the page — without a signed-in session every resolve fails, so
   for anything past the decode either use the dev login (§1) or intercept the routes the
