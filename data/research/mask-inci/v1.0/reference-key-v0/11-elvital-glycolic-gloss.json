@@ -1,0 +1,324 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "productId": "11-elvital-glycolic-gloss",
+  "identity": {
+    "brand": "L'Oréal Paris Elvital",
+    "productName": "Glycolic Gloss, 5-Minuten Haar-Laminierung",
+    "packSize": "200 ml",
+    "gtinEan": "3600524128500",
+    "market": "DE (dm.de + Rossmann.de + Müller)",
+    "formulaSource": "retailer-aggregated (douglas.de 5011301009, rossmann.de and parfumdreams.de listing copy) — NOT a single verbatim fetch; dm.de and Rossmann.de direct fetches both blocked, accessed 2026-09-04",
+    "rawInciSha256": "8ef9b78b553d932ae16173a202b55a6a38a9a4bf81b596c2aa8001f3a265a98d",
+    "identityState": "provisional_formula_conflict",
+    "identityStateReason": "The formula of record is retailer-aggregated rather than verbatim, and it differs materially in ORDER from the lexicon's own worked example for this product family ([D-3], which reports Parfum at rank 4 and glycolic acid last). [D-3] is itself quarantined as an unverified lookalike-domain transcription. The two readings agree on the substance — a structurally minimal, single-cationic, lipid-free mask with the hero acid at the very bottom — but not on the tail index. Per G5 the conflict is preserved and the smallest affected scope is lowered."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "Directions state a contact time (5 Minuten, also the product's own name) and a rinse, after application to damp hair. Charter F4 is explicit and binding: gloss/lamination rinse-out treatments are included and treated as shine-focused masks, with the claims claim-gated and conservative. The charter's F4 boundary-case list names this exact product.",
+    "evidenceSignals": [
+      "directions: 'Großzügige Menge auf feuchtes Haar auftragen … 5 Minuten einwirken lassen, gründlich ausspülen'",
+      "charter F4 and §2.1 table: gloss/lamination rinse-out treatments are in scope",
+      "charter known-boundary-case list: \"L'Oréal Elvital Glycolic Gloss 5-Min-Laminierung … gloss/lamination → included, claim-gated\"",
+      "single stated mode"
+    ],
+    "placementConjunctNote": "The directions state 'von den Wurzeln bis in die Spitzen' — explicit ROOT application, which contradicts P5's canonical 'Längen und Spitzen, Ansatz aussparen'. Under R8's mask delta this is a protocol deviation that fires the root/scalp application review trigger; it does not silently change R8 and does not create a scalp property. Eligibility was not refused: the stated placement INCLUDES lengths and ends, and the charter names this product as included by identity. See AP-11-ROOTS."
+  },
+  "tailMarker": {
+    "ingredient": "CI 17200/RED 33",
+    "rank": 7,
+    "anomalyNote": "The earliest tail-class ingredient is a COLOURANT at rank 7 — the only cohort product where the marker is neither a fragrance nor a preservative, and the only one where Parfum is the FINAL entry (rank 30). §3.1's literal anomaly conditions are not met (rank 7 > 3, and Cetearyl Alcohol @2 and Behentrimonium Chloride @4 precede it), so the marker is technically resolved. But a colourant pair at ranks 7–8 in a list whose fragrance sits at 30 is not a plausible ~1% proxy: cosmetic colourants are typically used far below 1%, and this ordering is more consistent with a house listing convention or a retailer transcription artefact than with descending weight. I therefore fire `tail_marker_anomaly` by reviewer judgment and cap every affected field at moderate confidence, while still applying the marker as written. See AP-11-COLOURANT."
+  },
+  "aboveTailSegment": [
+    "1 AQUA/WATER",
+    "2 CETEARYL ALCOHOL",
+    "3 COCAMIDOPROPYL BETAINE",
+    "4 BEHENTRIMONIUM CHLORIDE",
+    "5 PROPYLENE GLYCOL",
+    "6 AMODIMETHICONE"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": { "value": "moderate", "note": "One cationic surfactant, one fatty alcohol, one silicone; no lipid of any kind above the tail. A structurally minimal formula, exactly as the lexicon's worked example for this product family describes." },
+    "conditioning_deposition_potential": { "value": "moderate", "note": "Behentrimonium Chloride @4 with Cetearyl Alcohol @2; Cetrimonium Chloride @25 is deep in the tail." },
+    "wet_slip_detangling_potential": { "value": "moderate", "note": "Single cationic plus amino silicone; wet evidence is not dry evidence." },
+    "dry_combability_potential": { "value": "moderate", "note": "Amodimethicone deposits preferentially on damaged, more anionic fibre regions — direction only, no numbers. No dry endpoint." },
+    "surface_lubrication_softness_potential": { "value": "moderate", "note": "No lipid above the tail; the lubrication route is the silicone alone." },
+    "smoothing_frizz_control_potential": { "value": "moderate", "note": "A real but single-species film route; not weatherproof frizz control." },
+    "shine_potential": { "value": "higher", "note": "An alignment-oriented amino silicone above the tail with ZERO lipid load above the tail — the low-lipid optical architecture §9.5.4 criterion 1 describes — plus unambiguous exact-product gloss positioning. Multiple independent endpoint-relevant observations, capped at E2." },
+    "humectant_support_potential": { "value": "lower", "note": "Propylene Glycol @5 is the only above-tail humectant, and Caprylyl Glycol @22 is a preservative booster to be discounted in any case." },
+    "weight_deposition_potential": { "value": "lower", "note": "No lipid, butter, oil or occlusive above the tail; Cocos Nucifera Oil @9 and Propylene Glycol Dicaprylate/Dicaprate @21 are both demoted." },
+    "body_lightness_potential": { "value": "likely_preserving", "note": "Lipid-free credited architecture; no lightness positioning to corroborate, so the reading stays formula-side." },
+    "repair_lubrication_protection": { "value": "candidate", "note": "Manageability route only." },
+    "repair_surface_film": { "value": "none_visible", "note": "No protein or peptide species at any rank." },
+    "bond_specific_support": { "value": "unknown", "note": "No bond positioning and no named bond token. Glycolic Acid @29 is an explicit family-6 non-qualifier." },
+    "color_chemical_damage_protection": { "value": "general_conditioning", "note": "No colour-protection positioning; the CI entries are the product's own dye load, not a colour-care route." },
+    "fragrance_scalp_exposure": { "value": "aromatic_or_allergen_exposure", "note": "Hydroxycitronellal @12, Limonene @18, Linalool @19, Hexyl Cinnamal @28, Parfum @30. Root application is a protocol deviation, not a scalp property." }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, retailer-aggregated DE INCI of record (sha256 8ef9b78b…), above-tail ranks 1–6; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Exactly one §9.1 structural signal is satisfied. The credited segment is six entries long and contains one cationic, one fatty alcohol, one amphoteric surfactant, one glycol and one silicone — no lipid at all. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three, the one satisfied signal",
+        "BEHENTRIMONIUM CHLORIDE (rank 4) — the only cationic surfactant above the tail",
+        "COCAMIDOPROPYL BETAINE (rank 3) — an AMPHOTERIC surfactant, deliberately NOT counted toward S1; it is a cleansing/foam agent, not a long-chain cationic quat or protonatable amidoamine",
+        "CETRIMONIUM CHLORIDE (rank 25) — a second cationic, deep in the tail",
+        "no non-fatty-alcohol lipid above the tail (Cocos Nucifera Oil @9 is below the marker)"
+      ],
+      "derivation": "S1 = NOT satisfied (one qualifying cationic above the tail). S2 = satisfied (Cetearyl Alcohol @2). S3 = NOT satisfied (zero lipids above the tail). Count = 1 of 3.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.1's 'everything else, including exactly one satisfied signal'.",
+        "`high` does not apply: only S2 holds.",
+        "`low` does not apply: Cetearyl Alcohol @2 defeats its second conjunct. Note that on substance this formula is the leanest conventional emulsion in the cohort and `low` would arguably describe it better — a further instance of AP-07-LOWUNREACHABLE, here on the conditioning scale rather than the weight scale.",
+        "Confidence `moderate` and additionally capped by the fired `tail_marker_anomaly`: only one signal is available, the source is retailer-aggregated rather than verbatim, and the marker's plausibility is contested."
+      ],
+      "counterSignals": [
+        "Cocamidopropyl Betaine at rank 3 of a rinse-out mask is unusual and would be a cleansing/foam contribution; it is credited nowhere.",
+        "Sodium Chloride @10, Hydroxypropyl Guar @11, Acrylates/Stearyl Methacrylate Copolymer @23 and Sorbitan Oleate @24 are formulation infrastructure and are in the tail besides.",
+        "The `tail_marker_anomaly` (colourant marker at rank 7 against Parfum at rank 30) makes the above-tail boundary the least secure in the cohort."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support.",
+        "Formula source is aggregated across three retailer listings, not a single verbatim page; the cohort capture itself recommends a direct re-fetch at freeze time."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "The `high` anchor fails on cationic count and on both supporting alternatives; the `low` anchor fails on the cetearyl-class conjunct alone. `moderate` is the residual, for a formula with no lipid whatsoever above the tail. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "BEHENTRIMONIUM CHLORIDE (rank 4) — a single qualifying cationic above the tail (low-anchor conjunct 1: SATISFIED)",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
+        "no R4b heavy lipid at any rank; Cocos Nucifera Oil @9 is the only heavy candidate and it is below the marker (low-anchor conjunct 3: SATISFIED)",
+        "AMODIMETHICONE (rank 6) — a single silicone; the occlusive-stack alternative needs two species or a dimethicone/dimethiconol pair"
+      ],
+      "derivation": "§9.2 `high` required base leg 1 fails; both supporting alternatives also fail. §9.2 `low` conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual bucket.",
+        "`high` does not apply: one cationic, no heavy lipid above the tail, one silicone.",
+        "`low` does not apply on the cetearyl conjunct alone — the fourth cohort instance of AP-07-LOWUNREACHABLE.",
+        "§9.2 conflict fallback not engaged: no `high` reached. Note that the product's positioning ('für stumpfes, poröses Haar', a gloss treatment) carries no richness claim either way."
+      ],
+      "counterSignals": ["The graded `weight_deposition_potential` reads `lower` against a profile value of `moderate` — the anchor's structure, not the evidence."],
+      "limitations": ["A soft preference with a stated reason, never an exclusion."]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6; comparative care emphasis, never an assertion about a user's protein or moisture state (G6).",
+      "rationale": "D6 is explicit that a gloss/lamination mask classifies by the care base it actually carries, not by its acid claim. The base here is a conventional cetearyl/behentrimonium/amodimethicone conditioning architecture with no protein route — which is exactly the pattern D6's own worked example describes, and it lands in `moisture`. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank",
+        "CETEARYL ALCOHOL (2), BEHENTRIMONIUM CHLORIDE (4), AMODIMETHICONE (6) — the conventional conditioning base D6 names for this product family",
+        "PROPYLENE GLYCOL (rank 5) — the only above-tail humectant",
+        "GLYCOLIC ACID (rank 29) — the hero acid, second from last in the list, contributing nothing to care_direction under D6"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species at any rank), closing `protein` and `balanced`. D6's gloss/lamination rule is applied verbatim: classify by the care base, not the acid claim. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning architecture without a dominant protein-film route.",
+        "`protein` does not apply: no protein exists anywhere. (D6 notes the sibling case Balea Glow & Shine reaches `protein` because its keratin route is material; this product has no such route.)",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Confidence `moderate` rather than `high`: the route separation is unambiguous, but the fired `tail_marker_anomaly` and the aggregated source cap it."
+      ],
+      "counterSignals": [
+        "The acid identity is carried entirely by the `shine` focus, not by care_direction — D6's explicit instruction, applied.",
+        "D4 does not fire."
+      ],
+      "limitations": ["Banned wording observed absolutely — see the shine record."]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "No named bond chemistry and no protein species at any rank. Glycolic acid and amino silicone are both explicit non-qualifiers. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "GLYCOLIC ACID (rank 29) — explicit family-6 bond non-qualifier and an explicit §9.4 non-upgrader (citric/glycolic acids are never bond evidence)",
+        "AMODIMETHICONE (rank 6) — amino silicone, explicit family-6 non-qualifier",
+        "POLYQUATERNIUM-37 (rank 17) — cationic polymer, explicit non-upgrader and in the tail",
+        "no protein or peptide species at any rank"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; no material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists.",
+        "`high` does not apply: no named bond token exists.",
+        "R6a applied: glycolic acid TEMPORARILY PLASTICIZES the fibre (a measured decrease in Young's modulus). It does not seal, coat, close the cuticle, laminate, or produce lasting change, and it contributes nothing to this field."
+      ],
+      "counterSignals": [
+        "The pack claims 'versiegelt die Haaroberfläche mit intensivem, langanhaltendem Glanz' and the directions say 'brillant zu versiegeln'. Both use wording that R6a and §9.5.4 place on an absolute banned list. They are quoted here strictly as claim context; no part of this record adopts sealing, lasting, or lamination language."
+      ],
+      "limitations": ["Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."]
+    },
+    "primaryFocus": {
+      "value": "shine",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–6; §9.5.4 shine threshold with its claim-gated third criterion.",
+      "rationale": "All three §9.5.4 criteria are met. The formula shape is the one §9.5.4 criterion 1 describes as distinguishing a gloss product from a rich nourishing mask — an alignment-oriented amino silicone above the tail with a comparatively low lipid load, and here the lipid load above the tail is literally zero. The claim leg is satisfied by unambiguous exact-product Gloss/Laminierung/Glanz positioning, used as corroboration only. E2 ceiling: temporary optical/surface emphasis and comparative shine POTENTIAL — never sealing, never lasting.",
+      "evidenceSignals": [
+        "AMODIMETHICONE (rank 6) — alignment-oriented R2 silicone above the tail",
+        "zero R4b heavy lipids above the tail, and in fact zero lipids of any class above the tail — the comparatively low lipid load criterion 1 requires",
+        "COCOS NUCIFERA OIL (rank 9) — the formula's only heavy lipid candidate, BELOW the marker, so criterion 1's lipid condition is satisfied on the credited segment",
+        "POLYQUATERNIUM-37 (rank 17) and HYDROXYPROPYL GUAR (rank 11) — cationic polymers, both in the tail; the optical route rests on the silicone alone",
+        "GLYCOLIC ACID (rank 29) — R6a acid-gloss context: supporting context, never sufficient, and here it earns nothing at its rank",
+        "claims: '19% Gloss-Complex mit Glykolsäure', 'erstes Haar-Laminierungs-Produkt von L'Oréal Paris für zuhause', 'für stumpfes, poröses Haar'; product name 'Glycolic Gloss, 5-Minuten Haar-Laminierung'"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation plus one M3 optical observation. Step 3: `repair` blocked (no R5, no bond, and R6a can never set repair); `curl_support` blocked (single cationic, no above-tail polymer); `color_care` blocked (no colour-protection candidate and no colour-protection positioning — the CI entries are the product's own dye load, and colour-DEPOSITING masks are excluded at G0 in any case); `lightness` blocked (weight `moderate`, not `low`). Step 4 `moisture` blocked (one above-tail humectant against a required three). Step 5 `shine`: all three criteria evaluated and met.",
+      "thresholdReasoning": [
+        "Criterion 1 CLEARS: a distinct optical emphasis architecture — an alignment-oriented R2 silicone above the tail — with a comparatively low lipid load and no R4b heavy lipid above the tail. This directly answers §18 open question 6, which asked whether the low-lipid-load criterion would exclude products the charter explicitly wants classified as shine-focused. For this product it does not: the credited segment is lipid-free, so the criterion is met comfortably rather than narrowly.",
+        "Criterion 2 CLEARS: the optical route is not merely a smoothing film already counted. No smoothing focus was awarded, and the architecture is not the ordinary M1 deposition — it is a lipid-free, single-silicone, alignment-oriented shape. §9.5.4's fallback instruction ('if the same M1/M3 deposition is the sole basis, select smoothing') would apply to a formula whose optical claim rested on nothing but its conditioning base; this formula's base is unusually thin and the silicone is the distinct addition.",
+        "Criterion 3 CLEARS on claim corroboration — the one legitimately claim-gated leg in this record, and the only place in the entire cohort where unblinding changed a value. Gloss, Glaze, Laminierung and Glanz positioning are all present in the exact-product name and claims. Corroboration only: it could not have created the route, and criteria 1 and 2 were established blind.",
+        "`smoothing` was the blind-lane value and lost to `shine` only on criterion 3. Recorded as a blind-to-final change with its reason.",
+        "`general` does not apply: a candidate cleared at step 5.",
+        "There is NO lamination property and no `lamination` focus value. Gloss identity is carried entirely by `shine`, per charter F4, D2 and evidence §7."
+      ],
+      "counterSignals": [
+        "The `tail_marker_anomaly` matters more here than anywhere else: if the marker were taken at Phenoxyethanol @13 instead of the colourant @7, Cocos Nucifera Oil @9 and Hydroxypropyl Guar @11 would come above the tail. The coconut oil is an R4b heavy lipid, which would defeat criterion 1's low-lipid-load condition and collapse `shine` to `smoothing` or `general`. This is the single most marker-sensitive focus call in the cohort.",
+        "The exact-product claim '19% Gloss-Complex' is an E0 marketing figure and is not a concentration fact; no percentage was inferred from it.",
+        "Glycolic acid's skin-exfoliation evidence is not imported, and its position (rank 29, second from last) is the lexicon's own standing reminder that acid-led positioning and acid-led architecture are unrelated."
+      ],
+      "limitations": [
+        "Banned wording, absolute (evidence §7, §9.5.4, R6a): this record never says seals, versiegelt, closes the cuticle, laminates, lasting, permanent, or builds a protective layer that stays — notwithstanding that the product's own pack and directions use two of those words. Permitted and used: temporary optical/surface emphasis, comparative shine potential.",
+        "The optical mechanism behind gloss (surface smoothing raising specular reflection) is not separable from ordinary smoothing-film shine; `shine` here is a positioning-corroborated architectural reading, not a measured optical result. Goniophotometry or blinded visual assessment would be required for E3."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "`smoothing` is the only candidate and it would reuse the identical amodimethicone film that carries the primary — the double-count §6 rule 2 forbids.",
+      "evidenceSignals": [
+        "AMODIMETHICONE (6) is the sole non-base route above the tail and has been spent on the primary",
+        "PROPYLENE GLYCOL (5) — one humectant, blocking `moisture` as a secondary"
+      ],
+      "derivation": "§6 rule 2 and the §9.5.2 secondary rule: a secondary must add useful matching information rather than restate the primary's mechanism. §9.5.3 criterion 1 fails for moisture.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: with a six-entry credited segment containing exactly one non-base ingredient, there is no second endpoint to describe."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": ["fine", "normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": ["derived from weight_potential = moderate"],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the moderate row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, refused on the cetearyl conjunct despite a lipid-free credited segment.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-level prior; no production projection is authorized."]
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged.",
+      "evidenceSignals": ["conditioning_level = moderate", "repair_support_level = low", "bond_route = none"],
+      "derivation": "§9.7 row 2.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row.",
+        "{moderately_damaged, highly_damaged} does not apply: the specialist branch requires conditioning_level `high` and a qualifying route; neither is present, and §9.7's never-qualifying list names generic silicone explicitly.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Note the interaction with positioning: the product is aimed at 'stumpfes, poröses Haar' (dull, porous hair). Porosity is not a damage_fit input and no such inference was made."
+      ],
+      "counterSignals": [],
+      "limitations": ["Watch-list item 1: fully computable from fields 1 and 4."]
+    },
+    "textureFit": {
+      "value": ["straight", "wavy", "curly"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": ["weight_potential = moderate"],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{wavy, curly, coily} does not apply: weight_potential is not `high` and there is no high-slip R1/R3 breadth above the tail.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-only; no current consumer."]
+    }
+  },
+  "bondRoute": { "value": "none", "token": null, "rank": null },
+  "focusCareVerdict": {
+    "value": "not_applicable",
+    "claimRole": "corroborating",
+    "note": "The chosen focus is not a repair/moisture decision — it is an optical one, so §9.5.1's repair/moisture verdict set does not apply. Recorded for completeness: on the repair/moisture axis the formula would read `nonspecific` (no protein, one humectant, generic conditioning). claim_role is `corroborating` and points specifically at §9.5.4 criterion 3, the one claim-gated leg in this record. The claim corroborated an optical architecture that criteria 1 and 2 had already established from the formula alone; it could not have created it."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "primaryFocus",
+      "blindValue": "smoothing",
+      "finalValue": "shine",
+      "reason": "THE ONLY VALUE CHANGE PRODUCED BY UNBLINDING ANYWHERE IN THIS COHORT. Blind, the formula cleared §9.5.4 criteria 1 and 2 — an alignment-oriented amino silicone at rank 6 with zero lipid load above the tail — but criterion 3 requires exact-product Gloss/Glaze/Laminierung/Glanz positioning, which is by construction unavailable in a blind packet. The hierarchy therefore fell through to step 6 and returned `smoothing`. On unblinding, criterion 3 was satisfied unambiguously by the product name and claims, and `shine` was selected at step 5. This is §11 step 4's first permitted channel working exactly as designed, and it is the reason the shine focus is claim-gated in the first place."
+    },
+    {
+      "field": "projectedOutputs.functional_benefits",
+      "blindValue": "['smoothing_frizz_control']",
+      "finalValue": "['shine']",
+      "reason": "Consequential change following the primaryFocus change, via D2's deterministic benefits derivation."
+    },
+    {
+      "field": "all other fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "No dual_supported tie, no bond claim, no lightness positioning to trigger the §9.2 conflict fallback, and no colour-protection positioning. In particular the gloss claim did NOT touch conditioning_level, care_direction, repair_support_level, or the moisture guard — §11 step 4 forbids all four."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": ["shine"],
+    "suitable_thicknesses": ["fine", "normal", "coarse"]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-11-COLOURANT",
+      "title": "A colourant as tail marker is reproducible but not plausible, and it decides this product's headline",
+      "body": "§3.1 lists 'any CI 1xxxx / CI 7xxxx' as a tail class. In this formula the colourant pair sits at ranks 7 and 8 while Parfum is the final entry at rank 30, so the mechanical marker is the colourant and the credited segment is six entries. Cosmetic colourants are typically used at a small fraction of 1%, far below the ~0.2–1% band the lexicon says the fragrance/preservative proxy targets, so a colourant is a systematically EARLIER marker than the rule intends. The consequence here is decisive: at the colourant marker the credited segment is lipid-free and `shine` clears criterion 1; at the next plausible marker (Phenoxyethanol @13) Cocos Nucifera Oil @9 becomes an above-tail R4b heavy lipid, criterion 1 fails, and the primary focus collapses to `smoothing` or `general`. I applied the rule as written and fired `tail_marker_anomaly` by judgment. Candidate fix: remove colourants from the tail-class list and keep them as E1 formula facts only, OR rank colourants below fragrance/preservative in a marker-precedence order rather than taking the strict earliest. Note that the lexicon's own §0.2 definition already differs from the standard's here in the other direction — it includes colourants but omits chelators, which the standard includes.",
+      "source": "§3.1 tail-class enumeration [judgment call — review]; lexicon §0.2"
+    },
+    {
+      "id": "AP-11-ROOTS",
+      "title": "Directions mandating root application on a charter-included product",
+      "body": "The frozen directions read 'von den Wurzeln bis in die Spitzen brillant zu versiegeln' — root-to-tip application, directly contradicting P5's canonical 'Längen und Spitzen, Ansatz aussparen'. R8's mask delta covers exactly this: it is a protocol deviation that fires the root/scalp review trigger and does not silently change R8 or create a scalp property. But the standard does not say what happens NEXT for a product whose authoritative directions cannot be reconciled with the protocol the engine's stamp requires. Since P5 owns placement and the charter names this product as included, I classified it and flagged the deviation. Nick should decide whether such a product is stampable at all under TPL-MASK, since the protocol's placement slot and the product's own directions disagree.",
+      "source": "§5 R8 mask delta, §2.5 / P5, charter F4"
+    },
+    {
+      "id": "AP-11-Q6ANSWERED",
+      "title": "§18 open question 6 answered for this product: the low-lipid-load criterion does NOT exclude it",
+      "body": "Open question 6 asked whether L'Oréal Glycolic Gloss, Syoss Lamination Intense Glaze and Neqi Gloss Glaze actually clear the three-criterion shine threshold on their real INCIs, or whether the low-lipid-load criterion excludes products the charter explicitly wants classified as shine-focused. For this product, on this formula of record, all three criteria clear and the low-lipid condition is met with room to spare — the credited segment contains no lipid at all. The caveat is AP-11-COLOURANT: the answer is 'yes, comfortably' at the applied marker and 'no' at the next plausible one. The other two gloss products are not in this cohort and remain unanswered.",
+      "source": "§18 open question 6; §9.5.4"
+    }
+  ],
+  "uncertainFields": ["primaryFocus", "conditioningLevel", "weightPotential"],
+  "assumptionNotes": [
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `gloss_lamination_claim` (mandatory for any Gloss/Glaze/Laminierung positioning — the shine threshold was verified as independently met on criteria 1 and 2 before the claim was consulted, and the banned wording is absent from every rationale in this record); `tail_marker_anomaly` (fired by reviewer judgment, not by §3.1's literal conditions — see AP-11-COLOURANT); root/scalp application (inherited Conditioner §12 trigger — see AP-11-ROOTS); formula-source conflict (aggregated source, and an order conflict against the lexicon's own worked example for this product family).",
+    "Protocol metadata for traceability only, zero classification credit: contact time 5 minutes, also embedded in the product name. Placement per the product's own directions is root-to-tip, which deviates from P5.",
+    "Cocamidopropyl Betaine at rank 3 was classified as an amphoteric surfactant and credited toward nothing — neither S1's cationic count nor any care route.",
+    "The pack's 'versiegelt' language and the directions' 'brillant zu versiegeln' are quoted as claim context only. Every rationale in this record uses permitted wording: temporary optical/surface emphasis, comparative shine potential. Glycolic acid temporarily plasticizes and does not seal."
+  ]
+}

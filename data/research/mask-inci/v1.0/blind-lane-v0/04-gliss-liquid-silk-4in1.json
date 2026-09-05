@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "blind",
+  "productId": "04-gliss-liquid-silk-4in1",
+  "g0": {
+    "value": "eligible",
+    "modeScoped": true,
+    "multiUse": true,
+    "rationale": "Section 2.2 five-step test. Step 1: authoritative directions located in the packet (aggregated brand + retailer copy, confidence moderate-high). Step 2: four stated modes tested against section 2.1. (a) Mask mode - 'Nach dem Waschen sanft auf das nasse Haar auftragen und 2 bis 3 Minuten einwirken lassen, gruendlich ausspuelen': after cleansing, stated contact time, rinse -> QUALIFIES. (b) Pre-shampoo mode: not after cleansing -> fails. (c) Conditioner mode ('als Spuelung nach dem Shampoonieren'): after cleansing and rinsed, but no contact time is stated for it -> fails the stated-contact-time leg. (d) Leave-in: not rinsed -> fails. Step 3: exactly one mode qualifies, so only that mode is classified, multi_use = true and the uncovered modes are named. Step 5 (ambiguity) does not apply: the modes are separable and only one carries a stated dwell. Charter F1 covers this case explicitly.",
+    "evidenceSignals": [
+      "multi_use: true",
+      "multi_use_covered_mode: post_shampoo_rinse_out_mask",
+      "multi_use_uncovered_modes: [pre_shampoo_treatment, conditioner, leave_in] - verbatim from the directions ('Kann zusaetzlich als Pre-Shampoo-Behandlung, als Spuelung nach dem Shampoonieren, oder als Leave-in verwendet werden')",
+      "multi_use_directions_source: packet directions block, aggregated schwarzkopf.de + bipa.at + drogeriedepot.de",
+      "The mask mode's 2-3 minute contact time is protocol metadata with zero classification credit (section 2.5, 7.2)",
+      "The multi_use flag is a scope declaration only - never a quality signal, never a penalty, never an input to any comparison field (section 2.2)"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 13,
+    "anomalyNote": "Resolved, no anomaly; a long twelve-entry above-tail segment. Decisive consequences on the tail side: AMODIMETHICONE (14), BUTYROSPERMUM PARKII BUTTER (15) and PRUNUS ARMENIACA KERNEL OIL (18) all sit after the marker and carry zero credit - the same decorative-lipid and tail-silicone pattern the evidence lexicon documents for the sibling Gliss 4-in-1 formula. This is what keeps the product out of both the weight-high anchor and the shine threshold."
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-12) of the exact-market INCI; formula-only structural position.",
+      "rationale": "All three section 9.1 structural signals are satisfied, with unusual cationic breadth (three distinct species) on a rank-2 fatty-alcohol network. E2 ceiling: architecture, not delivered conditioning.",
+      "evidenceSignals": [
+        "S1 satisfied (three-fold): BEHENTRIMONIUM CHLORIDE (4), DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE (5), BEHENAMIDOPROPYL DIMETHYLAMINE (7) - three distinct cationic/protonatable-amidoamine species above the tail",
+        "S2 satisfied: CETEARYL ALCOHOL at rank 2",
+        "S3 satisfied: ISOPROPYL MYRISTATE (6, light ester) and GLYCOSPHINGOLIPIDS (10, ceramide-family lipid, R4a) - two distinct non-fatty-alcohol lipids above the tail",
+        "Not counted (tail-side): BUTYROSPERMUM PARKII BUTTER (15), PRUNUS ARMENIACA KERNEL OIL (18), AMODIMETHICONE (14)",
+        "Not counted (family 10): CETEARETH-20 (21), TRIDECETH-10 (22)"
+      ],
+      "derivation": "Section 9.1 S1/S2/S3 counting on the above-tail slice; 3 of 3 -> high.",
+      "thresholdReasoning": [
+        "Why high, not moderate: three independent signals, well past the >= 2 threshold; the moderate residual covers zero or one signal plus the unresolvable fallback.",
+        "Why high, not low: every leg of the low anchor is falsified.",
+        "The cationic breadth here (three species) exceeds even the lexicon's C1 discussion of a two-species near-baseline, so S1 is not a marginal call on this product.",
+        "LACTIC ACID (16) was checked as a possible active and rejected: with BEHENAMIDOPROPYL DIMETHYLAMINE present it is with high likelihood the amidoamine neutraliser (lexicon C3), and it is tail-side in any case."
+      ],
+      "counterSignals": [
+        "Long 29-entry list - count is not payload",
+        "Tail-side butter and apricot oil would inflate a naive richness read",
+        "GLYCOSPHINGOLIPIDS is a weak supportive lipid at best (lexicon family 11, marked weak/supplier-dominated evidence); it carries the second S3 slot"
+      ],
+      "limitations": [
+        "S3 rests on one light ester plus one trace ceramide-family token. The breadth test counts species, not load, so S3 is satisfied by a thin lipid presence - this matters more for care_direction than here.",
+        "Section 9.1's honest limitation on the three-step scale applies."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-12); ingredient-informed matching prior.",
+      "rationale": "The required rich base is satisfied, but neither supporting alternative survives the tail rule, so the formula lands in the expected-majority moderate bucket. E2 ceiling.",
+      "evidenceSignals": [
+        "Required base leg 1 satisfied: three distinct cationics above the tail (4, 5, 7)",
+        "Required base leg 2 satisfied: CETEARYL ALCOHOL at rank 2",
+        "Alternative (a) fails: the only R4b heavy lipid, BUTYROSPERMUM PARKII BUTTER, is at rank 15, after the marker at 13. ISOPROPYL MYRISTATE (6) is a light ester, GLYCOSPHINGOLIPIDS (10) a trace lipid; neither is heavy",
+        "Alternative (b) fails: AMODIMETHICONE (14) is the only silicone in the list and it is tail-side, so there is no occlusive silicone stack above the tail - and no dimethicone/dimethiconol pair anywhere"
+      ],
+      "derivation": "Section 9.2: base satisfied but zero alternatives -> not high; low anchor falsified -> moderate residual.",
+      "thresholdReasoning": [
+        "Why moderate, not high: the ruled reading is base-plus-at-least-one-alternative. The base holds; both alternatives fail on tail position. This is exactly the discrimination the lexicon's worked example on the sibling Gliss mask predicts - shea butter below the fragrance line is decorative and earns zero weight credit.",
+        "Why moderate, not low: the low anchor requires a single cationic species and no cetearyl-class fatty alcohol in the top three. Three cationics and CETEARYL ALCOHOL at rank 2 falsify both legs.",
+        "Section 9.2 expects moderate to be the majority outcome and accepts that; this is not a failure of the scale."
+      ],
+      "counterSignals": [
+        "'Bonding Haarmaske' / rich-treatment positioning without a matching above-tail lipid architecture - the exact counter-signal section 9.2 names ('reichhaltig' claim without matching lipid architecture)",
+        "Silicone presence is not the weight driver in this category, and the silicone here is tail-side anyway"
+      ],
+      "limitations": [
+        "The value swings on one rank: if the marker were read one position later, shea butter would be above-tail and alternative (a) would carry the formula to high. The lexicon's boundary-band warning (do not let a single rank either side of the marker flip an extreme) is a reason to keep moderate rather than to reach for high."
+      ]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment; comparative emphasis only, never a user-state assertion (G6).",
+      "rationale": "Two distinct qualifying R5 species above the tail establish a material protein-film route, and the second leg of the section 9.3 balanced test (S3 satisfied) is met, so the written operational test resolves to balanced. E2 ceiling: a comparative architecture reading only. I flag this as a rule-bar concern rather than a product concern - see limitations.",
+      "evidenceSignals": [
+        "Qualifying R5 species 1: HYDROLYZED SILK (11) - a hydrolyzed protein, above the tail (13)",
+        "Qualifying R5 species 2: SERICIN (12) - a protein-derived film former listed in lexicon family 5a, above the tail",
+        "Material-R5 test leg (a) satisfied: two distinct qualifying species above the tail. Leg (b) is not satisfied (neither is within the first eight above-tail ranks), so the route rests on the two-species leg",
+        "Balanced second leg: S3 satisfied - ISOPROPYL MYRISTATE (6) and GLYCOSPHINGOLIPIDS (10)",
+        "Humectant leg NOT satisfied: GLYCERIN (3) is the only R9 humectant above the tail (BUTYLENE GLYCOL is at 19, tail-side); a cluster needs >= 3 with >= 2 non-glycerin",
+        "Not counted as protein: the gluconamide pair (8, 9) - section 6 rule 4 forbids counting the bond token twice, once for bond_route and again as a protein-film route for care_direction"
+      ],
+      "derivation": "Section 9.3: material R5 route established on the two-species leg; balanced test = material R5 AND (humectant cluster OR S3). Humectant cluster fails, S3 holds -> balanced.",
+      "thresholdReasoning": [
+        "Why balanced, not protein: the written balanced test is a disjunction, and its S3 branch is satisfied. Protein would be the value only if both the humectant cluster and S3 failed.",
+        "Why balanced, not moisture: moisture is the residual when no material R5 route exists. Two distinct hydrolyzed/protein-derived species above the tail establish one.",
+        "Confidence capped at moderate for two independent reasons that both bind: (i) D4 fires - multiple distinct R5 species above the tail is a heavy protein payload, which caps care_direction confidence at moderate and fires protein_payload_review; (ii) section 9.3's own cap for cases where a reviewer could plausibly call a neighbouring value."
+      ],
+      "counterSignals": [
+        "protein_payload_counter_signal: HYDROLYZED SILK (rank 11), SERICIN (rank 12) - recorded at trace level only, never a field, never a verdict, never a value modifier",
+        "S3 here is satisfied by one light ester plus one trace ceramide token - a breadth test, not a substance test",
+        "SERICIN and HYDROLYZED SILK are both silk-derived and arguably one supplier system rather than two independent routes; the INCI tokens are distinct and the lexicon lists them separately, so I counted two"
+      ],
+      "limitations": [
+        "This is my least comfortable call in the set. Section 9.3 describes balanced as 'reserved', 'a substantive mixed protein-plus-moisture architecture', and warns that inflating it has real downstream cost because it bridge-matches. But its own operational test equates 'a substantial R4 lipid/emollient stack' with 'S3 satisfied', and S3 is only a two-distinct-species breadth test that a light ester plus a trace ceramide clears. I applied the operational test as written and am flagging the gap between the test and the semantics.",
+        "Under the semantic reading (substantive mixed architecture), this product would be care_direction: protein. That is the adjacent value a reviewer could plausibly reach, which is exactly what moderate confidence encodes."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment; a comparative formula-potential value, explicitly not an efficacy statement.",
+      "rationale": "The canonical gluconamide bonding pair is declared above the tail, which is the sole deterministic gate for high under section 9.4 / R7. Standing caveat, stated as the rule requires: none of the three bond routes has strong independent product-level substantiation at drugstore concentrations, and the independent peer-reviewed gluconamide literature explicitly reports the mechanism by which the mixture affects hair as unknown. This value ranks comparative formula potential, and nothing here proves new bonds, internal repair, or strength. E2 ceiling; the token presence itself is E1.",
+      "evidenceSignals": [
+        "HYDROXYPROPYLGLUCONAMIDE (rank 8) and HYDROXYPROPYLAMMONIUM GLUCONATE (rank 9) - the Ashland FiberHance-type pair, supplied and used as a pair, both above the tail marker (13)",
+        "Both tokens are nameable INCI species, so R7's 'branded naming never substitutes for a token' condition is met without relying on any pack claim",
+        "Independently, the material R5 route (HYDROLYZED SILK 11, SERICIN 12) would have earned medium; high supersedes it",
+        "Explicit non-qualifiers present and excluded: AMODIMETHICONE (14, amino silicone, tail-side anyway), LACTIC ACID (16), hydrolyzed protein alone"
+      ],
+      "derivation": "R7 mask delta deterministic enum -> bond_route = gluconamide; section 9.4 -> high, gated solely on bond_route != none.",
+      "thresholdReasoning": [
+        "Why high, not medium: medium is the protein-film route level; high is reached only through a named bond token above the tail, and it is present. Because the gate is deterministic on the token, confidence tracks identity evidence rather than judgment - a verified exact-market INCI plus a resolved tail marker supports high confidence.",
+        "Why high, not low: two independent upgrade routes are present (bond token and protein film route).",
+        "Contrast with packet 02, the same brand's express Kur: there the identical gluconamide pair sits below the tail marker and therefore yields bond_route = none and repair_support_level = low. The rule's entire discriminating power on this chemistry is rank position."
+      ],
+      "counterSignals": [
+        "R7 standing caveat: no strong independent product-level substantiation at drugstore concentrations; the peer-reviewed gluconamide work reports the hair mechanism as unknown",
+        "The 2-3 minute dwell carries zero credit",
+        "'Bonding' in the product name is E0 and was not used - the value rests on the tokens alone"
+      ],
+      "limitations": [
+        "Open question 7 of the standard applies: whether the exact qualifying gluconamide token(s) can be pinned so the enum value is as deterministic as maleate. Here both members of the pair are present, which is the strongest form of the identification, but the route still rests on reviewer identification of the family.",
+        "specialist_damage_fit and (indirectly) the whole damage_fit specialist branch hang on this single deterministic call."
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail architecture plus the section 9.5.2 hierarchy; no claims summary available for the shine corroboration leg.",
+      "rationale": "Step 3 tests repair first, and this formula clears it on both of the two independent routes the step names: a distinct R5 protein/peptide film route and R7 named bond chemistry above the tail. E2 ceiling: comparative route potential, never an efficacy statement.",
+      "evidenceSignals": [
+        "Step 3 repair clears on route (a): HYDROLYZED SILK (11) + SERICIN (12), two distinct qualifying species above the tail",
+        "Step 3 repair clears independently on route (b): the gluconamide pair (8, 9) above the tail, bond_route != none",
+        "Step 3 curl_support fails: no curl-specific architecture; positioning could only corroborate",
+        "Step 3 color_care fails: no candidate, no positioning",
+        "Step 3 lightness fails: weight_potential is moderate, not low",
+        "Step 4 moisture fails: one humectant above the tail against a required three",
+        "Step 5 shine fails on criterion 1: the only silicone (AMODIMETHICONE 14) and the only cationic polymer route are tail-side, so there is no distinct optical-emphasis architecture above the tail. This is decisive despite the product's 'Liquid Silk Glanz' name - positioning corroborates, never creates (step 9)",
+        "Step 6 smoothing fails: no distinct above-tail silicone or substantive polymer",
+        "Step 7 detangling fails: slip is category baseline"
+      ],
+      "derivation": "Section 9.5.2 in order; step 3's first tested route clears and terminates the hierarchy. focus_care_verdict = repair_supported - a coherent substantive/deposition cluster (two protein species plus a named bond pair), not merely one protein token.",
+      "thresholdReasoning": [
+        "Why repair, not shine: shine needs all three of its criteria. Criterion 1 (alignment-oriented silicone and/or cationic polymer above the tail with a comparatively low lipid load) fails outright - the amodimethicone is below the marker. Criterion 3 (Gloss/Glanz corroboration) would have been available from the product name, but corroboration cannot substitute for the missing architecture, and D2 forbids shine as a free add-on of the smoothing film.",
+        "Why repair, not moisture: step 4 is tested after step 3 and only when no richer special-purpose route wins. Repair won, and the humectant cluster fails criterion 1 anyway.",
+        "Why repair, not general: general is step 8, reachable only when nothing clears earlier.",
+        "claim_role = not_applicable: I had no claims summary. The 'Bonding' and 'Glanz' words in the product name are E0 positioning; neither was used to create a route, and neither could have been. The one place a claims source would have mattered is the shine corroboration leg - and it fails on criterion 1 regardless, so the gap changed no value."
+      ],
+      "counterSignals": [
+        "The product's own name foregrounds shine ('Liquid Silk Glanz'), and the formula's optical species is tail-side - a clean example of positioning and architecture pointing in different directions",
+        "The R7 standing caveat qualifies the strength of the repair route; the focus records a comparative route, not an outcome"
+      ],
+      "limitations": [
+        "Confidence moderate rather than high because the repair route's protein leg is itself the marginal call flagged under care_direction, and because the bond leg carries the R7 substantiation caveat. The bond leg alone is sufficient, which is why the value is not lower.",
+        "primary_focus is not listed in uncertain_fields: two independent routes clear step 3, so the value is robust even if one is rejected."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primary_focus.",
+      "rationale": "No further candidate clears its own threshold, and shine specifically is barred because its architecture is tail-side. E2 ceiling.",
+      "evidenceSignals": [
+        "shine rejected: criterion 1 fails (no above-tail optical-emphasis architecture); D2 and section 6 rule 2 also bar shine as the optical consequence of the smoothing film",
+        "moisture rejected: cluster of one",
+        "smoothing rejected: no beyond-baseline above-tail silicone or polymer"
+      ],
+      "derivation": "Section 9.5.2 secondary rule: a secondary must add useful matching information and clear its own route test.",
+      "thresholdReasoning": [
+        "Why zero secondaries: the tempting candidate is shine, and taking it would mean letting the 'Glanz' name substitute for the missing above-tail architecture - the precise upgrade section 9.5.2 step 9 and section 9.5.4 criterion 3 forbid."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "If a reviewer read AMODIMETHICONE as above-tail, shine criterion 1 would need re-testing, and the low-lipid-load conjunct would then also be re-tested against a then-above-tail shea butter."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": ["fine", "normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential; desired-finish/dosage prior.",
+      "rationale": "weight_potential: moderate maps to fine + normal + coarse under the section 9.6 table. E2 ceiling inherited.",
+      "evidenceSignals": ["weight_potential = moderate"],
+      "derivation": "Section 9.6 table row 'moderate'.",
+      "thresholdReasoning": [
+        "Why not normal+coarse: keyed to weight_potential high, which fails because both supporting alternatives are tail-side.",
+        "Why not fine+normal: keyed to weight_potential low, falsified by three cationics and a rank-2 cetearyl alcohol."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Inherits the one-rank sensitivity of weight_potential."
+      ]
+    },
+    "damageFit": {
+      "value": ["moderately_damaged", "highly_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from conditioning_level plus the specialist-route test; a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level: high with a qualifying specialist route maps to exactly moderately_damaged + highly_damaged. The specialist result replaces the general-high set. E2 ceiling inherited.",
+      "evidenceSignals": [
+        "conditioning_level = high",
+        "Qualifying specialist route (b): named bond chemistry, bond_route = gluconamide",
+        "Qualifying specialist route (a) independently: repair_support_level >= medium via the protein film route"
+      ],
+      "derivation": "Section 9.7 table row 'high with a qualifying specialist route'.",
+      "thresholdReasoning": [
+        "Why not healthy + moderately_damaged: that row is for conditioning_level high WITHOUT a qualifying specialist route. Two of the four qualifying options are present.",
+        "Why not all three values: the standard is explicit that the specialist result replaces the general-high set and all three are never emitted.",
+        "The mask delta warns that a large specialist bucket across the first set would be evidence of a leaking test. This is one of only two products in my 12 profiled where it fires, and it fires on a deterministic bond token rather than on judgment."
+      ],
+      "counterSignals": [
+        "The section 9.7 mask delta caution about specialist-route leakage - noted and tested; the route here is the deterministic one, not a generic-repair inference"
+      ],
+      "limitations": [
+        "specialist_damage_fit trigger fired for human verification.",
+        "Watch-list item 1 applies: this field is fully computable from conditioning_level and repair_support_level and may belong as a computed row rather than a reviewed field."
+      ]
+    },
+    "textureFit": {
+      "value": ["straight", "wavy", "curly"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential; research-only.",
+      "rationale": "weight_potential: moderate maps to straight + wavy + curly under the section 9.8 table. E2 ceiling inherited.",
+      "evidenceSignals": ["weight_potential = moderate", "three-cationic slip route present but the weight row governs"],
+      "derivation": "Section 9.8 table row 'balanced architecture'.",
+      "thresholdReasoning": [
+        "Why not wavy+curly+coily: that row requires weight_potential high as well as a coherent high-slip route. The slip route is arguably present (three cationics), but the weight leg fails, and the table is keyed on weight first.",
+        "Why not straight+wavy: keyed to weight_potential low."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Inherits the weight_potential sensitivity; a shift to high would move this to wavy + curly + coily."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "gluconamide",
+    "token": "HYDROXYPROPYLGLUCONAMIDE + HYDROXYPROPYLAMMONIUM GLUCONATE",
+    "rank": 8
+  },
+  "uncertainFields": [
+    "careDirection",
+    "weightPotential"
+  ],
+  "assumptionNotes": [
+    "SERICIN counted as a second distinct qualifying R5 species alongside HYDROLYZED SILK. Both are silk-derived and may come from one supplier system; the lexicon lists Sericin separately in family 5a, so I counted two. If they were counted as one, the material-R5 route would fail leg (a) and also leg (b) (rank 11 is beyond the first eight above-tail ranks), care_direction would fall to moisture, and repair would lose its protein leg - though repair_support_level: high and primary_focus: repair would survive on the bond token alone.",
+    "GLYCOSPHINGOLIPIDS counted as an R4a lipid for S3 (R4's candidate list names ceramides explicitly). Lexicon family 11 treats this class as a weak supportive signal that contributes nothing to weight - which is how it was used here.",
+    "The gluconamide pair was counted once, for bond_route only, and deliberately not re-counted as a protein-film route for care_direction (section 6 rule 4).",
+    "The conditioner mode was ruled non-qualifying because the packet's directions state no contact time for it. If a fuller directions source stated a dwell for that mode too, section 2.2 would face two qualifying modes - a case steps 3-5 do not cover (see blind-notes).",
+    "Review triggers I would fire: protein_payload_review (D4: multiple distinct R5 species above the tail); specialist_damage_fit (damage_fit resolved to the specialist pair); gloss_lamination_claim is NOT fired - the name carries 'Glanz' but not Gloss/Glaze/Laminierung positioning, though a reviewer with the claims sheet may disagree and should re-test the shine threshold. bond_claim_review does not fire: the bond token is nameable and above the tail.",
+    "No claims summary supplied. The only claim-permitted leg that was live is shine corroboration, which fails on architecture regardless."
+  ]
+}
