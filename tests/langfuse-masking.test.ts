@@ -66,3 +66,30 @@ test("maskLangfuseExport preserves root trace current user message field", () =>
   assert.match(serialized, /Welche Spuelung passt zu mir/)
   assert.match(serialized, /conversation-1/)
 })
+
+test("maskLangfuseExport preserves safe observability names and UUIDs", () => {
+  const productId = "6fde3fe0-2716-4973-b9f2-ebb17eb13bad"
+  const payload = JSON.stringify({
+    tool_summary: {
+      name: "select_products",
+      valid_product_ids: [productId],
+    },
+    prompt: {
+      name: "chaarlie-agent-v2-responses-care-balance",
+    },
+    user_profile: {
+      name: "Nick Beispiel",
+      full_name: "Nick Beispiel",
+      phone: "+49 170 1234567",
+    },
+  })
+
+  const masked = maskLangfuseExport({ data: payload })
+  const serialized = typeof masked === "string" ? masked : JSON.stringify(masked)
+
+  assert.match(serialized, /select_products/)
+  assert.match(serialized, /chaarlie-agent-v2-responses-care-balance/)
+  assert.match(serialized, new RegExp(productId))
+  assert.doesNotMatch(serialized, /Nick Beispiel/)
+  assert.doesNotMatch(serialized, /170 1234567/)
+})
