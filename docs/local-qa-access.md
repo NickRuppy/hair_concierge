@@ -73,6 +73,16 @@ page fabricates its own scenario. Useful ones under `src/app/labs/`:
 - `/labs/personal-plan-application`, `/labs/personal-plan-application/[dayType]` — Anwendung
 - `/labs/personal-plan-chapters`, `/labs/personal-plan-view-transition`,
   `/labs/personal-plan-routine-editor`, `/labs/offer-page`, `/labs/profile-reactivation`
+- `/labs/scan` — the `/scan` flow on a **fake camera and a fake barcode detector**, so the
+  scanner is clickable on a laptop with no webcam. Drive it from the browser console via
+  `window.__scanLab`: `emit("4006381333931")` scans a barcode (two detections = one stable
+  read; it then stays in frame), `emitNone(3)` takes it back out, `denyCamera("NotAllowedError")`
+  makes the next camera acquisition fail, `stall()` kills the live stream, `startCamera()`
+  releases a camera held by the `__SCAN_LAB_HOLD_CAMERA` boot flag, and `events` /
+  `transitions` / `state` expose what the flow tracked and where it is. The `/api/scan/*`
+  calls are NOT mocked by the page — without a signed-in session every resolve fails, so
+  for anything past the decode either use the dev login (§1) or intercept the routes the
+  way `tests/scan-flow.spec.ts` does.
 
 These are the right tool for UI/copy/layout review of a stage. They do not exercise
 entitlement, routing, or persistence — that's §3.
