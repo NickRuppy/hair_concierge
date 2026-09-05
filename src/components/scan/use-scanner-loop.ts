@@ -625,6 +625,13 @@ export function useScannerLoop({
 
       watchTracks(stream)
       streamRef.current = stream
+      // The new stream is unmuted by construction: mute bookkeeping is per current stream,
+      // and the old stream (if any) is stopped without ever firing `unmute` — so without
+      // this reset a stale `trackMuted` from before the swap would survive it and force
+      // every later `visibilitychange` to `recover("visibility")` again (see report, Fix
+      // round 2).
+      trackMuted = false
+      clearMuteGrace()
       video.srcObject = stream
       try {
         await video.play()
