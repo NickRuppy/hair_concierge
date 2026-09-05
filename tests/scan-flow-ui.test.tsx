@@ -4,7 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { ScanFlow } from "../src/components/scan/scan-flow"
 import { ScanResultSheet } from "../src/components/scan/scan-result-sheet"
-import { ScanSaveSheet } from "../src/components/scan/scan-save-sheet"
+import { ScanSaveSheet, type ScanSaveCompletion } from "../src/components/scan/scan-save-sheet"
 import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
 import { ScanUnknownFlow } from "../src/components/scan/scan-unknown-flow"
 import { ScanWishlistSheet } from "../src/components/scan/scan-wishlist-sheet"
@@ -504,8 +504,10 @@ test("ScanFlow: a save that completes after the next product is shown leaves tha
 
   const saveSheetA = requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet")
   assert.equal(saveSheetA.props.productId, "p-a")
+  // The completion A's still-open request will report — captured from A's render, which
+  // is exactly the closure that used to close B's sheet and track B's save.
   const completeSaveForA = saveSheetA.props.onSavedStateChange as (
-    savedState: ScanSavedStatePayload,
+    completion: ScanSaveCompletion,
   ) => void
 
   sheetProps(flow.tree).onClose()
@@ -515,15 +517,49 @@ test("ScanFlow: a save that completes after the next product is shown leaves tha
   await flow.settle()
   assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.productId, "p-b")
 
-  completeSaveForA({ state: "merkliste", managedByScan: true })
+  // The user is already picking a destination for B when A's save finally lands.
+  requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
+
+  completeSaveForA({ productId: "p-a", savedState: { state: "merkliste", managedByScan: true } })
   await flow.settle()
 
   const saveSheetB = requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet")
   assert.equal(saveSheetB.props.productId, "p-b")
   assert.deepEqual(saveSheetB.props.savedState, { state: null, managedByScan: false })
+  // Not one side effect of A's save may land on B: no state, no event, no closed sheet.
+  assert.equal(saveSheetB.props.open, true)
   assert.equal(
     flow.events.some((event) => event.name === "scan_saved"),
-    true,
+    false,
+  )
+})
+
+test("ScanFlow: a save that completes for the product on screen updates it, tracks it and closes the sheet", async () => {
+  const flow = await mountFlow(async () => json(verdictResult("p-a")))
+
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
+  await delay(450)
+  await flow.settle()
+
+  const saveSheet = requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet")
+  saveSheet.props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
+
+  saveSheet.props.onSavedStateChange({
+    productId: "p-a",
+    savedState: { state: "merkliste", managedByScan: true },
+  })
+  await flow.settle()
+
+  const applied = requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet")
+  assert.deepEqual(applied.props.savedState, { state: "merkliste", managedByScan: true })
+  assert.equal(applied.props.open, false)
+  assert.deepEqual(
+    flow.events.filter((event) => event.name === "scan_saved").map((event) => event.payload.kind),
+    ["merkliste"],
   )
 })
 

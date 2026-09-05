@@ -29,7 +29,7 @@ import { useToast } from "@/providers/toast-provider"
 import { ScanActionFooter } from "./scan-action-footer"
 import { ScanResultCard } from "./scan-result-card"
 import { ScanResultSheet } from "./scan-result-sheet"
-import { ScanSaveSheet } from "./scan-save-sheet"
+import { ScanSaveSheet, type ScanSaveCompletion } from "./scan-save-sheet"
 import { ScanSearchSheet } from "./scan-search-sheet"
 import { ScanUnknownFlow, type ScanSubmissionInput } from "./scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "./scan-wishlist-sheet"
@@ -308,6 +308,32 @@ export function ScanFlow({
     analytics.track("scan_fallback_search_used", { trigger: "timeout" })
   }, [analytics])
 
+  /**
+   * F5: a completed save belongs to the product it was STARTED for. The sheet names that
+   * product, and every consequence — the state change, `scan_saved`, closing the sheet —
+   * happens only while that product is still the one on screen. `stateRef` is read rather
+   * than the render's `resultStep`, because the in-flight save closed over the render
+   * that started it: that closure still describes product A even after B replaced it.
+   */
+  const handleSaveCompleted = useCallback(
+    ({ productId, savedState }: ScanSaveCompletion) => {
+      const current = stateRef.current.step
+      if (current.kind !== "result") return
+      if (current.result.product.productId !== productId) return
+      dispatch({ type: "saved_state_changed", productId, savedState })
+      // Only the save direction is `scan_saved`; a removal (savedState -> null) isn't a
+      // "save" event.
+      if (savedState.state) {
+        analytics.track("scan_saved", {
+          kind: savedState.state,
+          verdict: resultVerdictLabel(current.result),
+        })
+      }
+      dispatch({ type: "save_sheet_toggled", open: false })
+    },
+    [analytics],
+  )
+
   const openFromProductId = useCallback(
     (productId: string) => {
       // The reducer's `resolve_started` deliberately leaves auxiliary sheets alone, so
@@ -505,24 +531,7 @@ export function ScanFlow({
           productId={resultStep.result.product.productId}
           savedState={resultStep.result.savedState}
           onOpenChange={(open) => dispatch({ type: "save_sheet_toggled", open })}
-          onSavedStateChange={(savedState) => {
-            // F5: name the product the sheet was opened for. A save that lands after the
-            // user scanned something else is dropped by the reducer instead of painting
-            // the new product's card.
-            dispatch({
-              type: "saved_state_changed",
-              productId: resultStep.result.product.productId,
-              savedState,
-            })
-            // Only the save direction is `scan_saved`; a removal (savedState -> null)
-            // isn't a "save" event.
-            if (savedState.state) {
-              analytics.track("scan_saved", {
-                kind: savedState.state,
-                verdict: resultVerdictLabel(resultStep.result),
-              })
-            }
-          }}
+          onSavedStateChange={handleSaveCompleted}
         />
       ) : null}
 

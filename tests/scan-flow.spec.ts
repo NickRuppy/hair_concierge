@@ -427,17 +427,20 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await emit(page, EAN_PRODUCT_B)
     await expect(page.getByText("Lab Shampoo Beta")).toBeVisible()
 
-    // The save really does complete — its own success toast is the proof — it just lands
-    // on a flow that has moved on.
+    // The save is answered server-side (the request is already recorded above), but the
+    // user dismissed the sheet while it was in flight: the completion belongs to a
+    // product nobody is looking at any more, so not one of its side effects may land —
+    // no toast, no "Gemerkt" on B, no state change.
     api.releaseSave()
-    await expect(toasts(page)).toHaveText(["Auf der Merkliste gespeichert"])
     await expectStable(
-      async () =>
-        page.evaluate(
+      async () => ({
+        toastCount: await toasts(page).count(),
+        leaked: await page.evaluate(
           () =>
             document.querySelector("[data-scan-flow]")?.textContent?.includes("Gemerkt") ?? true,
         ),
-      (leaked) => leaked === false,
+      }),
+      (sample) => sample.toastCount === 0 && sample.leaked === false,
     )
     await expect(page.getByRole("button", { name: "Speichern", exact: true })).toBeVisible()
     await expect(page.getByText("Lab Shampoo Beta")).toBeVisible()
