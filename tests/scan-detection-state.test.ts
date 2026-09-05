@@ -184,11 +184,19 @@ test("isSameDetectionState: a different kind is a change", () => {
   )
 })
 
-test("isSameDetectionState: sub-milli jitter in the box is not a change", () => {
-  const jittered = { x: 0.10004, y: 0.09996, width: 0.2, height: 0.2 }
+test("isSameDetectionState: jitter below the half-percent tolerance is not a change", () => {
+  const jittered = { x: 0.1015, y: 0.0988, width: 0.2, height: 0.2 }
   assert.equal(
     isSameDetectionState({ kind: "spotted", box: boxA }, { kind: "spotted", box: jittered }),
     true,
+  )
+})
+
+test("isSameDetectionState: a move past the tolerance is a change", () => {
+  const moved = { x: 0.109, y: 0.1, width: 0.2, height: 0.2 }
+  assert.equal(
+    isSameDetectionState({ kind: "spotted", box: boxA }, { kind: "spotted", box: moved }),
+    false,
   )
 })
 

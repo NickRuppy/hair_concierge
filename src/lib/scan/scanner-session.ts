@@ -391,9 +391,18 @@ export function nextDetectionState(
   }
 }
 
-/** Detector boxes jitter every frame; only ~a thousandth of the frame counts as a move. */
+/**
+ * How far a box edge has to move before the UI is told about it, as a fraction of the
+ * frame. Detector boxes jitter every frame on a bottle that is being held still; half a
+ * percent of the frame is well under what the eye reads as a moving outline, and well
+ * over the jitter — the outline follows real movement through its CSS transition instead
+ * of re-rendering on noise.
+ */
+const BOX_MOVE_TOLERANCE = 0.005
+
+/** Quantised, not compared pairwise: a slow drift still crosses a step eventually. */
 function roundBoxComponent(value: number): number {
-  return Math.round(value * 1000) / 1000
+  return Math.round(value / BOX_MOVE_TOLERANCE)
 }
 
 /**

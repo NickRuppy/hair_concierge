@@ -313,6 +313,43 @@ test("Scanner: a sheet over the viewfinder freezes the dot and the breathing cor
   assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
 })
 
+test("Scanner: a sheet over a spotted barcode falls back to the static searching look", () => {
+  const scanner = mountScanner()
+
+  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
+  scanner.setPaused(true)
+  scanner.render()
+
+  // What the loop last saw is stale behind the sheet: no amber "hold still" over a
+  // picture nobody can see, and no outline on a barcode that may already be gone.
+  assert.equal(detectionAttribute(scanner.tree), "searching")
+  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 0)
+  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
+  assert.doesNotMatch(pill(scanner.tree).props.className as string, /bg-\[#b97a17\]/)
+  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 0)
+  assert.equal(hasClass(scanner.tree, "animate-scan-breathe"), false)
+
+  // The sheet closes: the loop is live again and the next report drives the viewfinder.
+  scanner.setPaused(false)
+  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
+  scanner.render()
+  assert.equal(detectionAttribute(scanner.tree), "spotted")
+})
+
+test("Scanner: the read confirm survives the sheet rising over the viewfinder", () => {
+  const scanner = mountScanner()
+
+  scanner.loop.onDetectionState({ kind: "read", box: BOX })
+  scanner.loop.onConfirm()
+  // Exactly what the flow does: the result sheet goes up inside the 400ms window.
+  scanner.setPaused(true)
+  scanner.render()
+
+  assert.equal(detectionAttribute(scanner.tree), "read")
+  assert.equal(textContent(pill(scanner.tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
+  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 1)
+})
+
 test("Scanner: a new scan attempt drops the confirm state back to the idle pill", () => {
   const scanner = mountScanner()
 

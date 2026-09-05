@@ -187,6 +187,9 @@ export function Scanner({
     [onDecoded],
   )
 
+  // Hook-as-value seam: `__loop` is read once per mount and never changes for the life of
+  // this component, so the hook order stays constant and the current lint rules accept it.
+  // Worth revisiting if React Compiler is ever enabled — it wants hooks called by name.
   const useLoop = __loop ?? useScannerLoop
   useLoop({
     active,
@@ -220,12 +223,20 @@ export function Scanner({
   if (!active) return null
 
   /**
+   * A sheet covers the camera and the loop is paused, so whatever it last saw is stale:
+   * the viewfinder falls back to a STATIC searching look — no outline, no dot, no
+   * breathing — rather than freezing an amber "hold still" over a picture nobody can see.
+   * The 400ms read confirm is exempt: that is exactly the moment the result sheet rises
+   * over, and its green/plum flash belongs to the decode the user just made.
+   */
+  const frozen = detectionPaused && !confirmActive
+  /**
    * The confirm window owns the "read" look, not the raw detection state: the barcode is
    * usually still in frame while the sheet is on its way up, so the loop keeps reporting
    * `spotted` — and the user would see the green moment flicker back to amber.
    */
-  const visual: ScanVisualState = confirmActive ? "read" : detection.kind
-  const outlineBox = detection.kind === "searching" ? null : detection.box
+  const visual: ScanVisualState = confirmActive ? "read" : frozen ? "searching" : detection.kind
+  const outlineBox = frozen || detection.kind === "searching" ? null : detection.box
   const outlineRect = outlineBox
     ? mapBoxToCover(
         outlineBox,
@@ -233,7 +244,7 @@ export function Scanner({
         { width: metrics.elementWidth, height: metrics.elementHeight },
       )
     : null
-  const breathing = visual === "searching" && !detectionPaused
+  const breathing = visual === "searching" && !frozen
 
   return (
     <div
@@ -255,7 +266,7 @@ export function Scanner({
             height: `${outlineRect.height}px`,
           }}
           className={cn(
-            "pointer-events-none absolute rounded-md transition-[left,top,width,height] duration-150",
+            "pointer-events-none absolute rounded-md motion-safe:transition-[left,top,width,height] motion-safe:duration-150",
             visual === "read"
               ? "border-[2.5px] border-[var(--status-ok-text)] shadow-[0_0_0_4px_rgba(53,107,69,.28)]"
               : "border-[2.5px] border-[#e0a13a] shadow-[0_0_0_4px_rgba(224,161,58,.28)]",
@@ -289,7 +300,7 @@ export function Scanner({
           )}
           aria-live="polite"
         >
-          {visual === "searching" && !detectionPaused ? (
+          {visual === "searching" && !frozen ? (
             <span
               aria-hidden
               data-scan-pill-dot=""
