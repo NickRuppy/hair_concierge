@@ -3,13 +3,17 @@ import test from "node:test"
 
 import {
   MAX_TICK_DELTA_MS,
+  MUTE_GRACE_MS,
   advanceLoopClock,
   bumpLoopGeneration,
   createScanLoopController,
   isDetectionCurrent,
   isLoopPaused,
+  isVideoStreamDead,
   nextLoopAction,
+  recoveryFailureAction,
   setPauseReason,
+  streamReleasePlan,
   type ScanLoopController,
 } from "../src/lib/scan/scanner-loop"
 import { SCAN_TIMEOUT_MS, createScanSessionState } from "../src/lib/scan/scanner-session"
@@ -308,4 +312,93 @@ test("advanceLoopClock: a decoded session never reports the fallback", () => {
     now += 100
     assert.equal(advanceLoopClock(controller, session, now).timedOut, false)
   }
+})
+
+// ---------------------------------------------------------------------------
+// Stream ownership: a release may only touch the slots that still point at it
+// ---------------------------------------------------------------------------
+
+type FakeStream = { id: string }
+
+test("streamReleasePlan: releasing the live stream clears both shared slots", () => {
+  const live: FakeStream = { id: "live" }
+  const plan = streamReleasePlan({ current: live, videoSource: live }, live)
+  assert.deepEqual(plan, { clearCurrent: true, clearVideoSource: true })
+})
+
+test("streamReleasePlan: a stale effect instance cannot stop the newer instance's stream", () => {
+  // The exact `camera_retry` shape: instance A parked on `await video.play()`, instance B
+  // already acquired and attached its own stream. A's bail-out must clear nothing.
+  const stale: FakeStream = { id: "stale" }
+  const fresh: FakeStream = { id: "fresh" }
+  const plan = streamReleasePlan({ current: fresh, videoSource: fresh }, stale)
+  assert.deepEqual(plan, { clearCurrent: false, clearVideoSource: false })
+})
+
+test("streamReleasePlan: during a recovery swap the old stream leaves the new one attached", () => {
+  // `recover()` acquires first: the ref and the video already point at the new stream when
+  // the old one is released, so releasing it must not detach the live viewfinder.
+  const previous: FakeStream = { id: "previous" }
+  const next: FakeStream = { id: "next" }
+  const plan = streamReleasePlan({ current: next, videoSource: next }, previous)
+  assert.equal(plan.clearCurrent, false)
+  assert.equal(plan.clearVideoSource, false)
+})
+
+test("streamReleasePlan: slots are judged independently", () => {
+  const stream: FakeStream = { id: "s" }
+  const other: FakeStream = { id: "other" }
+  assert.deepEqual(streamReleasePlan({ current: stream, videoSource: other }, stream), {
+    clearCurrent: true,
+    clearVideoSource: false,
+  })
+  assert.deepEqual(streamReleasePlan({ current: null, videoSource: stream }, stream), {
+    clearCurrent: false,
+    clearVideoSource: true,
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Mute policy: a mute is not a death certificate (controller ruling)
+// ---------------------------------------------------------------------------
+
+function fakeStream(...states: string[]) {
+  return { getVideoTracks: () => states.map((readyState) => ({ readyState })) }
+}
+
+test("MUTE_GRACE_MS: a foreground mute is tolerated for 3s before re-acquiring", () => {
+  assert.equal(MUTE_GRACE_MS, 3000)
+})
+
+test("isVideoStreamDead: a muted-but-live track is not dead", () => {
+  assert.equal(isVideoStreamDead(fakeStream("live")), false)
+  assert.equal(isVideoStreamDead(fakeStream("live", "ended")), false)
+})
+
+test("isVideoStreamDead: ended tracks, no tracks and no stream are dead", () => {
+  assert.equal(isVideoStreamDead(fakeStream("ended")), true)
+  assert.equal(isVideoStreamDead(fakeStream("ended", "ended")), true)
+  assert.equal(isVideoStreamDead(fakeStream()), true)
+  assert.equal(isVideoStreamDead(null), true)
+})
+
+test("recoveryFailureAction: a failed re-acquire after `ended` stalls", () => {
+  assert.equal(recoveryFailureAction({ trigger: "ended", previousStreamDead: true }), "stall")
+  // `ended` fired, so the stream is gone even if the readyState has not caught up.
+  assert.equal(recoveryFailureAction({ trigger: "ended", previousStreamDead: false }), "stall")
+})
+
+test("recoveryFailureAction: a failed re-acquire on the mute path keeps the old stream", () => {
+  // iOS: the phone call that muted the track is also what makes `getUserMedia` fail with
+  // NotReadableError. Latching `stalled` here would turn a self-healing blip into a dead
+  // viewfinder, so the old stream and its `unmute` listener stay in place.
+  assert.equal(recoveryFailureAction({ trigger: "mute", previousStreamDead: false }), "keep")
+  assert.equal(recoveryFailureAction({ trigger: "visibility", previousStreamDead: false }), "keep")
+  assert.equal(recoveryFailureAction({ trigger: "pageshow", previousStreamDead: false }), "keep")
+})
+
+test("recoveryFailureAction: any trigger stalls once the old stream is provably dead", () => {
+  assert.equal(recoveryFailureAction({ trigger: "mute", previousStreamDead: true }), "stall")
+  assert.equal(recoveryFailureAction({ trigger: "visibility", previousStreamDead: true }), "stall")
+  assert.equal(recoveryFailureAction({ trigger: "pageshow", previousStreamDead: true }), "stall")
 })

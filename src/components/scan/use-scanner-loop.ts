@@ -5,14 +5,19 @@ import { useCallback, useEffect, useRef, type RefObject } from "react"
 import { nextScanHint, type ScanHint, type ScanTelemetry } from "@/lib/scan/guidance"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import {
+  MUTE_GRACE_MS,
   advanceLoopClock,
   bumpLoopGeneration,
   createScanLoopController,
   isDetectionCurrent,
   isLoopPaused,
+  isVideoStreamDead,
   nextLoopAction,
+  recoveryFailureAction,
   setPauseReason,
+  streamReleasePlan,
   type PauseReason,
+  type RecoverTrigger,
 } from "@/lib/scan/scanner-loop"
 import {
   applyRawDetection,
@@ -28,6 +33,7 @@ import {
 import type { DetectedBarcode } from "barcode-detector/ponyfill"
 
 export type { PauseReason }
+export { MUTE_GRACE_MS }
 
 export type ScanUnavailableReason = "no_camera" | "denied" | "insecure"
 
@@ -197,6 +203,14 @@ function updateHint(
   session.hint = next
   session.hintChangedAt = now
   onHint(next)
+}
+
+/** The listeners one acquired stream carries, kept with the exact handler references. */
+type WatchedStream = {
+  tracks: MediaStreamTrack[]
+  onEnded: () => void
+  onMute: () => void
+  onUnmute: () => void
 }
 
 /**
@@ -417,7 +431,15 @@ export function useScannerLoop({
     let stalled = false
     let trackMuted = false
     let pageListenersAttached = false
-    let watchedTracks: MediaStreamTrack[] = []
+    let muteGraceTimer: number | null = null
+    /**
+     * The streams this effect instance attached listeners to, keyed by the stream itself.
+     * Ownership is explicit and per stream — never "whatever sits in `streamRef`" — so a
+     * stale instance that wakes up from an await cannot stop the stream a *newer*
+     * instance acquired (Task 10 re-activates the Scanner on `camera_retry`; the old
+     * aliasing bug killed that new camera silently: no `ended` event, no recovery).
+     */
+    const watched = new Map<MediaStream, WatchedStream>()
 
     // Session start: one reset point for every mutable field a prior session could have
     // left in a non-default state (dedupe/debounce counters, hint, telemetry).
@@ -433,45 +455,85 @@ export function useScannerLoop({
       syncLoop()
     }
 
-    function handleTrackEnded() {
-      void recover()
+    function clearMuteGrace() {
+      if (muteGraceTimer === null) return
+      window.clearTimeout(muteGraceTimer)
+      muteGraceTimer = null
     }
 
-    function handleTrackMuted() {
-      trackMuted = true
-      // A track that mutes while the page is in front has really stopped delivering
-      // frames (another app grabbed the camera, permission revoked): re-acquire now. A
-      // mute while hidden is ordinary backgrounding — that one is handled on the way back
-      // in `handleVisibilityChange`.
-      if (document.visibilityState === "visible") void recover()
-    }
-
-    function handleTrackUnmuted() {
-      trackMuted = false
+    /**
+     * A foreground `mute` only arms this timer (see `MUTE_GRACE_MS`): `unmute` disarms it
+     * and the camera heals itself; only an expiry means the frames really are gone.
+     */
+    function startMuteGrace() {
+      if (muteGraceTimer !== null) return
+      muteGraceTimer = window.setTimeout(() => {
+        muteGraceTimer = null
+        if (cancelled || !trackMuted) return
+        void recover("mute")
+      }, MUTE_GRACE_MS)
     }
 
     function watchTracks(stream: MediaStream) {
-      watchedTracks = stream.getVideoTracks()
-      for (const track of watchedTracks) {
-        track.addEventListener("ended", handleTrackEnded)
-        track.addEventListener("mute", handleTrackMuted)
-        track.addEventListener("unmute", handleTrackUnmuted)
+      if (watched.has(stream)) return
+      // Every handler is bound to its own stream and ignores events from a stream that is
+      // no longer the live one, so a dying old stream cannot drive the new one's state.
+      const isCurrent = () => streamRef.current === stream
+      const onEnded = () => {
+        if (isCurrent()) void recover("ended")
       }
+      const onMute = () => {
+        if (!isCurrent()) return
+        trackMuted = true
+        // A mute while hidden is ordinary backgrounding; it is re-checked on the way back
+        // in `handleVisibilityChange` instead of burning a grace window in the background.
+        if (document.visibilityState === "visible") startMuteGrace()
+      }
+      const onUnmute = () => {
+        if (!isCurrent()) return
+        trackMuted = false
+        clearMuteGrace()
+      }
+      const tracks = stream.getVideoTracks()
+      for (const track of tracks) {
+        track.addEventListener("ended", onEnded)
+        track.addEventListener("mute", onMute)
+        track.addEventListener("unmute", onUnmute)
+      }
+      watched.set(stream, { tracks, onEnded, onMute, onUnmute })
     }
 
-    function releaseStream() {
-      for (const track of watchedTracks) {
-        track.removeEventListener("ended", handleTrackEnded)
-        track.removeEventListener("mute", handleTrackMuted)
-        track.removeEventListener("unmute", handleTrackUnmuted)
+    /**
+     * Release exactly the stream the caller owns. The shared slots (`streamRef`,
+     * `video.srcObject`) are cleared only while they still point at *this* stream —
+     * `streamReleasePlan` owns that invariant and is tested in
+     * `tests/scan-scanner-loop.test.ts`.
+     */
+    function releaseStream(stream: MediaStream | null) {
+      if (!stream) return
+      const entry = watched.get(stream)
+      if (entry) {
+        for (const track of entry.tracks) {
+          track.removeEventListener("ended", entry.onEnded)
+          track.removeEventListener("mute", entry.onMute)
+          track.removeEventListener("unmute", entry.onUnmute)
+        }
+        watched.delete(stream)
       }
-      watchedTracks = []
-      trackMuted = false
-      const stream = streamRef.current
-      streamRef.current = null
-      stream?.getTracks().forEach((track) => track.stop())
-      const video = videoRef.current
-      if (video?.srcObject) video.srcObject = null
+      const plan = streamReleasePlan(
+        { current: streamRef.current, videoSource: videoRef.current?.srcObject ?? null },
+        stream,
+      )
+      if (plan.clearCurrent) {
+        streamRef.current = null
+        trackMuted = false
+        clearMuteGrace()
+      }
+      stream.getTracks().forEach((track) => track.stop())
+      if (plan.clearVideoSource) {
+        const video = videoRef.current
+        if (video) video.srcObject = null
+      }
     }
 
     function resumePlayback() {
@@ -486,13 +548,17 @@ export function useScannerLoop({
     function handleVisibilityChange() {
       if (document.visibilityState === "hidden") {
         setPauseReason(controller, "hidden", true)
+        // The grace window is a foreground policy: disarm it rather than re-acquiring
+        // into a background tab.
+        clearMuteGrace()
         syncLoop()
         return
       }
       setPauseReason(controller, "hidden", false)
       if (trackMuted) {
-        // Backgrounding muted the track and it never came back: the stream is gone.
-        void recover()
+        // Backgrounding muted the track and it never came back: try for a new stream,
+        // but keep this one if the re-acquire fails — it may still unmute.
+        void recover("visibility")
         return
       }
       resumePlayback()
@@ -502,7 +568,7 @@ export function useScannerLoop({
     function handlePageShow(event: PageTransitionEvent) {
       // A bfcache restore hands back a page whose MediaStream tracks are already dead.
       if (event.persisted) {
-        void recover()
+        void recover("pageshow")
         return
       }
       resumePlayback()
@@ -516,43 +582,49 @@ export function useScannerLoop({
       window.addEventListener("pageshow", handlePageShow)
     }
 
-    async function acquire(reportUnavailable: boolean): Promise<boolean> {
-      if (typeof window === "undefined") return false
+    /**
+     * Acquire a stream and attach it. Returns the stream this call owns (the caller is
+     * then responsible for it) or null. Every bail-out after attachment releases *that*
+     * stream, never `streamRef`'s.
+     */
+    async function acquire(reportUnavailable: boolean): Promise<MediaStream | null> {
+      if (typeof window === "undefined") return null
       const { runtime: currentRuntime } = latestRef.current
       if (!window.isSecureContext) {
         if (reportUnavailable) latestRef.current.onUnavailable("insecure")
-        return false
+        return null
       }
       const mediaSource = currentRuntime?.mediaSource
       if (!mediaSource && !navigator.mediaDevices?.getUserMedia) {
         if (reportUnavailable) latestRef.current.onUnavailable("no_camera")
-        return false
+        return null
       }
 
       let stream: MediaStream
       try {
         stream = await (mediaSource ?? defaultMediaSource)()
       } catch (err) {
-        if (cancelled) return false
+        if (cancelled) return null
         if (reportUnavailable) {
           const name = err instanceof DOMException ? err.name : ""
           const denied = name === "NotAllowedError" || name === "SecurityError"
           latestRef.current.onUnavailable(denied ? "denied" : "no_camera")
         }
-        return false
+        return null
       }
+      // Not attached to anything yet, so this stream is still purely local.
       if (cancelled) {
         stream.getTracks().forEach((track) => track.stop())
-        return false
+        return null
       }
-
       const video = videoRef.current
       if (!video) {
         stream.getTracks().forEach((track) => track.stop())
-        return false
+        return null
       }
-      streamRef.current = stream
+
       watchTracks(stream)
+      streamRef.current = stream
       video.srcObject = stream
       try {
         await video.play()
@@ -560,11 +632,12 @@ export function useScannerLoop({
         // Autoplay can be blocked without a user gesture; playsInline+muted covers the
         // common iOS case, and `resumePlayback` retries on the next resume (F8a).
       }
-      // From here on the stream is ours, so every bail-out has to hand it back: teardown
-      // may have run while an await was pending, and its `releaseStream()` saw nothing.
+      // From here on a teardown may already have run while an await was pending, and its
+      // release loop saw a stream this closure had not registered yet — so every bail-out
+      // hands back the stream it acquired itself.
       if (cancelled) {
-        releaseStream()
-        return false
+        releaseStream(stream)
+        return null
       }
 
       // Kept across a re-acquire: the detector is stateless and re-creating it would
@@ -574,20 +647,20 @@ export function useScannerLoop({
         try {
           detector = await (currentRuntime?.detectorFactory ?? defaultDetectorFactory)()
         } catch {
-          releaseStream()
-          if (cancelled) return false
+          releaseStream(stream)
+          if (cancelled) return null
           // The camera works but nothing can decode: same dead end for the user as no
           // camera at all, so the flow falls back to the search sheet.
           if (reportUnavailable) latestRef.current.onUnavailable("no_camera")
-          return false
+          return null
         }
         if (cancelled) {
-          releaseStream()
-          return false
+          releaseStream(stream)
+          return null
         }
         detectorRef.current = detector
       }
-      return true
+      return stream
     }
 
     function beginLoop() {
@@ -604,25 +677,44 @@ export function useScannerLoop({
     }
 
     /**
-     * F8: the stream died (track ended/muted, bfcache restore). Tear it down and try to
-     * get a new one exactly once per stall; a failure is terminal for this camera cycle
-     * and surfaces as `onStalled` so the flow can offer a retry instead of showing a
-     * frozen viewfinder forever. The session is deliberately NOT reset — the same scan
-     * attempt continues, keeping the D6 block that stops a re-scan of the last product.
+     * F8: the live stream may be gone (track ended, a foreground mute that outlived its
+     * grace, a mute that survived backgrounding, a bfcache restore).
+     *
+     * The NEW stream is acquired first and the old one is only released once that
+     * succeeded: a `getUserMedia` issued during a transient mute fails with
+     * `NotReadableError`, and tearing down first would trade a self-healing blip for a
+     * dead viewfinder. On failure the old stream, its listeners and the loop stay in
+     * place; only a provably dead old stream latches `stalled` + `onStalled()`. The
+     * session is deliberately NOT reset — the same scan attempt continues, keeping the D6
+     * block that stops a re-scan of the last product.
      */
-    async function recover() {
+    async function recover(trigger: RecoverTrigger) {
       if (cancelled || recovering || stalled) return
       recovering = true
+      const previous = streamRef.current
       try {
         stopLoop()
-        releaseStream()
-        const acquired = await acquire(false)
-        if (cancelled) return
-        if (!acquired) {
-          stalled = true
-          latestRef.current.onStalled()
+        const next = await acquire(false)
+        if (cancelled) {
+          releaseStream(next)
           return
         }
+        if (!next) {
+          const action = recoveryFailureAction({
+            trigger,
+            previousStreamDead: isVideoStreamDead(previous),
+          })
+          if (action === "stall") {
+            stalled = true
+            latestRef.current.onStalled()
+            return
+          }
+          // The old stream is still alive and may still unmute: keep scanning on it and
+          // let the next `ended`/`mute` decide.
+          beginLoop()
+          return
+        }
+        if (previous && previous !== next) releaseStream(previous)
         beginLoop()
       } finally {
         recovering = false
@@ -630,8 +722,12 @@ export function useScannerLoop({
     }
 
     async function start() {
-      const acquired = await acquire(true)
-      if (cancelled || !acquired) return
+      const stream = await acquire(true)
+      if (!stream) return
+      if (cancelled) {
+        releaseStream(stream)
+        return
+      }
       beginLoop()
     }
 
@@ -642,8 +738,11 @@ export function useScannerLoop({
       document.removeEventListener("visibilitychange", handleVisibilityChange)
       window.removeEventListener("pageshow", handlePageShow)
       pageListenersAttached = false
+      clearMuteGrace()
       stopLoop()
-      releaseStream()
+      // Only the streams this instance actually owns: a stream acquired by a newer effect
+      // instance is not in `watched` and is left running.
+      for (const stream of [...watched.keys()]) releaseStream(stream)
       detectorRef.current = null
       controller.pauseReasons.clear()
       controller.lastTickAt = null

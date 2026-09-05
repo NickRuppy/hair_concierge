@@ -117,3 +117,63 @@ export function advanceLoopClock(
   if (previous !== null) advanceActiveClock(session, Math.min(now - previous, MAX_TICK_DELTA_MS))
   return { timedOut: shouldFireTimeout(session) }
 }
+
+/**
+ * How long a foreground track `mute` is tolerated before the stream is treated as gone.
+ *
+ * A mute is NOT proof the camera died: iOS fires it for an incoming call or an app
+ * switcher pass and follows with `unmute` when the page gets the camera back. Worse, a
+ * `getUserMedia` issued inside that window fails with `NotReadableError` — so recovering
+ * immediately would turn a self-healing blip into a permanently stalled viewfinder.
+ */
+export const MUTE_GRACE_MS = 3000
+
+/** What made `recover()` run. Only `ended` is proof, by itself, that the stream is gone. */
+export type RecoverTrigger = "ended" | "mute" | "visibility" | "pageshow"
+
+/** A stream, as far as liveness is concerned. Structural so tests need no DOM. */
+export type VideoStreamLike = {
+  getVideoTracks(): ReadonlyArray<{ readyState: string }>
+}
+
+/**
+ * Whether the stream we already hold is provably unusable. A muted track is still alive
+ * (it can unmute); only an `ended` readyState — or having no video track at all — is
+ * terminal.
+ */
+export function isVideoStreamDead(stream: VideoStreamLike | null): boolean {
+  if (!stream) return true
+  const tracks = stream.getVideoTracks()
+  return tracks.length === 0 || tracks.every((track) => track.readyState === "ended")
+}
+
+/**
+ * What a failed re-acquire means. `stall` latches the dead-camera state and calls
+ * `onStalled()`; `keep` holds on to the old stream, its listeners and the loop, because
+ * the failure may just be the transient window that caused the mute in the first place.
+ */
+export function recoveryFailureAction(args: {
+  trigger: RecoverTrigger
+  previousStreamDead: boolean
+}): "stall" | "keep" {
+  return args.trigger === "ended" || args.previousStreamDead ? "stall" : "keep"
+}
+
+/**
+ * Which shared slots a `releaseStream(stream)` may clear: only the ones that still point
+ * at that exact stream.
+ *
+ * Stream ownership is per closure, never "whatever is in the ref". A stale effect
+ * instance parked on `await video.play()` can wake up after a newer instance already
+ * acquired and attached its own stream; clearing the ref or `video.srcObject`
+ * unconditionally would stop the *new* camera with no `ended` event and no way back.
+ */
+export function streamReleasePlan<T>(
+  slots: { current: T | null; videoSource: unknown },
+  stream: T,
+): { clearCurrent: boolean; clearVideoSource: boolean } {
+  return {
+    clearCurrent: slots.current === stream,
+    clearVideoSource: slots.videoSource === stream,
+  }
+}
