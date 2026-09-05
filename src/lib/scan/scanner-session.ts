@@ -367,6 +367,48 @@ export function mapBoxToCover(
   }
 }
 
+/** What the viewfinder is drawing right now — the three detection kinds, rendered. */
+export type ScanVisualState = ScanDetectionState["kind"]
+
+/** Everything the viewfinder needs to draw itself, derived from the reported state. */
+export type ViewfinderPresentation = {
+  visual: ScanVisualState
+  /** The box to outline, still normalised; `null` draws no outline at all. */
+  outlineBox: NormalizedBox | null
+  /**
+   * The loop is paused behind a sheet and the confirm window is over: everything the
+   * viewfinder shows is stale, so it goes static.
+   */
+  frozen: boolean
+}
+
+function detectionBoxOf(state: ScanDetectionState): NormalizedBox | null {
+  return state.kind === "searching" ? null : state.box
+}
+
+/**
+ * What the viewfinder draws, from what the loop reported plus the two states the
+ * component owns. Pure so the three-way derivation is testable without a camera:
+ *
+ * - the 400ms confirm window owns the `read` look, because the barcode is usually still
+ *   in frame while the result sheet rises and the loop keeps reporting `spotted` — the
+ *   user would otherwise see the green moment flicker back to amber;
+ * - a sheet over a paused loop falls back to a STATIC searching look rather than
+ *   freezing an amber "hold still" over a picture nobody can see. The confirm window is
+ *   exempt: that is exactly the moment the sheet rises over.
+ */
+export function deriveViewfinderPresentation(input: {
+  detection: ScanDetectionState
+  confirmActive: boolean
+  detectionPaused: boolean
+}): ViewfinderPresentation {
+  const { detection, confirmActive, detectionPaused } = input
+  const frozen = detectionPaused && !confirmActive
+  if (confirmActive) return { visual: "read", outlineBox: detectionBoxOf(detection), frozen }
+  if (frozen) return { visual: "searching", outlineBox: null, frozen }
+  return { visual: detection.kind, outlineBox: detectionBoxOf(detection), frozen }
+}
+
 /**
  * The viewfinder's state machine. Deliberately mirrors the D6 re-arm the session already
  * runs on: the outline is only dropped once `REARM_EMPTY_DETECTIONS` attempts in a row

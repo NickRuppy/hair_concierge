@@ -2,30 +2,20 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 
-import { Scanner } from "../src/components/scan/scanner"
-import type { UseScannerLoopArgs } from "../src/components/scan/use-scanner-loop"
+import { ScannerView, type ScannerViewProps } from "../src/components/scan/scanner-view"
 import {
   SCAN_CONFIRM_LABEL,
   SCAN_HINT_DEFAULT,
   SCAN_HINT_MORE_LIGHT,
   SCAN_HINT_SPOTTED,
 } from "../src/lib/scan/guidance"
-import type { NormalizedBox } from "../src/lib/scan/scanner-session"
 
 /**
- * The viewfinder's four visual states (plan 2026-09-05, Task 2). `Scanner` is a
- * "use client" component and this repo has no jsdom/testing-library, so the component
- * function is called directly under a hand-rolled hook dispatcher and the returned
- * element tree is walked — same harness family as `tests/scan-flow-ui.test.tsx`.
- *
- * The camera/detection hook is injected through the `__loop` seam rather than mocked:
- * every state under test is produced by a hook callback (`onDetectionState`,
- * `onConfirm`), and the real hook would need a camera, a detector and a live video
- * element to reach any of them.
+ * The viewfinder's visual states (plan 2026-09-05, Task 2). `ScannerView` is pure — every
+ * input is a prop — so the element tree is produced by calling it directly and walked
+ * here; no camera, no hook, no jsdom. The derivation that feeds these props lives in
+ * `deriveViewfinderPresentation` and is covered in `tests/scan-detection-state.test.ts`.
  */
-
-// The confirm window is scheduled through `window`; nothing else browser-ish is touched.
-Object.defineProperty(globalThis, "window", { configurable: true, value: globalThis })
 
 // --- element-tree helpers ---------------------------------------------------
 
@@ -64,306 +54,145 @@ function hasClass(node: ReactNode, className: string): boolean {
   return classNames(node).some((value) => value.split(/\s+/).includes(className))
 }
 
-/** The pill is the only `aria-live` region in the viewfinder. */
+function onlyWith(node: ReactNode, attribute: string): AnyElement {
+  const matches = withAttribute(node, attribute)
+  assert.equal(matches.length, 1, `Expected exactly one [${attribute}]`)
+  return matches[0]
+}
+
+/** The visible hint / spotted / confirm pill. */
 function pill(node: ReactNode): AnyElement {
-  const match = findAll(node, (element) => element.props["aria-live"] === "polite")[0]
-  assert.ok(match, "Expected the hint pill")
-  return match
+  return onlyWith(node, "data-scan-pill")
+}
+
+/** The visually-hidden polite live region. */
+function announcement(node: ReactNode): AnyElement {
+  return onlyWith(node, "data-scan-announcement")
 }
 
 function detectionAttribute(node: ReactNode): string {
-  const root = withAttribute(node, "data-scan-detection")[0]
-  assert.ok(root, "Expected the viewfinder root")
-  return root.props["data-scan-detection"] as string
+  return onlyWith(node, "data-scan-detection").props["data-scan-detection"] as string
 }
 
-// --- hook harness -----------------------------------------------------------
+// --- rendering --------------------------------------------------------------
 
-type ReactDispatcherInternals = { H: unknown }
-type EffectRecord = { deps: unknown[] | undefined; cleanup?: () => void }
-type MemoRecord<T> = { deps: unknown[] | undefined; value: T }
+const RECT = { left: 40, top: 90, width: 120, height: 48 }
 
-function createHookHarness(render: () => ReactElement | null): {
-  render: () => ReactElement | null
-} {
-  const reactInternals = (
-    React as unknown as {
-      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE: ReactDispatcherInternals
-    }
-  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
-  const previousDispatcher = reactInternals.H
-  const hookValues: unknown[] = []
-  let cursor = 0
-  let pendingEffects: Array<{ index: number; effect: () => void | (() => void) }> = []
-
-  function depsChanged(previous: unknown[] | undefined, next: unknown[] | undefined): boolean {
-    return (
-      !previous ||
-      !next ||
-      previous.length !== next.length ||
-      next.some((dep, index) => dep !== previous[index])
-    )
-  }
-
-  const dispatcher = {
-    useCallback<T extends (...args: never[]) => unknown>(callback: T, deps?: unknown[]): T {
-      return this.useMemo(() => callback, deps)
-    },
-    useEffect(effect: () => void | (() => void), deps?: unknown[]) {
-      const index = cursor
-      cursor += 1
-      const previous = hookValues[index] as EffectRecord | undefined
-      if (!depsChanged(previous?.deps, deps)) return
-      previous?.cleanup?.()
-      hookValues[index] = { deps } satisfies EffectRecord
-      pendingEffects.push({ index, effect })
-    },
-    useLayoutEffect(effect: () => void | (() => void), deps?: unknown[]) {
-      this.useEffect(effect, deps)
-    },
-    useMemo<T>(factory: () => T, deps?: unknown[]): T {
-      const index = cursor
-      cursor += 1
-      const previous = hookValues[index] as MemoRecord<T> | undefined
-      if (previous && !depsChanged(previous.deps, deps)) return previous.value
-      const value = factory()
-      hookValues[index] = { deps, value } satisfies MemoRecord<T>
-      return value
-    },
-    useRef<T>(initialValue: T): { current: T } {
-      const index = cursor
-      cursor += 1
-      if (!hookValues[index]) hookValues[index] = { current: initialValue }
-      return hookValues[index] as { current: T }
-    },
-    useState<T>(initialState: T | (() => T)): [T, (next: T | ((previous: T) => T)) => void] {
-      const index = cursor
-      cursor += 1
-      if (hookValues.length <= index) {
-        hookValues[index] =
-          typeof initialState === "function" ? (initialState as () => T)() : initialState
-      }
-      return [
-        hookValues[index] as T,
-        (next) => {
-          hookValues[index] =
-            typeof next === "function" ? (next as (previous: T) => T)(hookValues[index] as T) : next
-        },
-      ]
-    },
-  }
-
-  return {
-    render() {
-      cursor = 0
-      pendingEffects = []
-      reactInternals.H = dispatcher
-      try {
-        const tree = render()
-        const effects = pendingEffects
-        pendingEffects = []
-        for (const { index, effect } of effects) {
-          const cleanup = effect()
-          if (typeof cleanup === "function") {
-            ;(hookValues[index] as EffectRecord).cleanup = cleanup
-          }
-        }
-        return tree
-      } finally {
-        reactInternals.H = previousDispatcher
-      }
-    },
-  }
+function view(overrides: Partial<ScannerViewProps> = {}): ReactElement {
+  return ScannerView({
+    visual: "searching",
+    outlineBox: null,
+    hint: SCAN_HINT_DEFAULT,
+    confirmActive: false,
+    detectionPaused: false,
+    videoRef: { current: null },
+    frameRef: { current: null },
+    announcement: SCAN_HINT_DEFAULT,
+    ...overrides,
+  })
 }
 
-// --- mounting ---------------------------------------------------------------
+// --- the visual states ------------------------------------------------------
 
-const BOX: NormalizedBox = { x: 0.25, y: 0.4, width: 0.5, height: 0.2 }
+test("ScannerView: searching shows the pulsing dot, the breathing corners and the idle hint", () => {
+  const tree = view()
 
-type ScannerHarness = {
-  tree: ReactElement | null
-  loop: UseScannerLoopArgs
-  setPaused: (paused: boolean) => void
-  render: () => ReactElement | null
-}
-
-function mountScanner(): ScannerHarness {
-  let captured: UseScannerLoopArgs | null = null
-  let detectionPaused = false
-
-  const harness = createHookHarness(() =>
-    Scanner({
-      active: true,
-      detectionPaused,
-      onDecoded: () => true,
-      onUnavailable: () => {},
-      onTimeout: () => {},
-      onStalled: () => {},
-      __loop: (args) => {
-        captured = args
-      },
-    }),
-  )
-
-  const scanner: ScannerHarness = {
-    tree: harness.render(),
-    get loop() {
-      assert.ok(captured, "Expected useScannerLoop to have been called")
-      return captured
-    },
-    setPaused(paused) {
-      detectionPaused = paused
-    },
-    render() {
-      scanner.tree = harness.render()
-      return scanner.tree
-    },
-  }
-  return scanner
-}
-
-// --- the four states --------------------------------------------------------
-
-test("Scanner: searching shows the pulsing dot, the breathing corners and the idle hint", () => {
-  const scanner = mountScanner()
-
-  assert.equal(detectionAttribute(scanner.tree), "searching")
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 1)
-  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 0)
+  assert.equal(detectionAttribute(tree), "searching")
+  assert.equal(textContent(pill(tree)), SCAN_HINT_DEFAULT)
+  assert.equal(withAttribute(tree, "data-scan-pill-dot").length, 1)
+  assert.equal(withAttribute(tree, "data-scan-outline").length, 0)
   // One breathing class per corner marker.
   assert.equal(
-    classNames(scanner.tree).filter((value) => value.split(/\s+/).includes("animate-scan-breathe"))
-      .length,
+    classNames(tree).filter((value) => value.split(/\s+/).includes("animate-scan-breathe")).length,
     4,
   )
 })
 
-test("Scanner: a situational hint replaces the idle text while the dot stays", () => {
-  const scanner = mountScanner()
+test("ScannerView: a situational hint replaces the idle text while the dot stays", () => {
+  const tree = view({ hint: SCAN_HINT_MORE_LIGHT, announcement: SCAN_HINT_MORE_LIGHT })
 
-  scanner.loop.onHint(SCAN_HINT_MORE_LIGHT)
-  scanner.render()
-
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_MORE_LIGHT)
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 1)
+  assert.equal(textContent(pill(tree)), SCAN_HINT_MORE_LIGHT)
+  assert.equal(withAttribute(tree, "data-scan-pill-dot").length, 1)
 })
 
-test("Scanner: a spotted barcode gets the amber outline and the hold-still pill", () => {
-  const scanner = mountScanner()
+test("ScannerView: a spotted barcode gets the amber outline and the hold-still pill", () => {
+  const tree = view({ visual: "spotted", outlineBox: RECT, announcement: SCAN_HINT_SPOTTED })
 
-  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
-  scanner.render()
+  assert.equal(detectionAttribute(tree), "spotted")
+  const outline = onlyWith(tree, "data-scan-outline")
+  assert.equal(outline.props["data-scan-outline"], "spotted")
+  assert.match(outline.props.className as string, /border-\[#e0a13a\]/)
+  assert.equal((outline.props.style as Record<string, string>).left, "40px")
 
-  assert.equal(detectionAttribute(scanner.tree), "spotted")
-  const outline = withAttribute(scanner.tree, "data-scan-outline")
-  assert.equal(outline.length, 1)
-  assert.equal(outline[0].props["data-scan-outline"], "spotted")
-  assert.match(outline[0].props.className as string, /border-\[#e0a13a\]/)
-
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_SPOTTED)
-  assert.match(pill(scanner.tree).props.className as string, /bg-\[#b97a17\]/)
+  assert.equal(textContent(pill(tree)), SCAN_HINT_SPOTTED)
+  assert.match(pill(tree).props.className as string, /bg-\[#b97a17\]/)
   // The dot and the breathing corners belong to "still looking", not to "found it".
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 0)
-  assert.equal(hasClass(scanner.tree, "animate-scan-breathe"), false)
+  assert.equal(withAttribute(tree, "data-scan-pill-dot").length, 0)
+  assert.equal(hasClass(tree, "animate-scan-breathe"), false)
 })
 
-test("Scanner: an accepted decode turns the outline green and the pill plum", () => {
-  const scanner = mountScanner()
+test("ScannerView: an accepted decode turns the outline green and the pill plum", () => {
+  const tree = view({
+    visual: "read",
+    outlineBox: RECT,
+    confirmActive: true,
+    announcement: SCAN_CONFIRM_LABEL,
+  })
 
-  scanner.loop.onDetectionState({ kind: "read", box: BOX })
-  scanner.loop.onConfirm()
-  scanner.render()
+  assert.equal(detectionAttribute(tree), "read")
+  const outline = onlyWith(tree, "data-scan-outline")
+  assert.equal(outline.props["data-scan-outline"], "read")
+  assert.match(outline.props.className as string, /border-\[var\(--status-ok-text\)\]/)
 
-  assert.equal(detectionAttribute(scanner.tree), "read")
-  const outline = withAttribute(scanner.tree, "data-scan-outline")
-  assert.equal(outline.length, 1)
-  assert.equal(outline[0].props["data-scan-outline"], "read")
-  assert.match(outline[0].props.className as string, /border-\[var\(--status-ok-text\)\]/)
-
-  assert.equal(textContent(pill(scanner.tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
-  assert.match(pill(scanner.tree).props.className as string, /bg-\[var\(--brand-plum\)\]/)
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 0)
+  assert.equal(textContent(pill(tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
+  assert.match(pill(tree).props.className as string, /bg-\[var\(--brand-plum\)\]/)
+  assert.equal(withAttribute(tree, "data-scan-pill-dot").length, 0)
 })
 
-test("Scanner: the confirm window keeps the read look while the barcode is spotted again", () => {
-  const scanner = mountScanner()
+test("ScannerView: the read confirm keeps its motion while the sheet rises over it", () => {
+  const tree = view({
+    visual: "read",
+    outlineBox: RECT,
+    confirmActive: true,
+    detectionPaused: true,
+    announcement: SCAN_CONFIRM_LABEL,
+  })
 
-  scanner.loop.onDetectionState({ kind: "read", box: BOX })
-  scanner.loop.onConfirm()
-  // The bottle has not moved, so the loop keeps reporting raw hits behind the confirm.
-  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
-  scanner.render()
-
-  assert.equal(detectionAttribute(scanner.tree), "read")
-  assert.equal(textContent(pill(scanner.tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
+  // Paused, but inside the confirm window: the green moment belongs to the user's decode.
+  assert.equal(detectionAttribute(tree), "read")
+  assert.equal(textContent(pill(tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
+  assert.equal(withAttribute(tree, "data-scan-outline").length, 1)
 })
 
-test("Scanner: a sheet over the viewfinder freezes the dot and the breathing corners", () => {
-  const scanner = mountScanner()
+test("ScannerView: a sheet over the viewfinder freezes the dot and the breathing corners", () => {
+  const tree = view({ detectionPaused: true })
 
-  scanner.setPaused(true)
-  scanner.render()
-
-  assert.equal(detectionAttribute(scanner.tree), "searching")
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 0)
-  assert.equal(hasClass(scanner.tree, "animate-scan-breathe"), false)
-  assert.equal(hasClass(scanner.tree, "animate-scan-dot"), false)
+  assert.equal(detectionAttribute(tree), "searching")
+  assert.equal(withAttribute(tree, "data-scan-pill-dot").length, 0)
+  assert.equal(hasClass(tree, "animate-scan-breathe"), false)
+  assert.equal(hasClass(tree, "animate-scan-dot"), false)
   // The pill still says what it says; only the motion stops.
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
+  assert.equal(textContent(pill(tree)), SCAN_HINT_DEFAULT)
 })
 
-test("Scanner: a sheet over a spotted barcode falls back to the static searching look", () => {
-  const scanner = mountScanner()
+// --- the accessible status --------------------------------------------------
 
-  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
-  scanner.setPaused(true)
-  scanner.render()
+test("ScannerView: only the visually-hidden sibling is a live region", () => {
+  const tree = view({ visual: "spotted", outlineBox: RECT, announcement: SCAN_HINT_SPOTTED })
 
-  // What the loop last saw is stale behind the sheet: no amber "hold still" over a
-  // picture nobody can see, and no outline on a barcode that may already be gone.
-  assert.equal(detectionAttribute(scanner.tree), "searching")
-  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 0)
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
-  assert.doesNotMatch(pill(scanner.tree).props.className as string, /bg-\[#b97a17\]/)
-  assert.equal(withAttribute(scanner.tree, "data-scan-pill-dot").length, 0)
-  assert.equal(hasClass(scanner.tree, "animate-scan-breathe"), false)
-
-  // The sheet closes: the loop is live again and the next report drives the viewfinder.
-  scanner.setPaused(false)
-  scanner.loop.onDetectionState({ kind: "spotted", box: BOX })
-  scanner.render()
-  assert.equal(detectionAttribute(scanner.tree), "spotted")
+  // The pill flips as fast as the detector does; the live region is the debounced copy.
+  assert.equal(pill(tree).props["aria-live"], undefined)
+  const region = announcement(tree)
+  assert.equal(region.props["aria-live"], "polite")
+  assert.match(region.props.className as string, /\bsr-only\b/)
+  assert.equal(textContent(region), SCAN_HINT_SPOTTED)
 })
 
-test("Scanner: the read confirm survives the sheet rising over the viewfinder", () => {
-  const scanner = mountScanner()
+test("ScannerView: the live region can lag the pill without changing what is drawn", () => {
+  // Exactly what the 1s rate limit produces: the pill is already amber while the live
+  // region still holds the idle hint it announced a moment ago.
+  const tree = view({ visual: "spotted", outlineBox: RECT, announcement: SCAN_HINT_DEFAULT })
 
-  scanner.loop.onDetectionState({ kind: "read", box: BOX })
-  scanner.loop.onConfirm()
-  // Exactly what the flow does: the result sheet goes up inside the 400ms window.
-  scanner.setPaused(true)
-  scanner.render()
-
-  assert.equal(detectionAttribute(scanner.tree), "read")
-  assert.equal(textContent(pill(scanner.tree)), `✓ ${SCAN_CONFIRM_LABEL}`)
-  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 1)
-})
-
-test("Scanner: a new scan attempt drops the confirm state back to the idle pill", () => {
-  const scanner = mountScanner()
-
-  scanner.loop.onDetectionState({ kind: "read", box: BOX })
-  scanner.loop.onConfirm()
-  scanner.render()
-  assert.equal(detectionAttribute(scanner.tree), "read")
-
-  // What the hook does on an epoch bump: restart, then the fresh attempt's state.
-  scanner.loop.onAttemptStart()
-  scanner.loop.onDetectionState({ kind: "searching" })
-  scanner.render()
-
-  assert.equal(detectionAttribute(scanner.tree), "searching")
-  assert.equal(textContent(pill(scanner.tree)), SCAN_HINT_DEFAULT)
-  assert.equal(withAttribute(scanner.tree, "data-scan-outline").length, 0)
+  assert.equal(textContent(pill(tree)), SCAN_HINT_SPOTTED)
+  assert.equal(textContent(announcement(tree)), SCAN_HINT_DEFAULT)
 })

@@ -220,9 +220,12 @@ function outline(page: Page) {
   return page.locator("[data-scan-outline]")
 }
 
-/** The viewfinder's hint / spotted / confirm pill. */
+/**
+ * The viewfinder's hint / spotted / confirm pill — the VISIBLE one. The accessible copy
+ * lives in `[data-scan-announcement]`, which is rate-limited and deliberately lags.
+ */
 function pill(page: Page) {
-  return page.locator('[data-scan-detection] [aria-live="polite"]')
+  return page.locator("[data-scan-detection] [data-scan-pill]")
 }
 
 async function labState(page: Page) {

@@ -3,6 +3,7 @@ import test from "node:test"
 
 import {
   REARM_EMPTY_DETECTIONS,
+  deriveViewfinderPresentation,
   isSameDetectionState,
   mapBoxToCover,
   nextDetectionState,
@@ -205,4 +206,66 @@ test("isSameDetectionState: a real move is a change", () => {
     isSameDetectionState({ kind: "spotted", box: boxA }, { kind: "spotted", box: boxB }),
     false,
   )
+})
+
+// --- deriveViewfinderPresentation -------------------------------------------
+
+test("deriveViewfinderPresentation: a spotted barcode is drawn where the loop saw it", () => {
+  const presentation = deriveViewfinderPresentation({
+    detection: { kind: "spotted", box: boxA },
+    confirmActive: false,
+    detectionPaused: false,
+  })
+
+  assert.equal(presentation.visual, "spotted")
+  assert.deepEqual(presentation.outlineBox, boxA)
+  assert.equal(presentation.frozen, false)
+})
+
+test("deriveViewfinderPresentation: searching draws no outline at all", () => {
+  const presentation = deriveViewfinderPresentation({
+    detection: searching,
+    confirmActive: false,
+    detectionPaused: false,
+  })
+
+  assert.equal(presentation.visual, "searching")
+  assert.equal(presentation.outlineBox, null)
+})
+
+test("deriveViewfinderPresentation: the confirm window holds the read look over a fresh spot", () => {
+  // The bottle has not moved, so the loop keeps reporting raw hits behind the confirm.
+  const presentation = deriveViewfinderPresentation({
+    detection: { kind: "spotted", box: boxA },
+    confirmActive: true,
+    detectionPaused: false,
+  })
+
+  assert.equal(presentation.visual, "read")
+})
+
+test("deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching", () => {
+  const presentation = deriveViewfinderPresentation({
+    detection: { kind: "spotted", box: boxA },
+    confirmActive: false,
+    detectionPaused: true,
+  })
+
+  // What the loop last saw is stale behind the sheet: no amber "hold still" over a
+  // picture nobody can see, and no outline on a barcode that may already be gone.
+  assert.equal(presentation.visual, "searching")
+  assert.equal(presentation.outlineBox, null)
+  assert.equal(presentation.frozen, true)
+})
+
+test("deriveViewfinderPresentation: the read confirm survives the sheet rising over it", () => {
+  const presentation = deriveViewfinderPresentation({
+    detection: { kind: "read", box: boxA },
+    confirmActive: true,
+    detectionPaused: true,
+  })
+
+  assert.equal(presentation.visual, "read")
+  assert.deepEqual(presentation.outlineBox, boxA)
+  assert.equal(presentation.frozen, false)
 })
