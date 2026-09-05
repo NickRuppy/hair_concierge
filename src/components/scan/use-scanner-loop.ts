@@ -22,10 +22,16 @@ import {
 import {
   applyRawDetection,
   createScanSessionState,
+  isSameDetectionState,
+  nextDetectionState,
+  normalizeDetectionBox,
   noteEmptyDetection,
   restartScanSessionState,
   selectDetectionCandidate,
   unfireDetection,
+  unrotateDetectionBox,
+  type ScanDetectionEvent,
+  type ScanDetectionState,
   type ScanSessionState,
 } from "@/lib/scan/scanner-session"
 
@@ -79,6 +85,14 @@ export type UseScannerLoopArgs = {
   /** The stream died and could not be re-acquired — the viewfinder is dead (F8). */
   onStalled: () => void
   onHint: (hint: ScanHint) => void
+  /**
+   * What the viewfinder should be drawing right now: nothing yet (`searching`), an amber
+   * outline on a barcode that is in frame but not read (`spotted`), or a green one on the
+   * barcode that just decoded (`read`). Called ONLY when the state actually changed
+   * (`isSameDetectionState`), so a bottle held still does not cost a `setState` per frame.
+   * Purely a reporting seam — nothing in the detection lifecycle depends on it.
+   */
+  onDetectionState: (state: ScanDetectionState) => void
   /** A stable decode was accepted; the component shows the green confirm state. */
   onConfirm: () => void
   /**
@@ -245,6 +259,7 @@ export function useScannerLoop({
   onTimeout,
   onStalled,
   onHint,
+  onDetectionState,
   onConfirm,
   onAttemptStart,
 }: UseScannerLoopArgs): void {
@@ -259,6 +274,8 @@ export function useScannerLoop({
   // `syncLoop` schedules the tick, and the tick re-syncs the loop. The indirection keeps
   // that from becoming a `useCallback` cycle.
   const tickRef = useRef<() => void>(() => {})
+  /** The last state handed to `onDetectionState`; the source for the change check. */
+  const detectionStateRef = useRef<ScanDetectionState>({ kind: "searching" })
 
   // Latest props, so the long-lived camera effect never closes over a stale callback.
   const latestRef = useRef({
@@ -268,6 +285,7 @@ export function useScannerLoop({
     onTimeout,
     onStalled,
     onHint,
+    onDetectionState,
     onConfirm,
     onAttemptStart,
   })
@@ -279,10 +297,34 @@ export function useScannerLoop({
       onTimeout,
       onStalled,
       onHint,
+      onDetectionState,
       onConfirm,
       onAttemptStart,
     }
-  }, [runtime, onDecoded, onUnavailable, onTimeout, onStalled, onHint, onConfirm, onAttemptStart])
+  }, [
+    runtime,
+    onDecoded,
+    onUnavailable,
+    onTimeout,
+    onStalled,
+    onHint,
+    onDetectionState,
+    onConfirm,
+    onAttemptStart,
+  ])
+
+  /**
+   * Fold one detection event into the viewfinder state and report it — but only when it
+   * really changed. This is the whole cost of the seam on the frame loop: one pure
+   * transition plus a rounded box comparison, and a React update only on a real change.
+   */
+  const reportDetection = useCallback((event: ScanDetectionEvent, emptyStreak: number) => {
+    const previous = detectionStateRef.current
+    const next = nextDetectionState(previous, event, emptyStreak)
+    if (isSameDetectionState(previous, next)) return
+    detectionStateRef.current = next
+    latestRef.current.onDetectionState(next)
+  }, [])
 
   /**
    * The one place frames are scheduled or cancelled. Idempotent by construction: it acts
@@ -352,12 +394,18 @@ export function useScannerLoop({
         if (!isDetectionCurrent(controllerRef.current, generation)) return
 
         session.detectionAttempts += 1
+        // Whether `results` describe the 90°-rotated retry frame rather than the video:
+        // their boxes then need mapping back before the overlay can be drawn from them.
+        let fromRotatedFrame = false
         if (results.length === 0 && session.detectionAttempts % ROTATION_RETRY_INTERVAL === 0) {
           const rotated = getRotatedFrame(video, ensureCanvas(rotationCanvasRef))
           if (rotated) {
             try {
               const rotatedResults = await detector.detect(rotated)
-              if (rotatedResults.length > 0) results = rotatedResults
+              if (rotatedResults.length > 0) {
+                results = rotatedResults
+                fromRotatedFrame = true
+              }
             } catch {
               // Rotation retry is best-effort; ignore failures.
             }
@@ -369,6 +417,9 @@ export function useScannerLoop({
           // Counts towards the D6 re-arm: three empty attempts mean the barcode really
           // left the frame, which is what releases a blocked value.
           noteEmptyDetection(session)
+          // Same threshold for the outline: it is dropped once the barcode has really
+          // left the frame, not on the first attempt that happened to miss it.
+          reportDetection({ kind: "empty" }, session.emptyDetections)
           return
         }
 
@@ -377,6 +428,19 @@ export function useScannerLoop({
         const primary = selectDetectionCandidate(results, session, validateEanInput)
         if (!primary) return
         const frameArea = video.videoWidth * video.videoHeight
+        // The candidate the session is about to fold in is also the one the viewfinder
+        // outlines — anything else would draw a box around a barcode we are ignoring.
+        const detectionBox =
+          video.videoWidth > 0 && video.videoHeight > 0
+            ? normalizeDetectionBox(
+                fromRotatedFrame
+                  ? unrotateDetectionBox(primary.boundingBox, video.videoHeight)
+                  : primary.boundingBox,
+                video.videoWidth,
+                video.videoHeight,
+              )
+            : null
+        if (detectionBox) reportDetection({ kind: "raw", box: detectionBox }, 0)
         const { fire } = applyRawDetection(
           session,
           {
@@ -393,6 +457,7 @@ export function useScannerLoop({
           // The confirm state is the *accepted* decode's green moment: a refused value
           // never reached the flow, so it gets neither the pill nor the consumed guards.
           if (latestRef.current.onDecoded(fire)) {
+            if (detectionBox) reportDetection({ kind: "read", box: detectionBox }, 0)
             latestRef.current.onConfirm()
           } else {
             unfireDetection(session, fire)
@@ -402,7 +467,7 @@ export function useScannerLoop({
         session.detecting = false
       }
     },
-    [videoRef],
+    [reportDetection, videoRef],
   )
 
   const tick = useCallback(() => {
@@ -852,7 +917,10 @@ export function useScannerLoop({
     restartScanSessionState(sessionRef.current, performance.now())
     bumpLoopGeneration(controller)
     controller.lastTickAt = null
+    // The viewfinder starts every attempt clean: whatever outline the last attempt ended
+    // on describes a frame the user has already left.
+    reportDetection({ kind: "restart" }, 0)
     latestRef.current.onAttemptStart()
     syncLoop()
-  }, [active, sessionEpoch, syncLoop])
+  }, [active, reportDetection, sessionEpoch, syncLoop])
 }

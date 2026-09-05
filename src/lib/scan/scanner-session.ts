@@ -264,3 +264,150 @@ export function shouldFireTimeout(
   session.timeoutFired = true
   return true
 }
+
+/* --------------------------------------------------------------------------
+ * Viewfinder detection state (plan 2026-09-05, Task 1)
+ *
+ * A reporting seam, not a lifecycle: the detection loop already knows whether a barcode
+ * is in frame and where, and these helpers turn that into the three states the
+ * viewfinder draws — searching, spotted (amber outline), read (green outline). Pure on
+ * purpose, so the transitions and the on-screen geometry are testable without a camera.
+ * ------------------------------------------------------------------------ */
+
+/** A box in 0..1 fractions of the video's *intrinsic* size (not the element's). */
+export type NormalizedBox = { x: number; y: number; width: number; height: number }
+
+export type ScanDetectionState =
+  | { kind: "searching" }
+  | { kind: "spotted"; box: NormalizedBox }
+  | { kind: "read"; box: NormalizedBox }
+
+/** What the detection loop just observed. `emptyStreak` decides what `empty` means. */
+export type ScanDetectionEvent =
+  | { kind: "raw"; box: NormalizedBox }
+  | { kind: "read"; box: NormalizedBox }
+  | { kind: "empty" }
+  | { kind: "restart" }
+
+const SEARCHING: ScanDetectionState = { kind: "searching" }
+
+function clamp01(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  if (value < 0) return 0
+  if (value > 1) return 1
+  return value
+}
+
+/**
+ * A detector bounding box (pixels of the video's intrinsic frame) as 0..1 fractions,
+ * clamped into the frame — a barcode half out of shot must not draw an outline hanging
+ * outside the viewfinder. A frame with no intrinsic size yet yields a zero box, which
+ * the caller treats as "nothing to draw".
+ */
+export function normalizeDetectionBox(
+  boundingBox: { x: number; y: number; width: number; height: number },
+  videoWidth: number,
+  videoHeight: number,
+): NormalizedBox {
+  if (!(videoWidth > 0) || !(videoHeight > 0)) return { x: 0, y: 0, width: 0, height: 0 }
+  const x = clamp01(boundingBox.x / videoWidth)
+  const y = clamp01(boundingBox.y / videoHeight)
+  return {
+    x,
+    y,
+    width: Math.min(clamp01(boundingBox.width / videoWidth), 1 - x),
+    height: Math.min(clamp01(boundingBox.height / videoHeight), 1 - y),
+  }
+}
+
+/**
+ * The periodic rotated retry (`getRotatedFrame`) hands the detector a canvas turned 90°,
+ * so its boxes are in the ROTATED frame's coordinates. The rotation maps a video point
+ * (x, y) to (videoHeight - y, x); this is the inverse for a whole box, so a barcode found
+ * on a vertically-held bottle still gets its outline drawn where the barcode actually is.
+ */
+export function unrotateDetectionBox(
+  box: { x: number; y: number; width: number; height: number },
+  videoHeight: number,
+): { x: number; y: number; width: number; height: number } {
+  return {
+    x: box.y,
+    y: videoHeight - box.x - box.width,
+    width: box.height,
+    height: box.width,
+  }
+}
+
+/**
+ * Where a normalized box lands inside an element rendering the video with
+ * `object-fit: cover` (centred, cropped on whichever axis overflows). Returns CSS pixels
+ * relative to the element's own box; a coordinate may be negative or past the element's
+ * edge when that part of the frame is cropped away, which is correct — the overlay is
+ * clipped by the viewfinder's `overflow-hidden`.
+ */
+export function mapBoxToCover(
+  box: NormalizedBox,
+  video: { width: number; height: number },
+  element: { width: number; height: number },
+): { left: number; top: number; width: number; height: number } {
+  if (!(video.width > 0) || !(video.height > 0)) return { left: 0, top: 0, width: 0, height: 0 }
+  if (!(element.width > 0) || !(element.height > 0)) {
+    return { left: 0, top: 0, width: 0, height: 0 }
+  }
+  const scale = Math.max(element.width / video.width, element.height / video.height)
+  const displayedWidth = video.width * scale
+  const displayedHeight = video.height * scale
+  const offsetX = (element.width - displayedWidth) / 2
+  const offsetY = (element.height - displayedHeight) / 2
+  return {
+    left: offsetX + box.x * displayedWidth,
+    top: offsetY + box.y * displayedHeight,
+    width: box.width * displayedWidth,
+    height: box.height * displayedHeight,
+  }
+}
+
+/**
+ * The viewfinder's state machine. Deliberately mirrors the D6 re-arm the session already
+ * runs on: the outline is only dropped once `REARM_EMPTY_DETECTIONS` attempts in a row
+ * saw no barcode at all, so a single missed decode on a still-held bottle does not make
+ * the outline flicker.
+ */
+export function nextDetectionState(
+  previous: ScanDetectionState,
+  event: ScanDetectionEvent,
+  emptyStreak: number,
+  rearmAfter: number = REARM_EMPTY_DETECTIONS,
+): ScanDetectionState {
+  switch (event.kind) {
+    case "raw":
+      return { kind: "spotted", box: event.box }
+    case "read":
+      return { kind: "read", box: event.box }
+    case "restart":
+      return SEARCHING
+    case "empty":
+      return emptyStreak >= rearmAfter ? SEARCHING : previous
+  }
+}
+
+/** Detector boxes jitter every frame; only ~a thousandth of the frame counts as a move. */
+function roundBoxComponent(value: number): number {
+  return Math.round(value * 1000) / 1000
+}
+
+/**
+ * Whether two states are the same as far as the UI is concerned. This is what keeps the
+ * reporting seam off React's render path: the loop runs at frame rate, and a static
+ * barcode must not cause a `setState` per frame.
+ */
+export function isSameDetectionState(a: ScanDetectionState, b: ScanDetectionState): boolean {
+  if (a.kind !== b.kind) return false
+  if (a.kind === "searching" || b.kind === "searching") return true
+  return (
+    roundBoxComponent(a.box.x) === roundBoxComponent(b.box.x) &&
+    roundBoxComponent(a.box.y) === roundBoxComponent(b.box.y) &&
+    roundBoxComponent(a.box.width) === roundBoxComponent(b.box.width) &&
+    roundBoxComponent(a.box.height) === roundBoxComponent(b.box.height)
+  )
+}

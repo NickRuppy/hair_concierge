@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 import { SCAN_CONFIRM_LABEL, SCAN_HINT_DEFAULT, type ScanHint } from "@/lib/scan/guidance"
+import type { ScanDetectionState } from "@/lib/scan/scanner-session"
 import { cn } from "@/lib/utils"
 
 import { useScannerLoop, type ScanUnavailableReason, type ScannerRuntime } from "./use-scanner-loop"
@@ -63,6 +64,9 @@ export function Scanner({
 
   const [hint, setHint] = useState<ScanHint>(SCAN_HINT_DEFAULT)
   const [confirmActive, setConfirmActive] = useState(false)
+  // What the loop last reported about the barcode in frame. Only ever set from
+  // `onDetectionState`, which the hook calls on a real change — never per frame.
+  const [detection, setDetection] = useState<ScanDetectionState>({ kind: "searching" })
   // The confirm-off timeout is owned here so an epoch reset or a newer decode cancels the
   // stale callback — otherwise a previous scan's timer clears the new confirm early.
   const confirmTimerRef = useRef<number | null>(null)
@@ -104,6 +108,7 @@ export function Scanner({
     onTimeout,
     onStalled,
     onHint: setHint,
+    onDetectionState: setDetection,
     onConfirm: handleConfirm,
     onAttemptStart: handleAttemptStart,
   })
@@ -114,7 +119,10 @@ export function Scanner({
   if (!active) return null
 
   return (
-    <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black">
+    <div
+      data-scan-detection={detection.kind}
+      className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-black"
+    >
       <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
 
       {/* Viewfinder corner markers — green + pulse during the decode-confirm moment */}
