@@ -115,9 +115,11 @@ export function Scanner({
   }, [])
 
   /**
-   * Re-measure the video and the viewfinder. Called when the detection state changes and
-   * on a resize — never per frame: the overlay follows the barcode through a CSS
-   * transition, so the layout numbers only have to be right when the box moves.
+   * Re-measure the video and the viewfinder. Called on mount, when the stream reports
+   * its intrinsic size, and on a resize — never from a detection report: `clientWidth` /
+   * `clientHeight` force layout, and the detection seam fires as often as the barcode
+   * moves. Nothing else can change these numbers, and the outline follows the barcode
+   * through a CSS transition on top of them.
    */
   const syncMetrics = useCallback(() => {
     const video = videoRef.current
@@ -131,16 +133,12 @@ export function Scanner({
     setMetrics((previous) => (sameMetrics(previous, next) ? previous : next))
   }, [])
 
-  const handleDetectionState = useCallback(
-    (next: ScanDetectionState) => {
-      setDetection(next)
-      // Snapshot the accepted decode's box: the confirm window keeps drawing THIS one
-      // even as the loop reports the bottle moving (or leaving) behind the rising sheet.
-      if (next.kind === "read") setConfirmBox(next.box)
-      syncMetrics()
-    },
-    [syncMetrics],
-  )
+  const handleDetectionState = useCallback((next: ScanDetectionState) => {
+    setDetection(next)
+    // Snapshot the accepted decode's box: the confirm window keeps drawing THIS one
+    // even as the loop reports the bottle moving (or leaving) behind the rising sheet.
+    if (next.kind === "read") setConfirmBox(next.box)
+  }, [])
 
   const handleConfirm = useCallback(() => {
     clearConfirmTimer()
@@ -183,6 +181,21 @@ export function Scanner({
 
   // Unmount only: never leave a confirm timer pointing at a dead component.
   useEffect(() => clearConfirmTimer, [clearConfirmTimer])
+
+  // The video's intrinsic size only becomes known once the stream delivers metadata.
+  // The out-of-band initial measure covers a resume onto an element that already has it
+  // (the event would have fired before this effect could subscribe) and keeps this a
+  // subscribe-only effect rather than one that sets state while committing.
+  useEffect(() => {
+    const video = videoRef.current
+    if (!active || !video) return
+    video.addEventListener("loadedmetadata", syncMetrics)
+    const initialMeasure = window.setTimeout(syncMetrics, 0)
+    return () => {
+      window.clearTimeout(initialMeasure)
+      video.removeEventListener("loadedmetadata", syncMetrics)
+    }
+  }, [active, syncMetrics])
 
   // A rotated phone or a resized window moves the whole `object-cover` crop, so the
   // outline has to be re-placed even though the barcode never moved.

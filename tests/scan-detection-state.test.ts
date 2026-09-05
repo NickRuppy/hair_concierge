@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  BOX_MOVE_TOLERANCE,
   REARM_EMPTY_DETECTIONS,
   deriveViewfinderPresentation,
   isSameDetectionState,
@@ -199,6 +200,34 @@ test("isSameDetectionState: a move past the tolerance is a change", () => {
     isSameDetectionState({ kind: "spotted", box: boxA }, { kind: "spotted", box: moved }),
     false,
   )
+})
+
+test("isSameDetectionState: a hair's move never counts, wherever in the frame it lands", () => {
+  // The old rounding-bucket comparison called this a move whenever the pair happened to
+  // straddle a bucket edge — 0.00002 of the frame, roughly a hundredth of a millimetre
+  // on screen, redrawing the outline for nothing.
+  const before = { x: 0.00249, y: 0.00249, width: 0.2, height: 0.2 }
+  const after = { x: 0.00251, y: 0.00251, width: 0.2, height: 0.2 }
+  assert.equal(
+    isSameDetectionState({ kind: "spotted", box: before }, { kind: "spotted", box: after }),
+    true,
+  )
+})
+
+test("isSameDetectionState: a slow drift is reported once it has really accumulated", () => {
+  // Each step is far under the tolerance, but every comparison is against the box that
+  // was LAST REPORTED — so the drift adds up instead of being ignored forever.
+  const reported: ScanDetectionState = { kind: "spotted", box: boxA }
+  let x = boxA.x
+  let steps = 0
+  while (isSameDetectionState(reported, { kind: "spotted", box: { ...boxA, x } })) {
+    x += 0.002
+    steps += 1
+    assert.ok(steps <= 10, "a steady drift was never reported")
+  }
+
+  assert.ok(x - boxA.x > BOX_MOVE_TOLERANCE)
+  assert.equal(steps, 3)
 })
 
 test("isSameDetectionState: a real move is a change", () => {

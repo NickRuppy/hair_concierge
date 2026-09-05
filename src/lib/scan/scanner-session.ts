@@ -449,25 +449,31 @@ export function nextDetectionState(
  * over the jitter — the outline follows real movement through its CSS transition instead
  * of re-rendering on noise.
  */
-const BOX_MOVE_TOLERANCE = 0.005
-
-/** Quantised, not compared pairwise: a slow drift still crosses a step eventually. */
-function roundBoxComponent(value: number): number {
-  return Math.round(value / BOX_MOVE_TOLERANCE)
-}
+export const BOX_MOVE_TOLERANCE = 0.005
 
 /**
  * Whether two states are the same as far as the UI is concerned. This is what keeps the
  * reporting seam off React's render path: the loop runs at frame rate, and a static
  * barcode must not cause a `setState` per frame.
+ *
+ * Boxes are compared by ABSOLUTE delta, not by rounding each component into a bucket:
+ * a bucketed comparison calls a 0.00002 wobble a move whenever it happens to straddle a
+ * bucket edge, and calls a 0.0049 jump nothing whenever it does not. The caller always
+ * compares against the box it LAST REPORTED (the hook holds that reference), so the
+ * pairwise comparison is not asked to be transitive — a slow drift accumulates against
+ * the reported box and is reported the moment it has really moved half a percent.
  */
 export function isSameDetectionState(a: ScanDetectionState, b: ScanDetectionState): boolean {
   if (a.kind !== b.kind) return false
   if (a.kind === "searching" || b.kind === "searching") return true
   return (
-    roundBoxComponent(a.box.x) === roundBoxComponent(b.box.x) &&
-    roundBoxComponent(a.box.y) === roundBoxComponent(b.box.y) &&
-    roundBoxComponent(a.box.width) === roundBoxComponent(b.box.width) &&
-    roundBoxComponent(a.box.height) === roundBoxComponent(b.box.height)
+    withinBoxTolerance(a.box.x, b.box.x) &&
+    withinBoxTolerance(a.box.y, b.box.y) &&
+    withinBoxTolerance(a.box.width, b.box.width) &&
+    withinBoxTolerance(a.box.height, b.box.height)
   )
+}
+
+function withinBoxTolerance(a: number, b: number): boolean {
+  return Math.abs(a - b) <= BOX_MOVE_TOLERANCE
 }
