@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
 
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -8,18 +8,20 @@ import {
   scanResultShownInCatalog,
   type ScanAnalyticsPort,
 } from "@/lib/scan/scan-analytics"
-import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
+import {
+  initialScanFlowState,
+  isDetectionPaused,
+  scanFlowReducer,
+  type ScanFlowState,
+  type ScanFlowStep,
+} from "@/lib/scan/scan-flow-state"
+import { useLatestRequest } from "@/lib/scan/use-latest-request"
 import {
   SCAN_RESOLVING_SUBLINE,
   SCAN_RESOLVING_TITLE,
   SCAN_UNKNOWN_HEADLINE,
 } from "@/lib/scan/verdict-labels"
-import type {
-  ScanPendingSubmissionResult,
-  ScanResolveResult,
-  ScanResolvedVerdictResult,
-  ScanUnknownProductResult,
-} from "@/lib/scan/types"
+import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
 import { useToast } from "@/providers/toast-provider"
@@ -27,30 +29,30 @@ import { useToast } from "@/providers/toast-provider"
 import { ScanActionFooter } from "./scan-action-footer"
 import { ScanResultCard } from "./scan-result-card"
 import { ScanResultSheet } from "./scan-result-sheet"
-import { ScanSaveSheet } from "./scan-save-sheet"
+import { ScanSaveSheet, type ScanSaveCompletion } from "./scan-save-sheet"
 import { ScanSearchSheet } from "./scan-search-sheet"
 import { ScanUnknownFlow, type ScanSubmissionInput } from "./scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "./scan-wishlist-sheet"
-import { Scanner, type ScanDecodedIdentifier, type ScanUnavailableReason } from "./scanner"
+import {
+  Scanner,
+  type ScanDecodedIdentifier,
+  type ScannerRuntime,
+  type ScanUnavailableReason,
+} from "./scanner"
 
 /**
- * Client orchestrator for `/scan` (the route itself is Task 6). Owns the state machine
- * scanning → resolving → sheet(result | unknown | pending), the scanner's fallbacks
- * (timeout / no camera → search sheet) and the save + Merkliste surfaces.
+ * Client orchestrator for `/scan` (the route itself is Task 6). Every transition of
+ * scanning → resolving → sheet(result | unknown | pending) lives in the pure reducer
+ * `scanFlowReducer`; this component only turns events into actions and actions into
+ * markup. The guards that used to be scattered refs are now structural: each async
+ * request carries a token and the reducer drops a response the user has moved past.
  *
  * The camera keeps running behind an open sheet — that is what "the sheet slides up over
- * the camera" means in the spec, and it makes "Nochmal scannen" instant. Decodes are
- * ignored while a sheet is open (see `sheetOpenRef`).
+ * the camera" means in the spec, and it makes "Nochmal scannen" instant. Only the
+ * detection loop pauses (`isDetectionPaused`), and decodes that still land are ignored.
  */
 
 type ScanIdentifier = { type: "ean"; value: string }
-
-type ScanFlowStep =
-  | { kind: "scanning" }
-  | { kind: "resolving" }
-  | { kind: "result"; result: ScanResolvedVerdictResult }
-  | { kind: "unknown"; unknown: ScanUnknownProductResult }
-  | { kind: "pending"; pending: ScanPendingSubmissionResult }
 
 // Mirrors `CONFIRM_DURATION_MS` in scanner.tsx: the sheet waits this long after a camera
 // decode so the green "✓ Barcode erkannt" state is actually visible (Variante A).
@@ -64,10 +66,27 @@ const RESOLVE_ERRORS: Record<string, string> = {
   temporarily_unavailable: "Hat nicht geklappt – versuch's nochmal.",
 }
 const GENERIC_ERROR = "Hat nicht geklappt – versuch's nochmal."
-const CAMERA_UNAVAILABLE_COPY: Record<ScanUnavailableReason, string> = {
+
+/** Why the viewfinder is replaced by the fallback tile. */
+type ScanCameraTileReason = ScanUnavailableReason | "stalled"
+
+const CAMERA_NOTICE_COPY: Record<ScanCameraTileReason, string> = {
   denied: "Ohne Kamerazugriff findest du dein Produkt hier über die Suche.",
   no_camera: "Wir finden keine Kamera — nutze so lange die Suche.",
   insecure: "Die Kamera braucht eine sichere Verbindung — nutze so lange die Suche.",
+  stalled: "Das Kamerabild ist abgebrochen.",
+}
+
+/**
+ * `insecure` is the one reason with no retry: nothing the user can do inside the page
+ * turns an http:// origin into a secure context, so offering the button would only
+ * promise a recovery that cannot happen.
+ */
+const CAMERA_RETRY_LABEL: Record<ScanCameraTileReason, string | null> = {
+  denied: "Kamera erneut versuchen",
+  no_camera: "Kamera erneut versuchen",
+  insecure: null,
+  stalled: "Kamera neu starten",
 }
 
 /**
@@ -76,67 +95,87 @@ const CAMERA_UNAVAILABLE_COPY: Record<ScanUnavailableReason, string> = {
  * happens one layer up in `scan-page-client.tsx`, the thin client boundary that supplies
  * the real consent-aware `scanAnalytics` instance (`/scan/page.tsx` is a Server Component
  * and can't pass a port object as a prop across the RSC boundary itself).
+ *
+ * `scannerRuntime` is the camera/detector test seam handed straight to `<Scanner>`; the
+ * labs harness supplies it, production leaves it undefined.
  */
 export function ScanFlow({
   analytics = noOpScanAnalytics,
-}: { analytics?: ScanAnalyticsPort } = {}) {
+  scannerRuntime,
+}: { analytics?: ScanAnalyticsPort; scannerRuntime?: ScannerRuntime } = {}) {
   const { toast } = useToast()
-  const [step, setStep] = useState<ScanFlowStep>({ kind: "scanning" })
-  const [cameraAvailable, setCameraAvailable] = useState(true)
-  const [cameraNotice, setCameraNotice] = useState<string | null>(null)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [wishlistOpen, setWishlistOpen] = useState(false)
-  const [saveOpen, setSaveOpen] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  // Bumped on every return to the scanning step; see `returnToScanning`.
-  const [scanEpoch, setScanEpoch] = useState(0)
-  const sheetOpenRef = useRef(false)
+  const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
+  const requests = useLatestRequest()
+  /**
+   * Counts "Kamera erneut versuchen" taps. It keys the `<Scanner>` so a retry really
+   * re-runs `getUserMedia` (after `onStalled` the loop stops retrying for that camera
+   * cycle, so nothing short of a fresh mount recovers), and `> 0` tells the fallback
+   * apart from the first failure — see `handleUnavailable`.
+   */
+  const [cameraRetries, setCameraRetries] = useState(0)
+
   // Reset at the start of every scanning window (mount + each "Nochmal scannen") so
   // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
   const scanSessionStartRef = useRef(0)
-
-  // Resolve lifecycle guards. During the 400ms confirm window the step is still
-  // "scanning", so detection keeps running and a second, different EAN could fire —
-  // `resolveInFlightRef` drops those; `resolveGenRef` invalidates in-flight responses
-  // once the user has moved on (see `returnToScanning`).
-  const resolveGenRef = useRef(0)
+  // The confirm-window timer that raises the resolving skeleton. Stored in a ref so
+  // `returnToScanning` and unmount can clear it; a timer that still fires is harmless,
+  // because `resolving_sheet_due` carries its request's token.
+  const sheetTimerRef = useRef<number | null>(null)
+  /**
+   * Latest state for the handlers the scanner calls from its frame loop. Synced in an
+   * effect rather than during render: those callbacks are stable across renders, so a
+   * closure over `state` would read the value from the render that created them.
+   *
+   * A LAYOUT effect (it only writes a ref — no setState, so the React Compiler rules are
+   * satisfied): the scanner's frame loop runs outside React's commit cycle, so a passive
+   * effect would leave a window after a commit in which the mirror still describes the
+   * previous state and a decode could pass a guard the new state closes.
+   */
+  const stateRef = useRef<ScanFlowState>(state)
+  useLayoutEffect(() => {
+    stateRef.current = state
+  }, [state])
+  /**
+   * `stateRef`'s mirror only updates once the effect above runs after a render — a
+   * decode that fires a second time before that render (the scanner's frame loop is
+   * outside React's commit cycle) would still read the stale `activeRequest: null` and
+   * slip through `handleDecoded`'s guard. This ref is set the instant `resolve()` claims
+   * a token, so the guard has a synchronous source of truth for "a resolve is in flight"
+   * with no such window.
+   */
   const resolveInFlightRef = useRef(false)
 
-  const sheetOpen = step.kind !== "scanning"
-  // Any open sheet covers the viewfinder, so decoding behind it burns CPU/battery on
-  // frames nobody can aim. The camera stream stays live (that is what makes "Nochmal
-  // scannen" instant); only the detection loop pauses, and it resumes on close.
-  const detectionPaused = sheetOpen || searchOpen || wishlistOpen || saveOpen
-  sheetOpenRef.current = detectionPaused
+  const clearSheetTimer = useCallback(() => {
+    if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current)
+    sheetTimerRef.current = null
+  }, [])
 
   useEffect(() => {
     scanSessionStartRef.current = performance.now()
     analytics.track("scan_started", {})
   }, [analytics])
 
+  // Unmount only: never leave a sheet timer pointing at a dead component.
+  useEffect(() => clearSheetTimer, [clearSheetTimer])
+
   /**
    * The single way back to the scanning step. The camera never stops (the sheet slides up
-   * over it), so the scanner's session guards have to be restarted explicitly: `scanEpoch`
-   * does that (see `Scanner`'s `sessionEpoch`). Without it the same product could never be
-   * scanned twice on one page visit and the 3s search-fallback timeout never re-armed.
+   * over it), so the scanner's session guards have to be restarted explicitly: the
+   * reducer's `epoch` does that (see `Scanner`'s `sessionEpoch`). Without it the same
+   * product could never be scanned twice on one page visit and the 3s search-fallback
+   * timeout never re-armed.
    */
   const returnToScanning = useCallback(() => {
-    // Invalidate any in-flight resolve: a late response must never repaint a step the
-    // user has already left (dismissed resolving sheet, newer scan under way).
-    resolveGenRef.current += 1
+    clearSheetTimer()
+    // Nothing outstanding may write any more. The reducer drops stale *actions* on its
+    // own; this is what also stops the `already_in_catalog` chain from starting a resolve
+    // for a sheet the user just dismissed.
+    requests.invalidateAll()
     resolveInFlightRef.current = false
-    setStep({ kind: "scanning" })
-    setScanEpoch((epoch) => epoch + 1)
+    dispatch({ type: "return_to_scanning" })
     scanSessionStartRef.current = performance.now()
     analytics.track("scan_started", {})
-  }, [analytics])
-
-  const closeSheet = useCallback(() => {
-    setSaveOpen(false)
-    setSubmitError(null)
-    returnToScanning()
-  }, [returnToScanning])
+  }, [analytics, clearSheetTimer, requests])
 
   const resolve = useCallback(
     async (
@@ -146,31 +185,25 @@ export function ScanFlow({
       // Decode-confirm moment (Variante A): a camera decode passes `sheetDelayMs` so the
       // scanner's green "✓ Barcode erkannt" state stays visible before the sheet slides
       // up — the fetch below still starts immediately, so no time-to-verdict is lost.
-      //
-      // Generation guard: `returnToScanning` bumps the generation, so a request whose
-      // step the user already left (dismissed sheet, newer scan) silently drops its
-      // response and timer instead of repainting a stale result.
-      const gen = ++resolveGenRef.current
-      const alive = () => resolveGenRef.current === gen
+      const token = requests.begin()
       resolveInFlightRef.current = true
-      const settle = () => {
-        if (alive()) resolveInFlightRef.current = false
-      }
+      dispatch({
+        type: "resolve_started",
+        token,
+        showResolvingImmediately: !options?.sheetDelayMs,
+      })
       // Fast success must not cut the confirm moment short: the result waits out the
       // remainder of the window (the sheet timer shows the skeleton at the boundary).
       const confirmUntil =
         options?.sheetDelayMs !== undefined ? performance.now() + options.sheetDelayMs : null
-      let sheetTimer: number | null = null
-      const clearSheetTimer = () => {
-        if (sheetTimer !== null) window.clearTimeout(sheetTimer)
-        sheetTimer = null
-      }
+      // The previous request is already stale, so its pending timer is a no-op — dropping
+      // it here just keeps one timer per flow instead of one per resolve.
+      clearSheetTimer()
       if (options?.sheetDelayMs) {
-        sheetTimer = window.setTimeout(() => {
-          if (alive()) setStep({ kind: "resolving" })
+        sheetTimerRef.current = window.setTimeout(() => {
+          sheetTimerRef.current = null
+          dispatch({ type: "resolving_sheet_due", token })
         }, options.sheetDelayMs)
-      } else {
-        setStep({ kind: "resolving" })
       }
       try {
         const response = await fetch("/api/scan/resolve", {
@@ -178,15 +211,11 @@ export function ScanFlow({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         })
-        if (!alive()) {
-          clearSheetTimer()
-          return
-        }
         if (!response.ok) {
-          clearSheetTimer()
           const payload = (await response.json().catch(() => null)) as { error?: string } | null
-          if (!alive()) return
-          settle()
+          if (!requests.isCurrent(token)) return
+          resolveInFlightRef.current = false
+          dispatch({ type: "resolve_failed", token })
           toast({
             title: RESOLVE_ERRORS[payload?.error ?? ""] ?? GENERIC_ERROR,
             variant: "destructive",
@@ -199,72 +228,117 @@ export function ScanFlow({
           const remaining = confirmUntil - performance.now()
           if (remaining > 0) await new Promise((done) => window.setTimeout(done, remaining))
         }
-        if (!alive()) {
-          clearSheetTimer()
-          return
-        }
-        settle()
-        clearSheetTimer()
+        if (!requests.isCurrent(token)) return
+        resolveInFlightRef.current = false
         if (result.kind === "unknown_product") {
           analytics.track("scan_not_found", {})
-          setStep({ kind: "unknown", unknown: result })
-        } else if (result.kind === "pending_submission") {
-          setStep({ kind: "pending", pending: result })
-        } else {
+        } else if (result.kind !== "pending_submission") {
           analytics.track("scan_result_shown", {
             verdict: resultVerdictLabel(result),
             category: result.product.category,
             inCatalog: scanResultShownInCatalog(result),
             snapshotSource: result.snapshotSource,
           })
-          setStep({ kind: "result", result })
         }
+        dispatch({ type: "resolved", token, result })
       } catch {
-        clearSheetTimer()
-        if (!alive()) return
-        settle()
+        if (!requests.isCurrent(token)) return
+        resolveInFlightRef.current = false
+        dispatch({ type: "resolve_failed", token })
         toast({ title: GENERIC_ERROR, variant: "destructive" })
         returnToScanning()
       }
     },
-    [toast, analytics, returnToScanning],
+    [analytics, clearSheetTimer, requests, returnToScanning, toast],
   )
 
+  /**
+   * Answers the scanner: `true` only when this decode actually started a resolve. A
+   * refusal leaves the value unconsumed in the loop's session (see `unfireDetection`), so
+   * the same barcode fires again as soon as the flow can take it — the user does not have
+   * to move the bottle out of frame and back (controller ruling C3).
+   */
   const handleDecoded = useCallback(
-    (identifier: ScanDecodedIdentifier) => {
-      if (sheetOpenRef.current) return
-      if (resolveInFlightRef.current) return
+    (identifier: ScanDecodedIdentifier): boolean => {
+      const current = stateRef.current
+      if (isDetectionPaused(current)) return false
+      // During the 400ms confirm window the step is still "scanning", so detection keeps
+      // running and a second, different EAN could fire. The first one owns the flow.
+      // `stateRef.current` only catches up after the next render's passive effect, so a
+      // second decode fired before that render would see a stale `activeRequest: null` —
+      // `resolveInFlightRef` is set synchronously inside `resolve()` and closes that
+      // window.
+      if (current.activeRequest || resolveInFlightRef.current) return false
       analytics.track("scan_decoded", {
         msToDecode: Math.round(performance.now() - scanSessionStartRef.current),
         format: identifier.value.length === 8 ? "ean_8" : "ean_13",
       })
       void resolve({ identifier }, { sheetDelayMs: SCAN_CONFIRM_DELAY_MS })
+      return true
     },
-    [resolve, analytics],
+    [analytics, resolve],
   )
 
   const handleUnavailable = useCallback(
     (reason: ScanUnavailableReason) => {
-      setCameraAvailable(false)
-      setSearchOpen(true)
-      setCameraNotice(CAMERA_UNAVAILABLE_COPY[reason])
+      dispatch({ type: "camera_unavailable", reason })
+      // Only the FIRST failure pops the search sheet. After a retry the user has already
+      // seen (and dismissed) it once — re-opening it over their deliberate retry would
+      // just be the pop-open they closed a moment ago.
+      if (cameraRetries === 0) dispatch({ type: "auxiliary_opened", sheet: "search" })
       // Pass the real reason through ("denied" | "no_camera" | "insecure") — `trigger`
       // is a plain string in the event map, so the finer-grained value costs nothing.
       analytics.track("scan_fallback_search_used", { trigger: reason })
     },
-    [analytics],
+    [analytics, cameraRetries],
   )
 
+  const retryCamera = useCallback(() => {
+    setCameraRetries((count) => count + 1)
+    dispatch({ type: "camera_retry" })
+  }, [])
+
+  const handleStalled = useCallback(() => {
+    dispatch({ type: "camera_stalled" })
+  }, [])
+
   const handleTimeout = useCallback(() => {
-    if (sheetOpenRef.current) return
-    setSearchOpen(true)
+    if (isDetectionPaused(stateRef.current)) return
+    dispatch({ type: "auxiliary_opened", sheet: "search" })
     analytics.track("scan_fallback_search_used", { trigger: "timeout" })
   }, [analytics])
 
+  /**
+   * F5: a completed save belongs to the product it was STARTED for. The sheet names that
+   * product, and every consequence — the state change, `scan_saved`, closing the sheet —
+   * happens only while that product is still the one on screen. `stateRef` is read rather
+   * than the render's `resultStep`, because the in-flight save closed over the render
+   * that started it: that closure still describes product A even after B replaced it.
+   */
+  const handleSaveCompleted = useCallback(
+    ({ productId, savedState }: ScanSaveCompletion) => {
+      const current = stateRef.current.step
+      if (current.kind !== "result") return
+      if (current.result.product.productId !== productId) return
+      dispatch({ type: "saved_state_changed", productId, savedState })
+      // Only the save direction is `scan_saved`; a removal (savedState -> null) isn't a
+      // "save" event.
+      if (savedState.state) {
+        analytics.track("scan_saved", {
+          kind: savedState.state,
+          verdict: resultVerdictLabel(current.result),
+        })
+      }
+      dispatch({ type: "save_sheet_toggled", open: false })
+    },
+    [analytics],
+  )
+
   const openFromProductId = useCallback(
     (productId: string) => {
-      setSearchOpen(false)
-      setWishlistOpen(false)
+      // The reducer's `resolve_started` deliberately leaves auxiliary sheets alone, so
+      // the search/Merkliste sheet has to be closed before the skeleton goes up.
+      dispatch({ type: "auxiliary_closed" })
       void resolve({ productId })
     },
     [resolve],
@@ -272,8 +346,8 @@ export function ScanFlow({
 
   const submitUnknown = useCallback(
     async (input: ScanSubmissionInput, identifier: ScanIdentifier) => {
-      setSubmitting(true)
-      setSubmitError(null)
+      const token = requests.begin()
+      dispatch({ type: "submit_started", token })
       try {
         const response = await fetch("/api/scan/submit", {
           method: "POST",
@@ -281,7 +355,7 @@ export function ScanFlow({
           body: JSON.stringify({ identifier, ...input }),
         })
         if (!response.ok) {
-          setSubmitError(GENERIC_ERROR)
+          dispatch({ type: "submit_failed", token, error: GENERIC_ERROR })
           return
         }
         const result = (await response.json()) as
@@ -289,13 +363,20 @@ export function ScanFlow({
           | { kind: "pending_submission"; submissionId: string; headline: string }
         if (result.kind === "already_in_catalog") {
           // The EAN was catalogued between the scan and the submission — show the real
-          // verdict instead of a research receipt for a product we already know.
+          // verdict instead of a research receipt for a product we already know. Only if
+          // this submission still owns the flow: otherwise the user dismissed the sheet
+          // and a resolve would re-open one over the live viewfinder (F4).
+          if (!requests.isCurrent(token)) return
           await resolve({ productId: result.productId })
           return
         }
+        // The submission exists server-side the moment this response lands, whether or
+        // not the user is still looking at the sheet — tracked unconditionally. Only the
+        // `submitted` dispatch (which would repaint the step) stays token-guarded.
         analytics.track("scan_submission_created", { category: input.category })
-        setStep({
-          kind: "pending",
+        dispatch({
+          type: "submitted",
+          token,
           pending: {
             kind: "pending_submission",
             submissionId: result.submissionId,
@@ -304,43 +385,76 @@ export function ScanFlow({
           },
         })
       } catch {
-        setSubmitError(GENERIC_ERROR)
-      } finally {
-        setSubmitting(false)
+        dispatch({ type: "submit_failed", token, error: GENERIC_ERROR })
       }
     },
-    [resolve, analytics],
+    [analytics, requests, resolve],
   )
 
-  const updateSavedState = useCallback((savedState: ScanSavedStatePayload) => {
-    setStep((current) =>
-      current.kind === "result"
-        ? { kind: "result", result: { ...current.result, savedState } }
-        : current,
-    )
-  }, [])
+  const { step } = state
+  const sheetOpen = step.kind !== "scanning"
+  const resultStep = step.kind === "result" ? step : null
+  const cameraTileReason: ScanCameraTileReason | null =
+    state.camera.status === "unavailable"
+      ? state.camera.reason
+      : state.camera.status === "stalled"
+        ? "stalled"
+        : null
 
   return (
-    <div className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5">
+    <div
+      /**
+       * Debug surface for the dev-only `/labs/scan` harness and its Playwright spec
+       * (`tests/scan-flow.spec.ts`): the reducer's whole observable state as data
+       * attributes, so an end-to-end assertion can name a transition instead of guessing
+       * it from copy. Cheaper than a debug prop (nothing to thread through, nothing the
+       * production caller has to pass) and inert in production — six attributes on one
+       * div, no behaviour attached.
+       */
+      data-scan-flow=""
+      data-scan-step={step.kind}
+      data-scan-auxiliary={state.auxiliary}
+      data-scan-camera={state.camera.status}
+      data-scan-camera-reason={cameraTileReason ?? "none"}
+      data-scan-save-open={state.saveOpen ? "true" : "false"}
+      data-scan-epoch={state.epoch}
+      className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5"
+    >
       <div className="flex items-center justify-between py-2">
         <h1 className="text-[17px] font-bold text-foreground">Scan</h1>
-        <ScanWishlistTrigger onClick={() => setWishlistOpen(true)} />
+        <ScanWishlistTrigger
+          onClick={() => dispatch({ type: "auxiliary_opened", sheet: "wishlist" })}
+        />
       </div>
 
-      {cameraAvailable ? (
+      {cameraTileReason === null ? (
         <Scanner
+          // A retry must re-mount: `useScannerLoop` gives up on a camera cycle once it
+          // has reported `onStalled`, so only a fresh mount re-acquires the stream.
+          key={cameraRetries}
           active
-          detectionPaused={detectionPaused}
-          sessionEpoch={scanEpoch}
+          detectionPaused={isDetectionPaused(state)}
+          sessionEpoch={state.epoch}
+          runtime={scannerRuntime}
           onDecoded={handleDecoded}
           onUnavailable={handleUnavailable}
           onTimeout={handleTimeout}
+          onStalled={handleStalled}
         />
       ) : (
-        <div className="flex aspect-[3/4] w-full items-center justify-center rounded-2xl bg-muted px-6 text-center">
+        <div className="flex aspect-[3/4] w-full flex-col items-center justify-center rounded-2xl bg-muted px-6 text-center">
           <p className="text-sm leading-6 text-muted-foreground">
-            {cameraNotice ?? CAMERA_UNAVAILABLE_COPY.no_camera}
+            {CAMERA_NOTICE_COPY[cameraTileReason]}
           </p>
+          {CAMERA_RETRY_LABEL[cameraTileReason] ? (
+            <button
+              type="button"
+              onClick={retryCamera}
+              className="mt-4 min-h-[48px] w-auto min-w-[220px] rounded-[12px] border-[1.5px] border-[var(--brand-plum-light)] bg-transparent px-6 text-[15px] font-semibold text-[var(--brand-plum-dark)] transition-colors hover:border-[var(--brand-plum)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+            >
+              {CAMERA_RETRY_LABEL[cameraTileReason]}
+            </button>
+          ) : null}
         </div>
       )}
 
@@ -349,7 +463,7 @@ export function ScanFlow({
         <button
           type="button"
           onClick={() => {
-            setSearchOpen(true)
+            dispatch({ type: "auxiliary_opened", sheet: "search" })
             analytics.track("scan_fallback_search_used", { trigger: "manual" })
           }}
           className="font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
@@ -361,40 +475,44 @@ export function ScanFlow({
       <ScanResultSheet
         open={sheetOpen}
         title={sheetTitle(step)}
-        onClose={closeSheet}
+        onClose={returnToScanning}
         footer={
-          step.kind === "result" ? (
+          resultStep ? (
             <ScanActionFooter
-              kind={step.result.kind}
-              verdict={step.result.kind === "in_catalog" ? step.result.verdict : null}
-              product={step.result.product}
-              savedState={step.result.savedState}
-              onSave={() => setSaveOpen(true)}
+              kind={resultStep.result.kind}
+              verdict={resultStep.result.kind === "in_catalog" ? resultStep.result.verdict : null}
+              product={resultStep.result.product}
+              savedState={resultStep.result.savedState}
+              onSave={() => dispatch({ type: "save_sheet_toggled", open: true })}
               onBuy={() =>
-                analytics.track("scan_buy_clicked", { verdict: resultVerdictLabel(step.result) })
+                analytics.track("scan_buy_clicked", {
+                  verdict: resultVerdictLabel(resultStep.result),
+                })
               }
             />
           ) : undefined
         }
       >
         {step.kind === "resolving" ? <ResolvingBody /> : null}
-        {step.kind === "result" ? (
+        {resultStep ? (
           <ScanResultCard
-            result={step.result}
-            onRescan={closeSheet}
+            result={resultStep.result}
+            onRescan={returnToScanning}
             onOpenAlternative={openFromProductId}
             // An alternative's "Kaufen ↗" reports the verdict of the payload it was
             // offered under — the scanned product's — not the alternative's own pill.
             onBuyAlternative={() =>
-              analytics.track("scan_buy_clicked", { verdict: resultVerdictLabel(step.result) })
+              analytics.track("scan_buy_clicked", {
+                verdict: resultVerdictLabel(resultStep.result),
+              })
             }
           />
         ) : null}
         {step.kind === "unknown" ? (
           <ScanUnknownFlow
             unknown={step.unknown}
-            submitting={submitting}
-            error={submitError}
+            submitting={state.submitting}
+            error={state.submitError}
             // The v1 scan surface is EAN-only in both directions (resolve returns the
             // scanned/typed EAN, submit accepts nothing else), so the narrowing is safe.
             onSubmit={(input) =>
@@ -403,43 +521,41 @@ export function ScanFlow({
           />
         ) : null}
         {step.kind === "pending" ? (
-          <PendingBody headline={step.pending.headline} onContinue={closeSheet} />
+          <PendingBody headline={step.pending.headline} onContinue={returnToScanning} />
         ) : null}
       </ScanResultSheet>
 
-      {step.kind === "result" ? (
+      {resultStep ? (
         <ScanSaveSheet
-          open={saveOpen}
-          productId={step.result.product.productId}
-          savedState={step.result.savedState}
-          onOpenChange={setSaveOpen}
-          onSavedStateChange={(savedState) => {
-            updateSavedState(savedState)
-            // Only the save direction is `scan_saved`; a removal (savedState -> null)
-            // isn't a "save" event.
-            if (savedState.state) {
-              analytics.track("scan_saved", {
-                kind: savedState.state,
-                verdict: resultVerdictLabel(step.result),
-              })
-            }
-          }}
+          open={state.saveOpen && step.kind === "result"}
+          productId={resultStep.result.product.productId}
+          savedState={resultStep.result.savedState}
+          onOpenChange={(open) => dispatch({ type: "save_sheet_toggled", open })}
+          onSavedStateChange={handleSaveCompleted}
         />
       ) : null}
 
       <ScanSearchSheet
-        open={searchOpen}
-        onOpenChange={setSearchOpen}
+        open={state.auxiliary === "search"}
+        onOpenChange={(open) =>
+          dispatch(
+            open ? { type: "auxiliary_opened", sheet: "search" } : { type: "auxiliary_closed" },
+          )
+        }
         onSelectProduct={openFromProductId}
         onSubmitIdentifier={(identifier) => {
-          setSearchOpen(false)
+          dispatch({ type: "auxiliary_closed" })
           void resolve({ identifier })
         }}
       />
 
       <ScanWishlistSheet
-        open={wishlistOpen}
-        onOpenChange={setWishlistOpen}
+        open={state.auxiliary === "wishlist"}
+        onOpenChange={(open) =>
+          dispatch(
+            open ? { type: "auxiliary_opened", sheet: "wishlist" } : { type: "auxiliary_closed" },
+          )
+        }
         onOpenProduct={openFromProductId}
         // The Merkliste list carries no verdict of its own; "merkliste" is the surface the
         // click came from. `verdict` is a plain string in the event map, so this is legal
