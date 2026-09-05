@@ -259,6 +259,51 @@ test("D6: a block released on an empty frame still needs two matching reads from
   assert.equal(read(session, EAN_A, 1_600), EAN_A)
 })
 
+test("D6/C1: a blocked read resets the active clock and the hint telemetry", () => {
+  const session = createScanSessionState()
+  read(session, EAN_A, 100)
+  read(session, EAN_A, 200)
+  restartScanSessionState(session, 1_000)
+
+  // The bottle never moved after the sheet closed: the loop keeps reading the blocked
+  // barcode perfectly. That is a clean read we are deliberately ignoring, so it must
+  // neither feed the "weniger kippen" hint threshold nor let the 3s search fallback fire.
+  for (let i = 0; i < 3; i += 1) {
+    advanceActiveClock(session, 1_500)
+    read(session, EAN_A, 1_100 + i * 200)
+    assert.equal(read(session, EAN_A, 1_200 + i * 200), null)
+
+    assert.equal(session.rawDetectionsWithoutStableRead, 0)
+    assert.equal(session.activeMs, 0)
+    assert.equal(shouldFireTimeout(session), false)
+  }
+  // The block never counts as a decode — the attempt has produced nothing yet.
+  assert.equal(session.hasDecoded, false)
+  assert.equal(session.timeoutFired, false)
+})
+
+test("D6/C1: once the block is released the fallback re-arms from zero active time", () => {
+  const session = createScanSessionState()
+  read(session, EAN_A, 100)
+  read(session, EAN_A, 200)
+  restartScanSessionState(session, 1_000)
+
+  advanceActiveClock(session, 2_000)
+  read(session, EAN_A, 1_100)
+  assert.equal(read(session, EAN_A, 1_200), null)
+  assert.equal(session.activeMs, 0)
+
+  noteEmptyDetection(session)
+  noteEmptyDetection(session)
+  noteEmptyDetection(session)
+  assert.equal(session.blockedValue, null)
+
+  advanceActiveClock(session, SCAN_TIMEOUT_MS - 1)
+  assert.equal(shouldFireTimeout(session), false)
+  advanceActiveClock(session, 1)
+  assert.equal(shouldFireTimeout(session), true)
+})
+
 test("D6: a different barcode fires while another value is blocked", () => {
   const session = createScanSessionState()
   read(session, EAN_A, 100)

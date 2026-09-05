@@ -172,11 +172,16 @@ export function applyRawDetection(
 
   const validated = validate(input.rawValue)
   let fire: string | null = null
-  if (
-    validated.ok &&
-    session.lastFiredValue !== validated.value &&
-    session.blockedValue !== validated.value
-  ) {
+  if (validated.ok && session.blockedValue === validated.value) {
+    // Controller ruling C1: a blocked read is a *clean* read we are deliberately
+    // ignoring, not a failure to read. So it resets the two counters that measure
+    // "we cannot read anything here" — the hint telemetry behind "Weniger kippen"
+    // and the active clock behind the 3s search fallback — while deliberately NOT
+    // setting `hasDecoded`: this attempt has still produced nothing, so the fallback
+    // stays armed for the moment the user actually points at something else.
+    session.activeMs = 0
+    session.rawDetectionsWithoutStableRead = 0
+  } else if (validated.ok && session.lastFiredValue !== validated.value) {
     session.lastFiredValue = validated.value
     session.hasDecoded = true
     session.rawDetectionsWithoutStableRead = 0
