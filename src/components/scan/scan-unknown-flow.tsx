@@ -73,7 +73,10 @@ export function ScanUnknownFlow({
 
       <div className="grid gap-2">
         {visible.map((entry) => {
-          const isTapped = tappedCategory === entry.key
+          // Derived, not remembered: once the request has settled no card is "the one
+          // being submitted" any more. Keeping the raw `tappedCategory` here left a
+          // failed attempt highlighted and labelled as in flight next to its error (F17).
+          const isTapped = tappedCategory === entry.key && submitting
           return (
             <button
               key={entry.key}
@@ -90,7 +93,7 @@ export function ScanUnknownFlow({
               )}
             >
               <span className="block text-[17px] font-bold text-foreground">
-                {isTapped && submitting ? "Wird eingereicht" : entry.label}
+                {isTapped ? "Wird eingereicht" : entry.label}
               </span>
             </button>
           )

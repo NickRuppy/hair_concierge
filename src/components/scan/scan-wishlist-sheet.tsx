@@ -7,6 +7,7 @@ import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/
 import { Skeleton } from "@/components/ui/skeleton"
 import type { ScanWishlistEntry } from "@/app/api/scan/wishlist/route"
 import { scanAlternativeMetaLine } from "@/lib/scan/result-presentation"
+import { useLatestRequest } from "@/lib/scan/use-latest-request"
 
 import { ScanProductThumb } from "./scan-product-thumb"
 
@@ -46,26 +47,35 @@ export function ScanWishlistSheet({
 }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [entries, setEntries] = useState<ScanWishlistEntry[]>([])
+  const requests = useLatestRequest()
 
   const load = useCallback(async () => {
+    // Close/reopen and the "Erneut versuchen" button can both leave an older GET in
+    // flight; without the guard its late response overwrites the newer list — or paints
+    // an error over a list that loaded fine (F13).
+    const token = requests.begin()
     setStatus("loading")
     try {
       const response = await fetch("/api/scan/wishlist", { cache: "no-store" })
       if (!response.ok) throw new Error("wishlist_unavailable")
       const body = (await response.json()) as { entries: ScanWishlistEntry[] }
+      if (!requests.isCurrent(token)) return
       setEntries(body.entries ?? [])
       setStatus("ready")
     } catch {
+      if (!requests.isCurrent(token)) return
       setStatus("error")
     }
-  }, [])
+  }, [requests])
 
   useEffect(() => {
     if (open) void load()
   }, [open, load])
 
   async function remove(productId: string) {
-    const previous = entries
+    const index = entries.findIndex((entry) => entry.productId === productId)
+    if (index < 0) return
+    const removed = entries[index]
     setEntries((current) => current.filter((entry) => entry.productId !== productId))
     try {
       const response = await fetch("/api/scan/save", {
@@ -75,7 +85,14 @@ export function ScanWishlistSheet({
       })
       if (!response.ok) throw new Error("remove_failed")
     } catch {
-      setEntries(previous)
+      // Re-insert THIS entry only, at the index it held. Restoring the whole array as it
+      // looked before the request would also resurrect every other removal that happened
+      // meanwhile, and would undo a reload that landed in between (F13).
+      setEntries((current) =>
+        current.some((entry) => entry.productId === productId)
+          ? current
+          : [...current.slice(0, index), removed, ...current.slice(index)],
+      )
     }
   }
 

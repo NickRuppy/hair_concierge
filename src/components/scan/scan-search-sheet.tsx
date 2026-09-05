@@ -1,10 +1,12 @@
 "use client"
 
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useState } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { ScanSearchResult } from "@/app/api/scan/search/route"
+
+import { useLatestRequest } from "@/lib/scan/use-latest-request"
 
 import { ManualEanField } from "./manual-ean-field"
 import { ScanProductThumb } from "./scan-product-thumb"
@@ -38,31 +40,31 @@ export function ScanSearchSheet({
   const [query, setQuery] = useState("")
   const [status, setStatus] = useState<SearchStatus>("idle")
   const [results, setResults] = useState<ScanSearchResult[]>([])
-  const requestRef = useRef(0)
+  const requests = useLatestRequest()
 
   useEffect(() => {
     if (!open) {
-      // Invalidate anything still in flight: without the bump, a response that lands
-      // after the sheet closed still writes results/status into a fresh session and the
-      // next open flashes the previous query's hits.
-      requestRef.current += 1
+      // Invalidate anything still in flight: without it, a response that lands after
+      // the sheet closed still writes results/status into a fresh session and the next
+      // open flashes the previous query's hits.
+      requests.invalidateAll()
       setQuery("")
       setResults([])
       setStatus("idle")
     }
-  }, [open])
+  }, [open, requests])
 
   useEffect(() => {
     const trimmed = query.trim()
     if (trimmed.length < MIN_QUERY_LENGTH) {
       // Deleting back below the minimum cancels the pending request too — otherwise its
       // late response would repaint results for a query the user already erased.
-      requestRef.current += 1
+      requests.invalidateAll()
       setStatus("idle")
       setResults([])
       return
     }
-    const requestId = ++requestRef.current
+    const token = requests.begin()
     setStatus("loading")
     const timeout = window.setTimeout(async () => {
       try {
@@ -71,16 +73,16 @@ export function ScanSearchSheet({
         })
         if (!response.ok) throw new Error("search_unavailable")
         const body = (await response.json()) as { results: ScanSearchResult[] }
-        if (requestRef.current !== requestId) return
+        if (!requests.isCurrent(token)) return
         setResults(body.results ?? [])
         setStatus("ready")
       } catch {
-        if (requestRef.current !== requestId) return
+        if (!requests.isCurrent(token)) return
         setStatus("error")
       }
     }, DEBOUNCE_MS)
     return () => window.clearTimeout(timeout)
-  }, [query])
+  }, [query, requests])
 
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
