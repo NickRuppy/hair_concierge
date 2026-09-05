@@ -213,6 +213,7 @@ test("isSameDetectionState: a real move is a change", () => {
 test("deriveViewfinderPresentation: a spotted barcode is drawn where the loop saw it", () => {
   const presentation = deriveViewfinderPresentation({
     detection: { kind: "spotted", box: boxA },
+    confirmBox: null,
     confirmActive: false,
     detectionPaused: false,
   })
@@ -225,6 +226,7 @@ test("deriveViewfinderPresentation: a spotted barcode is drawn where the loop sa
 test("deriveViewfinderPresentation: searching draws no outline at all", () => {
   const presentation = deriveViewfinderPresentation({
     detection: searching,
+    confirmBox: null,
     confirmActive: false,
     detectionPaused: false,
   })
@@ -237,6 +239,7 @@ test("deriveViewfinderPresentation: the confirm window holds the read look over 
   // The bottle has not moved, so the loop keeps reporting raw hits behind the confirm.
   const presentation = deriveViewfinderPresentation({
     detection: { kind: "spotted", box: boxA },
+    confirmBox: boxA,
     confirmActive: true,
     detectionPaused: false,
   })
@@ -247,6 +250,7 @@ test("deriveViewfinderPresentation: the confirm window holds the read look over 
 test("deriveViewfinderPresentation: a sheet over a spotted barcode goes static searching", () => {
   const presentation = deriveViewfinderPresentation({
     detection: { kind: "spotted", box: boxA },
+    confirmBox: null,
     confirmActive: false,
     detectionPaused: true,
   })
@@ -261,6 +265,7 @@ test("deriveViewfinderPresentation: a sheet over a spotted barcode goes static s
 test("deriveViewfinderPresentation: the read confirm survives the sheet rising over it", () => {
   const presentation = deriveViewfinderPresentation({
     detection: { kind: "read", box: boxA },
+    confirmBox: boxA,
     confirmActive: true,
     detectionPaused: true,
   })
@@ -268,4 +273,32 @@ test("deriveViewfinderPresentation: the read confirm survives the sheet rising o
   assert.equal(presentation.visual, "read")
   assert.deepEqual(presentation.outlineBox, boxA)
   assert.equal(presentation.frozen, false)
+})
+
+test("deriveViewfinderPresentation: the confirm window keeps the box the decode was read at", () => {
+  // The bottle drifts while the result sheet rises: the loop reports a new, different
+  // box behind the confirm — the green outline must not follow it.
+  const presentation = deriveViewfinderPresentation({
+    detection: { kind: "spotted", box: boxB },
+    confirmBox: boxA,
+    confirmActive: true,
+    detectionPaused: false,
+  })
+
+  assert.equal(presentation.visual, "read")
+  assert.deepEqual(presentation.outlineBox, boxA)
+})
+
+test("deriveViewfinderPresentation: the confirm outline survives the barcode leaving the frame", () => {
+  // The user pulls the bottle away the instant it is read: the loop re-arms to
+  // `searching`, but the confirm still owes the user the box it decoded.
+  const presentation = deriveViewfinderPresentation({
+    detection: searching,
+    confirmBox: boxA,
+    confirmActive: true,
+    detectionPaused: false,
+  })
+
+  assert.equal(presentation.visual, "read")
+  assert.deepEqual(presentation.outlineBox, boxA)
 })

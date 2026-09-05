@@ -11,6 +11,7 @@ import {
 import {
   deriveViewfinderPresentation,
   mapBoxToCover,
+  type NormalizedBox,
   type ScanDetectionState,
 } from "@/lib/scan/scanner-session"
 
@@ -101,6 +102,9 @@ export function Scanner({
   // What the loop last reported about the barcode in frame. Only ever set from
   // `onDetectionState`, which the hook calls on a real change — never per frame.
   const [detection, setDetection] = useState<ScanDetectionState>({ kind: "searching" })
+  // The box the accepted decode was read at — frozen for the confirm window (see
+  // `deriveViewfinderPresentation`). Only ever read while `confirmActive`.
+  const [confirmBox, setConfirmBox] = useState<NormalizedBox | null>(null)
   const [metrics, setMetrics] = useState<ViewfinderMetrics>(ZERO_METRICS)
   // The confirm-off timeout is owned here so an epoch reset or a newer decode cancels the
   // stale callback — otherwise a previous scan's timer clears the new confirm early.
@@ -130,6 +134,9 @@ export function Scanner({
   const handleDetectionState = useCallback(
     (next: ScanDetectionState) => {
       setDetection(next)
+      // Snapshot the accepted decode's box: the confirm window keeps drawing THIS one
+      // even as the loop reports the bottle moving (or leaving) behind the rising sheet.
+      if (next.kind === "read") setConfirmBox(next.box)
       syncMetrics()
     },
     [syncMetrics],
@@ -150,6 +157,7 @@ export function Scanner({
     setHint(SCAN_HINT_DEFAULT)
     clearConfirmTimer()
     setConfirmActive(false)
+    setConfirmBox(null)
   }, [clearConfirmTimer])
 
   const handleDecoded = useCallback(
@@ -190,6 +198,7 @@ export function Scanner({
 
   const { visual, outlineBox } = deriveViewfinderPresentation({
     detection,
+    confirmBox,
     confirmActive,
     detectionPaused,
   })

@@ -399,12 +399,21 @@ function detectionBoxOf(state: ScanDetectionState): NormalizedBox | null {
  */
 export function deriveViewfinderPresentation(input: {
   detection: ScanDetectionState
+  /**
+   * The box the loop reported with the accepted decode, captured when the `read` arrived.
+   * The confirm window draws THIS box for its whole duration: the loop keeps running
+   * behind it, so the live box may already describe a wobble the user made while the
+   * sheet was rising — or be gone entirely.
+   */
+  confirmBox: NormalizedBox | null
   confirmActive: boolean
   detectionPaused: boolean
 }): ViewfinderPresentation {
-  const { detection, confirmActive, detectionPaused } = input
+  const { detection, confirmBox, confirmActive, detectionPaused } = input
   const frozen = detectionPaused && !confirmActive
-  if (confirmActive) return { visual: "read", outlineBox: detectionBoxOf(detection), frozen }
+  if (confirmActive) {
+    return { visual: "read", outlineBox: confirmBox ?? detectionBoxOf(detection), frozen }
+  }
   if (frozen) return { visual: "searching", outlineBox: null, frozen }
   return { visual: detection.kind, outlineBox: detectionBoxOf(detection), frozen }
 }
