@@ -141,7 +141,13 @@ export type ScanPresentedVerdictPayload =
   | ScanNotNeededVerdictPayload
 
 /**
- * The three shapes `POST /api/scan/resolve` can return. The two verdict payloads above
+ * The three FULL shapes `POST /api/scan/resolve` can return. Since T8 the route has a
+ * fourth, free-tier-only branch — `ScanMaskedVerdictResult` (`masked-alternative.ts`) —
+ * which is deliberately not a member here, so nothing that consumes this union can read
+ * an identity field off a masked alternative. The client-side union covering both tiers
+ * is `ScanClientResolveResult` in `verdict-access.ts`.
+ *
+ * The two verdict payloads above
  * gain `product` (the scanned catalog row as the header/footer render it),
  * `snapshotSource` (which profile snapshot the verdict was evaluated against — see
  * `ScanEvaluationContext`) and `savedState` (merkliste/routine/neither, plus whether the

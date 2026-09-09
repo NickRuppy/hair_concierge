@@ -1,15 +1,18 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import {
   initialScanFlowState,
   isDetectionPaused,
   isSheetOpen,
   scanFlowReducer,
+  scanRevealedAlternatives,
   type ScanFlowAction,
   type ScanFlowState,
 } from "../src/lib/scan/scan-flow-state"
 import type {
+  ScanAlternativePresentation,
   ScanPendingSubmissionResult,
   ScanResolvedVerdictResult,
   ScanUnknownProductResult,
@@ -78,6 +81,9 @@ test("initialScanFlowState: starts scanning, live camera, nothing in flight", ()
     submitError: null,
     epoch: 0,
     activeRequest: null,
+    tier: "unknown",
+    reveal: { status: "idle" },
+    premiumSheet: null,
   })
 })
 
@@ -533,4 +539,168 @@ test("isDetectionPaused: only a bare scanning step with no sheet keeps decoding"
   )
   // Combinations stay paused.
   assert.equal(isDetectionPaused({ ...resolving(), auxiliary: "wishlist", saveOpen: true }), true)
+})
+
+// --- T9: tier signal, one-lifetime reveal, Premium sheet --------------------
+
+/** A free-tier `in_catalog` verdict (T8's masked shape) for `productId`. */
+function maskedResult(productId = "p1", freeRevealAvailable = true): ScanMaskedVerdictResult {
+  return {
+    kind: "in_catalog",
+    verdict: "mismatch",
+    verdictLabel: "Passt nicht",
+    verdictTitle: "Passt nicht zu deinem Haar",
+    status: "danger",
+    subtitle: "1 von 3 Zielbereichen getroffen",
+    evaluatedRole: null,
+    evaluatedRoleLabel: null,
+    dimensions: [],
+    criteria: [],
+    coverage: null,
+    fitNarrative: null,
+    alternatives: [
+      {
+        verdict: "ideal",
+        verdictLabel: "Passt",
+        comparison: {
+          rows: [{ rowId: "care_weight", label: "Pflegegewicht", state: "match" }],
+          summaryScore: 1,
+        },
+      },
+    ],
+    product: verdictResult(productId).product,
+    snapshotSource: "refined",
+    savedState: { state: null, managedByScan: false },
+    freeRevealAvailable,
+  }
+}
+
+const REVEALED: ScanAlternativePresentation[] = [
+  {
+    productId: "alt-1",
+    displayName: "Lab Shampoo Gamma",
+    imageUrl: null,
+    priceLabel: "9,99 €",
+    netContentLabel: null,
+    verdict: "ideal",
+    verdictLabel: "Passt",
+    brand: "Chaarlie Lab",
+    purchaseUrl: null,
+  },
+]
+
+/** The state showing `productId`'s masked verdict, nothing in flight. */
+function maskedShown(productId = "p1", freeRevealAvailable = true): ScanFlowState {
+  return run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: maskedResult(productId, freeRevealAvailable) },
+  )
+}
+
+test("scanFlowReducer: a masked verdict proves the free tier, an unmasked one proves premium", () => {
+  assert.equal(maskedShown().tier, "free")
+  assert.equal(
+    run(
+      { type: "resolve_started", token: 1, showResolvingImmediately: true },
+      { type: "resolved", token: 1, result: { ...maskedResult(), freeRevealAvailable: false } },
+    ).tier,
+    "free",
+  )
+  // The premium/flag-off response: the same verdict WITHOUT the masking marker.
+  const { freeRevealAvailable: _omitted, ...premiumResult } = maskedResult()
+  const premium = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    {
+      type: "resolved",
+      token: 1,
+      result: { ...premiumResult, alternatives: [] } as ScanResolvedVerdictResult,
+    },
+  )
+  assert.equal(premium.tier, "premium")
+})
+
+test("scanFlowReducer: a later evidence-free verdict does not unlock a proven free tier", () => {
+  const afterMasked = maskedShown()
+  const afterNotNeeded = scanFlowReducer(
+    scanFlowReducer(afterMasked, {
+      type: "resolve_started",
+      token: 2,
+      showResolvingImmediately: true,
+    }),
+    { type: "resolved", token: 2, result: verdictResult("p2") },
+  )
+  assert.equal(afterNotNeeded.tier, "free")
+})
+
+test("scanFlowReducer: a successful reveal only lands on the product it was started for", () => {
+  const started = scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" })
+  assert.deepEqual(started.reveal, { status: "pending", productId: "p1" })
+
+  const revealed = scanFlowReducer(started, {
+    type: "reveal_succeeded",
+    productId: "p1",
+    alternatives: REVEALED,
+  })
+  assert.deepEqual(revealed.reveal, {
+    status: "revealed",
+    productId: "p1",
+    alternatives: REVEALED,
+  })
+  assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
+
+  // The same response, arriving after the user scanned something else: dropped whole.
+  const moved = scanFlowReducer(
+    scanFlowReducer(started, { type: "resolve_started", token: 2, showResolvingImmediately: true }),
+    { type: "resolved", token: 2, result: maskedResult("p2") },
+  )
+  const late = scanFlowReducer(moved, {
+    type: "reveal_succeeded",
+    productId: "p1",
+    alternatives: REVEALED,
+  })
+  assert.equal(late, moved)
+  assert.equal(scanRevealedAlternatives(late), null)
+})
+
+test("scanFlowReducer: 409 already_used flips the CTA, any other failure only clears the busy flag", () => {
+  const started = scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" })
+  assert.deepEqual(
+    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "already_used" })
+      .reveal,
+    { status: "unavailable", productId: "p1" },
+  )
+  assert.deepEqual(
+    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "error" }).reveal,
+    { status: "idle" },
+  )
+})
+
+test("scanFlowReducer: a new resolve and a return to scanning both drop what the reveal showed", () => {
+  const revealed = scanFlowReducer(
+    scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" }),
+    { type: "reveal_succeeded", productId: "p1", alternatives: REVEALED },
+  )
+  assert.deepEqual(
+    scanFlowReducer(revealed, { type: "resolve_started", token: 2, showResolvingImmediately: true })
+      .reveal,
+    { status: "idle" },
+  )
+  assert.deepEqual(scanFlowReducer(revealed, { type: "return_to_scanning" }).reveal, {
+    status: "idle",
+  })
+})
+
+test("scanFlowReducer: the Premium sheet opens with its context, closes empty, and pauses detection", () => {
+  const opened = scanFlowReducer(maskedShown(), {
+    type: "premium_sheet_opened",
+    context: { feature: "merkliste", source: "scan:verdict" },
+  })
+  assert.deepEqual(opened.premiumSheet, { feature: "merkliste", source: "scan:verdict" })
+  assert.equal(
+    isDetectionPaused({ ...initialScanFlowState, premiumSheet: opened.premiumSheet }),
+    true,
+  )
+  assert.equal(scanFlowReducer(opened, { type: "premium_sheet_closed" }).premiumSheet, null)
+  // Returning to the viewfinder can never leave a paywall hanging over it.
+  assert.equal(scanFlowReducer(opened, { type: "return_to_scanning" }).premiumSheet, null)
 })
