@@ -1,8 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
+import { deriveEntitlements } from "@/lib/entitlements"
 import { resolvePaidAppAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
-import { consumeFreeReveal, type ConsumeFreeRevealResult } from "@/lib/entitlements/free-reveal"
+import {
+  consumeFreeReveal,
+  loadFreeRevealRecord,
+  type ConsumeFreeRevealResult,
+  type FreeRevealRecord,
+} from "@/lib/entitlements/free-reveal"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import {
   loadScanProductFacts,
@@ -70,6 +76,7 @@ export type ScanRevealRouteDeps = {
     client: SupabaseClient,
     input: { userId: string; productId: string },
   ) => Promise<ConsumeFreeRevealResult>
+  loadFreeRevealRecord: (client: SupabaseClient, userId: string) => Promise<FreeRevealRecord | null>
   loadActiveProductById: (client: SupabaseClient, productId: string) => Promise<ActiveProductLookup>
   isProductSearchQuarantined: typeof isProductSearchQuarantined
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
@@ -123,14 +130,20 @@ export function createScanRevealRouteHandler(deps: ScanRevealRouteDeps) {
       const access = await deps.resolvePaidAccess(userId)
       if (access === "unavailable") throw new Error("scan_reveal_entitlements_unavailable")
 
-      // Premium alternatives are never masked in the first place (binding constraint), so
-      // a premium caller spends no credit — this is a no-op on the ledger, just a full
-      // re-read of the same alternatives resolve already showed them.
-      if (access === "denied") {
-        const consumed = await deps.consumeFreeReveal(client, { userId, productId: active.id })
-        if (consumed === "already_used") return scanFail("already_used", 409)
-      }
+      // Fix round 1 (F2): route the credit decision through the same entitlements module
+      // resolve's masking gate uses, not a raw `access === "denied"` check, so both routes
+      // have exactly one place to change if a future ruling grants some free cohort
+      // alternatives without full paid access.
+      const entitlements = deriveEntitlements({
+        hasAppAccess: access === "allowed",
+        freeRevealUsed: false,
+      })
 
+      // Fix round 1 (F1): compute the verdict and the eligible alternative list BEFORE
+      // touching the ledger. A downstream failure here now throws — same as any other scan
+      // read — with no credit spent yet; a retry costs nothing. Premium alternatives are
+      // never masked in the first place (binding constraint), so a premium caller reaches
+      // this unconditionally and never spends a credit either way.
       const verdict = await loadScanVerdictForProduct(
         client,
         deps,
@@ -156,6 +169,24 @@ export function createScanRevealRouteHandler(deps: ScanRevealRouteDeps) {
         productId: active.id,
         alternatives: presented.kind === "in_catalog" ? presented.alternatives : [],
       }
+
+      if (!entitlements.canSeeAlternatives) {
+        // Nothing to reveal: never spend the one-lifetime credit on an empty result (F1,
+        // failure scenario B — `not_needed` verdicts and an all-quarantined alternative
+        // list both land here).
+        if (result.alternatives.length === 0) return scanOk(result)
+
+        const consumed = await deps.consumeFreeReveal(client, { userId, productId: active.id })
+        if (consumed === "already_used") {
+          // Fix round 1 (F1-adjunct, keepsake rule): the user keeps what they already
+          // spent their credit on. Re-serve the SAME product's just-computed reveal
+          // instead of erroring; only a genuinely different product is a conflict.
+          const ledgered = await deps.loadFreeRevealRecord(client, userId)
+          if (ledgered?.productId === active.id) return scanOk(result)
+          return scanFail("already_used", 409)
+        }
+      }
+
       return scanOk(result)
     },
   })
@@ -235,6 +266,7 @@ export const POST = createScanRevealRouteHandler({
   isFreemiumScannerFirstEnabled,
   resolvePaidAccess: resolvePaidAccessForCurrentUser,
   consumeFreeReveal,
+  loadFreeRevealRecord,
   loadActiveProductById,
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,

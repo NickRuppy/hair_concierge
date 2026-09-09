@@ -272,6 +272,9 @@ test("scan resolve masking: a not_needed verdict never calls resolvePaidAccess (
 })
 
 test("scan resolve masking: premium (flag on, allowed) is byte-identical to the flag-off response", async () => {
+  // Fix round 1 (F5): compare the raw response TEXT, not parsed objects — `assert.deepEqual`
+  // on parsed JSON is key-order-insensitive and doesn't actually prove byte-identity.
+  const texts: string[] = []
   const bodies: Array<Record<string, unknown>> = []
   for (const flag of [undefined, "true"]) {
     // eslint-disable-next-line no-await-in-loop
@@ -281,10 +284,12 @@ test("scan resolve masking: premium (flag on, allowed) is byte-identical to the 
       )
       const response = await handler(request({ productId }))
       assert.equal(response.status, 200)
-      bodies.push(await response.json())
+      const text = await response.text()
+      texts.push(text)
+      bodies.push(JSON.parse(text))
     })
   }
-  assert.deepEqual(bodies[0], bodies[1])
+  assert.equal(texts[0], texts[1])
   assert.equal(bodies[1].freeRevealAvailable, undefined)
   assert.equal(
     (bodies[1].alternatives as unknown[])[0] &&

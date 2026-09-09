@@ -39,6 +39,14 @@ export async function loadScanVerdictForProduct(
   productId: string,
   decision: PlanCategoryDecision,
   context: ScanEvaluationContext,
+  /**
+   * T8 fix round 1 (F4): the pre-extraction code marked the attempt-telemetry failure
+   * stage `"verdict"` once facts-loading finished and `buildScanVerdict` itself was about
+   * to run. The extraction collapsed that into one `"product_facts"` stage for every
+   * caller. Optional so `/api/scan/reveal` (which has no attempt-telemetry row) can omit
+   * it; `/api/scan/resolve` passes a callback that restores the original two-stage split.
+   */
+  onEnterVerdictStage?: () => void,
 ): Promise<ScanVerdictPayload> {
   const shampooTarget =
     category === "shampoo" && decision.target?.category === "shampoo" ? decision.target : null
@@ -100,6 +108,8 @@ export async function loadScanVerdictForProduct(
     }),
   )
   const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
+
+  onEnterVerdictStage?.()
 
   return deps.buildScanVerdict({
     category,

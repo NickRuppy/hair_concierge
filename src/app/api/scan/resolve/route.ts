@@ -3,7 +3,7 @@ import { after } from "next/server"
 import { z } from "zod"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
-import { deriveEntitlements } from "@/lib/entitlements"
+import { getEntitlements } from "@/lib/entitlements"
 import { resolvePaidAppAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
 import { hasUsedFreeReveal } from "@/lib/entitlements/free-reveal"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
@@ -370,10 +370,11 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       if (!decision) throw new Error("scan_resolve_decision_missing")
 
       // T8: facts-loading + `buildScanVerdict` extracted to `load-scan-verdict.ts`, shared
-      // with `/api/scan/reveal` — see that module for why. `failureStage` collapses the
-      // former "product_facts"/"verdict" split into one stage: a throw anywhere inside now
-      // reports "product_facts", a small, fail-open telemetry-granularity trade for never
-      // letting the two routes compute a different alternative list.
+      // with `/api/scan/reveal` — see that module for why. The `onEnterVerdictStage`
+      // callback (fix round 1, F4) restores the original two-stage telemetry split: a
+      // throw during facts-loading still reports "product_facts", a throw inside
+      // `buildScanVerdict` itself now reports "verdict" again instead of collapsing both
+      // into one stage.
       attempt.failureStage = "product_facts"
       const verdict = await loadScanVerdictForProduct(
         client,
@@ -382,6 +383,9 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         productId,
         decision,
         context,
+        () => {
+          attempt.failureStage = "verdict"
+        },
       )
 
       // One catalog read covers the sheet's product header and the alternatives' brand +
@@ -421,13 +425,25 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       // verdict never call `resolvePaidAccess` at all, so neither performs a billing
       // lookup it didn't before T8 (mirrors the F1a "inert with the flag off" pattern on
       // `hasFreemiumPaidAccess`). Premium falls through to the untouched full path below.
+      //
+      // Fail-closed constraint (fix round 1, F3): `resolvePaidAccess` returning
+      // "unavailable" 503s every `in_catalog` verdict here, premium included — an
+      // entitlement-source outage must never be treated as "unmask," so this is the one
+      // case where "flag on + premium ⇒ byte-identical" does not hold.
       if (isFreemiumScannerFirstEnabled() && eligibleVerdict.kind === "in_catalog") {
         const access = await deps.resolvePaidAccess(userId)
         if (access === "unavailable") throw new Error("scan_resolve_entitlements_unavailable")
 
-        if (access === "denied") {
-          const freeRevealUsed = await deps.hasUsedFreeReveal(client, userId)
-          const entitlements = deriveEntitlements({ hasAppAccess: false, freeRevealUsed })
+        // Fix round 1 (F2): the brief names `getEntitlements(...).canSeeAlternatives` as
+        // the deciding signal, not the raw `resolvePaidAccess` result — same module the
+        // reveal route now also branches on, so a future ruling that grants some free
+        // cohort alternatives only has one place to change.
+        const entitlements = await getEntitlements(userId, {
+          hasAppAccess: async () => access === "allowed",
+          readFreeRevealUsed: (id) => deps.hasUsedFreeReveal(client, id),
+        })
+
+        if (!entitlements.canSeeAlternatives) {
           const maskedResult: ScanMaskedVerdictResult = {
             ...maskScanVerdictPayload(eligibleVerdict),
             product: productHeader,

@@ -532,6 +532,30 @@ test("scan resolve: a candidate load that omits a requested role fails closed as
   ])
 })
 
+test("scan resolve: a buildScanVerdict throw reports the 'verdict' failure stage (T8 fix round 1, F4)", async () => {
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      buildScanVerdict: () => {
+        throw new Error("boom")
+      },
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 503)
+  await attempts.flush()
+  assert.deepEqual(attempts.completions, [
+    {
+      attemptId: "attempt-1",
+      lookupOutcome: "hit",
+      terminalOutcome: "temporarily_unavailable",
+      matchedProductId: productId,
+      failureStage: "verdict",
+    },
+  ])
+})
+
 test("scan resolve: a category whose facts do not vary by role loads exactly once", async () => {
   const conditionerDecision = {
     ...decision,

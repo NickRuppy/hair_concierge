@@ -117,6 +117,7 @@ function baseDeps(overrides: Partial<ScanRevealRouteDeps> = {}): ScanRevealRoute
     isFreemiumScannerFirstEnabled: () => true,
     resolvePaidAccess: async () => "denied",
     consumeFreeReveal: async () => "consumed",
+    loadFreeRevealRecord: async () => null,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
@@ -232,18 +233,52 @@ test("scan reveal: a free user's first reveal consumes the credit and returns fu
   assert.deepEqual(consumeCalls, [{ userId, productId }])
 })
 
-test("scan reveal: an already-used credit is a distinguishable error, no silver reveal", async () => {
+test("scan reveal: an already-used credit for a DIFFERENT product is a distinguishable error, no silver reveal", async () => {
+  const otherProductId = "44444444-4444-4444-8444-444444444444"
   const handler = createScanRevealRouteHandler(
     baseDeps({
       consumeFreeReveal: async () => "already_used",
-      buildScanVerdict: () => {
-        throw new Error("must not compute a verdict once the credit is already spent")
-      },
+      // The ledger's own product_id (fixture: a different product) decides the outcome,
+      // not a canned error — this is a genuine conflict, so no re-serve.
+      loadFreeRevealRecord: async () => ({ productId: otherProductId }),
     }),
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 409)
   assert.deepEqual(await response.json(), { error: "already_used" })
+})
+
+test("scan reveal: an already-used credit for the SAME product re-serves the reveal (keepsake rule, F1-adjunct)", async () => {
+  const handler = createScanRevealRouteHandler(
+    baseDeps({
+      consumeFreeReveal: async () => "already_used",
+      loadFreeRevealRecord: async () => ({ productId }),
+    }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.ok, true)
+  assert.equal(body.productId, productId)
+  assert.equal(body.alternatives.length, 1)
+})
+
+test("scan reveal: the verdict is computed BEFORE the credit is spent (F1) — a downstream failure spends nothing", async () => {
+  const consumeCalls: unknown[] = []
+  const handler = createScanRevealRouteHandler(
+    baseDeps({
+      buildScanVerdict: () => {
+        throw new Error("boom")
+      },
+      consumeFreeReveal: async (_client, input) => {
+        consumeCalls.push(input)
+        return "consumed"
+      },
+    }),
+  )
+  const response = await handler(request({ productId }))
+  assert.equal(response.status, 503)
+  assert.deepEqual(consumeCalls, [])
 })
 
 test("scan reveal: a missing profile is checked before the credit is spent", async () => {
@@ -275,23 +310,37 @@ test("scan reveal: a premium user never consumes a credit", async () => {
   assert.equal(body.alternatives.length, 1)
 })
 
-test("scan reveal: a not_needed verdict has nothing to reveal", async () => {
+test("scan reveal: a not_needed verdict has nothing to reveal, and spends no credit (F1)", async () => {
+  const consumeCalls: unknown[] = []
   const handler = createScanRevealRouteHandler(
-    baseDeps({ buildScanVerdict: () => notNeededVerdict }),
+    baseDeps({
+      buildScanVerdict: () => notNeededVerdict,
+      consumeFreeReveal: async (_client, input) => {
+        consumeCalls.push(input)
+        return "consumed"
+      },
+    }),
   )
   const response = await handler(request({ productId }))
   assert.equal(response.status, 200)
   const body = await response.json()
   assert.deepEqual(body.alternatives, [])
+  assert.deepEqual(consumeCalls, [])
 })
 
-test("scan reveal: a quarantined alternative is never revealed (ruling R7)", async () => {
+test("scan reveal: a quarantined alternative is never revealed (ruling R7), and spends no credit (F1)", async () => {
+  const consumeCalls: unknown[] = []
   const handler = createScanRevealRouteHandler(
     baseDeps({
       loadQuarantinedProductIdsAmong: async () => new Set([alternativeId]),
+      consumeFreeReveal: async (_client, input) => {
+        consumeCalls.push(input)
+        return "consumed"
+      },
     }),
   )
   const response = await handler(request({ productId }))
   const body = await response.json()
   assert.deepEqual(body.alternatives, [])
+  assert.deepEqual(consumeCalls, [])
 })

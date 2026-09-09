@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { consumeFreeReveal, hasUsedFreeReveal } from "../src/lib/entitlements/free-reveal"
+import {
+  consumeFreeReveal,
+  hasUsedFreeReveal,
+  loadFreeRevealRecord,
+} from "../src/lib/entitlements/free-reveal"
 
 type FakeRow = { user_id: string; product_id: string }
 
@@ -22,7 +26,10 @@ function createFakeFreeRevealClient() {
       assert.equal(table, "scan_free_reveals")
       return {
         select: (columns: string) => {
-          assert.equal(columns, "user_id")
+          assert.ok(
+            columns === "user_id" || columns === "product_id",
+            `unexpected select columns: ${columns}`,
+          )
           return {
             eq: (column: string, value: string) => {
               assert.equal(column, "user_id")
@@ -30,7 +37,12 @@ function createFakeFreeRevealClient() {
                 maybeSingle: async () => {
                   selectCalls += 1
                   const row = rows.get(value)
-                  return { data: row ? { user_id: row.user_id } : null, error: null }
+                  if (!row) return { data: null, error: null }
+                  const data =
+                    columns === "product_id"
+                      ? { product_id: row.product_id }
+                      : { user_id: row.user_id }
+                  return { data, error: null }
                 },
               }
             },
@@ -161,6 +173,51 @@ test("hasUsedFreeReveal: throws on an unexpected lookup error", async () => {
 
   await assert.rejects(
     () => hasUsedFreeReveal(client as never, "user-1"),
+    /free_reveal_lookup_failed/,
+  )
+})
+
+test("loadFreeRevealRecord: null when no row exists for the user", async () => {
+  const { client } = createFakeFreeRevealClient()
+
+  const result = await loadFreeRevealRecord(client as never, "user-1")
+
+  assert.equal(result, null)
+})
+
+test("loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed", async () => {
+  const { client } = createFakeFreeRevealClient()
+
+  await consumeFreeReveal(client as never, { userId: "user-1", productId: "product-a" })
+  const result = await loadFreeRevealRecord(client as never, "user-1")
+
+  assert.deepEqual(result, { productId: "product-a" })
+})
+
+test("loadFreeRevealRecord: does not leak across users", async () => {
+  const { client } = createFakeFreeRevealClient()
+
+  await consumeFreeReveal(client as never, { userId: "user-1", productId: "product-a" })
+
+  assert.deepEqual(await loadFreeRevealRecord(client as never, "user-1"), {
+    productId: "product-a",
+  })
+  assert.equal(await loadFreeRevealRecord(client as never, "user-2"), null)
+})
+
+test("loadFreeRevealRecord: throws on an unexpected lookup error", async () => {
+  const client = {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: null, error: { message: "connection reset" } }),
+        }),
+      }),
+    }),
+  }
+
+  await assert.rejects(
+    () => loadFreeRevealRecord(client as never, "user-1"),
     /free_reveal_lookup_failed/,
   )
 })

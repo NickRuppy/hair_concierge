@@ -30,6 +30,30 @@ export async function hasUsedFreeReveal(client: SupabaseClient, userId: string):
   return data !== null
 }
 
+export type FreeRevealRecord = { productId: string }
+
+/**
+ * T8 fix round 1 (F1-adjunct, keepsake rule): reads which product the user's one-lifetime
+ * credit was already spent on, so a caller that hits `"already_used"` can tell a genuine
+ * re-request for the SAME product (re-serve what they paid for) apart from a different
+ * product (a real conflict). Read-only; never used to decide consume vs. already_used —
+ * `consumeFreeReveal`'s INSERT stays the sole source of truth for that.
+ */
+export async function loadFreeRevealRecord(
+  client: SupabaseClient,
+  userId: string,
+): Promise<FreeRevealRecord | null> {
+  const { data, error } = await client
+    .from("scan_free_reveals")
+    .select("product_id")
+    .eq("user_id", userId)
+    .maybeSingle()
+
+  if (error) throw new Error(`free_reveal_lookup_failed: ${error.message}`)
+  const row = data as { product_id: string } | null
+  return row ? { productId: row.product_id } : null
+}
+
 /**
  * Atomic consume: the PRIMARY KEY on `user_id` is the only thing that
  * decides "consumed" vs. "already_used" — a second concurrent INSERT for
