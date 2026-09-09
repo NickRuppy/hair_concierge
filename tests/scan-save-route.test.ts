@@ -25,7 +25,7 @@ function baseDeps(overrides: Partial<ScanSaveRouteDeps> = {}): ScanSaveRouteDeps
     removeWishlist: async () => ({ outcome: "removed" }),
     removeRoutine: async () => ({ outcome: "removed" }),
     loadSavedState: async () => NOT_SAVED,
-    requirePremiumAccess: async () => true,
+    requirePremiumAccess: async () => "allowed",
     ...overrides,
   }
 }

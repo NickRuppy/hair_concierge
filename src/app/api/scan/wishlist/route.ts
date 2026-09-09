@@ -5,7 +5,7 @@ import { checkRateLimit } from "@/lib/rate-limit"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, scanFail, scanOk } from "@/lib/scan/route"
-import { hasFreemiumPaidAccess } from "@/lib/entitlements/access"
+import { hasFreemiumPaidAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -48,8 +48,14 @@ export type ScanWishlistRouteDeps = {
    * subscription paywall (see `hasFreemiumPaidAccess`). When the flag is off
    * no free user ever reaches this route at all (middleware still 403s
    * them), so this check is redundant-but-harmless in that case.
+   *
+   * Returns the tri-state `FreemiumAccessResult` (T4 review fix I2), not a
+   * plain boolean: an unreadable moderator lookup with no independently
+   * verified paid access must surface as a retriable 503, not a 403 —
+   * mirroring the middleware paywall's own `moderator_access_unavailable`
+   * response.
    */
-  requirePremiumAccess: (userId: string) => Promise<boolean>
+  requirePremiumAccess: (userId: string) => Promise<FreemiumAccessResult>
 }
 
 export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
@@ -59,9 +65,9 @@ export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
     parse: async () => ({ ok: true, body: undefined }),
     failureReason: "wishlist_list_failed",
     handler: async (ctx) => {
-      if (!(await deps.requirePremiumAccess(ctx.userId))) {
-        return scanFail("subscription_required", 403)
-      }
+      const access = await deps.requirePremiumAccess(ctx.userId)
+      if (access === "unavailable") return scanFail("temporarily_unavailable", 503)
+      if (access === "denied") return scanFail("subscription_required", 403)
       const client = deps.createAdminClient()
       const entries = await deps.listWishlist(client, ctx.userId)
       return scanOk({ entries })
@@ -120,10 +126,22 @@ export async function listScanWishlist(
     })
 }
 
+// Separate from `getUserId`: the shared scan wrapper only forwards a userId
+// string to the handler (see `ScanRouteContext` in `@/lib/scan/route.ts`,
+// which this task does not restructure), so the email needed for the C1 fix
+// has no path from `getUserId` into `requirePremiumAccess` without a second
+// `auth.getUser()` read. That is a deliberate, request-scoped read — reusing
+// a module-level variable across the two calls would leak one concurrent
+// request's email into another's premium check.
+async function requirePremiumAccessForCurrentUser(userId: string): Promise<FreemiumAccessResult> {
+  const { data } = await (await createClient()).auth.getUser()
+  return hasFreemiumPaidAccess(userId, data.user?.email)
+}
+
 export const GET = createScanWishlistRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
   createAdminClient,
   listWishlist: listScanWishlist,
-  requirePremiumAccess: hasFreemiumPaidAccess,
+  requirePremiumAccess: requirePremiumAccessForCurrentUser,
 })

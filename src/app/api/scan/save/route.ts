@@ -10,7 +10,7 @@ import {
 } from "@/lib/scan/saved-state"
 import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
-import { hasFreemiumPaidAccess } from "@/lib/entitlements/access"
+import { hasFreemiumPaidAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -40,8 +40,14 @@ export type ScanSaveRouteDeps = {
    * paywall (see `hasFreemiumPaidAccess`). When the flag is off no free user
    * ever reaches this route at all (middleware still 403s them), so this
    * check is redundant-but-harmless in that case.
+   *
+   * Returns the tri-state `FreemiumAccessResult` (T4 review fix I2), not a
+   * plain boolean: an unreadable moderator lookup with no independently
+   * verified paid access must surface as a retriable 503, not a 403 —
+   * mirroring the middleware paywall's own `moderator_access_unavailable`
+   * response.
    */
-  requirePremiumAccess: (userId: string) => Promise<boolean>
+  requirePremiumAccess: (userId: string) => Promise<FreemiumAccessResult>
 }
 
 export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
@@ -62,9 +68,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
     parse: parseJsonBody(saveBodySchema),
     failureReason: "save_failed",
     handler: async (ctx) => {
-      if (!(await deps.requirePremiumAccess(ctx.userId))) {
-        return scanFail("subscription_required", 403)
-      }
+      const access = await deps.requirePremiumAccess(ctx.userId)
+      if (access === "unavailable") return scanFail("temporarily_unavailable", 503)
+      if (access === "denied") return scanFail("subscription_required", 403)
       const client = deps.createAdminClient()
       // The two destinations are exclusive, so a save is a MOVE — destination write
       // plus source cleanup plus the state read, all inside one transaction
@@ -94,9 +100,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
     parse: parseJsonBody(saveBodySchema),
     failureReason: "save_removal_failed",
     handler: async (ctx) => {
-      if (!(await deps.requirePremiumAccess(ctx.userId))) {
-        return scanFail("subscription_required", 403)
-      }
+      const access = await deps.requirePremiumAccess(ctx.userId)
+      if (access === "unavailable") return scanFail("temporarily_unavailable", 503)
+      if (access === "denied") return scanFail("subscription_required", 403)
       const client = deps.createAdminClient()
       const result = await removeKind(client, ctx.userId, ctx.body.productId, ctx.body.kind)
       // The routine row belongs to Stage-3 / product intake: the scan sheet has no
@@ -118,6 +124,18 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
   return { POST, DELETE }
 }
 
+// Separate from `getUserId`: the shared scan wrapper only forwards a userId
+// string to the handler (see `ScanRouteContext` in `@/lib/scan/route.ts`,
+// which this task does not restructure), so the email needed for the C1 fix
+// has no path from `getUserId` into `requirePremiumAccess` without a second
+// `auth.getUser()` read. That is a deliberate, request-scoped read — reusing
+// a module-level variable across the two calls would leak one concurrent
+// request's email into another's premium check.
+async function requirePremiumAccessForCurrentUser(userId: string): Promise<FreemiumAccessResult> {
+  const { data } = await (await createClient()).auth.getUser()
+  return hasFreemiumPaidAccess(userId, data.user?.email)
+}
+
 const handlers = createScanSaveRouteHandlers({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
@@ -126,7 +144,7 @@ const handlers = createScanSaveRouteHandlers({
   removeWishlist: removeScanWishlistProduct,
   removeRoutine: removeScanRoutineProduct,
   loadSavedState: loadScanSavedState,
-  requirePremiumAccess: hasFreemiumPaidAccess,
+  requirePremiumAccess: requirePremiumAccessForCurrentUser,
 })
 
 export const POST = handlers.POST
