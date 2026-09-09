@@ -280,6 +280,85 @@ test("tracker still redirects an authenticated user without current access to re
   assert.equal(frontierCalls.count, 0)
 })
 
+// --- Freemium scanner-first flag (T2), end-to-end through createUpdateSession ---
+
+test("flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/tracker"))
+
+    assert.equal(response.status, 307)
+    assert.equal(
+      response.headers.get("location"),
+      "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
+    )
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/tracker"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user without current access is still gated on a non-admitted route (/api/chat stays subscription_required)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/api/chat"))
+
+    assert.equal(response.status, 403)
+    const body = await response.json()
+    assert.deepEqual(body, { error: "subscription_required" })
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const observedTables: string[] = []
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      observedTables,
+    })(new NextRequest("https://chaarlie.de/scan"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+    // No personal_plans routine lookup is needed to admit this free user —
+    // the /scan bypass is now entitlement-independent under the flag.
+    assert.ok(!observedTables.includes("personal_plans"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
 test("chat retains proxy intake and preserves redirect query parameters", async () => {
   const observedTables: string[] = []
   const frontierCalls = { count: 0 }
