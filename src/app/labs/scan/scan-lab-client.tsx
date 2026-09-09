@@ -34,6 +34,14 @@ type ScanLabState = {
   saveOpen: boolean
   epoch: number
   /**
+   * Freemium scanner-first (T9): the tier the resolve responses have proven so far, the
+   * one-lifetime reveal's status, and which Premium-sheet gate is open ("none" while it
+   * is closed). All three are read off the flow root like every other field here.
+   */
+  tier: string
+  reveal: string
+  premiumSheet: string
+  /**
    * What the VIEWFINDER is drawing — `searching` / `spotted` / `read`, or `""` while the
    * scanner is not mounted at all. It lives on the scanner root (inside the flow root),
    * not on the flow root, so it is read from its own element.
@@ -153,6 +161,9 @@ function readFlowState(): ScanLabState | null {
     cameraReason: root.getAttribute("data-scan-camera-reason") ?? "",
     saveOpen: root.getAttribute("data-scan-save-open") === "true",
     epoch: Number(root.getAttribute("data-scan-epoch") ?? "0"),
+    tier: root.getAttribute("data-scan-tier") ?? "",
+    reveal: root.getAttribute("data-scan-reveal") ?? "",
+    premiumSheet: root.getAttribute("data-scan-premium-sheet") ?? "",
     detection: viewfinder?.getAttribute("data-scan-detection") ?? "",
   }
 }
@@ -332,6 +343,9 @@ function createScanLab(): ScanLabInternals {
       previous.cameraReason === next.cameraReason &&
       previous.saveOpen === next.saveOpen &&
       previous.epoch === next.epoch &&
+      previous.tier === next.tier &&
+      previous.reveal === next.reveal &&
+      previous.premiumSheet === next.premiumSheet &&
       previous.detection === next.detection
     ) {
       return
@@ -349,6 +363,9 @@ function createScanLab(): ScanLabInternals {
       "data-scan-camera-reason",
       "data-scan-save-open",
       "data-scan-epoch",
+      "data-scan-tier",
+      "data-scan-reveal",
+      "data-scan-premium-sheet",
       "data-scan-detection",
     ],
   })

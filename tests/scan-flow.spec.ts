@@ -9,6 +9,9 @@ import {
   EAN_UNKNOWN,
   PENDING_SUBMISSION,
   PRODUCT_A_ID,
+  REVEALED_ALTERNATIVES,
+  REVEALED_ALTERNATIVE_NAME,
+  maskedResolvePayloadFor,
   resolvePayloadFor,
 } from "./scan-flow.fixtures"
 
@@ -51,6 +54,17 @@ type ScanApiController = {
   releaseSave: () => void
   holdSubmit: boolean
   holdSave: boolean
+  /**
+   * Freemium scanner-first (T9). `freeTier` switches `/api/scan/resolve` to T8's masked
+   * response for product A; everything else keeps answering the premium shape, so one
+   * installer covers both tiers.
+   */
+  freeTier: boolean
+  freeRevealAvailable: boolean
+  revealBodies: Array<Record<string, unknown>>
+  revealStatus: number
+  revealErrorCode: string
+  revealAlternatives: unknown[]
 }
 
 /**
@@ -78,6 +92,12 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
     releaseSave: () => releaseSave(),
     holdSubmit: false,
     holdSave: false,
+    freeTier: false,
+    freeRevealAvailable: true,
+    revealBodies: [],
+    revealStatus: 200,
+    revealErrorCode: "already_used",
+    revealAlternatives: REVEALED_ALTERNATIVES,
   }
 
   await page.route("**/api/scan/resolve", async (route) => {
@@ -90,7 +110,9 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
         body: JSON.stringify({ error: controller.resolveErrorCode }),
       })
     }
-    const payload = resolvePayloadFor(body as never)
+    const payload = controller.freeTier
+      ? maskedResolvePayloadFor(body as never, controller.freeRevealAvailable)
+      : resolvePayloadFor(body as never)
     if (!payload) {
       return route.fulfill({
         status: 404,
@@ -102,6 +124,27 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
       status: 200,
       contentType: "application/json",
       body: JSON.stringify(payload),
+    })
+  })
+
+  await page.route("**/api/scan/reveal", async (route) => {
+    const body = JSON.parse(route.request().postData() ?? "{}") as Record<string, unknown>
+    controller.revealBodies.push(body)
+    if (controller.revealStatus !== 200) {
+      return route.fulfill({
+        status: controller.revealStatus,
+        contentType: "application/json",
+        body: JSON.stringify({ error: controller.revealErrorCode }),
+      })
+    }
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        ok: true,
+        productId: body.productId,
+        alternatives: controller.revealAlternatives,
+      }),
     })
   })
 
@@ -723,6 +766,122 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
     expect(order.bridge).toBeGreaterThanOrEqual(0)
     expect(order.bridge).toBeLessThan(order.subline)
+  })
+
+  /* ------------------------------------------- T9: the free tier's verdict states */
+
+  test("T9 first reveal: the masked comparison is readable, and the one-lifetime reveal unblurs the real product", async ({
+    page,
+  }) => {
+    const api = await installScanApi(page)
+    api.freeTier = true
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    await emit(page, EAN_PRODUCT_A)
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
+    // The tier is learned from the response shape alone — nothing client-side guesses it.
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "free")
+
+    // Everything except the identity is on screen.
+    const masked = page.locator("[data-scan-masked-alternatives]")
+    await expect(masked).toBeVisible()
+    for (const label of ["Pflegegewicht", "Reinigungsstärke", "Silikone", "Protein"]) {
+      await expect(masked.getByText(label)).toBeVisible()
+    }
+    await expect(masked.getByText("2 von 4 Prüfpunkten im Ziel")).toBeVisible()
+    await expect(masked.getByText("Produkt verdeckt")).toBeVisible()
+    await expect(page.getByText(REVEALED_ALTERNATIVE_NAME)).toHaveCount(0)
+    // Ruling 2026-09-09: no „Warum?" affordance anywhere on a verdict.
+    await expect(page.getByRole("button", { name: /Warum/ })).toHaveCount(0)
+
+    await page.locator("[data-scan-reveal-cta]").click()
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-reveal", "revealed")
+    await expect(page.locator("[data-scan-revealed-alternatives]")).toBeVisible()
+    await expect(page.getByText(REVEALED_ALTERNATIVE_NAME)).toBeVisible()
+    await expect(page.locator("[data-scan-masked-alternatives]")).toHaveCount(0)
+    // The body names the SCANNED product: masked alternatives carry no id to round-trip.
+    expect(api.revealBodies).toEqual([{ productId: PRODUCT_A_ID }])
+
+    // The 1.2s unblur is a real animation on the revealed wrapper, not a jump cut.
+    const animation = await page.evaluate(() => {
+      const node = document.querySelector("[data-scan-revealed-alternatives]")
+      if (!node) return null
+      const style = window.getComputedStyle(node)
+      return { name: style.animationName, duration: style.animationDuration }
+    })
+    expect(animation?.name).toBe("scan-reveal-unblur")
+    expect(animation?.duration).toBe("1.2s")
+  })
+
+  test("T9 post-reveal: a spent credit shows the Premium gate, and Merken is locked without covering the bookmark", async ({
+    page,
+  }) => {
+    const api = await installScanApi(page)
+    api.freeTier = true
+    api.freeRevealAvailable = false
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    await emit(page, EAN_PRODUCT_A)
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
+
+    // The comparison stays fully readable; only the identity is behind the gate.
+    await expect(
+      page.locator("[data-scan-masked-alternatives]").getByText("Silikone"),
+    ).toBeVisible()
+    await expect(page.locator("[data-scan-reveal-cta]")).toHaveCount(0)
+
+    const gate = page.locator("[data-scan-premium-cta]")
+    await expect(gate).toHaveText("Was passt stattdessen?")
+    await gate.click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "empfehlungen")
+    await expect(page.getByText("Chaarlie Premium")).toBeVisible()
+    // The tapped feature leads the sheet (T5's ordered-benefits contract).
+    await expect(page.getByText("Empfehlungen")).toBeVisible()
+    expect(api.revealBodies).toEqual([])
+
+    await closeSheetContaining(page, "Chaarlie Premium").click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "none")
+
+    // Merken on the verdict: the Premium sheet, never the save sheet.
+    await page.getByRole("button", { name: "Speichern — Premium" }).click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "merkliste")
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-save-open", "false")
+    await closeSheetContaining(page, "Chaarlie Premium").click()
+
+    // …and the header bookmark, which keeps its symbol under a corner marker.
+    await closeSheetContaining(page, "Passt nicht zu deinem Haar").click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "scanning")
+    const bookmark = page.getByRole("button", { name: "Merkliste öffnen — Premium" })
+    await expect(bookmark.locator("svg.lucide-bookmark")).toBeVisible()
+    await expect(bookmark.locator("[data-scan-lock-badge]")).toBeVisible()
+    await bookmark.click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "merkliste")
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "none")
+  })
+
+  test("T9 premium: a response without the masking marker renders today's verdict untouched", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    await emit(page, EAN_PRODUCT_A)
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "premium")
+
+    await expect(page.locator("[data-scan-masked-alternatives]")).toHaveCount(0)
+    await expect(page.locator("[data-scan-reveal-cta]")).toHaveCount(0)
+    await expect(page.locator("[data-scan-premium-cta]")).toHaveCount(0)
+    await expect(page.locator("[data-scan-lock-badge]")).toHaveCount(0)
+
+    // Merken still opens the real save sheet.
+    await page.getByRole("button", { name: "Speichern", exact: true }).click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-save-open", "true")
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "none")
   })
 
   test("copy: a search sheet the user opened keeps the neutral title", async ({ page }) => {
