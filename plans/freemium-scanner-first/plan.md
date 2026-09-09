@@ -53,11 +53,11 @@ Status: **confirmed** (retained per plan-hardening rule: Rev. 2 changes are veri
 
 **Undiscussed consequential assumptions affecting this handoff: none.**
 
-Coverage acknowledgement: Nick last saw the consolidated record 2026-09-09 (pre-review). Rev. 2 record to be re-presented together with the §6 journey walkthrough; sign-off pending there.
+Coverage acknowledgement: Nick reviewed the Rev. 2 record with the §6 journey walkthrough on 2026-09-09 (post-Codex adjustments explained; immediate-provisioning call explicitly confirmed). Covers plan Rev. 2 / this handoff.
 
 ## 6. Designed user journey
 
-**Sign-off status: pending** (stage-6 walkthrough is the next Nick touchpoint).
+**Sign-off status: confirmed** — Nick, 2026-09-09, after the post-review walkthrough; explicitly including the immediate post-purchase routine provisioning (staged-journey alternative offered and declined).
 
 Journey text unchanged from Rev. 1 (it described the approved prototype; the review changed how we build it, not what the user experiences), with two precision additions:
 
@@ -135,7 +135,7 @@ Authoritative shared values: flag `freemium_scanner_first`; `getEntitlements(use
 - Branch/worktree: `.worktrees/freemium-scanner-first` on `codex/freemium-scanner-first`; this plan + research committed on the branch (Rev. 2 commit).
 - Per-PR gates: ready-check (`ci:verify` + full `test:node` + flow drive + T4 direct-request suite) → Codex whole-branch review before push → `/ship` publish-only → explicit "merge it".
 - Counterpart review of this plan: **done** (Codex Astra high, 2026-09-09) — ledger §11; all findings accepted and folded into Rev. 2. Re-run only on material blocker-driven changes.
-- User-journey sign-off: **pending — next step** (stage-6 walkthrough of §6 + the Rev. 2 coverage record).
+- User-journey sign-off: **confirmed** (2026-09-09, post-review walkthrough; no corrections).
 - Artifact disposition: prototype = archive (link retained); research + this plan = commit; Codex transcript = discard (ledger preserved in §11).
 - Stop point: no PR publication before its ready-check; no flag flip before the §9 evidence-sensitive pass and Nick's explicit go.
 
