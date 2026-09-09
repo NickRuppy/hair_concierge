@@ -44,11 +44,23 @@ export type ScanFlowStep =
  * product's card. `unavailable` is the 409 `already_used` answer — the credit turns out to
  * be spent (a second tab, a reload) — which flips the CTA to the Premium sheet instead of
  * offering a reveal the server will keep refusing.
+ *
+ * `silent` (fix round 1, F2) tells `pending` and `revealed` apart from an explicit CTA tap:
+ * `scan-flow.tsx` also fires this same reveal in the BACKGROUND, unprompted, whenever a
+ * masked verdict arrives with the credit already spent — the reveal endpoint is idempotent,
+ * so a 200 there means this is the SAME product the credit was spent on (a rescan or a
+ * reload), not a fresh reveal. `silent: true` is what tells the card to show that card
+ * already sharp instead of playing the 1.2s unblur meant for the moment of "revealing".
  */
 export type ScanRevealState =
   | { status: "idle" }
-  | { status: "pending"; productId: string }
-  | { status: "revealed"; productId: string; alternatives: ScanAlternativePresentation[] }
+  | { status: "pending"; productId: string; silent: boolean }
+  | {
+      status: "revealed"
+      productId: string
+      alternatives: ScanAlternativePresentation[]
+      silent: boolean
+    }
   | { status: "unavailable"; productId: string }
 
 /**
@@ -96,9 +108,20 @@ export type ScanFlowAction =
   | { type: "resolving_sheet_due"; token: number }
   | { type: "resolved"; token: number; result: ScanClientResolveResult }
   | { type: "resolve_failed"; token: number }
-  | { type: "reveal_started"; productId: string }
-  | { type: "reveal_succeeded"; productId: string; alternatives: ScanAlternativePresentation[] }
-  | { type: "reveal_failed"; productId: string; reason: "already_used" | "error" }
+  | { type: "reveal_started"; productId: string; silent: boolean }
+  | {
+      type: "reveal_succeeded"
+      productId: string
+      alternatives: ScanAlternativePresentation[]
+      silent: boolean
+    }
+  /**
+   * `reason` distinguishes three outcomes that all land the CTA back on `idle`/`unavailable`
+   * but mean different things for future analytics (fix round 1, F3): `"already_used"` is
+   * the 409 (credit spent elsewhere), `"empty"` is a 200 with nothing eligible (T8 spends NO
+   * credit for this), and `"error"` is an actual failure.
+   */
+  | { type: "reveal_failed"; productId: string; reason: "already_used" | "empty" | "error" }
   | { type: "premium_sheet_opened"; context: PremiumSheetContext }
   | { type: "premium_sheet_closed" }
   | { type: "submit_started"; token: number }
@@ -180,7 +203,10 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
 
     case "reveal_started":
       if (!ownsResultProduct(state, action.productId)) return state
-      return { ...state, reveal: { status: "pending", productId: action.productId } }
+      return {
+        ...state,
+        reveal: { status: "pending", productId: action.productId, silent: action.silent },
+      }
 
     case "reveal_succeeded":
       // Same guard as `saved_state_changed` (F5), for the same reason: a reveal that
@@ -192,6 +218,7 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
           status: "revealed",
           productId: action.productId,
           alternatives: action.alternatives,
+          silent: action.silent,
         },
       }
 
@@ -340,4 +367,18 @@ export function scanRevealedAlternatives(
   if (state.reveal.status !== "revealed") return null
   if (state.reveal.productId !== state.step.result.product.productId) return null
   return state.reveal.alternatives
+}
+
+/**
+ * Whether the currently revealed card should play the 1.2s unblur (fix round 1, F2).
+ * `false` for the background same-product re-serve (a rescan or a reload replaying a
+ * credit already spent on this exact product) — nothing is being "revealed" to the user
+ * in that case, so the card should simply already look sharp. `true` for an explicit CTA
+ * tap, which is the only moment the animation is meant to mark.
+ */
+export function scanRevealAnimates(state: ScanFlowState): boolean {
+  if (state.step.kind !== "result") return false
+  if (state.reveal.status !== "revealed") return false
+  if (state.reveal.productId !== state.step.result.product.productId) return false
+  return !state.reveal.silent
 }

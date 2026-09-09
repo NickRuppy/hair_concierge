@@ -14,6 +14,7 @@ import {
   initialScanFlowState,
   isDetectionPaused,
   scanFlowReducer,
+  scanRevealAnimates,
   scanRevealedAlternatives,
   type ScanFlowState,
   type ScanFlowStep,
@@ -22,9 +23,15 @@ import { useLatestRequest } from "@/lib/scan/use-latest-request"
 import {
   SCAN_RESOLVING_SUBLINE,
   SCAN_RESOLVING_TITLE,
+  SCAN_REVEAL_EMPTY_NOTICE,
   SCAN_UNKNOWN_HEADLINE,
 } from "@/lib/scan/verdict-labels"
-import type { ScanClientResolveResult, ScanVerdictResult } from "@/lib/scan/verdict-access"
+import {
+  isMaskedScanVerdict,
+  type ScanClientResolveResult,
+  type ScanVerdictResult,
+} from "@/lib/scan/verdict-access"
+import type { EntitlementTier } from "@/lib/entitlements"
 import type { ScanAlternativePresentation } from "@/lib/scan/types"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
@@ -71,13 +78,6 @@ const RESOLVE_ERRORS: Record<string, string> = {
 }
 const GENERIC_ERROR = "Hat nicht geklappt – versuch's nochmal."
 
-/**
- * The one-lifetime reveal came back with nothing to show (T8: an empty eligible list is a
- * 200 that deliberately spends NO credit). Saying so plainly is the only honest option —
- * the CTA stays, because the credit is still there.
- */
-const REVEAL_EMPTY_NOTICE = "Gerade keine Alternative verfügbar."
-
 /** Free-tier gates on this surface all open the same sheet (T5 opener contract). */
 const SCAN_VERDICT_SOURCE = "scan:verdict"
 const MERKLISTE_GATE: PremiumSheetContext = { feature: "merkliste", source: SCAN_VERDICT_SOURCE }
@@ -117,11 +117,25 @@ const CAMERA_RETRY_LABEL: Record<ScanCameraTileReason, string | null> = {
  *
  * `scannerRuntime` is the camera/detector test seam handed straight to `<Scanner>`; the
  * labs harness supplies it, production leaves it undefined.
+ *
+ * `tier` (fix round 1, F1) is the SERVER-derived signal — `/scan/page.tsx` loads it from
+ * `loadAuthenticatedAppNavigationAccess()`, the same source T3's nav lock markers use,
+ * which fails closed to `"premium"` — never a client-side entitlement guess. It is what
+ * lets the header Merken bookmark lock from the very first paint, before any verdict has
+ * proven the tier from a response shape; `state.tier` (learned from the resolve responses
+ * themselves) still takes over independently once it has evidence, so a degraded nav
+ * loader can never unlock a free user either. Omitted, it changes nothing: every existing
+ * caller (tests, the labs harness without a tier boot flag) keeps today's behaviour.
  */
 export function ScanFlow({
   analytics = noOpScanAnalytics,
   scannerRuntime,
-}: { analytics?: ScanAnalyticsPort; scannerRuntime?: ScannerRuntime } = {}) {
+  tier,
+}: {
+  analytics?: ScanAnalyticsPort
+  scannerRuntime?: ScannerRuntime
+  tier?: EntitlementTier
+} = {}) {
   const { toast } = useToast()
   const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
   const requests = useLatestRequest()
@@ -196,6 +210,63 @@ export function ScanFlow({
     analytics.track("scan_started", {})
   }, [analytics, clearSheetTimer, requests])
 
+  /**
+   * The free tier's one-lifetime reveal (T9), against T8's `POST /api/scan/reveal`. The
+   * body carries the SCANNED product's id — masked alternatives have no id to round-trip
+   * — and the reducer drops the answer unless that product is still on screen.
+   *
+   * The three outcomes the endpoint's contract asks the UI to tell apart:
+   * - `200` with alternatives → the full card (animated for an explicit tap, already sharp
+   *   for the `silent` background re-serve below — fix round 1, F2).
+   * - `200` with an empty list → nothing to show and NO credit spent (fix round 1, F3: a
+   *   distinct `"empty"` reason, not `"error"` — nothing failed).
+   * - `409 already_used` → the credit went to a different product; the CTA becomes the
+   *   Premium sheet rather than a button the server will keep refusing.
+   *
+   * `silent` (fix round 1, F2) is set by `resolve()` below for the BACKGROUND same-product
+   * re-serve attempt, never by the user tapping a CTA: it suppresses every toast (a
+   * background attempt failing must stay invisible — the masked card's existing gate
+   * already covers that state) and marks a success so the card skips the unblur.
+   */
+  const revealAlternatives = useCallback(
+    async (productId: string, options?: { silent?: boolean }) => {
+      const silent = options?.silent ?? false
+      dispatch({ type: "reveal_started", productId, silent })
+      try {
+        const response = await fetch("/api/scan/reveal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId }),
+        })
+        if (!response.ok) {
+          const payload = (await response.json().catch(() => null)) as { error?: string } | null
+          const alreadyUsed = payload?.error === "already_used"
+          dispatch({
+            type: "reveal_failed",
+            productId,
+            reason: alreadyUsed ? "already_used" : "error",
+          })
+          if (!alreadyUsed && !silent) toast({ title: GENERIC_ERROR, variant: "destructive" })
+          return
+        }
+        const result = (await response.json()) as {
+          alternatives?: ScanAlternativePresentation[]
+        }
+        const alternatives = result.alternatives ?? []
+        if (alternatives.length === 0) {
+          dispatch({ type: "reveal_failed", productId, reason: "empty" })
+          if (!silent) toast({ title: SCAN_REVEAL_EMPTY_NOTICE })
+          return
+        }
+        dispatch({ type: "reveal_succeeded", productId, alternatives, silent })
+      } catch {
+        dispatch({ type: "reveal_failed", productId, reason: "error" })
+        if (!silent) toast({ title: GENERIC_ERROR, variant: "destructive" })
+      }
+    },
+    [toast],
+  )
+
   const resolve = useCallback(
     async (
       body: { identifier: ScanIdentifier } | { productId: string },
@@ -260,6 +331,19 @@ export function ScanFlow({
           })
         }
         dispatch({ type: "resolved", token, result })
+        // Fix round 1 (F2): a masked verdict with the credit already spent MIGHT be the
+        // same product the credit was spent on — the reveal endpoint is idempotent, so
+        // attempting it silently either re-serves that same card (a rescan or a reload of
+        // the revealed product) or 409s for a different one, which just confirms today's
+        // Premium gate. `revealAlternatives` itself no-ops once the user has moved to a
+        // different product (the reducer's `ownsResultProduct` guard).
+        if (
+          result.kind === "in_catalog" &&
+          isMaskedScanVerdict(result) &&
+          !result.freeRevealAvailable
+        ) {
+          void revealAlternatives(result.product.productId, { silent: true })
+        }
       } catch {
         if (!requests.isCurrent(token)) return
         resolveInFlightRef.current = false
@@ -268,7 +352,7 @@ export function ScanFlow({
         returnToScanning()
       }
     },
-    [analytics, clearSheetTimer, requests, returnToScanning, toast],
+    [analytics, clearSheetTimer, requests, returnToScanning, revealAlternatives, toast],
   )
 
   /**
@@ -355,56 +439,6 @@ export function ScanFlow({
     [analytics],
   )
 
-  /**
-   * The free tier's one-lifetime reveal (T9), against T8's `POST /api/scan/reveal`. The
-   * body carries the SCANNED product's id — masked alternatives have no id to round-trip
-   * — and the reducer drops the answer unless that product is still on screen.
-   *
-   * The three outcomes the endpoint's contract asks the UI to tell apart:
-   * - `200` with alternatives → unblur into the full card (a repeat call for the same
-   *   product re-serves them, so a reload never loses what the credit bought).
-   * - `200` with an empty list → nothing to show and NO credit spent: say so, keep the CTA.
-   * - `409 already_used` → the credit went to a different product; the CTA becomes the
-   *   Premium sheet rather than a button the server will keep refusing.
-   */
-  const revealAlternatives = useCallback(
-    async (productId: string) => {
-      dispatch({ type: "reveal_started", productId })
-      try {
-        const response = await fetch("/api/scan/reveal", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId }),
-        })
-        if (!response.ok) {
-          const payload = (await response.json().catch(() => null)) as { error?: string } | null
-          const alreadyUsed = payload?.error === "already_used"
-          dispatch({
-            type: "reveal_failed",
-            productId,
-            reason: alreadyUsed ? "already_used" : "error",
-          })
-          if (!alreadyUsed) toast({ title: GENERIC_ERROR, variant: "destructive" })
-          return
-        }
-        const result = (await response.json()) as {
-          alternatives?: ScanAlternativePresentation[]
-        }
-        const alternatives = result.alternatives ?? []
-        if (alternatives.length === 0) {
-          dispatch({ type: "reveal_failed", productId, reason: "error" })
-          toast({ title: REVEAL_EMPTY_NOTICE })
-          return
-        }
-        dispatch({ type: "reveal_succeeded", productId, alternatives })
-      } catch {
-        dispatch({ type: "reveal_failed", productId, reason: "error" })
-        toast({ title: GENERIC_ERROR, variant: "destructive" })
-      }
-    },
-    [toast],
-  )
-
   const openFromProductId = useCallback(
     (productId: string) => {
       // The reducer's `resolve_started` deliberately leaves auxiliary sheets alone, so
@@ -466,12 +500,16 @@ export function ScanFlow({
   const sheetOpen = step.kind !== "scanning"
   const resultStep = step.kind === "result" ? step : null
   /**
-   * Every free-state decision below reads the RESPONSE, never a client-side entitlement
-   * guess: `merkenLocked` follows the tier the resolve responses have proven so far, and
-   * the reveal affordances follow this verdict's own masked shape.
+   * Every free-state decision below reads either the server-derived `tier` prop or the
+   * RESPONSE, never a client-side entitlement guess (fix round 1, F1): `merkenLocked`
+   * locks from first paint off `tier` (fails closed to `"premium"` upstream, so this side
+   * can never mislock a premium user) and stays locked once a resolve response proves the
+   * caller free even if `tier` somehow degraded. The reveal affordances follow this
+   * verdict's own masked shape.
    */
-  const merkenLocked = state.tier === "free"
+  const merkenLocked = tier === "free" || state.tier === "free"
   const revealedAlternatives = scanRevealedAlternatives(state)
+  const revealAnimatesAlternatives = scanRevealAnimates(state)
   const revealPending = state.reveal.status === "pending"
   const revealUnavailable = state.reveal.status === "unavailable"
   const cameraTileReason: ScanCameraTileReason | null =
@@ -591,6 +629,7 @@ export function ScanFlow({
           <ScanResultCard
             result={resultStep.result}
             revealedAlternatives={revealedAlternatives}
+            revealAnimates={revealAnimatesAlternatives}
             revealPending={revealPending}
             revealUnavailable={revealUnavailable}
             onReveal={() => void revealAlternatives(resultStep.result.product.productId)}

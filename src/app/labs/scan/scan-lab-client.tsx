@@ -4,6 +4,7 @@ import { useMemo } from "react"
 
 import { ScanFlow } from "@/components/scan/scan-flow"
 import type { ScanBarcodeDetector, ScannerRuntime } from "@/components/scan/use-scanner-loop"
+import type { EntitlementTier } from "@/lib/entitlements"
 import type { ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
 import { ToastProvider } from "@/providers/toast-provider"
 
@@ -107,6 +108,14 @@ declare global {
     __SCAN_LAB_HOLD_CAMERA?: boolean
     /** Boot flag: make the FIRST acquisition fail with this `DOMException` name. */
     __SCAN_LAB_DENY_CAMERA?: string
+    /**
+     * Boot flag (fix round 1, F1): stands in for the SERVER-derived `tier` prop
+     * `/scan/page.tsx` passes in production (`loadAuthenticatedAppNavigationAccess`).
+     * There is no real session behind this dev-only harness, so a Playwright spec sets
+     * this instead to prove the Merken bookmark locks from first paint. Omitted, `ScanFlow`
+     * gets no `tier` prop at all — same as today.
+     */
+    __SCAN_LAB_TIER?: EntitlementTier
   }
 }
 
@@ -391,11 +400,12 @@ function ensureScanLab(): ScanLabInternals {
 
 export function ScanLabClient() {
   const harness = useMemo(() => (typeof window === "undefined" ? null : ensureScanLab()), [])
+  const tier = typeof window === "undefined" ? undefined : window.__SCAN_LAB_TIER
 
   return (
     <ToastProvider>
       <main className="min-h-dvh bg-background py-4">
-        <ScanFlow analytics={harness?.analytics} scannerRuntime={harness?.runtime} />
+        <ScanFlow analytics={harness?.analytics} scannerRuntime={harness?.runtime} tier={tier} />
       </main>
     </ToastProvider>
   )

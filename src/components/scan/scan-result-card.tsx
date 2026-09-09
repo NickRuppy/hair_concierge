@@ -8,6 +8,7 @@ import {
   scanNotNeededSections,
   scanReasonsLabel,
 } from "@/lib/scan/result-presentation"
+import { SCAN_REVEAL_EMPTY_NOTICE } from "@/lib/scan/verdict-labels"
 import type {
   ScanAlternativePresentation,
   ScanProductHeader,
@@ -46,6 +47,7 @@ const GOOD_TO_KNOW_BODY = "Ändert sich dein Haar oder deine Routine, prüfen wi
 export function ScanResultCard({
   result,
   revealedAlternatives = null,
+  revealAnimates = true,
   revealPending = false,
   revealUnavailable = false,
   onRescan,
@@ -61,6 +63,13 @@ export function ScanResultCard({
    * were never masked in the first place.
    */
   revealedAlternatives?: ScanAlternativePresentation[] | null
+  /**
+   * Whether `revealedAlternatives` should play the 1.2s unblur (fix round 1, F2). `true`
+   * for an explicit CTA tap; `false` for the background same-product re-serve (a rescan or
+   * a reload replaying a credit already spent on this exact product) — nothing is being
+   * "revealed" to the user there, so the card should simply already look sharp.
+   */
+  revealAnimates?: boolean
   revealPending?: boolean
   revealUnavailable?: boolean
   onRescan: () => void
@@ -83,18 +92,36 @@ export function ScanResultCard({
   let alternativesBlock: React.ReactNode = null
   if (result.kind === "in_catalog" && isMaskedScanVerdict(result)) {
     if (revealedAlternatives) {
-      // The reveal succeeded: the SAME card the premium tier gets, arriving out of the
-      // masked card's blur (globals.css, 1.2s, inert under reduced motion).
-      alternativesBlock =
-        revealedAlternatives.length > 0 ? (
+      if (revealedAlternatives.length > 0) {
+        // The reveal succeeded: the SAME card the premium tier gets. `revealAnimates`
+        // decides whether it arrives out of the masked card's blur (globals.css, 1.2s,
+        // inert under reduced motion) — an explicit tap — or already sharp — the
+        // background same-product re-serve (fix round 1, F2).
+        const alternativesList = (
+          <Alternatives
+            alternatives={revealedAlternatives}
+            onOpen={onOpenAlternative}
+            onBuy={onBuyAlternative}
+          />
+        )
+        alternativesBlock = revealAnimates ? (
           <div className="scan-reveal-unblur" data-scan-revealed-alternatives="">
-            <Alternatives
-              alternatives={revealedAlternatives}
-              onOpen={onOpenAlternative}
-              onBuy={onBuyAlternative}
-            />
+            {alternativesList}
           </div>
-        ) : null
+        ) : (
+          <div data-scan-revealed-alternatives="">{alternativesList}</div>
+        )
+      } else {
+        // Not reachable via today's `revealAlternatives()` (it never dispatches
+        // `reveal_succeeded` with an empty list — see `reveal_failed reason:"empty"`), but
+        // an empty list must not silently erase the whole block for whoever calls the
+        // reducer next (fix round 1, F4).
+        alternativesBlock = (
+          <p data-scan-reveal-empty="" className="text-[13px] leading-6 text-muted-foreground">
+            {SCAN_REVEAL_EMPTY_NOTICE}
+          </p>
+        )
+      }
     } else if (result.alternatives.length > 0) {
       alternativesBlock = (
         <ScanMaskedAlternatives

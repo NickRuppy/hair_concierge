@@ -21,7 +21,15 @@ export type ScanComparisonRow = {
 
 export type ScanAlternativeComparison = {
   rows: ScanComparisonRow[]
-  /** Fraction of rows in `"match"` state, in [0, 1]. `0` when there are no rows. */
+  /**
+   * Fraction of rows in `"match"` state, in [0, 1]. `0` when there are no rows.
+   *
+   * Contract-mandated (T8/plan), currently unconsumed by the UI: the "n von m
+   * Prüfpunkten im Ziel" line counts `"match"` rows directly off `rows` instead, to avoid
+   * float rounding on small row counts — a lossy projection of this same field, so the two
+   * can never diverge (fix round 1 review, F5). Do not "fix" the UI to use this fraction;
+   * it cannot recover the exact `n` without re-multiplying and rounding.
+   */
   summaryScore: number
 }
 
