@@ -10,6 +10,7 @@ import {
 } from "@/lib/scan/saved-state"
 import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
+import { hasFreemiumPaidAccess } from "@/lib/entitlements/access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -31,6 +32,16 @@ export type ScanSaveRouteDeps = {
   removeRoutine: typeof removeScanRoutineProduct
   loadSavedState: typeof loadScanSavedState
   captureScanException?: typeof captureScanException
+  /**
+   * Freemium scanner-first (T4): save/remove is a premium mutation. Free-tier
+   * users can reach this route (the middleware carve-out admits `/api/scan`
+   * without itself gating the entitlement), so the guard has to run here,
+   * server-side, using the same paid-access composite as the subscription
+   * paywall (see `hasFreemiumPaidAccess`). When the flag is off no free user
+   * ever reaches this route at all (middleware still 403s them), so this
+   * check is redundant-but-harmless in that case.
+   */
+  requirePremiumAccess: (userId: string) => Promise<boolean>
 }
 
 export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
@@ -51,6 +62,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
     parse: parseJsonBody(saveBodySchema),
     failureReason: "save_failed",
     handler: async (ctx) => {
+      if (!(await deps.requirePremiumAccess(ctx.userId))) {
+        return scanFail("subscription_required", 403)
+      }
       const client = deps.createAdminClient()
       // The two destinations are exclusive, so a save is a MOVE — destination write
       // plus source cleanup plus the state read, all inside one transaction
@@ -80,6 +94,9 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
     parse: parseJsonBody(saveBodySchema),
     failureReason: "save_removal_failed",
     handler: async (ctx) => {
+      if (!(await deps.requirePremiumAccess(ctx.userId))) {
+        return scanFail("subscription_required", 403)
+      }
       const client = deps.createAdminClient()
       const result = await removeKind(client, ctx.userId, ctx.body.productId, ctx.body.kind)
       // The routine row belongs to Stage-3 / product intake: the scan sheet has no
@@ -109,6 +126,7 @@ const handlers = createScanSaveRouteHandlers({
   removeWishlist: removeScanWishlistProduct,
   removeRoutine: removeScanRoutineProduct,
   loadSavedState: loadScanSavedState,
+  requirePremiumAccess: hasFreemiumPaidAccess,
 })
 
 export const POST = handlers.POST

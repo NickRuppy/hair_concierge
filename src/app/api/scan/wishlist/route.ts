@@ -4,7 +4,8 @@ import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
-import { createScanRoute, scanOk } from "@/lib/scan/route"
+import { createScanRoute, scanFail, scanOk } from "@/lib/scan/route"
+import { hasFreemiumPaidAccess } from "@/lib/entitlements/access"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -39,6 +40,16 @@ export type ScanWishlistRouteDeps = {
   createAdminClient: typeof createAdminClient
   listWishlist: (client: SupabaseClient, userId: string) => Promise<ScanWishlistEntry[]>
   captureScanException?: typeof captureScanException
+  /**
+   * Freemium scanner-first (T4): the Merkliste listing is a premium view.
+   * Free-tier users can reach this route (the middleware carve-out admits
+   * `/api/scan` without itself gating the entitlement), so the guard has to
+   * run here, server-side, using the same paid-access composite as the
+   * subscription paywall (see `hasFreemiumPaidAccess`). When the flag is off
+   * no free user ever reaches this route at all (middleware still 403s
+   * them), so this check is redundant-but-harmless in that case.
+   */
+  requirePremiumAccess: (userId: string) => Promise<boolean>
 }
 
 export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
@@ -48,6 +59,9 @@ export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
     parse: async () => ({ ok: true, body: undefined }),
     failureReason: "wishlist_list_failed",
     handler: async (ctx) => {
+      if (!(await deps.requirePremiumAccess(ctx.userId))) {
+        return scanFail("subscription_required", 403)
+      }
       const client = deps.createAdminClient()
       const entries = await deps.listWishlist(client, ctx.userId)
       return scanOk({ entries })
@@ -111,4 +125,5 @@ export const GET = createScanWishlistRouteHandler({
   checkRateLimit,
   createAdminClient,
   listWishlist: listScanWishlist,
+  requirePremiumAccess: hasFreemiumPaidAccess,
 })
