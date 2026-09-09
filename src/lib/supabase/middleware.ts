@@ -395,7 +395,13 @@ export function createUpdateSession(
     const partnerGuest = isPartnerAccessGuest(user)
     let oneTimeAccessState: OneTimeAccessState | null = null
     let hasActivePersonalPlanEntitlement = false
-    let hasAppAccessResult = false
+    // Mirrors the paywall's own "has paid access" definition (see the
+    // `!active && oneTimeAccessState !== "active" && moderatorAccess !==
+    // "active"` gate below) — NOT just `hasCurrentAppAccess`. A one-time
+    // purchaser or active moderator counts as paid even while `active` is
+    // `false`, so they must not be treated as free-tier by the freemium
+    // intake exemption below.
+    let hasPaidAppAccessResult = false
     let moderatorAccess: ModeratorAccessState = "none"
 
     if (needsSub) {
@@ -444,7 +450,8 @@ export function createUpdateSession(
           moderatorAccess,
           oneTimeAccessState,
         })
-        hasAppAccessResult = active
+        hasPaidAppAccessResult =
+          active || oneTimeAccessState === "active" || moderatorAccess === "active"
       } catch (error) {
         console.warn("[billing] app access check failed", error)
         if (fieldTestGuest) {
@@ -640,14 +647,17 @@ export function createUpdateSession(
         personalPlanRoutineAccess,
         freemiumScannerFirstEnabled,
       })
-      // Freemium admission: a free-tier user (no paid access) navigating an
+      // Freemium admission: a free-tier user (no paid access, per the same
+      // composite the subscription paywall uses — hasCurrentAppAccess OR an
+      // active one-time purchase OR an active moderator grant) navigating an
       // admitted app-shell route is never bounced into legacy onboarding —
-      // they land where they navigated. Paid users, and any non-admitted
-      // route (e.g. /auth, /quiz), are unaffected.
+      // they land where they navigated. Paid users (including one-time
+      // owners and active moderators), and any non-admitted route (e.g.
+      // /auth, /quiz), are unaffected.
       const freemiumIntakeAdmitted =
         freemiumScannerFirstEnabled &&
         rawRedirectPath === "/onboarding" &&
-        !hasAppAccessResult &&
+        !hasPaidAppAccessResult &&
         isFreemiumAdmittedRoutePath(pathname)
       const redirectPath = freemiumIntakeAdmitted ? null : rawRedirectPath
 

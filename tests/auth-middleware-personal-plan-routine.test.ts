@@ -36,6 +36,7 @@ function createMiddleware({
   useDefaultFrontier = false,
   userAppMetadata = { access_kind: "field_test" },
   moderatorAccess = "none",
+  oneTimeAccessState = "none",
   hairProfile = completeQuizProfile as Record<string, unknown> | null,
   observedTables,
   frontierCalls,
@@ -60,6 +61,7 @@ function createMiddleware({
   useDefaultFrontier?: boolean
   userAppMetadata?: Record<string, unknown>
   moderatorAccess?: "active" | "ended" | "none" | "unavailable"
+  oneTimeAccessState?: "none" | "paid_pending" | "active" | "revoked"
   hairProfile?: Record<string, unknown> | null
   observedTables?: string[]
   frontierCalls?: { count: number }
@@ -144,7 +146,7 @@ function createMiddleware({
     hasCurrentPaidAppAccess: (async () =>
       paidAccess) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
     resolveOneTimeAccessState: (async () =>
-      "none") as UpdateSessionDependencies["resolveOneTimeAccessState"],
+      oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
     resolveModeratorAccess: (async () =>
       moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
     getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
@@ -353,6 +355,70 @@ test("flag on: a free authenticated user reaches the /scan page shell without be
     // No personal_plans routine lookup is needed to admit this free user —
     // the /scan bypass is now entitlement-independent under the flag.
     assert.ok(!observedTables.includes("personal_plans"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    // Default hairProfile (complete) + default profile.onboarding_completed
+    // false resolves to intakeState "needs_onboarding". No paid access at
+    // all: no current app access, no one-time purchase, no moderator grant.
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    // This mirrors the flag-OFF outcome exactly: a paying one-time-access
+    // owner who hasn't finished legacy onboarding must not be admitted by
+    // the freemium exemption just because the underlying `active` (current
+    // app access) boolean happens to be false.
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "active",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 307)
+    assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "active",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 307)
+    assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
   } finally {
     if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
     else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
