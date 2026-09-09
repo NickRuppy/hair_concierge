@@ -33,6 +33,12 @@ import {
 } from "@/lib/scan/verdict-access"
 import type { EntitlementTier } from "@/lib/entitlements"
 import type { ScanAlternativePresentation } from "@/lib/scan/types"
+import {
+  createBrowserScanSessionMarkerStorage,
+  markScanSessionSeen,
+  type ScanSessionMarkerStorage,
+} from "@/lib/scan/triggers/session-marker"
+import { scanTriggerSheetContext } from "@/lib/scan/triggers/trigger-rules"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
 import { useToast } from "@/providers/toast-provider"
@@ -42,6 +48,7 @@ import { ScanResultCard } from "./scan-result-card"
 import { ScanResultSheet } from "./scan-result-sheet"
 import { ScanSaveSheet, type ScanSaveCompletion } from "./scan-save-sheet"
 import { ScanSearchSheet } from "./scan-search-sheet"
+import { ScanCategoryRepeatCard, ScanProactiveTriggerCard } from "./scan-trigger-cards"
 import { ScanUnknownFlow, type ScanSubmissionInput } from "./scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "./scan-wishlist-sheet"
 import {
@@ -86,6 +93,21 @@ const EMPFEHLUNGEN_GATE: PremiumSheetContext = {
   source: SCAN_VERDICT_SOURCE,
 }
 
+/**
+ * T10's user-initiated gate 2 always maps to the same context — resolved once at module
+ * scope (mirrors `MERKLISTE_GATE`/`EMPFEHLUNGEN_GATE` above) so the render path never
+ * needs to assert away `scanTriggerSheetContext`'s nullable return.
+ */
+const ZWEI_SCANS_GATE: PremiumSheetContext = requireScanTriggerSheetContext(
+  "zwei_scans_gleiche_kategorie",
+)
+
+function requireScanTriggerSheetContext(id: Parameters<typeof scanTriggerSheetContext>[0]) {
+  const context = scanTriggerSheetContext(id)
+  if (!context) throw new Error(`scan trigger "${id}" is missing its sheet context`)
+  return context
+}
+
 /** Why the viewfinder is replaced by the fallback tile. */
 type ScanCameraTileReason = ScanUnavailableReason | "stalled"
 
@@ -126,15 +148,21 @@ const CAMERA_RETRY_LABEL: Record<ScanCameraTileReason, string | null> = {
  * themselves) still takes over independently once it has evidence, so a degraded nav
  * loader can never unlock a free user either. Omitted, it changes nothing: every existing
  * caller (tests, the labs harness without a tier boot flag) keeps today's behaviour.
+ *
+ * `sessionMarkerStorage` (T10) is the Wiederkehrer trigger's test seam, same idea as
+ * `scannerRuntime`: production leaves it undefined (the real browser adapter is used),
+ * tests inject a memory store pre-seeded to simulate a returning session.
  */
 export function ScanFlow({
   analytics = noOpScanAnalytics,
   scannerRuntime,
   tier,
+  sessionMarkerStorage,
 }: {
   analytics?: ScanAnalyticsPort
   scannerRuntime?: ScannerRuntime
   tier?: EntitlementTier
+  sessionMarkerStorage?: ScanSessionMarkerStorage
 } = {}) {
   const { toast } = useToast()
   const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
@@ -177,6 +205,13 @@ export function ScanFlow({
    * with no such window.
    */
   const resolveInFlightRef = useRef(false)
+  /**
+   * The Wiederkehrer trigger's "second session" approximation (T10): set once, from a
+   * localStorage marker, on mount — before any resolve can complete — so `resolve()` below
+   * always reads a settled value rather than racing the effect. `false` (never returning)
+   * is the safe default for SSR and for a storage read that fails.
+   */
+  const isReturningSessionRef = useRef(false)
 
   const clearSheetTimer = useCallback(() => {
     if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current)
@@ -187,6 +222,17 @@ export function ScanFlow({
     scanSessionStartRef.current = performance.now()
     analytics.track("scan_started", {})
   }, [analytics])
+
+  useEffect(() => {
+    isReturningSessionRef.current = markScanSessionSeen(
+      sessionMarkerStorage !== undefined
+        ? sessionMarkerStorage
+        : createBrowserScanSessionMarkerStorage(),
+    )
+    // Deliberately runs once per mount only: a session marker is read/written at the
+    // START of a session, not re-evaluated if a caller swaps the prop mid-visit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Unmount only: never leave a sheet timer pointing at a dead component.
   useEffect(() => clearSheetTimer, [clearSheetTimer])
@@ -330,7 +376,18 @@ export function ScanFlow({
             snapshotSource: result.snapshotSource,
           })
         }
-        dispatch({ type: "resolved", token, result })
+        // T10: the trigger layer's own tier gate, computed the same way as `merkenLocked`
+        // below (server prop OR this response's own shape) — never a fresh client guess.
+        // `stateRef` (not `state`) because `resolve` is not re-created on every render.
+        const effectiveTier: EntitlementTier =
+          tier === "free" || stateRef.current.tier === "free" ? "free" : "premium"
+        dispatch({
+          type: "resolved",
+          token,
+          result,
+          tier: effectiveTier,
+          isReturningSession: isReturningSessionRef.current,
+        })
         // Fix round 1 (F2): a masked verdict with the credit already spent MIGHT be the
         // same product the credit was spent on — the reveal endpoint is idempotent, so
         // attempting it silently either re-serves that same card (a rescan or a reload of
@@ -352,7 +409,7 @@ export function ScanFlow({
         returnToScanning()
       }
     },
-    [analytics, clearSheetTimer, requests, returnToScanning, revealAlternatives, toast],
+    [analytics, clearSheetTimer, requests, returnToScanning, revealAlternatives, tier, toast],
   )
 
   /**
@@ -508,6 +565,13 @@ export function ScanFlow({
    * verdict's own masked shape.
    */
   const merkenLocked = tier === "free" || state.tier === "free"
+  /**
+   * T10: a plain local binding (not `state.activeProactiveTrigger` read again inline)
+   * so TypeScript keeps the non-null narrowing inside the `onOpenSheet` closure below —
+   * narrowing a `const` survives a closure; narrowing a property read from `state` would
+   * not, since `state` could in principle change before the closure runs.
+   */
+  const activeProactiveTrigger = state.activeProactiveTrigger
   const revealedAlternatives = scanRevealedAlternatives(state)
   const revealAnimatesAlternatives = scanRevealAnimates(state)
   const revealPending = state.reveal.status === "pending"
@@ -539,6 +603,8 @@ export function ScanFlow({
       data-scan-tier={state.tier}
       data-scan-reveal={state.reveal.status}
       data-scan-premium-sheet={state.premiumSheet?.feature ?? "none"}
+      data-scan-active-trigger={activeProactiveTrigger ?? "none"}
+      data-scan-zwei-scans-gleiche-kategorie={state.zweiScansGleicheKategorie ? "true" : "false"}
       className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5"
     >
       <div className="flex items-center justify-between py-2">
@@ -645,6 +711,26 @@ export function ScanFlow({
                 verdict: resultVerdictLabel(resultStep.result),
               })
             }
+          />
+        ) : null}
+        {/* T10 trigger layer: additive cards below the verdict, never inside
+            `ScanResultCard` — T9's tested composition stays untouched. Both gates are
+            zero-render for premium/flag-off (the reducer only ever sets these once the
+            trigger's own tier gate has confirmed free tier). */}
+        {resultStep && state.zweiScansGleicheKategorie ? (
+          <ScanCategoryRepeatCard
+            onOpenSheet={() => dispatch({ type: "premium_sheet_opened", context: ZWEI_SCANS_GATE })}
+          />
+        ) : null}
+        {resultStep && activeProactiveTrigger ? (
+          <ScanProactiveTriggerCard
+            id={activeProactiveTrigger}
+            onOpenSheet={() => {
+              const context = scanTriggerSheetContext(activeProactiveTrigger)
+              // `kategorien_luecke` never opens the sheet (journey ruling) — its card is a
+              // plain Link, so `onOpenSheet` is simply never invoked for it.
+              if (context) dispatch({ type: "premium_sheet_opened", context })
+            }}
           />
         ) : null}
         {step.kind === "unknown" ? (

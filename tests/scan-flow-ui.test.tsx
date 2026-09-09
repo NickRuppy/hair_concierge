@@ -9,6 +9,10 @@ import { ScanResultCard } from "../src/components/scan/scan-result-card"
 import { ScanResultSheet } from "../src/components/scan/scan-result-sheet"
 import { ScanSaveSheet, type ScanSaveCompletion } from "../src/components/scan/scan-save-sheet"
 import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
+import {
+  ScanCategoryRepeatCard,
+  ScanProactiveTriggerCard,
+} from "../src/components/scan/scan-trigger-cards"
 import { ScanUnknownFlow } from "../src/components/scan/scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "../src/components/scan/scan-wishlist-sheet"
 import { Scanner } from "../src/components/scan/scanner"
@@ -17,6 +21,7 @@ import type { EntitlementTier } from "../src/lib/entitlements"
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type { ScanAnalyticsPort } from "../src/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
+import { createMemoryScanSessionMarkerStorage } from "../src/lib/scan/triggers/session-marker"
 import type {
   ScanAlternativePresentation,
   ScanResolvedVerdictResult,
@@ -266,7 +271,11 @@ type FlowHarness = {
  */
 async function mountFlow(
   route: (url: string, init: RequestInit | undefined) => Promise<Response>,
-  options: { tier?: EntitlementTier } = {},
+  options: {
+    tier?: EntitlementTier
+    /** T10: pre-seed to simulate a returning session for the Wiederkehrer trigger. */
+    sessionMarkerStorage?: ReturnType<typeof createMemoryScanSessionMarkerStorage>
+  } = {},
 ): Promise<FlowHarness> {
   const events: TrackedEvent[] = []
   const toasts: string[] = []
@@ -282,11 +291,19 @@ async function mountFlow(
     globalThis.fetch = previousFetch
   })
 
-  const harness = createClientStateHarness(() => ScanFlow({ analytics, tier: options.tier }), {
-    toasts: [],
-    dismiss: () => {},
-    toast: (input: { title: string }) => toasts.push(input.title),
-  })
+  const harness = createClientStateHarness(
+    () =>
+      ScanFlow({
+        analytics,
+        tier: options.tier,
+        sessionMarkerStorage: options.sessionMarkerStorage,
+      }),
+    {
+      toasts: [],
+      dismiss: () => {},
+      toast: (input: { title: string }) => toasts.push(input.title),
+    },
+  )
 
   const flow: FlowHarness = {
     tree: null,
@@ -1121,5 +1138,135 @@ test("premium: an unmasked verdict leaves every Merken and reveal affordance unt
   footerProps(flow.tree).onSave()
   await flow.settle()
   assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+// --- T10: trigger layer, wired end to end through the flow -------------------
+
+/** `verdictResult` with the category overridden, for scanning a 2nd, different category. */
+function verdictResultInCategory(
+  productId: string,
+  category: "shampoo" | "conditioner",
+): ScanResolvedVerdictResult {
+  const base = verdictResult(productId)
+  return { ...base, product: { ...base.product, category, categoryLabel: category } }
+}
+
+function triggerCardProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, ScanProactiveTriggerCard, "ScanProactiveTriggerCard").props
+}
+
+test("T10: two scans in the same category surface the repeat card, opening empfehlungen", async () => {
+  const flow = await mountFlow(async () => json(verdictResult("p-a")), { tier: "free" })
+  await scanInto(flow, "1111111111111")
+  assert.equal(findByType(flow.tree, ScanCategoryRepeatCard), null)
+
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  await scanInto(flow, "2222222222222")
+
+  const card = requireByType(flow.tree, ScanCategoryRepeatCard, "ScanCategoryRepeatCard")
+  card.props.onOpenSheet()
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "empfehlungen",
+    source: "trigger:zwei-scans-gleiche-kategorie",
+  })
+})
+
+test("T10: a genuinely returning free session shows the Wiederkehrer pitch, opening routine", async () => {
+  const storage = createMemoryScanSessionMarkerStorage()
+  storage.setItem("chaarlie:scan:session-seen:v1", "1") // pre-seeded: a prior session happened
+  const flow = await mountFlow(async () => json(verdictResult("p-a")), {
+    tier: "free",
+    sessionMarkerStorage: storage,
+  })
+  await scanInto(flow)
+
+  assert.equal(triggerCardProps(flow.tree).id, "wiederkehrer")
+  triggerCardProps(flow.tree).onOpenSheet()
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "routine",
+    source: "trigger:wiederkehrer",
+  })
+})
+
+test("T10: fatigue — a second qualifying proactive candidate in the same session shows nothing", async () => {
+  const storage = createMemoryScanSessionMarkerStorage()
+  storage.setItem("chaarlie:scan:session-seen:v1", "1")
+  let call = 0
+  const flow = await mountFlow(
+    async () => {
+      call += 1
+      return json(
+        call === 1
+          ? verdictResultInCategory("p1", "shampoo")
+          : verdictResultInCategory("p2", "conditioner"),
+      )
+    },
+    { tier: "free", sessionMarkerStorage: storage },
+  )
+  await scanInto(flow, "1111111111111")
+  assert.equal(triggerCardProps(flow.tree).id, "wiederkehrer")
+
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  await scanInto(flow, "2222222222222")
+
+  // The 2nd scan's own category-gap condition would otherwise qualify kategorien_luecke,
+  // but the session already spent its one proactive pitch on Wiederkehrer.
+  assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
+})
+
+test("T10: Kategorien-Lücke links into /routine and never opens the Premium sheet", async () => {
+  let call = 0
+  const flow = await mountFlow(
+    async () => {
+      call += 1
+      return json(
+        call === 1
+          ? verdictResultInCategory("p1", "shampoo")
+          : verdictResultInCategory("p2", "conditioner"),
+      )
+    },
+    { tier: "free" },
+  )
+  await scanInto(flow, "1111111111111")
+  assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
+
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  await scanInto(flow, "2222222222222")
+
+  assert.equal(triggerCardProps(flow.tree).id, "kategorien_luecke")
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+test("T10: premium sees zero trigger surfaces even under conditions that would fire every one of them", async () => {
+  const storage = createMemoryScanSessionMarkerStorage()
+  storage.setItem("chaarlie:scan:session-seen:v1", "1")
+  let call = 0
+  const flow = await mountFlow(
+    async () => {
+      call += 1
+      return json(
+        call === 1
+          ? verdictResultInCategory("p1", "shampoo")
+          : verdictResultInCategory("p2", "conditioner"),
+      )
+    },
+    { tier: "premium", sessionMarkerStorage: storage },
+  )
+  await scanInto(flow, "1111111111111")
+  assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
+  assert.equal(findByType(flow.tree, ScanCategoryRepeatCard), null)
+
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  await scanInto(flow, "2222222222222")
+
+  assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
+  assert.equal(findByType(flow.tree, ScanCategoryRepeatCard), null)
   assert.equal(premiumSheetProps(flow.tree).open, false)
 })

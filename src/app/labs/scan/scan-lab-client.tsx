@@ -43,6 +43,12 @@ type ScanLabState = {
   reveal: string
   premiumSheet: string
   /**
+   * Trigger layer (T10): which proactive card is currently shown ("none" while closed)
+   * and whether the always-available "2. Scan, gleiche Kategorie" gate is showing.
+   */
+  activeTrigger: string
+  zweiScansGleicheKategorie: boolean
+  /**
    * What the VIEWFINDER is drawing — `searching` / `spotted` / `read`, or `""` while the
    * scanner is not mounted at all. It lives on the scanner root (inside the flow root),
    * not on the flow root, so it is read from its own element.
@@ -173,6 +179,9 @@ function readFlowState(): ScanLabState | null {
     tier: root.getAttribute("data-scan-tier") ?? "",
     reveal: root.getAttribute("data-scan-reveal") ?? "",
     premiumSheet: root.getAttribute("data-scan-premium-sheet") ?? "",
+    activeTrigger: root.getAttribute("data-scan-active-trigger") ?? "",
+    zweiScansGleicheKategorie:
+      root.getAttribute("data-scan-zwei-scans-gleiche-kategorie") === "true",
     detection: viewfinder?.getAttribute("data-scan-detection") ?? "",
   }
 }
@@ -355,6 +364,8 @@ function createScanLab(): ScanLabInternals {
       previous.tier === next.tier &&
       previous.reveal === next.reveal &&
       previous.premiumSheet === next.premiumSheet &&
+      previous.activeTrigger === next.activeTrigger &&
+      previous.zweiScansGleicheKategorie === next.zweiScansGleicheKategorie &&
       previous.detection === next.detection
     ) {
       return
@@ -375,6 +386,8 @@ function createScanLab(): ScanLabInternals {
       "data-scan-tier",
       "data-scan-reveal",
       "data-scan-premium-sheet",
+      "data-scan-active-trigger",
+      "data-scan-zwei-scans-gleiche-kategorie",
       "data-scan-detection",
     ],
   })
