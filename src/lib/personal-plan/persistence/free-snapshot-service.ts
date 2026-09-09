@@ -28,15 +28,33 @@ import { hashPersonalPlanNeedVersionInput, type JsonValue } from "./index"
  *   moves `enrollment_purchase_source_id` off `null`. Fixing that requires an
  *   explicit upgrade/admission step that reassigns the pinned column (tracked
  *   for T14/T18) — it does not self-heal and is not attempted by this module.
- * - **Guard — free provisioning refuses a paid user:** because a collision is
- *   permanent rather than recoverable, `provisionFreeInitialSnapshot` checks
- *   the injected `hasPaidAppAccess` signal (the same paid-access source
- *   `src/lib/entitlements/access.ts` resolves against — see
- *   `free-snapshot-supabase.ts`) before doing anything else, and returns the
- *   typed `"paid_user"` outcome without touching the artifact or the RPC when
- *   the caller currently has paid app access. This is a defensive backstop
- *   against a misrouted call, not the primary control — the primary control is
- *   that this service is only ever invoked from the free-registration path.
+ * - **Guard — free provisioning refuses a paid, moderator, or field-test
+ *   user:** because a collision is permanent rather than recoverable,
+ *   `provisionFreeInitialSnapshot` checks the injected `resolvePaidAccess`
+ *   signal before doing anything else. This is the FULL flag-independent
+ *   paid-access composite `src/lib/entitlements/access.ts` exports as
+ *   `resolvePaidAppAccess` (the same one `hasFreemiumPaidAccess` runs once its
+ *   flag check passes) — billing subscription OR active one-time purchase OR
+ *   legacy-profile access OR an email-keyed manual access grant OR active
+ *   moderator/field-test roster access. A moderator/field-test user gets a
+ *   REAL non-null `enrollment_purchase_source_id` through the paid path
+ *   (`sourceKind: "field_test"`, activated via
+ *   `src/lib/personal-plan-field-test/`), so missing that branch here would
+ *   pin this free path's `null` first and permanently collide with theirs —
+ *   the exact failure this guard exists to prevent, not just under a lookup
+ *   failure.
+ *   - `"allowed"` → the typed `"paid_user"` outcome, without touching the
+ *     artifact or the RPC.
+ *   - `"unavailable"` (the moderator lookup couldn't be read and there is no
+ *     independently verified paid entitlement to fall back on) → the typed
+ *     `"temporarily_unavailable"` outcome. Fail CLOSED here: an unreadable
+ *     moderator lookup must never be treated as "not paid", because a real
+ *     moderator/field-test user behind that outage would otherwise get
+ *     provisioned free and permanently collide with their real enrollment id.
+ *   - `"denied"` → proceeds to provisioning as normal.
+ *   This is a defensive backstop against a misrouted call, not the primary
+ *   control — the primary control is that this service is only ever invoked
+ *   from the free-registration path.
  * - **Source:** the user's linked `personal_plan_prepared_artifacts` row
  *   (`status = 'attached'`, `user_id` = the signed-in user) — the same artifact
  *   `src/lib/quiz/link-to-profile.ts` attaches after quiz completion, regardless
@@ -86,17 +104,27 @@ export type ProvisionFreeInitialSnapshotResult =
   | { outcome: "paid_user" }
   | { outcome: "temporarily_unavailable" }
 
+/** Mirrors `FreemiumAccessResult` from `src/lib/entitlements/access.ts`
+ * without importing it, so this service file stays free of any runtime
+ * dependency on the entitlements module. */
+export type PaidAccessResolution = "allowed" | "denied" | "unavailable"
+
 export type FreeSnapshotDependencies = {
   loadLinkedQuizArtifact: (userId: string) => Promise<Stage1PreparedArtifact | null>
   createOrReuseInitialNeed: (request: FreeInitialNeedRequest) => Promise<CreateInitialNeedResult>
   /**
    * The defensive guard's paid-access check (see the ownership contract
    * above). Injected rather than resolved here so the service stays pure and
-   * unit-testable — `free-snapshot-supabase.ts` wires this to the same
-   * `hasCurrentPaidAppAccess` signal `src/lib/entitlements/access.ts` uses as
-   * its own independently-verified paid-access source.
+   * unit-testable — `free-snapshot-supabase.ts` wires this to
+   * `resolvePaidAppAccess` from `src/lib/entitlements/access.ts`, the FULL
+   * flag-independent composite (billing/one-time/legacy-profile access, an
+   * email-keyed manual grant, or active moderator/field-test roster access),
+   * threading both `userId` and `email` the way the scan route guards do.
    */
-  hasPaidAppAccess: (userId: string) => Promise<boolean>
+  resolvePaidAccess: (
+    userId: string,
+    email: string | null | undefined,
+  ) => Promise<PaidAccessResolution>
   now?: () => Date
 }
 
@@ -104,16 +132,22 @@ export function createFreeSnapshotService(deps: FreeSnapshotDependencies) {
   return {
     async provisionFreeInitialSnapshot({
       userId,
+      email,
     }: {
       userId: string
+      email?: string | null
     }): Promise<ProvisionFreeInitialSnapshotResult> {
-      let isPaidUser: boolean
+      let paidAccess: PaidAccessResolution
       try {
-        isPaidUser = await deps.hasPaidAppAccess(userId)
+        paidAccess = await deps.resolvePaidAccess(userId, email)
       } catch {
         return { outcome: "temporarily_unavailable" }
       }
-      if (isPaidUser) return { outcome: "paid_user" }
+      // Fail closed on "unavailable": an unreadable moderator lookup must
+      // never be treated as "not paid" — see the ownership-contract guard
+      // note above.
+      if (paidAccess === "unavailable") return { outcome: "temporarily_unavailable" }
+      if (paidAccess === "allowed") return { outcome: "paid_user" }
 
       let artifact: Stage1PreparedArtifact | null
       try {

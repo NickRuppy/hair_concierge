@@ -21,7 +21,7 @@ function dependencies(overrides: Partial<FreeSnapshotDependencies> = {}): FreeSn
       needVersionId: "need-1",
       outputSnapshot: request.outputSnapshot,
     }),
-    hasPaidAppAccess: async () => false,
+    resolvePaidAccess: async () => "denied",
     now: () => new Date("2026-09-09T02:00:00.000Z"),
     ...overrides,
   }
@@ -128,7 +128,7 @@ test("maps an unusable artifact and storage failures to safe typed outcomes", as
   })
 })
 
-test("refuses a user who currently has paid app access, without reading the artifact or writing", async () => {
+test("refuses a user whose paid-access composite resolves 'allowed' (subscription/one-time/manual-grant/moderator), without reading the artifact or writing", async () => {
   let artifactReads = 0
   let writes = 0
   const service = createFreeSnapshotService(
@@ -141,7 +141,7 @@ test("refuses a user who currently has paid app access, without reading the arti
         writes += 1
         return { outcome: "completed", personalPlanId: "p", needVersionId: "n", outputSnapshot: {} }
       },
-      hasPaidAppAccess: async () => true,
+      resolvePaidAccess: async () => "allowed",
     }),
   )
 
@@ -152,10 +152,41 @@ test("refuses a user who currently has paid app access, without reading the arti
   assert.equal(writes, 0)
 })
 
-test("a failing paid-access check maps to temporarily_unavailable rather than proceeding", async () => {
+// The composite's "unavailable" result (e.g. an unreadable moderator/
+// field-test roster lookup with no independently verified paid entitlement to
+// fall back on — see `resolvePaidAppAccess` in src/lib/entitlements/access.ts)
+// must fail CLOSED: it is a distinct branch from a throwing dependency below,
+// and must not be treated as "not paid" — a real moderator/field-test user
+// behind that outage would otherwise get provisioned free and permanently
+// collide with their real enrollment id.
+test("a paid-access composite resolving 'unavailable' (e.g. an unreadable moderator lookup) maps to temporarily_unavailable, without reading the artifact or writing", async () => {
+  let artifactReads = 0
+  let writes = 0
   const service = createFreeSnapshotService(
     dependencies({
-      hasPaidAppAccess: async () => {
+      loadLinkedQuizArtifact: async () => {
+        artifactReads += 1
+        return artifact
+      },
+      createOrReuseInitialNeed: async () => {
+        writes += 1
+        return { outcome: "completed", personalPlanId: "p", needVersionId: "n", outputSnapshot: {} }
+      },
+      resolvePaidAccess: async () => "unavailable",
+    }),
+  )
+
+  assert.deepEqual(await service.provisionFreeInitialSnapshot({ userId: "user-1" }), {
+    outcome: "temporarily_unavailable",
+  })
+  assert.equal(artifactReads, 0)
+  assert.equal(writes, 0)
+})
+
+test("a throwing paid-access check maps to temporarily_unavailable rather than proceeding", async () => {
+  const service = createFreeSnapshotService(
+    dependencies({
+      resolvePaidAccess: async () => {
         throw new Error("billing lookup down")
       },
     }),

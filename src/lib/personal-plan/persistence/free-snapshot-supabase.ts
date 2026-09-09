@@ -1,5 +1,5 @@
-import { hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "@/lib/billing/types"
+import { resolvePaidAppAccess } from "@/lib/entitlements/access"
 
 import type { FreeInitialNeedRequest, FreeSnapshotDependencies } from "./free-snapshot-service"
 import type { CreateInitialNeedResult, Stage1PreparedArtifact } from "./stage1-service"
@@ -45,12 +45,22 @@ export function createFreeSnapshotSupabaseDependencies(
       return { id: row.id, quizAnswers: row.quiz_answers }
     },
     createOrReuseInitialNeed: (request) => callCreateFreeInitialNeed(admin, request),
-    // Same underlying signal `hasFreemiumPaidAccess` (src/lib/entitlements/
-    // access.ts) recomputes when it can't trust a moderator lookup: excludes
-    // manual/moderator grants, so this guard checks independently-verified
-    // paid access only (subscription or one-time purchase).
-    hasPaidAppAccess: (userId) =>
-      hasCurrentPaidAppAccess(admin as unknown as SupabaseBillingClient, { userId }),
+    // The SAME flag-independent paid-access composite `hasFreemiumPaidAccess`
+    // (src/lib/entitlements/access.ts) runs once its own flag check passes:
+    // billing subscription OR active one-time purchase OR legacy-profile
+    // access OR an email-keyed manual access grant (`hasCurrentAppAccess`) OR
+    // active moderator/field-test roster access (`resolveModeratorAccess`).
+    // `fieldTestGuest` is passed as `false` — unlike a route request, this
+    // provisioning call has no independent signal that the caller is a known
+    // field-test guest, so the moderator lookup always runs; an unreadable
+    // lookup surfaces as `"unavailable"` and the service fails closed
+    // (`temporarily_unavailable`) rather than risk misrouting a real
+    // moderator/field-test user onto the free path (see the ownership
+    // contract in `free-snapshot-service.ts`).
+    resolvePaidAccess: (userId, email) =>
+      resolvePaidAppAccess(userId, email, false, {
+        client: admin as unknown as SupabaseBillingClient,
+      }),
   }
 }
 

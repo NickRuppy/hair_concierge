@@ -27,6 +27,10 @@ function createFakeDatabase() {
   const preparedArtifacts: Row[] = []
   const personalPlans = new Map<string, Row>()
   const needVersions = new Map<string, Row>()
+  const manualAccessGrants: Row[] = []
+  const moderatorMembers: Row[] = []
+  const moderatorEnrollments: Row[] = []
+  let moderatorMembersError: unknown = null
 
   function seedAttachedArtifact(userId: string, quizAnswers: unknown) {
     preparedArtifacts.push({
@@ -36,6 +40,63 @@ function createFakeDatabase() {
       quiz_answers: quizAnswers,
       attached_at: new Date().toISOString(),
     })
+  }
+
+  // Exercised by the guard's full `resolvePaidAppAccess` composite
+  // (`hasCurrentAppAccess` -> `findCurrentManualAccessGrant`): an email-bound
+  // grant has no `user_id` row to match, only the email lookup finds it.
+  function seedEmailOnlyManualAccessGrant(email: string) {
+    manualAccessGrants.push({
+      id: randomUUID(),
+      user_id: null,
+      email,
+      expires_at: null,
+      revoked_at: null,
+    })
+  }
+
+  // Exercised by the guard's `resolveModeratorAccess` branch: an
+  // "activated" roster member with an "active" linked enrollment resolves
+  // moderator access as active (see personal-plan-moderator-contract.test.ts
+  // for the same fixture shape).
+  function seedActiveModerator(userId: string) {
+    const enrollmentId = randomUUID()
+    const grantId = randomUUID()
+    const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
+    moderatorMembers.push({
+      id: randomUUID(),
+      campaign_id: randomUUID(),
+      user_id: userId,
+      normalized_email: "moderator@example.com",
+      status: "activated",
+      reset_receipt_ref: "reset-1",
+      enrollment_id: enrollmentId,
+      revoked_at: null,
+    })
+    moderatorEnrollments.push({
+      id: enrollmentId,
+      campaign_id: moderatorMembers[moderatorMembers.length - 1].campaign_id,
+      user_id: userId,
+      status: "active",
+      activated_at: new Date().toISOString(),
+      expires_at: expiresAt,
+      revoked_at: null,
+      manual_access_grant_id: grantId,
+      manual_access_grants: {
+        id: grantId,
+        user_id: userId,
+        reason: "tester",
+        expires_at: expiresAt,
+        revoked_at: null,
+      },
+    })
+  }
+
+  // Simulates an unreadable moderator roster (distinct from the "missing
+  // table" pre-migration case, which `resolveModeratorAccess` treats as
+  // "none") — the guard must fail closed, not treat this as "not paid".
+  function makeModeratorLookupUnavailable() {
+    moderatorMembersError = new Error("simulated moderator roster read failure")
   }
 
   function rpcCreateOrReuseInitialNeed(args: Row) {
@@ -89,6 +150,8 @@ function createFakeDatabase() {
   const admin = {
     from(table: string) {
       const filters = new Map<string, unknown>()
+      const matches = (row: Row) =>
+        [...filters.entries()].every(([key, value]) => row[key] === value)
       const chain = {
         select: () => chain,
         eq: (column: string, value: unknown) => {
@@ -97,10 +160,23 @@ function createFakeDatabase() {
         },
         order: () => chain,
         limit: () => chain,
+        // Real Postgrest query builders are directly awaitable (no
+        // `.maybeSingle()` needed for a plain array-returning select) — this
+        // makes the fake chain thenable so `manual_access_grants` reads
+        // (`findCurrentManualAccessGrant`, which never calls `.maybeSingle()`)
+        // resolve real seeded rows instead of the "await a plain object"
+        // no-op every other never-seeded table already relied on.
+        then: (resolve: (result: { data: unknown; error: unknown }) => void) => {
+          if (table === "manual_access_grants") {
+            resolve({ data: manualAccessGrants.filter(matches), error: null })
+            return
+          }
+          resolve({ data: [], error: null })
+        },
         maybeSingle: async () => {
           if (table === "personal_plan_prepared_artifacts") {
             const rows = preparedArtifacts
-              .filter((row) => [...filters.entries()].every(([key, value]) => row[key] === value))
+              .filter(matches)
               .sort((a, b) => String(b.attached_at).localeCompare(String(a.attached_at)))
             return { data: rows[0] ?? null, error: null }
           }
@@ -111,9 +187,7 @@ function createFakeDatabase() {
             }
           }
           if (table === "personal_plan_need_versions") {
-            const row = [...needVersions.values()].find((need) =>
-              [...filters.entries()].every(([key, value]) => need[key] === value),
-            )
+            const row = [...needVersions.values()].find((need) => matches(need))
             return { data: row ?? null, error: null }
           }
           // Exercised by the free-snapshot service's paid-access guard
@@ -121,6 +195,19 @@ function createFakeDatabase() {
           // none of these acceptance-test users have a `profiles` row here.
           if (table === "profiles") {
             return { data: null, error: null }
+          }
+          // Exercised by the guard's `resolveModeratorAccess` branch
+          // (`loadLatestMemberForUser`).
+          if (table === "personal_plan_test_members") {
+            if (moderatorMembersError) return { data: null, error: moderatorMembersError }
+            const row = moderatorMembers.find((member) => matches(member))
+            return { data: row ?? null, error: null }
+          }
+          // Exercised by the guard's `resolveModeratorAccess` branch
+          // (`loadEnrollment`).
+          if (table === "personal_plan_test_enrollments") {
+            const row = moderatorEnrollments.find((enrollment) => matches(enrollment))
+            return { data: row ?? null, error: null }
           }
           throw new Error(`unexpected table ${table}`)
         },
@@ -142,7 +229,15 @@ function createFakeDatabase() {
     },
   }
 
-  return { admin, seedAttachedArtifact, needVersions, personalPlans }
+  return {
+    admin,
+    seedAttachedArtifact,
+    seedEmailOnlyManualAccessGrant,
+    seedActiveModerator,
+    makeModeratorLookupUnavailable,
+    needVersions,
+    personalPlans,
+  }
 }
 
 test("a free account with no enrollment is provisioned and then passes the scanner's profile-context read (no profile_missing)", async () => {
@@ -214,4 +309,61 @@ test("a plan already pinned to a real enrollment id fails the free service perma
   const result = await service.provisionFreeInitialSnapshot({ userId })
 
   assert.deepEqual(result, { outcome: "invalid_source", reasonCode: "enrollment_mismatch" })
+})
+
+// --- Review fix round 2: the guard must cover the FULL composite, not just
+// independently-verified paid access — a moderator/field-test user gets a
+// REAL non-null enrollment_purchase_source_id through the paid path, so
+// missing this branch would let the free path pin `null` first and
+// permanently collide with theirs. These three prove the real
+// `resolvePaidAppAccess` composite (wired through
+// `createFreeSnapshotSupabaseDependencies`, not a mock) reaches the
+// moderator roster and the email-keyed manual-grant table, and fails closed
+// when the moderator lookup can't be read.
+
+test("an active moderator/field-test user is refused with paid_user and not provisioned", async () => {
+  const { admin, seedActiveModerator } = createFakeDatabase()
+  const userId = "66666666-6666-4666-8666-666666666666"
+  // Deliberately no linked quiz artifact seeded: if the guard were bypassed,
+  // the service would fall through to "no_quiz_artifact" instead of
+  // "paid_user", so this also proves the guard runs before the artifact read.
+  seedActiveModerator(userId)
+
+  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+  const result = await service.provisionFreeInitialSnapshot({ userId })
+
+  assert.deepEqual(result, { outcome: "paid_user" })
+  assert.equal(await loadScanEvaluationContext(admin as never, userId), null)
+})
+
+test("a user with only an email-keyed manual access grant (no user_id row) is refused with paid_user", async () => {
+  const { admin, seedEmailOnlyManualAccessGrant } = createFakeDatabase()
+  const userId = "77777777-7777-4777-8777-777777777777"
+  const email = "friend@example.com"
+  seedEmailOnlyManualAccessGrant(email)
+
+  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+  const result = await service.provisionFreeInitialSnapshot({ userId, email })
+
+  assert.deepEqual(result, { outcome: "paid_user" })
+  assert.equal(await loadScanEvaluationContext(admin as never, userId), null)
+
+  // Reproduces the guard's own version of the C1 regression: without the
+  // email, the manual grant is invisible and the guard would let this
+  // moderator/tester holder fall through as a plain free user.
+  const withoutEmail = await service.provisionFreeInitialSnapshot({ userId })
+  assert.notDeepEqual(withoutEmail, { outcome: "paid_user" })
+})
+
+test("an unreadable moderator lookup with no independent paid entitlement fails closed with temporarily_unavailable, not provisioning", async () => {
+  const { admin, seedAttachedArtifact, makeModeratorLookupUnavailable } = createFakeDatabase()
+  const userId = "88888888-8888-4888-8888-888888888888"
+  seedAttachedArtifact(userId, COMPLETE_V3_PLAN_ENVELOPE)
+  makeModeratorLookupUnavailable()
+
+  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+  const result = await service.provisionFreeInitialSnapshot({ userId })
+
+  assert.deepEqual(result, { outcome: "temporarily_unavailable" })
+  assert.equal(await loadScanEvaluationContext(admin as never, userId), null)
 })
