@@ -87,6 +87,14 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     buildScanVerdict: () => inCatalogVerdict,
     loadActiveProductById: async () => ({ id: productId, category: "shampoo" }),
     loadPresentationRows: async () => [presentationRow],
+    // Freemium scanner-first (T8): both defaults keep every existing test on the
+    // pre-T8 full/premium path. `resolvePaidAccess` only runs at all when the flag is on
+    // AND the verdict is in_catalog (see route.ts) — with the flag unset in this test
+    // process, it is never even called, so "allowed" here is a value that is never
+    // observed either. Masking-specific tests below set `FREEMIUM_SCANNER_FIRST_ENABLED`
+    // and override both.
+    resolvePaidAccess: async () => "allowed",
+    hasUsedFreeReveal: async () => false,
     // Next's real `after` throws outside a request scope, and these tests assert on the
     // response only. Tests that assert on the deferred telemetry swap in
     // `collectAttempts().deps.after`, which records the task so `flush()` can drain it.
