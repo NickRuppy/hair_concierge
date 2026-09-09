@@ -116,16 +116,29 @@ function createFakeDatabase() {
             )
             return { data: row ?? null, error: null }
           }
+          // Exercised by the free-snapshot service's paid-access guard
+          // (`hasCurrentPaidAppAccess`'s legacy-profile-subscription check):
+          // none of these acceptance-test users have a `profiles` row here.
+          if (table === "profiles") {
+            return { data: null, error: null }
+          }
           throw new Error(`unexpected table ${table}`)
         },
       }
       return chain
     },
     async rpc(name: string, args: Row) {
-      if (name !== "personal_plan_create_or_reuse_initial_need") {
-        throw new Error(`unexpected rpc ${name}`)
+      if (name === "personal_plan_create_or_reuse_initial_need") {
+        return rpcCreateOrReuseInitialNeed(args)
       }
-      return rpcCreateOrReuseInitialNeed(args)
+      // Exercised by the free-snapshot service's paid-access guard
+      // (`hasCurrentPaidAppAccess` -> `resolveOneTimeAccessStateForUser`):
+      // none of these acceptance-test users have a one-time purchase, so the
+      // real RPC would report "none" — no further table reads needed for it.
+      if (name === "get_personal_plan_one_time_access_state") {
+        return { data: "none", error: null }
+      }
+      throw new Error(`unexpected rpc ${name}`)
     },
   }
 
@@ -179,4 +192,26 @@ test("a user with no linked quiz artifact is not provisioned and the scanner sti
 
   assert.deepEqual(result, { outcome: "no_quiz_artifact" })
   assert.equal(await loadScanEvaluationContext(admin as never, userId), null)
+})
+
+test("a plan already pinned to a real enrollment id fails the free service permanently with enrollment_mismatch (I1's collision, not self-healing)", async () => {
+  const { admin, seedAttachedArtifact, personalPlans } = createFakeDatabase()
+  const userId = "55555555-5555-4555-8555-555555555555"
+  seedAttachedArtifact(userId, COMPLETE_V3_PLAN_ENVELOPE)
+
+  // Simulate the paid path having already written this plan (e.g. the RPC
+  // ran once for this user with a real enrollment id, pinning the column).
+  const planId = randomUUID()
+  personalPlans.set(userId, {
+    id: planId,
+    user_id: userId,
+    enrollment_purchase_source_id: randomUUID(),
+    current_initial_need_version_id: null,
+    current_refined_need_version_id: null,
+  })
+
+  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+  const result = await service.provisionFreeInitialSnapshot({ userId })
+
+  assert.deepEqual(result, { outcome: "invalid_source", reasonCode: "enrollment_mismatch" })
 })

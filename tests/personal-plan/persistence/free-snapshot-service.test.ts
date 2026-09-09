@@ -21,6 +21,7 @@ function dependencies(overrides: Partial<FreeSnapshotDependencies> = {}): FreeSn
       needVersionId: "need-1",
       outputSnapshot: request.outputSnapshot,
     }),
+    hasPaidAppAccess: async () => false,
     now: () => new Date("2026-09-09T02:00:00.000Z"),
     ...overrides,
   }
@@ -123,6 +124,44 @@ test("maps an unusable artifact and storage failures to safe typed outcomes", as
     }),
   )
   assert.deepEqual(await writeFails.provisionFreeInitialSnapshot({ userId: "user-1" }), {
+    outcome: "temporarily_unavailable",
+  })
+})
+
+test("refuses a user who currently has paid app access, without reading the artifact or writing", async () => {
+  let artifactReads = 0
+  let writes = 0
+  const service = createFreeSnapshotService(
+    dependencies({
+      loadLinkedQuizArtifact: async () => {
+        artifactReads += 1
+        return artifact
+      },
+      createOrReuseInitialNeed: async () => {
+        writes += 1
+        return { outcome: "completed", personalPlanId: "p", needVersionId: "n", outputSnapshot: {} }
+      },
+      hasPaidAppAccess: async () => true,
+    }),
+  )
+
+  const result = await service.provisionFreeInitialSnapshot({ userId: "user-1" })
+
+  assert.deepEqual(result, { outcome: "paid_user" })
+  assert.equal(artifactReads, 0)
+  assert.equal(writes, 0)
+})
+
+test("a failing paid-access check maps to temporarily_unavailable rather than proceeding", async () => {
+  const service = createFreeSnapshotService(
+    dependencies({
+      hasPaidAppAccess: async () => {
+        throw new Error("billing lookup down")
+      },
+    }),
+  )
+
+  assert.deepEqual(await service.provisionFreeInitialSnapshot({ userId: "user-1" }), {
     outcome: "temporarily_unavailable",
   })
 })

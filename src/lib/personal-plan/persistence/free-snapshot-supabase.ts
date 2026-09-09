@@ -1,3 +1,6 @@
+import { hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
+import type { SupabaseBillingClient } from "@/lib/billing/types"
+
 import type { FreeInitialNeedRequest, FreeSnapshotDependencies } from "./free-snapshot-service"
 import type { CreateInitialNeedResult, Stage1PreparedArtifact } from "./stage1-service"
 
@@ -42,6 +45,12 @@ export function createFreeSnapshotSupabaseDependencies(
       return { id: row.id, quizAnswers: row.quiz_answers }
     },
     createOrReuseInitialNeed: (request) => callCreateFreeInitialNeed(admin, request),
+    // Same underlying signal `hasFreemiumPaidAccess` (src/lib/entitlements/
+    // access.ts) recomputes when it can't trust a moderator lookup: excludes
+    // manual/moderator grants, so this guard checks independently-verified
+    // paid access only (subscription or one-time purchase).
+    hasPaidAppAccess: (userId) =>
+      hasCurrentPaidAppAccess(admin as unknown as SupabaseBillingClient, { userId }),
   }
 }
 

@@ -12,11 +12,31 @@ import { hashPersonalPlanNeedVersionInput, type JsonValue } from "./index"
  * - **Who creates it:** this service, for signed-in users with NO Personal Plan
  *   entitlement (no enrollment/source/qualification/lead). `stage1-service.ts`
  *   remains the sole writer for the paid/enrolled path and is untouched by this
- *   module — the two never write concurrently for the same user because the
- *   underlying `personal_plan_create_or_reuse_initial_need` RPC pins a plan's
- *   `enrollment_purchase_source_id` on first write and rejects a mismatched
- *   value on every later call (see `free-snapshot-supabase.ts`, which always
- *   passes `null`).
+ *   module. Call this service ONLY at free registration (T18) — it is not safe
+ *   to invoke opportunistically for an arbitrary signed-in user (see the
+ *   guard below and the no-ordering-guarantee note).
+ * - **No ordering guarantee — a collision is a permanent failure, not a race
+ *   that resolves:** the underlying `personal_plan_create_or_reuse_initial_need`
+ *   RPC pins a plan's `enrollment_purchase_source_id` on whichever call reaches
+ *   it FIRST for a given user (`null` from this free path, or a real enrollment
+ *   id from the paid path) and rejects every later call whose value differs
+ *   (`invalid_source` / `enrollment_mismatch`). This does not prevent a
+ *   collision — it converts one into a permanent failure for the path that
+ *   loses the race: if this free service ever runs first for a user who then
+ *   buys, the paid path's later calls to the same RPC will keep returning
+ *   `invalid_source`/`enrollment_mismatch` indefinitely, because nothing here
+ *   moves `enrollment_purchase_source_id` off `null`. Fixing that requires an
+ *   explicit upgrade/admission step that reassigns the pinned column (tracked
+ *   for T14/T18) — it does not self-heal and is not attempted by this module.
+ * - **Guard — free provisioning refuses a paid user:** because a collision is
+ *   permanent rather than recoverable, `provisionFreeInitialSnapshot` checks
+ *   the injected `hasPaidAppAccess` signal (the same paid-access source
+ *   `src/lib/entitlements/access.ts` resolves against — see
+ *   `free-snapshot-supabase.ts`) before doing anything else, and returns the
+ *   typed `"paid_user"` outcome without touching the artifact or the RPC when
+ *   the caller currently has paid app access. This is a defensive backstop
+ *   against a misrouted call, not the primary control — the primary control is
+ *   that this service is only ever invoked from the free-registration path.
  * - **Source:** the user's linked `personal_plan_prepared_artifacts` row
  *   (`status = 'attached'`, `user_id` = the signed-in user) — the same artifact
  *   `src/lib/quiz/link-to-profile.ts` attaches after quiz completion, regardless
@@ -25,11 +45,18 @@ import { hashPersonalPlanNeedVersionInput, type JsonValue } from "./index"
  * - **Derivation:** delegates to the exact same pure `computeNeedPlan` (and the
  *   same `PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION`) that `stage1-service.ts`
  *   uses for the paid path. Nothing about the math is forked here.
- * - **When re-provisioned:** every call re-derives from the current artifact and
- *   re-submits it. The RPC is idempotent on `(personal_plan_id, input_hash)` for
- *   `kind = 'initial'` rows, so an unchanged artifact reuses the existing row and
- *   an unrelated caller can safely call this on every scan attempt without
- *   duplicating rows or bumping `personal_plans.revision`.
+ * - **When re-provisioned, and only while the input hash is unchanged:** every
+ *   call re-derives from the current artifact and re-submits it. The RPC is
+ *   idempotent on `(personal_plan_id, input_hash)` for `kind = 'initial'` rows,
+ *   so as long as the derived input hash matches the existing row, calling this
+ *   on every scan attempt is a true no-op (no duplicate row, no
+ *   `personal_plans.revision` bump). That guarantee does NOT extend to a
+ *   changed input hash: if the linked artifact changes between calls, the RPC
+ *   treats it as a new initial-need write and runs its normal staleness side
+ *   effects — any `in_progress` refinement draft and `active` product draft for
+ *   the plan are marked `stale`, `current_refined_need_version_id` is nulled,
+ *   and `personal_plans.revision` is bumped. Callers must not assume repeated
+ *   calls are side-effect-free in general — only that same-hash calls are.
  * - **Upgrade note (out of scope here, relevant to T14/T18):** because the RPC
  *   pins `enrollment_purchase_source_id` on first write, a user provisioned free
  *   (`null`) who later buys must go through an upgrade path that can move that
@@ -56,11 +83,20 @@ export type ProvisionFreeInitialSnapshotResult =
     }
   | { outcome: "no_quiz_artifact" }
   | { outcome: "invalid_source"; reasonCode?: string }
+  | { outcome: "paid_user" }
   | { outcome: "temporarily_unavailable" }
 
 export type FreeSnapshotDependencies = {
   loadLinkedQuizArtifact: (userId: string) => Promise<Stage1PreparedArtifact | null>
   createOrReuseInitialNeed: (request: FreeInitialNeedRequest) => Promise<CreateInitialNeedResult>
+  /**
+   * The defensive guard's paid-access check (see the ownership contract
+   * above). Injected rather than resolved here so the service stays pure and
+   * unit-testable — `free-snapshot-supabase.ts` wires this to the same
+   * `hasCurrentPaidAppAccess` signal `src/lib/entitlements/access.ts` uses as
+   * its own independently-verified paid-access source.
+   */
+  hasPaidAppAccess: (userId: string) => Promise<boolean>
   now?: () => Date
 }
 
@@ -71,6 +107,14 @@ export function createFreeSnapshotService(deps: FreeSnapshotDependencies) {
     }: {
       userId: string
     }): Promise<ProvisionFreeInitialSnapshotResult> {
+      let isPaidUser: boolean
+      try {
+        isPaidUser = await deps.hasPaidAppAccess(userId)
+      } catch {
+        return { outcome: "temporarily_unavailable" }
+      }
+      if (isPaidUser) return { outcome: "paid_user" }
+
       let artifact: Stage1PreparedArtifact | null
       try {
         artifact = await deps.loadLinkedQuizArtifact(userId)
