@@ -193,18 +193,21 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
 
 async function openLab(
   page: Page,
-  boot: { holdCamera?: boolean; denyCamera?: string } = {},
+  boot: { holdCamera?: boolean; denyCamera?: string; tier?: "free" | "premium" } = {},
 ): Promise<void> {
   await page.addInitScript(
-    ({ holdCamera, denyCamera }) => {
+    ({ holdCamera, denyCamera, tier }) => {
       window.localStorage.setItem(
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
       )
       if (holdCamera) window.__SCAN_LAB_HOLD_CAMERA = true
       if (denyCamera) window.__SCAN_LAB_DENY_CAMERA = denyCamera
+      // Fix round 1 (F1): stands in for the SERVER-derived `tier` prop `/scan/page.tsx`
+      // passes in production — see `scan-lab-client.tsx`'s `__SCAN_LAB_TIER` doc comment.
+      if (tier) window.__SCAN_LAB_TIER = tier
     },
-    { holdCamera: boot.holdCamera ?? false, denyCamera: boot.denyCamera ?? "" },
+    { holdCamera: boot.holdCamera ?? false, denyCamera: boot.denyCamera ?? "", tier: boot.tier },
   )
   await page.goto(LAB_PATH)
   await page.waitForFunction(() => Boolean(window.__scanLab))
@@ -821,6 +824,12 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     const api = await installScanApi(page)
     api.freeTier = true
     api.freeRevealAvailable = false
+    // Fix round 1 (F2): `freeRevealAvailable:false` now makes the flow attempt a silent
+    // background re-serve for this SAME product before the user does anything. This test
+    // is about the credit being spent on a DIFFERENT product, so that attempt must 409 —
+    // the default `revealStatus` (200) would otherwise auto-reveal the card and hide the
+    // very gate this test asserts on.
+    api.revealStatus = 409
     await openLab(page)
     await waitForScanningLoop(page)
 
@@ -835,12 +844,16 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
 
     const gate = page.locator("[data-scan-premium-cta]")
     await expect(gate).toHaveText("Was passt stattdessen?")
+    // The silent background attempt already fired and 409'd — no toast, gate unchanged.
+    expect(api.revealBodies).toEqual([{ productId: PRODUCT_A_ID }])
     await gate.click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "empfehlungen")
     await expect(page.getByText("Chaarlie Premium")).toBeVisible()
     // The tapped feature leads the sheet (T5's ordered-benefits contract).
     await expect(page.getByText("Empfehlungen")).toBeVisible()
-    expect(api.revealBodies).toEqual([])
+    // Tapping the gate itself never calls the endpoint again — only the one silent
+    // background attempt from landing on this verdict.
+    expect(api.revealBodies).toEqual([{ productId: PRODUCT_A_ID }])
 
     await closeSheetContaining(page, "Chaarlie Premium").click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "none")
@@ -882,6 +895,65 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await page.getByRole("button", { name: "Speichern", exact: true }).click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-save-open", "true")
     await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "none")
+  })
+
+  test("T9 fix round 1 (F1): the free tier's bookmark is locked at landing, before any scan", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    // The server-derived tier prop (`__SCAN_LAB_TIER` stands in for `/scan/page.tsx`'s
+    // real prop) — not a resolve response, which never fires before the user scans.
+    await openLab(page, { tier: "free" })
+    await waitForScanningLoop(page)
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "unknown")
+    const bookmark = page.getByRole("button", { name: "Merkliste öffnen — Premium" })
+    await expect(bookmark.locator("svg.lucide-bookmark")).toBeVisible()
+    await expect(bookmark.locator("[data-scan-lock-badge]")).toBeVisible()
+    await bookmark.click()
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "merkliste")
+  })
+
+  test("T9 fix round 1 (F1): a premium tier's bookmark stays unlocked at landing", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { tier: "premium" })
+    await waitForScanningLoop(page)
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "unknown")
+    await expect(page.getByRole("button", { name: "Merkliste öffnen", exact: true })).toBeVisible()
+    await expect(page.locator("[data-scan-lock-badge]")).toHaveCount(0)
+  })
+
+  test("T9 fix round 1 (F2): a masked verdict with the credit spent re-serves the SAME product silently, without the unblur", async ({
+    page,
+  }) => {
+    const api = await installScanApi(page)
+    api.freeTier = true
+    api.freeRevealAvailable = false
+    // Default `revealStatus` (200) simulates the reveal endpoint's idempotent re-serve:
+    // this IS the product the credit was spent on (a rescan or a reload of it).
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    await emit(page, EAN_PRODUCT_A)
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
+
+    // Nobody tapped anything — the flow reveals it on its own.
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-reveal", "revealed")
+    await expect(page.locator("[data-scan-revealed-alternatives]")).toBeVisible()
+    await expect(page.getByText(REVEALED_ALTERNATIVE_NAME)).toBeVisible()
+    await expect(page.locator("[data-scan-masked-alternatives]")).toHaveCount(0)
+    expect(api.revealBodies).toEqual([{ productId: PRODUCT_A_ID }])
+
+    // No unblur this time — the card was never "revealed" from the user's point of view.
+    const animation = await page.evaluate(() => {
+      const node = document.querySelector("[data-scan-revealed-alternatives]")
+      if (!node) return null
+      return window.getComputedStyle(node).animationName
+    })
+    expect(animation).toBe("none")
   })
 
   test("copy: a search sheet the user opened keeps the neutral title", async ({ page }) => {

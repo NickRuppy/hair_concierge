@@ -7,6 +7,7 @@ import {
   isDetectionPaused,
   isSheetOpen,
   scanFlowReducer,
+  scanRevealAnimates,
   scanRevealedAlternatives,
   type ScanFlowAction,
   type ScanFlowState,
@@ -633,20 +634,27 @@ test("scanFlowReducer: a later evidence-free verdict does not unlock a proven fr
 })
 
 test("scanFlowReducer: a successful reveal only lands on the product it was started for", () => {
-  const started = scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" })
-  assert.deepEqual(started.reveal, { status: "pending", productId: "p1" })
+  const started = scanFlowReducer(maskedShown("p1"), {
+    type: "reveal_started",
+    productId: "p1",
+    silent: false,
+  })
+  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: false })
 
   const revealed = scanFlowReducer(started, {
     type: "reveal_succeeded",
     productId: "p1",
     alternatives: REVEALED,
+    silent: false,
   })
   assert.deepEqual(revealed.reveal, {
     status: "revealed",
     productId: "p1",
     alternatives: REVEALED,
+    silent: false,
   })
   assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
+  assert.equal(scanRevealAnimates(revealed), true)
 
   // The same response, arriving after the user scanned something else: dropped whole.
   const moved = scanFlowReducer(
@@ -657,13 +665,38 @@ test("scanFlowReducer: a successful reveal only lands on the product it was star
     type: "reveal_succeeded",
     productId: "p1",
     alternatives: REVEALED,
+    silent: false,
   })
   assert.equal(late, moved)
   assert.equal(scanRevealedAlternatives(late), null)
+  assert.equal(scanRevealAnimates(late), false)
 })
 
-test("scanFlowReducer: 409 already_used flips the CTA, any other failure only clears the busy flag", () => {
-  const started = scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" })
+test("scanFlowReducer: fix round 1 (F2) — a silent (background) reveal skips the unblur", () => {
+  const started = scanFlowReducer(maskedShown("p1"), {
+    type: "reveal_started",
+    productId: "p1",
+    silent: true,
+  })
+  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: true })
+
+  const revealed = scanFlowReducer(started, {
+    type: "reveal_succeeded",
+    productId: "p1",
+    alternatives: REVEALED,
+    silent: true,
+  })
+  // The card still renders the full alternatives — only the animation decision differs.
+  assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
+  assert.equal(scanRevealAnimates(revealed), false)
+})
+
+test("scanFlowReducer: 409 already_used flips the CTA; an empty list or any other failure only clears the busy flag", () => {
+  const started = scanFlowReducer(maskedShown("p1"), {
+    type: "reveal_started",
+    productId: "p1",
+    silent: false,
+  })
   assert.deepEqual(
     scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "already_used" })
       .reveal,
@@ -673,12 +706,18 @@ test("scanFlowReducer: 409 already_used flips the CTA, any other failure only cl
     scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "error" }).reveal,
     { status: "idle" },
   )
+  // Fix round 1 (F3): a distinct reason from "error" (T8 spends no credit here), but the
+  // same `idle` state — the CTA stays exactly as available as it was.
+  assert.deepEqual(
+    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "empty" }).reveal,
+    { status: "idle" },
+  )
 })
 
 test("scanFlowReducer: a new resolve and a return to scanning both drop what the reveal showed", () => {
   const revealed = scanFlowReducer(
-    scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1" }),
-    { type: "reveal_succeeded", productId: "p1", alternatives: REVEALED },
+    scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1", silent: false }),
+    { type: "reveal_succeeded", productId: "p1", alternatives: REVEALED, silent: false },
   )
   assert.deepEqual(
     scanFlowReducer(revealed, { type: "resolve_started", token: 2, showResolvingImmediately: true })

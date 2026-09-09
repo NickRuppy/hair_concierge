@@ -13,6 +13,7 @@ import { ScanUnknownFlow } from "../src/components/scan/scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "../src/components/scan/scan-wishlist-sheet"
 import { Scanner } from "../src/components/scan/scanner"
 import type { ScanWishlistEntry } from "../src/app/api/scan/wishlist/route"
+import type { EntitlementTier } from "../src/lib/entitlements"
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type { ScanAnalyticsPort } from "../src/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
@@ -265,6 +266,7 @@ type FlowHarness = {
  */
 async function mountFlow(
   route: (url: string, init: RequestInit | undefined) => Promise<Response>,
+  options: { tier?: EntitlementTier } = {},
 ): Promise<FlowHarness> {
   const events: TrackedEvent[] = []
   const toasts: string[] = []
@@ -280,7 +282,7 @@ async function mountFlow(
     globalThis.fetch = previousFetch
   })
 
-  const harness = createClientStateHarness(() => ScanFlow({ analytics }), {
+  const harness = createClientStateHarness(() => ScanFlow({ analytics, tier: options.tier }), {
     toasts: [],
     dismiss: () => {},
     toast: (input: { title: string }) => toasts.push(input.title),
@@ -933,6 +935,19 @@ async function scanInto(flow: FlowHarness, ean = "4006381333931"): Promise<void>
   await flow.settle()
 }
 
+test("fix round 1 (F1): the server-derived tier prop locks Merken before any scan at all", async () => {
+  const free = await mountFlow(notFound, { tier: "free" })
+  assert.equal(wishlistTriggerProps(free.tree).locked, true)
+
+  const premium = await mountFlow(notFound, { tier: "premium" })
+  assert.equal(wishlistTriggerProps(premium.tree).locked, false)
+
+  // No `tier` prop at all (every other caller in this suite, the labs harness without its
+  // boot flag): unchanged from today — only a resolve response can lock it.
+  const untiered = await mountFlow(notFound)
+  assert.equal(wishlistTriggerProps(untiered.tree).locked, false)
+})
+
 test("free tier: a masked verdict locks Merken on both surfaces and offers the reveal", async () => {
   const flow = await mountFlow(async () => json(maskedVerdict()))
   await scanInto(flow)
@@ -1000,7 +1015,12 @@ test("free tier: an empty reveal says so and leaves the unspent credit's CTA in 
 })
 
 test("free tier: the post-reveal CTA opens the Premium sheet for empfehlungen", async () => {
-  const flow = await mountFlow(async () => json(maskedVerdict("p-a", false)))
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict("p-a", false))
+    // Fix round 1 (F2): `freeRevealAvailable:false` now makes the flow attempt a silent
+    // background reveal for this SAME product; here it belongs to a different one, so 409.
+    return json({ error: "already_used" }, 409)
+  })
   await scanInto(flow)
 
   assert.equal(cardProps(flow.tree).result.freeRevealAvailable, false)
@@ -1014,6 +1034,45 @@ test("free tier: the post-reveal CTA opens the Premium sheet for empfehlungen", 
   })
   // A paywall over the viewfinder must not keep the detector burning frames.
   assert.equal(scannerProps(flow.tree).detectionPaused, true)
+})
+
+test("fix round 1 (F2): a masked verdict with the credit spent re-serves the SAME product silently", async () => {
+  const revealBodies: string[] = []
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict("p-a", false))
+    if (url === "/api/scan/reveal") {
+      revealBodies.push(String(init?.body))
+      // The endpoint's idempotent re-serve: this IS the product the credit was spent on.
+      return json({ ok: true, productId: "p-a", alternatives: [REVEALED_ALTERNATIVE] })
+    }
+    return notFound()
+  })
+  await scanInto(flow)
+
+  // Nobody called `onReveal` — the flow revealed it on its own.
+  assert.deepEqual(JSON.parse(revealBodies[0]), { productId: "p-a" })
+  assert.deepEqual(cardProps(flow.tree).revealedAlternatives, [REVEALED_ALTERNATIVE])
+  // No unblur this time — nothing is being "revealed" to the user.
+  assert.equal(cardProps(flow.tree).revealAnimates, false)
+  assert.deepEqual(flow.toasts, [])
+})
+
+test("fix round 1 (F2): a background re-serve attempt that 409s stays on the Premium gate, silently", async () => {
+  const revealBodies: string[] = []
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict("p-a", false))
+    if (url === "/api/scan/reveal") {
+      revealBodies.push(String(init?.body))
+      return json({ error: "already_used" }, 409)
+    }
+    return notFound()
+  })
+  await scanInto(flow)
+
+  assert.deepEqual(JSON.parse(revealBodies[0]), { productId: "p-a" })
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  // A background attempt failing must stay invisible — the Premium gate already shows.
+  assert.deepEqual(flow.toasts, [])
 })
 
 test("free tier: Merken opens the Premium sheet instead of the Merkliste or the save sheet", async () => {

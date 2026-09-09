@@ -254,6 +254,30 @@ test("after the reveal: the full alternative card replaces the masked one, insid
   assert.equal(findByData(tree, "data-scan-premium-cta").length, 0)
 })
 
+test("fix round 1 (F2): a silent (background) re-serve renders the same card without the unblur", () => {
+  const tree = renderCard({
+    result: maskedResult(true),
+    revealedAlternatives: [FULL_ALTERNATIVE],
+    revealAnimates: false,
+  })
+
+  const revealed = findByData(tree, "data-scan-revealed-alternatives")
+  assert.equal(revealed.length, 1)
+  assert.ok(textContent(revealed[0]).includes("Lab Shampoo Gamma"))
+  // The only difference from an explicit tap: no unblur wrapper class.
+  assert.equal(findByClass(tree, "scan-reveal-unblur").length, 0)
+})
+
+test("fix round 1 (F4): an empty revealed list falls back to the empty-alternative notice, not nothing", () => {
+  const tree = renderCard({ result: maskedResult(true), revealedAlternatives: [] })
+
+  assert.equal(findByData(tree, "data-scan-revealed-alternatives").length, 0)
+  assert.equal(findByData(tree, "data-scan-masked-alternatives").length, 0)
+  const notice = findByData(tree, "data-scan-reveal-empty")
+  assert.equal(notice.length, 1)
+  assert.equal(textContent(notice[0]), "Gerade keine Alternative verfügbar.")
+})
+
 // --- post-reveal locked state ------------------------------------------------
 
 test('later „passt nicht": the spent credit turns the CTA into the Premium gate', () => {
