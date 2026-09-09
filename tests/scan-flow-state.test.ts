@@ -85,6 +85,11 @@ test("initialScanFlowState: starts scanning, live camera, nothing in flight", ()
     tier: "unknown",
     reveal: { status: "idle" },
     premiumSheet: null,
+    categoriesScanned: [],
+    consecutiveMismatches: 0,
+    proactiveTriggerShown: null,
+    activeProactiveTrigger: null,
+    zweiScansGleicheKategorie: false,
   })
 })
 
@@ -742,4 +747,183 @@ test("scanFlowReducer: the Premium sheet opens with its context, closes empty, a
   assert.equal(scanFlowReducer(opened, { type: "premium_sheet_closed" }).premiumSheet, null)
   // Returning to the viewfinder can never leave a paywall hanging over it.
   assert.equal(scanFlowReducer(opened, { type: "return_to_scanning" }).premiumSheet, null)
+})
+
+// --- T10: trigger-layer session history --------------------------------------
+
+test("resolved: an in_catalog/not_needed verdict appends its category to the scan history", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1") }, // category: shampoo
+  )
+  assert.deepEqual(state.categoriesScanned, ["shampoo"])
+})
+
+test("resolved: an unknown/pending result leaves the category history untouched", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: unknownResult },
+  )
+  assert.deepEqual(state.categoriesScanned, [])
+
+  const pendingState = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: pendingResult },
+  )
+  assert.deepEqual(pendingState.categoriesScanned, [])
+})
+
+test("resolved: the category history survives return_to_scanning and accumulates across scans", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1") },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    { type: "resolved", token: 2, result: verdictResult("p2") },
+  )
+  assert.deepEqual(state.categoriesScanned, ["shampoo", "shampoo"])
+})
+
+test("resolved: a mismatch verdict increments consecutiveMismatches, any other fit verdict resets it", () => {
+  const twoMismatches = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: maskedResult("p1") }, // verdict: mismatch
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    { type: "resolved", token: 2, result: maskedResult("p2") },
+  )
+  assert.equal(twoMismatches.consecutiveMismatches, 2)
+
+  const brokenByIdeal = scanFlowReducer(
+    run(
+      { type: "resolve_started", token: 1, showResolvingImmediately: true },
+      { type: "resolved", token: 1, result: maskedResult("p1") },
+      { type: "return_to_scanning" },
+      { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    ),
+    { type: "resolved", token: 2, result: { ...maskedResult("p2"), verdict: "ideal" } },
+  )
+  assert.equal(brokenByIdeal.consecutiveMismatches, 0)
+})
+
+test("resolved: not_needed/unknown/pending leave a running mismatch streak untouched, not reset", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: maskedResult("p1") },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    { type: "resolved", token: 2, result: unknownResult },
+  )
+  assert.equal(state.consecutiveMismatches, 1)
+})
+
+/** `maskedResult` with the category overridden — for scanning a 2nd, different category. */
+function maskedResultInCategory(
+  productId: string,
+  category: "shampoo" | "conditioner",
+): ScanMaskedVerdictResult {
+  const base = maskedResult(productId)
+  return {
+    ...base,
+    product: { ...base.product, category, categoryLabel: category },
+  }
+}
+
+test("resolved: the trigger-layer decision is derived from tier/isReturningSession, not passed verbatim", () => {
+  // Second scan, same category ("shampoo" again) — fires zwei_scans_gleiche_kategorie.
+  // Only 1 distinct category so far, so no proactive candidate qualifies yet.
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free" },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    { type: "resolved", token: 2, result: verdictResult("p2"), tier: "free" },
+  )
+  assert.equal(state.zweiScansGleicheKategorie, true)
+  assert.equal(state.activeProactiveTrigger, null)
+  assert.equal(state.proactiveTriggerShown, null)
+})
+
+test("resolved: omitting tier/isReturningSession fails closed to no trigger at all (every pre-T10 call site)", () => {
+  const state = scanFlowReducer(resolving(), {
+    type: "resolved",
+    token: 1,
+    result: verdictResult(),
+  })
+  assert.equal(state.activeProactiveTrigger, null)
+  assert.equal(state.zweiScansGleicheKategorie, false)
+  assert.equal(state.proactiveTriggerShown, null)
+})
+
+test("resolved: a genuinely free session can fire a proactive trigger (Wiederkehrer)", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    {
+      type: "resolved",
+      token: 1,
+      result: verdictResult("p1"),
+      tier: "free",
+      isReturningSession: true,
+    },
+  )
+  assert.equal(state.activeProactiveTrigger, "wiederkehrer")
+  assert.equal(state.proactiveTriggerShown, "wiederkehrer")
+})
+
+test("fatigue: once a proactive trigger has fired, a later resolve's own card is suppressed", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    {
+      type: "resolved",
+      token: 1,
+      result: verdictResult("p1"),
+      tier: "free",
+      isReturningSession: true,
+    },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    // A second, different category — on its own this would qualify kategorien_luecke —
+    // but the session already spent its one proactive pitch on Wiederkehrer.
+    {
+      type: "resolved",
+      token: 2,
+      result: maskedResultInCategory("p2", "conditioner"),
+      tier: "free",
+    },
+  )
+  assert.equal(state.proactiveTriggerShown, "wiederkehrer")
+  assert.equal(state.activeProactiveTrigger, null)
+})
+
+test("activeProactiveTrigger and zweiScansGleicheKategorie reset on a new resolve and on return_to_scanning", () => {
+  const shown = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free" },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    // A 2nd, DIFFERENT category (kategorien_luecke's condition) — no wiederkehrer/frust
+    // candidate is qualified here, so this is deterministically the winner.
+    {
+      type: "resolved",
+      token: 2,
+      result: maskedResultInCategory("p2", "conditioner"),
+      tier: "free",
+    },
+  )
+  assert.equal(shown.activeProactiveTrigger, "kategorien_luecke")
+  assert.equal(shown.zweiScansGleicheKategorie, false)
+
+  const afterReturn = scanFlowReducer(shown, { type: "return_to_scanning" })
+  assert.equal(afterReturn.activeProactiveTrigger, null)
+  assert.equal(afterReturn.zweiScansGleicheKategorie, false)
+  // Fatigue persists across the return — it is session-scoped, not per-step.
+  assert.equal(afterReturn.proactiveTriggerShown, "kategorien_luecke")
+
+  const midFlightNewResolve = scanFlowReducer(shown, {
+    type: "resolve_started",
+    token: 3,
+    showResolvingImmediately: true,
+  })
+  assert.equal(midFlightNewResolve.activeProactiveTrigger, null)
+  assert.equal(midFlightNewResolve.zweiScansGleicheKategorie, false)
 })

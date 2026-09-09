@@ -1,9 +1,16 @@
 import type { ScanSearchReason } from "@/components/scan/scan-search-sheet"
 import type { ScanUnavailableReason } from "@/components/scan/scanner"
 
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 
 import type { ScanSavedStatePayload } from "./saved-state"
+import {
+  firesGatedZweiScansGleicheKategorie,
+  resolveGatedProactiveScanTrigger,
+  type ScanProactiveTriggerId,
+  type ScanTriggerGate,
+} from "./triggers/trigger-rules"
 import type {
   ScanAlternativePresentation,
   ScanPendingSubmissionResult,
@@ -101,12 +108,55 @@ export type ScanFlowState = {
   reveal: ScanRevealState
   /** The stub Premium sheet's opener context, or null while it is closed (T5/T9). */
   premiumSheet: PremiumSheetContext | null
+  /**
+   * Trigger-layer session history (T10). Kept as raw facts here — the reducer never
+   * decides which trigger fires, that stays in the pure `triggers/trigger-rules.ts` lib —
+   * but the history has to survive `return_to_scanning`/the `epoch` bump, because the
+   * fatigue rule and "two scans, same category" both span the whole app session, not just
+   * one scan. `categoriesScanned` keeps every scan (duplicates included) so
+   * "already scanned before this scan" is a plain slice, not a recomputation.
+   */
+  categoriesScanned: PersonalPlanCategory[]
+  /** Consecutive "passt nicht" (mismatch) verdicts feeding the Frust-Serie trigger. */
+  consecutiveMismatches: number
+  /**
+   * Which proactive trigger has already been shown this session, or null. Set once and
+   * never cleared (not even on `return_to_scanning`) — the fatigue rule is "at most ONE
+   * proactive pitch per session", not "one per scan".
+   */
+  proactiveTriggerShown: ScanProactiveTriggerId | null
+  /**
+   * The proactive trigger card to show for THE CURRENT result step, or null. Decided by
+   * the caller (`scan-flow.tsx`, from the pure `triggers/trigger-rules.ts` lib) at the
+   * moment `resolved` dispatches — the reducer only stores the verdict mechanically, same
+   * division of labour as `token`. Reset on every new resolve and on `return_to_scanning`
+   * (unlike `proactiveTriggerShown`, which persists): a proactive card belongs to the scan
+   * that earned it, never lingering onto the next one.
+   */
+  activeProactiveTrigger: ScanProactiveTriggerId | null
+  /** User-initiated gate 2, decided the same way, for the current result step only. */
+  zweiScansGleicheKategorie: boolean
 }
 
 export type ScanFlowAction =
   | { type: "resolve_started"; token: number; showResolvingImmediately: boolean }
   | { type: "resolving_sheet_due"; token: number }
-  | { type: "resolved"; token: number; result: ScanClientResolveResult }
+  | {
+      type: "resolved"
+      token: number
+      result: ScanClientResolveResult
+      /**
+       * T10: the two leaf inputs the trigger-layer decision needs that the reducer cannot
+       * derive from its own history — `tier` (the server-verified signal, gates every
+       * trigger; see `scanTriggersEnabled`) and `isReturningSession` (the Wiederkehrer
+       * approximation from `triggers/session-marker.ts`). Both optional and default to the
+       * fail-closed values (`"premium"`, `false`) so every pre-T10 call site (a plain
+       * `{ token, result }`, across the test suites) keeps compiling and firing zero
+       * triggers, unchanged.
+       */
+      tier?: "free" | "premium"
+      isReturningSession?: boolean
+    }
   | { type: "resolve_failed"; token: number }
   | { type: "reveal_started"; productId: string; silent: boolean }
   | {
@@ -150,6 +200,11 @@ export const initialScanFlowState: ScanFlowState = {
   tier: "unknown",
   reveal: { status: "idle" },
   premiumSheet: null,
+  categoriesScanned: [],
+  consecutiveMismatches: 0,
+  proactiveTriggerShown: null,
+  activeProactiveTrigger: null,
+  zweiScansGleicheKategorie: false,
 }
 
 /**
@@ -185,6 +240,10 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         // A new verdict is on its way: whatever the previous one revealed belongs to a
         // product that is about to leave the screen.
         reveal: { status: "idle" },
+        // Same reasoning (T10): a trigger card belongs to the step that earned it, not to
+        // whatever comes up while this new resolve is in flight.
+        activeProactiveTrigger: null,
+        zweiScansGleicheKategorie: false,
       }
 
     case "resolving_sheet_due":
@@ -193,11 +252,45 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
 
     case "resolved": {
       if (!owns(state, "resolve", action.token)) return state
+      const categoriesScanned = appendScannedCategory(state.categoriesScanned, action.result)
+      const consecutiveMismatches = nextConsecutiveMismatches(
+        state.consecutiveMismatches,
+        action.result,
+      )
+      const category = categoryOfResult(action.result)
+      const gate: ScanTriggerGate = {
+        freemiumScannerFirstEnabled: true,
+        tier: action.tier ?? "premium",
+      }
+      const activeProactiveTrigger = resolveGatedProactiveScanTrigger(
+        gate,
+        {
+          categoriesScannedThisSession: categoriesScanned,
+          verdict: action.result.kind === "in_catalog" ? action.result.verdict : null,
+          consecutiveMismatchCount: consecutiveMismatches,
+          isReturningSession: action.isReturningSession ?? false,
+        },
+        state.proactiveTriggerShown !== null,
+      )
+      const zweiScansGleicheKategorie =
+        category !== null &&
+        firesGatedZweiScansGleicheKategorie(gate, {
+          category,
+          // BEFORE this scan: `state.categoriesScanned` is the pre-update history.
+          categoriesScannedBeforeThisScan: state.categoriesScanned,
+        })
       return {
         ...state,
         step: stepForResult(action.result),
         activeRequest: null,
         tier: nextScanTierSignal(state.tier, scanTierSignal(action.result)),
+        categoriesScanned,
+        consecutiveMismatches,
+        activeProactiveTrigger,
+        zweiScansGleicheKategorie,
+        // First one wins for the session (fatigue rule) — a later resolve's own decision
+        // never overwrites an already-recorded one.
+        proactiveTriggerShown: state.proactiveTriggerShown ?? activeProactiveTrigger,
       }
     }
 
@@ -287,6 +380,10 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         epoch: state.epoch + 1,
         reveal: { status: "idle" },
         premiumSheet: null,
+        // T10: a trigger card belongs to the step that earned it. `proactiveTriggerShown`
+        // (the session-wide fatigue flag) deliberately stays untouched here.
+        activeProactiveTrigger: null,
+        zweiScansGleicheKategorie: false,
       }
 
     case "auxiliary_opened":
@@ -328,6 +425,38 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
     case "camera_live":
       return { ...state, camera: { status: "live" } }
   }
+}
+
+/**
+ * Every category the flow has resolved a verdict for, oldest first. Only `in_catalog` and
+ * `not_needed` results carry a `product.category` — `unknown`/`pending` results short-
+ * circuit before a category is known, so they leave the history untouched.
+ */
+function appendScannedCategory(
+  history: PersonalPlanCategory[],
+  result: ScanClientResolveResult,
+): PersonalPlanCategory[] {
+  const category = categoryOfResult(result)
+  return category === null ? history : [...history, category]
+}
+
+/** `null` for `unknown`/`pending`, which short-circuit before a category is known. */
+function categoryOfResult(result: ScanClientResolveResult): PersonalPlanCategory | null {
+  if (result.kind !== "in_catalog" && result.kind !== "not_needed") return null
+  return result.product.category
+}
+
+/**
+ * Feeds the Frust-Serie trigger (T10): counts CONSECUTIVE "passt nicht" (mismatch)
+ * verdicts. Any other concrete fit verdict (ideal/supportive) resets the streak — it
+ * proves the run of bad fits broke. `not_needed`/`unknown`/`pending` carry no fit verdict
+ * at all, so they deliberately leave the count untouched rather than resetting it: a
+ * stray non-fit scan mid-series should not erase the frustration signal.
+ */
+function nextConsecutiveMismatches(current: number, result: ScanClientResolveResult): number {
+  if (result.kind !== "in_catalog") return current
+  if (result.verdict === "mismatch") return current + 1
+  return 0
 }
 
 function stepForResult(result: ScanClientResolveResult): ScanFlowStep {
