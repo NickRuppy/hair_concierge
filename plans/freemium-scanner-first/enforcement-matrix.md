@@ -23,26 +23,38 @@ Two enforcing seams appear below:
   composite the middleware paywall uses (including the T2 review fix that
   re-verifies `active` via `hasCurrentPaidAppAccess` once a moderator grant
   has ended or its lookup is unavailable, so a stale manual grant can't keep
-  counting as paid).
+  counting as paid). `email` is threaded through to the underlying
+  `hasAppAccess` call (T4 review fix C1 — an email-bound manual grant has no
+  `user_id` row to match otherwise), and the result is the tri-state
+  `FreemiumAccessResult` (`"allowed" | "denied" | "unavailable"`, T4 review
+  fix I2) rather than a plain boolean, so an unreadable moderator lookup with
+  no independent paid entitlement surfaces as the same retriable 503
+  (`moderator_access_unavailable`-equivalent) middleware would return, not a
+  hard 403 deny.
 
 **Flag off** (`FREEMIUM_SCANNER_FIRST_ENABLED` unset or not `"true"`):
 `FREEMIUM_ADMITTED_ROUTE_PREFIXES` never applies (`shouldRedirectToReactivation`
 always returns `true` — proven for `/api/scan` itself by
 `tests/freemium-admission-middleware.test.ts` → `"flag off: always redirects
 to reactivation, admitted or not"`), so a free user is denied by middleware
-before ever reaching `/api/scan/save` or `/api/scan/wishlist`. The in-route
-guards added by this task run anyway (they don't read the flag), so they are
-**redundant-but-harmless** in the flag-off world — byte-identical behavior to
-today for every existing user.
+before ever reaching `/api/scan/save` or `/api/scan/wishlist`. `hasFreemiumPaidAccess`
+itself now short-circuits to `"allowed"` before performing any billing or
+moderator lookup when the flag is off (PR1 review fix F1) — it is not merely
+"redundant but harmless" by virtue of being unreachable; it is provably inert
+on its own. This also closes a flag-OFF regression the earlier, non-flag-aware
+version of the guard had: a field-test guest who already reaches these routes
+today independent of this flag (a valid manual field-test grant plus an
+unrelated moderator-lookup outage) would have been 503'd by the guard where
+`main` returns 200 for them. See the "field-test-guest" rows below.
 
 ## `/api/scan/*`
 
 | Route | Method | Required entitlement | Enforcing seam (flag ON) | Test |
 | --- | --- | --- | --- | --- |
 | `/api/scan/resolve` | POST | free (auth + rate limit only) | middleware admits (`/api/scan` in `FREEMIUM_ADMITTED_ROUTE_PREFIXES`); route itself has no entitlement check — unaffected by this task | `tests/freemium-admission-middleware.test.ts` → `"isFreemiumAdmittedRoutePath admits the app-shell page prefixes and /api/scan"`, `"flag on: admitted routes are exempted from the reactivation redirect"` |
-| `/api/scan/search` | POST | free (auth + rate limit only) | middleware admits; unaffected by this task | same as above (`/api/scan` prefix) |
+| `/api/scan/search` | GET | free (auth + rate limit only) | middleware admits; unaffected by this task | same as above (`/api/scan` prefix) |
 | `/api/scan/submit` | POST | free (auth + rate limit only) | middleware admits; unaffected by this task | same as above (`/api/scan` prefix) |
-| `/api/scan/save` | POST (move to routine/Merkliste) | **premium** | **in-route guard** (new, T4) — `requirePremiumAccess` dep, wired to `hasFreemiumPaidAccess` in `src/app/api/scan/save/route.ts` | `tests/freemium-enforcement-matrix.test.ts` → `"scan save POST: a free-tier user (flag-ON reachable) is denied with the middleware's subscription_required shape"`; paid pass: `"scan save POST: a paid user (composite true) passes through unchanged"` |
+| `/api/scan/save` | POST (move to routine/Merkliste) | **premium** | **in-route guard** (new, T4) — `requirePremiumAccess` dep, wired to `hasFreemiumPaidAccess` in `src/app/api/scan/save/route.ts` | `tests/freemium-enforcement-matrix.test.ts` → `"scan save POST: a free-tier user (flag-ON reachable) is denied with the middleware's subscription_required shape"`; paid pass: `"scan save POST: a paid user (composite allowed) passes through unchanged"` |
 | `/api/scan/save` | DELETE (remove from routine/Merkliste) | **premium** | **in-route guard** (new, T4), same dep | `tests/freemium-enforcement-matrix.test.ts` → `"scan save DELETE: a free-tier user is denied before any removal"` |
 | `/api/scan/wishlist` | GET (Merkliste listing) | **premium** | **in-route guard** (new, T4) — `requirePremiumAccess` dep, wired to `hasFreemiumPaidAccess` in `src/app/api/scan/wishlist/route.ts` | `tests/freemium-enforcement-matrix.test.ts` → `"scan wishlist GET: a free-tier user is denied with the middleware's subscription_required shape"`; paid pass: `"scan wishlist GET: a paid user passes through unchanged"` |
 | `/api/scan/reveal` (or equivalent one-lifetime-reveal endpoint) | POST | **premium action for a free user** (consumes the one-lifetime-reveal credit; distinct from ordinary premium — a free user is the intended caller once, ledger-gated) | **planned (T8)** — endpoint does not exist yet; masked-alternative contract + reveal ledger land in T8 | none yet — add with T8 |
@@ -56,6 +68,20 @@ restructure `src/lib/scan/route.ts`'s shared `createScanRoute` scaffolding
 (auth → rate limit → parse → handler), which all five scan routes share; the
 guard is called from inside each premium route's own `handler` callback so
 `resolve`/`search`/`submit` are untouched.
+
+Note (PR1 review fix F1): a field-test guest (`user.app_metadata.access_kind
+=== "field_test"`) is a case middleware treats specially — it skips the
+moderator lookup for them entirely, relying only on `active`/
+`oneTimeAccessState` (see `src/lib/supabase/middleware.ts` around
+`isPersonalPlanFieldTestGuest`). `hasFreemiumPaidAccess` now takes the same
+`fieldTestGuest` signal (computed at each route's call site via
+`isPersonalPlanFieldTestGuest`) and applies the identical skip, so a
+moderator-lookup outage that is irrelevant to a field-test guest's access can
+no longer surface as a 503 for them where middleware would have let them
+through. Pinned by the `"field-test-guest"` and
+`"field-test-guest-moderator-unavailable"` rows in the `tests/freemium-enforcement-matrix.test.ts`
+parity matrix (both seams — the guard util and the middleware paywall —
+asserted identical).
 
 ## Other premium APIs (middleware-enforced, unaffected by this task)
 
@@ -73,4 +99,5 @@ guard is called from inside each premium route's own `handler` callback so
 | --- | --- |
 | `/api/scan` itself stays fully subscription-gated when the flag is off (so a free user never reaches `/api/scan/save` or `/api/scan/wishlist` in the first place) | `tests/freemium-admission-middleware.test.ts` → `"flag off: always redirects to reactivation, admitted or not"` |
 | A one-time-access owner or an active moderator (paid via the composite, `active` alone false) is unaffected by admission logic regardless of the flag | `tests/auth-middleware-personal-plan-routine.test.ts` → `"flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)"`, `"an ended moderator with independently verified paid access remains admitted"` |
-| The in-route guards' own composite semantics (independent of the flag — they don't read it) | `tests/freemium-enforcement-matrix.test.ts` → `hasFreemiumPaidAccess` unit tests (active subscription / one-time / moderator / ended-moderator-fix / unavailable-moderator-fallback) |
+| `hasFreemiumPaidAccess` itself is inert with the flag off — `"allowed"`, with no billing or moderator lookup performed at all (PR1 review fix F1a) | `tests/freemium-enforcement-matrix.test.ts` → `"hasFreemiumPaidAccess: flag off is inert — allowed, no billing/moderator lookups performed"` |
+| The in-route guards' own composite semantics with the flag on | `tests/freemium-enforcement-matrix.test.ts` → `hasFreemiumPaidAccess` unit tests (active subscription / one-time / moderator / ended-moderator-fix / unavailable-moderator-fallback / field-test-guest skip) |

@@ -257,92 +257,148 @@ function accessDeps(overrides: Partial<HasFreemiumPaidAccessDeps> = {}): HasFree
   }
 }
 
+// PR1 review fix (F1a): the guard must be literally inert with the flag off
+// — allowed, with no billing/moderator lookup at all — not merely "denies
+// the same users middleware already denies". Every dep below throws if
+// called, so this fails loudly if the flag-off short-circuit is ever
+// removed or moved after a lookup.
+test("hasFreemiumPaidAccess: flag off is inert — allowed, no billing/moderator lookups performed", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => {
+          throw new Error("must not be called when the flag is off")
+        },
+        hasPaidAppAccess: async () => {
+          throw new Error("must not be called when the flag is off")
+        },
+        resolveOneTimeAccessState: async () => {
+          throw new Error("must not be called when the flag is off")
+        },
+        resolveModeratorAccess: async () => {
+          throw new Error("must not be called when the flag is off")
+        },
+      }),
+    )
+    assert.equal(result, "allowed")
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
 test("hasFreemiumPaidAccess: no active subscription, one-time access, or moderator grant denies", async () => {
-  const result = await hasFreemiumPaidAccess(userId, userEmail, accessDeps())
-  assert.equal(result, "denied")
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(userId, userEmail, false, accessDeps())
+    assert.equal(result, "denied")
+  })
 })
 
 test("hasFreemiumPaidAccess: an active subscription (hasAppAccess) grants access", async () => {
-  const result = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({ hasAppAccess: async () => true }),
-  )
-  assert.equal(result, "allowed")
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({ hasAppAccess: async () => true }),
+    )
+    assert.equal(result, "allowed")
+  })
 })
 
 test("hasFreemiumPaidAccess: an active one-time purchase grants access even when hasAppAccess is false", async () => {
-  const result = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({ resolveOneTimeAccessState: async () => "active" }),
-  )
-  assert.equal(result, "allowed")
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({ resolveOneTimeAccessState: async () => "active" }),
+    )
+    assert.equal(result, "allowed")
+  })
 })
 
 test("hasFreemiumPaidAccess: an active moderator grant grants access", async () => {
-  const result = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({
-      resolveModeratorAccess: async () => ({
-        kind: "active",
-        campaignId: "c1",
-        expiresAt: "2026-12-31T00:00:00.000Z",
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        resolveModeratorAccess: async () => ({
+          kind: "active",
+          campaignId: "c1",
+          expiresAt: "2026-12-31T00:00:00.000Z",
+        }),
       }),
-    }),
-  )
-  assert.equal(result, "allowed")
+    )
+    assert.equal(result, "allowed")
+  })
 })
 
 test("hasFreemiumPaidAccess: an ended moderator cannot retain access through a manual grant alone (mirrors T2 I1/I3 fix)", async () => {
-  const result = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({
-      hasAppAccess: async () => true, // manual-grant-inclusive check says yes
-      hasPaidAppAccess: async () => false, // independent (excludes manual grants) check says no
-      resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
-    }),
-  )
-  assert.equal(result, "denied")
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true, // manual-grant-inclusive check says yes
+        hasPaidAppAccess: async () => false, // independent (excludes manual grants) check says no
+        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
+      }),
+    )
+    assert.equal(result, "denied")
+  })
 })
 
 test("hasFreemiumPaidAccess: an ended moderator with independently verified paid access remains admitted", async () => {
-  const result = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({
-      hasAppAccess: async () => true,
-      hasPaidAppAccess: async () => true,
-      resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
-    }),
-  )
-  assert.equal(result, "allowed")
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true,
+        hasPaidAppAccess: async () => true,
+        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
+      }),
+    )
+    assert.equal(result, "allowed")
+  })
 })
 
 test("hasFreemiumPaidAccess: an unavailable moderator lookup falls back to the independent paid-access check", async () => {
-  const denied = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({
-      hasAppAccess: async () => true,
-      hasPaidAppAccess: async () => false,
-      resolveModeratorAccess: async () => ({ kind: "unavailable" }),
-    }),
-  )
-  assert.equal(denied, "unavailable")
+  await withFlagOn(async () => {
+    const denied = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true,
+        hasPaidAppAccess: async () => false,
+        resolveModeratorAccess: async () => ({ kind: "unavailable" }),
+      }),
+    )
+    assert.equal(denied, "unavailable")
 
-  const admitted = await hasFreemiumPaidAccess(
-    userId,
-    userEmail,
-    accessDeps({
-      hasAppAccess: async () => true,
-      hasPaidAppAccess: async () => true,
-      resolveModeratorAccess: async () => ({ kind: "unavailable" }),
-    }),
-  )
-  assert.equal(admitted, "allowed")
+    const admitted = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true,
+        hasPaidAppAccess: async () => true,
+        resolveModeratorAccess: async () => ({ kind: "unavailable" }),
+      }),
+    )
+    assert.equal(admitted, "allowed")
+  })
 })
 
 // C1 (Critical): the guard previously called `hasAppAccess(client, { userId
@@ -354,17 +410,43 @@ test("hasFreemiumPaidAccess: an unavailable moderator lookup falls back to the i
 // allowed, and that dropping the email (passing `null`) reproduces the
 // regression.
 test("hasFreemiumPaidAccess: an email-only manual grant is allowed once the authenticated email is threaded through", async () => {
-  const emailOnlyGrantDeps = accessDeps({
-    hasAppAccess: async (_client, lookup) => lookup.email === userEmail,
+  await withFlagOn(async () => {
+    const emailOnlyGrantDeps = accessDeps({
+      hasAppAccess: async (_client, lookup) => lookup.email === userEmail,
+    })
+
+    const allowed = await hasFreemiumPaidAccess(userId, userEmail, false, emailOnlyGrantDeps)
+    assert.equal(allowed, "allowed")
+
+    // Reproduces the C1 regression: without the email, the manual grant is
+    // invisible to `hasAppAccess` and the holder is falsely denied.
+    const withoutEmail = await hasFreemiumPaidAccess(userId, null, false, emailOnlyGrantDeps)
+    assert.equal(withoutEmail, "denied")
   })
+})
 
-  const allowed = await hasFreemiumPaidAccess(userId, userEmail, emailOnlyGrantDeps)
-  assert.equal(allowed, "allowed")
-
-  // Reproduces the C1 regression: without the email, the manual grant is
-  // invisible to `hasAppAccess` and the holder is falsely denied.
-  const withoutEmail = await hasFreemiumPaidAccess(userId, null, emailOnlyGrantDeps)
-  assert.equal(withoutEmail, "denied")
+// PR1 review fix (F1b): a field-test guest's moderator lookup is skipped
+// entirely by middleware (`!fieldTestGuest && dependencies.resolveModeratorAccess
+// ? ... : Promise.resolve("none")`), so an unrelated moderator outage can
+// never surface for them. The `resolveModeratorAccess` stub below returns a
+// state that would flip the outcome if it were ever consulted (`"ended"`,
+// which forces the independent-paid-access recomputation and — since that
+// recomputation says no — would deny), proving the skip actually happens
+// rather than coincidentally agreeing.
+test("hasFreemiumPaidAccess: a field-test guest's moderator lookup is skipped, mirroring middleware's access_kind exception", async () => {
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      true,
+      accessDeps({
+        hasAppAccess: async () => true, // valid manual field-test grant
+        hasPaidAppAccess: async () => false, // no independent paid entitlement
+        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
+      }),
+    )
+    assert.equal(result, "allowed")
+  })
 })
 
 // --- 4. I3: parity between the middleware composite and the guard util -----
@@ -396,6 +478,12 @@ type ParityScenario = {
   hasCurrentPaidAppAccess: (lookup: { userId: string }) => boolean
   oneTimeAccessState: OneTimeAccessState
   moderatorAccess: ModeratorAccessResolution
+  // PR1 review fix (F1): both seams skip the moderator lookup entirely for a
+  // field-test guest (access_kind === "field_test"), so `moderatorAccess`
+  // above is a trap value for these scenarios — it must never actually be
+  // consulted, and the scenario is chosen so that consulting it would flip
+  // the outcome (catching a forgotten skip).
+  fieldTestGuest: boolean
   expected: FreemiumAccessResult
 }
 
@@ -406,6 +494,7 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => true,
     oneTimeAccessState: "none",
     moderatorAccess: { kind: "none" },
+    fieldTestGuest: false,
     expected: "allowed",
   },
   {
@@ -414,6 +503,7 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => false,
     oneTimeAccessState: "active",
     moderatorAccess: { kind: "none" },
+    fieldTestGuest: false,
     expected: "allowed",
   },
   {
@@ -422,6 +512,7 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => false,
     oneTimeAccessState: "none",
     moderatorAccess: { kind: "active", campaignId: "c1", expiresAt: "2026-12-31T00:00:00.000Z" },
+    fieldTestGuest: false,
     expected: "allowed",
   },
   {
@@ -431,6 +522,7 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => false,
     oneTimeAccessState: "none",
     moderatorAccess: { kind: "none" },
+    fieldTestGuest: false,
     expected: "allowed",
   },
   {
@@ -439,6 +531,7 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => false,
     oneTimeAccessState: "none",
     moderatorAccess: { kind: "none" },
+    fieldTestGuest: false,
     expected: "denied",
   },
   {
@@ -447,61 +540,103 @@ const parityScenarios: ParityScenario[] = [
     hasCurrentPaidAppAccess: () => false, // independent check says no
     oneTimeAccessState: "none",
     moderatorAccess: { kind: "unavailable" },
+    fieldTestGuest: false,
     expected: "unavailable",
+  },
+  {
+    // F1b: a field-test guest with a valid manual grant. `moderatorAccess`
+    // is "ended" here specifically because — if the access_kind-driven skip
+    // were missing — "ended" forces the independent-paid-access
+    // recomputation (hasCurrentPaidAppAccess: false below), which would flip
+    // this to "denied". Only the skip keeps it "allowed".
+    name: "field-test-guest",
+    hasCurrentAppAccess: () => true,
+    hasCurrentPaidAppAccess: () => false,
+    oneTimeAccessState: "none",
+    moderatorAccess: { kind: "ended", campaignId: "c1" },
+    fieldTestGuest: true,
+    expected: "allowed",
+  },
+  {
+    // F1's exact composed replay: valid manual field-test access + no
+    // independent paid entitlement + an unavailable moderator lookup. Absent
+    // the skip, this is exactly the scenario that regressed to a 503/denied
+    // outcome that main (which has no per-route guard at all) never
+    // produces for this user.
+    name: "field-test-guest-moderator-unavailable",
+    hasCurrentAppAccess: () => true,
+    hasCurrentPaidAppAccess: () => false,
+    oneTimeAccessState: "none",
+    moderatorAccess: { kind: "unavailable" },
+    fieldTestGuest: true,
+    expected: "allowed",
   },
 ]
 
 for (const scenario of parityScenarios) {
-  test(`parity (I3): middleware and hasFreemiumPaidAccess agree on "${scenario.name}"`, async () => {
-    // Seam 1: the in-route guard util.
-    const utilResult = await hasFreemiumPaidAccess(parityUserId, parityEmail, {
-      client: {} as never,
-      hasAppAccess: async (_client, lookup) => scenario.hasCurrentAppAccess(lookup),
-      hasPaidAppAccess: async (_client, lookup) => scenario.hasCurrentPaidAppAccess(lookup),
-      resolveOneTimeAccessState: async () => scenario.oneTimeAccessState,
-      resolveModeratorAccess: async () => scenario.moderatorAccess,
+  test(`parity (I3/F1): middleware and hasFreemiumPaidAccess agree on "${scenario.name}"`, async () => {
+    await withFlagOn(async () => {
+      // Seam 1: the in-route guard util.
+      const utilResult = await hasFreemiumPaidAccess(
+        parityUserId,
+        parityEmail,
+        scenario.fieldTestGuest,
+        {
+          client: {} as never,
+          hasAppAccess: async (_client, lookup) => scenario.hasCurrentAppAccess(lookup),
+          hasPaidAppAccess: async (_client, lookup) => scenario.hasCurrentPaidAppAccess(lookup),
+          resolveOneTimeAccessState: async () => scenario.oneTimeAccessState,
+          resolveModeratorAccess: async () => scenario.moderatorAccess,
+        },
+      )
+      assert.equal(utilResult, scenario.expected, `hasFreemiumPaidAccess: ${scenario.name}`)
+
+      // Seam 2: the middleware paywall, given the identical deps.
+      const fakeSupabase = {
+        auth: {
+          getUser: async () => ({
+            data: {
+              user: {
+                id: parityUserId,
+                email: parityEmail,
+                app_metadata: scenario.fieldTestGuest ? { access_kind: "field_test" } : {},
+              },
+            },
+          }),
+        },
+        from(table: string) {
+          throw new Error(`unexpected table read: ${table}`)
+        },
+      }
+      const dependencies: UpdateSessionDependencies = {
+        createServerClient: (() =>
+          fakeSupabase) as unknown as UpdateSessionDependencies["createServerClient"],
+        hasCurrentAppAccess: (async (_client, lookup) =>
+          scenario.hasCurrentAppAccess(lookup)) as UpdateSessionDependencies["hasCurrentAppAccess"],
+        hasCurrentPaidAppAccess: (async (_client, lookup) =>
+          scenario.hasCurrentPaidAppAccess(
+            lookup,
+          )) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
+        resolveOneTimeAccessState: (async () =>
+          scenario.oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
+        resolveModeratorAccess: (async () =>
+          scenario.moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
+        getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
+      }
+
+      const response = await createUpdateSession(dependencies)(
+        new NextRequest("https://chaarlie.de/api/profile"),
+      )
+
+      if (scenario.expected === "allowed") {
+        assert.equal(response.status, 200, `middleware: ${scenario.name}`)
+      } else if (scenario.expected === "denied") {
+        assert.equal(response.status, 403, `middleware: ${scenario.name}`)
+        assert.deepEqual(await response.json(), { error: "subscription_required" })
+      } else {
+        assert.equal(response.status, 503, `middleware: ${scenario.name}`)
+        assert.deepEqual(await response.json(), { error: "moderator_access_unavailable" })
+      }
     })
-    assert.equal(utilResult, scenario.expected, `hasFreemiumPaidAccess: ${scenario.name}`)
-
-    // Seam 2: the middleware paywall, given the identical deps.
-    const fakeSupabase = {
-      auth: {
-        getUser: async () => ({
-          data: { user: { id: parityUserId, email: parityEmail, app_metadata: {} } },
-        }),
-      },
-      from(table: string) {
-        throw new Error(`unexpected table read: ${table}`)
-      },
-    }
-    const dependencies: UpdateSessionDependencies = {
-      createServerClient: (() =>
-        fakeSupabase) as unknown as UpdateSessionDependencies["createServerClient"],
-      hasCurrentAppAccess: (async (_client, lookup) =>
-        scenario.hasCurrentAppAccess(lookup)) as UpdateSessionDependencies["hasCurrentAppAccess"],
-      hasCurrentPaidAppAccess: (async (_client, lookup) =>
-        scenario.hasCurrentPaidAppAccess(
-          lookup,
-        )) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
-      resolveOneTimeAccessState: (async () =>
-        scenario.oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
-      resolveModeratorAccess: (async () =>
-        scenario.moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
-      getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
-    }
-
-    const response = await createUpdateSession(dependencies)(
-      new NextRequest("https://chaarlie.de/api/profile"),
-    )
-
-    if (scenario.expected === "allowed") {
-      assert.equal(response.status, 200, `middleware: ${scenario.name}`)
-    } else if (scenario.expected === "denied") {
-      assert.equal(response.status, 403, `middleware: ${scenario.name}`)
-      assert.deepEqual(await response.json(), { error: "subscription_required" })
-    } else {
-      assert.equal(response.status, 503, `middleware: ${scenario.name}`)
-      assert.deepEqual(await response.json(), { error: "moderator_access_unavailable" })
-    }
   })
 }

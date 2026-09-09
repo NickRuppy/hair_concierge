@@ -12,6 +12,7 @@ import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import { hasFreemiumPaidAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
 import { createClient } from "@/lib/supabase/server"
 
 const saveBodySchema = z
@@ -127,13 +128,18 @@ export function createScanSaveRouteHandlers(deps: ScanSaveRouteDeps) {
 // Separate from `getUserId`: the shared scan wrapper only forwards a userId
 // string to the handler (see `ScanRouteContext` in `@/lib/scan/route.ts`,
 // which this task does not restructure), so the email needed for the C1 fix
-// has no path from `getUserId` into `requirePremiumAccess` without a second
+// and the `access_kind` needed for the PR1 review's F1 field-test fix have
+// no path from `getUserId` into `requirePremiumAccess` without a second
 // `auth.getUser()` read. That is a deliberate, request-scoped read — reusing
 // a module-level variable across the two calls would leak one concurrent
-// request's email into another's premium check.
+// request's email/app_metadata into another's premium check.
 async function requirePremiumAccessForCurrentUser(userId: string): Promise<FreemiumAccessResult> {
   const { data } = await (await createClient()).auth.getUser()
-  return hasFreemiumPaidAccess(userId, data.user?.email)
+  return hasFreemiumPaidAccess(
+    userId,
+    data.user?.email,
+    isPersonalPlanFieldTestGuest(data.user ?? {}),
+  )
 }
 
 const handlers = createScanSaveRouteHandlers({
