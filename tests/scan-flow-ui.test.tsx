@@ -2,17 +2,25 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 
+import { PremiumSheet } from "../src/components/premium-sheet/premium-sheet"
+import { ScanActionFooter } from "../src/components/scan/scan-action-footer"
 import { ScanFlow } from "../src/components/scan/scan-flow"
+import { ScanResultCard } from "../src/components/scan/scan-result-card"
 import { ScanResultSheet } from "../src/components/scan/scan-result-sheet"
 import { ScanSaveSheet, type ScanSaveCompletion } from "../src/components/scan/scan-save-sheet"
 import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
 import { ScanUnknownFlow } from "../src/components/scan/scan-unknown-flow"
-import { ScanWishlistSheet } from "../src/components/scan/scan-wishlist-sheet"
+import { ScanWishlistSheet, ScanWishlistTrigger } from "../src/components/scan/scan-wishlist-sheet"
 import { Scanner } from "../src/components/scan/scanner"
 import type { ScanWishlistEntry } from "../src/app/api/scan/wishlist/route"
+import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type { ScanAnalyticsPort } from "../src/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
-import type { ScanResolvedVerdictResult, ScanUnknownProductResult } from "../src/lib/scan/types"
+import type {
+  ScanAlternativePresentation,
+  ScanResolvedVerdictResult,
+  ScanUnknownProductResult,
+} from "../src/lib/scan/types"
 
 /**
  * `ScanFlow` is a "use client" component: this repo has no jsdom/testing-library, so the
@@ -844,4 +852,215 @@ test("ScanWishlistSheet: a stale load cannot overwrite the newer list (F13)", as
   await view.settle()
 
   assert.deepEqual(entryIds(view.tree), ["new"])
+})
+
+// --- T9: the free tier's verdict states, end to end through the flow ---------
+
+/**
+ * A free-tier `in_catalog` verdict, i.e. T8's masked shape. The only structural
+ * difference to the premium response is the alternatives list plus `freeRevealAvailable`
+ * — which is exactly the signal the flow gates every free state on.
+ */
+function maskedVerdict(productId = "p-a", freeRevealAvailable = true): ScanMaskedVerdictResult {
+  return {
+    kind: "in_catalog",
+    verdict: "mismatch",
+    verdictLabel: "Passt nicht",
+    verdictTitle: "Passt nicht zu deinem Haar",
+    status: "danger",
+    subtitle: "1 von 3 Zielbereichen getroffen",
+    evaluatedRole: null,
+    evaluatedRoleLabel: null,
+    dimensions: [],
+    criteria: [],
+    coverage: null,
+    fitNarrative: null,
+    alternatives: [
+      {
+        verdict: "ideal",
+        verdictLabel: "Passt",
+        comparison: {
+          rows: [{ rowId: "care_weight", label: "Pflegegewicht", state: "match" }],
+          summaryScore: 1,
+        },
+      },
+    ],
+    product: verdictResult(productId).product,
+    snapshotSource: "refined",
+    savedState: { state: null, managedByScan: false },
+    freeRevealAvailable,
+  }
+}
+
+/** The same verdict a premium (or flag-off) caller gets: no masking marker at all. */
+function premiumVerdict(productId = "p-a"): ScanResolvedVerdictResult {
+  const { freeRevealAvailable: _omitted, ...rest } = maskedVerdict(productId)
+  return { ...rest, alternatives: [] }
+}
+
+const REVEALED_ALTERNATIVE: ScanAlternativePresentation = {
+  productId: "p-alt",
+  displayName: "Lab Shampoo Gamma",
+  imageUrl: null,
+  priceLabel: "9,99 €",
+  netContentLabel: null,
+  verdict: "ideal",
+  verdictLabel: "Passt",
+  brand: "Chaarlie Lab",
+  purchaseUrl: null,
+}
+
+function cardProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, ScanResultCard, "ScanResultCard").props
+}
+
+function wishlistTriggerProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, ScanWishlistTrigger, "ScanWishlistTrigger").props
+}
+
+function footerProps(tree: ReactNode): Record<string, any> {
+  return requireByType(sheetProps(tree).footer, ScanActionFooter, "ScanActionFooter").props
+}
+
+function premiumSheetProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, PremiumSheet, "PremiumSheet").props
+}
+
+/** Decode `ean`, wait out the confirm window, and settle into the result sheet. */
+async function scanInto(flow: FlowHarness, ean = "4006381333931"): Promise<void> {
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: ean })
+  await delay(450)
+  await flow.settle()
+}
+
+test("free tier: a masked verdict locks Merken on both surfaces and offers the reveal", async () => {
+  const flow = await mountFlow(async () => json(maskedVerdict()))
+  await scanInto(flow)
+
+  assert.equal(cardProps(flow.tree).result.freeRevealAvailable, true)
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  assert.equal(wishlistTriggerProps(flow.tree).locked, true)
+  assert.equal(footerProps(flow.tree).saveLocked, true)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+test("free tier: the reveal posts the SCANNED product's id and unblurs into the full card", async () => {
+  const revealBodies: string[] = []
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict("p-a"))
+    if (url === "/api/scan/reveal") {
+      revealBodies.push(String(init?.body))
+      return json({ ok: true, productId: "p-a", alternatives: [REVEALED_ALTERNATIVE] })
+    }
+    return notFound()
+  })
+  await scanInto(flow)
+
+  cardProps(flow.tree).onReveal()
+  await flow.settle()
+
+  // Masked alternatives carry no id to round-trip, so the body names the scanned product.
+  assert.deepEqual(JSON.parse(revealBodies[0]), { productId: "p-a" })
+  assert.deepEqual(cardProps(flow.tree).revealedAlternatives, [REVEALED_ALTERNATIVE])
+  assert.equal(cardProps(flow.tree).revealPending, false)
+  assert.deepEqual(flow.toasts, [])
+})
+
+test("free tier: 409 already_used turns the CTA into the Premium gate without a toast", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict())
+    return json({ error: "already_used" }, 409)
+  })
+  await scanInto(flow)
+
+  cardProps(flow.tree).onReveal()
+  await flow.settle()
+
+  assert.equal(cardProps(flow.tree).revealUnavailable, true)
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  // Nothing went wrong for the user — the credit is simply spent elsewhere.
+  assert.deepEqual(flow.toasts, [])
+})
+
+test("free tier: an empty reveal says so and leaves the unspent credit's CTA in place", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict())
+    // T8: an empty eligible list is a 200 that deliberately spends NO credit.
+    return json({ ok: true, productId: "p-a", alternatives: [] })
+  })
+  await scanInto(flow)
+
+  cardProps(flow.tree).onReveal()
+  await flow.settle()
+
+  assert.deepEqual(flow.toasts, ["Gerade keine Alternative verfügbar."])
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  assert.equal(cardProps(flow.tree).revealUnavailable, false)
+  assert.equal(cardProps(flow.tree).result.freeRevealAvailable, true)
+})
+
+test("free tier: the post-reveal CTA opens the Premium sheet for empfehlungen", async () => {
+  const flow = await mountFlow(async () => json(maskedVerdict("p-a", false)))
+  await scanInto(flow)
+
+  assert.equal(cardProps(flow.tree).result.freeRevealAvailable, false)
+  cardProps(flow.tree).onPremiumAlternatives()
+  await flow.settle()
+
+  assert.equal(premiumSheetProps(flow.tree).open, true)
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "empfehlungen",
+    source: "scan:verdict",
+  })
+  // A paywall over the viewfinder must not keep the detector burning frames.
+  assert.equal(scannerProps(flow.tree).detectionPaused, true)
+})
+
+test("free tier: Merken opens the Premium sheet instead of the Merkliste or the save sheet", async () => {
+  const flow = await mountFlow(async () => json(maskedVerdict()))
+  await scanInto(flow)
+
+  footerProps(flow.tree).onSave()
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "merkliste",
+    source: "scan:verdict",
+  })
+  assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, false)
+
+  premiumSheetProps(flow.tree).onClose()
+  await flow.settle()
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+
+  // The header bookmark stays locked between scans, so it never 403s a free user.
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  assert.equal(wishlistTriggerProps(flow.tree).locked, true)
+  wishlistTriggerProps(flow.tree).onClick()
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "merkliste",
+    source: "scan:verdict",
+  })
+  assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, false)
+})
+
+test("premium: an unmasked verdict leaves every Merken and reveal affordance untouched", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") return json(premiumVerdict())
+    if (url === "/api/scan/wishlist") return json({ entries: [] })
+    return notFound()
+  })
+  await scanInto(flow)
+
+  assert.equal(wishlistTriggerProps(flow.tree).locked, false)
+  assert.equal(footerProps(flow.tree).saveLocked, false)
+  assert.equal(cardProps(flow.tree).revealedAlternatives, null)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+
+  // Merken still opens the real save sheet, not a paywall.
+  footerProps(flow.tree).onSave()
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
 })

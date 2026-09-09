@@ -9,6 +9,7 @@ import type { ScanWishlistEntry } from "@/app/api/scan/wishlist/route"
 import { scanAlternativeMetaLine } from "@/lib/scan/result-presentation"
 import { useLatestRequest } from "@/lib/scan/use-latest-request"
 
+import { ScanLockBadge } from "./scan-lock-badge"
 import { ScanProductThumb } from "./scan-product-thumb"
 
 /**
@@ -19,15 +20,32 @@ import { ScanProductThumb } from "./scan-product-thumb"
 const EMPTY_COPY = "Noch nichts gemerkt. Scanne ein Produkt und speichere es hier."
 const ERROR_COPY = "Deine Merkliste lässt sich gerade nicht laden."
 
-export function ScanWishlistTrigger({ onClick }: { onClick: () => void }) {
+/**
+ * `locked` is the free tier's Merken gate (T9): `/api/scan/wishlist` denies a free user
+ * server-side, so the bookmark opens the Premium sheet instead of a list it may not read.
+ * The marker is a CORNER badge — the bookmark symbol itself stays fully visible (binding
+ * constraint, same contract as T3's `NavLockBadge`).
+ */
+export function ScanWishlistTrigger({
+  onClick,
+  locked = false,
+}: {
+  onClick: () => void
+  locked?: boolean
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label="Merkliste öffnen"
-      className="flex h-11 w-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+      data-scan-wishlist-locked={locked ? "true" : "false"}
+      aria-label={locked ? "Merkliste öffnen — Premium" : "Merkliste öffnen"}
+      className="relative flex h-11 w-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
     >
       <Bookmark className="h-5 w-5" aria-hidden="true" />
+      {/* The 44px tap target is much larger than the 20px symbol inside it: without this
+          offset the badge would float in empty space at the button's corner instead of
+          marking the bookmark it belongs to. */}
+      {locked ? <ScanLockBadge className="right-[7px] top-[7px]" /> : null}
     </button>
   )
 }

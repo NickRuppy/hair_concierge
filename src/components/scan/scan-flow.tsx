@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
 
+import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
 import { Skeleton } from "@/components/ui/skeleton"
+import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import {
   noOpScanAnalytics,
   scanResultShownInCatalog,
@@ -12,6 +14,7 @@ import {
   initialScanFlowState,
   isDetectionPaused,
   scanFlowReducer,
+  scanRevealedAlternatives,
   type ScanFlowState,
   type ScanFlowStep,
 } from "@/lib/scan/scan-flow-state"
@@ -21,7 +24,8 @@ import {
   SCAN_RESOLVING_TITLE,
   SCAN_UNKNOWN_HEADLINE,
 } from "@/lib/scan/verdict-labels"
-import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
+import type { ScanClientResolveResult, ScanVerdictResult } from "@/lib/scan/verdict-access"
+import type { ScanAlternativePresentation } from "@/lib/scan/types"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
 import { useToast } from "@/providers/toast-provider"
@@ -66,6 +70,21 @@ const RESOLVE_ERRORS: Record<string, string> = {
   temporarily_unavailable: "Hat nicht geklappt – versuch's nochmal.",
 }
 const GENERIC_ERROR = "Hat nicht geklappt – versuch's nochmal."
+
+/**
+ * The one-lifetime reveal came back with nothing to show (T8: an empty eligible list is a
+ * 200 that deliberately spends NO credit). Saying so plainly is the only honest option —
+ * the CTA stays, because the credit is still there.
+ */
+const REVEAL_EMPTY_NOTICE = "Gerade keine Alternative verfügbar."
+
+/** Free-tier gates on this surface all open the same sheet (T5 opener contract). */
+const SCAN_VERDICT_SOURCE = "scan:verdict"
+const MERKLISTE_GATE: PremiumSheetContext = { feature: "merkliste", source: SCAN_VERDICT_SOURCE }
+const EMPFEHLUNGEN_GATE: PremiumSheetContext = {
+  feature: "empfehlungen",
+  source: SCAN_VERDICT_SOURCE,
+}
 
 /** Why the viewfinder is replaced by the fallback tile. */
 type ScanCameraTileReason = ScanUnavailableReason | "stalled"
@@ -223,7 +242,7 @@ export function ScanFlow({
           returnToScanning()
           return
         }
-        const result = (await response.json()) as ScanResolveResult
+        const result = (await response.json()) as ScanClientResolveResult
         if (confirmUntil !== null) {
           const remaining = confirmUntil - performance.now()
           if (remaining > 0) await new Promise((done) => window.setTimeout(done, remaining))
@@ -336,6 +355,56 @@ export function ScanFlow({
     [analytics],
   )
 
+  /**
+   * The free tier's one-lifetime reveal (T9), against T8's `POST /api/scan/reveal`. The
+   * body carries the SCANNED product's id — masked alternatives have no id to round-trip
+   * — and the reducer drops the answer unless that product is still on screen.
+   *
+   * The three outcomes the endpoint's contract asks the UI to tell apart:
+   * - `200` with alternatives → unblur into the full card (a repeat call for the same
+   *   product re-serves them, so a reload never loses what the credit bought).
+   * - `200` with an empty list → nothing to show and NO credit spent: say so, keep the CTA.
+   * - `409 already_used` → the credit went to a different product; the CTA becomes the
+   *   Premium sheet rather than a button the server will keep refusing.
+   */
+  const revealAlternatives = useCallback(
+    async (productId: string) => {
+      dispatch({ type: "reveal_started", productId })
+      try {
+        const response = await fetch("/api/scan/reveal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId }),
+        })
+        if (!response.ok) {
+          const payload = (await response.json().catch(() => null)) as { error?: string } | null
+          const alreadyUsed = payload?.error === "already_used"
+          dispatch({
+            type: "reveal_failed",
+            productId,
+            reason: alreadyUsed ? "already_used" : "error",
+          })
+          if (!alreadyUsed) toast({ title: GENERIC_ERROR, variant: "destructive" })
+          return
+        }
+        const result = (await response.json()) as {
+          alternatives?: ScanAlternativePresentation[]
+        }
+        const alternatives = result.alternatives ?? []
+        if (alternatives.length === 0) {
+          dispatch({ type: "reveal_failed", productId, reason: "error" })
+          toast({ title: REVEAL_EMPTY_NOTICE })
+          return
+        }
+        dispatch({ type: "reveal_succeeded", productId, alternatives })
+      } catch {
+        dispatch({ type: "reveal_failed", productId, reason: "error" })
+        toast({ title: GENERIC_ERROR, variant: "destructive" })
+      }
+    },
+    [toast],
+  )
+
   const openFromProductId = useCallback(
     (productId: string) => {
       // The reducer's `resolve_started` deliberately leaves auxiliary sheets alone, so
@@ -396,6 +465,15 @@ export function ScanFlow({
   const { step } = state
   const sheetOpen = step.kind !== "scanning"
   const resultStep = step.kind === "result" ? step : null
+  /**
+   * Every free-state decision below reads the RESPONSE, never a client-side entitlement
+   * guess: `merkenLocked` follows the tier the resolve responses have proven so far, and
+   * the reveal affordances follow this verdict's own masked shape.
+   */
+  const merkenLocked = state.tier === "free"
+  const revealedAlternatives = scanRevealedAlternatives(state)
+  const revealPending = state.reveal.status === "pending"
+  const revealUnavailable = state.reveal.status === "unavailable"
   const cameraTileReason: ScanCameraTileReason | null =
     state.camera.status === "unavailable"
       ? state.camera.reason
@@ -420,12 +498,20 @@ export function ScanFlow({
       data-scan-camera-reason={cameraTileReason ?? "none"}
       data-scan-save-open={state.saveOpen ? "true" : "false"}
       data-scan-epoch={state.epoch}
+      data-scan-tier={state.tier}
+      data-scan-reveal={state.reveal.status}
+      data-scan-premium-sheet={state.premiumSheet?.feature ?? "none"}
       className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5"
     >
       <div className="flex items-center justify-between py-2">
         <h1 className="text-[17px] font-bold text-foreground">Scan</h1>
         <ScanWishlistTrigger
-          onClick={() => dispatch({ type: "auxiliary_opened", sheet: "wishlist" })}
+          locked={merkenLocked}
+          onClick={() =>
+            merkenLocked
+              ? dispatch({ type: "premium_sheet_opened", context: MERKLISTE_GATE })
+              : dispatch({ type: "auxiliary_opened", sheet: "wishlist" })
+          }
         />
       </div>
 
@@ -485,7 +571,12 @@ export function ScanFlow({
               verdict={resultStep.result.kind === "in_catalog" ? resultStep.result.verdict : null}
               product={resultStep.result.product}
               savedState={resultStep.result.savedState}
-              onSave={() => dispatch({ type: "save_sheet_toggled", open: true })}
+              saveLocked={merkenLocked}
+              onSave={() =>
+                merkenLocked
+                  ? dispatch({ type: "premium_sheet_opened", context: MERKLISTE_GATE })
+                  : dispatch({ type: "save_sheet_toggled", open: true })
+              }
               onBuy={() =>
                 analytics.track("scan_buy_clicked", {
                   verdict: resultVerdictLabel(resultStep.result),
@@ -499,6 +590,13 @@ export function ScanFlow({
         {resultStep ? (
           <ScanResultCard
             result={resultStep.result}
+            revealedAlternatives={revealedAlternatives}
+            revealPending={revealPending}
+            revealUnavailable={revealUnavailable}
+            onReveal={() => void revealAlternatives(resultStep.result.product.productId)}
+            onPremiumAlternatives={() =>
+              dispatch({ type: "premium_sheet_opened", context: EMPFEHLUNGEN_GATE })
+            }
             onRescan={returnToScanning}
             onOpenAlternative={openFromProductId}
             // An alternative's "Kaufen ↗" reports the verdict of the payload it was
@@ -567,6 +665,15 @@ export function ScanFlow({
         // and keeps every buy click in one event.
         onBuy={() => analytics.track("scan_buy_clicked", { verdict: "merkliste" })}
       />
+
+      {/* Every free-tier gate on this surface — Merken and the post-reveal alternatives
+          CTA — opens the one stub sheet from T5. PR4 replaces its body with the real
+          paywall behind the same opener contract. */}
+      <PremiumSheet
+        open={state.premiumSheet !== null}
+        context={state.premiumSheet}
+        onClose={() => dispatch({ type: "premium_sheet_closed" })}
+      />
     </div>
   )
 }
@@ -575,7 +682,7 @@ export function ScanFlow({
  * The `verdict` analytics property: the fit verdict on `in_catalog`, or the need
  * mode ("not_needed" / "deferred") when the category reached no fit verdict at all.
  */
-function resultVerdictLabel(result: ScanResolvedVerdictResult): string {
+function resultVerdictLabel(result: ScanVerdictResult): string {
   return result.kind === "in_catalog" ? result.verdict : result.mode
 }
 

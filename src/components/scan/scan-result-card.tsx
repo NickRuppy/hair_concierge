@@ -11,14 +11,20 @@ import {
 import type {
   ScanAlternativePresentation,
   ScanProductHeader,
-  ScanResolvedVerdictResult,
   ScanStatusToken,
 } from "@/lib/scan/types"
+import {
+  isMaskedScanVerdict,
+  scanRevealCta,
+  type ScanVerdictResult,
+} from "@/lib/scan/verdict-access"
 import type { Stage3CriterionResult } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
 import { ScanDimensionBar } from "./scan-dimension-bar"
+import { ScanMaskedAlternatives } from "./scan-masked-alternatives"
 import { ScanProductThumb } from "./scan-product-thumb"
+import { SCAN_MARKER_CLASS, SCAN_STATUS_CLASS } from "./scan-status-tokens"
 
 /**
  * The scan verdict body (UI spec §2). Same anatomy in every verdict: product header,
@@ -27,19 +33,8 @@ import { ScanProductThumb } from "./scan-product-thumb"
  * this file only owns fixed section chrome.
  */
 
-const STATUS_CLASS: Record<ScanStatusToken, string> = {
-  ok: "bg-[var(--status-ok-bg)] text-[var(--status-ok-text)]",
-  pending: "bg-[var(--status-pending-bg)] text-[var(--status-pending-text)]",
-  danger: "bg-[var(--status-danger-bg)] text-[var(--status-danger-text)]",
-  neutral: "bg-[var(--status-neutral-bg)] text-[var(--status-neutral-text)]",
-}
-
-const MARKER_CLASS: Record<ScanStatusToken, string> = {
-  ok: "text-[var(--status-ok-text)]",
-  pending: "text-[var(--status-pending-text)]",
-  danger: "text-[var(--status-danger-text)]",
-  neutral: "text-muted-foreground",
-}
+const STATUS_CLASS = SCAN_STATUS_CLASS
+const MARKER_CLASS = SCAN_MARKER_CLASS
 
 /**
  * Fixed reassurance for a verdict that can change with the profile behind it. Not
@@ -50,20 +45,79 @@ const GOOD_TO_KNOW_BODY = "Ändert sich dein Haar oder deine Routine, prüfen wi
 
 export function ScanResultCard({
   result,
+  revealedAlternatives = null,
+  revealPending = false,
+  revealUnavailable = false,
   onRescan,
   onOpenAlternative,
   onBuyAlternative,
+  onReveal = () => {},
+  onPremiumAlternatives = () => {},
 }: {
-  result: ScanResolvedVerdictResult
+  result: ScanVerdictResult
+  /**
+   * Free tier only (T9): the full alternatives the one-lifetime reveal handed back for
+   * THIS product. Always `null` for a premium or flag-off verdict, whose alternatives
+   * were never masked in the first place.
+   */
+  revealedAlternatives?: ScanAlternativePresentation[] | null
+  revealPending?: boolean
+  revealUnavailable?: boolean
   onRescan: () => void
   onOpenAlternative: (productId: string) => void
   /** An alternative's "Kaufen ↗" is a buy click too — same event as the footer's. */
   onBuyAlternative: (productId: string) => void
+  onReveal?: () => void
+  onPremiumAlternatives?: () => void
 }) {
   const sections =
     result.kind === "not_needed"
       ? scanNotNeededSections(result)
       : { reasons: false, goodToKnow: false, coveredBy: false }
+
+  /**
+   * Three mutually exclusive shapes for the alternatives block. The LAST one is today's
+   * path, reached by every premium and every flag-off verdict (their response carries no
+   * masking marker at all), and it renders exactly as before this task.
+   */
+  let alternativesBlock: React.ReactNode = null
+  if (result.kind === "in_catalog" && isMaskedScanVerdict(result)) {
+    if (revealedAlternatives) {
+      // The reveal succeeded: the SAME card the premium tier gets, arriving out of the
+      // masked card's blur (globals.css, 1.2s, inert under reduced motion).
+      alternativesBlock =
+        revealedAlternatives.length > 0 ? (
+          <div className="scan-reveal-unblur" data-scan-revealed-alternatives="">
+            <Alternatives
+              alternatives={revealedAlternatives}
+              onOpen={onOpenAlternative}
+              onBuy={onBuyAlternative}
+            />
+          </div>
+        ) : null
+    } else if (result.alternatives.length > 0) {
+      alternativesBlock = (
+        <ScanMaskedAlternatives
+          alternatives={result.alternatives}
+          cta={scanRevealCta({
+            freeRevealAvailable: result.freeRevealAvailable,
+            revealUnavailable,
+          })}
+          revealPending={revealPending}
+          onReveal={onReveal}
+          onPremium={onPremiumAlternatives}
+        />
+      )
+    }
+  } else if (result.kind === "in_catalog" && result.alternatives.length > 0) {
+    alternativesBlock = (
+      <Alternatives
+        alternatives={result.alternatives}
+        onOpen={onOpenAlternative}
+        onBuy={onBuyAlternative}
+      />
+    )
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -129,13 +183,7 @@ export function ScanResultCard({
         <CoveredBy entries={result.coveredBy} />
       ) : null}
 
-      {result.kind === "in_catalog" && result.alternatives.length > 0 ? (
-        <Alternatives
-          alternatives={result.alternatives}
-          onOpen={onOpenAlternative}
-          onBuy={onBuyAlternative}
-        />
-      ) : null}
+      {alternativesBlock}
 
       <button
         type="button"
