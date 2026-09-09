@@ -84,6 +84,15 @@ test("ScanProactiveTriggerCard: renders a card for every proactive trigger id wi
     assert.equal(card.length, 1)
     assert.equal(card[0].props["data-scan-trigger-card"], id)
     assert.ok(textContent(card[0]).length > 0)
+    // F8: the section has an accessible name — no more anonymous region in the a11y tree.
+    assert.ok(
+      typeof card[0].props["aria-label"] === "string" && card[0].props["aria-label"].length > 0,
+    )
+    // F8: the CTA's data attribute is namespaced per trigger id, not a bare "" shared
+    // across every card (a future Playwright selector on it would otherwise match many).
+    const cta = findByData(tree, "data-scan-trigger-cta")
+    assert.equal(cta.length, 1)
+    assert.equal(cta[0].props["data-scan-trigger-cta"], id)
   }
 })
 
@@ -113,15 +122,21 @@ test("ScanProactiveTriggerCard: passt_gut_moment/frust_serie/wiederkehrer open t
 
 // --- ScanCategoryRepeatCard ---------------------------------------------------
 
-test("ScanCategoryRepeatCard: renders its own card and opens the sheet on tap", () => {
+test("ScanCategoryRepeatCard: renders its own card, names the repeated category, and opens the sheet on tap", () => {
   let opened = 0
-  const tree = deepRender(ScanCategoryRepeatCard({ onOpenSheet: () => (opened += 1) }))
+  const tree = deepRender(
+    ScanCategoryRepeatCard({ categoryLabel: "Shampoo", onOpenSheet: () => (opened += 1) }),
+  )
   const card = findByData(tree, "data-scan-trigger-card")
   assert.equal(card.length, 1)
   assert.equal(card[0].props["data-scan-trigger-card"], "zwei_scans_gleiche_kategorie")
+  // F3/F7: an honest, non-debug-label title that names the actual repeated category.
+  assert.ok(textContent(card[0]).includes("Shampoo"))
 
   const cta = findAll(tree, (element) => element.type === "button")
   assert.equal(cta.length, 1)
+  // F8: the CTA's data attribute is namespaced, not a bare "" shared with the other card.
+  assert.equal(cta[0].props["data-scan-trigger-cta"], "zwei_scans_gleiche_kategorie")
   cta[0].props.onClick()
   assert.equal(opened, 1)
 })

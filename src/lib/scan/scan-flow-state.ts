@@ -148,14 +148,15 @@ export type ScanFlowAction =
       /**
        * T10: the two leaf inputs the trigger-layer decision needs that the reducer cannot
        * derive from its own history — `tier` (the server-verified signal, gates every
-       * trigger; see `scanTriggersEnabled`) and `isReturningSession` (the Wiederkehrer
-       * approximation from `triggers/session-marker.ts`). Both optional and default to the
-       * fail-closed values (`"premium"`, `false`) so every pre-T10 call site (a plain
-       * `{ token, result }`, across the test suites) keeps compiling and firing zero
-       * triggers, unchanged.
+       * trigger; see `scanTriggersEnabled`) and `sessionNumber` (fix round 1, F4: the
+       * Wiederkehrer approximation from `triggers/session-marker.ts`'s localStorage record —
+       * 1 on a device's first-ever visit). Both optional and default to the fail-closed
+       * values (`"premium"`, `1`, which can never equal the required session number 2) so
+       * every pre-T10 call site (a plain `{ token, result }`, across the test suites) keeps
+       * compiling and firing zero triggers, unchanged.
        */
       tier?: "free" | "premium"
-      isReturningSession?: boolean
+      sessionNumber?: number
     }
   | { type: "resolve_failed"; token: number }
   | { type: "reveal_started"; productId: string; silent: boolean }
@@ -186,6 +187,14 @@ export type ScanFlowAction =
   | { type: "camera_stalled" }
   | { type: "camera_retry" }
   | { type: "camera_live" }
+  /**
+   * Fix round 1 (F1): re-seeds the session-wide fatigue budget from `sessionStorage`,
+   * dispatched once from `scan-flow.tsx`'s very first mount effect — before any resolve can
+   * land — so a remount (tab away and back) cannot forget an already-spent pitch. `id` is
+   * `null` when nothing was persisted (a genuinely fresh session, or a storage read that
+   * failed closed).
+   */
+  | { type: "fatigue_hydrated"; id: ScanProactiveTriggerId | null }
 
 export const initialScanFlowState: ScanFlowState = {
   step: { kind: "scanning" },
@@ -258,20 +267,31 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         action.result,
       )
       const category = categoryOfResult(action.result)
+      const nextStep = stepForResult(action.result)
       const gate: ScanTriggerGate = {
         freemiumScannerFirstEnabled: true,
         tier: action.tier ?? "premium",
       }
-      const activeProactiveTrigger = resolveGatedProactiveScanTrigger(
-        gate,
-        {
-          categoriesScannedThisSession: categoriesScanned,
-          verdict: action.result.kind === "in_catalog" ? action.result.verdict : null,
-          consecutiveMismatchCount: consecutiveMismatches,
-          isReturningSession: action.isReturningSession ?? false,
-        },
-        state.proactiveTriggerShown !== null,
-      )
+      /**
+       * Fix round 1 (F2): `unknown`/`pending` steps render neither new card (both are
+       * gated on `resultStep` in `scan-flow.tsx`, i.e. exactly `nextStep.kind === "result"`)
+       * — evaluating the proactive decision for them anyway would select and RECORD a
+       * winner nobody ever sees, silently burning the session's one pitch. Only a genuine
+       * result step (`in_catalog`/`not_needed`) may select or spend it.
+       */
+      const activeProactiveTrigger =
+        nextStep.kind === "result"
+          ? resolveGatedProactiveScanTrigger(
+              gate,
+              {
+                categoriesScannedThisSession: categoriesScanned,
+                verdict: action.result.kind === "in_catalog" ? action.result.verdict : null,
+                consecutiveMismatchCount: consecutiveMismatches,
+                sessionNumber: action.sessionNumber ?? 1,
+              },
+              state.proactiveTriggerShown !== null,
+            )
+          : null
       const zweiScansGleicheKategorie =
         category !== null &&
         firesGatedZweiScansGleicheKategorie(gate, {
@@ -281,7 +301,7 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         })
       return {
         ...state,
-        step: stepForResult(action.result),
+        step: nextStep,
         activeRequest: null,
         tier: nextScanTierSignal(state.tier, scanTierSignal(action.result)),
         categoriesScanned,
@@ -289,7 +309,9 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
         activeProactiveTrigger,
         zweiScansGleicheKategorie,
         // First one wins for the session (fatigue rule) — a later resolve's own decision
-        // never overwrites an already-recorded one.
+        // never overwrites an already-recorded one. `activeProactiveTrigger` is `null` for
+        // an unknown/pending step (F2 above), so this line leaves an unspent budget
+        // untouched rather than recording a phantom winner.
         proactiveTriggerShown: state.proactiveTriggerShown ?? activeProactiveTrigger,
       }
     }
@@ -424,6 +446,14 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
     case "camera_retry":
     case "camera_live":
       return { ...state, camera: { status: "live" } }
+
+    case "fatigue_hydrated":
+      // Only ever meaningful once, on the very first mount effect, before any resolve can
+      // land — guarded anyway so a stray second dispatch can never clobber a budget this
+      // same mount has already spent.
+      return state.proactiveTriggerShown === null
+        ? { ...state, proactiveTriggerShown: action.id }
+        : state
   }
 }
 

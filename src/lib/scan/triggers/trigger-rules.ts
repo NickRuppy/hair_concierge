@@ -86,6 +86,14 @@ export function scanTriggersEnabled(gate: ScanTriggerGate): boolean {
  * `merkliste`; the 3 sheet-opening proactive pitches (6-8) → `routine`. Deliberately has
  * no entry for `kategorien_luecke` (links into the gated Routine page instead of opening
  * the sheet — journey ruling) or `unbekanntes_produkt` (never pitches at all).
+ *
+ * Fix round 1 (F6, adjudicated — keep as-is, do not rewire): `erster_passt_nicht` and
+ * `merken_tap` below are the canonical rule models for triggers 1 and 3, but their actual
+ * surfaces shipped in T9 as the reveal CTA and the Merken lock, both opening the sheet with
+ * `source: "scan:verdict"` (`scan-flow.tsx`'s `MERKLISTE_GATE`/`EMPFEHLUNGEN_GATE`), not
+ * `trigger:erster-passt-nicht` / `trigger:merken-tap`. That is intentional: T9's sources are
+ * not renamed, and no production caller uses these two registry entries — they exist so the
+ * mapping itself stays independently testable.
  */
 const SCAN_TRIGGER_SHEET_FEATURE: Partial<Record<ScanTriggerId, PremiumFeatureId>> = {
   erster_passt_nicht: "empfehlungen",
@@ -156,8 +164,8 @@ export function firesMerkenTap(input: { merkenLocked: boolean }): boolean {
  * (rather than simply omitted from the catalog) so the test lane can assert
  * unknown-never-pitches for every input, including one that looks pitchable.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- kept for the test lane's explicit rule signature
 export function firesUnbekanntesProdukt(_input: { isUnknownProduct: boolean }): false {
-  void _input
   return false
 }
 
@@ -199,15 +207,20 @@ export function firesFrustSerie(input: { consecutiveMismatchCount: number }): bo
 // --- 8. Wiederkehrer ---------------------------------------------------------------------
 
 /**
- * Approximation (documented): "second session without purchase" needs cross-visit memory
- * this client doesn't otherwise keep (no new DB table, per the brief) — `isReturningSession`
- * is wired from a localStorage marker (`session-marker.ts`), which is device-scoped, not
- * account-scoped. "Without purchase" needs no separate signal: this trigger — like every
- * trigger in this module — only ever evaluates once `scanTriggersEnabled` has confirmed
- * the viewer is free tier, and a free-tier viewer has by definition not purchased premium.
+ * Fix round 1 (F4, controller ruling): fires ONLY when the session record says this is
+ * EXACTLY the second session (catalog-literal "second session, no purchase") — not on
+ * every returning session. Session 1 has no signal yet; session 3+ leaves the one-pitch
+ * budget for Frust-Serie / Kategorien-Lücke / Passt-gut instead of Wiederkehrer claiming it
+ * every time by virtue of being the only candidate possible on a session's first scan.
+ * `sessionNumber` is an explicit input (from `session-marker.ts`'s localStorage record) so
+ * this stays a pure, deterministic function of its arguments, same as every other rule
+ * here — device-scoped, not account-scoped (no new DB table, per the brief). "Without
+ * purchase" needs no separate signal: this trigger — like every trigger in this module —
+ * only ever evaluates once `scanTriggersEnabled` has confirmed the viewer is free tier, and
+ * a free-tier viewer has by definition not purchased premium.
  */
-export function firesWiederkehrer(input: { isReturningSession: boolean }): boolean {
-  return input.isReturningSession
+export function firesWiederkehrer(input: { sessionNumber: number }): boolean {
+  return input.sessionNumber === 2
 }
 
 // --- fatigue rule: at most one proactive pitch per session ----------------------------
@@ -216,7 +229,8 @@ export type ScanProactiveTriggerInput = {
   categoriesScannedThisSession: readonly PersonalPlanCategory[]
   verdict: ScanVerdict | null
   consecutiveMismatchCount: number
-  isReturningSession: boolean
+  /** Fix round 1 (F4): the explicit session number Wiederkehrer needs — see its doc. */
+  sessionNumber: number
 }
 
 /** Every proactive trigger whose raw condition currently holds, in no particular order. */
@@ -236,6 +250,13 @@ export function candidateProactiveTriggers(
  * brief does not rank them; this fixes one so the winner is reproducible). Frustration
  * first — a repeated bad fit is the strongest signal of unmet need — then the category
  * gap, then a positive moment, then the returning-session nudge last (weakest signal).
+ *
+ * Fix round 1 (F4): before the ruling above, Wiederkehrer was true from a returning
+ * session's first scan while the other three structurally need ≥2 scans, so it always won
+ * on session 1 regardless of this ordering — the priority was moot. Now that Wiederkehrer
+ * only fires on exactly session 2, a real tie is possible (e.g. two same-session scans that
+ * also happen to be a user's second-ever session), and this ordering is what actually
+ * decides it.
  */
 const PROACTIVE_PRIORITY: readonly ScanProactiveTriggerId[] = [
   "frust_serie",

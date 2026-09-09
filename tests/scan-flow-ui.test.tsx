@@ -21,7 +21,10 @@ import type { EntitlementTier } from "../src/lib/entitlements"
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type { ScanAnalyticsPort } from "../src/lib/scan/scan-analytics"
 import type { ScanSavedStatePayload } from "../src/lib/scan/saved-state"
-import { createMemoryScanSessionMarkerStorage } from "../src/lib/scan/triggers/session-marker"
+import {
+  createMemoryScanTriggerStorage,
+  SCAN_SESSION_RECORD_KEY,
+} from "../src/lib/scan/triggers/session-marker"
 import type {
   ScanAlternativePresentation,
   ScanResolvedVerdictResult,
@@ -273,8 +276,10 @@ async function mountFlow(
   route: (url: string, init: RequestInit | undefined) => Promise<Response>,
   options: {
     tier?: EntitlementTier
-    /** T10: pre-seed to simulate a returning session for the Wiederkehrer trigger. */
-    sessionMarkerStorage?: ReturnType<typeof createMemoryScanSessionMarkerStorage>
+    /** T10: pre-seed to simulate a given session number for the Wiederkehrer trigger. */
+    sessionRecordStorage?: ReturnType<typeof createMemoryScanTriggerStorage>
+    /** Fix round 1 (F1): shared across two `mountFlow` calls to simulate a remount. */
+    fatigueStorage?: ReturnType<typeof createMemoryScanTriggerStorage>
   } = {},
 ): Promise<FlowHarness> {
   const events: TrackedEvent[] = []
@@ -296,7 +301,8 @@ async function mountFlow(
       ScanFlow({
         analytics,
         tier: options.tier,
-        sessionMarkerStorage: options.sessionMarkerStorage,
+        sessionRecordStorage: options.sessionRecordStorage,
+        fatigueStorage: options.fatigueStorage,
       }),
     {
       toasts: [],
@@ -1156,6 +1162,40 @@ function triggerCardProps(tree: ReactNode): Record<string, any> {
   return requireByType(tree, ScanProactiveTriggerCard, "ScanProactiveTriggerCard").props
 }
 
+const THIRTY_ONE_MINUTES_MS = 31 * 60 * 1000
+
+/** Pre-seeds the localStorage record so the NEXT `recordScanSession` call is session 2. */
+function seedPriorSession(
+  storage: ReturnType<typeof createMemoryScanTriggerStorage>,
+  count = 1,
+): void {
+  storage.setItem(
+    SCAN_SESSION_RECORD_KEY,
+    JSON.stringify({ count, lastSeenAt: Date.now() - THIRTY_ONE_MINUTES_MS }),
+  )
+}
+
+/** Counts every `getItem`/`setItem` call — F5's "zero storage activity" needs a spy. */
+function spyStorage(): {
+  getItem(key: string): string | null
+  setItem(key: string, value: string): void
+  calls: number
+} {
+  const inner = createMemoryScanTriggerStorage()
+  const spy = {
+    calls: 0,
+    getItem(key: string) {
+      spy.calls += 1
+      return inner.getItem(key)
+    },
+    setItem(key: string, value: string) {
+      spy.calls += 1
+      inner.setItem(key, value)
+    },
+  }
+  return spy
+}
+
 test("T10: two scans in the same category surface the repeat card, opening empfehlungen", async () => {
   const flow = await mountFlow(async () => json(verdictResult("p-a")), { tier: "free" })
   await scanInto(flow, "1111111111111")
@@ -1166,6 +1206,8 @@ test("T10: two scans in the same category surface the repeat card, opening empfe
   await scanInto(flow, "2222222222222")
 
   const card = requireByType(flow.tree, ScanCategoryRepeatCard, "ScanCategoryRepeatCard")
+  // F7: the repeat card names the actual category, not a debug label.
+  assert.equal(card.props.categoryLabel, "Shampoo")
   card.props.onOpenSheet()
   await flow.settle()
   assert.deepEqual(premiumSheetProps(flow.tree).context, {
@@ -1174,12 +1216,12 @@ test("T10: two scans in the same category surface the repeat card, opening empfe
   })
 })
 
-test("T10: a genuinely returning free session shows the Wiederkehrer pitch, opening routine", async () => {
-  const storage = createMemoryScanSessionMarkerStorage()
-  storage.setItem("chaarlie:scan:session-seen:v1", "1") // pre-seeded: a prior session happened
+test("T10/F4: a session record of exactly 2 shows the Wiederkehrer pitch, opening routine", async () => {
+  const sessionRecordStorage = createMemoryScanTriggerStorage()
+  seedPriorSession(sessionRecordStorage) // next recordScanSession() call becomes session 2
   const flow = await mountFlow(async () => json(verdictResult("p-a")), {
     tier: "free",
-    sessionMarkerStorage: storage,
+    sessionRecordStorage,
   })
   await scanInto(flow)
 
@@ -1192,9 +1234,29 @@ test("T10: a genuinely returning free session shows the Wiederkehrer pitch, open
   })
 })
 
+test("F4: session 1 (no prior record) and session 3+ never show Wiederkehrer", async () => {
+  // Session 1: fresh storage, nothing pre-seeded.
+  const sessionOne = await mountFlow(async () => json(verdictResult("p-a")), {
+    tier: "free",
+    sessionRecordStorage: createMemoryScanTriggerStorage(),
+  })
+  await scanInto(sessionOne)
+  assert.equal(findByType(sessionOne.tree, ScanProactiveTriggerCard), null)
+
+  // Session 3: the record already says count 2, so the next visit becomes session 3.
+  const sessionThreeStorage = createMemoryScanTriggerStorage()
+  seedPriorSession(sessionThreeStorage, 2)
+  const sessionThree = await mountFlow(async () => json(verdictResult("p-a")), {
+    tier: "free",
+    sessionRecordStorage: sessionThreeStorage,
+  })
+  await scanInto(sessionThree)
+  assert.equal(findByType(sessionThree.tree, ScanProactiveTriggerCard), null)
+})
+
 test("T10: fatigue — a second qualifying proactive candidate in the same session shows nothing", async () => {
-  const storage = createMemoryScanSessionMarkerStorage()
-  storage.setItem("chaarlie:scan:session-seen:v1", "1")
+  const sessionRecordStorage = createMemoryScanTriggerStorage()
+  seedPriorSession(sessionRecordStorage)
   let call = 0
   const flow = await mountFlow(
     async () => {
@@ -1205,7 +1267,7 @@ test("T10: fatigue — a second qualifying proactive candidate in the same sessi
           : verdictResultInCategory("p2", "conditioner"),
       )
     },
-    { tier: "free", sessionMarkerStorage: storage },
+    { tier: "free", sessionRecordStorage },
   )
   await scanInto(flow, "1111111111111")
   assert.equal(triggerCardProps(flow.tree).id, "wiederkehrer")
@@ -1217,6 +1279,45 @@ test("T10: fatigue — a second qualifying proactive candidate in the same sessi
   // The 2nd scan's own category-gap condition would otherwise qualify kategorien_luecke,
   // but the session already spent its one proactive pitch on Wiederkehrer.
   assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
+})
+
+test("F1: the fatigue budget survives a remount (tab away and back) via shared sessionStorage", async () => {
+  const fatigueStorage = createMemoryScanTriggerStorage()
+  const sessionRecordStorage = createMemoryScanTriggerStorage()
+  seedPriorSession(sessionRecordStorage) // this mount's visit becomes session 2
+
+  // Mount 1: a scan qualifies and spends Wiederkehrer.
+  const mount1 = await mountFlow(async () => json(verdictResult("p-a")), {
+    tier: "free",
+    sessionRecordStorage,
+    fatigueStorage,
+  })
+  await scanInto(mount1)
+  assert.equal(triggerCardProps(mount1.tree).id, "wiederkehrer")
+
+  // Mount 2: a genuinely fresh `ScanFlow` instance (a real remount resets the reducer's
+  // in-memory state exactly like this) sharing the SAME `fatigueStorage` — the fix round 1
+  // regression this test guards against is the fatigue flag resetting to unfired here,
+  // which used to let a second proactive pitch (Kategorien-Lücke, from the 2-category scan
+  // below) render on the very next return to `/scan`.
+  let call = 0
+  const mount2 = await mountFlow(
+    async () => {
+      call += 1
+      return json(
+        call === 1
+          ? verdictResultInCategory("p1", "shampoo")
+          : verdictResultInCategory("p2", "conditioner"),
+      )
+    },
+    { tier: "free", sessionRecordStorage, fatigueStorage },
+  )
+  await scanInto(mount2, "1111111111111")
+  assert.equal(findByType(mount2.tree, ScanProactiveTriggerCard), null)
+  sheetProps(mount2.tree).onClose()
+  await mount2.settle()
+  await scanInto(mount2, "2222222222222")
+  assert.equal(findByType(mount2.tree, ScanProactiveTriggerCard), null)
 })
 
 test("T10: Kategorien-Lücke links into /routine and never opens the Premium sheet", async () => {
@@ -1244,8 +1345,8 @@ test("T10: Kategorien-Lücke links into /routine and never opens the Premium she
 })
 
 test("T10: premium sees zero trigger surfaces even under conditions that would fire every one of them", async () => {
-  const storage = createMemoryScanSessionMarkerStorage()
-  storage.setItem("chaarlie:scan:session-seen:v1", "1")
+  const sessionRecordStorage = createMemoryScanTriggerStorage()
+  seedPriorSession(sessionRecordStorage)
   let call = 0
   const flow = await mountFlow(
     async () => {
@@ -1256,7 +1357,7 @@ test("T10: premium sees zero trigger surfaces even under conditions that would f
           : verdictResultInCategory("p2", "conditioner"),
       )
     },
-    { tier: "premium", sessionMarkerStorage: storage },
+    { tier: "premium", sessionRecordStorage },
   )
   await scanInto(flow, "1111111111111")
   assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
@@ -1269,4 +1370,29 @@ test("T10: premium sees zero trigger surfaces even under conditions that would f
   assert.equal(findByType(flow.tree, ScanProactiveTriggerCard), null)
   assert.equal(findByType(flow.tree, ScanCategoryRepeatCard), null)
   assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+test("F5: premium and flag-off (no tier prop) cause zero trigger-storage activity", async () => {
+  const premiumRecord = spyStorage()
+  const premiumFatigue = spyStorage()
+  const premium = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")), {
+    tier: "premium",
+    sessionRecordStorage: premiumRecord,
+    fatigueStorage: premiumFatigue,
+  })
+  await scanInto(premium)
+  assert.equal(premiumRecord.calls, 0)
+  assert.equal(premiumFatigue.calls, 0)
+
+  // No `tier` prop at all is exactly what a flag-off mount looks like in production
+  // (`navigation-access.ts` never assigns `tier: "free"` with the flag off).
+  const flagOffRecord = spyStorage()
+  const flagOffFatigue = spyStorage()
+  const flagOff = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")), {
+    sessionRecordStorage: flagOffRecord,
+    fatigueStorage: flagOffFatigue,
+  })
+  await scanInto(flagOff)
+  assert.equal(flagOffRecord.calls, 0)
+  assert.equal(flagOffFatigue.calls, 0)
 })

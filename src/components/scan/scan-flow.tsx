@@ -34,9 +34,12 @@ import {
 import type { EntitlementTier } from "@/lib/entitlements"
 import type { ScanAlternativePresentation } from "@/lib/scan/types"
 import {
-  createBrowserScanSessionMarkerStorage,
-  markScanSessionSeen,
-  type ScanSessionMarkerStorage,
+  createBrowserScanLocalStorage,
+  createBrowserScanSessionStorage,
+  readScanFatigueBudget,
+  recordScanSession,
+  writeScanFatigueBudget,
+  type ScanTriggerStorage,
 } from "@/lib/scan/triggers/session-marker"
 import { scanTriggerSheetContext } from "@/lib/scan/triggers/trigger-rules"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
@@ -149,20 +152,24 @@ const CAMERA_RETRY_LABEL: Record<ScanCameraTileReason, string | null> = {
  * loader can never unlock a free user either. Omitted, it changes nothing: every existing
  * caller (tests, the labs harness without a tier boot flag) keeps today's behaviour.
  *
- * `sessionMarkerStorage` (T10) is the Wiederkehrer trigger's test seam, same idea as
- * `scannerRuntime`: production leaves it undefined (the real browser adapter is used),
- * tests inject a memory store pre-seeded to simulate a returning session.
+ * `sessionRecordStorage`/`fatigueStorage` (T10; split in fix round 1, F1) are the trigger
+ * layer's two test seams, same idea as `scannerRuntime`: production leaves both undefined
+ * (the real `localStorage`/`sessionStorage` adapters are used), tests inject memory stores
+ * — pre-seeded to simulate a returning session, or shared across two mounts to prove the
+ * fatigue budget survives a remount.
  */
 export function ScanFlow({
   analytics = noOpScanAnalytics,
   scannerRuntime,
   tier,
-  sessionMarkerStorage,
+  sessionRecordStorage,
+  fatigueStorage,
 }: {
   analytics?: ScanAnalyticsPort
   scannerRuntime?: ScannerRuntime
   tier?: EntitlementTier
-  sessionMarkerStorage?: ScanSessionMarkerStorage
+  sessionRecordStorage?: ScanTriggerStorage
+  fatigueStorage?: ScanTriggerStorage
 } = {}) {
   const { toast } = useToast()
   const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
@@ -206,12 +213,14 @@ export function ScanFlow({
    */
   const resolveInFlightRef = useRef(false)
   /**
-   * The Wiederkehrer trigger's "second session" approximation (T10): set once, from a
-   * localStorage marker, on mount — before any resolve can complete — so `resolve()` below
-   * always reads a settled value rather than racing the effect. `false` (never returning)
-   * is the safe default for SSR and for a storage read that fails.
+   * The Wiederkehrer trigger's "second session" input (T10; fix round 1, F4): set once,
+   * from the localStorage session record, on mount — before any resolve can complete — so
+   * `resolve()` below always reads a settled value rather than racing the effect. `1` (a
+   * device's first-ever visit, which can never equal the required session number 2) is the
+   * safe default for SSR, for a premium/flag-off mount that skips the read entirely (F5),
+   * and for a storage read that fails.
    */
-  const isReturningSessionRef = useRef(false)
+  const sessionNumberRef = useRef(1)
 
   const clearSheetTimer = useCallback(() => {
     if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current)
@@ -223,16 +232,43 @@ export function ScanFlow({
     analytics.track("scan_started", {})
   }, [analytics])
 
+  /**
+   * Fix round 1 (F5): both trigger-layer storages are read ONLY for a confirmed free-tier
+   * mount — the server-verified `tier` prop, the same signal every trigger is gated on —
+   * so premium and flag-off users cause zero storage activity, not merely zero rendered
+   * surfaces. Deliberately runs once per mount only: both are read/written at the START of
+   * a session, not re-evaluated if a caller swaps a prop mid-visit.
+   *
+   * Fix round 1 (F1): also re-seeds the reducer's fatigue budget from `sessionStorage` via
+   * `fatigue_hydrated`, before any resolve can land — see that action's doc for why a plain
+   * ref cannot do this (the flag lives in reducer state, not just this closure).
+   */
   useEffect(() => {
-    isReturningSessionRef.current = markScanSessionSeen(
-      sessionMarkerStorage !== undefined
-        ? sessionMarkerStorage
-        : createBrowserScanSessionMarkerStorage(),
+    if (tier !== "free") return
+    sessionNumberRef.current = recordScanSession(
+      sessionRecordStorage !== undefined ? sessionRecordStorage : createBrowserScanLocalStorage(),
     )
-    // Deliberately runs once per mount only: a session marker is read/written at the
-    // START of a session, not re-evaluated if a caller swaps the prop mid-visit.
+    const hydratedFatigue = readScanFatigueBudget(
+      fatigueStorage !== undefined ? fatigueStorage : createBrowserScanSessionStorage(),
+    )
+    if (hydratedFatigue) dispatch({ type: "fatigue_hydrated", id: hydratedFatigue })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  /**
+   * Fix round 1 (F1): the write side of the fatigue budget — persists the session's one
+   * spent pitch to `sessionStorage` so a later remount's read above can find it.
+   * `state.proactiveTriggerShown` can only ever become non-null once a resolve's own
+   * `effectiveTier` (below) was already free (see `resolveGatedProactiveScanTrigger`'s
+   * gate), so this needs no additional tier check to satisfy F5.
+   */
+  useEffect(() => {
+    if (state.proactiveTriggerShown === null) return
+    writeScanFatigueBudget(
+      fatigueStorage !== undefined ? fatigueStorage : createBrowserScanSessionStorage(),
+      state.proactiveTriggerShown,
+    )
+  }, [state.proactiveTriggerShown, fatigueStorage])
 
   // Unmount only: never leave a sheet timer pointing at a dead component.
   useEffect(() => clearSheetTimer, [clearSheetTimer])
@@ -386,7 +422,7 @@ export function ScanFlow({
           token,
           result,
           tier: effectiveTier,
-          isReturningSession: isReturningSessionRef.current,
+          sessionNumber: sessionNumberRef.current,
         })
         // Fix round 1 (F2): a masked verdict with the credit already spent MIGHT be the
         // same product the credit was spent on — the reveal endpoint is idempotent, so
@@ -719,6 +755,7 @@ export function ScanFlow({
             trigger's own tier gate has confirmed free tier). */}
         {resultStep && state.zweiScansGleicheKategorie ? (
           <ScanCategoryRepeatCard
+            categoryLabel={resultStep.result.product.categoryLabel}
             onOpenSheet={() => dispatch({ type: "premium_sheet_opened", context: ZWEI_SCANS_GATE })}
           />
         ) : null}

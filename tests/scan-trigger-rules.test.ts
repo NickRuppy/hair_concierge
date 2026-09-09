@@ -161,9 +161,11 @@ test("frust_serie fires at 2 or more consecutive passt-nicht verdicts, not at 1"
 
 // --- 8. Wiederkehrer ---------------------------------------------------------------
 
-test("wiederkehrer fires exactly on a returning session", () => {
-  assert.equal(firesWiederkehrer({ isReturningSession: true }), true)
-  assert.equal(firesWiederkehrer({ isReturningSession: false }), false)
+test("wiederkehrer fires exactly on session number 2, not session 1 or session 3+ (F4)", () => {
+  assert.equal(firesWiederkehrer({ sessionNumber: 1 }), false)
+  assert.equal(firesWiederkehrer({ sessionNumber: 2 }), true)
+  assert.equal(firesWiederkehrer({ sessionNumber: 3 }), false)
+  assert.equal(firesWiederkehrer({ sessionNumber: 4 }), false)
 })
 
 // --- fatigue rule: at most one proactive pitch per session -----------------------
@@ -173,7 +175,7 @@ test("candidateProactiveTriggers lists every proactive trigger whose raw conditi
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 2,
-    isReturningSession: true,
+    sessionNumber: 2,
   })
   assert.deepEqual(
     new Set(candidates),
@@ -186,7 +188,7 @@ test("resolveProactiveScanTrigger picks one deterministic winner when several qu
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 2,
-    isReturningSession: true,
+    sessionNumber: 2,
   }
   const winner = resolveProactiveScanTrigger(input, false)
   assert.ok(winner)
@@ -199,10 +201,36 @@ test("fatigue: a second proactive candidate in the same session is suppressed on
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 0,
-    isReturningSession: false,
+    sessionNumber: 1,
   }
   assert.notEqual(resolveProactiveScanTrigger(input, false), null)
   assert.equal(resolveProactiveScanTrigger(input, true), null)
+})
+
+test("F4: on session 3+, Wiederkehrer never claims the budget — it structurally cannot qualify", () => {
+  const input: ScanProactiveTriggerInput = {
+    categoriesScannedThisSession: ["shampoo", "conditioner"],
+    verdict: null,
+    consecutiveMismatchCount: 0,
+    sessionNumber: 3,
+  }
+  assert.deepEqual(candidateProactiveTriggers(input), ["kategorien_luecke"])
+  assert.equal(resolveProactiveScanTrigger(input, false), "kategorien_luecke")
+})
+
+test("F4: a genuine tie on session 2 is broken by PROACTIVE_PRIORITY, not by Wiederkehrer always winning", () => {
+  const input: ScanProactiveTriggerInput = {
+    categoriesScannedThisSession: ["shampoo", "conditioner"],
+    verdict: null,
+    consecutiveMismatchCount: 2,
+    sessionNumber: 2,
+  }
+  assert.deepEqual(
+    new Set(candidateProactiveTriggers(input)),
+    new Set(["frust_serie", "kategorien_luecke", "wiederkehrer"]),
+  )
+  // frust_serie outranks both kategorien_luecke and wiederkehrer (documented priority).
+  assert.equal(resolveProactiveScanTrigger(input, false), "frust_serie")
 })
 
 test("fatigue does not touch user-initiated gates: they fire regardless of alreadyFiredThisSession", () => {
@@ -225,7 +253,7 @@ test("no proactive candidate yields no winner", () => {
         categoriesScannedThisSession: [],
         verdict: null,
         consecutiveMismatchCount: 0,
-        isReturningSession: false,
+        sessionNumber: 1,
       },
       false,
     ),
@@ -247,7 +275,7 @@ test("resolveGatedProactiveScanTrigger yields no trigger for premium regardless 
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 5,
-    isReturningSession: true,
+    sessionNumber: 2,
   }
   assert.equal(resolveGatedProactiveScanTrigger(PREMIUM_ON, hotInput, false), null)
 })
@@ -257,7 +285,7 @@ test("resolveGatedProactiveScanTrigger yields no trigger with the flag off regar
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 5,
-    isReturningSession: true,
+    sessionNumber: 2,
   }
   assert.equal(resolveGatedProactiveScanTrigger(FREE_FLAG_OFF, hotInput, false), null)
 })
@@ -267,7 +295,7 @@ test("resolveGatedProactiveScanTrigger fires for a genuinely free, flag-on sessi
     categoriesScannedThisSession: ["shampoo", "conditioner"],
     verdict: "ideal",
     consecutiveMismatchCount: 0,
-    isReturningSession: false,
+    sessionNumber: 1,
   }
   assert.notEqual(resolveGatedProactiveScanTrigger(FREE_ON, hotInput, false), null)
 })

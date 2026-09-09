@@ -829,7 +829,7 @@ function maskedResultInCategory(
   }
 }
 
-test("resolved: the trigger-layer decision is derived from tier/isReturningSession, not passed verbatim", () => {
+test("resolved: the trigger-layer decision is derived from tier/sessionNumber, not passed verbatim", () => {
   // Second scan, same category ("shampoo" again) — fires zwei_scans_gleiche_kategorie.
   // Only 1 distinct category so far, so no proactive candidate qualifies yet.
   const state = run(
@@ -844,7 +844,7 @@ test("resolved: the trigger-layer decision is derived from tier/isReturningSessi
   assert.equal(state.proactiveTriggerShown, null)
 })
 
-test("resolved: omitting tier/isReturningSession fails closed to no trigger at all (every pre-T10 call site)", () => {
+test("resolved: omitting tier/sessionNumber fails closed to no trigger at all (every pre-T10 call site)", () => {
   const state = scanFlowReducer(resolving(), {
     type: "resolved",
     token: 1,
@@ -855,7 +855,7 @@ test("resolved: omitting tier/isReturningSession fails closed to no trigger at a
   assert.equal(state.proactiveTriggerShown, null)
 })
 
-test("resolved: a genuinely free session can fire a proactive trigger (Wiederkehrer)", () => {
+test("resolved: a genuinely free session can fire a proactive trigger (Wiederkehrer, session 2)", () => {
   const state = run(
     { type: "resolve_started", token: 1, showResolvingImmediately: true },
     {
@@ -863,11 +863,25 @@ test("resolved: a genuinely free session can fire a proactive trigger (Wiederkeh
       token: 1,
       result: verdictResult("p1"),
       tier: "free",
-      isReturningSession: true,
+      sessionNumber: 2,
     },
   )
   assert.equal(state.activeProactiveTrigger, "wiederkehrer")
   assert.equal(state.proactiveTriggerShown, "wiederkehrer")
+})
+
+test("resolved: Wiederkehrer does NOT fire on session 1 or session 3+ (F4)", () => {
+  const sessionOne = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free", sessionNumber: 1 },
+  )
+  assert.equal(sessionOne.activeProactiveTrigger, null)
+
+  const sessionThree = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free", sessionNumber: 3 },
+  )
+  assert.equal(sessionThree.activeProactiveTrigger, null)
 })
 
 test("fatigue: once a proactive trigger has fired, a later resolve's own card is suppressed", () => {
@@ -878,7 +892,7 @@ test("fatigue: once a proactive trigger has fired, a later resolve's own card is
       token: 1,
       result: verdictResult("p1"),
       tier: "free",
-      isReturningSession: true,
+      sessionNumber: 2,
     },
     { type: "return_to_scanning" },
     { type: "resolve_started", token: 2, showResolvingImmediately: true },
@@ -893,6 +907,40 @@ test("fatigue: once a proactive trigger has fired, a later resolve's own card is
   )
   assert.equal(state.proactiveTriggerShown, "wiederkehrer")
   assert.equal(state.activeProactiveTrigger, null)
+})
+
+// --- F2 (fix round 1): unknown/pending resolves never select nor spend a proactive trigger
+
+test("F2: an unknown_product resolve under would-be-qualifying conditions selects no trigger and leaves the budget unspent", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    // sessionNumber 2 alone would fire Wiederkehrer for an in_catalog/not_needed result —
+    // here the result is `unknown_product`, so no card can ever render for it.
+    { type: "resolved", token: 1, result: unknownResult, tier: "free", sessionNumber: 2 },
+  )
+  assert.equal(state.activeProactiveTrigger, null)
+  assert.equal(state.proactiveTriggerShown, null)
+})
+
+test("F2: a pending_submission resolve under would-be-qualifying conditions also leaves the budget unspent", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: pendingResult, tier: "free", sessionNumber: 2 },
+  )
+  assert.equal(state.activeProactiveTrigger, null)
+  assert.equal(state.proactiveTriggerShown, null)
+})
+
+test("F2: after an unknown resolve, the NEXT in_catalog resolve can still pitch (budget was never spent)", () => {
+  const state = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: unknownResult, tier: "free", sessionNumber: 2 },
+    { type: "return_to_scanning" },
+    { type: "resolve_started", token: 2, showResolvingImmediately: true },
+    { type: "resolved", token: 2, result: verdictResult("p2"), tier: "free", sessionNumber: 2 },
+  )
+  assert.equal(state.activeProactiveTrigger, "wiederkehrer")
+  assert.equal(state.proactiveTriggerShown, "wiederkehrer")
 })
 
 test("activeProactiveTrigger and zweiScansGleicheKategorie reset on a new resolve and on return_to_scanning", () => {
@@ -926,4 +974,51 @@ test("activeProactiveTrigger and zweiScansGleicheKategorie reset on a new resolv
   })
   assert.equal(midFlightNewResolve.activeProactiveTrigger, null)
   assert.equal(midFlightNewResolve.zweiScansGleicheKategorie, false)
+})
+
+// --- F1 (fix round 1): the fatigue budget survives a remount via `fatigue_hydrated` ----
+
+test("fatigue_hydrated: re-seeds an empty budget from a persisted value (simulates a remount)", () => {
+  const hydrated = scanFlowReducer(initialScanFlowState, {
+    type: "fatigue_hydrated",
+    id: "kategorien_luecke",
+  })
+  assert.equal(hydrated.proactiveTriggerShown, "kategorien_luecke")
+
+  // The persisted budget is now respected by a fresh resolve, exactly like an in-mount
+  // fatigue flag would be — the whole point of hydrating before any resolve can land.
+  const state = scanFlowReducer(
+    scanFlowReducer(hydrated, {
+      type: "resolve_started",
+      token: 1,
+      showResolvingImmediately: true,
+    }),
+    {
+      type: "resolved",
+      token: 1,
+      result: maskedResultInCategory("p1", "conditioner"),
+      tier: "free",
+      sessionNumber: 2,
+    },
+  )
+  assert.equal(state.activeProactiveTrigger, null)
+  assert.equal(state.proactiveTriggerShown, "kategorien_luecke")
+})
+
+test("fatigue_hydrated: null (nothing persisted) leaves the budget open for this mount", () => {
+  const state = scanFlowReducer(initialScanFlowState, { type: "fatigue_hydrated", id: null })
+  assert.equal(state.proactiveTriggerShown, null)
+})
+
+test("fatigue_hydrated: never clobbers a budget already spent this same mount", () => {
+  const alreadySpent = run(
+    { type: "resolve_started", token: 1, showResolvingImmediately: true },
+    { type: "resolved", token: 1, result: verdictResult("p1"), tier: "free", sessionNumber: 2 },
+  )
+  assert.equal(alreadySpent.proactiveTriggerShown, "wiederkehrer")
+  const state = scanFlowReducer(alreadySpent, {
+    type: "fatigue_hydrated",
+    id: "frust_serie",
+  })
+  assert.equal(state.proactiveTriggerShown, "wiederkehrer")
 })

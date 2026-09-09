@@ -17,9 +17,12 @@ const PROACTIVE_TRIGGER_COPY: Record<
   ScanProactiveTriggerId,
   { title: string; body: string; cta: string }
 > = {
+  // Fix round 1 (F3): the rule only knows a Leave-in was never SCANNED, not that the user
+  // doesn't own one — the old copy ("Dir fehlt noch ein Leave-in.") asserted the latter on
+  // evidence that only supports the former. Speaks about the scans, not the routine.
   kategorien_luecke: {
-    title: "Lücke in deiner Routine",
-    body: "Dir fehlt noch ein Leave-in.",
+    title: "Lücke in deinen Scans",
+    body: "Leave-in fehlt in deinen Scans.",
     cta: "Zur Routine",
   },
   passt_gut_moment: {
@@ -28,13 +31,16 @@ const PROACTIVE_TRIGGER_COPY: Record<
     cta: "Routine ansehen",
   },
   frust_serie: {
-    title: "Zweimal passt's nicht",
+    // Fix round 1 (F7): typographic apostrophe, not a straight one.
+    title: "Zweimal passt’s nicht",
     body: "Eine geprüfte Routine erspart dir das Rätselraten.",
     cta: "Routine ansehen",
   },
   wiederkehrer: {
     title: "Wieder da?",
-    body: "Deine Routine wartet noch auf dich.",
+    // Fix round 1 (F7): the old line ("Deine Routine wartet noch auf dich.") presumed a
+    // routine the free user does not have yet — the routine page is gated, not built.
+    body: "Starte deine Routine.",
     cta: "Routine ansehen",
   },
 }
@@ -56,6 +62,7 @@ export function ScanProactiveTriggerCard({
   return (
     <section
       data-scan-trigger-card={id}
+      aria-label={copy.title}
       className="rounded-[14px] border border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] px-4 py-3.5"
     >
       <p className="text-[13px] font-bold text-[var(--brand-plum-dark)]">{copy.title}</p>
@@ -63,7 +70,7 @@ export function ScanProactiveTriggerCard({
       {id === "kategorien_luecke" ? (
         <Link
           href="/routine"
-          data-scan-trigger-cta=""
+          data-scan-trigger-cta={id}
           className="mt-2 inline-block min-h-[32px] text-[13px] font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
         >
           {copy.cta}
@@ -71,7 +78,7 @@ export function ScanProactiveTriggerCard({
       ) : (
         <button
           type="button"
-          data-scan-trigger-cta=""
+          data-scan-trigger-cta={id}
           onClick={onOpenSheet}
           className="mt-2 min-h-[32px] text-[13px] font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
         >
@@ -85,17 +92,28 @@ export function ScanProactiveTriggerCard({
 /**
  * User-initiated gate 2 (Zwei Scans, gleiche Kategorie) — always available, never
  * fatigue-limited, so it can appear alongside a proactive card in the same verdict.
+ * Fix round 1 (F7): the title used to be a flat telemetry label ("2. Scan, gleiche
+ * Kategorie") with no value proposition; naming the actual category it repeats reads as a
+ * real sentence instead of a debug string.
  */
-export function ScanCategoryRepeatCard({ onOpenSheet }: { onOpenSheet: () => void }) {
+export function ScanCategoryRepeatCard({
+  categoryLabel,
+  onOpenSheet,
+}: {
+  categoryLabel: string
+  onOpenSheet: () => void
+}) {
+  const title = `Nochmal ${categoryLabel}`
   return (
     <section
       data-scan-trigger-card="zwei_scans_gleiche_kategorie"
+      aria-label={title}
       className="rounded-[14px] border border-border bg-card px-4 py-3.5"
     >
-      <p className="text-[13px] font-bold text-foreground">2. Scan, gleiche Kategorie</p>
+      <p className="text-[13px] font-bold text-foreground">{title}</p>
       <button
         type="button"
-        data-scan-trigger-cta=""
+        data-scan-trigger-cta="zwei_scans_gleiche_kategorie"
         onClick={onOpenSheet}
         className="mt-1.5 min-h-[32px] text-[13px] font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
       >
