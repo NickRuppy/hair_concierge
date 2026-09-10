@@ -1127,6 +1127,63 @@ test("free tier: Merken opens the Premium sheet instead of the Merkliste or the 
   assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, false)
 })
 
+test("F1: a verified purchase unlocks Merken on this surface, with no reload", async () => {
+  // The whole point of the contextual finish (journey step 9): the gate the buyer started
+  // from opens with its REAL behaviour. `router.refresh()` re-serves the `tier` prop but
+  // cannot touch this reducer, and `state.tier` is sticky — so the sheet has to say so.
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") return json(maskedVerdict())
+    if (url === "/api/scan/wishlist") return json({ entries: [] })
+    return notFound()
+  })
+  await scanInto(flow)
+
+  footerProps(flow.tree).onSave()
+  await flow.settle()
+  assert.equal(premiumSheetProps(flow.tree).open, true)
+
+  // What `PremiumSheet` calls after `/api/freemium/purchase/complete` verified the money.
+  premiumSheetProps(flow.tree).onUnlocked()
+  await flow.settle()
+
+  assert.equal(premiumSheetProps(flow.tree).open, false, "the paywall is gone")
+  assert.equal(wishlistTriggerProps(flow.tree).locked, false)
+  assert.equal(footerProps(flow.tree).saveLocked, false)
+
+  // Merken now does the real thing instead of re-opening a sheet with no CTA.
+  footerProps(flow.tree).onSave()
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+test("F2: a redirect return asks this surface to reopen the sheet on its own gate", async () => {
+  const flow = await mountFlow(async () => json(maskedVerdict()))
+  await scanInto(flow)
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  assert.equal(premiumSheetProps(flow.tree).open, false)
+
+  // What `PremiumSheet` calls when a PayPal return lands `pending` or `failed`.
+  premiumSheetProps(flow.tree).onRequestOpen({ feature: "routine", source: "scan:verdict" })
+  await flow.settle()
+  assert.equal(premiumSheetProps(flow.tree).open, true)
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "routine",
+    source: "scan:verdict",
+  })
+
+  // Nothing remembered → the surface's own default gate, never a closed sheet.
+  premiumSheetProps(flow.tree).onClose()
+  await flow.settle()
+  premiumSheetProps(flow.tree).onRequestOpen(null)
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "merkliste",
+    source: "scan:verdict",
+  })
+})
+
 test("premium: an unmasked verdict leaves every Merken and reveal affordance untouched", async () => {
   const flow = await mountFlow(async (url) => {
     if (url === "/api/scan/resolve") return json(premiumVerdict())

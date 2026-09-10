@@ -155,12 +155,13 @@ function createStateHarness(renderComponent: () => ReactElement | null) {
      */
     useEffect(): void {},
     /**
-     * `useRouter` / `usePathname` both resolve through context. One stub serves both: the
-     * router methods are no-ops (nothing here may navigate), and the pathname falls back to
-     * the sanitizer's default, which is all these assertions need.
+     * `useRouter` / `usePathname` / `useToast` all resolve through context. One stub serves
+     * them: the router methods are no-ops (nothing here may navigate), the toast is a
+     * no-op (the effect-level suite `premium-sheet-effects.test.tsx` owns it), and the
+     * pathname falls back to the sanitizer's default, which is all these assertions need.
      */
     useContext(): unknown {
-      return { refresh() {}, replace() {}, push() {} }
+      return { refresh() {}, replace() {}, push() {}, toasts: [], toast() {}, dismiss() {} }
     },
     /** `usePathname` reads its context through `use`, not `useContext`. */
     use(): unknown {

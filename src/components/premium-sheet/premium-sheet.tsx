@@ -5,7 +5,6 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 
 import { usePlanSelection } from "@/components/checkout/use-plan-selection"
 import { PremiumSheetCheckout } from "@/components/premium-sheet/premium-sheet-checkout"
-import { PremiumSheetUnlockToast } from "@/components/premium-sheet/premium-sheet-unlock-toast"
 import {
   BottomSheet,
   BottomSheetContent,
@@ -17,6 +16,10 @@ import {
   FREEMIUM_CHECKOUT_RETURN_PARAM,
   sanitizeFreemiumCheckoutReturnPath,
 } from "@/lib/freemium/checkout-return"
+import {
+  consumePremiumSheetCheckoutContext,
+  persistPremiumSheetCheckoutContext,
+} from "@/lib/premium-sheet/checkout-context-storage"
 import { PREMIUM_FEATURES, type PremiumSheetContext } from "@/lib/premium-sheet/context"
 import { premiumSheetDismissLabel } from "@/lib/premium-sheet/dismiss-label"
 import { orderedBenefits } from "@/lib/premium-sheet/ordered-benefits"
@@ -37,6 +40,7 @@ import {
   premiumSheetShowsCheckout,
 } from "@/lib/premium-sheet/purchase-state"
 import { cn } from "@/lib/utils"
+import { useToast } from "@/providers/toast-provider"
 
 /**
  * The Premium sheet (T13, freemium-scanner-first PR4) — the program's one conversion
@@ -63,9 +67,11 @@ import { cn } from "@/lib/utils"
  *    `POST /api/freemium/purchase/complete` — which re-reads the Session from Stripe —
  *    unlocks anything. The state machine (`lib/premium-sheet/purchase-state.ts`) makes that
  *    the only reachable path.
- *  - On unlock it refreshes the router and closes. The gates are server-rendered from the
- *    entitlement tier, so the refresh is what turns the „Beispiel" frame into the buyer's
- *    real content — the toast just says so.
+ *  - On unlock it refreshes the router, tells the opener (`onUnlocked`) and closes. The
+ *    gates are server-rendered from the entitlement tier, so the refresh is what turns the
+ *    „Beispiel" frame into the buyer's real content — but a surface that holds its own
+ *    client-side tier state (the scanner's Merken bookmark) cannot learn from a refresh,
+ *    which is why the callback exists (fix round 1, F1).
  *  - Every failure lands back on the plan rows inside the same open sheet. Nothing is
  *    navigated and nothing about the free session is touched.
  */
@@ -73,18 +79,35 @@ export function PremiumSheet({
   open,
   context,
   onClose,
+  onUnlocked,
+  onRequestOpen,
 }: {
   open: boolean
   context: PremiumSheetContext | null
   onClose: () => void
+  /**
+   * Fired once, on VERIFIED unlock, before the router refresh. The opener uses it to flip
+   * whatever tier state it holds itself — `router.refresh()` re-serves the server props of
+   * a mounted client component but cannot touch its reducer, so without this the gate the
+   * purchase started from stays locked until a hard reload (fix round 1, F1).
+   */
+  onUnlocked?: () => void
+  /**
+   * Asks the opener to open the sheet. Used only by the redirect return (PayPal), where
+   * the buyer comes back on a fresh page load with the sheet closed: a pending or failed
+   * payment must be visible, not silently dispatched into a closed sheet (fix round 1,
+   * F2). Carries the context the purchase started from, so the reopened sheet is the gate
+   * they left, not the surface's default.
+   */
+  onRequestOpen?: (context: PremiumSheetContext | null) => void
 }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { toast } = useToast()
   const [purchase, dispatchPurchase] = useReducer(
     premiumSheetPurchaseReducer,
     initialPremiumSheetPurchaseState,
   )
-  const [toastDismissed, setToastDismissed] = useState(false)
   // BottomSheetContent keeps rendering through the ~200-250ms exit animation
   // (see bottom-sheet.tsx `closing`), but openers null out `context` the moment
   // they set `open` to false. Hold the last non-null context in state so the
@@ -155,6 +178,8 @@ export function PremiumSheet({
    * same verification the in-place completion runs.
    */
   const consumedReturnRef = useRef<string | null>(null)
+  const returnedContextRef = useRef<PremiumSheetContext | null>(null)
+  const returnedRef = useRef(false)
   useEffect(() => {
     // Read from `window.location` rather than `useSearchParams`: this component is mounted
     // on every gate, and `useSearchParams` would force a Suspense boundary (and a client
@@ -165,32 +190,68 @@ export function PremiumSheet({
     )
     if (!returnedSessionId || consumedReturnRef.current === returnedSessionId) return
     consumedReturnRef.current = returnedSessionId
+    returnedRef.current = true
+    returnedContextRef.current = consumePremiumSheetCheckoutContext()
     dispatchPurchase({ type: "provider_completed", sessionId: returnedSessionId })
     // Drop the parameter so a refresh (or a shared link) cannot replay the return.
     router.replace(pathname ?? returnPath)
   }, [router, pathname, returnPath])
 
   /**
-   * Unlock: refresh the server-rendered gates so the originating surface shows the buyer's
-   * real content, raise the toast, then close the sheet into it.
+   * The redirect return's visible half (fix round 1, F2). The buyer came back on a fresh
+   * page load, so the sheet is CLOSED: a `pending` panel or a `failed` alert would render
+   * into nothing. Ask the opener to open it for exactly those two outcomes — a verified
+   * completion needs no sheet, it unlocks the surface and toasts.
    */
-  const unlocked = purchase.phase === "unlocked"
+  const reopenForPhase =
+    purchase.phase === "pending" || purchase.phase === "failed" ? purchase.phase : null
+  const reopenRequestedRef = useRef<string | null>(null)
   useEffect(() => {
-    if (!unlocked) return
+    if (!reopenForPhase || !returnedRef.current) return
+    if (reopenRequestedRef.current === reopenForPhase) return
+    reopenRequestedRef.current = reopenForPhase
+    onRequestOpen?.(returnedContextRef.current)
+  }, [reopenForPhase, onRequestOpen])
+
+  /**
+   * Unlock: tell the opener (so client-held locks flip too — F1), refresh the
+   * server-rendered gates so the originating surface shows the buyer's real content, raise
+   * the toast, then close the sheet into it.
+   *
+   * The toast goes through the app-wide `ToastProvider`, which every surface that mounts
+   * this sheet has above it in its route layout (`AppRouteProviders`). That provider
+   * survives the refresh; a portal owned by this component does not, because the refresh
+   * replaces the whole gated subtree this sheet lives in — which used to kill the toast a
+   * few hundred ms in (fix round 1, F3).
+   */
+  const unlockedRoutineReady = purchase.phase === "unlocked" ? purchase.routineReady : null
+  // Once, ever. Openers pass inline callbacks, so every re-render changes this effect's
+  // deps — and `router.refresh()` itself causes one, which would make the unlock a refresh
+  // loop raising a new toast each time.
+  const unlockHandledRef = useRef(false)
+  useEffect(() => {
+    if (unlockedRoutineReady === null || unlockHandledRef.current) return
+    unlockHandledRef.current = true
+    onUnlocked?.()
     router.refresh()
+    toast({
+      title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast,
+      ...(unlockedRoutineReady
+        ? {}
+        : { description: PREMIUM_SHEET_PURCHASE_COPY.unlockToastRoutinePending }),
+    })
     onClose()
-  }, [unlocked, router, onClose])
-  // Derived, not set from the effect above: the toast is simply "unlocked and not yet
-  // dismissed", which also keeps the repo's no-setState-in-effect rule satisfied.
-  const toastVisible = unlocked && !toastDismissed
+  }, [unlockedRoutineReady, router, onClose, onUnlocked, toast])
 
   const startCheckout = useCallback(() => {
+    // Remembered for a redirect method only; a card payment never leaves this component.
+    persistPremiumSheetCheckoutContext(renderedContext)
     dispatchPurchase({
       type: "checkout_requested",
       interval: selectedInterval,
       attemptId: crypto.randomUUID(),
     })
-  }, [selectedInterval])
+  }, [renderedContext, selectedInterval])
 
   const onCheckoutReady = useCallback(() => dispatchPurchase({ type: "checkout_ready" }), [])
   const onCheckoutFailed = useCallback(
@@ -231,7 +292,11 @@ export function PremiumSheet({
                 data-premium-sheet-selected-interval={selectedInterval}
                 onClick={startCheckout}
               >
-                {selectedPlan.ctaLabel}
+                {/* After a failure the CTA is a retry, not a fresh offer — the repo-wide
+                    „Erneut versuchen" (fix round 1, F2). */}
+                {purchase.phase === "failed"
+                  ? PREMIUM_SHEET_PURCHASE_COPY.retry
+                  : selectedPlan.ctaLabel}
               </Button>
             ) : null}
             {/* One escape, always present and always one tap away — including mid-payment,
@@ -386,13 +451,6 @@ export function PremiumSheet({
           </>
         )}
       </BottomSheetContent>
-      {/* Outside BottomSheetContent on purpose: the toast has to survive the sheet's exit
-          animation and the surface re-render behind it. */}
-      <PremiumSheetUnlockToast
-        visible={toastVisible}
-        routineReady={purchase.phase === "unlocked" ? purchase.routineReady : true}
-        onDismiss={() => setToastDismissed(true)}
-      />
     </BottomSheet>
   )
 }

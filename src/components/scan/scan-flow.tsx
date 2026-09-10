@@ -909,6 +909,17 @@ export function ScanFlow({
         open={state.premiumSheet !== null}
         context={state.premiumSheet}
         onClose={() => dispatch({ type: "premium_sheet_closed" })}
+        // Fix round 1 (F1): the sheet's `router.refresh()` re-serves this component's
+        // server props but cannot touch its reducer, and `state.tier` is sticky by design.
+        // Without this the buyer returns from the purchase to a still-locked Merken
+        // bookmark — the gate most of them started from.
+        onUnlocked={() => dispatch({ type: "tier_upgraded" })}
+        // Fix round 1 (F2): a redirect payment (PayPal) returns on a fresh page load with
+        // no sheet open, so a pending or failed outcome has nowhere to render. Reopen on
+        // the gate the purchase started from; Merken is this surface's default origin.
+        onRequestOpen={(context) =>
+          dispatch({ type: "premium_sheet_opened", context: context ?? MERKLISTE_GATE })
+        }
       />
     </div>
   )
