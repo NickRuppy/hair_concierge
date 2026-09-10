@@ -104,8 +104,10 @@ for (const [route, component] of GATED_ROUTES) {
     const source = readFileSync(path.join(SOURCE_ROOT, route), "utf8")
     const gate = source.indexOf("resolveGatedPageMode()")
     assert.ok(gate > -1, `${route} must derive the tier server-side`)
+    // The window is a readability bound, not a contract: PR5's keepsake branch (Z2's
+    // routine-less state) sits between the gate and the free-tier return on /routine.
     assert.match(
-      source.slice(gate, gate + 900),
+      source.slice(gate, gate + 1500),
       new RegExp(`return <${component} \\/>`),
       `${route} must return the example for the free tier`,
     )

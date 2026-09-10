@@ -7,7 +7,7 @@ import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, scanFail, scanOk } from "@/lib/scan/route"
 import { hasFreemiumPaidAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
-import { loadPersonalPlanKeepsakeContentForUser } from "@/lib/personal-plan/keepsake-content"
+import { hasPersonalPlanKeepsakeEvidenceForUser } from "@/lib/personal-plan/keepsake-content"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
 import { createClient } from "@/lib/supabase/server"
@@ -168,7 +168,11 @@ async function requirePremiumAccessForCurrentUser(userId: string): Promise<Freem
 async function hasKeepsakeReadAccess(userId: string): Promise<boolean> {
   if (!isFreemiumScannerFirstEnabled()) return false
   try {
-    return Boolean(await loadPersonalPlanKeepsakeContentForUser(userId))
+    // PR5 review fix (Z2): a lapsed owner's Merkliste is readable on ANY paid-era
+    // artifact — their own `scan_wishlist` rows included. Requiring an accepted Routine
+    // version here 403'd exactly the users whose saved products this route exists to
+    // return (legacy subscribers, incomplete provisioning).
+    return await hasPersonalPlanKeepsakeEvidenceForUser(userId)
   } catch {
     return false
   }

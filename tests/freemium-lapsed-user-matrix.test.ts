@@ -10,6 +10,7 @@ import {
 } from "../src/lib/auth/authenticated-app-route-access"
 import { resolveGatedPageMode } from "../src/lib/gated-preview/gate"
 import {
+  hasPersonalPlanKeepsakeEvidence,
   loadPersonalPlanKeepsakeContent,
   parsePersonalPlanKeepsakeContent,
 } from "../src/lib/personal-plan/keepsake-content"
@@ -189,6 +190,145 @@ test("the keepsake read is owner-scoped and surfaces query errors instead of swa
   )
 })
 
+// --- 1b. PR5 review fix (Z2): the ROUTINE-LESS lapsed cohort ----------------
+//
+// Paid scanning, saving and chat never required an accepted Routine, so keying "lapsed"
+// on `active_routine_version_id` alone dropped two real paying cohorts into the never-paid
+// bucket: legacy subscribers from before the Personal Plan, and buyers whose provisioning
+// stopped before Stage-4 acceptance. Evidence is now ANY paid-era artifact.
+
+function evidenceClient(rows: Partial<Record<string, unknown>>, error?: unknown) {
+  const queried: string[] = []
+  const client = {
+    from(table: string) {
+      queried.push(table)
+      const query = {
+        select: () => query,
+        eq: (column: string, value: unknown) => {
+          assert.equal(column, "user_id", `${table} must be owner-scoped`)
+          assert.equal(value, USER_ID)
+          return query
+        },
+        limit: (count: number) => {
+          assert.equal(count, 1, `${table} must be an existence probe, not a listing`)
+          return query
+        },
+        maybeSingle: async () => ({ data: rows[table] ?? null, error: error ?? null }),
+      }
+      return query
+    },
+  }
+  return { client: client as never, queried }
+}
+
+test("Z2: lapsed evidence is ANY paid-era artifact — plan, own Merkliste rows, or own chat", async () => {
+  for (const table of ["personal_plans", "scan_wishlist", "conversations"]) {
+    const { client } = evidenceClient({ [table]: { id: "row-1" } })
+    assert.equal(
+      await hasPersonalPlanKeepsakeEvidence(client, USER_ID),
+      true,
+      `${table} alone must prove a paid era`,
+    )
+  }
+
+  // A routine-less plan row (no accepted Routine version) is now evidence in its own right
+  // — the exact cohort the old classifier lost.
+  const { client: routineLess } = evidenceClient({
+    personal_plans: { id: PLAN_ID, active_routine_version_id: null },
+  })
+  assert.equal(await hasPersonalPlanKeepsakeEvidence(routineLess, USER_ID), true)
+
+  // Never paid: no artifact anywhere -> unchanged „Beispiel" behaviour.
+  const { client: none, queried } = evidenceClient({})
+  assert.equal(await hasPersonalPlanKeepsakeEvidence(none, USER_ID), false)
+  assert.deepEqual(queried, ["personal_plans", "scan_wishlist", "conversations"])
+})
+
+test("Z2: the evidence probes short-circuit on the first hit and surface query errors", async () => {
+  const { client, queried } = evidenceClient({ personal_plans: { id: PLAN_ID } })
+  await hasPersonalPlanKeepsakeEvidence(client, USER_ID)
+  assert.deepEqual(queried, ["personal_plans"], "no further reads once the era is proven")
+
+  const { client: broken } = evidenceClient({}, { message: "boom" })
+  await assert.rejects(hasPersonalPlanKeepsakeEvidence(broken, USER_ID))
+})
+
+test("Z2: a routine-less lapsed user gets the honest empty Routine, never the Beispiel", async () => {
+  const base = {
+    getUserId: async () => USER_ID,
+    loadKeepsakeContent: async () => null,
+    readView: async () => ({ status: "no_personal_plan" }) as never,
+  }
+
+  // No accepted Routine version at all.
+  assert.equal((await resolveKeepsakeRoutinePage(base)).kind, "no_routine")
+  // Evidence exists but the view carries no active version.
+  assert.equal(
+    (
+      await resolveKeepsakeRoutinePage({
+        ...base,
+        loadKeepsakeContent: async () => ({
+          personalPlanId: PLAN_ID,
+          activeRoutineVersionId: ROUTINE_VERSION_ID,
+        }),
+        readView: async () =>
+          ({
+            status: "active",
+            personalPlanId: PLAN_ID,
+            planRevision: 1,
+            sourceRevision: 1,
+            activeVersion: null,
+            pendingProposal: null,
+            productPresentation: { catalogProducts: [] },
+          }) as never,
+      })
+    ).kind,
+    "no_routine",
+  )
+  // A read that FAILED is still `unavailable` — an untrusted signal keeps today's fallback.
+  assert.equal(
+    (
+      await resolveKeepsakeRoutinePage({
+        ...base,
+        loadKeepsakeContent: async () => {
+          throw new Error("read failed")
+        },
+      })
+    ).kind,
+    "unavailable",
+  )
+  assert.equal(
+    (await resolveKeepsakeRoutinePage({ ...base, getUserId: async () => null })).kind,
+    "unavailable",
+  )
+})
+
+test("Z2: the routine-less keepsake render keeps the Merkliste readable and drops the Beispiel", () => {
+  const source = readSource("app/routine/page.tsx")
+  const keepsakeBranch = source.slice(source.indexOf('if (pageMode === "keepsake")'))
+  assert.match(keepsakeBranch, /keepsake\.kind === "no_routine"/)
+  assert.match(keepsakeBranch, /<KeepsakeNoRoutineState/)
+  assert.ok(
+    keepsakeBranch.indexOf("<KeepsakeNoRoutineState") <
+      keepsakeBranch.indexOf("<GatedRoutineExample />"),
+    "the Beispiel is only reachable for an unreadable keepsake signal",
+  )
+  // The state itself: their own Merkliste, read-only — no write affordance, no example.
+  const state = source.slice(source.indexOf("function KeepsakeNoRoutineState"))
+  assert.match(state, /<GemerktSection merklisteEnabled=\{merklisteEnabled\} readOnly \/>/)
+})
+
+test("Z2: both keepsake gates read the widened evidence, not the accepted-Routine content", () => {
+  assert.match(
+    readSource("lib/auth/authenticated-app-route-access.ts"),
+    /hasKeepsakeContent: hasPersonalPlanKeepsakeEvidenceForUser/,
+  )
+  assert.match(
+    readSource("app/api/scan/wishlist/route.ts"),
+    /return await hasPersonalPlanKeepsakeEvidenceForUser\(userId\)/,
+  )
+})
+
 // --- 2. Page mode: reads allowed, example untouched -------------------------
 
 test("the page mode maps the three access states onto the three renders", async () => {
@@ -236,7 +376,7 @@ test("the keepsake Routine reads the owner's own accepted version, with the prop
   assert.deepEqual(readViewCalls, [{ userId: USER_ID, enabled: false }])
 })
 
-test("the keepsake Routine refuses to render without both halves of the evidence", async () => {
+test("the keepsake Routine refuses to render the OWNER'S ROUTINE without both halves of the evidence", async () => {
   const base = {
     getUserId: async () => USER_ID,
     loadKeepsakeContent: async () => ({
@@ -259,9 +399,12 @@ test("the keepsake Routine refuses to render without both halves of the evidence
     (await resolveKeepsakeRoutinePage({ ...base, getUserId: async () => null })).kind,
     "unavailable",
   )
+  // PR5 review fix (Z2): a MISSING routine is no longer the same answer as a BROKEN read —
+  // it is the honest `no_routine` state (see the routine-less cohort's own test above), so
+  // neither of these renders the owner's Routine, and neither falls back to the Beispiel.
   assert.equal(
     (await resolveKeepsakeRoutinePage({ ...base, loadKeepsakeContent: async () => null })).kind,
-    "unavailable",
+    "no_routine",
   )
   assert.equal(
     (
@@ -270,7 +413,7 @@ test("the keepsake Routine refuses to render without both halves of the evidence
         readView: async () => ({ status: "no_personal_plan" }) as never,
       })
     ).kind,
-    "unavailable",
+    "no_routine",
   )
   assert.equal(
     (

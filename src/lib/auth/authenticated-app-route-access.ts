@@ -7,7 +7,7 @@ import {
   hasCompletedQuizDiagnostics,
   type PersistedQuizDiagnosticsProfile,
 } from "@/lib/quiz/completion"
-import { loadPersonalPlanKeepsakeContentForUser } from "@/lib/personal-plan/keepsake-content"
+import { hasPersonalPlanKeepsakeEvidenceForUser } from "@/lib/personal-plan/keepsake-content"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
 
@@ -177,8 +177,12 @@ export const loadScanPageTier = loadAuthenticatedAppPageTier
  *
  * - `"premium"` — current paid access (and every flag-off request, with zero lookups).
  * - `"lapsed"` — the paid-access composite denies, but this user demonstrably HELD paid
- *   access: they own an accepted Routine version (`personal-plan/keepsake-content.ts`).
- *   Their own profile, Routine, Anwendung and Merkliste stay READABLE (keepsake); every
+ *   access: they left a paid-era artifact behind — a plan/enrollment row, their own
+ *   `scan_wishlist` rows, or their own chat conversations (PR5 review fix Z2, see
+ *   `hasPersonalPlanKeepsakeEvidence` in `personal-plan/keepsake-content.ts`; an accepted
+ *   Routine version alone missed legacy subscribers and incomplete provisioning).
+ *   Their own profile, Routine, Anwendung and Merkliste stay READABLE (keepsake) — each
+ *   surface showing its honest empty state where the user has nothing there; every
  *   mutation stays premium and opens the Premium sheet.
  * - `"free"` — denied and no keepsake evidence: today's T12 „Beispiel" behaviour, unchanged.
  *
@@ -227,7 +231,8 @@ export async function loadAuthenticatedAppAccessState(): Promise<AuthenticatedAp
   return resolveAuthenticatedAppAccessState({
     loadTier: loadAuthenticatedAppPageTier,
     getUserId: async () => (await supabase.auth.getUser()).data.user?.id ?? null,
-    hasKeepsakeContent: async (userId) =>
-      Boolean(await loadPersonalPlanKeepsakeContentForUser(userId)),
+    // PR5 review fix (Z2): ANY paid-era artifact, not only an accepted Routine version —
+    // see `hasPersonalPlanKeepsakeEvidence` for the ruling and the cohorts it recovers.
+    hasKeepsakeContent: hasPersonalPlanKeepsakeEvidenceForUser,
   })
 }

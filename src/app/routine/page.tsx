@@ -2,6 +2,7 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 
 import { GatedRoutineExample } from "@/components/gated-preview/gated-routine-example"
+import { GemerktSection } from "@/components/routine/gemerkt-section"
 import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
 import type { RoutineRefinementBannerViewModel } from "@/components/routine/personal-plan/routine-refinement-banner"
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
@@ -171,6 +172,28 @@ export function RoutineUnavailableState({
 }
 
 /**
+ * PR5 review fix (Z2): the keepsake Routine for a lapsed owner who never had an accepted
+ * Routine version (a legacy subscriber, or a buyer whose provisioning stopped before
+ * Stage-4 acceptance). Their Merkliste is still theirs, so it renders here read-only — the
+ * same `GemerktSection` the full keepsake Routine uses, with both write affordances gone.
+ * The Routine itself says, honestly, that there is none; it never borrows the „Beispiel"
+ * composition, which belongs to a never-paid user and is not this user's own plan.
+ */
+function KeepsakeNoRoutineState({ merklisteEnabled }: { merklisteEnabled: boolean }) {
+  return (
+    <main className="mx-auto min-h-screen w-full max-w-2xl space-y-6 px-4 py-8">
+      <section className="space-y-3 rounded-[8px] border border-border p-5">
+        <h1 className="text-xl font-semibold">Noch keine Routine</h1>
+        <p className="text-sm text-muted-foreground">
+          Für dich ist keine bestätigte Routine hinterlegt. Was du gemerkt hast, bleibt gespeichert.
+        </p>
+      </section>
+      <GemerktSection merklisteEnabled={merklisteEnabled} readOnly />
+    </main>
+  )
+}
+
+/**
  * T17 keepsake resolver — the LAPSED owner's own Routine.
  *
  * Deliberately does NOT go through `loadJourneyAccess`: that loader is the entitlement
@@ -204,10 +227,16 @@ export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolv
 
   try {
     const keepsake = await deps.loadKeepsakeContent(userId)
-    if (!keepsake) return { kind: "unavailable" as const }
+    // PR5 review fix (Z2): "no accepted Routine version" is not the same failure as "the
+    // read broke". A lapsed owner may legitimately have none — a legacy subscriber, or a
+    // buyer whose provisioning stopped before Stage-4 acceptance — and still own Merkliste
+    // and chat keepsakes. That cohort gets this page's HONEST pre-routine state (see
+    // `KeepsakeNoRoutineState`), never the „Beispiel" composition, which would show them a
+    // stranger's routine as if it were theirs.
+    if (!keepsake) return { kind: "no_routine" as const }
     const view = await deps.readView({ userId, enabled: false })
     if (view.status === "no_personal_plan" || !view.activeVersion) {
-      return { kind: "unavailable" as const }
+      return { kind: "no_routine" as const }
     }
     const portfolioVersionId = view.activeVersion.payload.source.productPortfolioVersionId
     let portfolioPresentation: PortfolioPresentation | null = null
@@ -285,8 +314,14 @@ export default async function RoutinePage() {
         />
       )
     }
-    // No readable keepsake after all (the evidence and the version disagree, or the read
-    // failed): fall back to the free tier's own page rather than inventing a third state.
+    // PR5 review fix (Z2): a lapsed owner with no accepted Routine keeps the keepsakes they
+    // DO have — their Merkliste is right here, read-only — and sees an honest empty Routine
+    // instead of the „Beispiel" page.
+    if (keepsake.kind === "no_routine") {
+      return <KeepsakeNoRoutineState merklisteEnabled={isFreemiumScannerFirstEnabled()} />
+    }
+    // The keepsake read itself failed (`unavailable`): fall back to the free tier's own
+    // page rather than inventing a third state on an untrusted signal.
     return <GatedRoutineExample />
   }
   const renderGatedExample = pageMode === "example"
