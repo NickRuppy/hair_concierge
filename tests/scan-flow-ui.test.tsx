@@ -264,6 +264,8 @@ type FlowHarness = {
   tree: ReactElement | null
   events: TrackedEvent[]
   toasts: string[]
+  /** T16: every href the DI'd `navigate` prop was called with, in order. */
+  navigateCalls: string[]
   settle: () => Promise<ReactElement | null>
 }
 
@@ -280,10 +282,14 @@ async function mountFlow(
     sessionRecordStorage?: ReturnType<typeof createMemoryScanTriggerStorage>
     /** Fix round 1 (F1): shared across two `mountFlow` calls to simulate a remount. */
     fatigueStorage?: ReturnType<typeof createMemoryScanTriggerStorage>
+    /** T16: defaults to `false`, matching `ScanFlow`'s own default — every existing test
+     * that does not pass this stays on zero wishlist-count fetches, zero deep-link wiring. */
+    merklisteEnabled?: boolean
   } = {},
 ): Promise<FlowHarness> {
   const events: TrackedEvent[] = []
   const toasts: string[] = []
+  const navigateCalls: string[] = []
   const analytics: ScanAnalyticsPort = {
     track(name, payload) {
       events.push({ name, payload: payload as Record<string, unknown> })
@@ -303,6 +309,12 @@ async function mountFlow(
         tier: options.tier,
         sessionRecordStorage: options.sessionRecordStorage,
         fatigueStorage: options.fatigueStorage,
+        merklisteEnabled: options.merklisteEnabled,
+        // T16: a plain injected function, never the real `useRouter()` — this harness's
+        // `useContext` always returns the fixed toast port regardless of which context is
+        // requested (see the file header comment), so `ScanFlow` must never call
+        // `useRouter()` itself. `navigate` is exactly that DI seam.
+        navigate: (href: string) => navigateCalls.push(href),
       }),
     {
       toasts: [],
@@ -315,6 +327,7 @@ async function mountFlow(
     tree: null,
     events,
     toasts,
+    navigateCalls,
     async settle() {
       await harness.render()
       await delay(0)
@@ -1268,6 +1281,107 @@ test("premium: an unmasked verdict leaves every Merken and reveal affordance unt
   await flow.settle()
   assert.equal(requireByType(flow.tree, ScanSaveSheet, "ScanSaveSheet").props.open, true)
   assert.equal(premiumSheetProps(flow.tree).open, false)
+})
+
+// --- T16: Merkliste bookmark — count badge + deep-link ------------------------
+
+test("T16 premium + merklisteEnabled: the bookmark loads the Merkliste count and deep-links to the Gemerkt section on tap, instead of opening the in-flow sheet", async () => {
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/wishlist")
+        return json({ entries: [{ productId: "a" }, { productId: "b" }] })
+      return notFound()
+    },
+    { tier: "premium", merklisteEnabled: true },
+  )
+  await flow.settle()
+
+  assert.equal(wishlistTriggerProps(flow.tree).locked, false)
+  assert.equal(wishlistTriggerProps(flow.tree).count, 2)
+
+  wishlistTriggerProps(flow.tree).onClick()
+  await flow.settle()
+
+  assert.deepEqual(flow.navigateCalls, ["/routine#gemerkt"])
+  // The in-flow sheet stays unopened — the bookmark is a shortcut to the Routine page now,
+  // not a second Merkliste surface.
+  assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, false)
+})
+
+test("T16 flag off: the bookmark never fetches a Merkliste count, even for a premium session", async () => {
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/wishlist") throw new Error("must not be called with the flag off")
+      return notFound()
+    },
+    { tier: "premium" },
+  )
+  await flow.settle()
+
+  assert.equal(wishlistTriggerProps(flow.tree).count, undefined)
+})
+
+test("T16 premium + merklisteEnabled: a load failure leaves the badge absent instead of showing a wrong count", async () => {
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/wishlist") return json({ error: "temporarily_unavailable" }, 503)
+      return notFound()
+    },
+    { tier: "premium", merklisteEnabled: true },
+  )
+  await flow.settle()
+
+  assert.equal(wishlistTriggerProps(flow.tree).count, undefined)
+})
+
+test("T16 free tier + merklisteEnabled: never fetches a Merkliste count and the bookmark still opens the Premium sheet", async () => {
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/wishlist")
+        throw new Error("must not be called for a free-tier session")
+      return notFound()
+    },
+    { tier: "free", merklisteEnabled: true },
+  )
+  await flow.settle()
+
+  assert.equal(wishlistTriggerProps(flow.tree).locked, true)
+  assert.equal(wishlistTriggerProps(flow.tree).count, undefined)
+
+  wishlistTriggerProps(flow.tree).onClick()
+  await flow.settle()
+  assert.deepEqual(premiumSheetProps(flow.tree).context, {
+    feature: "merkliste",
+    source: "scan:verdict",
+  })
+  assert.deepEqual(flow.navigateCalls, [])
+})
+
+test("T16 premium + merklisteEnabled: a premium in-catalog resolve refreshes the badge (server auto-saved it)", async () => {
+  let wishlistCalls = 0
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/resolve") return json(premiumVerdict("p-a"))
+      if (url === "/api/scan/wishlist") {
+        wishlistCalls += 1
+        // First (mount) read: nothing saved yet. Second (post-resolve) read: the server's
+        // own auto-save (T16, resolve route) has landed this exact product.
+        return json({ entries: wishlistCalls === 1 ? [] : [{ productId: "p-a" }] })
+      }
+      return notFound()
+    },
+    { tier: "premium", merklisteEnabled: true },
+  )
+  await flow.settle()
+  // Zero entries yet: `count` is `0`, which `ScanWishlistTrigger` treats the same as
+  // "absent" (falsy) — no badge shown, but the value itself is a real loaded `0`, not
+  // `undefined` (the load genuinely succeeded with an empty list).
+  assert.equal(wishlistTriggerProps(flow.tree).count, 0)
+
+  await scanInto(flow)
+
+  assert.equal(wishlistCalls, 2)
+  assert.equal(wishlistTriggerProps(flow.tree).count, 1)
 })
 
 // --- T10: trigger layer, wired end to end through the flow -------------------

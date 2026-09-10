@@ -164,12 +164,32 @@ export function ScanFlow({
   tier,
   sessionRecordStorage,
   fatigueStorage,
+  merklisteEnabled = false,
+  navigate = (href: string) => {
+    window.location.href = href
+  },
 }: {
   analytics?: ScanAnalyticsPort
   scannerRuntime?: ScannerRuntime
   tier?: EntitlementTier
   sessionRecordStorage?: ScanTriggerStorage
   fatigueStorage?: ScanTriggerStorage
+  /**
+   * T16: the freemium-flag gate for the Merkliste bookmark's count badge + deep-link (and
+   * for the „Gemerkt" section it points at — see `RoutinePage`). A server-derived boolean,
+   * never a client flag read (`isFreemiumScannerFirstEnabled()` is not Edge/browser-safe) —
+   * mirrors how `tier` itself is threaded in. Defaults to `false` so a bare `<ScanFlow />`
+   * (Storybook, this file's own test harness) stays on today's plain bookmark, unchanged.
+   */
+  merklisteEnabled?: boolean
+  /**
+   * DI seam for the premium bookmark's deep-link (`router.push`, supplied by
+   * `ScanPageClient`) — not a bare `useRouter()` call in this component, so this file's
+   * hand-rolled test harness (tests/scan-flow-ui.test.tsx, which does not provide a
+   * `next/navigation` context) never has to fake one. Defaults to a plain location change,
+   * safe for any caller that does not need client-side routing.
+   */
+  navigate?: (href: string) => void
 } = {}) {
   const { toast } = useToast()
   const [state, dispatch] = useReducer(scanFlowReducer, initialScanFlowState)
@@ -302,6 +322,38 @@ export function ScanFlow({
 
   // Unmount only: never leave a sheet timer pointing at a dead component.
   useEffect(() => clearSheetTimer, [clearSheetTimer])
+
+  /**
+   * T16: the Merkliste bookmark's premium count badge (`ScanWishlistTrigger`'s `count`
+   * prop) — a real `scan_wishlist` listing count, fetched separately, never a client
+   * guess. `null` before the first successful load, and on a load failure the badge simply
+   * stays absent (or keeps its last known value) rather than showing a wrong number.
+   */
+  const [wishlistCount, setWishlistCount] = useState<number | null>(null)
+
+  const loadWishlistCount = useCallback(async () => {
+    try {
+      const response = await fetch("/api/scan/wishlist", { cache: "no-store" })
+      if (!response.ok) return
+      const body = (await response.json()) as { entries?: unknown[] }
+      if (Array.isArray(body.entries)) setWishlistCount(body.entries.length)
+    } catch {
+      // Best-effort: the badge simply keeps whatever count (or absence) it already had.
+    }
+  }, [])
+
+  /**
+   * Fires once per mount — only when the flag is on AND the tier is known-not-free. The
+   * server-derived `tier` prop fails closed to "premium" (same as `merkenLocked` below), so
+   * this fires from first paint for a genuinely premium session without waiting for a scan.
+   * Flag-off and a `tier="free"` mount cause zero new network activity, matching this
+   * task's byte-identity / no-new-free-behavior constraints.
+   */
+  useEffect(() => {
+    if (!merklisteEnabled || tier === "free") return
+    void loadWishlistCount()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [merklisteEnabled, tier])
 
   /**
    * The single way back to the scanning step. The camera never stops (the sheet slides up
@@ -468,6 +520,15 @@ export function ScanFlow({
           tier: effectiveTier,
           sessionNumber: sessionNumberRef.current,
         })
+        // T16: a premium in-catalog resolve auto-saves server-side (POST /api/scan/resolve
+        // itself, insert-only into scan_wishlist) — refresh the bookmark's count badge so a
+        // newly-auto-saved product is reflected without waiting for the next mount. Free/
+        // flag-off never reach this branch (`effectiveTier` above is never "premium" for a
+        // free session; `merklisteEnabled` is the same server-derived flag gate the mount
+        // effect uses), so neither performs this extra read.
+        if (merklisteEnabled && effectiveTier === "premium" && result.kind === "in_catalog") {
+          void loadWishlistCount()
+        }
         // Fix round 1 (F2): a masked verdict with the credit already spent MIGHT be the
         // same product the credit was spent on — the reveal endpoint is idempotent, so
         // attempting it silently either re-serves that same card (a rescan or a reload of
@@ -493,6 +554,8 @@ export function ScanFlow({
       analytics,
       clearSheetTimer,
       hydrateFatigueBudget,
+      loadWishlistCount,
+      merklisteEnabled,
       requests,
       returnToScanning,
       revealAlternatives,
@@ -745,10 +808,15 @@ export function ScanFlow({
         <h1 className="text-[17px] font-bold text-foreground">Scan</h1>
         <ScanWishlistTrigger
           locked={merkenLocked}
+          // T16: premium's bookmark is a one-tap shortcut to the „Gemerkt" section on the
+          // Routine page — the section IS the Merkliste home now (plan ruling), not this
+          // in-flow sheet. Free stays exactly as T9 built it (opens the Premium sheet); the
+          // count badge is `wishlistCount`, which only ever loads when `merklisteEnabled`.
+          count={wishlistCount ?? undefined}
           onClick={() =>
             merkenLocked
               ? dispatch({ type: "premium_sheet_opened", context: MERKLISTE_GATE })
-              : dispatch({ type: "auxiliary_opened", sheet: "wishlist" })
+              : navigate("/routine#gemerkt")
           }
         />
       </div>
