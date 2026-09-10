@@ -1079,7 +1079,13 @@ export async function POST(req: NextRequest) {
           })
       : false
 
-    const response = NextResponse.json({ client_secret: session.client_secret })
+    const response = NextResponse.json({
+      client_secret: session.client_secret,
+      // T14 only: Stripe's embedded `onComplete` callback carries no Session id, and the
+      // sheet needs one to ask the server what actually happened. Added for the new source
+      // alone so every existing client's response body stays byte-identical.
+      ...(isPremiumSheetCheckout ? { session_id: session.id } : {}),
+    })
     if (funnelTouch && funnelRecorded) {
       response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
     }
