@@ -4,26 +4,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MessageCircle, RefreshCw, SlidersHorizontal } from "lucide-react"
 
-import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
-import { ScanSaveSheet, type ScanSaveCompletion } from "@/components/scan/scan-save-sheet"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/providers/toast-provider"
+import { GemerktSection } from "@/components/routine/gemerkt-section"
 import { launchRoutineChatTrigger, type RoutineChatTriggerType } from "@/lib/routines/chat-triggers"
 import type { RoutineUiCard, RoutineUiShape } from "@/lib/routines/types"
-import { scanAlternativeMetaLine } from "@/lib/scan/result-presentation"
 import type { HairProfile } from "@/lib/types"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
-import type { ScanWishlistEntry } from "@/app/api/scan/wishlist/route"
 import { RoutineCard } from "./routine-card"
 import { RoutineDrawer } from "./routine-drawer"
-
-/**
- * T16: same empty-state copy `ScanWishlistSheet` already shows (scan-wishlist-sheet.tsx) —
- * reused verbatim so the Merkliste reads consistently wherever it happens to be seen,
- * not invented fresh for this section.
- */
-const GEMERKT_EMPTY_COPY = "Noch nichts gemerkt. Scanne ein Produkt und speichere es hier."
-const GEMERKT_REMOVE_FAILED_TOAST = "Entfernen fehlgeschlagen. Bitte versuche es noch einmal."
 
 type RoutineApiBody =
   | { routine?: RoutineUiShape | { routine?: RoutineUiShape }; cards?: RoutineUiCard[] }
@@ -84,79 +73,6 @@ export function RoutinePageClient({
     () => cards.find((card) => card.id === drawerCardId) ?? null,
     [cards, drawerCardId],
   )
-
-  // --- T16: „Gemerkt" section (auto-saved Merkliste) ---------------------------
-  //
-  // `wishlistVisible` stays `false` for flag-off AND for a free-tier user whose
-  // `/api/scan/wishlist` read 403s (or any other read failure) — this section is cosmetic
-  // and failure-tolerant like `portfolioPresentation`/`refinementBanner` elsewhere on this
-  // page: a load that cannot be trusted simply means no section, never a broken Routine or
-  // new behavior surfaced to a free user.
-  const [wishlistVisible, setWishlistVisible] = useState(false)
-  const [wishlist, setWishlist] = useState<ScanWishlistEntry[]>([])
-  const [graduateEntry, setGraduateEntry] = useState<ScanWishlistEntry | null>(null)
-
-  useEffect(() => {
-    if (!merklisteEnabled) return
-    let cancelled = false
-    void (async () => {
-      try {
-        const response = await fetch("/api/scan/wishlist", { cache: "no-store" })
-        if (!response.ok) return
-        const body = (await response.json()) as { entries?: ScanWishlistEntry[] }
-        if (cancelled) return
-        setWishlist(Array.isArray(body.entries) ? body.entries : [])
-        setWishlistVisible(true)
-      } catch {
-        // Fail silent — see the comment above `wishlistVisible`.
-      }
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [merklisteEnabled])
-
-  // Deep-link from the scanner bookmark (`/routine#gemerkt`, T16): scroll once the section
-  // has real content to scroll to — the element does not exist yet during the initial
-  // loading render, so the browser's own hash-scroll-on-load cannot find it.
-  useEffect(() => {
-    if (!wishlistVisible) return
-    if (typeof window === "undefined" || window.location.hash !== "#gemerkt") return
-    document.getElementById("gemerkt")?.scrollIntoView({ block: "start" })
-  }, [wishlistVisible])
-
-  const removeFromWishlist = useCallback(
-    async (entry: ScanWishlistEntry) => {
-      const previous = wishlist
-      setWishlist((current) => current.filter((row) => row.productId !== entry.productId))
-      try {
-        const response = await fetch("/api/scan/save", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId: entry.productId, kind: "merkliste" }),
-        })
-        if (!response.ok) throw new Error("remove_failed")
-      } catch {
-        setWishlist(previous)
-        toast({ title: GEMERKT_REMOVE_FAILED_TOAST, variant: "destructive" })
-      }
-    },
-    [wishlist, toast],
-  )
-
-  /**
-   * Graduation hand-off: this section never writes to the routine itself — it only opens
-   * the EXISTING „Wohin speichern?" sheet (`ScanSaveSheet`, unchanged — the same save/move
-   * endpoint the scan flow's own Merken tap already uses) for the tapped product. The
-   * actual write, if any, happens only once the user explicitly picks a destination inside
-   * that sheet; this component just reflects the sheet's own report afterwards by dropping
-   * the product from THIS list (it left "merkliste" either way — moved to the routine, or
-   * removed outright).
-   */
-  const handleGraduated = useCallback((completion: ScanSaveCompletion) => {
-    setWishlist((current) => current.filter((row) => row.productId !== completion.productId))
-    setGraduateEntry(null)
-  }, [])
 
   const summary = useMemo(() => {
     // Three disjoint buckets: verified/active vs pending vs suggestions.
@@ -478,82 +394,12 @@ export function RoutinePageClient({
             </section>
           )}
 
-          {wishlistVisible && (
-            <section
-              id="gemerkt"
-              aria-labelledby="gemerkt-heading"
-              className="scroll-mt-4 border-t border-border pt-4"
-            >
-              <h2
-                id="gemerkt-heading"
-                className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground"
-              >
-                Gemerkt
-              </h2>
-              {wishlist.length === 0 ? (
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {GEMERKT_EMPTY_COPY}
-                </p>
-              ) : (
-                <ul className="mt-3 flex flex-col gap-2">
-                  {wishlist.map((entry) => {
-                    const meta = scanAlternativeMetaLine({
-                      brand: entry.brand,
-                      priceLabel: entry.priceLabel,
-                    })
-                    return (
-                      <li
-                        key={entry.productId}
-                        className="flex items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5"
-                      >
-                        <ScanProductThumb imageUrl={entry.imageUrl} label={entry.name} size={44} />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[13px] font-semibold text-foreground">
-                            {entry.name}
-                          </span>
-                          {meta ? (
-                            <span className="mt-0.5 block text-[12px] text-muted-foreground">
-                              {meta}
-                            </span>
-                          ) : null}
-                        </span>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="w-auto shrink-0"
-                          onClick={() => setGraduateEntry(entry)}
-                        >
-                          Zur Routine hinzufügen
-                        </Button>
-                        <button
-                          type="button"
-                          onClick={() => void removeFromWishlist(entry)}
-                          aria-label={`${entry.name} von der Merkliste entfernen`}
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
-                        >
-                          ×
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
-            </section>
-          )}
+          <GemerktSection
+            merklisteEnabled={merklisteEnabled}
+            onGraduated={() => void refreshRoutine()}
+          />
         </div>
       </main>
-      {graduateEntry ? (
-        <ScanSaveSheet
-          open={graduateEntry !== null}
-          productId={graduateEntry.productId}
-          savedState={{ state: "merkliste", managedByScan: true }}
-          onOpenChange={(open) => {
-            if (!open) setGraduateEntry(null)
-          }}
-          onSavedStateChange={handleGraduated}
-        />
-      ) : null}
       <RoutineDrawer
         card={drawerCard}
         hairProfile={routine.hairProfile}

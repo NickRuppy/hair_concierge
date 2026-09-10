@@ -123,9 +123,9 @@ test("routine product drawer receives loaded profile context", () => {
 })
 
 /**
- * T16: „Gemerkt" section wiring on the legacy Routine page. A full interactive mount is
- * out of this repo's established test surface for this component (no jsdom/testing-
- * library here, and `RoutinePageClient` calls the real `useRouter()` — see
+ * T16: „Gemerkt" section wiring. A full interactive mount is out of this repo's
+ * established test surface for these components (no jsdom/testing-library here, and both
+ * `RoutinePageClient` and `PersonalPlanRoutineClient` call the real `useRouter()` — see
  * tests/scan-flow-ui.test.tsx's header comment on why that harness family never attempts
  * a component that does), so — matching the source-pattern style already used for this
  * file just above — these assert the concrete wiring the acceptance criteria and THE
@@ -134,17 +134,23 @@ test("routine product drawer receives loaded profile context", () => {
  * The write paths those wire into (auto-save's insert-only upsert, the move endpoint's own
  * semantics) are covered directly in tests/scan-wishlist-auto-save-postgres.test.ts and
  * tests/scan-save-route.test.ts respectively.
+ *
+ * Fix round 1 (F1): the section moved out of `routine-page-client.tsx` into the shared
+ * `GemerktSection` component (`src/components/routine/gemerkt-section.tsx`) — the ORIGINAL
+ * placement only ever wired into the legacy Routine branch, leaving the scanner bookmark's
+ * `/routine#gemerkt` deep-link dead for every freemium-provisioned buyer and every current
+ * subscriber, who all resolve to the personal-plan branch instead. These assertions now
+ * cover the shared component itself plus BOTH callers wiring it in.
  */
 test("Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled", () => {
-  const source = read("src/components/routine/routine-page-client.tsx")
+  const source = read("src/components/routine/gemerkt-section.tsx")
 
-  assert.match(source, /merklisteEnabled = false/)
   assert.match(source, /if \(!merklisteEnabled\) return/)
   assert.match(source, /fetch\("\/api\/scan\/wishlist", \{ cache: "no-store" \}\)/)
 })
 
 test("Gemerkt section: the section anchor matches the scanner bookmark's deep-link target", () => {
-  const source = read("src/components/routine/routine-page-client.tsx")
+  const source = read("src/components/routine/gemerkt-section.tsx")
   const scanFlowSource = read("src/components/scan/scan-flow.tsx")
 
   assert.match(source, /id="gemerkt"/)
@@ -152,7 +158,7 @@ test("Gemerkt section: the section anchor matches the scanner bookmark's deep-li
 })
 
 test("Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section", () => {
-  const source = read("src/components/routine/routine-page-client.tsx")
+  const source = read("src/components/routine/gemerkt-section.tsx")
 
   // The hand-off opens ScanSaveSheet; the actual write only happens once the user picks a
   // destination INSIDE that (already-existing, already-tested) sheet.
@@ -168,13 +174,43 @@ test("Gemerkt section: graduation hands off to the EXISTING save/move sheet — 
   assert.match(source, /kind: "merkliste"/)
 })
 
-test("RoutinePage: the legacy branch passes the server-derived flag, not a client-side read", () => {
+test("Gemerkt section: a routine graduation (not a plain removal) tells the caller to refresh (F6)", () => {
+  const source = read("src/components/routine/gemerkt-section.tsx")
+
+  assert.match(source, /if \(completion\.savedState\.state === "routine"\) onGraduated\?\.\(\)/)
+})
+
+test("RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)", () => {
+  const source = read("src/components/routine/routine-page-client.tsx")
+
+  assert.match(source, /merklisteEnabled = false/)
+  assert.match(source, /<GemerktSection/)
+  assert.match(source, /merklisteEnabled=\{merklisteEnabled\}/)
+  assert.match(source, /onGraduated=\{\(\) => void refreshRoutine\(\)\}/)
+})
+
+test("PersonalPlanRoutineClient: wires the shared Gemerkt section too — this is the branch every freemium/subscriber premium user actually resolves to (F1)", () => {
+  const clientSource = read("src/components/routine/personal-plan/personal-plan-routine-client.tsx")
+  const pageSource = read("src/components/routine/personal-plan/routine-page.tsx")
+
+  assert.match(clientSource, /merklisteEnabled = false/)
+  assert.match(clientSource, /merklisteEnabled=\{merklisteEnabled\}/)
+  assert.match(clientSource, /onGraduated=\{\(\) => void reload\(\)\}/)
+  assert.match(
+    pageSource,
+    /<GemerktSection merklisteEnabled=\{merklisteEnabled\} onGraduated=\{onGraduated\} \/>/,
+  )
+})
+
+test("RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)", () => {
   const source = read("src/app/routine/page.tsx")
 
   assert.match(
     source,
     /<RoutinePageClient merklisteEnabled=\{isFreemiumScannerFirstEnabled\(\)\} \/>/,
   )
+  assert.match(source, /<PersonalPlanRoutineClient/)
+  assert.match(source, /merklisteEnabled=\{isFreemiumScannerFirstEnabled\(\)\}/)
 })
 
 test("routine trigger seeds are sent from session storage with the route conversation id", () => {

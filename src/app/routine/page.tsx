@@ -223,6 +223,11 @@ export default async function RoutinePage() {
       enabled={resolved.enabled}
       portfolioPresentation={resolved.portfolioPresentation}
       initialRefinementBanner={resolved.refinementBanner}
+      // Fix round 1 (F1): every freemium-provisioned buyer and every current subscriber
+      // resolves HERE, not to the `legacy` branch above — the same flag gate has to reach
+      // this branch too, or the „Gemerkt" section (and the scanner bookmark's
+      // `/routine#gemerkt` deep-link) is unreachable for the exact cohort it exists for.
+      merklisteEnabled={isFreemiumScannerFirstEnabled()}
     />
   )
 }

@@ -214,11 +214,19 @@ export function PersonalPlanRoutineClient({
   enabled,
   portfolioPresentation = null,
   initialRefinementBanner = null,
+  merklisteEnabled = false,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
   portfolioPresentation?: PortfolioPresentation | null
   initialRefinementBanner?: RoutineRefinementBannerViewModel | null
+  /**
+   * T16, fix round 1 (F1): server-derived freemium-flag gate for the shared „Gemerkt"
+   * section (`GemerktSection`, rendered inside `RoutinePage`) — see that component's doc
+   * comment. Defaults to `false` so an existing caller that forgets to pass it stays on
+   * today's exact behavior.
+   */
+  merklisteEnabled?: boolean
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -603,6 +611,8 @@ export function PersonalPlanRoutineClient({
         onRefineFromBanner={refineFromBanner}
         showPlanUpdatedToast={showPlanUpdatedToast}
         onDismissPlanUpdatedToast={dismissPlanUpdatedToast}
+        merklisteEnabled={merklisteEnabled}
+        onGraduated={() => void reload()}
       />
       {pending ? (
         <RoutineProposalSheet

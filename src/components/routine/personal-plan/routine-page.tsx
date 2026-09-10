@@ -5,6 +5,7 @@ import type {
   RoutinePayloadV1,
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { GemerktSection } from "@/components/routine/gemerkt-section"
 import { PersonalPlanStageEntrance } from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
@@ -32,6 +33,17 @@ export type RoutinePageProps = {
   /** The "✓ Plan aktualisiert" toast (Task 2.6) — its signal, and consuming it once, are the caller's job. */
   showPlanUpdatedToast?: boolean
   onDismissPlanUpdatedToast?: () => void
+  /**
+   * T16, fix round 1 (F1): the „Gemerkt" section, shared with the legacy Routine page
+   * (`RoutinePageClient`) via `GemerktSection` — this is the personal-plan branch every
+   * freemium-provisioned or current-subscriber premium user actually resolves to, so the
+   * scanner bookmark's `/routine#gemerkt` deep-link needs a target here too. Server-derived
+   * flag gate, threaded all the way from `app/routine/page.tsx`; defaults to `false` so an
+   * existing caller that forgets to pass it stays on today's exact behavior.
+   */
+  merklisteEnabled?: boolean
+  /** Fix round 1 (F6): refreshes the routine view after a „Gemerkt" product graduates in. */
+  onGraduated?: () => void
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -64,6 +76,8 @@ export function RoutinePage({
   onRefineFromBanner,
   showPlanUpdatedToast = false,
   onDismissPlanUpdatedToast,
+  merklisteEnabled = false,
+  onGraduated,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -273,6 +287,7 @@ export function RoutinePage({
               </ul>
             </details>
           ) : null}
+          <GemerktSection merklisteEnabled={merklisteEnabled} onGraduated={onGraduated} />
         </main>
       </PersonalPlanStageEntrance>
     </div>
