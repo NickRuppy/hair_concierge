@@ -122,6 +122,61 @@ test("routine product drawer receives loaded profile context", () => {
   assert.doesNotMatch(source, /hairProfile=\{null\}/)
 })
 
+/**
+ * T16: „Gemerkt" section wiring on the legacy Routine page. A full interactive mount is
+ * out of this repo's established test surface for this component (no jsdom/testing-
+ * library here, and `RoutinePageClient` calls the real `useRouter()` — see
+ * tests/scan-flow-ui.test.tsx's header comment on why that harness family never attempts
+ * a component that does), so — matching the source-pattern style already used for this
+ * file just above — these assert the concrete wiring the acceptance criteria and THE
+ * hazard both depend on: the flag gate, the deep-link anchor, and that graduation reuses
+ * the EXISTING save/move sheet (`ScanSaveSheet`) rather than writing to the routine itself.
+ * The write paths those wire into (auto-save's insert-only upsert, the move endpoint's own
+ * semantics) are covered directly in tests/scan-wishlist-auto-save-postgres.test.ts and
+ * tests/scan-save-route.test.ts respectively.
+ */
+test("Gemerkt section: defaults to hidden (flag-off byte-identity) and fetches only when merklisteEnabled", () => {
+  const source = read("src/components/routine/routine-page-client.tsx")
+
+  assert.match(source, /merklisteEnabled = false/)
+  assert.match(source, /if \(!merklisteEnabled\) return/)
+  assert.match(source, /fetch\("\/api\/scan\/wishlist", \{ cache: "no-store" \}\)/)
+})
+
+test("Gemerkt section: the section anchor matches the scanner bookmark's deep-link target", () => {
+  const source = read("src/components/routine/routine-page-client.tsx")
+  const scanFlowSource = read("src/components/scan/scan-flow.tsx")
+
+  assert.match(source, /id="gemerkt"/)
+  assert.match(scanFlowSource, /navigate\("\/routine#gemerkt"\)/)
+})
+
+test("Gemerkt section: graduation hands off to the EXISTING save/move sheet — no direct write from this section", () => {
+  const source = read("src/components/routine/routine-page-client.tsx")
+
+  // The hand-off opens ScanSaveSheet; the actual write only happens once the user picks a
+  // destination INSIDE that (already-existing, already-tested) sheet.
+  assert.match(source, /<ScanSaveSheet/)
+  assert.match(source, /onSavedStateChange=\{handleGraduated\}/)
+  // This file's own fetch calls to /api/scan/save are DELETE only (a plain scan_wishlist
+  // removal, never touching user_products — see removeScanWishlistProduct). The move
+  // endpoint's destructive-if-misused POST half is never called directly from here; the
+  // only POST anywhere in this component is the unrelated, pre-existing suggestion-dismiss
+  // call, which this regex does not match.
+  assert.doesNotMatch(source, /fetch\("\/api\/scan\/save",\s*\{\s*method: "POST"/)
+  assert.match(source, /fetch\("\/api\/scan\/save",\s*\{\s*method: "DELETE"/)
+  assert.match(source, /kind: "merkliste"/)
+})
+
+test("RoutinePage: the legacy branch passes the server-derived flag, not a client-side read", () => {
+  const source = read("src/app/routine/page.tsx")
+
+  assert.match(
+    source,
+    /<RoutinePageClient merklisteEnabled=\{isFreemiumScannerFirstEnabled\(\)\} \/>/,
+  )
+})
+
 test("routine trigger seeds are sent from session storage with the route conversation id", () => {
   const source = read("src/components/chat/chat-container.tsx")
   const hookSource = read("src/hooks/use-chat.ts")

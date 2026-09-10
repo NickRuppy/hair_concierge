@@ -6,6 +6,7 @@ import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
 import type { RoutineRefinementBannerViewModel } from "@/components/routine/personal-plan/routine-refinement-banner"
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
 import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import { shouldRenderGatedExample } from "@/lib/gated-preview/gate"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
@@ -202,7 +203,15 @@ export default async function RoutinePage() {
   // for unrelated reasons, so a dynamic import here would move nothing. Kept static.
   if (renderGatedExample) return <GatedRoutineExample />
 
-  if (resolved.kind === "legacy") return <RoutinePageClient />
+  if (resolved.kind === "legacy") {
+    // T16: the „Gemerkt" section (Merkliste's new home, replacing the scan flow's in-sheet
+    // list) is gated on the freemium flag itself, independent of tier — the section's OWN
+    // fetch (`/api/scan/wishlist`) is what tells premium from free (403 for free, hidden
+    // silently), but the flag has to gate whether `RoutinePageClient` attempts that fetch
+    // AT ALL. Without this, an existing paid subscriber with the flag OFF would see a
+    // brand-new section today's Routine page never had — flag-off must stay byte-identical.
+    return <RoutinePageClient merklisteEnabled={isFreemiumScannerFirstEnabled()} />
+  }
 
   if (resolved.kind === "unavailable") {
     return <RoutineUnavailableState />
