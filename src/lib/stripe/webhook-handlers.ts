@@ -12,6 +12,8 @@ import {
   subPeriodEndIso,
 } from "./checkout-activation"
 import { intervalFromPrice } from "./intervals"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { freemiumCheckoutUserId, isFreemiumCheckoutSession } from "@/lib/freemium/checkout-metadata"
 import {
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
@@ -114,6 +116,70 @@ async function selectedSubscriptionPaymentMethodType(
   // Fallback only when Checkout offered a single method. `payment_method_types`
   // is an offered-method list, not proof of the method used.
   return session.payment_method_types?.length === 1 ? session.payment_method_types[0] : undefined
+}
+
+/**
+ * Freemium (Premium-sheet) post-purchase provisioning, run from the webhook lane
+ * (freemium-scanner-first T14).
+ *
+ * The in-sheet completion callback already does this for a card payment that finishes while
+ * the buyer is watching. This lane covers everything else: an asynchronous payment method
+ * that settles minutes later, a buyer who closed the tab mid-payment, a failed completion
+ * call. Both lanes run the SAME idempotent service, so whichever arrives first provisions
+ * and the other one is a no-op.
+ *
+ * Inert unless the Session carries this program's marker, so no other checkout is affected.
+ */
+export async function provisionFreemiumCheckoutSession(
+  session: Stripe.Checkout.Session,
+  deps: Pick<StripeWebhookProvisioningDeps, "provisionFreemiumPurchase" | "freemiumEnabled">,
+): Promise<void> {
+  const enabled = deps.freemiumEnabled ?? isFreemiumScannerFirstEnabled
+  if (!enabled()) return
+  if (!isFreemiumCheckoutSession(session)) return
+  const userId = freemiumCheckoutUserId(session)
+  if (!userId) return
+  const provision = deps.provisionFreemiumPurchase ?? defaultProvisionFreemiumPurchase
+  try {
+    await provision({ userId, providerReference: session.id })
+  } catch (error) {
+    // Provisioning is retried by the next delivery of this event; it must never fail the
+    // webhook (which would also roll back the activation the buyer already paid for).
+    console.warn("[freemium] webhook provisioning failed", {
+      checkoutSessionId: session.id,
+      error,
+    })
+  }
+}
+
+export type StripeWebhookProvisioningDeps = {
+  freemiumEnabled?: () => boolean
+  provisionFreemiumPurchase?: (input: {
+    userId: string
+    providerReference: string
+  }) => Promise<unknown>
+}
+
+async function defaultProvisionFreemiumPurchase(input: {
+  userId: string
+  providerReference: string
+}) {
+  const [
+    { createFreemiumProvisioningService },
+    { createFreemiumProvisioningSupabaseDependencies },
+    { createAdminClient },
+  ] = await Promise.all([
+    import("@/lib/freemium/plan-provisioning"),
+    import("@/lib/freemium/plan-provisioning-supabase"),
+    import("@/lib/supabase/admin"),
+  ])
+  return createFreemiumProvisioningService(
+    createFreemiumProvisioningSupabaseDependencies(createAdminClient() as never),
+  ).provisionAfterPurchase({
+    userId: input.userId,
+    provider: "stripe",
+    providerReference: input.providerReference,
+  })
 }
 
 export async function handleCheckoutSessionCompleted(

@@ -62,6 +62,23 @@ export type DirectAcceptanceSeenRole = {
 
 export type AcceptIdealPlanInput = {
   seenRoles: readonly DirectAcceptanceSeenRole[]
+  /**
+   * Who chose the products (freemium-scanner-first T14).
+   *
+   * - `"seen"` (default, and the ONLY value the public `/api/personal-plan/accept-ideal-plan`
+   *   route can produce — its body schema is `.strict()` and has no such field): the
+   *   consent contract this module was built for. Nothing is planned that the person did
+   *   not look at, and a mismatch between what they saw and what the server evaluates is
+   *   `seen_state_stale`.
+   * - `"server_recommended"`: server-internal post-purchase provisioning, where there is
+   *   no Idealplan screen to have seen. A Premium-sheet buyer is promised a live Routine
+   *   the moment they pay (plan §"Inherited from evidence or contract": immediate
+   *   post-purchase real content, from the approved prototype journey), so the server
+   *   plans its OWN current recommendation for every role that has a buyable one and
+   *   leaves the rest honestly uncovered. `seenRoles` must be empty in this mode — a
+   *   caller that has seen-state should use `"seen"`.
+   */
+  roleSelection?: "seen" | "server_recommended"
 }
 
 export type AcceptIdealPlanResult = {
@@ -171,6 +188,48 @@ export function buildDirectAcceptanceIntents(
 }
 
 /**
+ * The `"server_recommended"` counterpart of `buildDirectAcceptanceIntents` (T14).
+ *
+ * Same two outcomes per role, decided from the server's own evaluations instead of from
+ * client seen-state: a role with a buyable recommendation is planned with exactly that
+ * recommendation; every other role is left uncovered with the same honest deferral reason
+ * the seen-state path would record. Nothing is invented — this plans only what the engine
+ * would recommend anyway, which is precisely what the buyer paid to receive.
+ */
+export function buildServerRecommendedIntents(
+  evaluations: readonly Stage3AuthorityEvaluation[],
+  previewedRoleKeys: ReadonlySet<string>,
+): Stage3AuthoritySemanticIntent[] {
+  const evaluatedKeys = new Set(evaluations.map((evaluation) => evaluation.subjectKey))
+  // Same server invariant the seen-state path asserts: one subject, one evaluation.
+  if (evaluatedKeys.size !== evaluations.length) {
+    throw new DirectAcceptanceError("seen_state_stale")
+  }
+  return evaluations.flatMap((evaluation): Stage3AuthoritySemanticIntent[] => {
+    if (hasBuyableRecommendation(evaluation)) {
+      return [
+        {
+          type: "resolve_decision" as const,
+          subjectKey: evaluation.subjectKey,
+          action: "plan_recommendation" as const,
+        },
+      ]
+    }
+    // An authority that does not even allow leaving the role uncovered has no decision this
+    // flow may author — completion reports it rather than this code forging an action.
+    if (!evaluation.allowedActions.includes("leave_uncovered" as never)) return []
+    return [
+      {
+        type: "resolve_decision" as const,
+        subjectKey: evaluation.subjectKey,
+        action: "leave_uncovered" as const,
+        deferralReason: deferralReasonFor(evaluation, previewedRoleKeys),
+      },
+    ]
+  })
+}
+
+/**
  * Server truth only — two independent facts, three reasons:
  *
  *   - the role was NOT previewable at all → it exists only because the
@@ -209,6 +268,13 @@ export async function acceptIdealPlan(
   if (!deps.flags.stage2Enabled || !deps.flags.stage3Enabled || !deps.flags.stage4Enabled) {
     throw new DirectAcceptanceError("stage_not_available")
   }
+  const serverRecommended = input.roleSelection === "server_recommended"
+  // The two modes are mutually exclusive by construction: seen-state in server-recommended
+  // mode would silently be ignored, which is exactly the kind of half-applied consent this
+  // module refuses elsewhere.
+  if (serverRecommended && input.seenRoles.length > 0) {
+    throw new DirectAcceptanceError("seen_state_stale")
+  }
 
   const { personalPlanId, refinedVersionId, previewedRoleKeys } =
     await completeSyntheticRefinement(deps)
@@ -222,11 +288,10 @@ export async function acceptIdealPlan(
 
   let draft = loaded.draft
   if (draft.status === "active") {
-    const intents = buildDirectAcceptanceIntents(
-      await deps.stage3Gateway.evaluateDecisions({ draftId: draft.draftId }),
-      input.seenRoles,
-      previewedRoleKeys,
-    )
+    const evaluations = await deps.stage3Gateway.evaluateDecisions({ draftId: draft.draftId })
+    const intents = serverRecommended
+      ? buildServerRecommendedIntents(evaluations, previewedRoleKeys)
+      : buildDirectAcceptanceIntents(evaluations, input.seenRoles, previewedRoleKeys)
     if (intents.length > 0) {
       const resolved = await deps.stage3Gateway.resolveDecisions({
         draftId: draft.draftId,

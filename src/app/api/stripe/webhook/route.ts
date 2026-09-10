@@ -18,6 +18,8 @@ import {
   handleSubscriptionDeleted,
   handleInvoicePaymentFailed,
   findProfileByStripeCustomerId,
+  provisionFreemiumCheckoutSession,
+  type StripeWebhookProvisioningDeps,
 } from "@/lib/stripe/webhook-handlers"
 import { PERSONAL_PLAN_ONCE_KIND } from "@/lib/billing/offer-products"
 import { getStripeTierIds } from "@/lib/stripe/tier-ids"
@@ -303,7 +305,7 @@ function scheduleCheckoutCompletedSync(input: {
   })
 }
 
-type StripeWebhookEventDeps = {
+type StripeWebhookEventDeps = StripeWebhookProvisioningDeps & {
   supabase: SupabaseClient
   stripe: Stripe
   defer?: (work: () => void | Promise<void>) => void
@@ -386,6 +388,9 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         }
         throw err
       }
+      // T14: the Premium sheet's own post-purchase provisioning, beside — never instead of
+      // — the activation above. Inert for every other checkout.
+      await provisionFreemiumCheckoutSession(session, deps)
       if (!recordBillingAnalytics) {
         scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
       }
@@ -417,6 +422,9 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         defer,
       })
       if (activation) {
+        // The pending → complete path: an asynchronous payment that settled after the
+        // buyer left the sheet still admits and provisions the plan.
+        await provisionFreemiumCheckoutSession(session, deps)
         if (!recordBillingAnalytics) {
           scheduleCheckoutCompletedSync({
             activation,
