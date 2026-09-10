@@ -201,6 +201,13 @@ export type FreeRegistrationDependencies = {
    * success followed by a dead end (fix round 1, review finding W5).
    */
   updateLeadEmail: (leadId: string, email: string) => Promise<{ updated: boolean }>
+  /**
+   * Stamps this lead as FREE-REGISTRATION provenance (PR6 review, finding V3),
+   * guarded by `user_id IS NULL` exactly like `updateLeadEmail`. Run immediately
+   * before the send, because `/auth/confirm` refuses the free branch for a lead
+   * that does not carry the mark — a link that goes out unmarked dead-ends.
+   */
+  markFreeRegistrationLead: (leadId: string) => Promise<{ marked: boolean }>
   checkEmailDeliverability: (email: string) => Promise<FreeRegistrationDeliverability>
   /**
    * Verifies the quiz-completion capability that authorizes a correction (fix
@@ -269,6 +276,14 @@ export type FreeRegistrationBindEvidence = {
   leadOwnedByAccount: boolean
   /** The account already has its own hair profile / Personal Plan row. */
   hasEstablishedProfile: boolean
+  /**
+   * The lead carries `free_registration_requested_at` — i.e. the free flow, and
+   * only the free flow, minted a magic link for it (PR6 review, finding V3).
+   * This is what decides the free-vs-paid branch and what switches the
+   * containment below ON for every path that can link this lead, whatever the
+   * request's parameters claim.
+   */
+  leadIsFreeRegistration: boolean
 }
 
 /**
@@ -381,6 +396,13 @@ export async function requestFreeRegistrationLink(
     const write = await deps.updateLeadEmail(leadId, targetEmail)
     if (!write.updated) return { outcome: "lead_claimed" }
   }
+
+  // Provenance BEFORE delivery (finding V3): `/auth/confirm` branches on the
+  // lead's mark, not on the link's parameters, so an unmarked link would confirm
+  // into the paid path and never provision. A mark that matches nothing means the
+  // lead was claimed in between — the same conflict `updateLeadEmail` reports.
+  const marked = await deps.markFreeRegistrationLead(leadId)
+  if (!marked.marked) return { outcome: "lead_claimed" }
 
   const sent = await deps.sendMagicLink({
     email: targetEmail,

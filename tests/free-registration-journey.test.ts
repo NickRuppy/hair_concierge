@@ -10,6 +10,7 @@ import { loadScanEvaluationContext } from "../src/lib/scan/profile-context"
 import {
   buildProfileDataFromPersonalPlanCanonicalProfile,
   canLinkDirectQuizLead,
+  type LinkQuizToProfileOptions,
 } from "../src/lib/quiz/link-to-profile"
 import { getAuthenticatedAppRedirect } from "../src/lib/auth/intake-state"
 import {
@@ -277,7 +278,12 @@ function createJourney() {
   const db = createJourneyDatabase()
   const transport = createAuthTransport()
   const provisioned: { userId: string; email?: string }[] = []
-  const linkCalls: { userId: string; email?: string; leadId?: string }[] = []
+  const linkCalls: {
+    userId: string
+    email?: string
+    leadId?: string
+    profileWrite?: string
+  }[] = []
 
   const registration = createFreeRegistrationPostHandler({
     isEnabled: () => true,
@@ -298,6 +304,12 @@ function createJourney() {
       if (row) row.email = email
       return { updated: Boolean(row) }
     },
+    // V3: the server-side provenance the confirm branch reads back.
+    async markFreeRegistrationLead(leadId) {
+      const row = db.leads.find((lead) => lead.id === leadId && lead.user_id === null)
+      if (row) row.free_registration_requested_at = new Date().toISOString()
+      return { marked: Boolean(row) }
+    },
     checkEmailDeliverability: async (email) => ({ ok: true, normalized: email }),
     // The real HMAC contract, exercised end to end with a test secret.
     verifyCorrectionCapability: (token, leadId) =>
@@ -310,8 +322,18 @@ function createJourney() {
    * rule, the same RPC, the same projection helper, the same lead-linking
    * write. Only the admin-client construction is replaced.
    */
-  async function linkQuizToProfile(userId: string, email?: string, leadId?: string) {
-    linkCalls.push({ userId, ...(email ? { email } : {}), ...(leadId ? { leadId } : {}) })
+  async function linkQuizToProfile(
+    userId: string,
+    email?: string,
+    leadId?: string,
+    options?: LinkQuizToProfileOptions,
+  ) {
+    linkCalls.push({
+      userId,
+      ...(email ? { email } : {}),
+      ...(leadId ? { leadId } : {}),
+      ...(options?.profileWrite ? { profileWrite: options.profileWrite } : {}),
+    })
     if (!leadId) return
     const lead = db.leads.find((row) => row.id === leadId)
     if (!lead || lead.quiz_kind !== "personal_plan") return
@@ -334,10 +356,13 @@ function createJourney() {
     )
     profileData.user_id = userId
     // Mirrors the real function's existing-row branch, which UPDATEs rather
-    // than inserts — the write W1b exists to prevent (link-to-profile.ts:214).
+    // than inserts — the write W1b exists to prevent (link-to-profile.ts:214) —
+    // and its `create_only` mode, which V4 added for the free path.
     const existing = db.hairProfiles.find((row) => row.user_id === userId)
-    if (existing) Object.assign(existing, profileData)
-    else db.hairProfiles.push(profileData)
+    if (existing) {
+      if (options?.profileWrite === "create_only") return
+      Object.assign(existing, profileData)
+    } else db.hairProfiles.push(profileData)
     lead.user_id = userId
     lead.status = "linked"
   }
@@ -842,6 +867,95 @@ test("ATTACK W3: ?free=1 on a payment-flow link does not take the free branch", 
   smuggled.searchParams.set("type", "magiclink")
   await journey2.openRaw(smuggled)
   assert.deepEqual(journey2.provisioned, [])
+})
+
+test("ATTACK V3a: stripping ?free=1 does not escape the bind containment", async () => {
+  // The free-vs-paid branch used to be decided by the URL, so a GENUINE
+  // free-registration token with the marker removed (or `next` repointed) ran
+  // `linkQuizToProfile` with no containment at all — straight over an
+  // established account's hair profile.
+  const journey = createJourney()
+
+  const victimLead = journey.db.seedQuizCompletion("opfer@example.com")
+  await journey.register(victimLead)
+  await journey.openLink(journey.transport.sent[0])
+  const victimId = journey.linkCalls[0].userId
+  const victimSnapshot = { ...journey.db.hairProfiles.find((row) => row.user_id === victimId)! }
+
+  // The attacker points their own lead at the victim's address, as in W1b.
+  const attackerLead = journey.db.seedQuizCompletion("angreifer@example.com")
+  journey.db.preparedArtifacts[1].canonical_profile = {
+    ...CANONICAL_PROFILE,
+    structure: "coily",
+    thickness: "coarse",
+  }
+  await journey.register(attackerLead, "opfer@example.com", journey.capabilityFor(attackerLead))
+  const link = journey.transport.sent.at(-1)!
+
+  for (const tamper of [
+    (url: URL) => url.searchParams.delete("free"),
+    (url: URL) => url.searchParams.set("next", "/plan-start"),
+  ]) {
+    const url = new URL(link.emailRedirectTo)
+    tamper(url)
+    url.searchParams.set("token_hash", link.tokenHash)
+    url.searchParams.set("type", "magiclink")
+    // A fresh token for the same account — the link is single-use.
+    await journey.register(attackerLead)
+    const fresh = journey.transport.sent.at(-1)!
+    url.searchParams.set("token_hash", fresh.tokenHash)
+
+    const linkCallsBefore = journey.linkCalls.length
+    await journey.openRaw(url)
+    assert.deepEqual(
+      journey.db.hairProfiles.find((row) => row.user_id === victimId),
+      victimSnapshot,
+      "the victim's profile must survive every parameter shape",
+    )
+    assert.equal(journey.db.leads[1].user_id, null, "the attacker's lead was not adopted")
+    // The containment has to fire BEFORE `linkQuizToProfile`, not inside it:
+    // that function attaches the prepared artifact to the account through
+    // `link_personal_plan_artifact_to_user` before it ever looks at the profile,
+    // so "the profile survived" is not on its own proof that nothing moved.
+    assert.equal(
+      journey.linkCalls.length,
+      linkCallsBefore,
+      "linkQuizToProfile must not run at all for a free-provenance lead that fails the bind",
+    )
+    assert.equal(
+      journey.db.preparedArtifacts[1].user_id,
+      null,
+      "the attacker's artifact must not be re-attached to the victim",
+    )
+  }
+})
+
+test("ATTACK V3b: crafted free params on a lead the free flow never marked take no free branch", async () => {
+  const journey = createJourney()
+  const freeLead = journey.db.seedQuizCompletion("lena@example.com")
+  await journey.register(freeLead)
+  const link = journey.transport.sent[0]
+
+  // A lead that was never registered through `/api/auth/free-registration` has
+  // no provenance mark — the shape of the URL must not be able to invent one,
+  // because the free write pins `enrollment_purchase_source_id = null` forever.
+  const foreignLead = journey.db.seedQuizCompletion("fremd@example.com")
+  assert.equal(journey.db.leads[1].free_registration_requested_at, undefined)
+
+  const crafted = new URL(`${ORIGIN}/auth/confirm`)
+  crafted.searchParams.set("free", "1")
+  crafted.searchParams.set("lead", foreignLead)
+  crafted.searchParams.set("next", "/scan")
+  crafted.searchParams.set("token_hash", link.tokenHash)
+  crafted.searchParams.set("type", "magiclink")
+
+  await journey.openRaw(crafted)
+  assert.deepEqual(journey.provisioned, [], "the free write must not run for an unmarked lead")
+  assert.equal(
+    journey.linkCalls.at(-1)?.profileWrite,
+    undefined,
+    "and the lead is linked with ordinary paid semantics, not the free create-only mode",
+  )
 })
 
 test("flag off: /auth/confirm ignores the free marker entirely (byte-identical legacy behaviour)", async () => {

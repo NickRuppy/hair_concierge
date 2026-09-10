@@ -26,10 +26,23 @@ export async function loadFreeRegistrationBindEvidence(input: {
 }): Promise<FreeRegistrationBindEvidence> {
   const admin = input.admin ?? (createAdminClient() as unknown as BindEvidenceAdmin)
 
-  const lead = await admin.from("leads").select("user_id").eq("id", input.leadId).maybeSingle()
+  const lead = await admin
+    .from("leads")
+    .select("user_id, free_registration_requested_at")
+    .eq("id", input.leadId)
+    .maybeSingle()
   if (lead.error) throw new Error("free_registration_bind_evidence_unavailable")
-  const leadUserId = (lead.data as { user_id?: unknown } | null)?.user_id
+  const leadRow = lead.data as {
+    user_id?: unknown
+    free_registration_requested_at?: unknown
+  } | null
+  const leadUserId = leadRow?.user_id
   const leadOwnedByAccount = typeof leadUserId === "string" && leadUserId === input.userId
+  // PR6 review, finding V3: server-side provenance. Written only by
+  // `/api/auth/free-registration` right before it mails a free-registration link
+  // (migration 20260910120000), so it — never the request's parameters — decides
+  // whether this confirm may take the free branch.
+  const leadIsFreeRegistration = Boolean(leadRow?.free_registration_requested_at)
 
   const profile = await admin
     .from("hair_profiles")
@@ -37,7 +50,9 @@ export async function loadFreeRegistrationBindEvidence(input: {
     .eq("user_id", input.userId)
     .maybeSingle()
   if (profile.error) throw new Error("free_registration_bind_evidence_unavailable")
-  if (profile.data) return { leadOwnedByAccount, hasEstablishedProfile: true }
+  if (profile.data) {
+    return { leadOwnedByAccount, hasEstablishedProfile: true, leadIsFreeRegistration }
+  }
 
   const plan = await admin
     .from("personal_plans")
@@ -46,7 +61,11 @@ export async function loadFreeRegistrationBindEvidence(input: {
     .maybeSingle()
   if (plan.error) throw new Error("free_registration_bind_evidence_unavailable")
 
-  return { leadOwnedByAccount, hasEstablishedProfile: Boolean(plan.data) }
+  return {
+    leadOwnedByAccount,
+    hasEstablishedProfile: Boolean(plan.data),
+    leadIsFreeRegistration,
+  }
 }
 
 type BindEvidenceQuery = {

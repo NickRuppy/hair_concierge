@@ -32,6 +32,7 @@ type Recorder = {
   rateLimitKeys: string[]
   rateLimitCalls: { dimension: FreeRegistrationRateDimension; identifier: string }[]
   capabilityChecks: { token: unknown; leadId: string }[]
+  provenanceMarks: string[]
 }
 
 /** A correction is authorized by default; individual tests take it away. */
@@ -46,6 +47,7 @@ function createDeps(
     rateLimitKeys: [],
     rateLimitCalls: [],
     capabilityChecks: [],
+    provenanceMarks: [],
   }
   const lead: FreeRegistrationLead | null =
     overrides.lead === undefined
@@ -68,6 +70,10 @@ function createDeps(
       if (!mutableLead || mutableLead.userId) return { updated: false }
       mutableLead.email = email
       return { updated: true }
+    },
+    async markFreeRegistrationLead(leadId) {
+      recorder.provenanceMarks.push(leadId)
+      return { marked: Boolean(mutableLead && !mutableLead.userId) }
     },
     async checkEmailDeliverability(email) {
       return { ok: true, normalized: email }
@@ -241,17 +247,29 @@ test("W1a: the capability is signed, lead-bound and expires", () => {
 test("ATTACK W1b: the free confirm branch never binds a foreign lead into an established account", () => {
   // The victim already has a hair profile; the attacker's lead is not theirs.
   assert.equal(
-    resolveFreeRegistrationBind({ leadOwnedByAccount: false, hasEstablishedProfile: true }),
+    resolveFreeRegistrationBind({
+      leadOwnedByAccount: false,
+      hasEstablishedProfile: true,
+      leadIsFreeRegistration: true,
+    }),
     "skip",
   )
   // A brand-new free account has nothing to lose.
   assert.equal(
-    resolveFreeRegistrationBind({ leadOwnedByAccount: false, hasEstablishedProfile: false }),
+    resolveFreeRegistrationBind({
+      leadOwnedByAccount: false,
+      hasEstablishedProfile: false,
+      leadIsFreeRegistration: true,
+    }),
     "bind",
   )
   // Re-clicking one's OWN link keeps the same-user retry `canLinkDirectQuizLead` allows.
   assert.equal(
-    resolveFreeRegistrationBind({ leadOwnedByAccount: true, hasEstablishedProfile: true }),
+    resolveFreeRegistrationBind({
+      leadOwnedByAccount: true,
+      hasEstablishedProfile: true,
+      leadIsFreeRegistration: true,
+    }),
     "bind",
   )
 })

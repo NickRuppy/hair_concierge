@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
+import { linkQuizToProfile, type LinkQuizToProfileOptions } from "@/lib/quiz/link-to-profile"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
 import type { PersonalPlanJourneyAccess } from "@/lib/personal-plan/journey-access"
 import { NextResponse } from "next/server"
@@ -37,20 +37,27 @@ export interface AuthConfirmDeps {
   exchangeCodeForSession: (code: string) => AuthResult
   verifyOtp: (params: { type: EmailOtpType; token_hash: string }) => AuthResult
   getUser: () => Promise<{ data: { user: AuthConfirmUser | null } }>
-  linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<void>
+  linkQuizToProfile: (
+    userId: string,
+    email?: string,
+    leadId?: string,
+    options?: LinkQuizToProfileOptions,
+  ) => Promise<void>
   loadJourneyAccess?: (userId: string) => Promise<PersonalPlanJourneyAccess>
   redirect: (url: string) => Response
   /**
-   * Freemium scanner-first (T18). Both are only consulted for a request that
-   * carries the free-registration marker (`?free=1`), so every pre-existing
-   * confirm path — payment activation included — is byte-identical.
+   * Freemium scanner-first (T18). With the flag OFF nothing below is consulted
+   * at all, so every pre-existing confirm path is byte-identical. With it ON,
+   * `loadFreeBindEvidence` runs for any confirm that names a lead — that read is
+   * what establishes the lead's provenance (PR6 review, V3) — while
+   * `provisionFreeSnapshot` still runs only for a genuine free registration.
    */
   freemiumScannerFirstEnabled?: () => boolean
   provisionFreeSnapshot?: (input: {
     userId: string
     email?: string
   }) => Promise<ProvisionFreeInitialSnapshotResult>
-  /** T18 fix round 1 (W1b): evidence for `resolveFreeRegistrationBind`. */
+  /** T18 fix round 1 (W1b) + PR6 V3: bind containment and lead provenance. */
   loadFreeBindEvidence?: (input: {
     userId: string
     leadId: string
@@ -61,7 +68,12 @@ export interface AuthConfirmDeps {
 
 export type AuthConfirmRouteDeps = {
   createClient: () => Promise<AuthConfirmClient>
-  linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<unknown>
+  linkQuizToProfile: (
+    userId: string,
+    email?: string,
+    leadId?: string,
+    options?: LinkQuizToProfileOptions,
+  ) => Promise<unknown>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   freemiumScannerFirstEnabled?: () => boolean
   provisionFreeSnapshot?: (input: {
@@ -174,8 +186,8 @@ async function handleAuthConfirmGet(request: Request, deps: AuthConfirmRouteDeps
     exchangeCodeForSession: (code) => supabase.auth.exchangeCodeForSession(code),
     verifyOtp: (params) => supabase.auth.verifyOtp(params),
     getUser: () => supabase.auth.getUser(),
-    linkQuizToProfile: async (userId, email, leadId) => {
-      await deps.linkQuizToProfile(userId, email, leadId)
+    linkQuizToProfile: async (userId, email, leadId, options) => {
+      await deps.linkQuizToProfile(userId, email, leadId, options)
     },
     loadJourneyAccess: deps.loadJourneyAccess,
     redirect: (url) => NextResponse.redirect(url),
@@ -258,37 +270,72 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   } = await deps.getUser()
 
   if (verified) {
-    // T18 fix round 1 (review finding W1b): the free branch must not adopt a
-    // lead into an account that already has its own hair profile — see
-    // `resolveFreeRegistrationBind`. Resolved BEFORE `linkQuizToProfile`,
-    // because that is the call whose existing-row branch would overwrite it.
-    // Any failure here resolves to "skip" (fail closed).
-    let freeBind: "bind" | "skip" = "bind"
-    if (isFreeRegistration && user && freeLeadId) {
-      try {
-        const evidence = deps.loadFreeBindEvidence
-          ? await deps.loadFreeBindEvidence({ userId: user.id, leadId: freeLeadId })
-          : null
-        freeBind = evidence ? resolveFreeRegistrationBind(evidence) : "skip"
-      } catch (e) {
-        console.error("free-registration bind evidence unavailable:", e)
-        freeBind = "skip"
-      }
-    }
-    const freeBindSkipped = isFreeRegistration && freeBind === "skip"
     // A real free-registration e-mail carries the lead one layer down, so the
     // outer `?lead=` is absent (finding V2) — the free branch links the lead the
     // resolved context names. Every other path keeps the outer parameter.
     const linkLeadId = isFreeRegistration ? freeLeadId : leadId
+    // Whatever this request CLAIMS to be, this is the lead it can reach.
+    const candidateLeadId = freeLeadId ?? (isFreeRegistrationLeadId(leadId) ? leadId : undefined)
+
+    // T18 fix round 1 (review finding W1b): the free branch must not adopt a
+    // lead into an account that already has its own hair profile — see
+    // `resolveFreeRegistrationBind`. Resolved BEFORE `linkQuizToProfile`,
+    // because that is the call whose existing-row branch would overwrite it.
+    //
+    // PR6 review, finding V3: the same read now also answers "is this a
+    // free-registration lead at all?", from the LEAD ROW, and it runs for every
+    // confirm that can reach a lead while the flag is on — not only for one that
+    // still carries `free=1`. Stripping the marker or repointing `next` used to
+    // skip this containment entirely while `linkQuizToProfile` went on to
+    // overwrite an established profile.
+    let leadIsFreeRegistration = false
+    let evidenceUnavailable = false
+    let freeBind: "bind" | "skip" = "bind"
+    if (freemiumEnabled && user && candidateLeadId) {
+      try {
+        const evidence = deps.loadFreeBindEvidence
+          ? await deps.loadFreeBindEvidence({ userId: user.id, leadId: candidateLeadId })
+          : null
+        if (!evidence) evidenceUnavailable = true
+        else {
+          leadIsFreeRegistration = evidence.leadIsFreeRegistration
+          if (leadIsFreeRegistration) freeBind = resolveFreeRegistrationBind(evidence)
+        }
+      } catch (e) {
+        console.error("free-registration bind evidence unavailable:", e)
+        evidenceUnavailable = true
+      }
+    }
+
+    // The free branch needs BOTH halves: the shape only `/api/auth/free-registration`
+    // mints, AND a lead that endpoint actually marked. Parameters alone decide
+    // nothing any more — which closes the payment-token-plus-crafted-params
+    // direction as well as the stripped-marker one.
+    const freeBranchActive = isFreeRegistration && leadIsFreeRegistration && !evidenceUnavailable
+    // Fail closed for a free-SHAPED request whose evidence could not be read
+    // (unchanged from fix round 1). For any other request the read failing is
+    // left to behave exactly as before this change, so a Supabase blip cannot
+    // silently stop linking quiz answers into a paying customer's profile.
+    const suppressLinking =
+      (isFreeRegistration && (evidenceUnavailable || freeBind === "skip")) ||
+      (leadIsFreeRegistration && freeBind === "skip")
 
     if (
       user &&
-      !freeBindSkipped &&
+      !suppressLinking &&
       !isModeratorReturnPath(next) &&
       !isPartnerAccessReturnPath(next)
     ) {
       try {
-        await deps.linkQuizToProfile(user.id, user.email, linkLeadId)
+        await deps.linkQuizToProfile(
+          user.id,
+          user.email,
+          linkLeadId,
+          // V4: a free-provenance lead never overwrites an existing profile,
+          // however this confirm was addressed. Paid/legacy linking passes no
+          // options and keeps its current create-or-update behaviour.
+          leadIsFreeRegistration ? { profileWrite: "create_only" } : undefined,
+        )
       } catch (e) {
         console.error("linkQuizToProfile failed:", e)
       }
@@ -312,7 +359,7 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     // nothing was logged. Every outcome other than `provisioned`/`paid_user` is
     // reported now. Skipped entirely on a bind-skip: provisioning over an
     // established account is exactly what W1b refuses.
-    if (isFreeRegistration && user && !freeBindSkipped && deps.provisionFreeSnapshot) {
+    if (freeBranchActive && user && !suppressLinking && deps.provisionFreeSnapshot) {
       try {
         const result = await deps.provisionFreeSnapshot({
           userId: user.id,
@@ -325,8 +372,10 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     }
 
     // The account kept its own data; say so instead of silently landing them on
-    // a scanner that answers with someone else's plan.
-    if (freeBindSkipped) {
+    // a scanner that answers with someone else's plan. Only a request that came
+    // in as a free registration gets this landing — a stripped-marker confirm is
+    // contained above but keeps its own destination.
+    if (isFreeRegistration && suppressLinking) {
       return deps.redirect(`${origin}${buildFreeRegistrationBindSkippedLandingPath()}`)
     }
 
@@ -335,7 +384,7 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     // URL, which `sanitizeAuthIntendedPath` refuses, so `next` would be the
     // `/chat` default and the free account would never reach the scanner
     // (finding V2). A constant is also the only redirect this branch can emit.
-    return deps.redirect(`${origin}${isFreeRegistration ? FREE_REGISTRATION_LANDING_PATH : next}`)
+    return deps.redirect(`${origin}${freeBranchActive ? FREE_REGISTRATION_LANDING_PATH : next}`)
   }
 
   // An expired/consumed free-registration link goes back to the registration

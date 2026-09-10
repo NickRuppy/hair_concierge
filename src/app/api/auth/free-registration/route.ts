@@ -177,6 +177,20 @@ function createDefaultDependencies(): FreeRegistrationDependencies {
       if (error) throw new Error(`Lead e-mail update failed: ${error.message}`)
       return { updated: Array.isArray(data) ? data.length > 0 : Boolean(data) }
     },
+    async markFreeRegistrationLead(leadId) {
+      // The provenance `/auth/confirm` branches on (PR6 review, finding V3).
+      // Same guarded-and-observable shape as `updateLeadEmail`: `user_id IS NULL`
+      // in the statement, `.select("id")` so a lost race is a conflict rather
+      // than a link that goes out into a dead end.
+      const { data, error } = await admin()
+        .from("leads")
+        .update({ free_registration_requested_at: new Date().toISOString() })
+        .eq("id", leadId)
+        .is("user_id", null)
+        .select("id")
+      if (error) throw new Error(`Lead free-registration mark failed: ${error.message}`)
+      return { marked: Array.isArray(data) ? data.length > 0 : Boolean(data) }
+    },
     async checkEmailDeliverability(email) {
       const result = await checkEmailDeliverability(email)
       if (result.ok) return { ok: true, normalized: result.normalized }
