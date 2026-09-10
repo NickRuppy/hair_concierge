@@ -148,15 +148,24 @@ function createEffectHarness(renderComponent: () => ReactElement | null, context
       return value
     },
     useReducer<S, A>(reducer: (state: S, action: A) => S, initialState: S): [S, (a: A) => void] {
-      const index = cursor
+      // Real React guarantees the dispatch function's IDENTITY is stable across every
+      // render of the component that owns it — production code (`verify`'s own
+      // `useCallback`, keyed on `dispatchPurchase`) relies on exactly that to stay a stable
+      // reference itself. A dispatch closure rebuilt every render here would make effects
+      // that depend on it (transitively, through `verify`) re-run every render too — not a
+      // production bug, a test-harness one, so the dispatch slot is allocated and built
+      // once and reused (Codex fix wave round 2, R3 test coverage).
+      const stateIndex = cursor
       cursor += 1
-      if (hookValues.length <= index) hookValues[index] = initialState
-      return [
-        hookValues[index] as S,
-        (action) => {
-          hookValues[index] = reducer(hookValues[index] as S, action)
-        },
-      ]
+      const dispatchIndex = cursor
+      cursor += 1
+      if (hookValues.length <= stateIndex) hookValues[stateIndex] = initialState
+      if (!hookValues[dispatchIndex]) {
+        hookValues[dispatchIndex] = (action: A) => {
+          hookValues[stateIndex] = reducer(hookValues[stateIndex] as S, action)
+        }
+      }
+      return [hookValues[stateIndex] as S, hookValues[dispatchIndex] as (a: A) => void]
     },
     useRef<T>(initialValue: T): { current: T } {
       const index = cursor
@@ -234,7 +243,7 @@ type SheetHarness = {
  * so a dispatch made from an awaited callback lands in the tree it returns.
  */
 async function mountSheet(options: {
-  completion: () => Response
+  completion: () => Response | Promise<Response>
   search?: string
   storage?: MemoryStorage
   open?: boolean
@@ -641,4 +650,223 @@ test("Y4: an abandoned Session says so, and the plan rows are back", async () =>
   const alert = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
   assert.equal(textContent(alert), PREMIUM_SHEET_PURCHASE_COPY.checkoutAbandoned)
   assert.equal(byData(sheet.tree, "data-premium-sheet-plans").length, 1)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Codex fix wave round 2 — R1: a transient error on the RESUME lane stays
+ * pending, never fails the purchase outright; an authoritative verdict still
+ * does.
+ * ------------------------------------------------------------------------- */
+
+test("R1: a resumed pending purchase treats a transport error as still-pending, not failed", async () => {
+  const storage = memoryStorage({
+    [CONTEXT_KEY]: JSON.stringify(REMEMBERED),
+    [PENDING_SESSION_KEY]: SESSION_ID,
+  })
+  let answered = 0
+  const sheet = await mountSheet({
+    completion: () => {
+      answered += 1
+      // The RESUME lane's first verify call — a transport/5xx error here must not read as
+      // the server's own "we could not confirm your payment".
+      return answered === 1
+        ? new Response("upstream unreachable", { status: 502 })
+        : json({ status: "pending" })
+    },
+    search: "",
+    storage,
+    open: false,
+    context: null,
+  })
+
+  const panel = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(
+    panel?.props["data-premium-sheet-purchase-phase"],
+    "pending",
+    "a transient error on resume stays pending, not failed",
+  )
+  assert.equal(sheet.toasts.length, 0)
+  assert.equal(sheet.calls.includes("close"), false)
+  // The resume handle is NOT torn down — the paid buyer can still reach their purchase.
+  assert.equal(storage.getItem(PENDING_SESSION_KEY), SESSION_ID)
+  assert.equal(storage.getItem(CONTEXT_KEY), JSON.stringify(REMEMBERED))
+})
+
+test("R1: an authoritative failure verdict on the RESUME lane is still terminal", async () => {
+  const storage = memoryStorage({
+    [CONTEXT_KEY]: JSON.stringify(REMEMBERED),
+    [PENDING_SESSION_KEY]: SESSION_ID,
+  })
+  const sheet = await mountSheet({
+    completion: () => json({ status: "failed", reason: "checkout_session_expired" }),
+    search: "",
+    storage,
+    open: false,
+    context: null,
+  })
+
+  const alert = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(alert?.props["data-premium-sheet-purchase-phase"], "failed")
+  assert.equal(textContent(alert), PREMIUM_SHEET_PURCHASE_COPY.checkoutExpired)
+  // A real server verdict still clears the memo — there is nothing left to resume.
+  assert.equal(storage.getItem(PENDING_SESSION_KEY), null)
+  assert.equal(storage.getItem(CONTEXT_KEY), null)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Codex fix wave round 2 — R3: the poll never overlaps itself, a manual
+ * recheck never stacks a second schedule, and a rate limit is a visible, but
+ * non-terminal, notice.
+ * ------------------------------------------------------------------------- */
+
+/**
+ * No test in this file ever "unmounts" its sheet, so a poll schedule an earlier test started
+ * (real, zero-delay-mocked `setTimeout`s) can still be ticking when the next test begins —
+ * and `verify()` looks up `globalThis.fetch` dynamically, so a leftover timer calls straight
+ * into whichever test's mock is CURRENTLY assigned. Harmless for tests that only assert
+ * eventual state, but fatal for the ones below that count exact calls. Draining the real
+ * timer queue before mounting anything lets any such leftover fire against the mock that was
+ * current when it was originally scheduled — the previous test's — not this one's.
+ */
+async function drainStaleTimers(rounds = 20): Promise<void> {
+  for (let i = 0; i < rounds; i += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  }
+}
+
+/**
+ * A `completion` that never answers on its own — the test decides exactly when each call
+ * resolves, via `answerNext`. `setTimeout`-based timing (real or mocked) is deliberately
+ * NOT relied on to prove "no overlap": that only proves nothing races within the delays this
+ * one run happened to pick. Holding a call open across several render passes and asserting
+ * no SECOND call is ever made while it is still open proves the invariant directly, for any
+ * timing.
+ */
+function deferredCompletion() {
+  const waiting: Array<(response: Response) => void> = []
+  let calls = 0
+  return {
+    completion: (): Promise<Response> =>
+      new Promise<Response>((resolve) => {
+        calls += 1
+        waiting.push(resolve)
+      }),
+    get calls() {
+      return calls
+    },
+    get outstanding() {
+      return waiting.length
+    },
+    answerNext(body: unknown) {
+      const resolve = waiting.shift()
+      assert.ok(resolve, "expected a call to be outstanding")
+      resolve(json(body))
+    },
+  }
+}
+
+test("R3: the automatic poll never fires the next attempt before the previous one settles", async () => {
+  await drainStaleTimers()
+  const server = deferredCompletion()
+  const sheet = await mountSheet({
+    completion: server.completion,
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  // Only the very first, in-place verify call has been made — nothing has answered it yet.
+  assert.equal(server.calls, 1)
+  assert.equal(server.outstanding, 1)
+
+  server.answerNext({ status: "pending" })
+  // Give the poll effect a render to mount now that the phase is `pending`, and a further
+  // one for its own scheduled timer to fire.
+  await sheet.settle()
+  await sheet.settle()
+  assert.equal(server.calls, 2, "the poll's first attempt fires once the phase is pending")
+  assert.equal(server.outstanding, 1)
+
+  // The critical assertion: hold this second call open across MULTIPLE render passes. If the
+  // next attempt were ever scheduled eagerly (the old bug — scheduling alongside the fetch
+  // instead of after it settles), a third call would show up here on its own.
+  await sheet.settle()
+  await sheet.settle()
+  await sheet.settle()
+  assert.equal(server.calls, 2, "no further call is made while the current one is unanswered")
+
+  server.answerNext({ status: "pending" })
+  await sheet.settle()
+  await sheet.settle()
+  assert.equal(server.calls, 3, "and the schedule resumes once the outstanding call answers")
+})
+
+test("R3: a manual „Status prüfen“ adds exactly one call and does not restart the automatic schedule", async () => {
+  // Compared against a control run with the IDENTICAL settle() cadence but no tap, instead of
+  // asserting an exact call count directly: the automatic schedule's own next attempt can
+  // legitimately land in the same render window as a manual tap (both are due around the
+  // same time), which is not the bug R3 is about. What R3 rules out is the OLD behaviour —
+  // the tap resetting the schedule's own attempt counter and arming an extra timer on top of
+  // the running one. If it did, the "with tap" run would gain more than exactly one call.
+  async function run(clickRecheck: boolean): Promise<number> {
+    await drainStaleTimers()
+    const server = deferredCompletion()
+    const sheet = await mountSheet({
+      completion: server.completion,
+      search: `?freemium_checkout=${SESSION_ID}`,
+      open: true,
+      context: REMEMBERED,
+    })
+    server.answerNext({ status: "pending" })
+    await sheet.settle()
+    if (clickRecheck) {
+      const recheck = byData(sheet.tree, "data-premium-sheet-recheck")[0]
+      assert.ok(recheck, "a bounded poll must always leave a button to press")
+      recheck.props.onClick()
+    }
+    await sheet.settle()
+    // Drain whatever the (bounded) automatic schedule still owes, so both runs reach the
+    // same, fully-settled end state before their totals are compared.
+    for (let guard = 0; guard < 10 && server.outstanding > 0; guard += 1) {
+      server.answerNext({ status: "pending" })
+      await sheet.settle()
+    }
+    return server.calls
+  }
+
+  const withoutTap = await run(false)
+  const withTap = await run(true)
+  assert.equal(withTap, withoutTap + 1, "the tap adds exactly one call — nothing is stacked")
+})
+
+test("R3: a rate-limited poll surfaces a non-terminal notice and never fails the purchase", async () => {
+  // Every answer is a 429 — the first call (from `verifying`) is never authoritative either,
+  // so the purchase must settle into `pending` and stay there, with the poll's own attempts
+  // (not the first call, which the effect above does not route into the notice) surfacing
+  // the notice once one of them lands.
+  const sheet = await mountSheet({
+    completion: () =>
+      new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Retry-After": "3" },
+      }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  await sheet.settle()
+  await sheet.settle()
+
+  const panel = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(
+    panel?.props["data-premium-sheet-purchase-phase"],
+    "pending",
+    "a 429 is never an authoritative verdict",
+  )
+  assert.equal(sheet.toasts.length, 0)
+  assert.equal(sheet.calls.includes("close"), false)
+  assert.ok(
+    findAll(sheet.tree, (element) => element.props["data-premium-sheet-rate-limit-notice"]).length >
+      0,
+    "the rate limit is surfaced, not silently swallowed",
+  )
 })

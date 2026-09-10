@@ -247,8 +247,18 @@ export function createFreemiumPurchaseCompletionHandler(deps: FreemiumPurchaseCo
         provisioning.outcome === "provisioned" ? provisioning.routineAccepted : false,
     })
 
+    if (provisioning.outcome === "provisioned" && provisioning.routineAccepted) {
+      return json({ status: "complete", routineReady: true })
+    }
+
+    // Admitted, pinned and derived, but the Routine is not ACTIVE yet — the webhook lane
+    // (`provisionFreemiumCheckoutSession`) already calls this exact condition retryable
+    // (`routine_not_accepted`), not complete. This endpoint used to answer `complete` here,
+    // which told the sheet to toast „Alles freigeschaltet" and close over a gate that was
+    // still locked (Codex fix wave round 2, R2). Reporting the same honest in-progress state
+    // both lanes agree on keeps the sheet polling until the Routine is really there.
     if (provisioning.outcome === "provisioned") {
-      return json({ status: "complete", routineReady: provisioning.routineAccepted })
+      return json({ status: "provisioning", retryable: true, reason: "routine_not_accepted" })
     }
 
     if (provisioning.outcome === "temporarily_unavailable") {

@@ -242,11 +242,33 @@ test("Y1: a provisioning failure a retry cannot fix stops the client polling", a
   }
 })
 
-test("Y1/Y2: a provisioned plan whose Routine is not accepted yet is complete, but not ready", async () => {
+test("R2: a provisioned plan whose Routine is not accepted yet is honest provisioning, not complete", async () => {
+  // It used to answer `{status:"complete", routineReady:false}` here — which the sheet
+  // renders as „Alles freigeschaltet" and closes, while the gate stays locked. The webhook
+  // lane (`provisionFreemiumCheckoutSession`) already treats this exact condition as
+  // retryable (`routine_not_accepted`); this endpoint now agrees (Codex fix wave round 2).
   const result = await call({
     provision: async () => ({ ...provisioned, routineAccepted: false }),
   })
-  assert.deepEqual(result.body, { status: "complete", routineReady: false })
+  assert.deepEqual(result.body, {
+    status: "provisioning",
+    retryable: true,
+    reason: "routine_not_accepted",
+  })
+})
+
+test("R2: the same call converges to complete once the Routine is accepted", async () => {
+  let attempts = 0
+  const provision = async () => {
+    attempts += 1
+    return attempts === 1 ? { ...provisioned, routineAccepted: false } : provisioned
+  }
+  assert.deepEqual((await call({ provision })).body, {
+    status: "provisioning",
+    retryable: true,
+    reason: "routine_not_accepted",
+  })
+  assert.deepEqual((await call({ provision })).body, { status: "complete", routineReady: true })
 })
 
 test("Y1: the same call converges once provisioning succeeds", async () => {

@@ -30,6 +30,11 @@ export const PREMIUM_SHEET_PURCHASE_COPY = {
   provisioningStalledBody: "Dein Plan konnte noch nicht erstellt werden. Wir kümmern uns darum.",
   /** Manual fallback whenever the automatic poll is running or exhausted. */
   recheck: "Status prüfen",
+  /**
+   * Non-terminal: the completion endpoint is rate-limited, not refusing the purchase (Codex
+   * fix wave round 2, R3). The schedule (or the next manual tap) tries again on its own.
+   */
+  rateLimited: "Kurz warten, wir prüfen gleich noch einmal.",
   /** Recoverable failures. One line each, then the retry. */
   checkoutUnavailable: "Checkout konnte nicht geladen werden.",
   providerUnavailable: "Zahlung konnte nicht gestartet werden.",

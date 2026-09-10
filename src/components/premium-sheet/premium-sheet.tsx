@@ -144,9 +144,22 @@ export function PremiumSheet({
    * `silentOnError` is what makes polling safe: a network blip on poll 3 must not demote a
    * paid `pending` purchase to a failure screen. A verdict the SERVER gave (`failed`) always
    * applies; an error on our side only ends the first, user-initiated attempt.
+   *
+   * `treatErrorAsPending` is the RESUME lane's variant (Codex fix wave round 2, R1): a
+   * resumed purchase is not a fresh, user-initiated attempt, so a transport/5xx error here
+   * must not read as the server's own "we could not confirm your payment" — it moves the
+   * machine to `pending` instead, the same phase a genuine async settlement reaches, so the
+   * poll below keeps trying and the resume handle (`clearPremiumSheetCheckoutMemo` only runs
+   * on a TERMINAL phase) survives.
+   *
+   * Returns whether the call settled normally or was rate-limited, so pollers can surface a
+   * brief notice instead of silently swallowing a 429 (Codex fix wave round 2, R3).
    */
   const verify = useCallback(
-    async (sessionId: string, options: { silentOnError?: boolean } = {}) => {
+    async (
+      sessionId: string,
+      options: { silentOnError?: boolean; treatErrorAsPending?: boolean } = {},
+    ): Promise<"settled" | "rate_limited"> => {
       type CompletionPayload = {
         status?: unknown
         routineReady?: unknown
@@ -154,14 +167,19 @@ export function PremiumSheet({
         reason?: unknown
       } | null
       let payload: CompletionPayload = null
+      let rateLimited = false
       try {
         const response = await fetch("/api/freemium/purchase/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId }),
         })
-        payload = (await response.json().catch(() => null)) as CompletionPayload
-        if (!response.ok) payload = null
+        if (response.status === 429) {
+          rateLimited = true
+        } else {
+          payload = (await response.json().catch(() => null)) as CompletionPayload
+          if (!response.ok) payload = null
+        }
       } catch {
         payload = null
       }
@@ -171,7 +189,7 @@ export function PremiumSheet({
           sessionId,
           routineReady: payload.routineReady === true,
         })
-        return
+        return "settled"
       }
       if (payload?.status === "provisioning") {
         // Paid and entitled, plan not built. `retryable: false` stops the poll.
@@ -180,11 +198,11 @@ export function PremiumSheet({
           sessionId,
           retryable: payload.retryable !== false,
         })
-        return
+        return "settled"
       }
       if (payload?.status === "pending") {
         dispatchPurchase({ type: "verification_pending", sessionId })
-        return
+        return "settled"
       }
       if (payload?.status === "failed") {
         dispatchPurchase({
@@ -192,14 +210,31 @@ export function PremiumSheet({
           sessionId,
           reason: verificationFailureReason(payload.reason),
         })
-        return
+        return "settled"
       }
-      if (options.silentOnError) return
+      if (rateLimited) {
+        // Never an authoritative verdict, from any phase this is called from (a fresh
+        // attempt, the resume lane, a poll, or a manual recheck) — always parks the purchase
+        // at `pending` so the poll or the next manual tap can retry it, instead of leaving a
+        // first-attempt call stuck in `verifying` with no dispatch at all (Codex fix wave
+        // round 2, R3).
+        dispatchPurchase({ type: "verification_pending", sessionId })
+        return "rate_limited"
+      }
+      if (options.treatErrorAsPending) {
+        dispatchPurchase({ type: "verification_pending", sessionId })
+        return "settled"
+      }
+      if (options.silentOnError) return "settled"
       dispatchPurchase({ type: "verification_failed", sessionId, reason: "verification_failed" })
+      return "settled"
     },
     [dispatchPurchase],
   )
 
+  // Set only by the RESUME lane below, to the exact Session id it resumed — the one case
+  // where the first verify call is not the buyer's first, user-initiated attempt (R1).
+  const resumedVerificationSessionRef = useRef<string | null>(null)
   const verifyingSessionId = purchase.phase === "verifying" ? purchase.sessionId : null
   useEffect(() => {
     if (!verifyingSessionId) return
@@ -207,7 +242,8 @@ export function PremiumSheet({
     // is impatient, the tab reloads, the redirect return already stripped the parameter)
     // would otherwise lose the only handle on the Session (Codex fix wave, Y3).
     persistPremiumSheetPendingSession(verifyingSessionId)
-    void verify(verifyingSessionId)
+    const isResume = resumedVerificationSessionRef.current === verifyingSessionId
+    void verify(verifyingSessionId, isResume ? { treatErrorAsPending: true } : undefined)
   }, [verifyingSessionId, verify])
 
   /**
@@ -252,6 +288,9 @@ export function PremiumSheet({
     if (!resumedSessionId) return
     returnedRef.current = true
     returnedContextRef.current = readPremiumSheetCheckoutContext()
+    // Marks this Session as a RESUME for the verifying effect above (R1): its first verify
+    // call is not a fresh attempt, so a transport error must not fail it outright.
+    resumedVerificationSessionRef.current = resumedSessionId
     dispatchPurchase({ type: "provider_completed", sessionId: resumedSessionId })
   }, [router, pathname, returnPath])
 
@@ -281,31 +320,62 @@ export function PremiumSheet({
    *
    * Bounded by `premiumSheetPollDelayMs`; when the schedule runs out the „Status prüfen"
    * button below is the way on, so the buyer is never left with nothing to press.
+   *
+   * Self-scheduling (Codex fix wave round 2, R3): each attempt is timed only from the moment
+   * the PREVIOUS one settles, not from when it was fired. The earlier version drove this off
+   * a `{sessionId, attempt}` state pair — bumping `attempt` re-ran the effect and armed the
+   * next timer in the same tick as the in-flight `fetch`, so a slow response and the
+   * following poll's own call could overlap. A plain closure loop inside one effect removes
+   * the extra render round-trip entirely.
    */
   const pollableSessionId = premiumSheetPollableSessionId(purchase)
-  const [poll, setPoll] = useState<{ sessionId: string; attempt: number }>({
-    sessionId: "",
-    attempt: 0,
-  })
   const [rechecking, setRechecking] = useState(false)
-  const pollAttempt = poll.sessionId === pollableSessionId ? poll.attempt : 0
-  const pollDelayMs = pollableSessionId ? premiumSheetPollDelayMs(pollAttempt) : null
+  // Keyed to the Session it was raised for, and DERIVED against the current one below —
+  // rather than reset imperatively at the top of the poll effect (a synchronous `setState`
+  // in an effect body, which cascades an extra render for every purchase and trips
+  // `react-hooks/set-state-in-effect`). A later purchase simply carries a different
+  // `pollableSessionId`, so a stale notice from an earlier one stops rendering on its own.
+  const [rateLimitState, setRateLimitState] = useState<{ sessionId: string; notice: boolean }>({
+    sessionId: "",
+    notice: false,
+  })
+  const rateLimitNotice = rateLimitState.sessionId === pollableSessionId && rateLimitState.notice
   useEffect(() => {
-    if (!pollableSessionId || pollDelayMs === null) return
-    const timer = setTimeout(() => {
-      setPoll({ sessionId: pollableSessionId, attempt: pollAttempt + 1 })
-      void verify(pollableSessionId, { silentOnError: true })
-    }, pollDelayMs)
-    return () => clearTimeout(timer)
-  }, [pollableSessionId, pollAttempt, pollDelayMs, verify])
+    if (!pollableSessionId) return
+    let cancelled = false
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    const schedule = (attempt: number) => {
+      const delayMs = premiumSheetPollDelayMs(attempt)
+      if (delayMs === null) return
+      timer = setTimeout(() => {
+        void verify(pollableSessionId, { silentOnError: true }).then((outcome) => {
+          if (cancelled) return
+          setRateLimitState({ sessionId: pollableSessionId, notice: outcome === "rate_limited" })
+          schedule(attempt + 1)
+        })
+      }, delayMs)
+    }
+    schedule(0)
+
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [pollableSessionId, verify])
 
   const recheck = useCallback(() => {
     if (!pollableSessionId || rechecking) return
     setRechecking(true)
-    // A manual recheck also restarts the automatic schedule: the buyer just told us they
-    // are still here and still waiting.
-    setPoll({ sessionId: pollableSessionId, attempt: 0 })
-    void verify(pollableSessionId, { silentOnError: true }).finally(() => setRechecking(false))
+    // A single immediate check. It does not touch the automatic schedule above in any way —
+    // no attempt counter to reset, no new timer armed — so repeated taps can only ever have
+    // one manual verify in flight at a time instead of stacking a second poll loop on top of
+    // the running one (Codex fix wave round 2, R3).
+    void verify(pollableSessionId, { silentOnError: true })
+      .then((outcome) =>
+        setRateLimitState({ sessionId: pollableSessionId, notice: outcome === "rate_limited" }),
+      )
+      .finally(() => setRechecking(false))
   }, [pollableSessionId, rechecking, verify])
 
   /**
@@ -493,6 +563,17 @@ export function PremiumSheet({
                   ? PREMIUM_SHEET_PURCHASE_COPY.verifying
                   : PREMIUM_SHEET_PURCHASE_COPY.recheck}
               </button>
+            ) : null}
+            {/* Non-terminal: the endpoint is rate-limited (20/min), not refusing the
+                purchase — the schedule (or the next manual tap) tries again on its own
+                (Codex fix wave round 2, R3). */}
+            {rateLimitNotice ? (
+              <p
+                data-premium-sheet-rate-limit-notice="true"
+                className="mt-2 text-[11px] text-muted-foreground"
+              >
+                {PREMIUM_SHEET_PURCHASE_COPY.rateLimited}
+              </p>
             ) : null}
           </div>
         ) : (
