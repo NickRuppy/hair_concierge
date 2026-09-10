@@ -6,6 +6,13 @@ import { NextResponse } from "next/server"
 import type { EmailOtpType } from "@supabase/supabase-js"
 import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 import { isPartnerAccessReturnPath } from "@/lib/auth/partner-access-return"
+import {
+  buildFreeRegistrationRecoveryPath,
+  isFreeRegistrationConfirmRequest,
+  isFreeRegistrationLeadId,
+} from "@/lib/auth/free-registration"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { provisionFreeInitialSnapshotForUser } from "@/lib/personal-plan/persistence/free-snapshot-supabase"
 
 type AuthConfirmUser = { id: string; email?: string }
 
@@ -26,18 +33,29 @@ export interface AuthConfirmDeps {
   linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<void>
   loadJourneyAccess?: (userId: string) => Promise<PersonalPlanJourneyAccess>
   redirect: (url: string) => Response
+  /**
+   * Freemium scanner-first (T18). Both are only consulted for a request that
+   * carries the free-registration marker (`?free=1`), so every pre-existing
+   * confirm path — payment activation included — is byte-identical.
+   */
+  freemiumScannerFirstEnabled?: () => boolean
+  provisionFreeSnapshot?: (input: { userId: string; email?: string }) => Promise<unknown>
 }
 
 export type AuthConfirmRouteDeps = {
   createClient: () => Promise<AuthConfirmClient>
   linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<unknown>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+  freemiumScannerFirstEnabled?: () => boolean
+  provisionFreeSnapshot?: (input: { userId: string; email?: string }) => Promise<unknown>
 }
 
 const defaultDeps: AuthConfirmRouteDeps = {
   createClient: async () => (await createClient()) as unknown as AuthConfirmClient,
   linkQuizToProfile,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
+  freemiumScannerFirstEnabled: isFreemiumScannerFirstEnabled,
+  provisionFreeSnapshot: provisionFreeInitialSnapshotForUser,
 }
 
 const AUTH_ONLY_QUERY_PARAMETERS = new Set([
@@ -134,6 +152,10 @@ async function handleAuthConfirmGet(request: Request, deps: AuthConfirmRouteDeps
     },
     loadJourneyAccess: deps.loadJourneyAccess,
     redirect: (url) => NextResponse.redirect(url),
+    ...(deps.freemiumScannerFirstEnabled
+      ? { freemiumScannerFirstEnabled: deps.freemiumScannerFirstEnabled }
+      : {}),
+    ...(deps.provisionFreeSnapshot ? { provisionFreeSnapshot: deps.provisionFreeSnapshot } : {}),
   })
 }
 
@@ -165,6 +187,12 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   const intendedNext = resolveAuthIntendedRedirectPath(searchParams, origin)
   const next = resolveAuthRedirectPath(searchParams, origin)
   const isRecovery = type === "recovery" || next === "/auth/update-password"
+  // Freemium scanner-first (T18): a link minted by `/api/auth/free-registration`.
+  // Everything below is inert for every other confirm request.
+  const isFreeRegistration =
+    !isRecovery &&
+    isFreeRegistrationConfirmRequest(searchParams) &&
+    (deps.freemiumScannerFirstEnabled?.() ?? false)
   let verified = false
   let verificationAttempted = false
 
@@ -201,6 +229,22 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
       return deps.redirect(recoveryUrl.toString())
     }
 
+    // The free account's scanner prerequisite: derive the initial need snapshot
+    // from the quiz artifact just linked above, with the AUTH e-mail supplied
+    // (T6 carry-forward — the paid-access guard needs it). Failures never block
+    // the landing; the scanner surfaces its own preparing/`profile_missing`
+    // state and the next confirm/visit can provision idempotently.
+    if (isFreeRegistration && user && deps.provisionFreeSnapshot) {
+      try {
+        await deps.provisionFreeSnapshot({
+          userId: user.id,
+          ...(user.email ? { email: user.email } : {}),
+        })
+      } catch (e) {
+        console.error("free snapshot provisioning failed:", e)
+      }
+    }
+
     return deps.redirect(`${origin}${next}`)
   }
 
@@ -216,6 +260,15 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     } catch (error) {
       console.warn("Personal Plan auth replay frontier failed:", error)
     }
+  }
+
+  // An expired/consumed free-registration link goes back to the registration
+  // screen (which explains it in German and can re-send), not to the login
+  // form — the account may not exist yet, so `/auth` would be a dead end.
+  if (isFreeRegistration) {
+    return deps.redirect(
+      `${origin}${buildFreeRegistrationRecoveryPath(isFreeRegistrationLeadId(leadId) ? leadId : null)}`,
+    )
   }
 
   return deps.redirect(buildExpiredLinkDestination(origin, next, isRecovery))
