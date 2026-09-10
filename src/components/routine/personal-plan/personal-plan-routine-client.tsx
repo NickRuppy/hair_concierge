@@ -428,6 +428,56 @@ export function PersonalPlanRoutineClient({
     })
   }, [pending, proposalOpen])
 
+  /**
+   * PR5 review fix (Z3): the graduation hand-off. „Zur Routine hinzufügen" →
+   * „Benutze ich schon" writes ownership and drops the product from „Gemerkt" — but the
+   * visible Routine is compiled from the confirmed version, so before this fix the product
+   * simply vanished with nothing to show for it.
+   *
+   * The hand-off now runs the EXISTING flows and nothing else — no implicit routine write
+   * is added here:
+   * 1. the routine sync (the same `POST /api/personal-plan/routine/sync` this page already
+   *    kicks on entry), which is the queued path that can surface a change; the user sees
+   *    an honest in-progress state while it runs,
+   * 2. if it staged a proposal, the existing proposal sheet opens on it — where the change
+   *    is reviewed and accepted, exactly as for any other successor,
+   * 3. otherwise the truthful outcome: the product is saved as owned, the Routine has not
+   *    changed, and „Routine anpassen" hands the user into the existing editor.
+   */
+  const [graduation, setGraduation] = React.useState<{
+    name: string
+    status: "pending" | "proposal" | "unchanged"
+  } | null>(null)
+
+  const handleGraduated = React.useCallback(
+    (product: { productId: string; name: string }) => {
+      setGraduation({ name: product.name, status: "pending" })
+      void (async () => {
+        try {
+          // `enabled === false` means the successor machinery is off for this render
+          // (Stage-4 flag off, or a keepsake read): the sync route would refuse it, so the
+          // hand-off goes straight to its honest terminal state.
+          if (enabled) {
+            const response = await fetch("/api/personal-plan/routine/sync", { method: "POST" })
+            if (!response.ok) throw new Error(await readError(response, "temporarily_unavailable"))
+          }
+          const next = await reload()
+          if (next.pendingProposal) {
+            setProposalOpen(true)
+            setGraduation({ name: product.name, status: "proposal" })
+            return
+          }
+          setGraduation({ name: product.name, status: "unchanged" })
+        } catch {
+          // The ownership write already succeeded — only the "did the Routine move?"
+          // question is unanswered, so say the smaller, certain thing.
+          setGraduation({ name: product.name, status: "unchanged" })
+        }
+      })()
+    },
+    [enabled, reload],
+  )
+
   const openEditor = React.useCallback(() => {
     if (!canEdit) return
     setError(null)
@@ -637,6 +687,31 @@ export function PersonalPlanRoutineClient({
           {error}
         </p>
       ) : null}
+      {graduation ? (
+        <section
+          aria-live="polite"
+          className="mx-auto mt-4 w-full max-w-2xl rounded-[12px] border border-border bg-card px-4 py-3"
+        >
+          <p className="text-sm text-foreground">
+            {graduation.status === "pending"
+              ? `${graduation.name} wird übernommen …`
+              : graduation.status === "proposal"
+                ? `${graduation.name} ist gespeichert. Prüfe den Vorschlag für deine Routine.`
+                : `${graduation.name} ist als „benutze ich schon" gespeichert. In deiner Routine steht es noch nicht.`}
+          </p>
+          {graduation.status === "unchanged" && canEdit ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-3 w-auto"
+              onClick={openEditor}
+            >
+              Routine anpassen
+            </Button>
+          ) : null}
+        </section>
+      ) : null}
       <RoutinePage
         view={view}
         onEdit={canEdit ? openEditor : undefined}
@@ -653,7 +728,7 @@ export function PersonalPlanRoutineClient({
         showPlanUpdatedToast={showPlanUpdatedToast}
         onDismissPlanUpdatedToast={dismissPlanUpdatedToast}
         merklisteEnabled={merklisteEnabled}
-        onGraduated={() => void reload()}
+        onGraduated={handleGraduated}
       />
       {pending ? (
         <RoutineProposalSheet

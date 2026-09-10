@@ -174,10 +174,62 @@ test("Gemerkt section: graduation hands off to the EXISTING save/move sheet — 
   assert.match(source, /kind: "merkliste"/)
 })
 
-test("Gemerkt section: a routine graduation (not a plain removal) tells the caller to refresh (F6)", () => {
+test("Gemerkt section: a routine graduation (not a plain removal) tells the caller WHICH product graduated (F6, Z3)", () => {
   const source = read("src/components/routine/gemerkt-section.tsx")
 
-  assert.match(source, /if \(completion\.savedState\.state === "routine"\) onGraduated\?\.\(\)/)
+  assert.match(
+    source,
+    /if \(completion\.savedState\.state === "routine"\) \{\s*onGraduated\?\.\(\{/,
+  )
+  // PR5 review fix (Z3): the product's identity travels with the callback — without it the
+  // caller could only refresh a list the graduation does not change, which is exactly how
+  // the product came to vanish from „Gemerkt" with nothing to show for it.
+  assert.match(source, /productId: completion\.productId/)
+  assert.match(source, /name: graduated\?\.name/)
+  // A plain removal is still not a graduation.
+  assert.doesNotMatch(source, /savedState\.state !== "routine"/)
+})
+
+/**
+ * PR5 review fix (Z3): the graduation hand-off. The ownership write is real, but the
+ * confirmed Routine is compiled from the accepted version — so the product used to leave
+ * „Gemerkt" and appear nowhere. The client now runs the EXISTING flows: the routine sync
+ * (queued, hence an honest in-progress state), the existing proposal sheet when that sync
+ * staged one, and otherwise the truthful "saved as owned, Routine unchanged" state with an
+ * entry into the existing editor. No new routine write is introduced anywhere.
+ */
+test("PersonalPlanRoutineClient: graduation hands off into the existing sync/proposal/editor flow, with an honest in-progress state (Z3)", () => {
+  const source = read("src/components/routine/personal-plan/personal-plan-routine-client.tsx")
+  const handler = source.slice(
+    source.indexOf("const handleGraduated"),
+    source.indexOf("const openEditor"),
+  )
+
+  // 1. the existing entry-sync endpoint, never a new write of its own.
+  assert.match(handler, /fetch\("\/api\/personal-plan\/routine\/sync", \{ method: "POST" \}\)/)
+  assert.doesNotMatch(handler, /\/api\/personal-plan\/routine\/proposals/)
+  assert.doesNotMatch(handler, /\/api\/scan\/save/)
+  // The successor machinery is off when `enabled` is false — the sync is not attempted.
+  assert.match(handler, /if \(enabled\) \{/)
+  // 2. a staged proposal opens the EXISTING sheet on it.
+  assert.match(handler, /if \(next\.pendingProposal\) \{\s*setProposalOpen\(true\)/)
+  // 3. the three states the user can actually be in.
+  assert.match(handler, /status: "pending"/)
+  assert.match(handler, /status: "proposal"/)
+  assert.match(handler, /status: "unchanged"/)
+
+  // The in-progress state is announced, and the terminal "not in your routine yet" state
+  // hands into the existing editor rather than leaving the user with a vanished product.
+  const banner = source.slice(
+    source.indexOf("{graduation ? ("),
+    source.indexOf("onGraduated={handleGraduated}"),
+  )
+  assert.match(banner, /aria-live="polite"/)
+  assert.match(banner, /wird übernommen …/)
+  assert.match(banner, /In deiner Routine steht es noch nicht\./)
+  assert.match(banner, /graduation\.status === "unchanged" && canEdit/)
+  assert.match(banner, /onClick=\{openEditor\}/)
+  assert.match(banner, /Routine anpassen/)
 })
 
 test("RoutinePageClient (legacy): wires the shared Gemerkt section with the server-derived flag and refreshes the routine list on graduation (F6)", () => {
@@ -195,7 +247,7 @@ test("PersonalPlanRoutineClient: wires the shared Gemerkt section too — this i
 
   assert.match(clientSource, /merklisteEnabled = false/)
   assert.match(clientSource, /merklisteEnabled=\{merklisteEnabled\}/)
-  assert.match(clientSource, /onGraduated=\{\(\) => void reload\(\)\}/)
+  assert.match(clientSource, /onGraduated=\{handleGraduated\}/)
   // T17 added the keepsake `readOnly` prop to the same element; the two original props
   // are still wired straight through, which is what this test exists to pin.
   assert.match(pageSource, /<GemerktSection\s+merklisteEnabled=\{merklisteEnabled\}/)

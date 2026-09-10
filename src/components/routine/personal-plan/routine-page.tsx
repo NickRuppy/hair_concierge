@@ -43,8 +43,12 @@ export type RoutinePageProps = {
    * existing caller that forgets to pass it stays on today's exact behavior.
    */
   merklisteEnabled?: boolean
-  /** Fix round 1 (F6): refreshes the routine view after a „Gemerkt" product graduates in. */
-  onGraduated?: () => void
+  /**
+   * Fix round 1 (F6): refreshes the routine view after a „Gemerkt" product graduates in.
+   * PR5 review fix (Z3): carries WHICH product graduated, so the client can show the user
+   * where it went and hand them into the routine-editor flow for it.
+   */
+  onGraduated?: (product: { productId: string; name: string }) => void
   /**
    * T17 keepsake: a LAPSED owner reads their own Routine, but „Anpassen" is a premium
    * mutation. Passed INSTEAD of `onEdit` (never alongside it), it renders the same

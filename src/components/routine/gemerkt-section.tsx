@@ -57,8 +57,13 @@ export function GemerktSection({
    * "Benutze ich schon" in the hand-off sheet), so the caller can refresh whatever list
    * renders the confirmed routine — this section only owns its own „Gemerkt" list, not the
    * routine list it hands products off to.
+   *
+   * PR5 review fix (Z3): it now carries WHICH product graduated. Before this, the product
+   * simply vanished from „Gemerkt" and nothing else on the page changed — the caller had
+   * no way to name it, so it could neither show where the product went nor hand the user
+   * into the routine-editor flow for it.
    */
-  onGraduated?: () => void
+  onGraduated?: (product: { productId: string; name: string }) => void
   /**
    * T17 keepsake: a LAPSED owner keeps READING their Merkliste (the listing is what
    * „nothing free is ever removed" means here), but both write affordances —
@@ -140,11 +145,19 @@ export function GemerktSection({
    */
   const handleGraduated = useCallback(
     (completion: ScanSaveCompletion) => {
+      const graduated = wishlist.find((row) => row.productId === completion.productId)
       setWishlist((current) => current.filter((row) => row.productId !== completion.productId))
       setGraduateEntry(null)
-      if (completion.savedState.state === "routine") onGraduated?.()
+      // Z3: the caller is told WHICH product graduated, so it can show the user where it
+      // went instead of leaving them with a product that silently disappeared from here.
+      if (completion.savedState.state === "routine") {
+        onGraduated?.({
+          productId: completion.productId,
+          name: graduated?.name ?? "Das Produkt",
+        })
+      }
     },
-    [onGraduated],
+    [onGraduated, wishlist],
   )
 
   if (!wishlistVisible) return null
