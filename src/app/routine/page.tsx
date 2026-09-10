@@ -1,10 +1,12 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 
+import { GatedRoutineExample } from "@/components/gated-preview/gated-routine-example"
 import { PersonalPlanRoutineClient } from "@/components/routine/personal-plan"
 import type { RoutineRefinementBannerViewModel } from "@/components/routine/personal-plan/routine-refinement-banner"
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
 import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
+import { shouldRenderGatedExample } from "@/lib/gated-preview/gate"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
@@ -176,6 +178,12 @@ async function resolveDefaultRoutinePage() {
 }
 
 export default async function RoutinePage() {
+  // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Routine
+  // instead of its own (empty, stage-gated) one. Checked BEFORE `resolveDefaultRoutinePage`
+  // so a gated render performs none of that resolver's reads, and it is the only branch
+  // this page gained — premium and flag-off fall straight through to today's behaviour.
+  if (await shouldRenderGatedExample()) return <GatedRoutineExample />
+
   const resolved = await resolveDefaultRoutinePage()
   if (resolved.kind === "legacy") return <RoutinePageClient />
 

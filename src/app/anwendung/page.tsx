@@ -1,6 +1,8 @@
 import { RouteAwareApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
+import { GatedAnwendungExample } from "@/components/gated-preview/gated-anwendung-example"
+import { shouldRenderGatedExample } from "@/lib/gated-preview/gate"
 import {
   PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
   type PersonalPlanStage5ContractVersion,
@@ -247,6 +249,12 @@ async function resolveDefaultAnwendungPage(selectedDayType?: ApplicationDayTypeK
 export default async function AnwendungPage({
   selectedDayType,
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
+  // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Anwendung
+  // instead of its own (stage-gated, empty) one — for the overview and for every
+  // `/anwendung/[dayType]` deep link, which re-renders this same component. Checked before
+  // `resolveDefaultAnwendungPage` so a gated render performs none of its reads.
+  if (await shouldRenderGatedExample()) return <GatedAnwendungExample />
+
   const { view, durationMs } = await resolveDefaultAnwendungPage(selectedDayType)
   const internalComputeMs =
     process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
