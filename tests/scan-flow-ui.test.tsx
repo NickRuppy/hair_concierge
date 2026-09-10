@@ -1384,6 +1384,114 @@ test("T16 premium + merklisteEnabled: a premium in-catalog resolve refreshes the
   assert.equal(wishlistTriggerProps(flow.tree).count, 1)
 })
 
+// --- PR5 Codex review fixes: Z1 (flag-off bookmark) + Z5 (count/tier races) ---
+
+/**
+ * Z1, the flag-off regression this fix exists for: with `merklisteEnabled` false there is
+ * no „Gemerkt" section on the Routine page to deep-link INTO, so the unlocked bookmark has
+ * to keep doing exactly what it did before this branch — open the in-flow Merkliste sheet.
+ */
+test("Z1 flag off: the unlocked bookmark opens the in-flow Merkliste sheet and never deep-links", async () => {
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/wishlist") throw new Error("must not be called with the flag off")
+      return notFound()
+    },
+    { tier: "premium" },
+  )
+  await flow.settle()
+
+  assert.equal(wishlistTriggerProps(flow.tree).locked, false)
+  wishlistTriggerProps(flow.tree).onClick()
+  await flow.settle()
+
+  assert.deepEqual(flow.navigateCalls, [])
+  assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, true)
+})
+
+test("Z1 flag off + free tier: the bookmark still opens the Premium sheet, not the Merkliste sheet", async () => {
+  const flow = await mountFlow(notFound, { tier: "free" })
+  wishlistTriggerProps(flow.tree).onClick()
+  await flow.settle()
+
+  assert.equal(premiumSheetProps(flow.tree).open, true)
+  assert.equal(requireByType(flow.tree, ScanWishlistSheet, "ScanWishlistSheet").props.open, false)
+  assert.deepEqual(flow.navigateCalls, [])
+})
+
+test("Z5: a listing that has not caught up to the deferred auto-save cannot paint a stale count", async () => {
+  let wishlistCalls = 0
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/resolve") {
+        // What the resolve route answers when it SCHEDULED the deferred insert: the
+        // predicted post-save state, on the very response whose write has not landed yet.
+        return json({
+          ...premiumVerdict("p-a"),
+          savedState: { state: "merkliste", managedByScan: true },
+        })
+      }
+      if (url === "/api/scan/wishlist") {
+        wishlistCalls += 1
+        // Both reads run BEFORE the `after()` write commits — the race Z5 reported.
+        return json({ entries: wishlistCalls <= 2 ? [] : [{ productId: "p-a" }] })
+      }
+      return notFound()
+    },
+    { tier: "premium", merklisteEnabled: true },
+  )
+  await flow.settle()
+  assert.equal(wishlistTriggerProps(flow.tree).count, 0)
+
+  await scanInto(flow)
+  assert.equal(wishlistCalls, 2)
+  assert.equal(wishlistTriggerProps(flow.tree).count, 1, "the just-scanned product is counted")
+
+  // The listing catches up: the prediction is absorbed, never double-counted.
+  await scanInto(flow)
+  assert.equal(wishlistTriggerProps(flow.tree).count, 1)
+})
+
+test("Z5: after a verified purchase the re-resolve refreshes the count instead of reading the stale free-tier closure", async () => {
+  let resolveCalls = 0
+  let wishlistCalls = 0
+  const flow = await mountFlow(
+    async (url) => {
+      if (url === "/api/scan/resolve") {
+        resolveCalls += 1
+        return json(
+          resolveCalls === 1
+            ? maskedVerdict("p-a")
+            : {
+                ...premiumVerdict("p-a"),
+                savedState: { state: "merkliste", managedByScan: true },
+              },
+        )
+      }
+      if (url === "/api/scan/wishlist") {
+        wishlistCalls += 1
+        return json({ entries: [] })
+      }
+      return notFound()
+    },
+    // The server-derived prop still says "free" for the whole mount: `router.refresh()`
+    // re-serves it only after this, which is exactly what made the old closure stale.
+    { tier: "free", merklisteEnabled: true },
+  )
+  await flow.settle()
+  assert.equal(wishlistCalls, 0, "a free session performs no Merkliste read")
+
+  await scanInto(flow)
+  premiumSheetProps(flow.tree).onUnlocked()
+  await flow.settle()
+  await delay(0)
+  await flow.settle()
+
+  assert.equal(resolveCalls, 2, "the masked verdict is re-resolved after the purchase")
+  assert.equal(wishlistCalls, 1, "the buyer's own auto-saved product refreshes the badge")
+  assert.equal(wishlistTriggerProps(flow.tree).count, 1)
+})
+
 // --- T10: trigger layer, wired end to end through the flow -------------------
 
 /** `verdictResult` with the category overridden, for scanning a 2nd, different category. */
