@@ -394,14 +394,22 @@ test("Merken lock: the bookmark symbol stays visible under its corner marker", (
   const triggerElement = ScanWishlistTrigger({ onClick: noop, locked: true }) as AnyElement
   assert.equal(triggerElement.props["data-scan-wishlist-locked"], "true")
   assert.equal(triggerElement.props["aria-label"], "Merkliste öffnen — Premium")
+  assert.ok((triggerElement.props.className as string).includes("relative"))
   const locked = deepRender(triggerElement)
   const badge = findByData(locked, "data-scan-lock-badge")
   assert.equal(badge.length, 1)
   // Decorative marker, and the bookmark icon itself is still rendered beside it.
   assert.equal(badge[0].props["aria-hidden"], "true")
   assert.equal(childrenOf(triggerElement).length, 2)
+})
 
-  const open = deepRender(ScanWishlistTrigger({ onClick: noop }))
-  assert.equal((open as ReactElement<Record<string, any>>).props["aria-label"], "Merkliste öffnen")
-  assert.equal(findByData(open, "data-scan-lock-badge").length, 0)
+test("Merken lock: an unlocked bookmark trigger is byte-identical to today's (PR2 review fix, C4)", () => {
+  const open = ScanWishlistTrigger({ onClick: noop }) as AnyElement
+  assert.equal(open.props["aria-label"], "Merkliste öffnen")
+  // Not merely "false": the attribute and the "relative" class must be entirely absent,
+  // matching this component's pre-T9 markup for every premium/flag-off render.
+  assert.equal("data-scan-wishlist-locked" in open.props, false)
+  assert.equal((open.props.className as string).includes("relative"), false)
+  const rendered = deepRender(open)
+  assert.equal(findByData(rendered, "data-scan-lock-badge").length, 0)
 })

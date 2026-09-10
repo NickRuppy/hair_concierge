@@ -221,6 +221,20 @@ export function ScanFlow({
    * and for a storage read that fails.
    */
   const sessionNumberRef = useRef(1)
+  /**
+   * PR2 review fix (C2): mints a token per `revealAlternatives` call, independent of
+   * `requests` (which only arbitrates resolve/submit). Two reveal attempts can legitimately
+   * overlap for the SAME product — e.g. the F2 silent background re-serve still in flight
+   * when a rescan of that same product starts another one — and product identity alone
+   * (`ownsResultProduct`) cannot tell an older call's outcome from a newer one's. See
+   * `scan-flow-state.ts`'s `ScanRevealState`/`ownsRevealToken`.
+   */
+  const revealTokenRef = useRef(0)
+  /**
+   * PR2 review fix (C3): guards `hydrateFatigueBudget` below so it runs at most once per
+   * mount, regardless of which of its two call sites reaches it first.
+   */
+  const fatigueHydratedRef = useRef(false)
 
   const clearSheetTimer = useCallback(() => {
     if (sheetTimerRef.current !== null) window.clearTimeout(sheetTimerRef.current)
@@ -233,18 +247,29 @@ export function ScanFlow({
   }, [analytics])
 
   /**
-   * Fix round 1 (F5): both trigger-layer storages are read ONLY for a confirmed free-tier
-   * mount — the server-verified `tier` prop, the same signal every trigger is gated on —
-   * so premium and flag-off users cause zero storage activity, not merely zero rendered
-   * surfaces. Deliberately runs once per mount only: both are read/written at the START of
-   * a session, not re-evaluated if a caller swaps a prop mid-visit.
+   * Fix round 1 (F5): both trigger-layer storages are read ONLY once free tier is
+   * confirmed, so premium and flag-off users cause zero storage activity, not merely zero
+   * rendered surfaces. Guarded by `fatigueHydratedRef` to run at most once per mount.
    *
    * Fix round 1 (F1): also re-seeds the reducer's fatigue budget from `sessionStorage` via
    * `fatigue_hydrated`, before any resolve can land — see that action's doc for why a plain
    * ref cannot do this (the flag lives in reducer state, not just this closure).
+   *
+   * PR2 review fix (C3): free tier can be established from TWO independent sources — the
+   * server-derived `tier` prop (checked by the mount effect below, unchanged from fix round
+   * 1) OR a masked resolve response proving it later, when a degraded nav loader defaulted
+   * `tier` to `"premium"` (its own fail-closed default) and only the response shape reveals
+   * the truth. Before this fix, that second path never hydrated the persisted fatigue
+   * budget at all: the mount effect's `tier !== "free"` guard skipped it forever, so a
+   * pitch already spent in an earlier mount (persisted to `sessionStorage`) went unread and
+   * a second proactive pitch could fire in what is really the same fatigue-budget session.
+   * `resolve()`'s success handler below now also calls this, synchronously, BEFORE
+   * dispatching `resolved` — the action whose reducer case actually evaluates this verdict's
+   * trigger against the budget — so the hydrated value is always in place before it is used.
    */
-  useEffect(() => {
-    if (tier !== "free") return
+  const hydrateFatigueBudget = useCallback(() => {
+    if (fatigueHydratedRef.current) return
+    fatigueHydratedRef.current = true
     sessionNumberRef.current = recordScanSession(
       sessionRecordStorage !== undefined ? sessionRecordStorage : createBrowserScanLocalStorage(),
     )
@@ -252,6 +277,11 @@ export function ScanFlow({
       fatigueStorage !== undefined ? fatigueStorage : createBrowserScanSessionStorage(),
     )
     if (hydratedFatigue) dispatch({ type: "fatigue_hydrated", id: hydratedFatigue })
+  }, [fatigueStorage, sessionRecordStorage])
+
+  useEffect(() => {
+    if (tier !== "free") return
+    hydrateFatigueBudget()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -313,7 +343,13 @@ export function ScanFlow({
   const revealAlternatives = useCallback(
     async (productId: string, options?: { silent?: boolean }) => {
       const silent = options?.silent ?? false
-      dispatch({ type: "reveal_started", productId, silent })
+      // Fix C2: this call's own identity, threaded through every action it dispatches, so
+      // the reducer can tell its outcome apart from any OTHER reveal call for the same
+      // product (e.g. an overlapping F2 background re-serve) rather than trusting whichever
+      // one happens to land last.
+      revealTokenRef.current += 1
+      const token = revealTokenRef.current
+      dispatch({ type: "reveal_started", productId, silent, token })
       try {
         const response = await fetch("/api/scan/reveal", {
           method: "POST",
@@ -327,6 +363,7 @@ export function ScanFlow({
             type: "reveal_failed",
             productId,
             reason: alreadyUsed ? "already_used" : "error",
+            token,
           })
           if (!alreadyUsed && !silent) toast({ title: GENERIC_ERROR, variant: "destructive" })
           return
@@ -336,13 +373,13 @@ export function ScanFlow({
         }
         const alternatives = result.alternatives ?? []
         if (alternatives.length === 0) {
-          dispatch({ type: "reveal_failed", productId, reason: "empty" })
+          dispatch({ type: "reveal_failed", productId, reason: "empty", token })
           if (!silent) toast({ title: SCAN_REVEAL_EMPTY_NOTICE })
           return
         }
-        dispatch({ type: "reveal_succeeded", productId, alternatives, silent })
+        dispatch({ type: "reveal_succeeded", productId, alternatives, silent, token })
       } catch {
-        dispatch({ type: "reveal_failed", productId, reason: "error" })
+        dispatch({ type: "reveal_failed", productId, reason: "error", token })
         if (!silent) toast({ title: GENERIC_ERROR, variant: "destructive" })
       }
     },
@@ -417,6 +454,13 @@ export function ScanFlow({
         // `stateRef` (not `state`) because `resolve` is not re-created on every render.
         const effectiveTier: EntitlementTier =
           tier === "free" || stateRef.current.tier === "free" ? "free" : "premium"
+        // PR2 review fix (C3): the very first moment THIS resolve proves free tier — via
+        // either source — the persisted fatigue budget must already be hydrated into
+        // reducer state before the `resolved` dispatch below, because THAT dispatch is what
+        // evaluates this verdict's own trigger decision against `proactiveTriggerShown`.
+        // A no-op once already hydrated (from the mount effect or an earlier resolve), and
+        // never called at all for a session that stays premium/flag-off the whole time.
+        if (effectiveTier === "free") hydrateFatigueBudget()
         dispatch({
           type: "resolved",
           token,
@@ -445,7 +489,16 @@ export function ScanFlow({
         returnToScanning()
       }
     },
-    [analytics, clearSheetTimer, requests, returnToScanning, revealAlternatives, tier, toast],
+    [
+      analytics,
+      clearSheetTimer,
+      hydrateFatigueBudget,
+      requests,
+      returnToScanning,
+      revealAlternatives,
+      tier,
+      toast,
+    ],
   )
 
   /**
@@ -619,6 +672,29 @@ export function ScanFlow({
         ? "stalled"
         : null
 
+  /**
+   * PR2 review fix (C4): the five T9/T10 debug attributes below are only ever meaningful
+   * for a free-tier render — `state.tier`/`state.reveal`/the trigger fields never leave
+   * their inert defaults for a premium or flag-off session, because none of the code paths
+   * that change them can run without `merkenLocked` (or the equivalent tier check) being
+   * true first. Gating their PRESENCE on the same signal, rather than always emitting them
+   * (previously "unknown"/"idle"/"none"/"false"), is what makes a premium/flag-off render
+   * byte-identical to before T9/T10 touched this file — the binding invariant every other
+   * flag-gated surface in this repo holds (see `access.ts`'s doc comment on
+   * `hasFreemiumPaidAccess`).
+   */
+  const scanFlowDebugAttributes = merkenLocked
+    ? {
+        "data-scan-tier": state.tier,
+        "data-scan-reveal": state.reveal.status,
+        "data-scan-premium-sheet": state.premiumSheet?.feature ?? "none",
+        "data-scan-active-trigger": activeProactiveTrigger ?? "none",
+        "data-scan-zwei-scans-gleiche-kategorie": state.zweiScansGleicheKategorie
+          ? "true"
+          : "false",
+      }
+    : {}
+
   return (
     <div
       /**
@@ -627,7 +703,9 @@ export function ScanFlow({
        * attributes, so an end-to-end assertion can name a transition instead of guessing
        * it from copy. Cheaper than a debug prop (nothing to thread through, nothing the
        * production caller has to pass) and inert in production — six attributes on one
-       * div, no behaviour attached.
+       * div, no behaviour attached. The five T9/T10 attributes are spread in via
+       * `scanFlowDebugAttributes` — see its comment: absent, not merely "none"/"unknown",
+       * for a premium or flag-off render.
        */
       data-scan-flow=""
       data-scan-step={step.kind}
@@ -636,11 +714,7 @@ export function ScanFlow({
       data-scan-camera-reason={cameraTileReason ?? "none"}
       data-scan-save-open={state.saveOpen ? "true" : "false"}
       data-scan-epoch={state.epoch}
-      data-scan-tier={state.tier}
-      data-scan-reveal={state.reveal.status}
-      data-scan-premium-sheet={state.premiumSheet?.feature ?? "none"}
-      data-scan-active-trigger={activeProactiveTrigger ?? "none"}
-      data-scan-zwei-scans-gleiche-kategorie={state.zweiScansGleicheKategorie ? "true" : "false"}
+      {...scanFlowDebugAttributes}
       className="mx-auto w-full max-w-[430px] px-3 sm:max-w-[560px] sm:px-5"
     >
       <div className="flex items-center justify-between py-2">

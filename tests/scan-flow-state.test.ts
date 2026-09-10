@@ -643,20 +643,23 @@ test("scanFlowReducer: a successful reveal only lands on the product it was star
     type: "reveal_started",
     productId: "p1",
     silent: false,
+    token: 1,
   })
-  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: false })
+  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: false, token: 1 })
 
   const revealed = scanFlowReducer(started, {
     type: "reveal_succeeded",
     productId: "p1",
     alternatives: REVEALED,
     silent: false,
+    token: 1,
   })
   assert.deepEqual(revealed.reveal, {
     status: "revealed",
     productId: "p1",
     alternatives: REVEALED,
     silent: false,
+    token: 1,
   })
   assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
   assert.equal(scanRevealAnimates(revealed), true)
@@ -671,6 +674,7 @@ test("scanFlowReducer: a successful reveal only lands on the product it was star
     productId: "p1",
     alternatives: REVEALED,
     silent: false,
+    token: 1,
   })
   assert.equal(late, moved)
   assert.equal(scanRevealedAlternatives(late), null)
@@ -682,14 +686,16 @@ test("scanFlowReducer: fix round 1 (F2) — a silent (background) reveal skips t
     type: "reveal_started",
     productId: "p1",
     silent: true,
+    token: 1,
   })
-  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: true })
+  assert.deepEqual(started.reveal, { status: "pending", productId: "p1", silent: true, token: 1 })
 
   const revealed = scanFlowReducer(started, {
     type: "reveal_succeeded",
     productId: "p1",
     alternatives: REVEALED,
     silent: true,
+    token: 1,
   })
   // The card still renders the full alternatives — only the animation decision differs.
   assert.deepEqual(scanRevealedAlternatives(revealed), REVEALED)
@@ -701,28 +707,101 @@ test("scanFlowReducer: 409 already_used flips the CTA; an empty list or any othe
     type: "reveal_started",
     productId: "p1",
     silent: false,
+    token: 1,
   })
   assert.deepEqual(
-    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "already_used" })
-      .reveal,
+    scanFlowReducer(started, {
+      type: "reveal_failed",
+      productId: "p1",
+      reason: "already_used",
+      token: 1,
+    }).reveal,
     { status: "unavailable", productId: "p1" },
   )
   assert.deepEqual(
-    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "error" }).reveal,
+    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "error", token: 1 })
+      .reveal,
     { status: "idle" },
   )
   // Fix round 1 (F3): a distinct reason from "error" (T8 spends no credit here), but the
   // same `idle` state — the CTA stays exactly as available as it was.
   assert.deepEqual(
-    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "empty" }).reveal,
+    scanFlowReducer(started, { type: "reveal_failed", productId: "p1", reason: "empty", token: 1 })
+      .reveal,
     { status: "idle" },
   )
 })
 
+test("scanFlowReducer: C2 — a superseded reveal's late failure never erases a newer reveal's success (same product)", () => {
+  // The exact PR2 review repro: product A's silent background re-serve (token 1) is still
+  // in flight when the user rescans A, which starts a SECOND reveal attempt (token 2) for
+  // the same product — e.g. `resolve()`'s own F2 background re-serve firing again for the
+  // freshly-resolved masked verdict. The newer call (token 2) succeeds first; the older,
+  // now-superseded call (token 1) fails afterwards and must be dropped, not applied.
+  const firstStarted = scanFlowReducer(maskedShown("p1"), {
+    type: "reveal_started",
+    productId: "p1",
+    silent: true,
+    token: 1,
+  })
+  const secondStarted = scanFlowReducer(firstStarted, {
+    type: "reveal_started",
+    productId: "p1",
+    silent: true,
+    token: 2,
+  })
+  assert.deepEqual(secondStarted.reveal, {
+    status: "pending",
+    productId: "p1",
+    silent: true,
+    token: 2,
+  })
+
+  const secondSucceeded = scanFlowReducer(secondStarted, {
+    type: "reveal_succeeded",
+    productId: "p1",
+    alternatives: REVEALED,
+    silent: true,
+    token: 2,
+  })
+  assert.deepEqual(secondSucceeded.reveal, {
+    status: "revealed",
+    productId: "p1",
+    alternatives: REVEALED,
+    silent: true,
+    token: 2,
+  })
+
+  // The stale token-1 failure lands after: dropped whole, state unchanged.
+  const afterStaleFailure = scanFlowReducer(secondSucceeded, {
+    type: "reveal_failed",
+    productId: "p1",
+    reason: "already_used",
+    token: 1,
+  })
+  assert.equal(afterStaleFailure, secondSucceeded)
+  assert.deepEqual(scanRevealedAlternatives(afterStaleFailure), REVEALED)
+
+  // A stale token-1 SUCCESS landing late must be dropped the same way.
+  const afterStaleSuccess = scanFlowReducer(secondSucceeded, {
+    type: "reveal_succeeded",
+    productId: "p1",
+    alternatives: [],
+    silent: true,
+    token: 1,
+  })
+  assert.equal(afterStaleSuccess, secondSucceeded)
+})
+
 test("scanFlowReducer: a new resolve and a return to scanning both drop what the reveal showed", () => {
   const revealed = scanFlowReducer(
-    scanFlowReducer(maskedShown("p1"), { type: "reveal_started", productId: "p1", silent: false }),
-    { type: "reveal_succeeded", productId: "p1", alternatives: REVEALED, silent: false },
+    scanFlowReducer(maskedShown("p1"), {
+      type: "reveal_started",
+      productId: "p1",
+      silent: false,
+      token: 1,
+    }),
+    { type: "reveal_succeeded", productId: "p1", alternatives: REVEALED, silent: false, token: 1 },
   )
   assert.deepEqual(
     scanFlowReducer(revealed, { type: "resolve_started", token: 2, showResolvingImmediately: true })

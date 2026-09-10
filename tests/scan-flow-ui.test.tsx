@@ -1320,6 +1320,63 @@ test("F1: the fatigue budget survives a remount (tab away and back) via shared s
   assert.equal(findByType(mount2.tree, ScanProactiveTriggerCard), null)
 })
 
+/** `maskedVerdict` with the category overridden, for scanning a 2nd, different category. */
+function maskedVerdictInCategory(
+  productId: string,
+  category: "shampoo" | "conditioner",
+): ScanMaskedVerdictResult {
+  const base = maskedVerdict(productId)
+  return { ...base, product: { ...base.product, category, categoryLabel: category } }
+}
+
+test("C3: a degraded-nav mount (tier prop defaults to premium) still reads the persisted fatigue budget once a response proves free", async () => {
+  const fatigueStorage = createMemoryScanTriggerStorage()
+
+  // Mount 1: a genuinely free session (server-verified tier prop) spends the one proactive
+  // pitch this "session" on Wiederkehrer.
+  const priorSessionRecord = createMemoryScanTriggerStorage()
+  seedPriorSession(priorSessionRecord)
+  const mount1 = await mountFlow(async () => json(verdictResult("p-a")), {
+    tier: "free",
+    sessionRecordStorage: priorSessionRecord,
+    fatigueStorage,
+  })
+  await scanInto(mount1)
+  assert.equal(triggerCardProps(mount1.tree).id, "wiederkehrer")
+
+  // Mount 2: the C3 repro. A degraded nav loader defaulted the `tier` PROP to "premium" for
+  // what is really the SAME free user, sharing the same `fatigueStorage` (a real remount
+  // keeps the same `sessionStorage`). Only a MASKED response — proving free tier via its
+  // own shape, never the prop — can establish free tier here at all.
+  let call = 0
+  const mount2 = await mountFlow(
+    async () => {
+      call += 1
+      return json(
+        call === 1
+          ? maskedVerdictInCategory("p1", "shampoo")
+          : maskedVerdictInCategory("p2", "conditioner"),
+      )
+    },
+    { tier: "premium", fatigueStorage },
+  )
+  // Scan 1 is the response that FIRST proves free tier: its OWN trigger gate still
+  // evaluates as premium (no evidence existed yet at the moment the gate was computed for
+  // this very verdict), so nothing fires here regardless of the fix — this assertion pins
+  // that unaffected baseline.
+  await scanInto(mount2, "1111111111111")
+  assert.equal(findByType(mount2.tree, ScanProactiveTriggerCard), null)
+  sheetProps(mount2.tree).onClose()
+  await mount2.settle()
+  // Scan 2: `effectiveTier` is now "free" (scan 1 proved it) and the Kategorien-Lücke
+  // condition qualifies (2 distinct categories scanned, no leave-in) — the exact case the
+  // fix targets. Before it, this mount's fatigue budget was NEVER hydrated (the mount
+  // effect's `tier !== "free"` guard skipped it forever), so this fired a SECOND proactive
+  // pitch in what `fatigueStorage` proves is really the same spent session.
+  await scanInto(mount2, "2222222222222")
+  assert.equal(findByType(mount2.tree, ScanProactiveTriggerCard), null)
+})
+
 test("T10: Kategorien-Lücke links into /routine and never opens the Premium sheet", async () => {
   let call = 0
   const flow = await mountFlow(
@@ -1395,4 +1452,45 @@ test("F5: premium and flag-off (no tier prop) cause zero trigger-storage activit
   await scanInto(flagOff)
   assert.equal(flagOffRecord.calls, 0)
   assert.equal(flagOffFatigue.calls, 0)
+})
+
+// --- PR2 review fix (C4): premium/flag-off render-identity -------------------
+
+/** The five T9/T10 debug attributes that must be entirely absent, not merely inert. */
+const SCAN_FLOW_DEBUG_ATTRIBUTES = [
+  "data-scan-tier",
+  "data-scan-reveal",
+  "data-scan-premium-sheet",
+  "data-scan-active-trigger",
+  "data-scan-zwei-scans-gleiche-kategorie",
+] as const
+
+test("C4: a premium render never carries the T9/T10 debug attributes, even after a resolve and a Premium-gated action attempt", async () => {
+  const premium = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")), {
+    tier: "premium",
+  })
+  await scanInto(premium)
+  const rootProps = (premium.tree as AnyElement).props
+  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
+    assert.equal(attribute in rootProps, false, `expected ${attribute} to be absent for premium`)
+  }
+})
+
+test("C4: a flag-off render (no tier prop at all) never carries the T9/T10 debug attributes", async () => {
+  const flagOff = await mountFlow(async () => json(verdictResultInCategory("p1", "shampoo")))
+  await scanInto(flagOff)
+  const rootProps = (flagOff.tree as AnyElement).props
+  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
+    assert.equal(attribute in rootProps, false, `expected ${attribute} to be absent for flag-off`)
+  }
+})
+
+test("C4: a free-tier render carries all five T9/T10 debug attributes", async () => {
+  const free = await mountFlow(async () => json(maskedVerdict("p1")), { tier: "free" })
+  await scanInto(free)
+  const rootProps = (free.tree as AnyElement).props
+  for (const attribute of SCAN_FLOW_DEBUG_ATTRIBUTES) {
+    assert.equal(attribute in rootProps, true, `expected ${attribute} to be present for free tier`)
+  }
+  assert.equal(rootProps["data-scan-tier"], "free")
 })

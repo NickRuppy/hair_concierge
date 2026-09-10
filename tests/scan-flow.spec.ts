@@ -884,7 +884,10 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
 
     await emit(page, EAN_PRODUCT_A)
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
-    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "premium")
+    // PR2 review fix (C4): a premium render must be byte-identical to before T9/T10 —
+    // the debug attribute is absent, not merely a "premium" value, the same as every other
+    // T9/T10 attribute below.
+    await expect(flowRoot(page)).not.toHaveAttribute("data-scan-tier")
 
     await expect(page.locator("[data-scan-masked-alternatives]")).toHaveCount(0)
     await expect(page.locator("[data-scan-reveal-cta]")).toHaveCount(0)
@@ -894,7 +897,8 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     // Merken still opens the real save sheet.
     await page.getByRole("button", { name: "Speichern", exact: true }).click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-save-open", "true")
-    await expect(flowRoot(page)).toHaveAttribute("data-scan-premium-sheet", "none")
+    // C4: never even "none" for a premium render — the attribute itself is absent.
+    await expect(flowRoot(page)).not.toHaveAttribute("data-scan-premium-sheet")
   })
 
   test("T9 fix round 1 (F1): the free tier's bookmark is locked at landing, before any scan", async ({
@@ -921,7 +925,9 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await openLab(page, { tier: "premium" })
     await waitForScanningLoop(page)
 
-    await expect(flowRoot(page)).toHaveAttribute("data-scan-tier", "unknown")
+    // C4: a premium-tiered mount is a premium render from first paint — the debug
+    // attribute is absent, not "unknown".
+    await expect(flowRoot(page)).not.toHaveAttribute("data-scan-tier")
     await expect(page.getByRole("button", { name: "Merkliste öffnen", exact: true })).toBeVisible()
     await expect(page.locator("[data-scan-lock-badge]")).toHaveCount(0)
   })

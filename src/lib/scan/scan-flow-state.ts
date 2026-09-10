@@ -58,15 +58,25 @@ export type ScanFlowStep =
  * so a 200 there means this is the SAME product the credit was spent on (a rescan or a
  * reload), not a fresh reveal. `silent: true` is what tells the card to show that card
  * already sharp instead of playing the 1.2s unblur meant for the moment of "revealing".
+ *
+ * `token` (PR2 review fix, C2) identifies WHICH reveal attempt is in flight, on top of
+ * `ownsResultProduct`'s product-identity guard: the same product can have two overlapping
+ * reveal calls (the F2 silent background re-serve, plus a fresh explicit/background attempt
+ * from a rescan of that same product before the first call has settled). Product identity
+ * alone cannot tell those apart, so an older call's failure could otherwise land after a
+ * newer call's success and erase it. `reveal_succeeded`/`reveal_failed` only ever apply
+ * when their `token` still matches the CURRENT `pending`/`revealed` state's token — see
+ * `ownsRevealToken`.
  */
 export type ScanRevealState =
   | { status: "idle" }
-  | { status: "pending"; productId: string; silent: boolean }
+  | { status: "pending"; productId: string; silent: boolean; token: number }
   | {
       status: "revealed"
       productId: string
       alternatives: ScanAlternativePresentation[]
       silent: boolean
+      token: number
     }
   | { status: "unavailable"; productId: string }
 
@@ -159,12 +169,13 @@ export type ScanFlowAction =
       sessionNumber?: number
     }
   | { type: "resolve_failed"; token: number }
-  | { type: "reveal_started"; productId: string; silent: boolean }
+  | { type: "reveal_started"; productId: string; silent: boolean; token: number }
   | {
       type: "reveal_succeeded"
       productId: string
       alternatives: ScanAlternativePresentation[]
       silent: boolean
+      token: number
     }
   /**
    * `reason` distinguishes three outcomes that all land the CTA back on `idle`/`unavailable`
@@ -172,7 +183,12 @@ export type ScanFlowAction =
    * the 409 (credit spent elsewhere), `"empty"` is a 200 with nothing eligible (T8 spends NO
    * credit for this), and `"error"` is an actual failure.
    */
-  | { type: "reveal_failed"; productId: string; reason: "already_used" | "empty" | "error" }
+  | {
+      type: "reveal_failed"
+      productId: string
+      reason: "already_used" | "empty" | "error"
+      token: number
+    }
   | { type: "premium_sheet_opened"; context: PremiumSheetContext }
   | { type: "premium_sheet_closed" }
   | { type: "submit_started"; token: number }
@@ -228,6 +244,18 @@ function owns(state: ScanFlowState, kind: "resolve" | "submit", token: number): 
 /** Whether `productId` is still the product the result step is showing. */
 function ownsResultProduct(state: ScanFlowState, productId: string): boolean {
   return state.step.kind === "result" && state.step.result.product.productId === productId
+}
+
+/**
+ * Whether `token` is still the reveal attempt CURRENTLY tracked in `state.reveal` (fix C2).
+ * A newer `reveal_started` overwrites `state.reveal` with its own token before an older
+ * call's outcome can arrive, so this is false for any call an in-flight or already-settled
+ * newer call has superseded — regardless of the order the two outcomes actually land in.
+ */
+function ownsRevealToken(state: ScanFlowState, token: number): boolean {
+  return state.reveal.status !== "idle" && state.reveal.status !== "unavailable"
+    ? state.reveal.token === token
+    : false
 }
 
 export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): ScanFlowState {
@@ -318,15 +346,26 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
 
     case "reveal_started":
       if (!ownsResultProduct(state, action.productId)) return state
+      // Always takes over the reveal slot with ITS OWN token, even if another attempt for
+      // the same product is already pending — that older call's eventual outcome (fix C2)
+      // will fail `ownsRevealToken` once this one lands, and so can never overwrite it.
       return {
         ...state,
-        reveal: { status: "pending", productId: action.productId, silent: action.silent },
+        reveal: {
+          status: "pending",
+          productId: action.productId,
+          silent: action.silent,
+          token: action.token,
+        },
       }
 
     case "reveal_succeeded":
-      // Same guard as `saved_state_changed` (F5), for the same reason: a reveal that
-      // resolves after the user scanned something else must not unblur the new card.
+      // Same product-identity guard as `saved_state_changed` (F5): a reveal that resolves
+      // after the user scanned something else must not unblur the new card. The token guard
+      // (fix C2) additionally drops a SUPERSEDED call for the SAME product — otherwise a
+      // stale success could still land after a newer call has already moved the state on.
       if (!ownsResultProduct(state, action.productId)) return state
+      if (!ownsRevealToken(state, action.token)) return state
       return {
         ...state,
         reveal: {
@@ -334,11 +373,15 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
           productId: action.productId,
           alternatives: action.alternatives,
           silent: action.silent,
+          token: action.token,
         },
       }
 
     case "reveal_failed":
       if (!ownsResultProduct(state, action.productId)) return state
+      // Fix C2: an older, superseded call's failure must never erase a newer call's
+      // (pending or already-succeeded) outcome for the same product — see `ownsRevealToken`.
+      if (!ownsRevealToken(state, action.token)) return state
       return {
         ...state,
         reveal:
