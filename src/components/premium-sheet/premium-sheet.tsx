@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 import { usePlanSelection } from "@/components/checkout/use-plan-selection"
 import {
   BottomSheet,
@@ -46,13 +48,24 @@ export function PremiumSheet({
   context: PremiumSheetContext | null
   onClose: () => void
 }) {
-  const benefits = orderedBenefits(context)
+  // BottomSheetContent keeps rendering through the ~200-250ms exit animation
+  // (see bottom-sheet.tsx `closing`), but openers null out `context` the moment
+  // they set `open` to false. Hold the last non-null context in state so the
+  // benefit order, plum accent and escape label stay put while the sheet
+  // animates out instead of flipping mid-exit (T13 fix round 1, F1). Adjusting
+  // state during render (not a ref) keeps this compatible with the
+  // react-hooks/refs rule, which forbids reading/writing refs during render.
+  const [heldContext, setHeldContext] = useState<PremiumSheetContext | null>(context)
+  if (context !== null && context !== heldContext) setHeldContext(context)
+  const renderedContext = context ?? heldContext
+
+  const benefits = orderedBenefits(renderedContext)
   const plans = premiumSheetPlans()
   const { selectedInterval, selectPlan } = usePlanSelection({
     defaultInterval: PREMIUM_SHEET_DEFAULT_INTERVAL,
   })
   const selectedPlan = premiumSheetPlan(selectedInterval)
-  const dismissLabel = premiumSheetDismissLabel(context)
+  const dismissLabel = premiumSheetDismissLabel(renderedContext)
 
   return (
     <BottomSheet

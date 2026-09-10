@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { DEFAULT_PRICING_INTERVAL } from "@/lib/stripe/pricing-plans"
@@ -32,23 +32,24 @@ export function usePlanSelection({
   selectPlan: (interval: BillingInterval) => PlanSelectionChange
 } {
   const [selectedInterval, setSelectedInterval] = useState<BillingInterval>(defaultInterval)
-  // Plain state, not a ref: the index only ever moves inside `selectPlan`, and every
-  // caller reads it from the returned descriptor rather than from the hook.
-  const [selectionIndex, setSelectionIndex] = useState(0)
+  // A ref, not state: the index must increment synchronously across two `selectPlan`
+  // calls inside one React batch (no re-render between them), matching the original
+  // `planSelectionIndexRef.current += 1` semantics this hook was extracted from.
+  const selectionIndexRef = useRef(0)
 
   const selectPlan = useCallback(
     (interval: BillingInterval): PlanSelectionChange => {
+      selectionIndexRef.current += 1
       const change: PlanSelectionChange = {
         interval,
         previousInterval: selectedInterval,
         isDefault: interval === defaultInterval,
-        selectionIndex: selectionIndex + 1,
+        selectionIndex: selectionIndexRef.current,
       }
-      setSelectionIndex(change.selectionIndex)
       setSelectedInterval(interval)
       return change
     },
-    [defaultInterval, selectedInterval, selectionIndex],
+    [defaultInterval, selectedInterval],
   )
 
   return { selectedInterval, selectPlan }

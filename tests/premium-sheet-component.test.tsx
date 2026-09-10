@@ -4,7 +4,11 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { BottomSheetContent } from "@/components/ui/bottom-sheet"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
-import { PREMIUM_FEATURES, type PremiumFeatureId } from "@/lib/premium-sheet/context"
+import {
+  PREMIUM_FEATURES,
+  type PremiumFeatureId,
+  type PremiumSheetContext,
+} from "@/lib/premium-sheet/context"
 import { orderedBenefits } from "@/lib/premium-sheet/ordered-benefits"
 import { premiumSheetPlan } from "@/lib/premium-sheet/pricing"
 
@@ -119,6 +123,14 @@ function createStateHarness(renderComponent: () => ReactElement | null) {
         },
       ]
     },
+    useRef<T>(initialValue: T): { current: T } {
+      const index = cursor
+      cursor += 1
+      if (hookValues.length <= index) {
+        hookValues[index] = { current: initialValue }
+      }
+      return hookValues[index] as { current: T }
+    },
   }
 
   return {
@@ -202,6 +214,49 @@ test("a null context still shows three benefits (the core order)", () => {
   assert.deepEqual(
     benefits.map((item) => item.props["data-premium-sheet-benefit"]),
     orderedBenefits(null),
+  )
+})
+
+test("closing holds the last context steady through the exit animation (F1)", () => {
+  // Openers (scan-flow.tsx, T10 trigger cards) null `context` the same tick they set
+  // `open` to false, but BottomSheetContent keeps the panel mounted and rendering
+  // through its ~200-250ms exit animation. The sheet must keep showing the context it
+  // had when the user dismissed it, not flip to the default core order mid-exit.
+  let open = true
+  let context: PremiumSheetContext | null = { feature: "merkliste", source: "scan:verdict" }
+  const harness = createStateHarness(() => PremiumSheet({ open, context, onClose: () => {} }))
+
+  const before = harness.render()
+  const benefitsBefore = byData(before, "data-premium-sheet-benefit").map(
+    (item) => item.props["data-premium-sheet-benefit"],
+  )
+  const accentBefore = byData(before, "data-premium-sheet-benefit-accent")[0]?.props[
+    "data-premium-sheet-benefit-accent"
+  ]
+  const dismissBefore = textContent(requireOne(before, "data-premium-sheet-dismiss"))
+
+  open = false
+  context = null
+  const after = harness.render()
+
+  assert.deepEqual(
+    byData(after, "data-premium-sheet-benefit").map(
+      (item) => item.props["data-premium-sheet-benefit"],
+    ),
+    benefitsBefore,
+    "benefit order must not re-order mid-exit",
+  )
+  assert.equal(
+    byData(after, "data-premium-sheet-benefit-accent")[0]?.props[
+      "data-premium-sheet-benefit-accent"
+    ],
+    accentBefore,
+    "the plum accent must not jump mid-exit",
+  )
+  assert.equal(
+    textContent(requireOne(after, "data-premium-sheet-dismiss")),
+    dismissBefore,
+    "the escape label must not flip mid-exit",
   )
 })
 

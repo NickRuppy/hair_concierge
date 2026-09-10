@@ -63,6 +63,14 @@ function createHookHarness<T>(run: () => T) {
         },
       ]
     },
+    useRef<V>(initialValue: V): { current: V } {
+      const index = cursor
+      cursor += 1
+      if (hookValues.length <= index) {
+        hookValues[index] = { current: initialValue }
+      }
+      return hookValues[index] as { current: V }
+    },
   }
 
   return () => {
