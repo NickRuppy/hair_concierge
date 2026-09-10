@@ -248,26 +248,77 @@ async function acceptInitialRoutineForUser(
     )
     return "accepted"
   } catch (error) {
-    // A Routine this flow did not create is not a failure — the buyer already has one, and
-    // overwriting it is exactly what the guard exists to prevent.
-    //
-    // `conflict` belongs in the same bucket (fix round 1, F5). For a card payment the two
-    // provisioning lanes — the in-sheet completion and `checkout.session.completed` — enter
-    // `acceptIdealPlan` within the same second, so this is the LIKELY path, not an exotic
-    // one: the CAS lets exactly one of them through and hands the loser `conflict`. The
-    // Routine is live either way, and telling the buyer „Deine Routine wird gerade gebaut."
-    // about a Routine that already exists is simply false.
-    if (
-      error instanceof DirectAcceptanceError &&
-      (error.code === "plan_already_accepted" ||
-        error.code === "refinement_in_progress" ||
-        error.code === "conflict")
-    ) {
-      return "already_accepted"
-    }
-    console.warn("[freemium] post-purchase routine acceptance unavailable", {
-      code: error instanceof DirectAcceptanceError ? error.code : "unknown",
-    })
+    return classifyRoutineAcceptanceFailure(error, () => hasActiveRoutineVersion(admin, userId))
+  }
+}
+
+/**
+ * What an `acceptIdealPlan` failure means for the buyer's Routine (Codex fix wave, Y2).
+ *
+ * Exported for its own test: this mapping is the difference between telling a buyer their
+ * Routine is ready and telling them it is still being built, and getting it wrong in the
+ * optimistic direction is a lie the whole provisioning contract rests on.
+ *
+ * `confirmActiveRoutine` answers "does this plan carry an active routine version RIGHT
+ * NOW?", with `null` for "the read could not say".
+ */
+export async function classifyRoutineAcceptanceFailure(
+  error: unknown,
+  confirmActiveRoutine: () => Promise<boolean | null>,
+): Promise<AcceptInitialRoutineResult> {
+  if (!(error instanceof DirectAcceptanceError)) {
+    console.warn("[freemium] post-purchase routine acceptance unavailable", { code: "unknown" })
     return "unavailable"
+  }
+
+  // A Routine this flow did not create is not a failure — the buyer already has one, and
+  // overwriting it is exactly what the guard exists to prevent. `plan_already_accepted` is
+  // raised only AFTER `loadActiveRoutineVersionId` returned an id, so it is proof.
+  if (error.code === "plan_already_accepted") return "already_accepted"
+
+  // `conflict` and `refinement_in_progress` are NOT proof. For a card payment the two
+  // provisioning lanes — the in-sheet completion and `checkout.session.completed` — enter
+  // `acceptIdealPlan` within the same second, so a conflict is the LIKELY path rather than
+  // an exotic one. But `accept.ts:430` also raises `conflict` from the very FIRST Stage-2
+  // save, before any Routine exists: the loser of that race would report a ready Routine
+  // while the winner is still mid-flight — or has since failed. So the persisted activation
+  // is confirmed before readiness is claimed.
+  if (error.code === "conflict" || error.code === "refinement_in_progress") {
+    const active = await confirmActiveRoutine()
+    if (active === true) return "already_accepted"
+    console.info("[freemium] post-purchase routine acceptance still in flight", {
+      code: error.code,
+      activationConfirmed: active,
+    })
+    // `null` (the confirming read itself failed) lands here too: an unconfirmed Routine is
+    // reported as not ready, never as ready.
+    return "in_progress"
+  }
+
+  console.warn("[freemium] post-purchase routine acceptance unavailable", { code: error.code })
+  return "unavailable"
+}
+
+/**
+ * Does this user's plan carry an ACTIVE routine version right now? `null` when the read
+ * itself could not answer — the caller must treat that as "not confirmed", never as "yes".
+ */
+async function hasActiveRoutineVersion(
+  admin: ProvisioningAdminClient,
+  userId: string,
+): Promise<boolean | null> {
+  try {
+    const { data, error } = await admin
+      .from("personal_plans")
+      .select("active_routine_version_id")
+      .eq("user_id", userId)
+      .maybeSingle()
+    if (error) return null
+    if (!data) return false
+    const activeRoutineVersionId = (data as { active_routine_version_id?: unknown })
+      .active_routine_version_id
+    return typeof activeRoutineVersionId === "string" && activeRoutineVersionId.length > 0
+  } catch {
+    return null
   }
 }

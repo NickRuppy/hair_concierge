@@ -82,8 +82,19 @@ export type PinEnrollmentSourceResult =
 
 export type AcceptInitialRoutineResult =
   | "accepted"
-  /** The plan already carries an active Routine — nothing to do. */
+  /**
+   * The plan already carries an active Routine — nothing to do. Only ever returned once a
+   * persisted active routine version has actually been CONFIRMED (Codex fix wave, Y2); a
+   * bare acceptance conflict is not proof that anyone succeeded.
+   */
   | "already_accepted"
+  /**
+   * A concurrent acceptance is mid-flight and no active Routine exists yet. Distinct from
+   * `unavailable` (which is an error) and from `already_accepted` (which is a fact): the
+   * plan is entitled and derived, the Routine is genuinely still being built, and a later
+   * call converges once the winner commits.
+   */
+  | "in_progress"
   | "unavailable"
 
 export type FreemiumProvisioningDependencies = {

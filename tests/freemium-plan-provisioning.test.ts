@@ -8,6 +8,8 @@ import {
   type FreemiumProvisioningDependencies,
   type PinEnrollmentSourceResult,
 } from "../src/lib/freemium/plan-provisioning"
+import { classifyRoutineAcceptanceFailure } from "../src/lib/freemium/plan-provisioning-supabase"
+import { DirectAcceptanceError } from "../src/lib/personal-plan/direct-acceptance/accept"
 import type { CreateInitialNeedResult } from "../src/lib/personal-plan/persistence/stage1-service"
 
 /**
@@ -228,4 +230,78 @@ test("an unavailable admission write reports a retryable stage, never a fake suc
 
   assert.deepEqual(result, { outcome: "temporarily_unavailable", stage: "admission" })
   assert.equal(state.plan?.enrollmentPurchaseSourceId, null)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Y2 — a conflict is not proof that anybody succeeded.
+ * ------------------------------------------------------------------------- */
+
+test("Y2: the conflict LOSER does not claim a Routine that does not exist yet", async () => {
+  // `accept.ts:430` raises `conflict` from the FIRST Stage-2 save, before any Routine
+  // exists. Mapping that to „already accepted" told the loser of a two-lane race that the
+  // Routine was ready while the winner was still mid-flight — or had since failed.
+  let confirmations = 0
+  const result = await classifyRoutineAcceptanceFailure(
+    new DirectAcceptanceError("conflict"),
+    async () => {
+      confirmations += 1
+      return false
+    },
+  )
+  assert.equal(result, "in_progress")
+  assert.equal(confirmations, 1, "readiness is confirmed against the plan, not assumed")
+})
+
+test("Y2: the conflict loser converges once the winner has committed", async () => {
+  const result = await classifyRoutineAcceptanceFailure(
+    new DirectAcceptanceError("conflict"),
+    async () => true,
+  )
+  assert.equal(result, "already_accepted")
+})
+
+test("Y2: an unconfirmable read is never optimistic", async () => {
+  const result = await classifyRoutineAcceptanceFailure(
+    new DirectAcceptanceError("refinement_in_progress"),
+    async () => null,
+  )
+  assert.equal(result, "in_progress")
+})
+
+test("Y2: `plan_already_accepted` is proof on its own and needs no extra read", async () => {
+  // Its guard fires only after `loadActiveRoutineVersionId` returned an id.
+  let confirmations = 0
+  const result = await classifyRoutineAcceptanceFailure(
+    new DirectAcceptanceError("plan_already_accepted"),
+    async () => {
+      confirmations += 1
+      return true
+    },
+  )
+  assert.equal(result, "already_accepted")
+  assert.equal(confirmations, 0)
+})
+
+test("Y2: every other acceptance failure stays unavailable", async () => {
+  assert.equal(
+    await classifyRoutineAcceptanceFailure(
+      new DirectAcceptanceError("recommendation_unavailable"),
+      async () => true,
+    ),
+    "unavailable",
+  )
+  assert.equal(
+    await classifyRoutineAcceptanceFailure(new Error("boom"), async () => true),
+    "unavailable",
+  )
+})
+
+test("Y2: an in-flight Routine provisions the plan but never reports it ready", async () => {
+  const state = freshState()
+  const result = await provision(
+    fakeDeps(state, { acceptInitialRoutine: async () => "in_progress" }),
+  )
+  assert.equal(result.outcome, "provisioned")
+  if (result.outcome !== "provisioned") throw new Error("unreachable")
+  assert.equal(result.routineAccepted, false)
 })
