@@ -16,9 +16,10 @@ import {
   type RateLimitConfig,
 } from "@/lib/rate-limit"
 import {
+  assertCheckoutSessionActivatable,
   CheckoutActivationError,
   ensureCheckoutAccount,
-  verifyCheckoutSessionForActivation,
+  retrieveCheckoutSessionForActivation,
   type CheckoutAccountResult,
 } from "@/lib/stripe/checkout-activation"
 import { getStripe } from "@/lib/stripe/client"
@@ -78,7 +79,10 @@ export type FreemiumPurchaseCompletionDeps = {
   enabled: () => boolean
   getUser: () => Promise<{ id: string } | null>
   checkRateLimit: typeof checkRateLimit
+  /** Raw retrieve — no payment-state assertions, so ownership can be checked first (F6). */
   retrieveSession: (sessionId: string) => Promise<Stripe.Checkout.Session>
+  /** The assertion half: throws `CheckoutActivationError` for a Session that cannot activate. */
+  assertActivatable: (session: Stripe.Checkout.Session) => void
   activate: (session: Stripe.Checkout.Session) => Promise<CheckoutAccountResult>
   provision: (input: {
     userId: string
@@ -119,6 +123,28 @@ export function createFreemiumPurchaseCompletionHandler(deps: FreemiumPurchaseCo
     try {
       session = await deps.retrieveSession(sessionId)
     } catch (error) {
+      deps.captureException?.(error, {
+        provider: "stripe",
+        stage: "checkout_return",
+        source: "premium_sheet",
+        stripeSessionId: sessionId,
+        reason: "freemium_completion_session_unreadable",
+      })
+      return json({ error: "temporarily_unavailable" }, 503)
+    }
+
+    // Ownership FIRST, before the Session's payment state is classified (fix round 1, F6).
+    // Both halves matter: the marker proves THIS app created the Session for the sheet, the
+    // user id proves it was created for THIS user. Running the classification first would
+    // turn this endpoint into an oracle — an authenticated caller could tell an unpaid
+    // Session from a terminally unusable one for any `cs_…` id they can guess.
+    if (!isFreemiumCheckoutSession(session) || freemiumCheckoutUserId(session) !== user.id) {
+      return json({ error: "forbidden" }, 403)
+    }
+
+    try {
+      deps.assertActivatable(session)
+    } catch (error) {
       if (error instanceof CheckoutActivationError) {
         if (PENDING_ACTIVATION_CODES.has(error.code)) return json({ status: "pending" })
         return json({ status: "failed", reason: error.code })
@@ -131,12 +157,6 @@ export function createFreemiumPurchaseCompletionHandler(deps: FreemiumPurchaseCo
         reason: "freemium_completion_session_unreadable",
       })
       return json({ error: "temporarily_unavailable" }, 503)
-    }
-
-    // Ownership, before anything is written. Both halves matter: the marker proves THIS app
-    // created the Session for the sheet, the user id proves it was created for THIS user.
-    if (!isFreemiumCheckoutSession(session) || freemiumCheckoutUserId(session) !== user.id) {
-      return json({ error: "forbidden" }, 403)
     }
 
     let account: CheckoutAccountResult
@@ -205,7 +225,8 @@ export const POST = createFreemiumPurchaseCompletionHandler({
     return data.user ? { id: data.user.id } : null
   },
   checkRateLimit,
-  retrieveSession: (sessionId) => verifyCheckoutSessionForActivation(sessionId, getStripe()),
+  retrieveSession: (sessionId) => retrieveCheckoutSessionForActivation(sessionId, getStripe()),
+  assertActivatable: assertCheckoutSessionActivatable,
   activate: async (session) => {
     const admin = createAdminClient()
     return ensureCheckoutAccount(session, {

@@ -14,6 +14,7 @@ import {
 import { intervalFromPrice } from "./intervals"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import { freemiumCheckoutUserId, isFreemiumCheckoutSession } from "@/lib/freemium/checkout-metadata"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 import {
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
@@ -132,19 +133,47 @@ async function selectedSubscriptionPaymentMethodType(
  */
 export async function provisionFreemiumCheckoutSession(
   session: Stripe.Checkout.Session,
-  deps: Pick<StripeWebhookProvisioningDeps, "provisionFreemiumPurchase" | "freemiumEnabled">,
+  deps: Pick<
+    StripeWebhookProvisioningDeps,
+    "provisionFreemiumPurchase" | "freemiumEnabled" | "captureFreemiumProvisioningException"
+  >,
+  /**
+   * The account the ACTIVATION resolved (by Stripe customer / email), which is independent
+   * of the Session metadata. Fix round 1 (F7): the completion endpoint already refuses when
+   * the two identities disagree; this lane must too, because the plan's
+   * `enrollment_purchase_source_id` pin is permanent and never self-heals — pinning the
+   * wrong account's plan cannot be undone afterwards.
+   */
+  activation: { userId: string },
 ): Promise<void> {
   const userId = freemiumCheckoutProvisioningUserId(session, deps)
   if (!userId) return
+  if (userId !== activation.userId) {
+    console.error("[freemium] webhook provisioning identity mismatch", {
+      checkoutSessionId: session.id,
+    })
+    return
+  }
   const provision = deps.provisionFreemiumPurchase ?? defaultProvisionFreemiumPurchase
   try {
     await provision({ userId, providerReference: session.id })
   } catch (error) {
-    // Provisioning is retried by the next delivery of this event; it must never fail the
-    // webhook (which would also roll back the activation the buyer already paid for).
-    console.warn("[freemium] webhook provisioning failed", {
+    // Never fail the webhook (which would also roll back the activation the buyer already
+    // paid for). The provisioning service marks nothing "done" until it is done — admission
+    // is a reused row, the initial need reuses its `(plan, input_hash)` row and acceptance
+    // is CAS-guarded — so an interrupted run is resumable by any later lane. What is NOT
+    // automatic is a new delivery: `claimWebhookEvent` has already claimed this event id.
+    // So this is reported, not just logged (fix round 1, F4).
+    console.error("[freemium] webhook provisioning failed", {
       checkoutSessionId: session.id,
       error,
+    })
+    ;(deps.captureFreemiumProvisioningException ?? captureCheckoutException)(error, {
+      provider: "stripe",
+      stage: "stripe_webhook_activation",
+      source: "premium_sheet",
+      stripeSessionId: session.id,
+      reason: "freemium_webhook_provisioning_failed",
     })
   }
 }
@@ -170,6 +199,8 @@ export type StripeWebhookProvisioningDeps = {
     userId: string
     providerReference: string
   }) => Promise<unknown>
+  /** Test seam for the failure report above; production uses `captureCheckoutException`. */
+  captureFreemiumProvisioningException?: typeof captureCheckoutException
 }
 
 async function defaultProvisionFreemiumPurchase(input: {

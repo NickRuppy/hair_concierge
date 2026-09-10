@@ -49,6 +49,7 @@ function deps(overrides: Partial<FreemiumPurchaseCompletionDeps> = {}) {
     getUser: async () => ({ id: USER }),
     checkRateLimit: (async () => ({ allowed: true })) as never,
     retrieveSession: async () => freemiumSession(),
+    assertActivatable: () => {},
     activate: async () =>
       ({ userId: USER, email: "buyer@example.com", canSetInitialPassword: false }) as never,
     provision: async () => provisioned,
@@ -112,7 +113,7 @@ test("a Session without the freemium marker is refused — a plain subscription 
 test("an unpaid Session is pending, never complete — the client callback is only a hint", async () => {
   let provisionCalls = 0
   const result = await call({
-    retrieveSession: async () => {
+    assertActivatable: () => {
       throw new CheckoutActivationError("checkout_session_unpaid", "unpaid")
     },
     provision: async () => {
@@ -122,6 +123,35 @@ test("an unpaid Session is pending, never complete — the client callback is on
   })
   assert.deepEqual(result.body, { status: "pending" })
   assert.equal(provisionCalls, 0)
+})
+
+test("F6: a foreign Session is 403 before its payment state is ever classified", async () => {
+  // The oracle this closes: an authenticated caller must not be able to tell an unpaid
+  // Session from a terminally unusable one for an id that is not theirs.
+  let classified = 0
+  const result = await call({
+    retrieveSession: async () =>
+      freemiumSession({
+        metadata: { freemium_admission: "1", freemium_user_id: "someone-else" },
+      } as never),
+    assertActivatable: () => {
+      classified += 1
+      throw new CheckoutActivationError("checkout_session_unpaid", "unpaid")
+    },
+  })
+  assert.equal(result.status, 403)
+  assert.deepEqual(result.body, { error: "forbidden" })
+  assert.equal(classified, 0, "the Session's state is never classified for a non-owner")
+})
+
+test("F6: an unreadable Session is 503, never a classified reason", async () => {
+  const result = await call({
+    retrieveSession: async () => {
+      throw new Error("stripe unreachable")
+    },
+  })
+  assert.equal(result.status, 503)
+  assert.deepEqual(result.body, { error: "temporarily_unavailable" })
 })
 
 test("a Session with no subscription yet is pending, not failed", async () => {
@@ -135,13 +165,12 @@ test("a Session with no subscription yet is pending, not failed", async () => {
 
 test("pending → complete: the same call succeeds once the payment settles", async () => {
   let settled = false
-  const retrieveSession = async () => {
+  const assertActivatable = () => {
     if (!settled) throw new CheckoutActivationError("checkout_session_unpaid", "unpaid")
-    return freemiumSession()
   }
-  assert.deepEqual((await call({ retrieveSession })).body, { status: "pending" })
+  assert.deepEqual((await call({ assertActivatable })).body, { status: "pending" })
   settled = true
-  assert.deepEqual((await call({ retrieveSession })).body, {
+  assert.deepEqual((await call({ assertActivatable })).body, {
     status: "complete",
     routineReady: true,
   })
@@ -208,8 +237,8 @@ test("webhook replay provisions through the same idempotent service", async () =
       return provisioned
     },
   }
-  await provisionFreemiumCheckoutSession(freemiumSession(), webhookDeps)
-  await provisionFreemiumCheckoutSession(freemiumSession(), webhookDeps)
+  await provisionFreemiumCheckoutSession(freemiumSession(), webhookDeps, { userId: USER })
+  await provisionFreemiumCheckoutSession(freemiumSession(), webhookDeps, { userId: USER })
 
   // Both deliveries reach provisioning with the SAME identity — the service (proved
   // idempotent in freemium-plan-provisioning.test.ts) is what makes the replay a no-op,
@@ -229,19 +258,42 @@ test("the webhook lane is inert for every non-freemium checkout", async () => {
   await provisionFreemiumCheckoutSession(
     { id: "cs_legacy", metadata: { lead_id: "lead-1" } } as never,
     { freemiumEnabled: () => true, provisionFreemiumPurchase },
+    { userId: USER },
   )
   assert.equal(calls, 0)
 })
 
 test("the webhook lane is inert with the flag off", async () => {
   let calls = 0
-  await provisionFreemiumCheckoutSession(freemiumSession(), {
-    freemiumEnabled: () => false,
-    provisionFreemiumPurchase: async () => {
-      calls += 1
-      return provisioned
+  await provisionFreemiumCheckoutSession(
+    freemiumSession(),
+    {
+      freemiumEnabled: () => false,
+      provisionFreemiumPurchase: async () => {
+        calls += 1
+        return provisioned
+      },
     },
-  })
+    { userId: USER },
+  )
+  assert.equal(calls, 0)
+})
+
+test("F7: the webhook lane refuses when the activation resolved a different account", async () => {
+  // The plan's `enrollment_purchase_source_id` pin is permanent, so pinning the metadata
+  // user's plan while the paid authority lives on another account is unrecoverable.
+  let calls = 0
+  await provisionFreemiumCheckoutSession(
+    freemiumSession(),
+    {
+      freemiumEnabled: () => true,
+      provisionFreemiumPurchase: async () => {
+        calls += 1
+        return provisioned
+      },
+    },
+    { userId: "other-user" },
+  )
   assert.equal(calls, 0)
 })
 
@@ -265,11 +317,22 @@ test("the deferral guard decides synchronously, so a legacy checkout queues no e
   )
 })
 
-test("a failing webhook provisioning never fails the webhook", async () => {
-  await provisionFreemiumCheckoutSession(freemiumSession(), {
-    freemiumEnabled: () => true,
-    provisionFreemiumPurchase: async () => {
-      throw new Error("provisioning down")
+test("a failing webhook provisioning never fails the webhook, but is reported (F4)", async () => {
+  const captured: unknown[] = []
+  await provisionFreemiumCheckoutSession(
+    freemiumSession(),
+    {
+      freemiumEnabled: () => true,
+      provisionFreemiumPurchase: async () => {
+        throw new Error("provisioning down")
+      },
+      captureFreemiumProvisioningException: ((error: unknown) => {
+        captured.push(error)
+      }) as never,
     },
-  })
+    { userId: USER },
+  )
+  // `claimWebhookEvent` has already claimed this event id, so no redelivery will retry it:
+  // the buyer is billed and unprovisioned until someone sees this.
+  assert.equal(captured.length, 1)
 })

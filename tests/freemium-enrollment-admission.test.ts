@@ -176,10 +176,10 @@ test("without the accepted Routine the same buyer stops short of Stage 4", async
  * The intents that build that Routine.
  * ------------------------------------------------------------------------- */
 
-function knownEvaluation(subjectKey: string): Stage3AuthorityEvaluation {
+function knownEvaluation(subjectKey: string, category = "shampoo"): Stage3AuthorityEvaluation {
   return {
     status: "known",
-    category: "shampoo",
+    category,
     subjectKey,
     allowedActions: ["plan_recommendation", "leave_uncovered"],
     recommendation: { productId: "product-1" },
@@ -220,6 +220,34 @@ test("server-recommended acceptance plans every buyable role and defers the rest
       subjectKey: "decision:mask:repair:gap",
       action: "leave_uncovered",
       // Never previewed by an Idealplan the buyer never saw → the refinement owns it.
+      deferralReason: "refinement_required",
+    },
+  ])
+})
+
+test("D1: a refinement-required category is never auto-provisioned, even when buyable", () => {
+  // Nick's D1 ruling: a buyer who reported scalp irritation whose detail we never asked
+  // about must not be handed a scalp product chosen under the „normal" default. Everything
+  // else still lands, so the post-purchase promise („real content immediately") holds.
+  const intents = buildServerRecommendedIntents(
+    [
+      knownEvaluation("decision:shampoo:cleanse:gap"),
+      knownEvaluation("decision:scalp_care:scalp_comfort:gap", "scalp_care"),
+    ],
+    // Previewed on purpose: without the block, this key would plan its recommendation.
+    new Set(["decision:shampoo:cleanse:gap", "decision:scalp_care:scalp_comfort:gap"]),
+    new Set(["scalp_care"]),
+  )
+  assert.deepEqual(intents, [
+    {
+      type: "resolve_decision",
+      subjectKey: "decision:shampoo:cleanse:gap",
+      action: "plan_recommendation",
+    },
+    {
+      type: "resolve_decision",
+      subjectKey: "decision:scalp_care:scalp_comfort:gap",
+      action: "leave_uncovered",
       deferralReason: "refinement_required",
     },
   ])

@@ -62,6 +62,14 @@ import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
+/**
+ * The function lifetime, which `after()` work runs inside too. T14 defers the freemium
+ * Stage-2→4 provisioning chain here (fix round 1, F4), and every other route that runs that
+ * chain — `accept-ideal-plan`, the stage-2/3 routes, `freemium/purchase/complete` — already
+ * asks for 60s. A kill mid-chain would leave an async-payment buyer billed and
+ * unprovisioned, with `claimWebhookEvent` dropping the redelivery as a duplicate.
+ */
+export const maxDuration = 60
 
 async function getPremiumTierId(supabase: SupabaseClient) {
   return (await getStripeTierIds(supabase)).premiumTierId
@@ -396,7 +404,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       // to Stripe like a failed delivery — and the retry would be dropped as a duplicate
       // by `claimWebhookEvent`, leaving the buyer permanently unprovisioned.
       if (freemiumCheckoutProvisioningUserId(session, deps)) {
-        defer(() => provisionFreemiumCheckoutSession(session, deps))
+        defer(() => provisionFreemiumCheckoutSession(session, deps, activation))
       }
       if (!recordBillingAnalytics) {
         scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
@@ -432,7 +440,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         // The pending → complete path: an asynchronous payment that settled after the
         // buyer left the sheet still admits and provisions the plan.
         if (freemiumCheckoutProvisioningUserId(session, deps)) {
-          defer(() => provisionFreemiumCheckoutSession(session, deps))
+          defer(() => provisionFreemiumCheckoutSession(session, deps, activation))
         }
         if (!recordBillingAnalytics) {
           scheduleCheckoutCompletedSync({

@@ -250,9 +250,18 @@ async function acceptInitialRoutineForUser(
   } catch (error) {
     // A Routine this flow did not create is not a failure — the buyer already has one, and
     // overwriting it is exactly what the guard exists to prevent.
+    //
+    // `conflict` belongs in the same bucket (fix round 1, F5). For a card payment the two
+    // provisioning lanes — the in-sheet completion and `checkout.session.completed` — enter
+    // `acceptIdealPlan` within the same second, so this is the LIKELY path, not an exotic
+    // one: the CAS lets exactly one of them through and hands the loser `conflict`. The
+    // Routine is live either way, and telling the buyer „Deine Routine wird gerade gebaut."
+    // about a Routine that already exists is simply false.
     if (
       error instanceof DirectAcceptanceError &&
-      (error.code === "plan_already_accepted" || error.code === "refinement_in_progress")
+      (error.code === "plan_already_accepted" ||
+        error.code === "refinement_in_progress" ||
+        error.code === "conflict")
     ) {
       return "already_accepted"
     }
