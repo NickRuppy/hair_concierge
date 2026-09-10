@@ -49,7 +49,7 @@ export const GATED_CHAT_EXAMPLE_MESSAGES: Message[] = [
     id: "example-2",
     role: "assistant",
     content:
-      "1× pro Woche reicht für deine Längen — und immer **statt** dem Conditioner, nicht zusätzlich. Zusammen wird es schnell schwer.\n\nNur Längen und Spitzen, die Kopfhaut lässt du aus.",
+      "1× pro Woche reicht für deine Längen — und immer **statt** des Conditioners, nicht zusätzlich. Zusammen wird es schnell schwer.\n\nNur Längen und Spitzen, die Kopfhaut lässt du aus.",
   }),
   message({
     id: "example-3",

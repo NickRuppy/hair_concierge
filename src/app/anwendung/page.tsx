@@ -251,11 +251,28 @@ export default async function AnwendungPage({
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
   // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Anwendung
   // instead of its own (stage-gated, empty) one — for the overview and for every
-  // `/anwendung/[dayType]` deep link, which re-renders this same component. Checked before
-  // `resolveDefaultAnwendungPage` so a gated render performs none of its reads.
-  if (await shouldRenderGatedExample()) return <GatedAnwendungExample />
+  // `/anwendung/[dayType]` deep link, which re-renders this same component.
+  //
+  // Pre-boundary fix wave (F2): the tier check and `resolveDefaultAnwendungPage` now start
+  // CONCURRENTLY instead of the tier gating serially ahead of the resolver — the previous
+  // order added one `auth.getUser()` plus a billing/moderator composite in front of every
+  // PREMIUM render, which is the common case. The trade is a resolver read a FREE render
+  // now performs and discards (never a write — `resolveAnwendungPage` is read-only; its
+  // `reportFailure` calls only fire on genuine compile failures, unrelated to the tier) for
+  // zero added latency on the premium path. Semantics are unchanged: a free render still
+  // never reaches `view`, and `shouldRenderGatedExample` itself still fails closed to
+  // premium on flag-off or an entitlement-source outage.
+  const [renderGatedExample, { view, durationMs }] = await Promise.all([
+    shouldRenderGatedExample(),
+    resolveDefaultAnwendungPage(selectedDayType),
+  ])
+  // F3: verified with two production builds + a live network capture — the suspected
+  // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+  // client chunk set is IDENTICAL to `ApplicationPage`'s own (see the matching comment in
+  // `app/chat/page.tsx`), i.e. that code already ships on this route via a chunk shared
+  // for unrelated reasons, so a dynamic import here would move nothing. Kept static.
+  if (renderGatedExample) return <GatedAnwendungExample />
 
-  const { view, durationMs } = await resolveDefaultAnwendungPage(selectedDayType)
   const internalComputeMs =
     process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
       ? Math.round(durationMs * 100) / 100

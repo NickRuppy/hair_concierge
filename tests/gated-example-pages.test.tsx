@@ -53,12 +53,12 @@ const GATED_ROUTES = [
 ] as const
 
 for (const [route, component] of GATED_ROUTES) {
-  test(`${route} gates on the server tier before it resolves the real page`, () => {
+  test(`${route} gates on the server tier before it renders the real page`, () => {
     const source = readFileSync(path.join(SOURCE_ROOT, route), "utf8")
-    const gate = source.indexOf("await shouldRenderGatedExample()")
+    const gate = source.indexOf("shouldRenderGatedExample()")
     assert.ok(gate > -1, `${route} must derive the tier server-side`)
     assert.match(
-      source.slice(gate, gate + 200),
+      source.slice(gate, gate + 900),
       new RegExp(`return <${component} \\/>`),
       `${route} must return the example for the free tier`,
     )
@@ -67,6 +67,48 @@ for (const [route, component] of GATED_ROUTES) {
     assert.ok(source.indexOf("shouldRenderGatedExample") < source.lastIndexOf("return"))
   })
 }
+
+// Pre-boundary fix wave, finding F2: `/routine` and `/anwendung` used to await the tier
+// check BEFORE starting their own page resolver, serializing one auth.getUser() plus a
+// billing/moderator composite ahead of every premium render. They now start the tier
+// check and the resolver in the same `Promise.all`, so the composite's cost overlaps the
+// resolver's own reads instead of sitting in front of them. This pins the concurrency,
+// not just the outcome — a regression back to sequential awaits would still pass the
+// gating test above (the free/premium behaviour is unchanged either way) but would silently
+// reintroduce the latency finding closed this wave.
+test("routine and anwendung resolve the tier concurrently with their own page data (F2)", () => {
+  const cases = [
+    ["app/routine/page.tsx", "resolveDefaultRoutinePage"],
+    ["app/anwendung/page.tsx", "resolveDefaultAnwendungPage"],
+  ] as const
+
+  for (const [route, resolver] of cases) {
+    const source = readFileSync(path.join(SOURCE_ROOT, route), "utf8")
+    const gate = source.indexOf("shouldRenderGatedExample()")
+    assert.ok(gate > -1, `${route} must derive the tier server-side`)
+    // Both files also use `Promise.all` internally (parallel content/DB reads inside the
+    // resolver itself) — find the one that actually wraps the tier check, not the first
+    // occurrence in the file.
+    const promiseAll = source.lastIndexOf("Promise.all([", gate)
+    assert.ok(promiseAll > -1, `${route}: tier check and resolver must start concurrently`)
+    const closing = source.indexOf("])", promiseAll)
+    assert.ok(closing > -1, `${route}: unterminated Promise.all`)
+    const block = source.slice(promiseAll, closing)
+    assert.match(
+      block,
+      /shouldRenderGatedExample\(\)/,
+      `${route}: tier check must be inside the Promise.all`,
+    )
+    assert.match(
+      block,
+      new RegExp(resolver),
+      `${route}: page resolver must be inside the same Promise.all`,
+    )
+  }
+  // `/chat` has no server-side page resolver of its own to run the tier check alongside
+  // (`ChatContainer` loads its data client-side) — see the code comment in
+  // `app/chat/page.tsx` for why this one stays a plain `if (await shouldRenderGatedExample())`.
+})
 
 // --- copy -------------------------------------------------------------------
 

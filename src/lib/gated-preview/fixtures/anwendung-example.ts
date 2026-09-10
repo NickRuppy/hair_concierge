@@ -94,21 +94,19 @@ const INTENSIVE_CARE_DAY: ApplicationDayView = {
   dayType: "intensive_care_day",
   sortOrder: 20,
   labelDe: "Intensivpflegetag",
-  summaryDe: "Die Maske ersetzt an diesem Tag den Conditioner.",
+  // No shampoo step here on purpose (pre-boundary fix wave, copy fix 3): the Routine's
+  // shampoo cadence says "2× pro Woche", meaning the two Waschtage — Waschtag AND
+  // Intensivpflegetag both shampooing would total 3, which the Routine's own cadence line
+  // doesn't say. Hair is wetted for the mask without a separate shampoo step instead.
+  summaryDe: "Haare anfeuchten, Maske statt Shampoo und Conditioner verwenden.",
   cadenceDe: "1× pro Woche",
   steps: [
-    productStep({
-      product: GATED_EXAMPLE_PRODUCTS.shampoo,
-      categoryLabelDe: "Shampoo",
-      purposeDe: "Regelmäßige Reinigung",
-      actionDe: "Wie am Waschtag: auf die Kopfhaut, einmassieren, ausspülen.",
-    }),
     productStep({
       product: GATED_EXAMPLE_PRODUCTS.mask,
       categoryLabelDe: "Maske",
       purposeDe: "Intensivpflege",
       actionDe:
-        "Statt des Conditioners in Längen und Spitzen einarbeiten. Nach der angegebenen Zeit gründlich ausspülen.",
+        "Haare gründlich anfeuchten, dann die Maske statt des Conditioners in Längen und Spitzen einarbeiten. Nach der angegebenen Zeit gründlich ausspülen.",
     }),
     productStep({
       product: GATED_EXAMPLE_PRODUCTS.leaveIn,
@@ -120,11 +118,7 @@ const INTENSIVE_CARE_DAY: ApplicationDayView = {
   isPartial: false,
   provisionalProductCount: 0,
   unresolvedProductCount: 0,
-  shelf: [
-    shelfSlot(GATED_EXAMPLE_PRODUCTS.shampoo),
-    shelfSlot(GATED_EXAMPLE_PRODUCTS.mask),
-    shelfSlot(GATED_EXAMPLE_PRODUCTS.leaveIn),
-  ],
+  shelf: [shelfSlot(GATED_EXAMPLE_PRODUCTS.mask), shelfSlot(GATED_EXAMPLE_PRODUCTS.leaveIn)],
 }
 
 const STYLING_DAY: ApplicationDayView = {
