@@ -196,10 +196,11 @@ test("PersonalPlanRoutineClient: wires the shared Gemerkt section too — this i
   assert.match(clientSource, /merklisteEnabled = false/)
   assert.match(clientSource, /merklisteEnabled=\{merklisteEnabled\}/)
   assert.match(clientSource, /onGraduated=\{\(\) => void reload\(\)\}/)
-  assert.match(
-    pageSource,
-    /<GemerktSection merklisteEnabled=\{merklisteEnabled\} onGraduated=\{onGraduated\} \/>/,
-  )
+  // T17 added the keepsake `readOnly` prop to the same element; the two original props
+  // are still wired straight through, which is what this test exists to pin.
+  assert.match(pageSource, /<GemerktSection\s+merklisteEnabled=\{merklisteEnabled\}/)
+  assert.match(pageSource, /onGraduated=\{onGraduated\}/)
+  assert.match(pageSource, /readOnly=\{merklisteReadOnly\}/)
 })
 
 test("RoutinePage: BOTH the legacy and personal-plan branches pass the server-derived flag, not a client-side read (F1)", () => {
