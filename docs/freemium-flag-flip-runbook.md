@@ -3,7 +3,8 @@
 The freemium scanner-first restructure (`plans/freemium-scanner-first/plan.md`, PR1-PR6) ships
 entirely behind one server-read flag: `FREEMIUM_SCANNER_FIRST_ENABLED`
 (`src/lib/entitlements/flag.ts`). Every PR1-PR6 task shipped with the flag OFF in production.
-This runbook is the one-step, reversible operation that turns it ON — and back off again.
+This runbook is the reversible operation that turns it ON — and back off again. On Vercel that
+is TWO steps in each direction (set the env var, then redeploy), not one; see "The flip".
 
 **Full-switch semantics (ruled):** no percentage rollout, no per-user cohorting. The flag is
 the switch, for every new user, everywhere it is read, at once.
@@ -64,7 +65,7 @@ Verified directly in the current tree (all unconditional, no flag involved):
   `/scan` (Task 3 of that plan).
 - `next.config.ts` already noindexes the bare `/scan` path, not just `/scan/:path*` (Task 5).
 
-**Consequence for this task:** there was nothing left to "de-stealth" for the *existing paid*
+**Consequence for this task:** there was nothing left to "de-stealth" for the _existing paid_
 population — that population has had a fully public, discoverable scanner since 2026-09-01,
 independent of `FREEMIUM_SCANNER_FIRST_ENABLED`. The only population the flag still gates out
 of the scanner today is a signed-in user **with no paid access at all** — which, before this
@@ -92,9 +93,14 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
      fix round 2, N3 — provisioning terminal-outcome marker; code degrades safely if this one
      specifically is missing, but ships stale Sentry noise on every stuck-free-account render
      until applied — do not skip it)
+   - `supabase/migrations/20260910120000_leads_free_registration_provenance.sql` (PR6 review,
+     V3 — `leads.free_registration_requested_at`, the server-side provenance `/auth/confirm`
+     branches on). **This one is hard-required, not degrade-safe:** without the column the
+     bind-evidence read errors, every free confirm fails closed, and free registration lands
+     on `/scan?konto=bestehend` with nothing provisioned. Apply it BEFORE the flip.
 
    Verify with the Supabase MCP `list_migrations` against the target project before flipping;
-   this session had no live Supabase access, so these are *documented as required*, not
+   this session had no live Supabase access, so these are _documented as required_, not
    confirmed applied. Apply in this exact order (each migration's own header states its
    dependencies).
 
@@ -106,7 +112,10 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
    `src/lib/partner-access/intent.ts`). **If unset, the correction path silently degrades**:
    no HMAC capability is minted at quiz completion, and `/registrierung`'s "Andere
    E-Mail-Adresse" goes straight to the honest `correction_blocked` refusal screen — sending
-   and resending the magic link are unaffected. This has no user-visible failure mode in a
+   and resending the magic link are unaffected. The same refusal is expected (by design, PR6
+   review V1) whenever the save RPC REUSED an existing lead rather than creating one — an
+   identical e-mail and identical answers inside 15 minutes — so a support report of
+   "correction refused on my second attempt" is not necessarily a missing secret. This has no user-visible failure mode in a
    preview/local environment that never sets it (it degrades, it does not error), so verify
    the secret explicitly rather than trusting the absence of an incident.
 
@@ -138,15 +147,31 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
 
 ## The flip
 
+> **An env-var change on Vercel is NOT live on its own** (PR6 Codex review, finding V6). Vercel
+> binds environment variables to a DEPLOYMENT: changing a value in the project settings affects
+> the next deployment that is built, and every function of the currently promoted deployment
+> keeps serving the value it was created with. Both the flip and the rollback below are
+> therefore two steps — set the variable, then redeploy — and both have a window in which the
+> old behaviour is still being served.
+
 1. Confirm the reviewed PR6 head is what is actually deployed (Git SHA == Vercel production
    deployment SHA) — do not flip against a stale deployment.
-2. Set `FREEMIUM_SCANNER_FIRST_ENABLED=true` in the production environment (Vercel project env
-   vars) for the Production environment only. This is a plain env var read on every call
-   (`process.env.FREEMIUM_SCANNER_FIRST_ENABLED === "true"`, Edge-safe, no caching) — no code
-   deploy is required to flip it, only an env-var change + the redeploy/restart Vercel performs
-   for an env var update to take effect on already-running functions.
-3. Confirm the change is live: `isFreemiumScannerFirstEnabled()` is read fresh on every
-   request, so there is no propagation delay beyond Vercel's own env-var rollout.
+2. Set `FREEMIUM_SCANNER_FIRST_ENABLED=true` in the Vercel project's environment variables, for
+   the Production environment only. Nothing changes for live traffic at this point.
+3. **Redeploy production so the new value is bound.** Either redeploy the current production
+   deployment from the Vercel dashboard (Deployments → the promoted deployment → Redeploy,
+   with build cache reuse) or push/promote the same commit again — `vercel redeploy <url>` or
+   `vercel --prod` from the reviewed head. Do NOT redeploy a different commit than the one
+   verified in step 1.
+4. **Wait for the new deployment to be promoted, then verify.** Until promotion completes, the
+   old functions are still running with the flag off, so quiz completions in that window still
+   land on the paid reveal — expect a mixed-behaviour window of roughly the build+promote time,
+   and do not read it as a failed flip. Once promoted,
+   `process.env.FREEMIUM_SCANNER_FIRST_ENABLED === "true"` is read fresh on every request
+   (`isFreemiumScannerFirstEnabled()`, Edge-safe, no caching), so there is no further
+   propagation delay inside the new deployment.
+5. Confirm on the live site that a fresh quiz completion routes to `/registrierung`, before
+   working through the smoke checklist below.
 
 ## Post-flip smoke checklist
 
@@ -174,16 +199,28 @@ Run immediately after the flip, on production, before calling it done:
 
 Any smoke-checklist failure is a rollback trigger — see below, not a "monitor and see."
 
-## Rollback = flag off
+## Rollback = flag off + redeploy
 
-1. Set `FREEMIUM_SCANNER_FIRST_ENABLED=false` (or unset it) in the production environment.
-   Same mechanism as the flip: no code deploy, an env-var change takes effect on the next
-   request.
-2. Confirm: a fresh (or repeat) quiz completion now routes to `/result/<leadId>/reveal` again;
+1. Set `FREEMIUM_SCANNER_FIRST_ENABLED=false` (or unset it) in the Vercel project's Production
+   environment. **This alone changes nothing for live traffic** — see the note under "The
+   flip": the promoted deployment keeps serving the value it was built with.
+2. **Redeploy production immediately** (same two options as flip step 3). This is the step that
+   actually rolls back, so treat the rollback's clock as "set + redeploy + promote", not "set".
+   Until the new deployment is promoted, the free funnel is still live: new free accounts can
+   still be created in that window (they persist — see below), so if the rollback trigger is
+   user-facing damage rather than a metric, prefer the fastest promotion path available and do
+   not assume the flag "took" the moment it was saved.
+
+   If a redeploy is not possible fast enough, the only faster levers are Vercel-level (roll back
+   to the last deployment that was BUILT with the flag off — Deployments → an earlier production
+   deployment → Promote), which is a code rollback, not a flag rollback: it also reverts to that
+   deployment's code, so only use it knowingly.
+
+3. Confirm: a fresh (or repeat) quiz completion now routes to `/result/<leadId>/reveal` again;
    a signed-in user with no paid access is redirected to `/reactivate` from `/scan` and every
    other admitted route; nav for that user reverts to the legacy shell (no five tabs, no lock
    markers).
-3. Confirm existing paying users are unaffected throughout (their nav/access never depended on
+4. Confirm existing paying users are unaffected throughout (their nav/access never depended on
    the flag — see the stealth-control finding above).
 
 ### What rollback does and does NOT undo
@@ -211,7 +248,7 @@ Any smoke-checklist failure is a rollback trigger — see below, not a "monitor 
 - The free-registration entry path itself — `/registrierung` returns 404 again (its page and
   API route both check the flag and 404/dark-behind-flag when off, per T18).
 - New-user quiz-completion routing (back to the paid reveal).
-- Middleware admission for any *new* free-tier signed-in user (existing free accounts from
+- Middleware admission for any _new_ free-tier signed-in user (existing free accounts from
   during the window included, per above — the admission check re-evaluates on every request,
   it does not grandfather).
 - The five-tab free-tier nav and its lock markers for anyone without paid access.
