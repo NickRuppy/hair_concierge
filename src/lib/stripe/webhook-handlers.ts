@@ -134,10 +134,7 @@ export async function provisionFreemiumCheckoutSession(
   session: Stripe.Checkout.Session,
   deps: Pick<StripeWebhookProvisioningDeps, "provisionFreemiumPurchase" | "freemiumEnabled">,
 ): Promise<void> {
-  const enabled = deps.freemiumEnabled ?? isFreemiumScannerFirstEnabled
-  if (!enabled()) return
-  if (!isFreemiumCheckoutSession(session)) return
-  const userId = freemiumCheckoutUserId(session)
+  const userId = freemiumCheckoutProvisioningUserId(session, deps)
   if (!userId) return
   const provision = deps.provisionFreemiumPurchase ?? defaultProvisionFreemiumPurchase
   try {
@@ -150,6 +147,21 @@ export async function provisionFreemiumCheckoutSession(
       error,
     })
   }
+}
+
+/**
+ * The synchronous half of the guard above, so the webhook can decide whether there is any
+ * freemium work at all BEFORE scheduling deferred work. Every non-freemium checkout must
+ * leave the deferred-work queue exactly as it was pre-T14.
+ */
+export function freemiumCheckoutProvisioningUserId(
+  session: Stripe.Checkout.Session,
+  deps: Pick<StripeWebhookProvisioningDeps, "freemiumEnabled">,
+): string | null {
+  const enabled = deps.freemiumEnabled ?? isFreemiumScannerFirstEnabled
+  if (!enabled()) return null
+  if (!isFreemiumCheckoutSession(session)) return null
+  return freemiumCheckoutUserId(session)
 }
 
 export type StripeWebhookProvisioningDeps = {

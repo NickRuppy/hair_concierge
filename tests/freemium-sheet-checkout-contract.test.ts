@@ -6,6 +6,8 @@ import {
   resolveStripeCheckoutSessionCreateOptions,
   StripeCheckoutSessionRequestSchema,
 } from "../src/app/api/stripe/create-checkout-session/route"
+import { classifyRoute } from "../src/lib/auth/route-classification"
+import { requiresSubscriptionPath } from "../src/lib/supabase/middleware"
 import {
   buildFreemiumCheckoutReturnUrl,
   FREEMIUM_CHECKOUT_DEFAULT_RETURN_PATH,
@@ -188,6 +190,20 @@ test("the return path is an allowlist, not a redirector", () => {
   }
   // Query and hash are dropped so the return cannot smuggle its own parameters.
   assert.equal(sanitizeFreemiumCheckoutReturnPath("/scan?next=/admin#x"), "/scan")
+})
+
+test("the completion endpoint is authenticated but NOT behind the paywall", () => {
+  // The whole point is that a FREE user calls it — putting it behind
+  // `SUB_REQUIRED_PREFIXES` would make buying impossible for exactly the people the sheet
+  // exists for. It still must not be public: it admits a plan.
+  assert.equal(requiresSubscriptionPath("/api/freemium/purchase/complete"), false)
+  assert.equal(
+    classifyRoute("/api/freemium/purchase/complete", {
+      nodeEnv: "production",
+      localDevLoginEnabled: false,
+    }),
+    "protected",
+  )
 })
 
 test("only a marked Session with a user id is a freemium purchase", () => {

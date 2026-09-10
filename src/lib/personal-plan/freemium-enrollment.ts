@@ -16,6 +16,14 @@ import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
  * `public.freemium_plan_admissions`, written once at verified activation — and this
  * resolver turns that record into the same `PersonalPlanEnrollment` shape.
  *
+ * **Deploy order: the migration ships BEFORE the flag is turned on.** A missing
+ * `freemium_plan_admissions` relation throws out of here rather than resolving to "no
+ * admission" — same posture as the field-test reader in `enrollment.ts`. Silently reading a
+ * schema error as "this user owns no plan" would revoke a real buyer's Routine, which is
+ * strictly worse than failing loudly. With the flag off nothing reads the table at all, so
+ * the safe sequence is: apply the migration, verify, then flip
+ * `FREEMIUM_SCANNER_FIRST_ENABLED`.
+ *
  * **The record binds the source; it never grants access.** Exactly like the migration
  * admission it is modelled on, current paid authority is rechecked on every read, so a
  * cancelled subscription stops resolving here (and resumes, with the SAME enrollment id,

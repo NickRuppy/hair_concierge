@@ -8,7 +8,10 @@ import {
 } from "../src/app/api/freemium/purchase/complete/route"
 import type { FreemiumProvisioningResult } from "../src/lib/freemium/plan-provisioning"
 import { CheckoutActivationError } from "../src/lib/stripe/checkout-activation"
-import { provisionFreemiumCheckoutSession } from "../src/lib/stripe/webhook-handlers"
+import {
+  freemiumCheckoutProvisioningUserId,
+  provisionFreemiumCheckoutSession,
+} from "../src/lib/stripe/webhook-handlers"
 
 /**
  * The purchase-completion journey with Stripe mocked at the API seam — the endpoint's own
@@ -240,6 +243,26 @@ test("the webhook lane is inert with the flag off", async () => {
     },
   })
   assert.equal(calls, 0)
+})
+
+test("the deferral guard decides synchronously, so a legacy checkout queues no extra work", () => {
+  // The webhook schedules provisioning with `defer`; if the guard only ran INSIDE the
+  // deferred callback, every legacy checkout would still enqueue one — which is exactly
+  // what the Customer.io webhook suite counts.
+  assert.equal(
+    freemiumCheckoutProvisioningUserId(freemiumSession(), { freemiumEnabled: () => true }),
+    USER,
+  )
+  assert.equal(
+    freemiumCheckoutProvisioningUserId({ id: "cs_legacy", metadata: {} } as never, {
+      freemiumEnabled: () => true,
+    }),
+    null,
+  )
+  assert.equal(
+    freemiumCheckoutProvisioningUserId(freemiumSession(), { freemiumEnabled: () => false }),
+    null,
+  )
 })
 
 test("a failing webhook provisioning never fails the webhook", async () => {

@@ -18,6 +18,7 @@ import {
   handleSubscriptionDeleted,
   handleInvoicePaymentFailed,
   findProfileByStripeCustomerId,
+  freemiumCheckoutProvisioningUserId,
   provisionFreemiumCheckoutSession,
   type StripeWebhookProvisioningDeps,
 } from "@/lib/stripe/webhook-handlers"
@@ -389,8 +390,14 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         throw err
       }
       // T14: the Premium sheet's own post-purchase provisioning, beside — never instead of
-      // — the activation above. Inert for every other checkout.
-      await provisionFreemiumCheckoutSession(session, deps)
+      // — the activation above, and DEFERRED like every other post-activation side effect
+      // here. Building a Routine runs the whole Stage-2→4 chain; doing that inline would
+      // put it inside the webhook's response budget, where a platform timeout would look
+      // to Stripe like a failed delivery — and the retry would be dropped as a duplicate
+      // by `claimWebhookEvent`, leaving the buyer permanently unprovisioned.
+      if (freemiumCheckoutProvisioningUserId(session, deps)) {
+        defer(() => provisionFreemiumCheckoutSession(session, deps))
+      }
       if (!recordBillingAnalytics) {
         scheduleCheckoutCompletedSync({ activation, defer, eventId: event.id, session, timestamp })
       }
@@ -424,7 +431,9 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       if (activation) {
         // The pending → complete path: an asynchronous payment that settled after the
         // buyer left the sheet still admits and provisions the plan.
-        await provisionFreemiumCheckoutSession(session, deps)
+        if (freemiumCheckoutProvisioningUserId(session, deps)) {
+          defer(() => provisionFreemiumCheckoutSession(session, deps))
+        }
         if (!recordBillingAnalytics) {
           scheduleCheckoutCompletedSync({
             activation,

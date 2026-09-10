@@ -36,13 +36,35 @@ import type {
  * see the ownership contract at the top of `plan-provisioning.ts`.
  */
 
-type AnyAdminClient = {
-  from: (table: string) => any // eslint-disable-line @typescript-eslint/no-explicit-any
-  rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>
+type QueryResult = { data: unknown; error: unknown }
+
+/**
+ * The narrow, self-returning slice of the Supabase builder this file actually uses — the
+ * same hand-rolled-shape convention as `stage1-supabase.ts` / `free-snapshot-supabase.ts`,
+ * so the admin client is bridged with one cast at the call site instead of `any` here.
+ */
+type ProvisioningQuery = {
+  select: (columns: string) => ProvisioningQuery
+  insert: (values: Record<string, unknown>) => ProvisioningQuery
+  update: (values: Record<string, unknown>) => ProvisioningQuery
+  eq: (column: string, value: unknown) => ProvisioningQuery
+  is: (column: string, value: unknown) => ProvisioningQuery
+  order: (column: string, options: { ascending: boolean }) => ProvisioningQuery
+  limit: (count: number) => ProvisioningQuery
+  maybeSingle: () => Promise<QueryResult>
+  then: (
+    onfulfilled: (value: QueryResult) => unknown,
+    onrejected?: (reason: unknown) => unknown,
+  ) => Promise<unknown>
+}
+
+type ProvisioningAdminClient = {
+  from: (table: string) => ProvisioningQuery
+  rpc: (name: string, args: Record<string, unknown>) => Promise<QueryResult>
 }
 
 export function createFreemiumProvisioningSupabaseDependencies(
-  admin: AnyAdminClient,
+  admin: ProvisioningAdminClient,
 ): FreemiumProvisioningDependencies {
   return {
     async loadLinkedQuizArtifact(userId): Promise<FreemiumPlanArtifact | null> {
@@ -133,7 +155,10 @@ export function createFreemiumProvisioningSupabaseDependencies(
   }
 }
 
-async function readAdmissionId(admin: AnyAdminClient, userId: string): Promise<string | null> {
+async function readAdmissionId(
+  admin: ProvisioningAdminClient,
+  userId: string,
+): Promise<string | null> {
   const { data, error } = await admin
     .from(FREEMIUM_PLAN_ADMISSIONS_TABLE)
     .select("id")
@@ -145,7 +170,7 @@ async function readAdmissionId(admin: AnyAdminClient, userId: string): Promise<s
 }
 
 async function callCreateInitialNeed(
-  admin: AnyAdminClient,
+  admin: ProvisioningAdminClient,
   args: Record<string, unknown>,
 ): Promise<CreateInitialNeedResult> {
   const { data, error } = await admin.rpc("personal_plan_create_or_reuse_initial_need", args)
@@ -180,7 +205,7 @@ async function callCreateInitialNeed(
  * the buyer's Routine is built by the production Stage-2/3/4 path and by nothing else.
  */
 async function acceptInitialRoutineForUser(
-  admin: AnyAdminClient,
+  admin: ProvisioningAdminClient,
   userId: string,
 ): Promise<AcceptInitialRoutineResult> {
   try {
@@ -202,7 +227,9 @@ async function acceptInitialRoutineForUser(
               .eq("user_id", userId)
               .maybeSingle()
             if (error || !data) throw new Error("freemium_accept_plan_state_unavailable")
-            return data.active_routine_version_id ? String(data.active_routine_version_id) : null
+            const activeRoutineVersionId = (data as { active_routine_version_id?: unknown })
+              .active_routine_version_id
+            return activeRoutineVersionId ? String(activeRoutineVersionId) : null
           },
         },
         stage3Gateway: createProductionStage3ProductsGateway({
