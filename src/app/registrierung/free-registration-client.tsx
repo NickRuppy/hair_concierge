@@ -49,7 +49,7 @@ const COPY = {
 
 const QUIZ_ENTRY_PATH = "/lp/haarplan"
 
-type Handoff = { leadId: string; email?: string; capability?: string }
+export type Handoff = { leadId: string; email?: string; capability?: string }
 
 type Phase =
   | "resolving"
@@ -61,7 +61,10 @@ type Phase =
   | "failed"
   | "correction_blocked"
 
-function readHandoff(): Handoff | null {
+/** Exported for direct unit testing (fix round 2, N2) — the phase machine
+ * this sits behind lives behind `requestAnimationFrame` + `fetch`, same
+ * reason `FreeRegistrationScreen` was split out in fix round 1 (W6). */
+export function readHandoff(): Handoff | null {
   try {
     const raw = window.sessionStorage.getItem(FREE_REGISTRATION_HANDOFF_STORAGE_KEY)
     if (!raw) return null
@@ -81,11 +84,35 @@ function readHandoff(): Handoff | null {
   }
 }
 
-function writeHandoffEmail(leadId: string, email: string, capability: string | null) {
+/**
+ * `capability === undefined` means "not an explicit correction" (a plain
+ * resend, or the auto-send on mount) — the existing stored capability is
+ * preserved rather than nulled out (fix round 2, review finding N2). Before
+ * this, ANY successful send rewrote the handoff with `options.capability ??
+ * null`, and a plain resend never carries a capability — so a genuine user
+ * who resent, then reloaded within the 60-minute TTL, dead-ended on
+ * `correction_blocked` even though their capability was still valid. Only an
+ * explicit correction (which always passes its own capability, `string` or
+ * `null`) is allowed to update/consume the stored value.
+ */
+export function writeHandoffEmail(
+  leadId: string,
+  email: string,
+  capability: string | null | undefined,
+) {
   try {
+    const nextCapability =
+      capability !== undefined
+        ? capability
+        : (() => {
+            const existing = readHandoff()
+            return existing && existing.leadId === leadId ? (existing.capability ?? null) : null
+          })()
     window.sessionStorage.setItem(
       FREE_REGISTRATION_HANDOFF_STORAGE_KEY,
-      JSON.stringify(capability ? { leadId, email, capability } : { leadId, email }),
+      JSON.stringify(
+        nextCapability ? { leadId, email, capability: nextCapability } : { leadId, email },
+      ),
     )
   } catch {
     /* A blocked sessionStorage only costs the address in the copy. */
@@ -185,7 +212,15 @@ export function FreeRegistrationClient({
         const nextEmail = outcome.email ?? options.email ?? null
         if (nextEmail) {
           setEmail(nextEmail)
-          writeHandoffEmail(targetLeadId, nextEmail, options.capability ?? null)
+          // Only an explicit correction (identified by carrying its own
+          // `email`) is allowed to set/replace the stored capability — a
+          // plain resend or the auto-send on mount passes `undefined`, which
+          // `writeHandoffEmail` reads as "keep whatever is already stored".
+          writeHandoffEmail(
+            targetLeadId,
+            nextEmail,
+            options.email !== undefined ? (options.capability ?? null) : undefined,
+          )
         }
         setClaimed(false)
         setPhase("inbox")

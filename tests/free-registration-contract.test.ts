@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
+  buildAddressRateLimitKey,
   buildFreeRegistrationEmailRedirect,
   buildFreeRegistrationRecoveryPath,
   isFreeRegistrationConfirmRequest,
@@ -349,6 +350,78 @@ test("W4: every send is bounded per lead, per caller IP and per destination addr
     dimension: "address",
     identifier: "lena.neu@example.com",
   })
+})
+
+// --- N1 (fix round 2): the address rate-limit KEY is alias-canonicalized ---
+
+test("N1: buildAddressRateLimitKey strips a +suffix for every domain", () => {
+  assert.equal(buildAddressRateLimitKey("opfer@example.com"), "opfer@example.com")
+  assert.equal(buildAddressRateLimitKey("opfer+1@example.com"), "opfer@example.com")
+  assert.equal(buildAddressRateLimitKey("opfer+2@example.com"), "opfer@example.com")
+  assert.equal(buildAddressRateLimitKey("opfer+anything-here@example.com"), "opfer@example.com")
+})
+
+test("N1: buildAddressRateLimitKey additionally collapses dots for Gmail-family domains only", () => {
+  assert.equal(buildAddressRateLimitKey("o.p.fer@gmail.com"), "opfer@gmail.com")
+  assert.equal(buildAddressRateLimitKey("o.p.fer+x@gmail.com"), "opfer@gmail.com")
+  assert.equal(buildAddressRateLimitKey("o.p.fer@googlemail.com"), "opfer@googlemail.com")
+  // Dots are significant everywhere else — never collapsed for a non-Gmail domain.
+  assert.equal(buildAddressRateLimitKey("o.p.fer@example.com"), "o.p.fer@example.com")
+})
+
+test("N1: opfer+1@, opfer+2@, ... all hit the SAME address rate-limit bucket", async () => {
+  // This is the exact attack N1 closes: without canonicalization, each
+  // plus-alias correction got its own untouched 5/60min bucket, degrading the
+  // per-destination cap down to the (much looser) per-IP cap.
+  const aliasKeys: string[] = []
+  const { deps } = createDeps({
+    lead: { id: LEAD_ID, email: "opfer@gmail.com", quizKind: "personal_plan", userId: null },
+    async checkRateLimit({ dimension, identifier }) {
+      if (dimension === "address") aliasKeys.push(identifier)
+      return { allowed: true }
+    },
+  })
+
+  for (const alias of ["opfer+1@gmail.com", "opfer+2@gmail.com", "opfer+3@gmail.com"]) {
+    const result = await requestFreeRegistrationLink(
+      { leadId: LEAD_ID, email: alias, capability: VALID_CAPABILITY },
+      deps,
+    )
+    assert.equal(result.outcome, "sent", alias)
+  }
+
+  assert.deepEqual(new Set(aliasKeys), new Set(["opfer@gmail.com"]))
+})
+
+test("N1: the canonicalized key never touches the address that gets written or mailed", async () => {
+  const { deps, recorder } = createDeps({
+    lead: { id: LEAD_ID, email: "opfer@example.com", quizKind: "personal_plan", userId: null },
+  })
+
+  const result = await requestFreeRegistrationLink(
+    {
+      leadId: LEAD_ID,
+      email: "o.p.fer+correction@gmail.com",
+      capability: VALID_CAPABILITY,
+    },
+    deps,
+  )
+
+  assert.deepEqual(result, {
+    outcome: "sent",
+    email: "o.p.fer+correction@gmail.com",
+    corrected: true,
+  })
+  // The rate-limit bucket is canonicalized ("opfer@gmail.com")...
+  assert.deepEqual(recorder.rateLimitCalls.at(-1), {
+    dimension: "address",
+    identifier: "opfer@gmail.com",
+  })
+  // ...but the lead write and the actual send both use the exact requested address.
+  assert.deepEqual(recorder.leadEmailWrites, [
+    { leadId: LEAD_ID, email: "o.p.fer+correction@gmail.com" },
+  ])
+  assert.equal(recorder.sent[0]?.email, "o.p.fer+correction@gmail.com")
 })
 
 test("W4: each dimension can refuse on its own, before anything is written or sent", async () => {

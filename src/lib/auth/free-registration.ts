@@ -161,6 +161,33 @@ function normalizeEmail(value: string) {
   return value.trim().toLowerCase()
 }
 
+/** Domains where the mailbox provider itself treats dots in the local part as
+ * insignificant (`o.pfer@gmail.com` === `opfer@gmail.com`). */
+const DOT_INSENSITIVE_DOMAINS = new Set(["gmail.com", "googlemail.com"])
+
+/**
+ * Canonicalizes an address for the per-destination RATE-LIMIT KEY only (fix
+ * round 2, review finding N1) — NEVER for the delivery address itself, which
+ * keeps using the raw `targetEmail` for `updateLeadEmail`/`sendMagicLink`.
+ *
+ * `opfer+1@`, `opfer+2@`, … all deliver to the same inbox, but a raw-address
+ * rate key gave each alias its own untouched 5/60min bucket, degrading the
+ * per-destination cap down to the (much looser) per-IP cap for anyone willing
+ * to mint aliases. Stripping a `+suffix` from the local part closes that for
+ * every domain; Gmail-family domains additionally ignore dots in the local
+ * part, so those are collapsed too, there and only there.
+ */
+export function buildAddressRateLimitKey(email: string): string {
+  const at = email.lastIndexOf("@")
+  if (at < 0) return email
+  const domain = email.slice(at + 1)
+  let local = email.slice(0, at)
+  const plusIndex = local.indexOf("+")
+  if (plusIndex >= 0) local = local.slice(0, plusIndex)
+  if (DOT_INSENSITIVE_DOMAINS.has(domain)) local = local.replaceAll(".", "")
+  return `${local}@${domain}`
+}
+
 function toRateLimitOutcome(check: { error?: string }): FreeRegistrationResult {
   return check.error === "service_unavailable"
     ? { outcome: "rate_limit_unavailable" }
@@ -272,10 +299,11 @@ export async function requestFreeRegistrationLink(
 
   // The destination budget — checked once the final address is known, so a
   // correction spends the CORRECTED address's budget, and before anything is
-  // written or sent.
+  // written or sent. The bucket key is alias-canonicalized (fix round 2,
+  // finding N1); the address that gets written and mailed stays `targetEmail`.
   const addressRate = await deps.checkRateLimit({
     dimension: "address",
-    identifier: targetEmail,
+    identifier: buildAddressRateLimitKey(targetEmail),
   })
   if (!addressRate.allowed) return toRateLimitOutcome(addressRate)
 
