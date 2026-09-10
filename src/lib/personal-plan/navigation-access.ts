@@ -256,8 +256,11 @@ const loadCachedNavVisitedStateForUser = cache(
  * oneTimeAccessState === "active" || moderatorAccess === "active"`, with the
  * `hasCurrentPaidAppAccess` re-check for an ended/unreadable moderator grant), fed the
  * email and `access_kind` from the shared request-scoped user read above. Every other
- * cohort resolves identically to before — the composite is a superset of the old check,
- * so it can only ever turn a *false* "free" into "premium", never the reverse.
+ * cohort resolves identically to before, with one deliberate exception: an ENDED or
+ * unreadable moderator grant (where the old check reported `active`) now resolves via
+ * the composite's re-check and can flip nav from unlocked to locked — matching what the
+ * page-level gates already do for that cohort. For every other cohort the composite only
+ * ever turns a *false* "free" into "premium", never the reverse.
  *
  * `"unavailable"` (an unreadable moderator lookup with no independent paid entitlement)
  * maps to `true`/premium, matching `resolveAuthenticatedAppPageTier`'s fail-closed rule:

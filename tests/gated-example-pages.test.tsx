@@ -96,6 +96,7 @@ const GATED_ROUTES = [
   ["app/routine/page.tsx", "GatedRoutineExample"],
   ["app/anwendung/page.tsx", "GatedAnwendungExample"],
   ["app/chat/page.tsx", "GatedChatExample"],
+  ["app/chat/[conversationId]/page.tsx", "GatedChatExample"],
 ] as const
 
 for (const [route, component] of GATED_ROUTES) {
