@@ -108,9 +108,23 @@ individual Haar-Check field card, the "Haarlänge ergänzen" prompt) is gated
 in one place, so a free user has no UI path into `handleSaveQuiz` at all. A
 technical user could still POST to Supabase directly and write their own row
 — identical to what they could always do before this task, since the direct
-write path predates the freemium restructure and is untouched by it. `PUT
-/api/profile` itself (used by other, unrelated consumers) stays
-middleware-gated as documented above.
+write path predates the freemium restructure and is untouched by it.
+`PUT /api/profile` itself stays middleware-gated as documented above — but
+**(F4 correction, fix round 1)** it currently has zero in-repo callers, GET or
+PUT (`src/app/api/profile/route.ts` is dead code); the earlier "used by
+other, unrelated consumers" claim was false. The route is guarded but
+unconsumed; it enforces nothing for this page today.
+
+**Client-gate exception ruling (fix round 1, F5 in `task-15-review.md`):**
+Haar-Check content is user-owned intake, not paid content; the T15 lock is a
+UI gate by design. Server enforcement is not applicable because two
+un-paywalled write paths (onboarding, quiz retake → `linkQuizToProfile`) must
+remain open. No paid seam. This is a documented **client-gate exception**:
+blast radius is self-only (a bypass only lets a user rewrite their own
+`hair_profiles` row — no plan recompute, no generation cost, no cross-user
+effect, per `task-15-review.md`'s adjudication), and two sanctioned free write
+paths to the same row already exist — onboarding and `/quiz?mode=retake`. The
+exception applies to this one page's inline editor only.
 
 ## Flag-off regression coverage
 

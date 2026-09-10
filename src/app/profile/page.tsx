@@ -12,11 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { HaarCheckEditControl } from "@/components/profile/haar-check-edit-control"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
-import { ProfileLockBadge } from "@/components/profile/profile-lock-badge"
+import { MemoryToggleControl } from "@/components/profile/memory-toggle-control"
 import { useProfilePageTier } from "@/components/profile/profile-page-tier"
 import { useProfileRoutineAccess } from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
@@ -100,6 +100,10 @@ const VERFEINERUNG_GATE: PremiumSheetContext = {
   feature: "verfeinerung",
   source: "profil:verfeinerung",
 }
+// T15 fix round 1 (F5, controller ruling): the memory toggle's own gate — free tier's
+// `/api/memory` is subscription-gated (see enforcement-matrix.md), so a locked tap opens
+// the sheet instead of ever calling that endpoint.
+const MEMORY_GATE: PremiumSheetContext = { feature: "chat", source: "profil:gedaechtnis" }
 
 function membershipStatusLabel(state: MembershipManagementState) {
   if (state.kind === "payment_problem") return "Zahlung ausstehend"
@@ -970,7 +974,17 @@ export default function ProfilePage() {
   const goalsStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(goalsFilled.length, goalsFields.length)
-  const memoryStatus = memoryLoading ? "Wird geladen" : memoryEnabled ? "Aktiv" : "Pausiert"
+  // T15 fix round 1 (F5): free tier never reaches `/api/memory` (subscription-gated, not
+  // freemium-admitted), so `memoryEnabled` never reflects a real setting for them — the
+  // status must say so honestly instead of defaulting to "Aktiv".
+  const memoryStatus =
+    tier === "free"
+      ? "Nur mit Premium"
+      : memoryLoading
+        ? "Wird geladen"
+        : memoryEnabled
+          ? "Aktiv"
+          : "Pausiert"
 
   const memoryEntryLabel = memoryEntries.length === 1 ? "Erinnerung" : "Erinnerungen"
   const memorySectionSummary: ProfileSectionSummary = {
@@ -1273,16 +1287,7 @@ export default function ProfilePage() {
                 controls={
                   <>
                     {!quizEditing ? (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="relative w-auto"
-                        aria-label={tier === "free" ? "Haar-Check bearbeiten — Premium" : undefined}
-                        onClick={() => startQuizEditing()}
-                      >
-                        Haar-Check bearbeiten
-                        {tier === "free" ? <ProfileLockBadge /> : null}
-                      </Button>
+                      <HaarCheckEditControl tier={tier} onEdit={() => startQuizEditing()} />
                     ) : null}
                   </>
                 }
@@ -2109,11 +2114,12 @@ export default function ProfilePage() {
                 preview={memorySectionSummary.preview}
                 controls={
                   <>
-                    <Switch
+                    <MemoryToggleControl
+                      tier={tier}
                       checked={memoryEnabled}
                       disabled={memoryLoading || memorySaving}
                       onCheckedChange={handleMemoryToggle}
-                      aria-label="Erinnerungen aktivieren"
+                      onLockedTap={() => openPremiumSheet(MEMORY_GATE)}
                     />
                     <Button
                       type="button"
