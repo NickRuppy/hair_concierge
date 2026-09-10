@@ -496,6 +496,47 @@ test("keepsake mode removes every write path from the chat container and locks t
   assert.match(composer, /aria-label="Chat freischalten — Premium"/)
 })
 
+test("Z4: keepsake history renders the interactive chat cards statically — no failing POST is reachable", () => {
+  const container = readSource("components/chat/chat-container.tsx")
+  const message = readSource("components/chat/chat-message.tsx")
+  const clarification = readSource("components/chat/product-lookup-clarification-card.tsx")
+  const intake = readSource("components/chat/product-intake-card.tsx")
+
+  // The container's withheld callbacks were not enough: `selectProductFromClarification` is
+  // always a function and THROWS when the callback is missing, so the card's „Auswählen"
+  // stayed clickable for this cohort. It is now withheld and the card is read-only.
+  assert.match(container, /keepsake=\{keepsake\}/)
+  assert.match(
+    message,
+    /onSelectProduct=\{keepsake \? undefined : selectProductFromClarification\}/,
+  )
+  assert.match(message, /readOnly=\{keepsake\}/)
+
+  // Read-only clarification: selection inert, and the „none"-action intake form — its own
+  // POST /api/product-intake, 403 for a lapsed owner — is not offered at all.
+  assert.match(clarification, /const canSelect =\s*!readOnly &&/)
+  assert.match(clarification, /\{!hasLockedSelection && !readOnly \? \(/)
+  assert.match(clarification, /\{showIntake && !hasLockedSelection && !readOnly \? \(/)
+
+  // Read-only intake offer: a static note, returned BEFORE any of the form's own state or
+  // submit path is rendered.
+  assert.match(
+    intake,
+    /if \(readOnly && !submittedStatus && !persistedState\?\.submittedStatus\) \{/,
+  )
+  assert.match(intake, /return <ProductIntakeKeepsakeState \/>/)
+  const keepsakeState = intake.slice(intake.indexOf("export function ProductIntakeKeepsakeState"))
+  assert.doesNotMatch(
+    keepsakeState.slice(0, keepsakeState.indexOf("export function ProductIntakeSubmittedState")),
+    /fetch\(|<input|<select|onClick/,
+  )
+
+  // Both cards default to interactive, so premium and flag-off are untouched.
+  assert.match(clarification, /readOnly = false/)
+  assert.match(intake, /readOnly = false/)
+  assert.match(message, /keepsake = false/)
+})
+
 test("the Gemerkt section drops both write affordances when read-only", () => {
   const source = readSource("components/routine/gemerkt-section.tsx")
   const readOnlyBranch = source.slice(source.indexOf("{readOnly ? null : ("))

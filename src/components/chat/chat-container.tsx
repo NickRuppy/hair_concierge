@@ -764,6 +764,13 @@ export function ChatContainer({
                       // /api/chat/product-selection`, `POST /api/chat/feedback`, the
                       // product-intake submission). Omitted, `ChatMessage` renders the
                       // bubble without the affordance rather than with a failing one.
+                      //
+                      // PR5 review fix (Z4): withholding the callbacks was not enough for
+                      // the two interactive CARDS inside a historical message — the
+                      // clarification card called a handler that throws, and both intake
+                      // forms POST `/api/product-intake` (403) on their own. `keepsake` is
+                      // passed explicitly so those render as static history instead.
+                      keepsake={keepsake}
                       onSelectProductCandidate={keepsake ? undefined : selectProductCandidate}
                       onFeedback={keepsake ? undefined : submitFeedback}
                       isNew={newMessageIds.has(msg.id)}
