@@ -352,8 +352,11 @@ export function ScanFlow({
   useEffect(() => {
     if (!merklisteEnabled || tier === "free") return
     void loadWishlistCount()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [merklisteEnabled, tier])
+    // Fix round 1 (F9): `loadWishlistCount` is a `useCallback` with an empty dependency
+    // array, so it is referentially stable — listing it here changes nothing about when
+    // this effect re-runs, it just removes the need for the disable comment that used to
+    // sit here.
+  }, [merklisteEnabled, tier, loadWishlistCount])
 
   /**
    * The single way back to the scanning step. The camera never stops (the sheet slides up

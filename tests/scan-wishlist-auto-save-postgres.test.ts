@@ -4,19 +4,27 @@ import test from "node:test"
 
 import { PGlite } from "@electric-sql/pglite"
 
+import { autoSaveScanWishlistProduct } from "../src/lib/scan/saved-state"
+
 /**
  * Postgres-level coverage for T16's auto-save write, against the REAL `scan_wishlist` +
  * `user_products` schema (harness pattern: tests/scan-move-saved-product-postgres.test.ts).
  *
- * This is where the brief's named regression actually gets proven: auto-save issues the
- * exact SQL `autoSaveScanWishlistProduct` (src/lib/scan/saved-state.ts) sends via
- * supabase-js's `.upsert(..., { onConflict: "user_id,product_id", ignoreDuplicates: true
- * })` — a single `INSERT INTO scan_wishlist (...) VALUES (...) ON CONFLICT (user_id,
- * product_id) DO NOTHING` — and nothing else. Running that exact statement against the
- * real schema, with a real `user_products` ownership row already seeded, is what proves
- * THE hazard (the move endpoint's DELETE semantics) cannot leak into auto-save: there is
- * no DELETE in this statement at all, so the ownership row has nothing to survive except a
- * write that structurally cannot touch it.
+ * Fix round 1 (F4): this now calls the REAL `autoSaveScanWishlistProduct`
+ * (src/lib/scan/saved-state.ts) rather than a hand-written SQL statement standing in for
+ * it — the previous version asserted the reviewer's/implementer's *hypothesis* about what
+ * supabase-js's `.upsert(..., { onConflict, ignoreDuplicates: true })` emits, proven only
+ * indirectly by the call-shape tests in tests/scan-saved-state.test.ts. `pgliteSupabaseClient`
+ * below is a thin, purpose-built shim that translates the EXACT query-builder chains the
+ * function under test issues (`.from("user_products").select(...).eq(...)×4` for the F2
+ * ownership check, `.from("scan_wishlist").upsert(payload, options)` for the write) into
+ * SQL run against PGlite — not a general supabase-js emulator, just enough surface for this
+ * one function, so a drift in what supabase-js actually sends is no longer invisible to
+ * this suite. Running that through the real schema, with a real `user_products` ownership
+ * row already seeded, is what proves THE hazard (the move endpoint's DELETE semantics)
+ * cannot leak into auto-save: the function never issues a DELETE at all, so the ownership
+ * row has nothing to survive except a write that structurally cannot touch it — and (F2)
+ * that an owned row makes the function skip the write outright.
  */
 
 const ROOT = new URL("../", import.meta.url)
@@ -100,14 +108,63 @@ async function seed(pg: PGlite) {
   `)
 }
 
-/** The exact statement shape `autoSaveScanWishlistProduct` sends via supabase-js. */
-async function autoSave(pg: PGlite, userId: string, productId: string) {
-  await pg.query(
-    `INSERT INTO public.scan_wishlist (user_id, product_id)
-       VALUES ($1, $2)
-     ON CONFLICT (user_id, product_id) DO NOTHING`,
-    [userId, productId],
-  )
+/**
+ * A minimal supabase-js-shaped shim over PGlite — see the file header for why this exists
+ * and its intentionally narrow scope. Only supports the two chains
+ * `autoSaveScanWishlistProduct` (and the `loadOwnedRoutineRows` helper it calls) actually
+ * issues:
+ *   - `.from(table).select(cols).eq(col, val)...` — awaited directly (no `.maybeSingle()`),
+ *     translated into `SELECT <cols> FROM public.<table> WHERE <col> = $n AND ...`.
+ *   - `.from(table).upsert(payload, { onConflict, ignoreDuplicates })` — awaited directly,
+ *     translated into `INSERT INTO public.<table> (...) VALUES (...) ON CONFLICT (...) DO
+ *     NOTHING` (the only `ignoreDuplicates` value either call site ever passes).
+ */
+function pgliteSupabaseClient(pg: PGlite) {
+  return {
+    from(table: string) {
+      const filters: Array<[string, unknown]> = []
+      const builder = {
+        select(_columns: string) {
+          return builder
+        },
+        eq(column: string, value: unknown) {
+          filters.push([column, value])
+          return builder
+        },
+        upsert(payload: Record<string, unknown>, options: { onConflict: string }) {
+          return {
+            then: async (resolve: (result: { error: unknown }) => unknown) => {
+              const columns = Object.keys(payload)
+              const values = columns.map((column) => payload[column])
+              const placeholders = columns.map((_, index) => `$${index + 1}`)
+              try {
+                await pg.query(
+                  `INSERT INTO public.${table} (${columns.join(", ")})
+                     VALUES (${placeholders.join(", ")})
+                   ON CONFLICT (${options.onConflict}) DO NOTHING`,
+                  values,
+                )
+                return resolve({ error: null })
+              } catch (error) {
+                return resolve({ error: { message: String(error) } })
+              }
+            },
+          }
+        },
+        then: async (resolve: (result: { data: unknown; error: unknown }) => unknown) => {
+          const where = filters.map(([column], index) => `${column} = $${index + 1}`).join(" AND ")
+          const values = filters.map(([, value]) => value)
+          try {
+            const { rows } = await pg.query(`SELECT * FROM public.${table} WHERE ${where}`, values)
+            return resolve({ data: rows, error: null })
+          } catch (error) {
+            return resolve({ data: null, error: { message: String(error) } })
+          }
+        },
+      }
+      return builder
+    },
+  }
 }
 
 async function insertOwnedRow(pg: PGlite, userId = USER, productId = PRODUCT) {
@@ -143,6 +200,11 @@ async function wishlistCount(pg: PGlite, userId = USER, productId = PRODUCT) {
   return rows[0]!.count
 }
 
+async function autoSave(pg: PGlite, userId: string, productId: string) {
+  const client = pgliteSupabaseClient(pg)
+  await autoSaveScanWishlistProduct(client as never, userId, productId)
+}
+
 test("auto-save: a bare scan wishlist-saves the product (round trip into the listing the Gemerkt section reads)", async (t) => {
   const pg = await migratedDatabase(t)
   await autoSave(pg, USER, PRODUCT)
@@ -157,7 +219,7 @@ test("auto-save: rescanning the same product is idempotent — exactly one row s
   assert.equal(await wishlistCount(pg), 1)
 })
 
-test("auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched", async (t) => {
+test("auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + auto-saving it, leaves the ownership row untouched AND writes no wishlist row (F2)", async (t) => {
   const pg = await migratedDatabase(t)
   await insertOwnedRow(pg)
   const before = await ownedRows(pg)
@@ -166,19 +228,22 @@ test("auto-save NON-DESTRUCTIVE REGRESSION: owning a product, then rescanning + 
   // The rescan: exactly what the resolve route's auto-save call performs for a premium
   // in-catalog verdict. THE hazard this guards against is `scan_move_saved_product`
   // (migration 20260904150000) reaching this same product and DELETEing this row — this
-  // statement is not that RPC, has no DELETE clause at all, and never references
-  // `user_products`.
+  // function issues no DELETE at all and never writes `user_products`. Fix round 1 (F2)
+  // adds a second guarantee on top: the ownership check must SKIP the wishlist write
+  // entirely for an owned product, keeping the Merkliste↔Routine exclusivity the move
+  // endpoint's own migration documents.
   await autoSave(pg, USER, PRODUCT)
 
   const after = await ownedRows(pg)
   assert.deepEqual(after, before, "the owned row must survive byte-for-byte")
   assert.equal(after[0]!.ownership_status, "owned")
   assert.equal(after[0]!.intake_source, "catalog_search")
-  // And the auto-save itself actually happened — non-destructive, not "silently skipped".
-  assert.equal(await wishlistCount(pg), 1)
+  // F2 ruling: an owned product gets NO wishlist row from auto-save — not "harmlessly
+  // present alongside ownership", but skipped outright.
+  assert.equal(await wishlistCount(pg), 0)
 })
 
-test("auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership, across multiple scans", async (t) => {
+test("auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owned product never touches ownership nor writes a wishlist row, across multiple scans", async (t) => {
   const pg = await migratedDatabase(t)
   await insertOwnedRow(pg)
   const before = await ownedRows(pg)
@@ -188,7 +253,7 @@ test("auto-save NON-DESTRUCTIVE REGRESSION: repeated rescan+auto-save of an owne
   await autoSave(pg, USER, PRODUCT)
 
   assert.deepEqual(await ownedRows(pg), before)
-  assert.equal(await wishlistCount(pg), 1, "still idempotent even with an owned row present")
+  assert.equal(await wishlistCount(pg), 0, "still skipped on every repeat, owned row present")
 })
 
 test("auto-save: scoped to user and product — another user's or another product's rows are untouched", async (t) => {
@@ -207,7 +272,7 @@ test("auto-save: scoped to user and product — another user's or another produc
   assert.equal(rows[0]!.count, 3)
 })
 
-test("auto-save: an owned row from ANOTHER user is untouched by this user's rescan", async (t) => {
+test("auto-save: an owned row from ANOTHER user does not block this user's rescan, and is itself untouched", async (t) => {
   const pg = await migratedDatabase(t)
   await insertOwnedRow(pg, OTHER_USER, PRODUCT)
   const before = await ownedRows(pg, OTHER_USER, PRODUCT)
@@ -220,5 +285,7 @@ test("auto-save: an owned row from ANOTHER user is untouched by this user's resc
     0,
     "the other user gained no wishlist row",
   )
+  // The ownership check is scoped per user: another user's owned row must not skip THIS
+  // user's write.
   assert.equal(await wishlistCount(pg, USER, PRODUCT), 1)
 })

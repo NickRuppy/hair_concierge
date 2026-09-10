@@ -133,12 +133,25 @@ function parseSavedState(payload: unknown): ScanSavedStatePayload {
  * (migration 20260820100200) plus `ignoreDuplicates` turns a rescan into a plain
  * `ON CONFLICT (user_id, product_id) DO NOTHING` — no duplicate row, no error, and (unlike
  * the move RPC) nothing else in the schema is ever touched by this call.
+ *
+ * Fix round 1 (F2, controller ruling): auto-saving a product the user already OWNS
+ * (`user_products`) broke the exclusivity `scan_move_saved_product`'s own migration
+ * documents — a wishlist row for an owned product made `loadScanSavedState` (wishlist-first)
+ * report "merkliste" instead of "routine" from the very next scan onward, and once the
+ * „Gemerkt" section existed the same product would show in BOTH lists. This does one
+ * indexed lookup against `user_products` before the insert and skips the write when the
+ * product is already owned — kept in the same request path (not a separate deferred check),
+ * a race against a concurrent ownership change is accepted: `ON CONFLICT DO NOTHING` and the
+ * move endpoint's own semantics bound the damage either way.
  */
 export async function autoSaveScanWishlistProduct(
   client: SupabaseClient,
   userId: string,
   productId: string,
 ): Promise<void> {
+  const owned = await loadOwnedRoutineRows(client, userId, productId)
+  if (owned.length > 0) return
+
   const { error } = await client
     .from("scan_wishlist")
     .upsert(

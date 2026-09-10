@@ -12,6 +12,11 @@ import {
  * against a stub client in tests/scan-saved-state.test.ts and against real Postgres in
  * tests/scan-wishlist-auto-save-postgres.test.ts (the named non-destructive regression) —
  * this file only proves the resolve route wires the call to the right branch.
+ *
+ * Fix round 1 (F5): the call moved behind the route's `after()` seam, so it no longer runs
+ * before the handler's response is built — every test below has to flush the fake `after`
+ * queue (mirroring tests/scan-resolve-route.test.ts's `collectAttempts()` harness) before
+ * asserting on `deps.autoSaveScanWishlist`'s calls.
  */
 
 const userId = "11111111-1111-4111-8111-111111111111"
@@ -93,6 +98,24 @@ const presentationRow = {
   priceCheckedAt: "2026-08-19T00:00:00.000Z",
 }
 
+/**
+ * Real `after()` callbacks run only once the response has been sent, so the fake holds
+ * the task until `flush()` — running it earlier would not model production (same pattern
+ * as tests/scan-resolve-route.test.ts's `collectAttempts()`).
+ */
+function afterQueue() {
+  const queued: Array<() => Promise<void> | void> = []
+  const after = (task: () => Promise<void> | void) => {
+    queued.push(task)
+  }
+  const flush = async () => {
+    while (queued.length > 0) {
+      await Promise.all(queued.splice(0).map((task) => task()))
+    }
+  }
+  return { after, flush }
+}
+
 function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRouteDeps {
   return {
     getUserId: async () => userId,
@@ -142,6 +165,7 @@ test("scan resolve auto-save: a premium in-catalog resolve auto-saves exactly th
   await withFlag("true", async () => {
     const calls: Array<{ userId: string; productId: string }> = []
     const adminClient = { marker: "admin" }
+    const { after, flush } = afterQueue()
     const handler = createScanResolveRouteHandler(
       baseDeps({
         createAdminClient: () => adminClient as never,
@@ -150,31 +174,87 @@ test("scan resolve auto-save: a premium in-catalog resolve auto-saves exactly th
           assert.equal(client, adminClient, "must use the admin client, not a fresh one")
           calls.push({ userId: uid, productId: pid })
         },
+        after,
       }),
     )
     const response = await handler(request())
     assert.equal(response.status, 200)
+    assert.deepEqual(calls, [], "the write must not run before the response is built (F5)")
+    await flush()
     assert.deepEqual(calls, [{ userId, productId }])
+  })
+})
+
+test("scan resolve auto-save: the response reflects the predicted post-save state, not the stale pre-save read (F3)", async () => {
+  await withFlag("true", async () => {
+    const { after } = afterQueue()
+    const handler = createScanResolveRouteHandler(
+      baseDeps({
+        resolvePaidAccess: async () => "allowed",
+        loadScanSavedState: async () => ({ state: null, managedByScan: false }),
+        autoSaveScanWishlist: async () => {},
+        after,
+      }),
+    )
+    const response = await handler(request())
+    assert.equal(response.status, 200)
+    const body = (await response.json()) as { savedState?: unknown }
+    assert.deepEqual(body.savedState, { state: "merkliste", managedByScan: true })
+  })
+})
+
+test("scan resolve auto-save: an already-saved product's response state is carried through unchanged", async () => {
+  await withFlag("true", async () => {
+    const { after } = afterQueue()
+    const handler = createScanResolveRouteHandler(
+      baseDeps({
+        resolvePaidAccess: async () => "allowed",
+        loadScanSavedState: async () => ({ state: "merkliste", managedByScan: true }),
+        after,
+      }),
+    )
+    const response = await handler(request())
+    const body = (await response.json()) as { savedState?: unknown }
+    assert.deepEqual(body.savedState, { state: "merkliste", managedByScan: true })
+  })
+})
+
+test("scan resolve auto-save: an owned (routine) product's response state is carried through unchanged (F2)", async () => {
+  await withFlag("true", async () => {
+    const { after } = afterQueue()
+    const handler = createScanResolveRouteHandler(
+      baseDeps({
+        resolvePaidAccess: async () => "allowed",
+        loadScanSavedState: async () => ({ state: "routine", managedByScan: false }),
+        after,
+      }),
+    )
+    const response = await handler(request())
+    const body = (await response.json()) as { savedState?: unknown }
+    assert.deepEqual(body.savedState, { state: "routine", managedByScan: false })
   })
 })
 
 test("scan resolve auto-save: a masked (free-tier) resolve never auto-saves — direct-request denial", async () => {
   await withFlag("true", async () => {
+    const { after, flush } = afterQueue()
     const handler = createScanResolveRouteHandler(
       baseDeps({
         resolvePaidAccess: async () => "denied",
         autoSaveScanWishlist: async () => {
           throw new Error("must not be called for a free-tier (masked) resolve")
         },
+        after,
       }),
     )
     const response = await handler(request())
     assert.equal(response.status, 200)
     const body = await response.json()
     assert.equal(body.kind, "in_catalog")
-    // Masked: the throwing `autoSaveScanWishlist` above never fired, or this test itself
-    // would have rejected — this assertion just documents which branch the response proves.
     assert.equal(body.freeRevealAvailable, true)
+    // Masked responses never schedule the write at all — flushing an empty queue proves
+    // there is nothing pending, not just that the throwing dep above never fired yet.
+    await flush()
   })
 })
 
@@ -233,6 +313,7 @@ test("scan resolve auto-save: an unavailable paid-access lookup still fails clos
 test("scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx", async () => {
   await withFlag("true", async () => {
     const captured: unknown[] = []
+    const { after, flush } = afterQueue()
     const handler = createScanResolveRouteHandler(
       baseDeps({
         resolvePaidAccess: async () => "allowed",
@@ -242,12 +323,18 @@ test("scan resolve auto-save: a write failure is caught and reported, never turn
         captureScanException: (_error, details) => {
           captured.push(details)
         },
+        after,
       }),
     )
     const response = await handler(request())
     assert.equal(response.status, 200, "the verdict must still be served")
     const body = await response.json()
     assert.equal(body.kind, "in_catalog")
+    // Optimistic per F3: the response already predicted "merkliste" before the deferred
+    // write (which fails here) ever ran — that is the documented trade-off, not a bug this
+    // test should re-litigate.
+    assert.deepEqual(body.savedState, { state: "merkliste", managedByScan: true })
+    await flush()
     assert.deepEqual(captured, [
       {
         route: "resolve",
@@ -260,19 +347,37 @@ test("scan resolve auto-save: a write failure is caught and reported, never turn
   })
 })
 
+test("scan resolve auto-save: a synchronously throwing after() cannot turn a resolved scan into a 503", async () => {
+  await withFlag("true", async () => {
+    const handler = createScanResolveRouteHandler(
+      baseDeps({
+        resolvePaidAccess: async () => "allowed",
+        after: () => {
+          throw new Error("no store")
+        },
+      }),
+    )
+    const response = await handler(request())
+    assert.equal(response.status, 200)
+  })
+})
+
 test("scan resolve auto-save: rescanning the same product auto-saves again each time (idempotency is the DB's job, not a client-side skip)", async () => {
   await withFlag("true", async () => {
     let calls = 0
+    const { after, flush } = afterQueue()
     const handler = createScanResolveRouteHandler(
       baseDeps({
         resolvePaidAccess: async () => "allowed",
         autoSaveScanWishlist: async () => {
           calls += 1
         },
+        after,
       }),
     )
     await handler(request())
     await handler(request())
+    await flush()
     assert.equal(
       calls,
       2,

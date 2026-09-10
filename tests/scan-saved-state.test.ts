@@ -212,10 +212,17 @@ test("removeScanRoutineProduct: nothing owned at all is a plain idempotent succe
  * product_id) DO NOTHING` — at the JS-call level. The real Postgres semantics of that
  * upsert (including the named non-destructive regression against a seeded `user_products`
  * ownership row) are covered separately in tests/scan-wishlist-auto-save-postgres.test.ts.
+ *
+ * Fix round 1 (F2): the function now does one `user_products` READ (ownership check)
+ * before the `scan_wishlist` write, so every test below has to wire a `user_products`
+ * `selectList` handler too — an empty result models "not owned".
  */
+const NOT_OWNED = { user_products: { selectList: () => ({ data: [], error: null }) } }
+
 test("autoSaveScanWishlistProduct: upserts user_id + product_id into scan_wishlist with ON CONFLICT DO NOTHING semantics", async () => {
   const { client, upserts } = stubClient({
     scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
   })
   await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
   assert.equal(upserts.length, 1)
@@ -224,19 +231,34 @@ test("autoSaveScanWishlistProduct: upserts user_id + product_id into scan_wishli
   assert.deepEqual(upserts[0].options, { onConflict: "user_id,product_id", ignoreDuplicates: true })
 })
 
-test("autoSaveScanWishlistProduct: never touches any table but scan_wishlist", async () => {
-  // No `user_products` handler at all: a call against it throws `unexpected table
-  // user_products` from `stubClient` — this is THE hazard's regression at the call-shape
-  // level, mirroring `loadScanSavedState`'s wishlist-first test above.
+test("autoSaveScanWishlistProduct: the F2 ownership check only READS user_products — never writes to any table but scan_wishlist", async () => {
+  // `user_products` has a selectList handler (the ownership lookup) but deliberately no
+  // insert/upsert/delete handler: an attempted write against it would throw "no <op>
+  // handler for user_products" from `stubClient` — this is THE hazard's regression at the
+  // call-shape level, mirroring `loadScanSavedState`'s wishlist-first test above.
   const { client } = stubClient({
     scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
   })
   await assert.doesNotReject(() => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"))
+})
+
+test("autoSaveScanWishlistProduct: an owned product is skipped — no scan_wishlist write, exclusivity intact (F2 ruling)", async () => {
+  const { client, upserts } = stubClient({
+    // No upsert handler on scan_wishlist: reaching it at all would throw and fail the test.
+    scan_wishlist: {},
+    user_products: {
+      selectList: () => ({ data: [{ id: "up-1", intake_source: "catalog_search" }], error: null }),
+    },
+  })
+  await assert.doesNotReject(() => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"))
+  assert.deepEqual(upserts, [])
 })
 
 test("autoSaveScanWishlistProduct: rescanning the same product upserts again — idempotency is ON CONFLICT's job", async () => {
   const { client, upserts } = stubClient({
     scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
   })
   await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
   await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
@@ -247,11 +269,24 @@ test("autoSaveScanWishlistProduct: rescanning the same product upserts again —
 test("autoSaveScanWishlistProduct: an upsert error throws a stable error", async () => {
   const { client } = stubClient({
     scan_wishlist: { upsert: () => ({ error: { message: "boom" } }) },
+    ...NOT_OWNED,
   })
   await assert.rejects(
     () => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"),
     /scan_wishlist_auto_save_failed/,
   )
+})
+
+test("autoSaveScanWishlistProduct: an ownership-lookup error throws a stable error, before any write", async () => {
+  const { client, upserts } = stubClient({
+    scan_wishlist: {},
+    user_products: { selectList: () => ({ data: null, error: { message: "boom" } }) },
+  })
+  await assert.rejects(
+    () => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"),
+    /scan_saved_state_lookup_failed/,
+  )
+  assert.deepEqual(upserts, [])
 })
 
 /**
