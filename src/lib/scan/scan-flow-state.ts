@@ -202,6 +202,13 @@ export type ScanFlowAction =
    * re-serves the surface's server props without touching reducer state, so nothing else
    * can wash a proven `"free"` back out. Without this action the buyer came back from the
    * purchase to a still-locked Merken bookmark.
+   *
+   * Deliberately leaves `step`/`result` untouched — a purchase proves the tier, it does
+   * not hand back a new verdict. Fix round 2: when the step on screen is a masked
+   * `in_catalog` verdict, `scan-flow.tsx`'s `handleTierUpgraded` (the component-level
+   * `onUnlocked` handler, not this reducer) separately re-resolves that same product
+   * through the ordinary tokened `resolve()` machinery, so the buyer who purchased to see
+   * alternatives actually sees them instead of the stale masked card.
    */
   | { type: "tier_upgraded" }
   | { type: "submit_started"; token: number }
