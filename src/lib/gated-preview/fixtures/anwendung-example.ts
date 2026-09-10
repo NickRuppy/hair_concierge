@@ -98,7 +98,7 @@ const INTENSIVE_CARE_DAY: ApplicationDayView = {
   // shampoo cadence says "2× pro Woche", meaning the two Waschtage — Waschtag AND
   // Intensivpflegetag both shampooing would total 3, which the Routine's own cadence line
   // doesn't say. Hair is wetted for the mask without a separate shampoo step instead.
-  summaryDe: "Haare anfeuchten, Maske statt Shampoo und Conditioner verwenden.",
+  summaryDe: "Haare anfeuchten, Maske statt Conditioner verwenden.",
   cadenceDe: "1× pro Woche",
   steps: [
     productStep({
