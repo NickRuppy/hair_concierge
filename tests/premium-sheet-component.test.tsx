@@ -4,6 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { BottomSheetContent } from "@/components/ui/bottom-sheet"
 import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
+import { PremiumSheetCheckout } from "@/components/premium-sheet/premium-sheet-checkout"
 import {
   PREMIUM_FEATURES,
   type PremiumFeatureId,
@@ -130,6 +131,40 @@ function createStateHarness(renderComponent: () => ReactElement | null) {
         hookValues[index] = { current: initialValue }
       }
       return hookValues[index] as { current: T }
+    },
+    // T14: the sheet now owns a purchase machine, effects and the app router.
+    useReducer<S, A>(
+      reducer: (state: S, action: A) => S,
+      initialState: S,
+    ): [S, (action: A) => void] {
+      const index = cursor
+      cursor += 1
+      if (hookValues.length <= index) hookValues[index] = initialState
+      return [
+        hookValues[index] as S,
+        (action) => {
+          hookValues[index] = reducer(hookValues[index] as S, action)
+        },
+      ]
+    },
+    /**
+     * Effects are deliberately NOT run: this harness renders the component function once
+     * and walks the tree, so running effects would fire router refreshes and fetches with
+     * no environment behind them. Every effect-driven behaviour is covered by the pure
+     * reducer suite (`tests/premium-sheet-purchase-state.test.ts`) instead.
+     */
+    useEffect(): void {},
+    /**
+     * `useRouter` / `usePathname` both resolve through context. One stub serves both: the
+     * router methods are no-ops (nothing here may navigate), and the pathname falls back to
+     * the sanitizer's default, which is all these assertions need.
+     */
+    useContext(): unknown {
+      return { refresh() {}, replace() {}, push() {} }
+    },
+    /** `usePathname` reads its context through `use`, not `useContext`. */
+    use(): unknown {
+      return "/scan"
     },
   }
 
@@ -332,7 +367,7 @@ test("the labelled escape is context-appropriate and never degrades anything", (
   assert.equal(textContent(requireOne(gated, "data-premium-sheet-dismiss")), "Später")
 })
 
-test("dismissing always escapes: the escape button, the CTA stub and onOpenChange(false)", () => {
+test("dismissing always escapes: the escape button and onOpenChange(false)", () => {
   let closed = 0
   const harness = renderSheet({ onClose: () => (closed += 1) })
   const tree = harness.render()
@@ -340,14 +375,38 @@ test("dismissing always escapes: the escape button, the CTA stub and onOpenChang
   requireOne(tree, "data-premium-sheet-dismiss").props.onClick()
   assert.equal(closed, 1, "the labelled escape closes the sheet")
 
-  // T14 wires payment; until then the CTA keeps T5's placeholder behaviour.
-  requireOne(tree, "data-premium-sheet-cta").props.onClick()
-  assert.equal(closed, 2, "the placeholder CTA still just closes (no payment in T13)")
-
   const sheet = tree as AnyElement // <BottomSheet> is the outermost element
   sheet.props.onOpenChange(false)
-  assert.equal(closed, 3, "backdrop / Escape / X / drag dismiss the sheet")
+  assert.equal(closed, 2, "backdrop / Escape / X / drag dismiss the sheet")
 
   sheet.props.onOpenChange(true)
-  assert.equal(closed, 3, "re-opening must not call onClose")
+  assert.equal(closed, 2, "re-opening must not call onClose")
+})
+
+test("T14: the CTA opens checkout in place — it neither closes the sheet nor navigates", () => {
+  let closed = 0
+  const harness = renderSheet({ onClose: () => (closed += 1) })
+
+  requireOne(harness.render(), "data-premium-sheet-cta").props.onClick()
+  const paying = harness.render()
+
+  assert.equal(closed, 0, "starting a payment must never close the sheet")
+  // Plan rows and the CTA give way to the checkout body; the escape stays.
+  assert.equal(byData(paying, "data-premium-sheet-plans").length, 0)
+  assert.equal(byData(paying, "data-premium-sheet-cta").length, 0)
+  assert.ok(findByType(contentOf(paying), PremiumSheetCheckout), "checkout is mounted in the body")
+  assert.equal(textContent(requireOne(paying, "data-premium-sheet-dismiss")), "Plan ändern")
+})
+
+test("T14: the mid-payment escape returns to the plan rows instead of closing the sheet", () => {
+  let closed = 0
+  const harness = renderSheet({ onClose: () => (closed += 1) })
+  requireOne(harness.render(), "data-premium-sheet-cta").props.onClick()
+
+  requireOne(harness.render(), "data-premium-sheet-dismiss").props.onClick()
+  const back = harness.render()
+
+  assert.equal(closed, 0, "the free session is never ended by backing out of a payment")
+  assert.equal(byData(back, "data-premium-sheet-plans").length, 1)
+  assert.equal(findByType(contentOf(back), PremiumSheetCheckout), null)
 })

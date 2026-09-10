@@ -373,6 +373,28 @@ export function reportMissingExactOfferFunnelContext(
   return true
 }
 
+/**
+ * Which price catalog a checkout SUBMITS (freemium-scanner-first T14, carry-forward from
+ * T13).
+ *
+ * The Premium sheet renders standard prices unconditionally
+ * (`src/lib/premium-sheet/pricing.ts`), so the price it charges is pinned to the same
+ * catalog here — a launch-pricing rollout must never charge 69,99 behind a 99,99 sheet.
+ * Every other source keeps the flag-aware resolver exactly as before.
+ *
+ * Exported because this is the one assertion worth making in both flag states.
+ */
+export function resolveCheckoutPricingCatalog({
+  source,
+  launchPricingEnabled,
+}: {
+  source: CheckoutRequestSource
+  launchPricingEnabled: boolean
+}): SubscriptionPricingCatalog {
+  if (source === "premium_sheet") return STANDARD_PRICING_CATALOG
+  return resolveSubscriptionPricingCatalog(launchPricingEnabled)
+}
+
 export function resolveStripeCheckoutSessionCreateOptions({
   reactivationReservationId,
   isPreparation,
@@ -832,12 +854,10 @@ export async function POST(req: NextRequest) {
     const leadFunnelContext = resolvedLeadId
       ? await resolveFunnelContextForLead(resolvedLeadId, exactOfferFunnelSessionId)
       : null
-    // T14 (carry-forward from T13): the Premium sheet renders standard prices whatever the
-    // launch-pricing flag says, so the price it SUBMITS is pinned to the same catalog here,
-    // server-side. Every other source keeps the flag-aware resolver untouched.
-    const pricingCatalog = isPremiumSheetCheckout
-      ? STANDARD_PRICING_CATALOG
-      : resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+    const pricingCatalog = resolveCheckoutPricingCatalog({
+      source,
+      launchPricingEnabled: isPersonalPlanLaunchPricingEnabled(),
+    })
     const analyticsPlan = isOneTimePurchase
       ? PERSONAL_PLAN_ONCE_PRODUCT
       : getStripePricingPlan(subscriptionInterval, pricingCatalog)
