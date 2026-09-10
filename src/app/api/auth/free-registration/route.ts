@@ -2,14 +2,21 @@ import { NextResponse } from "next/server"
 
 import { checkEmailDeliverability } from "@/lib/email-deliverability"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
-import { checkRateLimit, FREE_REGISTRATION_RATE_LIMIT } from "@/lib/rate-limit"
+import {
+  checkRateLimit,
+  FREE_REGISTRATION_ADDRESS_RATE_LIMIT,
+  FREE_REGISTRATION_IP_RATE_LIMIT,
+  FREE_REGISTRATION_RATE_LIMIT,
+} from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   requestFreeRegistrationLink,
   type FreeRegistrationDependencies,
   type FreeRegistrationLead,
+  type FreeRegistrationRateDimension,
   type FreeRegistrationResult,
 } from "@/lib/auth/free-registration"
+import { verifyFreeRegistrationCapability } from "@/lib/auth/free-registration-capability"
 
 export const runtime = "nodejs"
 
@@ -27,6 +34,8 @@ const NOT_FOUND_ERROR = "Nicht gefunden"
 const INVALID_REQUEST_ERROR = "Bitte starte die Haaranalyse noch einmal."
 const LEAD_NOT_FOUND_ERROR = "Wir konnten deine Haaranalyse nicht finden."
 const LEAD_CLAIMED_ERROR = "Für diese Haaranalyse gibt es schon ein Konto. Bitte melde dich an."
+const CORRECTION_NOT_AUTHORIZED_ERROR =
+  "Diese Adresse lässt sich hier nicht mehr ändern. Starte die Haaranalyse noch einmal – dann geht der Link an deine neue Adresse."
 const RATE_LIMITED_ERROR = "Zu viele Versuche. Bitte warte ein paar Minuten."
 const RATE_LIMIT_UNAVAILABLE_ERROR =
   "Der Link kann gerade nicht gesendet werden. Bitte versuche es gleich noch einmal."
@@ -59,7 +68,12 @@ export function createFreeRegistrationPostHandler(
     const payload = isRecord(body) ? body : {}
     try {
       const result = await requestFreeRegistrationLink(
-        { leadId: payload.leadId, email: payload.email },
+        {
+          leadId: payload.leadId,
+          email: payload.email,
+          capability: payload.capability,
+          ipAddress: resolveClientIp(request),
+        },
         { ...createDefaultDependencies(), ...overrides },
       )
       return toResponse(toRouteResult(result))
@@ -85,6 +99,14 @@ export function toRouteResult(result: FreeRegistrationResult): RouteResult {
       return { status: 404, body: { code: "lead_not_found", error: LEAD_NOT_FOUND_ERROR } }
     case "lead_claimed":
       return { status: 409, body: { code: "lead_claimed", error: LEAD_CLAIMED_ERROR } }
+    case "correction_not_authorized":
+      return {
+        status: 403,
+        body: {
+          code: "correction_not_authorized",
+          error: CORRECTION_NOT_AUTHORIZED_ERROR,
+        },
+      }
     case "rate_limited":
       return { status: 429, body: { code: "rate_limited", error: RATE_LIMITED_ERROR } }
     case "rate_limit_unavailable":
@@ -116,7 +138,9 @@ function createDefaultDependencies(): FreeRegistrationDependencies {
 
   return {
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-    checkRateLimit: (identifier) => checkRateLimit(identifier, FREE_REGISTRATION_RATE_LIMIT),
+    checkRateLimit: ({ dimension, identifier }) =>
+      checkRateLimit(identifier, RATE_LIMITS_BY_DIMENSION[dimension]),
+    verifyCorrectionCapability: (token, leadId) => verifyFreeRegistrationCapability(token, leadId),
     async loadLead(leadId): Promise<FreeRegistrationLead | null> {
       const { data, error } = await admin()
         .from("leads")
@@ -140,13 +164,18 @@ function createDefaultDependencies(): FreeRegistrationDependencies {
     },
     async updateLeadEmail(leadId, email) {
       // Guarded by `user_id IS NULL` in the statement itself so a lead that
-      // gets claimed between the read and this write is never re-pointed.
-      const { error } = await admin()
+      // gets claimed between the read and this write is never re-pointed. The
+      // `.select()` is what makes that guard OBSERVABLE: without it a lost race
+      // returned `ok: true` and the link went to an address the lead no longer
+      // carries, dead-ending the resulting account (finding W5).
+      const { data, error } = await admin()
         .from("leads")
         .update({ email })
         .eq("id", leadId)
         .is("user_id", null)
+        .select("id")
       if (error) throw new Error(`Lead e-mail update failed: ${error.message}`)
+      return { updated: Array.isArray(data) ? data.length > 0 : Boolean(data) }
     },
     async checkEmailDeliverability(email) {
       const result = await checkEmailDeliverability(email)
@@ -169,6 +198,19 @@ function createDefaultDependencies(): FreeRegistrationDependencies {
       return { error: null }
     },
   }
+}
+
+const RATE_LIMITS_BY_DIMENSION: Record<
+  FreeRegistrationRateDimension,
+  typeof FREE_REGISTRATION_RATE_LIMIT
+> = {
+  lead: FREE_REGISTRATION_RATE_LIMIT,
+  ip: FREE_REGISTRATION_IP_RATE_LIMIT,
+  address: FREE_REGISTRATION_ADDRESS_RATE_LIMIT,
+}
+
+function resolveClientIp(request: Request): string | null {
+  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

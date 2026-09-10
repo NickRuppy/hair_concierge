@@ -37,16 +37,29 @@ const COPY = {
   noLeadTitle: "Wir konnten deine Haaranalyse nicht finden.",
   noLeadBody: "Starte sie kurz neu – es dauert nur ein paar Minuten.",
   noLeadCta: "Zur Haaranalyse",
+  claimedTitle: "Für diese Haaranalyse gibt es schon ein Konto.",
   claimedCta: "Zum Login",
+  correctionBlockedTitle: "Die Adresse lässt sich hier nicht mehr ändern.",
+  correctionBlockedBody:
+    "Aus Sicherheitsgründen geht das nur direkt nach der Haaranalyse. Starte sie kurz neu – dann schicken wir den Link an deine neue Adresse.",
+  genericErrorTitle: "Das hat gerade nicht geklappt.",
   genericError: "Das hat gerade nicht geklappt. Bitte versuche es noch einmal.",
   retry: "Erneut versuchen",
 } as const
 
 const QUIZ_ENTRY_PATH = "/lp/haarplan"
 
-type Handoff = { leadId: string; email?: string }
+type Handoff = { leadId: string; email?: string; capability?: string }
 
-type Phase = "resolving" | "sending" | "inbox" | "correct" | "expired" | "no_lead" | "failed"
+type Phase =
+  | "resolving"
+  | "sending"
+  | "inbox"
+  | "correct"
+  | "expired"
+  | "no_lead"
+  | "failed"
+  | "correction_blocked"
 
 function readHandoff(): Handoff | null {
   try {
@@ -59,17 +72,20 @@ function readHandoff(): Handoff | null {
     return {
       leadId: record.leadId,
       ...(typeof record.email === "string" && record.email ? { email: record.email } : {}),
+      ...(typeof record.capability === "string" && record.capability
+        ? { capability: record.capability }
+        : {}),
     }
   } catch {
     return null
   }
 }
 
-function writeHandoffEmail(leadId: string, email: string) {
+function writeHandoffEmail(leadId: string, email: string, capability: string | null) {
   try {
     window.sessionStorage.setItem(
       FREE_REGISTRATION_HANDOFF_STORAGE_KEY,
-      JSON.stringify({ leadId, email }),
+      JSON.stringify(capability ? { leadId, email, capability } : { leadId, email }),
     )
   } catch {
     /* A blocked sessionStorage only costs the address in the copy. */
@@ -96,12 +112,20 @@ type SendOutcome =
   | { ok: true; email?: string }
   | { ok: false; message: string; code?: string; suggestion?: string }
 
-async function postFreeRegistration(leadId: string, email?: string): Promise<SendOutcome> {
+async function postFreeRegistration(
+  leadId: string,
+  email?: string,
+  capability?: string | null,
+): Promise<SendOutcome> {
   try {
     const response = await fetch(FREE_REGISTRATION_API_PATH, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(email ? { leadId, email } : { leadId }),
+      // The capability travels only with a correction — it is what authorizes
+      // rewriting the lead's address (T18 fix round 1, W1a).
+      body: JSON.stringify(
+        email ? { leadId, email, ...(capability ? { capability } : {}) } : { leadId },
+      ),
     })
     const payload: unknown = await response.json().catch(() => null)
     const record =
@@ -135,6 +159,7 @@ export function FreeRegistrationClient({
   const [phase, setPhase] = useState<Phase>("resolving")
   const [leadId, setLeadId] = useState<string | null>(leadIdFromUrl)
   const [email, setEmail] = useState<string | null>(null)
+  const [capability, setCapability] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [claimed, setClaimed] = useState(false)
@@ -146,24 +171,33 @@ export function FreeRegistrationClient({
   const draftInputRef = useRef<HTMLInputElement>(null)
 
   const send = useCallback(
-    async (targetLeadId: string, options: { email?: string; notice?: string } = {}) => {
+    async (
+      targetLeadId: string,
+      options: { email?: string; capability?: string | null; notice?: string } = {},
+    ) => {
       setBusy(true)
       setError(null)
       setNotice(null)
-      const outcome = await postFreeRegistration(targetLeadId, options.email)
+      const outcome = await postFreeRegistration(targetLeadId, options.email, options.capability)
       setBusy(false)
       if (outcome.ok) {
         setSentMarker(targetLeadId)
         const nextEmail = outcome.email ?? options.email ?? null
         if (nextEmail) {
           setEmail(nextEmail)
-          writeHandoffEmail(targetLeadId, nextEmail)
+          writeHandoffEmail(targetLeadId, nextEmail, options.capability ?? null)
         }
         setClaimed(false)
         setPhase("inbox")
         setCooldownUntil(Date.now() + RESEND_COOLDOWN_MS)
         if (options.notice) setNotice(options.notice)
         return true
+      }
+      // The server is the authority on whether a correction was authorized; a
+      // stale or forged capability lands here just like a missing one.
+      if (outcome.code === "correction_not_authorized") {
+        setPhase("correction_blocked")
+        return false
       }
       setClaimed(outcome.code === "lead_claimed")
       setError(outcome.message)
@@ -186,9 +220,12 @@ export function FreeRegistrationClient({
       const handoff = readHandoff()
       const resolvedLeadId = leadIdFromUrl ?? handoff?.leadId ?? null
       setLeadId(resolvedLeadId)
-      if (handoff?.email && (!leadIdFromUrl || leadIdFromUrl === handoff.leadId)) {
-        setEmail(handoff.email)
-      }
+      const handoffMatchesLead = !leadIdFromUrl || leadIdFromUrl === handoff?.leadId
+      if (handoff?.email && handoffMatchesLead) setEmail(handoff.email)
+      // Only the browser that completed THIS quiz holds the capability — that is
+      // the whole control (W1a), so it never travels with a lead id from the URL
+      // unless the handoff is for that same lead.
+      if (handoff?.capability && handoffMatchesLead) setCapability(handoff.capability)
 
       if (!resolvedLeadId) {
         setPhase("no_lead")
@@ -221,6 +258,14 @@ export function FreeRegistrationClient({
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000))
 
   function startCorrection() {
+    // No capability, no correction — say so straight away instead of walking the
+    // user through a form the server is going to refuse (W1a).
+    if (!capability) {
+      setError(null)
+      setNotice(null)
+      setPhase("correction_blocked")
+      return
+    }
     setDraftEmail(email ?? "")
     setError(null)
     setNotice(null)
@@ -235,14 +280,81 @@ export function FreeRegistrationClient({
       setError(COPY.emailInvalid)
       return
     }
-    await send(leadId, { email: candidate, notice: COPY.resent })
+    await send(leadId, { email: candidate, capability, notice: COPY.resent })
   }
 
+  return (
+    <FreeRegistrationScreen
+      busy={busy}
+      claimed={claimed}
+      cooldownSeconds={cooldownSeconds}
+      draftEmail={draftEmail}
+      draftInputRef={draftInputRef}
+      email={email}
+      error={error}
+      notice={notice}
+      onCancelCorrection={() => {
+        setError(null)
+        setPhase("inbox")
+      }}
+      onDraftChange={(value) => {
+        setDraftEmail(value)
+        setError(null)
+      }}
+      onResend={() => leadId && void send(leadId, { notice: COPY.resent })}
+      onStartCorrection={startCorrection}
+      onSubmitCorrection={submitCorrection}
+      phase={phase}
+      resendDisabled={!leadId}
+    />
+  )
+}
+
+/**
+ * Every screen state this route can show, as one pure function of its inputs.
+ * Split out of `FreeRegistrationClient` in fix round 1 so the states are
+ * reachable from a test (review finding W6): the client's phase machine lives
+ * behind a `requestAnimationFrame` bootstrap and `fetch`, neither of which
+ * `renderToStaticMarkup` runs.
+ */
+export function FreeRegistrationScreen({
+  busy,
+  claimed,
+  cooldownSeconds,
+  draftEmail,
+  draftInputRef,
+  email,
+  error,
+  notice,
+  onCancelCorrection,
+  onDraftChange,
+  onResend,
+  onStartCorrection,
+  onSubmitCorrection,
+  phase,
+  resendDisabled = false,
+}: {
+  busy: boolean
+  claimed: boolean
+  cooldownSeconds: number
+  draftEmail: string
+  draftInputRef?: React.Ref<HTMLInputElement>
+  email: string | null
+  error: string | null
+  notice: string | null
+  onCancelCorrection: () => void
+  onDraftChange: (value: string) => void
+  onResend: () => void
+  onStartCorrection: () => void
+  onSubmitCorrection: (event: FormEvent) => void
+  phase: Phase
+  resendDisabled?: boolean
+}) {
   if (phase === "resolving") return <Shell>{null}</Shell>
 
   if (phase === "no_lead") {
     return (
-      <Shell>
+      <Shell state="no_lead">
         <h1 className={headingClass}>{COPY.noLeadTitle}</h1>
         <p className={bodyClass}>{COPY.noLeadBody}</p>
         <a className={linkCtaClass} href={QUIZ_ENTRY_PATH}>
@@ -252,10 +364,22 @@ export function FreeRegistrationClient({
     )
   }
 
+  if (phase === "correction_blocked") {
+    return (
+      <Shell state="correction_blocked">
+        <h1 className={headingClass}>{COPY.correctionBlockedTitle}</h1>
+        <p className={bodyClass}>{COPY.correctionBlockedBody}</p>
+        <a className={linkCtaClass} href={QUIZ_ENTRY_PATH}>
+          {COPY.noLeadCta}
+        </a>
+      </Shell>
+    )
+  }
+
   if (phase === "correct") {
     return (
-      <Shell>
-        <form noValidate onSubmit={submitCorrection}>
+      <Shell state="correct">
+        <form noValidate onSubmit={onSubmitCorrection}>
           <h1 className={headingClass}>{COPY.correctTitle}</h1>
           <div className="mt-8 text-left">
             <label
@@ -271,10 +395,7 @@ export function FreeRegistrationClient({
               className="mt-2 h-13 rounded-2xl border-[var(--brand-plum-light)] bg-white px-4 text-base"
               enterKeyHint="go"
               id="free-registration-email"
-              onChange={(event) => {
-                setDraftEmail(event.target.value)
-                setError(null)
-              }}
+              onChange={(event) => onDraftChange(event.target.value)}
               placeholder="du@beispiel.de"
               ref={draftInputRef}
               spellCheck={false}
@@ -289,10 +410,7 @@ export function FreeRegistrationClient({
           <Button
             className="mt-3 h-12 w-full rounded-[14px] border-[var(--brand-plum-light)] bg-white text-base text-[var(--brand-plum-darkest)] hover:bg-[var(--brand-plum-ice)]"
             disabled={busy}
-            onClick={() => {
-              setError(null)
-              setPhase("inbox")
-            }}
+            onClick={onCancelCorrection}
             type="button"
             variant="outline"
           >
@@ -303,17 +421,35 @@ export function FreeRegistrationClient({
     )
   }
 
-  if (phase === "expired" || (phase === "failed" && !claimed)) {
+  if (phase === "failed" && claimed) {
+    return (
+      <Shell state="claimed">
+        {/* The heading is ours, not the server's sentence (W7). */}
+        <h1 className={headingClass}>{COPY.claimedTitle}</h1>
+        {error ? <p className={bodyClass}>{error}</p> : null}
+        <a className={linkCtaClass} href="/auth">
+          {COPY.claimedCta}
+        </a>
+      </Shell>
+    )
+  }
+
+  if (phase === "expired" || phase === "failed") {
     const isExpired = phase === "expired"
     return (
-      <Shell>
-        <h1 className={headingClass}>{isExpired ? COPY.expiredTitle : COPY.genericError}</h1>
-        {isExpired ? <p className={bodyClass}>{COPY.expiredBody}</p> : null}
-        {error && !isExpired ? <ErrorLine>{error}</ErrorLine> : null}
+      <Shell state={isExpired ? "expired" : "failed"}>
+        <h1 className={headingClass}>{isExpired ? COPY.expiredTitle : COPY.genericErrorTitle}</h1>
+        {/* One sentence, never the same one twice (W7): the expired state
+            explains itself, the failed state shows the server's reason. */}
+        {isExpired ? (
+          <p className={bodyClass}>{COPY.expiredBody}</p>
+        ) : (
+          <ErrorLine>{error ?? COPY.genericError}</ErrorLine>
+        )}
         <Button
           className="mt-7"
-          disabled={busy || !leadId}
-          onClick={() => leadId && void send(leadId, { notice: COPY.resent })}
+          disabled={busy || resendDisabled}
+          onClick={onResend}
           type="button"
           variant="funnelCta"
         >
@@ -323,21 +459,10 @@ export function FreeRegistrationClient({
     )
   }
 
-  if (phase === "failed" && claimed) {
-    return (
-      <Shell>
-        <h1 className={headingClass}>{error ?? COPY.genericError}</h1>
-        <a className={linkCtaClass} href="/auth">
-          {COPY.claimedCta}
-        </a>
-      </Shell>
-    )
-  }
-
   const sending = phase === "sending" || (busy && phase === "inbox")
 
   return (
-    <Shell>
+    <Shell state={sending ? "sending" : "inbox"}>
       <h1 className={headingClass}>{COPY.inboxTitle}</h1>
       <p className={bodyClass} data-free-registration-body>
         {sending ? COPY.sending : email ? COPY.inboxBodyWithEmail(email) : COPY.inboxBody}
@@ -355,8 +480,8 @@ export function FreeRegistrationClient({
       {error ? <ErrorLine>{error}</ErrorLine> : null}
       <Button
         className="mt-7"
-        disabled={busy || !leadId || cooldownSeconds > 0}
-        onClick={() => leadId && void send(leadId, { notice: COPY.resent })}
+        disabled={busy || resendDisabled || cooldownSeconds > 0}
+        onClick={onResend}
         type="button"
         variant="funnelCta"
       >
@@ -371,7 +496,7 @@ export function FreeRegistrationClient({
       <Button
         className="mt-3 h-12 w-full rounded-[14px] border-[var(--brand-plum-light)] bg-white text-base text-[var(--brand-plum-darkest)] hover:bg-[var(--brand-plum-ice)]"
         disabled={busy}
-        onClick={startCorrection}
+        onClick={onStartCorrection}
         type="button"
         variant="outline"
       >
@@ -408,10 +533,14 @@ function ErrorLine({ children }: { children: ReactNode }) {
   )
 }
 
-function Shell({ children }: { children: ReactNode }) {
+function Shell({ children, state }: { children: ReactNode; state?: string }) {
   return (
     <main className="flex min-h-[100dvh] items-center justify-center bg-[hsl(var(--background))] px-5 py-10">
-      <section className="mx-auto w-full max-w-[36rem] text-center" data-free-registration>
+      <section
+        className="mx-auto w-full max-w-[36rem] text-center"
+        data-free-registration
+        data-free-registration-state={state}
+      >
         {children}
       </section>
     </main>

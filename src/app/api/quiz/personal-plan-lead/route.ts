@@ -35,6 +35,8 @@ import {
 } from "@/lib/personal-plan-field-test"
 
 import { resolveModeratorJourney } from "@/lib/personal-plan-field-test/moderator-journey"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { issueFreeRegistrationCapability } from "@/lib/auth/free-registration-capability"
 
 interface PersonalPlanLeadPostDependencies {
   checkRateLimit: typeof checkRateLimit
@@ -51,6 +53,8 @@ interface PersonalPlanLeadPostDependencies {
   resolvePersonalPlanFieldTestCampaignCookie: typeof resolvePersonalPlanFieldTestCampaignCookie
   resolveModeratorJourney: typeof resolveModeratorJourney
   scheduleAfter: typeof after
+  isFreemiumScannerFirstEnabled: typeof isFreemiumScannerFirstEnabled
+  issueFreeRegistrationCapability: (leadId: string) => string | null
 }
 
 export function createPersonalPlanLeadPostHandler(
@@ -71,6 +75,8 @@ export function createPersonalPlanLeadPostHandler(
     resolvePersonalPlanFieldTestCampaignCookie,
     resolveModeratorJourney,
     scheduleAfter: after,
+    isFreemiumScannerFirstEnabled,
+    issueFreeRegistrationCapability: (leadId) => issueFreeRegistrationCapability(leadId),
     ...overrides,
   }
 
@@ -238,11 +244,24 @@ export function createPersonalPlanLeadPostHandler(
                 leadId,
               })
             : false
-      const response = NextResponse.json(
+      // Freemium scanner-first (T18 fix round 1, review finding W1a): quiz
+      // completion is the ONE moment only the completing browser can observe,
+      // so it is where the capability that authorizes a later e-mail CORRECTION
+      // is minted. Returned in the body, carried by the quiz's sessionStorage
+      // handoff to `/registrierung`. Flag-gated: with the flag off the response
+      // body is byte-identical to before, and a missing signing secret simply
+      // omits the field (the correction path then refuses — fail closed).
+      const freeRegistrationCapability = dependencies.isFreemiumScannerFirstEnabled()
+        ? dependencies.issueFreeRegistrationCapability(leadId)
+        : null
+      const responseBody: Record<string, unknown> =
         fieldTestCampaign.kind === "eligible"
           ? { leadId, attributionAttached, fieldTestAttached }
-          : { leadId, attributionAttached },
-      )
+          : { leadId, attributionAttached }
+      if (freeRegistrationCapability) {
+        responseBody.freeRegistrationCapability = freeRegistrationCapability
+      }
+      const response = NextResponse.json(responseBody)
       if (isPersonalPlanResultReturnEnabled() && moderator.kind !== "authorized") {
         try {
           const issued = await dependencies.issueResultReturn({

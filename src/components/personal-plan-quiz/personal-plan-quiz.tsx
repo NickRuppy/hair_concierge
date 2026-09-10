@@ -163,13 +163,17 @@ const EMAIL_PROVIDERS = ["gmail.com", "gmx.de", "web.de", "outlook.com", "icloud
 function resolveQuizCompletionNavigation(
   leadId: string,
   email: string,
+  capability: string | null,
   freemiumScannerFirst: boolean,
 ) {
   if (freemiumScannerFirst) {
     try {
       window.sessionStorage.setItem(
         FREE_REGISTRATION_HANDOFF_STORAGE_KEY,
-        JSON.stringify({ leadId, email }),
+        // The capability is what later authorizes an e-mail CORRECTION on
+        // `/registrierung` (T18 fix round 1, W1a). Without it the screen can
+        // still send and resend — it just cannot redirect the lead.
+        JSON.stringify(capability ? { leadId, email, capability } : { leadId, email }),
       )
     } catch {
       /* Without it the registration screen just shows generic copy. */
@@ -1750,7 +1754,7 @@ function EmailCapture({
 }: {
   answers: PersonalPlanQuizAnswers
   onPreparedPlanRejected: () => void
-  onSaved: (leadId: string, email: string) => void | Promise<void>
+  onSaved: (leadId: string, email: string, capability: string | null) => void | Promise<void>
   preparedPlan: PreparedPlanClaim
   fieldTest: boolean
 }) {
@@ -1961,6 +1965,11 @@ function EmailCapture({
         payload && typeof payload === "object" && !Array.isArray(payload)
           ? (payload as Record<string, unknown>).fieldTestAttached
           : null
+      const rawCapability =
+        payload && typeof payload === "object" && !Array.isArray(payload)
+          ? (payload as Record<string, unknown>).freeRegistrationCapability
+          : null
+      const capability = typeof rawCapability === "string" ? rawCapability : null
       if (fieldTest && fieldTestAttached !== true) {
         setError(
           "Der Produkttest ist gerade nicht verfügbar. Bitte frage das Chaarlie-Team nach einem neuen Testlink.",
@@ -1973,7 +1982,7 @@ function EmailCapture({
         funnelEventId: funnelEventIdRef.current,
         testKind: fieldTest ? "field_test" : null,
       })
-      await onSaved(leadId, address)
+      await onSaved(leadId, address, capability)
     } catch {
       setError(
         "Deine Auswertung konnte gerade nicht gespeichert werden. Bitte versuche es noch einmal.",
@@ -2741,6 +2750,11 @@ export function PersonalPlanQuiz({
     scheduleNext(next)
   }
 
+  // Field-test and moderator completions keep the paid result reveal even with
+  // the flag on: their journey is the paid product, not the free tier. Declared
+  // above `renderScreen`, which closes over it.
+  const freeRegistrationFunnel = freemiumScannerFirst && !fieldTest && !moderator
+
   function renderScreen() {
     if (screen === "texture") {
       return (
@@ -2976,14 +2990,16 @@ export function PersonalPlanQuiz({
             if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
             setPreparedPlan({ status: "idle", claim: null, error: null })
           }}
-          onSaved={(leadId, email) => {
+          onSaved={(leadId, email, capability) => {
             stripPersonalPlanQuizResumeTokenFromCurrentUrl()
             void getServerDraftSession().revoke()
             const storage = getBrowserDraftStorage(draftScope)
             if (storage) clearPersonalPlanQuizDraft(storage)
             const sessionStorage = getBrowserSessionStorage(draftScope)
             if (sessionStorage) clearPersonalPlanPreparedPlanClaim(sessionStorage)
-            router.push(resolveQuizCompletionNavigation(leadId, email, freeRegistrationFunnel))
+            router.push(
+              resolveQuizCompletionNavigation(leadId, email, capability, freeRegistrationFunnel),
+            )
           }}
         />
       )
@@ -3013,10 +3029,6 @@ export function PersonalPlanQuiz({
     if (config) return renderQuestion(config)
     return null
   }
-
-  // Field-test and moderator completions keep the paid result reveal even with
-  // the flag on: their journey is the paid product, not the free tier.
-  const freeRegistrationFunnel = freemiumScannerFirst && !fieldTest && !moderator
 
   const currentSectionIndex = PERSONAL_PLAN_SECTION_IDS.indexOf(
     getPersonalPlanQuizSectionId(screen),

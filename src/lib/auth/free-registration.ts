@@ -18,14 +18,18 @@
  * still requires the account e-mail to equal the lead e-mail, which is why the
  * correction path below rewrites `leads.email` before the account exists.
  *
- * KNOWN RESIDUAL RISK (documented, reviewed): the correction path authorizes
- * on lead possession alone (`leadId` + the lead still being unclaimed). In the
- * free journey the lead id never appears in a shareable URL, and the window
- * closes as soon as the lead is claimed (`leads.user_id`), but a caller who
- * obtains an unclaimed lead id (e.g. from a shared `/result/<leadId>` link of
- * the paid funnel) could redirect that lead's registration to their own
- * address. Hardening this needs a signed same-session capability; see the T18
- * report for the trade-off.
+ * CORRECTION AUTHORIZATION (fix round 1, review finding W1a): rewriting
+ * `leads.email` requires a short-lived signed capability minted at quiz
+ * completion and held by the completing browser — lead possession alone is NOT
+ * enough, because unclaimed lead ids are published by design (see
+ * `free-registration-capability.ts` for the full attack and the control). The
+ * initial send and every resend keep bare-leadId auth: they can only ever mail
+ * the address the lead already holds.
+ *
+ * The other half of that attack — an attacker pointing their OWN lead at a
+ * victim's address so the victim's „login" click overwrites their existing hair
+ * profile — is closed on the confirm side by `resolveFreeRegistrationBind`
+ * below, which refuses to bind a foreign lead into an established account.
  */
 
 import { EMAIL_ADDRESS_PATTERN } from "@/lib/email-deliverability-shared"
@@ -38,6 +42,13 @@ export const FREE_REGISTRATION_CONFIRM_PARAM = "free"
 export const FREE_REGISTRATION_CONFIRM_VALUE = "1"
 /** sessionStorage handoff written by the quiz, read by `/registrierung`. */
 export const FREE_REGISTRATION_HANDOFF_STORAGE_KEY = "chaarlie_free_registration_handoff"
+/**
+ * Query flag on the `/scan` landing telling the free account that its magic
+ * link did NOT adopt the quiz it carried, because the account already had its
+ * own hair profile (see `resolveFreeRegistrationBind`).
+ */
+export const FREE_REGISTRATION_BIND_SKIPPED_PARAM = "konto"
+export const FREE_REGISTRATION_BIND_SKIPPED_VALUE = "bestehend"
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -94,6 +105,7 @@ export type FreeRegistrationResult =
   | { outcome: "invalid_request" }
   | { outcome: "lead_not_found" }
   | { outcome: "lead_claimed" }
+  | { outcome: "correction_not_authorized" }
   | { outcome: "rate_limited" }
   | { outcome: "rate_limit_unavailable" }
   | { outcome: "undeliverable_email"; reason?: string; suggestion?: string }
@@ -103,12 +115,32 @@ export type FreeRegistrationDeliverability =
   | { ok: true; normalized: string }
   | { ok: false; reason?: string; suggestion?: string }
 
+/**
+ * The three independent budgets one send has to fit into (fix round 1, review
+ * finding W4). `lead` alone was mintable by the caller — completing the quiz is
+ * free and scriptable — so it bounded nothing on its own.
+ */
+export type FreeRegistrationRateDimension = "lead" | "ip" | "address"
+
 export type FreeRegistrationDependencies = {
   siteUrl: string
-  checkRateLimit: (identifier: string) => Promise<{ allowed: boolean; error?: string }>
+  checkRateLimit: (input: {
+    dimension: FreeRegistrationRateDimension
+    identifier: string
+  }) => Promise<{ allowed: boolean; error?: string }>
   loadLead: (leadId: string) => Promise<FreeRegistrationLead | null>
-  updateLeadEmail: (leadId: string, email: string) => Promise<void>
+  /**
+   * Guarded by `user_id IS NULL`; reports whether it actually matched a row so a
+   * lead claimed between the read and the write is a conflict, not a silent
+   * success followed by a dead end (fix round 1, review finding W5).
+   */
+  updateLeadEmail: (leadId: string, email: string) => Promise<{ updated: boolean }>
   checkEmailDeliverability: (email: string) => Promise<FreeRegistrationDeliverability>
+  /**
+   * Verifies the quiz-completion capability that authorizes a correction (fix
+   * round 1, review finding W1a) — see `free-registration-capability.ts`.
+   */
+  verifyCorrectionCapability: (token: unknown, leadId: string) => boolean
   sendMagicLink: (input: {
     email: string
     emailRedirectTo: string
@@ -119,10 +151,63 @@ export type FreeRegistrationRequest = {
   leadId: unknown
   /** Optional: only present on the correct-e-mail recovery path. */
   email?: unknown
+  /** Required for a correction; ignored for an initial send or a resend. */
+  capability?: unknown
+  /** Best-effort caller IP for the second rate-limit dimension. */
+  ipAddress?: unknown
 }
 
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase()
+}
+
+function toRateLimitOutcome(check: { error?: string }): FreeRegistrationResult {
+  return check.error === "service_unavailable"
+    ? { outcome: "rate_limit_unavailable" }
+    : { outcome: "rate_limited" }
+}
+
+/**
+ * Evidence the FREE confirm branch weighs before it lets a magic link adopt the
+ * quiz lead it carries (fix round 1, review finding W1b).
+ */
+export type FreeRegistrationBindEvidence = {
+  /** The lead already carries this account's `user_id` (a same-user retry). */
+  leadOwnedByAccount: boolean
+  /** The account already has its own hair profile / Personal Plan row. */
+  hasEstablishedProfile: boolean
+}
+
+/**
+ * The free branch adopts a lead ONLY into an account that has nothing to lose.
+ *
+ * `signInWithOtp({ shouldCreateUser: true })` against an address that already
+ * has an account mails that account an ordinary LOGIN link. So an attacker could
+ * point their own lead at `victim@real.de`, and the victim's click would run
+ * `linkQuizToProfile`, whose existing-row branch UPDATEs the victim's
+ * `hair_profiles` with the attacker's answers — and, through the changed
+ * artifact input hash, stale their refinement and product drafts. On a paying
+ * customer that is silent, destructive and not self-healing.
+ *
+ * `"skip"` therefore means: no lead binding, no free provisioning, no writes at
+ * all — the user simply lands on `/scan` as their existing self, with an honest
+ * notice. It never applies to the genuine cases: a brand-new free account has no
+ * profile, and a re-click of one's OWN link owns the lead (which keeps the
+ * same-user retry `canLinkDirectQuizLead` deliberately allows). Callers resolve
+ * a failed or unreadable evidence lookup to `"skip"` — fail closed, because the
+ * cost of a wrong `"bind"` is a destroyed profile and the cost of a wrong
+ * `"skip"` is one honest notice.
+ */
+export function resolveFreeRegistrationBind(
+  evidence: FreeRegistrationBindEvidence,
+): "bind" | "skip" {
+  if (evidence.leadOwnedByAccount) return "bind"
+  return evidence.hasEstablishedProfile ? "skip" : "bind"
+}
+
+/** The `/scan` landing for a confirm whose lead binding was skipped. */
+export function buildFreeRegistrationBindSkippedLandingPath(): string {
+  return `${FREE_REGISTRATION_LANDING_PATH}?${FREE_REGISTRATION_BIND_SKIPPED_PARAM}=${FREE_REGISTRATION_BIND_SKIPPED_VALUE}`
 }
 
 /**
@@ -146,11 +231,15 @@ export async function requestFreeRegistrationLink(
     requestedEmail = candidate
   }
 
-  const rateCheck = await deps.checkRateLimit(leadId)
-  if (!rateCheck.allowed) {
-    return rateCheck.error === "service_unavailable"
-      ? { outcome: "rate_limit_unavailable" }
-      : { outcome: "rate_limited" }
+  const leadRate = await deps.checkRateLimit({ dimension: "lead", identifier: leadId })
+  if (!leadRate.allowed) return toRateLimitOutcome(leadRate)
+
+  if (typeof request.ipAddress === "string" && request.ipAddress) {
+    const ipRate = await deps.checkRateLimit({
+      dimension: "ip",
+      identifier: request.ipAddress,
+    })
+    if (!ipRate.allowed) return toRateLimitOutcome(ipRate)
   }
 
   const lead = await deps.loadLead(leadId)
@@ -164,6 +253,11 @@ export async function requestFreeRegistrationLink(
   let corrected = false
 
   if (requestedEmail && requestedEmail !== leadEmail) {
+    // Possession of the lead id authorizes a RESEND, never a redirect: only the
+    // browser that completed the quiz holds the capability (finding W1a).
+    if (!deps.verifyCorrectionCapability(request.capability, leadId)) {
+      return { outcome: "correction_not_authorized" }
+    }
     const deliverability = await deps.checkEmailDeliverability(requestedEmail)
     if (!deliverability.ok) {
       return {
@@ -174,9 +268,24 @@ export async function requestFreeRegistrationLink(
     }
     targetEmail = deliverability.normalized
     corrected = true
+  }
+
+  // The destination budget — checked once the final address is known, so a
+  // correction spends the CORRECTED address's budget, and before anything is
+  // written or sent.
+  const addressRate = await deps.checkRateLimit({
+    dimension: "address",
+    identifier: targetEmail,
+  })
+  if (!addressRate.allowed) return toRateLimitOutcome(addressRate)
+
+  if (corrected) {
     // Written BEFORE the link goes out: `/auth/confirm` binds the lead through
     // `canLinkDirectQuizLead`, which compares the account e-mail with this row.
-    await deps.updateLeadEmail(leadId, targetEmail)
+    // A write that matches nothing means the lead was claimed in between — the
+    // link must not go out, or the resulting account dead-ends (finding W5).
+    const write = await deps.updateLeadEmail(leadId, targetEmail)
+    if (!write.updated) return { outcome: "lead_claimed" }
   }
 
   const sent = await deps.sendMagicLink({
