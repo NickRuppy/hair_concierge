@@ -41,7 +41,7 @@ import { maskScanVerdictPayload, type ScanMaskedVerdictResult } from "@/lib/scan
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
-import { loadScanSavedState } from "@/lib/scan/saved-state"
+import { autoSaveScanWishlistProduct, loadScanSavedState } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { captureScanException } from "@/lib/observability/scan"
@@ -108,6 +108,18 @@ export type ScanResolveRouteDeps = {
   /** T7 accessor, called with the admin `client` already in scope — never a user-scoped
    * client, or RLS hides the row and this reports "unused" forever. */
   hasUsedFreeReveal: typeof hasUsedFreeReveal
+  /**
+   * T16: every successful PREMIUM scan of an `in_catalog` product auto-saves it to the
+   * Merkliste, insert-only (see the doc comment on `autoSaveScanWishlistProduct` for why
+   * this is never `moveScanSavedProduct`). Called only from inside the same
+   * `isFreemiumScannerFirstEnabled() && eligibleVerdict.kind === "in_catalog"` branch that
+   * `resolvePaidAccess` already gates on — flag-off, a free/masked verdict, and a
+   * `not_needed` result never call this, matching the masking block's own byte-identity
+   * invariant. Best-effort: a write failure here is caught and reported (see the call site)
+   * rather than turning an otherwise-successful resolve into a 5xx — the user's verdict is
+   * not allowed to depend on a Merkliste write succeeding.
+   */
+  autoSaveScanWishlist: typeof autoSaveScanWishlistProduct
   captureScanException?: typeof captureScanException
   /**
    * Injection seam for Next's `after`, which throws outside a request scope. Tests pass a
@@ -454,6 +466,23 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           completeAttempt(resolvedOutcome(), null)
           return scanOk(maskedResult)
         }
+
+        // T16: a successful PREMIUM scan of an in-catalog product auto-saves to the
+        // Merkliste — insert-only, idempotent, never the move endpoint (see the doc
+        // comment on `autoSaveScanWishlistProduct`/the dep above for THE hazard this
+        // avoids). Best-effort: a write failure here must not turn an otherwise-resolved
+        // verdict into a 5xx, so it is caught and reported rather than rethrown.
+        try {
+          await deps.autoSaveScanWishlist(client, userId, productId)
+        } catch (autoSaveError) {
+          ;(deps.captureScanException ?? captureScanException)(autoSaveError, {
+            route: "resolve",
+            status: 200,
+            reason: "scan_wishlist_auto_save_failed",
+            userId,
+            level: "warning",
+          })
+        }
       }
 
       const result: ScanResolvedVerdictResult = {
@@ -547,6 +576,7 @@ export const POST = createScanResolveRouteHandler({
   loadPresentationRows,
   resolvePaidAccess: resolvePaidAccessForCurrentUser,
   hasUsedFreeReveal,
+  autoSaveScanWishlist: autoSaveScanWishlistProduct,
 })
 
 /**

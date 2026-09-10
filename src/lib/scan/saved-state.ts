@@ -120,6 +120,34 @@ function parseSavedState(payload: unknown): ScanSavedStatePayload {
   return { state, managedByScan }
 }
 
+/**
+ * Freemium scanner-first (T16): every successful PREMIUM scan of an in-catalog product
+ * auto-saves it to the Merkliste. This is deliberately NOT `moveScanSavedProduct` — THE
+ * hazard this task exists to avoid: that RPC has MOVE semantics (destination write PLUS
+ * source cleanup) and its `routine` destination DELETEs the product's `scan_wishlist` row,
+ * while its `merkliste` destination is fine but the function as a whole is the wrong tool
+ * for a background auto-save that must never remove anything. Auto-save is insert-only,
+ * into `scan_wishlist` alone, full stop — it never reads or writes `user_products`.
+ *
+ * Idempotent by construction: `scan_wishlist`'s `UNIQUE (user_id, product_id)` constraint
+ * (migration 20260820100200) plus `ignoreDuplicates` turns a rescan into a plain
+ * `ON CONFLICT (user_id, product_id) DO NOTHING` — no duplicate row, no error, and (unlike
+ * the move RPC) nothing else in the schema is ever touched by this call.
+ */
+export async function autoSaveScanWishlistProduct(
+  client: SupabaseClient,
+  userId: string,
+  productId: string,
+): Promise<void> {
+  const { error } = await client
+    .from("scan_wishlist")
+    .upsert(
+      { user_id: userId, product_id: productId },
+      { onConflict: "user_id,product_id", ignoreDuplicates: true },
+    )
+  if (error) throw new Error("scan_wishlist_auto_save_failed")
+}
+
 /** Every `scan_wishlist` row belongs to the scan surface, so this can never be refused. */
 export async function removeScanWishlistProduct(
   client: SupabaseClient,
