@@ -15,11 +15,27 @@ import type { EntitlementTier } from "@/lib/entitlements"
  *
  * The tier itself is NOT recomputed here. It comes from the same email-aware,
  * field-test-aware paid-access composite `/scan` uses (PR2 review fix C1), which fails
- * closed to `"premium"` on an entitlement-source outage — an outage must never hand a
- * paying user an example of someone else's routine.
+ * closed to `"premium"` on a RETURNED `"unavailable"` (an entitlement-source outage).
+ *
+ * PR3 Codex fix (X1): that fail-closed handling only covers a returned `"unavailable"` —
+ * the billing reads underneath it (`findCurrentBillingSubscriptionForUser`,
+ * `findOneTimePurchaseEntitlementForUser`, etc., see `src/lib/billing/subscriptions.ts` and
+ * `purchases.ts`) THROW on a query error instead of returning it. Uncaught, that throw used
+ * to turn into a hard server error on `/chat` and reject the whole `Promise.all` on
+ * `/routine` and `/anwendung` even though those pages' own resolvers had already succeeded.
+ * `loadTier()` is therefore wrapped here so ANY tier-lookup failure — thrown or returned —
+ * fails closed the same way: to `"premium"`, never `"free"`. This is the one place all three
+ * gated pages funnel through, so the catch protects them all without touching each page's
+ * own (already self-contained) data resolver.
  */
 export async function shouldRenderGatedExample(
   loadTier: () => Promise<EntitlementTier> = loadAuthenticatedAppPageTier,
 ): Promise<boolean> {
-  return (await loadTier()) === "free"
+  let tier: EntitlementTier
+  try {
+    tier = await loadTier()
+  } catch {
+    tier = "premium"
+  }
+  return tier === "free"
 }

@@ -12,7 +12,10 @@ import { GATED_EXAMPLE_COPY } from "../src/lib/gated-preview/example-copy"
 import { GATED_EXAMPLE_PRODUCTS } from "../src/lib/gated-preview/fixtures/example-products"
 import { GATED_CHAT_EXAMPLE_MESSAGES } from "../src/lib/gated-preview/fixtures/chat-example"
 import { shouldRenderGatedExample } from "../src/lib/gated-preview/gate"
-import { loadAuthenticatedAppPageTier } from "../src/lib/auth/authenticated-app-route-access"
+import {
+  loadAuthenticatedAppPageTier,
+  resolveAuthenticatedAppPageTier,
+} from "../src/lib/auth/authenticated-app-route-access"
 import { PREMIUM_FEATURES } from "../src/lib/premium-sheet/context"
 
 /**
@@ -27,6 +30,41 @@ import { PREMIUM_FEATURES } from "../src/lib/premium-sheet/context"
 test("only the free tier renders the example", async () => {
   assert.equal(await shouldRenderGatedExample(async () => "free"), true)
   assert.equal(await shouldRenderGatedExample(async () => "premium"), false)
+})
+
+// PR3 Codex fix (X1): the billing reads behind the tier composite throw on a query error
+// instead of returning "unavailable" (see src/lib/billing/subscriptions.ts,
+// src/lib/billing/purchases.ts). Uncaught, that throw used to become a hard server error on
+// /chat and reject the whole Promise.all on /routine and /anwendung. `shouldRenderGatedExample`
+// must fail closed to premium (never free, never a rethrow) for any tier-lookup failure,
+// exactly like a returned "unavailable" already does.
+test("a thrown tier-lookup failure fails closed to premium, not a rethrow", async () => {
+  const rendersExample = await shouldRenderGatedExample(async () => {
+    throw new Error("billing read failed")
+  })
+  assert.equal(rendersExample, false)
+})
+
+test("a thrown failure anywhere in the real tier composite (getUser or the paid-access read) still fails closed to premium", async () => {
+  const throwingGetUser = await shouldRenderGatedExample(() =>
+    resolveAuthenticatedAppPageTier({
+      getUser: async () => {
+        throw new Error("auth.getUser() unavailable")
+      },
+      resolvePaidAccess: async () => "denied",
+    }),
+  )
+  assert.equal(throwingGetUser, false)
+
+  const throwingBillingRead = await shouldRenderGatedExample(() =>
+    resolveAuthenticatedAppPageTier({
+      getUser: async () => ({ id: "user-1", email: "user@example.com" }),
+      resolvePaidAccess: async () => {
+        throw new Error("findCurrentBillingSubscriptionForUser: query failed")
+      },
+    }),
+  )
+  assert.equal(throwingBillingRead, false)
 })
 
 test("with the freemium flag off the tier resolves premium without any lookup", async () => {
@@ -107,7 +145,55 @@ test("routine and anwendung resolve the tier concurrently with their own page da
   }
   // `/chat` has no server-side page resolver of its own to run the tier check alongside
   // (`ChatContainer` loads its data client-side) — see the code comment in
-  // `app/chat/page.tsx` for why this one stays a plain `if (await shouldRenderGatedExample())`.
+  // `app/chat/page.tsx` and the PR3 Codex fix (X2) test below for how that page instead
+  // streams the tier check behind Suspense.
+})
+
+// PR3 Codex fix (X2, controller ruling): flag on streams `/chat`'s tier-resolved segment
+// behind a Suspense boundary instead of awaiting it in the page body (so the page shell isn't
+// serialized behind one `auth.getUser()` plus the paid-access composite); flag off stays the
+// literal pre-branch page — no tier call, no Suspense wrapper, byte-identical to today. This
+// pins both halves of that split so a regression back to one unconditional
+// `await shouldRenderGatedExample()` (reintroducing the added latency on every premium
+// render) — or a Suspense wrapper that also wraps the flag-off branch (breaking byte-identity)
+// — fails this test even though the free/premium behaviour it renders is unchanged either way.
+test("/chat streams the tier check behind Suspense only when the flag is on; flag off stays branch-free (X2)", () => {
+  const source = readFileSync(path.join(SOURCE_ROOT, "app/chat/page.tsx"), "utf8")
+
+  const flagOffGuard = source.indexOf("if (!isFreemiumScannerFirstEnabled())")
+  assert.ok(flagOffGuard > -1, "flag-off must be an explicit, separate branch")
+  const flagOffLine = source.slice(flagOffGuard, source.indexOf("\n", flagOffGuard))
+  assert.match(
+    flagOffLine,
+    /return <ChatContainer \/>/,
+    "flag off must return ChatContainer directly, with no tier call and no Suspense",
+  )
+  const suspenseIndex = source.indexOf("<Suspense")
+  assert.ok(suspenseIndex > flagOffGuard, "the Suspense boundary is the flag-on path only")
+  const suspenseBlock = source.slice(suspenseIndex, source.indexOf("</Suspense>", suspenseIndex))
+  assert.match(
+    suspenseBlock,
+    /<ChatTierSegment \/>/,
+    "the Suspense boundary must stream the tier-resolved segment",
+  )
+
+  // `ChatTierSegment` — not the exported page component — is what actually calls the tier
+  // check and branches on it, so it can be the async child a Suspense boundary streams.
+  const segmentStart = source.indexOf("async function ChatTierSegment")
+  assert.ok(segmentStart > -1, "the tier branch must live in its own async segment component")
+  const segmentEnd = source.indexOf("\n}", segmentStart)
+  const segmentBody = source.slice(segmentStart, segmentEnd)
+  assert.match(segmentBody, /shouldRenderGatedExample\(\)/)
+  assert.match(segmentBody, /return <GatedChatExample \/>/)
+  assert.match(segmentBody, /return <ChatContainer \/>/)
+
+  // The exported page itself must not be `async` — flag off must resolve synchronously,
+  // matching the pre-T12 page's immediate render with zero added server-side latency.
+  assert.doesNotMatch(
+    source,
+    /export default async function ChatPage/,
+    "ChatPage itself must not be async — only ChatTierSegment awaits the tier check",
+  )
 })
 
 // --- copy -------------------------------------------------------------------

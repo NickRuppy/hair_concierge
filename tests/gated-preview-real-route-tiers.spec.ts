@@ -61,10 +61,38 @@ test("premium /chat renders the real ChatContainer, never the gated example", as
 
   // The real page's own chrome, absent from the framed example.
   await expect(page.getByRole("heading", { name: "Unterhaltungen" })).toBeVisible()
-  await expect(page.getByRole("heading", { name: "Guten Morgen, Local" })).toBeVisible()
+  // PR3 Codex fix (X3): the greeting is time-of-day dependent (`chat-container.tsx` picks
+  // „Guten Morgen"/„Guten Tag"/„Guten Abend" from the local hour), so pin the pattern rather
+  // than one fixed greeting — the exact string failed every afternoon.
+  await expect(
+    page.getByRole("heading", { name: /^Guten (Morgen|Tag|Abend), Local$/ }),
+  ).toBeVisible()
 
   await expect(page.locator("[data-gated-preview]")).toHaveCount(0)
   await expect(page.locator("[data-gated-preview-cta-block]")).toHaveCount(0)
+})
+
+// PR3 Codex fix (X2): flag on now streams `/chat`'s tier-resolved segment behind a Suspense
+// boundary instead of awaiting it inline. This drives a cold, direct SSR load (not a client
+// transition) through that boundary and confirms the resolved DOM still hydrates correctly —
+// the composer accepts input — with no leftover Suspense fallback and no gated-preview frame.
+test("premium /chat still renders and hydrates correctly through the flag-on Suspense boundary", async ({
+  page,
+}) => {
+  await page.goto("/api/dev/login?next=/chat")
+  await page.waitForURL("/chat", { timeout: 15_000 })
+
+  const composer = page.getByPlaceholder(/Stelle eine Frage/)
+  await expect(composer).toBeVisible({ timeout: 10_000 })
+  await composer.click()
+  await composer.fill("Hallo")
+  await expect(composer).toHaveValue("Hallo")
+
+  // A fresh, direct navigation re-enters the Suspense boundary from a cold SSR request
+  // rather than a client-side transition off an already-hydrated page.
+  await page.reload()
+  await expect(page.getByPlaceholder(/Stelle eine Frage/)).toBeVisible({ timeout: 10_000 })
+  await expect(page.locator("[data-gated-preview]")).toHaveCount(0)
 })
 
 test("premium /routine and /anwendung never render the gated example", async ({ page }) => {
