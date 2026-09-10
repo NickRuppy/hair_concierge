@@ -88,10 +88,29 @@ asserted identical).
 | Route | Method | Required entitlement | Enforcing seam | Test |
 | --- | --- | --- | --- | --- |
 | `/api/profile` | GET | premium today; **future: free read** (not changed in this task — a later PR is expected to move Haar-Check display data to a free read; see plan.md §8 T4 note) | middleware carve-out (`/api/profile` not in `FREEMIUM_ADMITTED_ROUTE_PREFIXES`) | `tests/freemium-enforcement-matrix.test.ts` → `"flag on: a free authenticated user is still denied /api/profile (non-admitted, subscription_required)"` (added by this task — previously only the pure-function prefix-list test existed); baseline prefix coverage: `tests/freemium-admission-middleware.test.ts` → `"flag on: non-admitted routes still redirect to reactivation"` |
-| `/api/profile` | PUT (Haar-Check fields) | **premium** | middleware carve-out | same tests as GET above (method-agnostic: middleware gates the whole prefix) |
+| `/api/profile` | PUT (Haar-Check fields) | **premium** | middleware carve-out | method-agnostic (middleware gates the whole prefix regardless of method) — T15 added a PUT-specific proof: `tests/freemium-enforcement-matrix.test.ts` → `"flag on: a free authenticated user is still denied PUT /api/profile (non-admitted, subscription_required)"`, paid pass: `"flag on: a paid authenticated user reaches PUT /api/profile unchanged"` |
 | `/api/chat` | POST | **premium** | middleware carve-out | `tests/auth-middleware-personal-plan-routine.test.ts` → `"flag on: a free authenticated user without current access is still gated on a non-admitted route (/api/chat stays subscription_required)"` (full `createUpdateSession` e2e, asserts the exact `{ error: "subscription_required" }` / 403 shape); prefix coverage: `tests/freemium-admission-middleware.test.ts` → `"flag on: non-admitted routes still redirect to reactivation"` |
 | `/api/personal-plan/stage-1/previews` | GET | **premium** | middleware carve-out (`/api/personal-plan` prefix) | `tests/freemium-enforcement-matrix.test.ts` → `"flag on: a free authenticated user is still denied /api/personal-plan/stage-1/previews (non-admitted, subscription_required)"` (added by this task — previously only the `/api/personal-plan` prefix-list test existed, not this concrete route); prefix coverage: `tests/freemium-admission-middleware.test.ts` → `"flag on: non-admitted routes still redirect to reactivation"` |
 | `/api/routine`, `/api/tracker`, `/api/memory`, `/api/product-intake` | (all methods) | premium | middleware carve-out | `tests/freemium-admission-middleware.test.ts` → `"flag on: non-admitted routes still redirect to reactivation"` (prefix-level; no route-specific e2e test added — brief scope is `/api/scan/*`, `/api/profile`, `/api/chat`, `/api/personal-plan/stage-1/previews`) |
+
+**T15 finding (Profil page audit):** `/profile`'s inline Haar-Check editor
+(`src/app/profile/page.tsx`, `handleSaveQuiz`) does **not** call `PUT
+/api/profile` — it writes to `hair_profiles` directly through the browser
+Supabase client (`supabase.from("hair_profiles").upsert(...)`). RLS policy
+`hair_profiles_update_own` (`supabase/migrations/00001_initial_schema.sql`)
+lets any authenticated owner write their own row with no tier check — this is
+intentional and pre-existing (onboarding itself writes the first Haar-Check
+before any subscription exists) and is a data-ownership boundary, not a
+paywall; changing it is a migration, out of scope for T15 (no migrations,
+no profile redesign). T15's corner lock is therefore a **client UX gate**:
+every entry point into edit mode (`startQuizEditing` — the header button, an
+individual Haar-Check field card, the "Haarlänge ergänzen" prompt) is gated
+in one place, so a free user has no UI path into `handleSaveQuiz` at all. A
+technical user could still POST to Supabase directly and write their own row
+— identical to what they could always do before this task, since the direct
+write path predates the freemium restructure and is untouched by it. `PUT
+/api/profile` itself (used by other, unrelated consumers) stays
+middleware-gated as documented above.
 
 ## Flag-off regression coverage
 
