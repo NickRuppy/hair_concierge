@@ -10,6 +10,7 @@ import {
   requestFreeRegistrationLink,
   resolveQuizCompletionDestination,
   resolveFreeRegistrationBind,
+  resolveFreeRegistrationConfirmContext,
   type FreeRegistrationDependencies,
   type FreeRegistrationLead,
   type FreeRegistrationRateDimension,
@@ -617,4 +618,71 @@ test("the payment-activation magic-link route stays payment-only and untouched b
   assert.ok(!source.includes("free-registration"))
   assert.ok(!source.includes("provisionFreeInitialSnapshot"))
   assert.ok(source.includes("verifyCheckoutSessionForActivation"))
+})
+
+// --- PR6 Codex review, finding V2 -------------------------------------------
+
+test("V2: the confirm context is resolved through the nesting the real builder produces", () => {
+  const origin = SITE_URL
+  const callback = buildFreeRegistrationEmailRedirect(SITE_URL, LEAD_ID)
+  const nested = (key: "next" | "redirect_to") => {
+    const url = new URL("/auth/confirm", origin)
+    url.searchParams.set("token_hash", "hash")
+    url.searchParams.set("type", key === "next" ? "email" : "magiclink")
+    url.searchParams.set(key, callback)
+    return url.searchParams
+  }
+
+  // The signup shape (`next=<callback>`) and the magic-link shape
+  // (`redirect_to=<callback>`) both resolve the lead.
+  assert.deepEqual(resolveFreeRegistrationConfirmContext(nested("next"), origin), {
+    leadId: LEAD_ID,
+  })
+  assert.deepEqual(resolveFreeRegistrationConfirmContext(nested("redirect_to"), origin), {
+    leadId: LEAD_ID,
+  })
+  // The direct/hand-built shape keeps working.
+  assert.deepEqual(resolveFreeRegistrationConfirmContext(new URL(callback).searchParams, origin), {
+    leadId: LEAD_ID,
+  })
+})
+
+test("V2: the nested resolver is a whitelist — no new redirect sink, no unbounded walk", () => {
+  const origin = SITE_URL
+  const wrap = (inner: string) => {
+    const url = new URL("/auth/confirm", origin)
+    url.searchParams.set("next", inner)
+    return url
+  }
+
+  // Cross-origin nesting is refused outright.
+  const foreign = new URL("/auth/confirm", "https://evil.test")
+  foreign.searchParams.set("free", "1")
+  foreign.searchParams.set("lead", LEAD_ID)
+  foreign.searchParams.set("next", "/scan")
+  assert.equal(
+    resolveFreeRegistrationConfirmContext(wrap(foreign.toString()).searchParams, origin),
+    null,
+  )
+
+  // A nested layer that is not the exact minted shape resolves nothing:
+  // a different landing, a non-UUID lead, or a missing free marker.
+  for (const params of [
+    { free: "1", lead: LEAD_ID, next: "/plan-start" },
+    { free: "1", lead: "not-a-uuid", next: "/scan" },
+    { lead: LEAD_ID, next: "/scan" },
+  ]) {
+    const inner = new URL("/auth/confirm", origin)
+    for (const [key, value] of Object.entries(params)) inner.searchParams.set(key, value)
+    assert.equal(
+      resolveFreeRegistrationConfirmContext(wrap(inner.toString()).searchParams, origin),
+      null,
+    )
+  }
+
+  // The walk is depth-bounded: a chain longer than the cap resolves nothing
+  // rather than recursing on attacker-controlled input.
+  let chained = buildFreeRegistrationEmailRedirect(SITE_URL, LEAD_ID)
+  for (let depth = 0; depth < 5; depth += 1) chained = wrap(chained).toString()
+  assert.equal(resolveFreeRegistrationConfirmContext(new URL(chained).searchParams, origin), null)
 })

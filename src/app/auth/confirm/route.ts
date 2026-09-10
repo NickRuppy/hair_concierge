@@ -10,9 +10,9 @@ import {
   buildFreeRegistrationBindSkippedLandingPath,
   buildFreeRegistrationRecoveryPath,
   FREE_REGISTRATION_LANDING_PATH,
-  isFreeRegistrationConfirmRequest,
   isFreeRegistrationLeadId,
   resolveFreeRegistrationBind,
+  resolveFreeRegistrationConfirmContext,
   type FreeRegistrationBindEvidence,
 } from "@/lib/auth/free-registration"
 import { loadFreeRegistrationBindEvidence } from "@/lib/auth/free-registration-bind-evidence"
@@ -223,15 +223,19 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   // alone is not evidence of origin — appended to a payment-activation link it
   // used to run the free branch, whose write pins
   // `enrollment_purchase_source_id = null` PERMANENTLY and breaks that user's
-  // paid plan forever. The branch now additionally requires the exact shape only
-  // `buildFreeRegistrationEmailRedirect` produces: a UUID `lead` and the `/scan`
-  // landing. A payment token with `?free=1` bolted on carries neither.
-  const isFreeRegistration =
-    !isRecovery &&
-    isFreeRegistrationConfirmRequest(searchParams) &&
-    isFreeRegistrationLeadId(leadId) &&
-    next === FREE_REGISTRATION_LANDING_PATH &&
-    (deps.freemiumScannerFirstEnabled?.() ?? false)
+  // paid plan forever. The branch therefore requires the exact shape only
+  // `buildFreeRegistrationEmailRedirect` produces: `free=1`, a UUID `lead` and
+  // the `/scan` landing. A payment token with `?free=1` bolted on carries none.
+  //
+  // PR6 review, finding V2: that shape is read through
+  // `resolveFreeRegistrationConfirmContext`, because the REAL e-mail nests this
+  // contract's callback one layer down (`?next=` for signup, `?redirect_to=` for
+  // magic link — `supabase/functions/send-email/message-builder.ts`). Reading the
+  // outer query alone worked only for hand-built links.
+  const freeContext = resolveFreeRegistrationConfirmContext(searchParams, origin)
+  const freemiumEnabled = deps.freemiumScannerFirstEnabled?.() ?? false
+  const isFreeRegistration = !isRecovery && freeContext !== null && freemiumEnabled
+  const freeLeadId = freeContext?.leadId
   let verified = false
   let verificationAttempted = false
 
@@ -260,10 +264,10 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     // because that is the call whose existing-row branch would overwrite it.
     // Any failure here resolves to "skip" (fail closed).
     let freeBind: "bind" | "skip" = "bind"
-    if (isFreeRegistration && user && isFreeRegistrationLeadId(leadId)) {
+    if (isFreeRegistration && user && freeLeadId) {
       try {
         const evidence = deps.loadFreeBindEvidence
-          ? await deps.loadFreeBindEvidence({ userId: user.id, leadId })
+          ? await deps.loadFreeBindEvidence({ userId: user.id, leadId: freeLeadId })
           : null
         freeBind = evidence ? resolveFreeRegistrationBind(evidence) : "skip"
       } catch (e) {
@@ -272,6 +276,10 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
       }
     }
     const freeBindSkipped = isFreeRegistration && freeBind === "skip"
+    // A real free-registration e-mail carries the lead one layer down, so the
+    // outer `?lead=` is absent (finding V2) — the free branch links the lead the
+    // resolved context names. Every other path keeps the outer parameter.
+    const linkLeadId = isFreeRegistration ? freeLeadId : leadId
 
     if (
       user &&
@@ -280,7 +288,7 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
       !isPartnerAccessReturnPath(next)
     ) {
       try {
-        await deps.linkQuizToProfile(user.id, user.email, leadId)
+        await deps.linkQuizToProfile(user.id, user.email, linkLeadId)
       } catch (e) {
         console.error("linkQuizToProfile failed:", e)
       }
@@ -322,7 +330,25 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
       return deps.redirect(`${origin}${buildFreeRegistrationBindSkippedLandingPath()}`)
     }
 
-    return deps.redirect(`${origin}${next}`)
+    // The free branch lands on its own CONSTANT destination, never on the
+    // resolved `next`: a real signup e-mail's outer `next` is a `/auth/confirm`
+    // URL, which `sanitizeAuthIntendedPath` refuses, so `next` would be the
+    // `/chat` default and the free account would never reach the scanner
+    // (finding V2). A constant is also the only redirect this branch can emit.
+    return deps.redirect(`${origin}${isFreeRegistration ? FREE_REGISTRATION_LANDING_PATH : next}`)
+  }
+
+  // An expired/consumed free-registration link goes back to the registration
+  // screen (which explains it in German and can re-send), not to the login
+  // form — the account may not exist yet, so `/auth` would be a dead end.
+  //
+  // Checked FIRST (finding V2): a real signup e-mail resolves no `intendedNext`
+  // at all, so an already-signed-in visitor re-clicking an expired free link
+  // would otherwise be sent to the paid journey frontier instead of the
+  // registration screen. Every other path is unaffected — this arm only ever
+  // runs for a request the free-registration shape resolved.
+  if (isFreeRegistration) {
+    return deps.redirect(`${origin}${buildFreeRegistrationRecoveryPath(freeLeadId ?? null)}`)
   }
 
   if (!isRecovery && user && isPersonalPlanReplayDestination(next, origin)) {
@@ -337,15 +363,6 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     } catch (error) {
       console.warn("Personal Plan auth replay frontier failed:", error)
     }
-  }
-
-  // An expired/consumed free-registration link goes back to the registration
-  // screen (which explains it in German and can re-send), not to the login
-  // form — the account may not exist yet, so `/auth` would be a dead end.
-  if (isFreeRegistration) {
-    return deps.redirect(
-      `${origin}${buildFreeRegistrationRecoveryPath(isFreeRegistrationLeadId(leadId) ? leadId : null)}`,
-    )
   }
 
   return deps.redirect(buildExpiredLinkDestination(origin, next, isRecovery))

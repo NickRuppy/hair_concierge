@@ -19,6 +19,7 @@ import {
 import { loadFreeRegistrationBindEvidence } from "../src/lib/auth/free-registration-bind-evidence"
 import { recoverMissingFreeSnapshot } from "../src/lib/auth/free-registration-recovery"
 import type { ProvisionFreeInitialSnapshotResult } from "../src/lib/personal-plan/persistence/free-snapshot-service"
+import { buildCustomerIoEmails } from "../supabase/functions/send-email/message-builder"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 /**
@@ -216,6 +217,37 @@ function createJourneyDatabase() {
 
 type SentLink = { email: string; emailRedirectTo: string; tokenHash: string }
 
+/**
+ * The URL the recipient ACTUALLY clicks (PR6 review, finding V2).
+ *
+ * `emailRedirectTo` is not it: Supabase hands that string to the send-email hook
+ * as `email_data.redirect_to`, and the REAL builder
+ * (`supabase/functions/send-email/message-builder.ts`) wraps it inside a fresh
+ * `/auth/confirm` URL carrying the token — nested under `next` for a `signup`
+ * action, under `redirect_to` for a `magiclink` action. The earlier journey test
+ * appended the token to `emailRedirectTo` directly and so never exercised that
+ * nesting; both delivered shapes lost the free context in production.
+ *
+ * `shouldCreateUser: true` produces a `signup` mail for a brand-new address and
+ * a `magiclink` mail for an address that already has an account, so both matter.
+ */
+function realEmailConfirmUrl(link: SentLink, actionType: "signup" | "magiclink"): URL {
+  const [email] = buildCustomerIoEmails(
+    {
+      user: { id: "auth-user", email: link.email },
+      email_data: {
+        email_action_type: actionType,
+        token: "123456",
+        token_hash: link.tokenHash,
+        redirect_to: link.emailRedirectTo,
+        site_url: ORIGIN,
+      },
+    },
+    { siteUrl: ORIGIN },
+  )
+  return new URL(email.message_data.confirmation_url)
+}
+
 function createAuthTransport() {
   const sent: SentLink[] = []
   const usersByEmail = new Map<string, { id: string; email: string }>()
@@ -385,6 +417,14 @@ function createJourney() {
       url.searchParams.set("type", "magiclink")
       return confirm(new Request(url.toString()))
     },
+    /** The link as the REAL e-mail builder renders it (finding V2). */
+    async openDeliveredLink(link: SentLink, actionType: "signup" | "magiclink") {
+      return confirm(new Request(realEmailConfirmUrl(link, actionType).toString()))
+    },
+    async openExpiredDeliveredLink(link: SentLink, actionType: "signup" | "magiclink") {
+      const url = realEmailConfirmUrl({ ...link, tokenHash: "expired-token-hash" }, actionType)
+      return confirm(new Request(url.toString()))
+    },
     /** Drive `/auth/confirm` with a hand-built URL (tampering scenarios). */
     async openRaw(url: URL) {
       return confirm(new Request(url.toString()))
@@ -397,6 +437,66 @@ function createJourney() {
     },
   }
 }
+
+// The delivered mail is a `signup` for a brand-new address and a `magiclink`
+// for one that already has an account; `shouldCreateUser: true` produces both,
+// and the builder nests this contract's callback differently in each.
+for (const actionType of ["signup", "magiclink"] as const) {
+  test(`JOURNEY (${actionType} mail): quiz -> e-mail -> magic link -> /scan with the quiz artifact intact`, async () => {
+    const journey = createJourney()
+    const leadId = journey.db.seedQuizCompletion("lena@example.com")
+
+    // 1. The quiz saved the lead; the registration screen asks for the link.
+    const sent = await journey.register(leadId)
+    assert.equal(sent.status, 200)
+    assert.deepEqual(sent.body, { ok: true, email: "lena@example.com", corrected: false })
+    assert.equal(journey.transport.sent.length, 1)
+
+    // 2. The link binds the EXACT lead and lands on the scanner — driven through
+    //    the REAL builder output, which nests the callback one layer down.
+    const link = journey.transport.sent[0]
+    assert.equal(link.email, "lena@example.com")
+    const redirect = new URL(link.emailRedirectTo)
+    assert.equal(redirect.pathname, "/auth/confirm")
+    assert.equal(redirect.searchParams.get("lead"), leadId)
+    assert.equal(redirect.searchParams.get("next"), "/scan")
+
+    const clicked = realEmailConfirmUrl(link, actionType)
+    assert.equal(clicked.searchParams.get("lead"), null, "the outer query has no lead")
+    assert.equal(clicked.searchParams.get("free"), null, "the outer query has no free marker")
+
+    const response = await journey.openDeliveredLink(link, actionType)
+    assert.equal(response.status, 307)
+    assert.equal(response.headers.get("location"), `${ORIGIN}/scan`)
+
+    // 3. The lead is claimed by the new account and its artifact came with it.
+    const userId = journey.linkCalls[0].userId
+    assert.equal(journey.db.leads[0].user_id, userId)
+    assert.equal(journey.db.preparedArtifacts[0].user_id, userId)
+
+    // 4. The scanner works immediately — no `profile_missing` 409.
+    assert.deepEqual(journey.provisioned, [{ userId, email: "lena@example.com" }])
+    const context = await loadScanEvaluationContext(journey.db.admin as never, userId)
+    assert.ok(context, "expected a scan evaluation context — profile_missing must not fire")
+    assert.equal(context?.snapshotSource, "initial")
+  })
+}
+
+test("V2: an expired DELIVERED link recovers to /registrierung, in both mail shapes", async () => {
+  for (const actionType of ["signup", "magiclink"] as const) {
+    const journey = createJourney()
+    const leadId = journey.db.seedQuizCompletion("lena@example.com")
+    await journey.register(leadId)
+
+    const response = await journey.openExpiredDeliveredLink(journey.transport.sent[0], actionType)
+    assert.equal(
+      response.headers.get("location"),
+      `${ORIGIN}/registrierung?lead=${leadId}&error=link_expired`,
+      `${actionType}: an expired delivered link must reach the registration screen`,
+    )
+    assert.deepEqual(journey.provisioned, [])
+  }
+})
 
 test("JOURNEY: quiz -> e-mail -> magic link -> /scan with the quiz artifact intact", async () => {
   const journey = createJourney()

@@ -93,6 +93,72 @@ export function isFreeRegistrationConfirmRequest(searchParams: URLSearchParams):
   return searchParams.get(FREE_REGISTRATION_CONFIRM_PARAM) === FREE_REGISTRATION_CONFIRM_VALUE
 }
 
+/** How many `/auth/confirm` layers `resolveFreeRegistrationConfirmContext` unwraps. */
+const FREE_REGISTRATION_CONFIRM_MAX_DEPTH = 3
+
+/**
+ * The one nesting step the real e-mail builder performs: the `emailRedirectTo`
+ * this module hands Supabase is NOT the URL the recipient clicks. Supabase gives
+ * it to the send-email hook as `email_data.redirect_to`, and
+ * `supabase/functions/send-email/message-builder.ts` wraps it inside a FRESH
+ * `/auth/confirm` URL that carries the token — as `?next=<callback>` for a
+ * `signup` action and as `?redirect_to=<callback>` for a `magiclink` action.
+ */
+function nestedConfirmParams(params: URLSearchParams, origin: string): URLSearchParams | null {
+  for (const key of ["next", "redirect_to"]) {
+    const raw = params.get(key)
+    if (!raw) continue
+    if (raw.startsWith("//") || raw.includes("\\")) continue
+    let url: URL
+    try {
+      url = new URL(raw, origin)
+    } catch {
+      continue
+    }
+    if (url.origin !== origin) continue
+    if (url.pathname !== "/auth/confirm" && !url.pathname.startsWith("/auth/confirm/")) continue
+    return url.searchParams
+  }
+  return null
+}
+
+/**
+ * Resolves the free-registration context of an `/auth/confirm` request — through
+ * the nesting the REAL e-mail actually has (PR6 Codex review, finding V2).
+ *
+ * `/auth/confirm` used to read `free` and `lead` from the outer query only, which
+ * holds for a hand-built link but never for a delivered e-mail: the builder above
+ * puts this contract's whole callback one layer down. A real signup mail therefore
+ * lost the free context entirely (the outer `next` is a `/auth/confirm` URL, which
+ * `sanitizeAuthIntendedPath` refuses, so the account landed on `/chat`), and a real
+ * magic-link mail reached `/scan` with no lead binding and no provisioning.
+ *
+ * WHITELIST, NOT A REDIRECT SINK: this returns nothing but the lead id, and only
+ * when the layer it is read from carries the exact shape
+ * `buildFreeRegistrationEmailRedirect` produces — `free=1`, a UUID `lead`, and the
+ * fixed `/scan` landing. Nothing here can widen where the request is redirected:
+ * the free branch always lands on the constant `FREE_REGISTRATION_LANDING_PATH`,
+ * and every other destination keeps going through `sanitizeAuthIntendedPath`.
+ */
+export function resolveFreeRegistrationConfirmContext(
+  searchParams: URLSearchParams,
+  origin: string,
+): { leadId: string } | null {
+  let params: URLSearchParams | null = searchParams
+  for (let depth = 0; params && depth <= FREE_REGISTRATION_CONFIRM_MAX_DEPTH; depth += 1) {
+    const leadId = params.get("lead")
+    if (
+      isFreeRegistrationConfirmRequest(params) &&
+      isFreeRegistrationLeadId(leadId) &&
+      params.get("next") === FREE_REGISTRATION_LANDING_PATH
+    ) {
+      return { leadId }
+    }
+    params = nestedConfirmParams(params, origin)
+  }
+  return null
+}
+
 export type FreeRegistrationLead = {
   id: string
   email: string
