@@ -186,10 +186,17 @@ export function createPersonalPlanLeadPostHandler(
         },
       )
       if (saveError) throw saveError
-      const leadId = savedLeads?.[0]?.lead_id
+      const savedLead = savedLeads?.[0]
+      const leadId = savedLead?.lead_id
       if (typeof leadId !== "string") {
         throw new Error("Personal-plan lead save returned no lead ID")
       }
+      // Both save RPCs report whether they RETURNED AN EXISTING lead instead of
+      // inserting one (`reused`). Only an explicit `false` counts as "this
+      // browser created this lead" — anything else (true, missing, malformed)
+      // is treated as reused, which is the fail-closed direction for the
+      // capability minted below.
+      const leadWasReused = savedLead?.reused !== false
 
       const createdAt = new Date().toISOString()
       if (moderator.kind !== "authorized")
@@ -251,9 +258,22 @@ export function createPersonalPlanLeadPostHandler(
       // handoff to `/registrierung`. Flag-gated: with the flag off the response
       // body is byte-identical to before, and a missing signing secret simply
       // omits the field (the correction path then refuses — fail closed).
-      const freeRegistrationCapability = dependencies.isFreemiumScannerFirstEnabled()
-        ? dependencies.issueFreeRegistrationCapability(leadId)
-        : null
+      //
+      // PR6 Codex review, finding V1 (CRITICAL): the save RPC DEDUPLICATES.
+      // `save_personal_plan_lead_with_artifact` returns the victim's existing
+      // lead for any submission carrying the same e-mail and the same canonical
+      // answers within 15 minutes (and for a replayed artifact claim), so an
+      // attacker who can guess or observe a victim's answers gets that victim's
+      // lead id back. Minting the capability there handed them authority to
+      // REPOINT the victim's lead at their own address. The capability is
+      // therefore minted ONLY for a genuinely new lead; a reused lead gets none,
+      // and `/registrierung`'s correction path answers with its existing honest
+      // `correction_not_authorized` refusal. Sending and re-sending the link to
+      // the address the lead already holds are unaffected either way.
+      const freeRegistrationCapability =
+        dependencies.isFreemiumScannerFirstEnabled() && !leadWasReused
+          ? dependencies.issueFreeRegistrationCapability(leadId)
+          : null
       const responseBody: Record<string, unknown> =
         fieldTestCampaign.kind === "eligible"
           ? { leadId, attributionAttached, fieldTestAttached }

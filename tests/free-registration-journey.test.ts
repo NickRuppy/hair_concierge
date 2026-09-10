@@ -577,6 +577,26 @@ test("ATTACK W1a: a stranger holding an unclaimed lead id cannot redirect it", a
   assert.equal(journey.transport.sent.at(-1)?.email, "lena.neu@example.com")
 })
 
+test("ATTACK V1: a capability minted for a FRESH lead cannot authorize another lead", async () => {
+  // The other half of V1's containment: even where a capability legitimately
+  // exists (the attacker completed their own quiz), it is scoped to exactly the
+  // lead it was minted for, so it can never move the lead the dedup RPC would
+  // have handed back.
+  const journey = createJourney()
+  const attackerLead = journey.db.seedQuizCompletion("angreifer@example.com")
+  const victimLead = journey.db.seedQuizCompletion("opfer@example.com")
+
+  const stolen = await journey.register(
+    victimLead,
+    "angreifer@example.com",
+    journey.capabilityFor(attackerLead),
+  )
+  assert.equal(stolen.status, 403)
+  assert.equal(stolen.body.code, "correction_not_authorized")
+  assert.equal(journey.db.leads[1].email, "opfer@example.com")
+  assert.equal(journey.transport.sent.length, 0, "nothing was mailed to the attacker")
+})
+
 test("ATTACK W1b: a victim's click on an attacker's lead never overwrites their profile", async () => {
   const journey = createJourney()
 
