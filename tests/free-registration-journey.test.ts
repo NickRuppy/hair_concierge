@@ -12,6 +12,13 @@ import {
   canLinkDirectQuizLead,
 } from "../src/lib/quiz/link-to-profile"
 import { getAuthenticatedAppRedirect } from "../src/lib/auth/intake-state"
+import {
+  issueFreeRegistrationCapability,
+  verifyFreeRegistrationCapability,
+} from "../src/lib/auth/free-registration-capability"
+import { loadFreeRegistrationBindEvidence } from "../src/lib/auth/free-registration-bind-evidence"
+import { recoverMissingFreeSnapshot } from "../src/lib/auth/free-registration-recovery"
+import type { ProvisionFreeInitialSnapshotResult } from "../src/lib/personal-plan/persistence/free-snapshot-service"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 /**
@@ -37,6 +44,7 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
  */
 
 const ORIGIN = "https://app.test"
+const CAPABILITY_SECRET = "journey-test-signing-secret-long-enough"
 
 const CANONICAL_PROFILE = {
   structure: "wavy",
@@ -256,8 +264,12 @@ function createJourney() {
     async updateLeadEmail(leadId, email) {
       const row = db.leads.find((lead) => lead.id === leadId && lead.user_id === null)
       if (row) row.email = email
+      return { updated: Boolean(row) }
     },
     checkEmailDeliverability: async (email) => ({ ok: true, normalized: email }),
+    // The real HMAC contract, exercised end to end with a test secret.
+    verifyCorrectionCapability: (token, leadId) =>
+      verifyFreeRegistrationCapability(token, leadId, { secret: CAPABILITY_SECRET }),
     sendMagicLink: transport.sendMagicLink,
   })
 
@@ -289,10 +301,17 @@ function createJourney() {
       (result as { canonical_profile: unknown }).canonical_profile,
     )
     profileData.user_id = userId
-    db.hairProfiles.push(profileData)
+    // Mirrors the real function's existing-row branch, which UPDATEs rather
+    // than inserts — the write W1b exists to prevent (link-to-profile.ts:214).
+    const existing = db.hairProfiles.find((row) => row.user_id === userId)
+    if (existing) Object.assign(existing, profileData)
+    else db.hairProfiles.push(profileData)
     lead.user_id = userId
     lead.status = "linked"
   }
+
+  const provisioningReports: { stage: string; outcome: string }[] = []
+  let provisionOverride: (() => ProvisionFreeInitialSnapshotResult) | null = null
 
   const confirm = createAuthConfirmGetHandler({
     createClient: async () =>
@@ -315,9 +334,19 @@ function createJourney() {
     freemiumScannerFirstEnabled: () => flagEnabled,
     async provisionFreeSnapshot(input) {
       provisioned.push(input)
+      if (provisionOverride) return provisionOverride()
       return createFreeSnapshotService(
         createFreeSnapshotSupabaseDependencies(db.admin as never),
       ).provisionFreeInitialSnapshot(input)
+    },
+    // The REAL bind guard (W1b) and the REAL reporting seam (W2), both driven
+    // through the same in-memory database the rest of the journey uses.
+    loadFreeBindEvidence: (input) =>
+      loadFreeRegistrationBindEvidence({ ...input, admin: db.admin as never }),
+    reportFreeProvisioning: (result, ctx) => {
+      if (result.outcome !== "provisioned" && result.outcome !== "paid_user") {
+        provisioningReports.push({ stage: ctx.stage, outcome: result.outcome })
+      }
     },
   })
 
@@ -328,15 +357,24 @@ function createJourney() {
     db,
     transport,
     provisioned,
+    provisioningReports,
     linkCalls,
     setFlag: (value: boolean) => {
       flagEnabled = value
     },
-    async register(leadId: string, email?: string) {
+    failProvisioning: (result: ProvisionFreeInitialSnapshotResult | null) => {
+      provisionOverride = result ? () => result : null
+    },
+    /** The capability the completing browser would have received. */
+    capabilityFor: (leadId: string) =>
+      issueFreeRegistrationCapability(leadId, { secret: CAPABILITY_SECRET }),
+    async register(leadId: string, email?: string, capability?: string | null) {
       const response = await registration(
         new Request(`${ORIGIN}/api/auth/free-registration`, {
           method: "POST",
-          body: JSON.stringify(email ? { leadId, email } : { leadId }),
+          body: JSON.stringify(
+            email ? { leadId, email, ...(capability ? { capability } : {}) } : { leadId },
+          ),
         }),
       )
       return { status: response.status, body: (await response.json()) as Record<string, unknown> }
@@ -345,6 +383,10 @@ function createJourney() {
       const url = new URL(link.emailRedirectTo)
       url.searchParams.set("token_hash", link.tokenHash)
       url.searchParams.set("type", "magiclink")
+      return confirm(new Request(url.toString()))
+    },
+    /** Drive `/auth/confirm` with a hand-built URL (tampering scenarios). */
+    async openRaw(url: URL) {
       return confirm(new Request(url.toString()))
     },
     async openExpiredLink(link: SentLink) {
@@ -432,7 +474,7 @@ test("RECOVERY correction: a corrected address still lands on the same lead's ar
   const leadId = journey.db.seedQuizCompletion("lena@examlpe.de")
 
   await journey.register(leadId)
-  const corrected = await journey.register(leadId, "lena@example.de")
+  const corrected = await journey.register(leadId, "lena@example.de", journey.capabilityFor(leadId))
   assert.equal(corrected.status, 200)
   assert.deepEqual(corrected.body, { ok: true, email: "lena@example.de", corrected: true })
 
@@ -491,11 +533,195 @@ test("a lead that already belongs to an account cannot be re-registered", async 
   await journey.register(leadId)
   await journey.openLink(journey.transport.sent[0])
 
-  const takeover = await journey.register(leadId, "angreifer@example.com")
+  const takeover = await journey.register(
+    leadId,
+    "angreifer@example.com",
+    journey.capabilityFor(leadId),
+  )
   assert.equal(takeover.status, 409)
   assert.equal(takeover.body.code, "lead_claimed")
   assert.equal(journey.db.leads[0].email, "lena@example.com")
   assert.equal(journey.transport.sent.length, 1)
+})
+
+test("ATTACK W1a: a stranger holding an unclaimed lead id cannot redirect it", async () => {
+  const journey = createJourney()
+  // `/result/<leadId>/reveal` publishes this id — possession proves nothing.
+  const leadId = journey.db.seedQuizCompletion("lena@example.com")
+  await journey.register(leadId)
+
+  const bare = await journey.register(leadId, "angreifer@example.com")
+  assert.equal(bare.status, 403)
+  assert.equal(bare.body.code, "correction_not_authorized")
+
+  const forged = await journey.register(
+    leadId,
+    "angreifer@example.com",
+    issueFreeRegistrationCapability(leadId, { secret: "attackers-own-secret-long-enough" }),
+  )
+  assert.equal(forged.status, 403)
+
+  // The lead still points at the victim, and the attacker was never mailed.
+  assert.equal(journey.db.leads[0].email, "lena@example.com")
+  assert.equal(journey.transport.sent.length, 1)
+  assert.equal(journey.transport.sent[0].email, "lena@example.com")
+
+  // The genuine completing browser's capability still works.
+  const genuine = await journey.register(
+    leadId,
+    "lena.neu@example.com",
+    journey.capabilityFor(leadId),
+  )
+  assert.equal(genuine.status, 200)
+  assert.equal(journey.db.leads[0].email, "lena.neu@example.com")
+  assert.equal(journey.transport.sent.at(-1)?.email, "lena.neu@example.com")
+})
+
+test("ATTACK W1b: a victim's click on an attacker's lead never overwrites their profile", async () => {
+  const journey = createJourney()
+
+  // 1. The victim is an established user: their own quiz, their own account.
+  const victimLead = journey.db.seedQuizCompletion("opfer@example.com")
+  await journey.register(victimLead)
+  await journey.openLink(journey.transport.sent[0])
+  const victimId = journey.linkCalls[0].userId
+  const victimProfile = journey.db.hairProfiles.find((row) => row.user_id === victimId)
+  assert.ok(victimProfile)
+  const victimSnapshot = { ...victimProfile }
+
+  // 2. The attacker completes their OWN quiz and — this is the whole attack —
+  //    registers it against the victim's address. `shouldCreateUser: true`
+  //    against an existing account mails that account an ordinary LOGIN link.
+  const attackerLead = journey.db.seedQuizCompletion("angreifer@example.com")
+  journey.db.preparedArtifacts[1].canonical_profile = {
+    ...CANONICAL_PROFILE,
+    structure: "coily",
+    thickness: "coarse",
+    scalp_type: "fettig",
+    treatment: ["blondiert"],
+  }
+  const redirected = await journey.register(
+    attackerLead,
+    "opfer@example.com",
+    journey.capabilityFor(attackerLead),
+  )
+  assert.equal(redirected.status, 200, "the attacker owns their own lead's capability")
+
+  // 3. The victim clicks the genuine-looking link.
+  const response = await journey.openLink(journey.transport.sent.at(-1)!)
+
+  // 4. Nothing of theirs moved: same profile, no adoption, no provisioning.
+  const after = journey.db.hairProfiles.find((row) => row.user_id === victimId)
+  assert.deepEqual(after, victimSnapshot, "the victim's hair profile must be untouched")
+  assert.equal(journey.db.hairProfiles.length, 1)
+  assert.equal(journey.db.leads[1].user_id, null, "the attacker's lead was not adopted")
+  assert.equal(journey.db.preparedArtifacts[1].user_id, null)
+  assert.equal(journey.provisioned.length, 1, "no provisioning over an established account")
+
+  // 5. They land on /scan as their existing self, with an honest notice.
+  assert.equal(response.headers.get("location"), `${ORIGIN}/scan?konto=bestehend`)
+})
+
+test("W1b: a re-click of one's OWN link still re-binds (the same-user retry survives)", async () => {
+  const journey = createJourney()
+  const leadId = journey.db.seedQuizCompletion("lena@example.com")
+  // Two links minted before the lead was claimed (an ordinary „nochmal senden").
+  await journey.register(leadId)
+  await journey.register(leadId)
+  await journey.openLink(journey.transport.sent[0])
+  const userId = journey.linkCalls[0].userId
+
+  // The second one, opened by the account that now OWNS the lead.
+  const again = await journey.openLink(journey.transport.sent[1])
+
+  assert.equal(again.headers.get("location"), `${ORIGIN}/scan`)
+  assert.equal(journey.linkCalls.length, 2, "linkQuizToProfile ran again for the owner")
+  assert.equal(journey.provisioned.length, 2)
+  assert.equal(journey.db.hairProfiles.length, 1)
+  assert.equal(journey.db.leads[0].user_id, userId)
+})
+
+test("W2: a typed provisioning failure is reported, and a later /scan visit recovers it", async () => {
+  const journey = createJourney()
+  const leadId = journey.db.seedQuizCompletion("lena@example.com")
+  await journey.register(leadId)
+
+  // The service's failures are typed non-errors, so the old `catch` never saw them.
+  journey.failProvisioning({ outcome: "temporarily_unavailable" })
+  const response = await journey.openLink(journey.transport.sent[0])
+  assert.equal(response.headers.get("location"), `${ORIGIN}/scan`)
+  const userId = journey.linkCalls[0].userId
+
+  assert.deepEqual(journey.provisioningReports, [
+    { stage: "confirm", outcome: "temporarily_unavailable" },
+  ])
+  // The dead end this used to be: no snapshot, and the lead is already claimed.
+  assert.equal(await loadScanEvaluationContext(journey.db.admin as never, userId), null)
+  const blocked = await journey.register(leadId)
+  assert.equal(blocked.status, 409)
+
+  // The retry seam: the next authenticated /scan visit provisions.
+  journey.failProvisioning(null)
+  const retried = await recoverMissingFreeSnapshot({
+    userId,
+    email: "lena@example.com",
+    admin: journey.db.admin as never,
+    provision: (input) =>
+      createFreeSnapshotService(
+        createFreeSnapshotSupabaseDependencies(journey.db.admin as never),
+      ).provisionFreeInitialSnapshot(input),
+    report: () => {},
+  })
+  assert.equal(retried, "attempted")
+  const context = await loadScanEvaluationContext(journey.db.admin as never, userId)
+  assert.ok(context, "the free product recovered — no permanent profile_missing")
+  assert.equal(context?.snapshotSource, "initial")
+
+  // Idempotent: a healthy account never re-enters the provisioning path.
+  let provisionCalls = 0
+  const second = await recoverMissingFreeSnapshot({
+    userId,
+    admin: journey.db.admin as never,
+    provision: async () => {
+      provisionCalls += 1
+      return { outcome: "temporarily_unavailable" }
+    },
+    report: () => {},
+  })
+  assert.equal(second, "not_needed")
+  assert.equal(provisionCalls, 0)
+})
+
+test("ATTACK W3: ?free=1 on a payment-flow link does not take the free branch", async () => {
+  const journey = createJourney()
+  const leadId = journey.db.seedQuizCompletion("lena@example.com")
+  await journey.register(leadId)
+  const link = journey.transport.sent[0]
+
+  // A payment-activation style link — no free lead, its own destination —
+  // with `?free=1` bolted on by the caller.
+  const tampered = new URL(`${ORIGIN}/auth/confirm`)
+  tampered.searchParams.set("free", "1")
+  tampered.searchParams.set("next", "/plan-start")
+  tampered.searchParams.set("token_hash", link.tokenHash)
+  tampered.searchParams.set("type", "magiclink")
+
+  const response = await journey.openRaw(tampered)
+  assert.equal(response.headers.get("location"), `${ORIGIN}/plan-start`)
+  // The decisive assertion: the free write — which pins
+  // `enrollment_purchase_source_id = null` permanently — never ran.
+  assert.deepEqual(journey.provisioned, [])
+
+  // Same for a free lead id smuggled onto a non-/scan destination.
+  const journey2 = createJourney()
+  const lead2 = journey2.db.seedQuizCompletion("mara@example.com")
+  await journey2.register(lead2)
+  const smuggled = new URL(journey2.transport.sent[0].emailRedirectTo)
+  smuggled.searchParams.set("next", "/plan-start")
+  smuggled.searchParams.set("token_hash", journey2.transport.sent[0].tokenHash)
+  smuggled.searchParams.set("type", "magiclink")
+  await journey2.openRaw(smuggled)
+  assert.deepEqual(journey2.provisioned, [])
 })
 
 test("flag off: /auth/confirm ignores the free marker entirely (byte-identical legacy behaviour)", async () => {

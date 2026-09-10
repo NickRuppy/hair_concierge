@@ -8,9 +8,16 @@ import {
   isFreeRegistrationConfirmRequest,
   requestFreeRegistrationLink,
   resolveQuizCompletionDestination,
+  resolveFreeRegistrationBind,
   type FreeRegistrationDependencies,
   type FreeRegistrationLead,
+  type FreeRegistrationRateDimension,
 } from "../src/lib/auth/free-registration"
+import {
+  issueFreeRegistrationCapability,
+  verifyFreeRegistrationCapability,
+  FREE_REGISTRATION_CAPABILITY_TTL_MS,
+} from "../src/lib/auth/free-registration-capability"
 import { createFreeRegistrationPostHandler } from "../src/app/api/auth/free-registration/route"
 import { classifyRoute } from "../src/lib/auth/route-classification"
 
@@ -21,12 +28,23 @@ type Recorder = {
   sent: { email: string; emailRedirectTo: string }[]
   leadEmailWrites: { leadId: string; email: string }[]
   rateLimitKeys: string[]
+  rateLimitCalls: { dimension: FreeRegistrationRateDimension; identifier: string }[]
+  capabilityChecks: { token: unknown; leadId: string }[]
 }
+
+/** A correction is authorized by default; individual tests take it away. */
+const VALID_CAPABILITY = "valid-capability"
 
 function createDeps(
   overrides: Partial<FreeRegistrationDependencies> & { lead?: FreeRegistrationLead | null } = {},
 ): { deps: FreeRegistrationDependencies; recorder: Recorder } {
-  const recorder: Recorder = { sent: [], leadEmailWrites: [], rateLimitKeys: [] }
+  const recorder: Recorder = {
+    sent: [],
+    leadEmailWrites: [],
+    rateLimitKeys: [],
+    rateLimitCalls: [],
+    capabilityChecks: [],
+  }
   const lead: FreeRegistrationLead | null =
     overrides.lead === undefined
       ? { id: LEAD_ID, email: "lena@example.com", quizKind: "personal_plan", userId: null }
@@ -35,8 +53,9 @@ function createDeps(
 
   const deps: FreeRegistrationDependencies = {
     siteUrl: SITE_URL,
-    async checkRateLimit(identifier) {
-      recorder.rateLimitKeys.push(identifier)
+    async checkRateLimit({ dimension, identifier }) {
+      recorder.rateLimitCalls.push({ dimension, identifier })
+      if (dimension === "lead") recorder.rateLimitKeys.push(identifier)
       return { allowed: true }
     },
     async loadLead() {
@@ -44,10 +63,16 @@ function createDeps(
     },
     async updateLeadEmail(leadId, email) {
       recorder.leadEmailWrites.push({ leadId, email })
-      if (mutableLead) mutableLead.email = email
+      if (!mutableLead || mutableLead.userId) return { updated: false }
+      mutableLead.email = email
+      return { updated: true }
     },
     async checkEmailDeliverability(email) {
       return { ok: true, normalized: email }
+    },
+    verifyCorrectionCapability(token, leadId) {
+      recorder.capabilityChecks.push({ token, leadId })
+      return token === VALID_CAPABILITY
     },
     async sendMagicLink(input) {
       recorder.sent.push(input)
@@ -115,13 +140,118 @@ test("resend re-sends to the same address (rate limit consulted every time)", as
 test("correction rewrites the still-unclaimed lead so the confirm-time lead binding keeps matching", async () => {
   const { deps, recorder } = createDeps()
   const result = await requestFreeRegistrationLink(
-    { leadId: LEAD_ID, email: "  Lena.Neu@Example.com " },
+    { leadId: LEAD_ID, email: "  Lena.Neu@Example.com ", capability: VALID_CAPABILITY },
     deps,
   )
 
   assert.deepEqual(result, { outcome: "sent", email: "lena.neu@example.com", corrected: true })
   assert.deepEqual(recorder.leadEmailWrites, [{ leadId: LEAD_ID, email: "lena.neu@example.com" }])
   assert.equal(recorder.sent[0].email, "lena.neu@example.com")
+  assert.deepEqual(recorder.capabilityChecks, [{ token: VALID_CAPABILITY, leadId: LEAD_ID }])
+})
+
+test("ATTACK W1a: a correction without the quiz-completion capability is refused", async () => {
+  // Possession of an unclaimed lead id is exactly what an attacker has — the
+  // paid funnel publishes it at `/result/<leadId>/reveal`.
+  for (const capability of [undefined, null, "", 42, "forged.capability"]) {
+    const { deps, recorder } = createDeps()
+    const result = await requestFreeRegistrationLink(
+      { leadId: LEAD_ID, email: "angreifer@example.com", capability },
+      deps,
+    )
+
+    assert.deepEqual(result, { outcome: "correction_not_authorized" }, String(capability))
+    // Nothing was rewritten and nothing was mailed to the attacker's address.
+    assert.equal(recorder.leadEmailWrites.length, 0)
+    assert.equal(recorder.sent.length, 0)
+  }
+})
+
+test("ATTACK W1a: the refusal never leaks whether the deliverability check would pass", async () => {
+  let deliverabilityCalls = 0
+  const { deps } = createDeps({
+    async checkEmailDeliverability(email) {
+      deliverabilityCalls += 1
+      return { ok: true, normalized: email }
+    },
+  })
+  await requestFreeRegistrationLink(
+    { leadId: LEAD_ID, email: "angreifer@example.com", capability: "forged" },
+    deps,
+  )
+  assert.equal(deliverabilityCalls, 0)
+})
+
+test("W1a: a resend to the lead's OWN address still needs no capability", async () => {
+  const { deps, recorder } = createDeps()
+  const result = await requestFreeRegistrationLink({ leadId: LEAD_ID }, deps)
+
+  assert.equal(result.outcome, "sent")
+  assert.equal(recorder.capabilityChecks.length, 0)
+  assert.equal(recorder.sent[0].email, "lena@example.com")
+})
+
+test("W1a: the capability is signed, lead-bound and expires", () => {
+  const secret = "test-signing-secret-that-is-long-enough"
+  const other = "22222222-2222-4222-8222-222222222222"
+  const now = 1_760_000_000_000
+  const token = issueFreeRegistrationCapability(LEAD_ID, { now, secret })
+  assert.ok(token)
+
+  assert.equal(verifyFreeRegistrationCapability(token, LEAD_ID, { now, secret }), true)
+  // Replayed for a different lead.
+  assert.equal(verifyFreeRegistrationCapability(token, other, { now, secret }), false)
+  // Signed with somebody else's secret.
+  assert.equal(
+    verifyFreeRegistrationCapability(token, LEAD_ID, { now, secret: `${secret}-different` }),
+    false,
+  )
+  // Payload edited, signature kept.
+  const [payload, signature] = token!.split(".")
+  const forgedPayload = Buffer.from(JSON.stringify({ leadId: other, iat: now })).toString(
+    "base64url",
+  )
+  assert.equal(
+    verifyFreeRegistrationCapability(`${forgedPayload}.${signature}`, other, { now, secret }),
+    false,
+  )
+  // Aged out, and clock-skewed into the future.
+  assert.equal(
+    verifyFreeRegistrationCapability(token, LEAD_ID, {
+      now: now + FREE_REGISTRATION_CAPABILITY_TTL_MS + 1_000,
+      secret,
+    }),
+    false,
+  )
+  assert.equal(
+    verifyFreeRegistrationCapability(token, LEAD_ID, { now: now - 600_000, secret }),
+    false,
+  )
+  // Malformed and missing inputs.
+  for (const bad of [null, undefined, 7, "", "no-dot", `${payload}.${signature}.extra`]) {
+    assert.equal(verifyFreeRegistrationCapability(bad, LEAD_ID, { now, secret }), false)
+  }
+  // No signing secret configured: fail closed in both directions.
+  assert.equal(issueFreeRegistrationCapability(LEAD_ID, { now, secret: "" }), null)
+  assert.equal(verifyFreeRegistrationCapability(token, LEAD_ID, { now, secret: "" }), false)
+})
+
+test("ATTACK W1b: the free confirm branch never binds a foreign lead into an established account", () => {
+  // The victim already has a hair profile; the attacker's lead is not theirs.
+  assert.equal(
+    resolveFreeRegistrationBind({ leadOwnedByAccount: false, hasEstablishedProfile: true }),
+    "skip",
+  )
+  // A brand-new free account has nothing to lose.
+  assert.equal(
+    resolveFreeRegistrationBind({ leadOwnedByAccount: false, hasEstablishedProfile: false }),
+    "bind",
+  )
+  // Re-clicking one's OWN link keeps the same-user retry `canLinkDirectQuizLead` allows.
+  assert.equal(
+    resolveFreeRegistrationBind({ leadOwnedByAccount: true, hasEstablishedProfile: true }),
+    "bind",
+  )
 })
 
 test("re-submitting the same address is a resend, not a correction", async () => {
@@ -142,7 +272,7 @@ test("an undeliverable correction address is rejected before the lead is rewritt
     },
   })
   const result = await requestFreeRegistrationLink(
-    { leadId: LEAD_ID, email: "lena@examplle.com" },
+    { leadId: LEAD_ID, email: "lena@examplle.com", capability: VALID_CAPABILITY },
     deps,
   )
 
@@ -165,13 +295,83 @@ test("a lead that already belongs to an account can no longer be re-pointed", as
     },
   })
   const result = await requestFreeRegistrationLink(
-    { leadId: LEAD_ID, email: "angreifer@example.com" },
+    { leadId: LEAD_ID, email: "angreifer@example.com", capability: VALID_CAPABILITY },
     deps,
   )
 
   assert.deepEqual(result, { outcome: "lead_claimed" })
   assert.equal(recorder.leadEmailWrites.length, 0)
   assert.equal(recorder.sent.length, 0)
+})
+
+test("W5: a lead claimed between the read and the guarded write is a conflict, not a silent success", async () => {
+  const { deps, recorder } = createDeps({
+    // The read still sees an unclaimed lead; the guarded UPDATE matches nothing.
+    async updateLeadEmail(leadId, email) {
+      recorder.leadEmailWrites.push({ leadId, email })
+      return { updated: false }
+    },
+  })
+  const result = await requestFreeRegistrationLink(
+    { leadId: LEAD_ID, email: "lena.neu@example.com", capability: VALID_CAPABILITY },
+    deps,
+  )
+
+  assert.deepEqual(result, { outcome: "lead_claimed" })
+  assert.equal(recorder.leadEmailWrites.length, 1)
+  // The decisive assertion: the link never went to an address the lead no
+  // longer carries, so the resulting account cannot dead-end.
+  assert.equal(recorder.sent.length, 0)
+})
+
+test("W4: every send is bounded per lead, per caller IP and per destination address", async () => {
+  const { deps, recorder } = createDeps()
+  await requestFreeRegistrationLink({ leadId: LEAD_ID, ipAddress: "203.0.113.7" }, deps)
+
+  assert.deepEqual(recorder.rateLimitCalls, [
+    { dimension: "lead", identifier: LEAD_ID },
+    { dimension: "ip", identifier: "203.0.113.7" },
+    { dimension: "address", identifier: "lena@example.com" },
+  ])
+
+  // A correction spends the CORRECTED address's budget, not the lead's old one.
+  const corrected = createDeps()
+  await requestFreeRegistrationLink(
+    {
+      leadId: LEAD_ID,
+      email: "lena.neu@example.com",
+      capability: VALID_CAPABILITY,
+      ipAddress: "203.0.113.7",
+    },
+    corrected.deps,
+  )
+  assert.deepEqual(corrected.recorder.rateLimitCalls.at(-1), {
+    dimension: "address",
+    identifier: "lena.neu@example.com",
+  })
+})
+
+test("W4: each dimension can refuse on its own, before anything is written or sent", async () => {
+  for (const blocked of ["ip", "address"] as const) {
+    const { deps, recorder } = createDeps({
+      async checkRateLimit({ dimension, identifier }) {
+        recorder.rateLimitCalls.push({ dimension, identifier })
+        return dimension === blocked ? { allowed: false } : { allowed: true }
+      },
+    })
+    const result = await requestFreeRegistrationLink(
+      {
+        leadId: LEAD_ID,
+        email: "lena.neu@example.com",
+        capability: VALID_CAPABILITY,
+        ipAddress: "203.0.113.7",
+      },
+      deps,
+    )
+    assert.deepEqual(result, { outcome: "rate_limited" }, blocked)
+    assert.equal(recorder.sent.length, 0, blocked)
+    assert.equal(recorder.leadEmailWrites.length, 0, blocked)
+  }
 })
 
 test("legacy-quiz leads and missing leads are indistinguishable to the caller", async () => {
@@ -280,6 +480,18 @@ test("the endpoint is dark while the flag is off and speaks HTTP codes when on",
   )
   assert.equal(claimedResponse.status, 409)
   assert.equal((await claimedResponse.json()).code, "lead_claimed")
+
+  // An unauthorized correction is a 403 with honest German copy, not a 200.
+  const refused = await live(
+    new Request("https://app.test/api/auth/free-registration", {
+      method: "POST",
+      body: JSON.stringify({ leadId: LEAD_ID, email: "angreifer@example.com" }),
+    }),
+  )
+  assert.equal(refused.status, 403)
+  const refusedBody = (await refused.json()) as Record<string, unknown>
+  assert.equal(refusedBody.code, "correction_not_authorized")
+  assert.match(String(refusedBody.error), /Haaranalyse noch einmal/)
 })
 
 test("an unexpected persistence failure is a 500, never a silent success", async () => {
@@ -312,7 +524,12 @@ test("field-test and moderator completions keep the paid reveal even with the fl
   )
   assert.match(
     quiz,
-    /router\.push\(resolveQuizCompletionNavigation\(leadId, email, freeRegistrationFunnel\)\)/,
+    /resolveQuizCompletionNavigation\(leadId, email, capability, freeRegistrationFunnel\)/,
+  )
+  // The capability is declared above `renderScreen`, which closes over it (W7).
+  assert.ok(
+    quiz.indexOf("const freeRegistrationFunnel") < quiz.indexOf("function renderScreen"),
+    "freeRegistrationFunnel must be declared before the closure that reads it",
   )
 })
 

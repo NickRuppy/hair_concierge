@@ -58,7 +58,7 @@ test("personal-plan quiz prepares the plan, saves V2 answers, and enters the res
   // pinned in the resolver.
   assert.match(
     quiz,
-    /router\.push\(resolveQuizCompletionNavigation\(leadId, email, freeRegistrationFunnel\)\)/,
+    /resolveQuizCompletionNavigation\(leadId, email, capability, freeRegistrationFunnel\)/,
   )
   assert.match(
     read("src/lib/auth/free-registration.ts"),
