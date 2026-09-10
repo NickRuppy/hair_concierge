@@ -6,6 +6,7 @@ import type {
 } from "@/lib/personal-plan/routine/contracts"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { GemerktSection } from "@/components/routine/gemerkt-section"
+import { KeepsakeLockBadge } from "@/components/keepsake/keepsake-lock-badge"
 import { PersonalPlanStageEntrance } from "@/components/personal-plan-journey"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 
@@ -44,6 +45,15 @@ export type RoutinePageProps = {
   merklisteEnabled?: boolean
   /** Fix round 1 (F6): refreshes the routine view after a „Gemerkt" product graduates in. */
   onGraduated?: () => void
+  /**
+   * T17 keepsake: a LAPSED owner reads their own Routine, but „Anpassen" is a premium
+   * mutation. Passed INSTEAD of `onEdit` (never alongside it), it renders the same
+   * affordance with a corner lock and opens the Premium sheet. Absent — the premium and
+   * flag-off case — this whole branch is unreachable and the header is byte-unchanged.
+   */
+  onLockedEdit?: () => void
+  /** T17 keepsake: „Gemerkt" stays readable, its save/remove affordances do not. */
+  merklisteReadOnly?: boolean
 }
 
 function payloadFor(view: PersonalPlanRoutineView) {
@@ -78,6 +88,8 @@ export function RoutinePage({
   onDismissPlanUpdatedToast,
   merklisteEnabled = false,
   onGraduated,
+  onLockedEdit,
+  merklisteReadOnly = false,
 }: RoutinePageProps) {
   const payload = payloadFor(view)
 
@@ -185,6 +197,19 @@ export function RoutinePage({
                     >
                       Anpassen
                     </button>
+                  ) : onLockedEdit ? (
+                    <span className="relative flex-none">
+                      <button
+                        type="button"
+                        onClick={onLockedEdit}
+                        aria-label="Anpassen — Premium"
+                        data-routine-keepsake-edit-lock="true"
+                        className="text-xs font-semibold text-[var(--brand-plum)] underline underline-offset-2 transition-colors hover:text-[var(--brand-plum-dark)]"
+                      >
+                        Anpassen
+                      </button>
+                      <KeepsakeLockBadge />
+                    </span>
                   ) : null}
                 </div>
                 <p className="mt-1 text-[11.5px] leading-relaxed text-[#706a65] sm:text-sm">
@@ -287,7 +312,11 @@ export function RoutinePage({
               </ul>
             </details>
           ) : null}
-          <GemerktSection merklisteEnabled={merklisteEnabled} onGraduated={onGraduated} />
+          <GemerktSection
+            merklisteEnabled={merklisteEnabled}
+            onGraduated={onGraduated}
+            readOnly={merklisteReadOnly}
+          />
         </main>
       </PersonalPlanStageEntrance>
     </div>

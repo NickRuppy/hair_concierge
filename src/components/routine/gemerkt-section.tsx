@@ -43,6 +43,7 @@ const WISHLIST_ENTRY_SAVED_STATE: ScanSavedStatePayload = {
 export function GemerktSection({
   merklisteEnabled,
   onGraduated,
+  readOnly = false,
 }: {
   /**
    * Server-derived freemium-flag gate (see `RoutinePage`'s doc comment in
@@ -58,6 +59,16 @@ export function GemerktSection({
    * routine list it hands products off to.
    */
   onGraduated?: () => void
+  /**
+   * T17 keepsake: a LAPSED owner keeps READING their Merkliste (the listing is what
+   * „nothing free is ever removed" means here), but both write affordances —
+   * „Zur Routine hinzufügen" (which opens the save/move sheet) and the × remove — are
+   * premium mutations whose endpoints answer 403 for them. Omitted rather than shown
+   * failing: an affordance that cannot work is worse than no affordance, and the page's
+   * own „Anpassen" lock already carries the gate for this surface. Defaults to `false`,
+   * so premium and flag-off render byte-identically to today.
+   */
+  readOnly?: boolean
 } = {}) {
   const { toast } = useToast()
   const [wishlistVisible, setWishlistVisible] = useState(false)
@@ -174,23 +185,27 @@ export function GemerktSection({
                       <span className="mt-0.5 block text-[12px] text-muted-foreground">{meta}</span>
                     ) : null}
                   </span>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="w-auto shrink-0"
-                    onClick={() => setGraduateEntry(entry)}
-                  >
-                    Zur Routine hinzufügen
-                  </Button>
-                  <button
-                    type="button"
-                    onClick={() => void removeFromWishlist(entry)}
-                    aria-label={`${entry.name} von der Merkliste entfernen`}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
-                  >
-                    ×
-                  </button>
+                  {readOnly ? null : (
+                    <>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-auto shrink-0"
+                        onClick={() => setGraduateEntry(entry)}
+                      >
+                        Zur Routine hinzufügen
+                      </Button>
+                      <button
+                        type="button"
+                        onClick={() => void removeFromWishlist(entry)}
+                        aria-label={`${entry.name} von der Merkliste entfernen`}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
+                      >
+                        ×
+                      </button>
+                    </>
+                  )}
                 </li>
               )
             })}

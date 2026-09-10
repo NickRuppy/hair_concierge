@@ -10,6 +10,8 @@ import {
   BottomSheetTitle,
 } from "@/components/ui/bottom-sheet"
 import { Button } from "@/components/ui/button"
+import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
+import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import { routineAnalytics } from "@/lib/personal-plan/routine/analytics"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
 import type {
@@ -41,6 +43,13 @@ import type { RoutineRefinementBannerViewModel } from "./routine-refinement-bann
 
 type RoutineViewResponse = PersonalPlanRoutineView | { status: "no_personal_plan" }
 type Mode = "overview" | "editor"
+
+/**
+ * T17: the gate a lapsed owner opens from their own Routine. Same `{feature, source}`
+ * pair the T12 „Beispiel" Routine uses (`GATED_EXAMPLE_COPY.routine`), so the sheet
+ * orders its benefits the same way from either surface.
+ */
+const KEEPSAKE_ROUTINE_GATE = { feature: "routine", source: "gated:routine" } as const
 
 function readError(response: Response, fallback: string) {
   return response
@@ -215,6 +224,7 @@ export function PersonalPlanRoutineClient({
   portfolioPresentation = null,
   initialRefinementBanner = null,
   merklisteEnabled = false,
+  keepsake = false,
 }: {
   initialView: PersonalPlanRoutineView
   enabled: boolean
@@ -227,6 +237,21 @@ export function PersonalPlanRoutineClient({
    * today's exact behavior.
    */
   merklisteEnabled?: boolean
+  /**
+   * T17 keepsake mode: this is a LAPSED owner reading their OWN confirmed Routine after
+   * their access ended. The caller passes `enabled={false}`, which already disables the
+   * entry sync, the editor and the proposal machinery; `keepsake` additionally
+   *
+   * - drops the per-item product-detail read (`GET /api/personal-plan/routine/items/…`
+   *   is outside the freemium admission list and answers 403 for them — the cards render
+   *   as plain rows instead of buttons that error),
+   * - locks „Anpassen" to the Premium sheet instead of hiding it (the owner should see
+   *   what they get back, not a silently reduced page), and
+   * - renders „Gemerkt" read-only.
+   *
+   * Defaults to `false`: premium and flag-off render byte-identically to today.
+   */
+  keepsake?: boolean
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -288,6 +313,20 @@ export function PersonalPlanRoutineClient({
   const [proposalRetryId, setProposalRetryId] = React.useState<string | null>(null)
   const [detail, setDetail] = React.useState<RoutineProductDetailData | null>(null)
   const [detailOpen, setDetailOpen] = React.useState(false)
+  // T17 keepsake: the one gate this page can open. Same shape as `GatedPreview`'s and
+  // T15's Profil opener. Never rendered outside keepsake mode.
+  const [premiumSheetOpen, setPremiumSheetOpen] = React.useState(false)
+  const [premiumSheetContext, setPremiumSheetContext] = React.useState<PremiumSheetContext | null>(
+    null,
+  )
+  const openPremiumSheet = React.useCallback((context: PremiumSheetContext) => {
+    setPremiumSheetContext(context)
+    setPremiumSheetOpen(true)
+  }, [])
+  const openKeepsakeRoutineGate = React.useCallback(
+    () => openPremiumSheet(KEEPSAKE_ROUTINE_GATE),
+    [openPremiumSheet],
+  )
   const syncedOnEntry = React.useRef(false)
   const displayedProposalId = React.useRef<string | null>(null)
   const proposalResolutionInFlight = React.useRef(false)
@@ -601,10 +640,12 @@ export function PersonalPlanRoutineClient({
       <RoutinePage
         view={view}
         onEdit={canEdit ? openEditor : undefined}
+        onLockedEdit={keepsake ? openKeepsakeRoutineGate : undefined}
         onReviewProposal={
           !isInitial && pending && enabled ? () => setProposalOpen(true) : undefined
         }
-        onItemDetail={(item) => void openDetail(item)}
+        onItemDetail={keepsake ? undefined : (item) => void openDetail(item)}
+        merklisteReadOnly={keepsake}
         portfolioPresentation={portfolioPresentation}
         refinementBanner={refinementBanner}
         onDismissRefinementBanner={dismissRefinementBanner}
@@ -678,6 +719,19 @@ export function PersonalPlanRoutineClient({
           ) : null}
         </BottomSheetContent>
       </BottomSheet>
+      {keepsake ? (
+        <PremiumSheet
+          open={premiumSheetOpen}
+          context={premiumSheetContext}
+          onClose={() => {
+            setPremiumSheetOpen(false)
+            setPremiumSheetContext(null)
+          }}
+          // No `onUnlocked` copy to flip: this page's keepsake mode is a SERVER prop, so
+          // the sheet's own `router.refresh()` after a verified purchase re-resolves it.
+          onRequestOpen={(context) => openPremiumSheet(context ?? KEEPSAKE_ROUTINE_GATE)}
+        />
+      ) : null}
     </>
   )
 }

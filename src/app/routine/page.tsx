@@ -7,7 +7,11 @@ import type { RoutineRefinementBannerViewModel } from "@/components/routine/pers
 import { RoutinePageClient } from "@/components/routine/routine-page-client"
 import { RetryRefreshButton } from "@/components/ui/retry-refresh-button"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
-import { shouldRenderGatedExample } from "@/lib/gated-preview/gate"
+import { resolveGatedPageMode } from "@/lib/gated-preview/gate"
+import {
+  loadPersonalPlanKeepsakeContentForUser,
+  type PersonalPlanKeepsakeContent,
+} from "@/lib/personal-plan/keepsake-content"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
@@ -166,6 +170,71 @@ export function RoutineUnavailableState({
   )
 }
 
+/**
+ * T17 keepsake resolver — the LAPSED owner's own Routine.
+ *
+ * Deliberately does NOT go through `loadJourneyAccess`: that loader is the entitlement
+ * authority (`accessState === "active"` plus a prepared source), and widening it would
+ * hand a lapsed user every route and API that asks it for permission. This reads the two
+ * facts a keepsake render needs — proof they own an accepted Routine version, and that
+ * version itself — through the same owner-scoped readers the premium path uses, and
+ * nothing else.
+ *
+ * `enabled: false` is what makes the read a keepsake rather than a live Routine: no
+ * pending proposal is loaded, so the successor/accept machinery has nothing to act on
+ * (`loadPersonalPlanRoutineView` returns `status: "active"` with the frozen version).
+ */
+export type KeepsakeRoutinePageResolverDeps = {
+  getUserId: () => Promise<string | null>
+  loadKeepsakeContent: (userId: string) => Promise<PersonalPlanKeepsakeContent | null>
+  readView: (input: {
+    userId: string
+    enabled: boolean
+  }) => ReturnType<typeof loadPersonalPlanRoutineView>
+  readPortfolioPresentation?: (
+    userId: string,
+    planId: string,
+    portfolioVersionId: string,
+  ) => Promise<PortfolioPresentation | null>
+}
+
+export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolverDeps) {
+  const userId = await deps.getUserId()
+  if (!userId) return { kind: "unavailable" as const }
+
+  try {
+    const keepsake = await deps.loadKeepsakeContent(userId)
+    if (!keepsake) return { kind: "unavailable" as const }
+    const view = await deps.readView({ userId, enabled: false })
+    if (view.status === "no_personal_plan" || !view.activeVersion) {
+      return { kind: "unavailable" as const }
+    }
+    const portfolioVersionId = view.activeVersion.payload.source.productPortfolioVersionId
+    let portfolioPresentation: PortfolioPresentation | null = null
+    if (portfolioVersionId && deps.readPortfolioPresentation) {
+      try {
+        portfolioPresentation = await deps.readPortfolioPresentation(
+          userId,
+          view.personalPlanId,
+          portfolioVersionId,
+        )
+      } catch {
+        // Presentation must not substitute or hide an otherwise valid Routine.
+      }
+    }
+    return { kind: "keepsake" as const, view, portfolioPresentation }
+  } catch {
+    return { kind: "unavailable" as const }
+  }
+}
+
+const keepsakeDeps: KeepsakeRoutinePageResolverDeps = {
+  getUserId: loadCachedAuthenticatedAppUserId,
+  loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
+  readView: defaultDeps.readView,
+  readPortfolioPresentation: defaultDeps.readPortfolioPresentation,
+}
+
 async function resolveDefaultRoutinePage() {
   const startedAt = performance.now()
   const resolved = await resolveRoutinePage(defaultDeps)
@@ -190,12 +259,37 @@ export default async function RoutinePage() {
   // now performs and discards (never a write — `resolveRoutinePage` is read-only and
   // catches its own errors) for zero added latency on the premium path. Semantics are
   // unchanged: a free render still never reaches `resolved`'s output, and
-  // `shouldRenderGatedExample` itself still fails closed to premium on flag-off or an
+  // `resolveGatedPageMode` itself still fails closed to premium on flag-off or an
   // entitlement-source outage.
-  const [renderGatedExample, resolved] = await Promise.all([
-    shouldRenderGatedExample(),
+  //
+  // T17 widens that one branch from two states to three: `"example"` is the never-paid
+  // free tier (unchanged), `"keepsake"` is a LAPSED owner who keeps reading their OWN
+  // Routine with every mutation locked, and `"premium"` still falls straight through to
+  // today's page. The keepsake read starts only after the mode is known — it is a second
+  // owner read that a premium or free render must never pay for.
+  const [pageMode, resolved] = await Promise.all([
+    resolveGatedPageMode(),
     resolveDefaultRoutinePage(),
   ])
+  if (pageMode === "keepsake") {
+    const keepsake = await resolveKeepsakeRoutinePage(keepsakeDeps)
+    if (keepsake.kind === "keepsake") {
+      return (
+        <PersonalPlanRoutineClient
+          initialView={keepsake.view}
+          enabled={false}
+          portfolioPresentation={keepsake.portfolioPresentation}
+          initialRefinementBanner={null}
+          merklisteEnabled={isFreemiumScannerFirstEnabled()}
+          keepsake
+        />
+      )
+    }
+    // No readable keepsake after all (the evidence and the version disagree, or the read
+    // failed): fall back to the free tier's own page rather than inventing a third state.
+    return <GatedRoutineExample />
+  }
+  const renderGatedExample = pageMode === "example"
   // F3: verified with two production builds + a live network capture — the suspected
   // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
   // client chunk set is IDENTICAL to `RoutinePageClient`'s own (see the matching comment
