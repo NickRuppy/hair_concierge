@@ -10,7 +10,9 @@ import type { FreemiumProvisioningResult } from "../src/lib/freemium/plan-provis
 import { CheckoutActivationError } from "../src/lib/stripe/checkout-activation"
 import {
   freemiumCheckoutProvisioningUserId,
+  FreemiumWebhookProvisioningRetryError,
   provisionFreemiumCheckoutSession,
+  runFreemiumCheckoutProvisioning,
 } from "../src/lib/stripe/webhook-handlers"
 
 /**
@@ -34,6 +36,15 @@ function freemiumSession(overrides: Partial<Stripe.Checkout.Session> = {}) {
     ...overrides,
   } as unknown as Stripe.Checkout.Session
 }
+
+/** The two provisioning outcomes no retry can fix, with the reason each must surface. */
+const BLOCKED_OUTCOMES: [FreemiumProvisioningResult, string][] = [
+  [{ outcome: "no_quiz_artifact" }, "no_quiz_artifact"],
+  [
+    { outcome: "enrollment_conflict", reasonCode: "plan_owned_by_other_source" },
+    "plan_owned_by_other_source",
+  ],
+]
 
 const provisioned: FreemiumProvisioningResult = {
   outcome: "provisioned",
@@ -193,20 +204,121 @@ test("activation resolving a different account unlocks nobody", async () => {
   assert.equal(result.status, 403)
 })
 
-test("degraded provisioning still unlocks — the money moved either way", async () => {
+test("Y1: a failed provisioning is never reported as a complete purchase", async () => {
+  // It used to answer `{status:"complete", routineReady:false}` — which the sheet renders as
+  // „Alles freigeschaltet" plus a promise that the Routine is being built, over a buyer who
+  // has no admission row, no plan and nothing in flight.
+  const captured: string[] = []
   const result = await call({
     provision: async () => ({ outcome: "temporarily_unavailable", stage: "acceptance" }),
+    captureException: ((_error: unknown, context: { reason?: string }) => {
+      captured.push(String(context.reason))
+    }) as never,
   })
-  assert.deepEqual(result.body, { status: "complete", routineReady: false })
+  assert.equal(result.status, 200, "the payment is real; this is not an error response")
+  assert.deepEqual(result.body, { status: "provisioning", retryable: true, reason: "acceptance" })
+  assert.deepEqual(captured, ["freemium_provisioning_unavailable"])
 })
 
-test("a thrown provisioning error is contained, not surfaced as a failed purchase", async () => {
+test("Y1: a thrown provisioning error is contained, reported, and honestly reported back", async () => {
+  const captured: string[] = []
   const result = await call({
     provision: async () => {
       throw new Error("db down")
     },
+    captureException: ((_error: unknown, context: { reason?: string }) => {
+      captured.push(String(context.reason))
+    }) as never,
+  })
+  assert.equal(result.status, 200)
+  assert.deepEqual(result.body, { status: "provisioning", retryable: true, reason: "admission" })
+  assert.deepEqual(captured, ["freemium_provisioning_failed", "freemium_provisioning_unavailable"])
+})
+
+test("Y1: a provisioning failure a retry cannot fix stops the client polling", async () => {
+  for (const [provisioning, reason] of BLOCKED_OUTCOMES) {
+    const result = await call({ provision: async () => provisioning })
+    assert.deepEqual(result.body, { status: "provisioning", retryable: false, reason })
+  }
+})
+
+test("Y1/Y2: a provisioned plan whose Routine is not accepted yet is complete, but not ready", async () => {
+  const result = await call({
+    provision: async () => ({ ...provisioned, routineAccepted: false }),
   })
   assert.deepEqual(result.body, { status: "complete", routineReady: false })
+})
+
+test("Y1: the same call converges once provisioning succeeds", async () => {
+  // The durability claim, at the endpoint's own seam: nothing about the first failure is
+  // sticky, so the poll (or the webhook redelivery) reaches the complete state.
+  let attempts = 0
+  const provision = async () => {
+    attempts += 1
+    return attempts === 1
+      ? ({ outcome: "temporarily_unavailable", stage: "initial_need" } as const)
+      : provisioned
+  }
+  assert.deepEqual((await call({ provision })).body, {
+    status: "provisioning",
+    retryable: true,
+    reason: "initial_need",
+  })
+  assert.deepEqual((await call({ provision })).body, { status: "complete", routineReady: true })
+})
+
+/* ------------------------------------------------------------------------- *
+ * Y4 — the Session's own lifecycle status decides retryability.
+ * ------------------------------------------------------------------------- */
+
+test("Y4: an expired Session is a terminal failure, not an endless „wird geprüft“", async () => {
+  let provisionCalls = 0
+  const result = await call({
+    retrieveSession: async () => freemiumSession({ status: "expired" } as never),
+    // `assertCheckoutSessionActivatable` raises `checkout_session_incomplete` for this
+    // Session — the code that used to be classified as pending.
+    assertActivatable: () => {
+      throw new CheckoutActivationError("checkout_session_incomplete", "not complete")
+    },
+    provision: async () => {
+      provisionCalls += 1
+      return provisioned
+    },
+  })
+  assert.equal(result.status, 200)
+  assert.deepEqual(result.body, { status: "failed", reason: "checkout_session_expired" })
+  assert.equal(provisionCalls, 0)
+})
+
+test("Y4: a Session the buyer abandoned (still `open`) is a failure they can retry", async () => {
+  const result = await call({
+    retrieveSession: async () => freemiumSession({ status: "open" } as never),
+    assertActivatable: () => {
+      throw new CheckoutActivationError("checkout_session_incomplete", "not complete")
+    },
+  })
+  assert.deepEqual(result.body, { status: "failed", reason: "checkout_session_abandoned" })
+})
+
+test("Y4: a complete Session whose payment is still settling is still pending", async () => {
+  const result = await call({
+    retrieveSession: async () => freemiumSession({ status: "complete" } as never),
+    assertActivatable: () => {
+      throw new CheckoutActivationError("checkout_session_unpaid", "unpaid")
+    },
+  })
+  assert.deepEqual(result.body, { status: "pending" })
+})
+
+test("Y4: the lifecycle check runs only for the Session's owner", async () => {
+  const result = await call({
+    retrieveSession: async () =>
+      freemiumSession({
+        status: "expired",
+        metadata: { freemium_admission: "1", freemium_user_id: "someone-else" },
+      } as never),
+  })
+  assert.equal(result.status, 403, "a non-owner learns nothing about the Session's state")
 })
 
 test("a malformed body is rejected before Stripe is touched", async () => {
@@ -317,22 +429,158 @@ test("the deferral guard decides synchronously, so a legacy checkout queues no e
   )
 })
 
-test("a failing webhook provisioning never fails the webhook, but is reported (F4)", async () => {
-  const captured: unknown[] = []
-  await provisionFreemiumCheckoutSession(
+/* ------------------------------------------------------------------------- *
+ * Y1 — the webhook lane's durability contract.
+ *
+ * The whole point of this lane is the buyer who is NOT watching: an asynchronous payment
+ * that settles minutes later, a tab closed mid-payment. If its failure is swallowed, there
+ * is no other lane — `claimWebhookEvent` has already claimed the event id, so no redelivery
+ * is processable, and the buyer stays paid-and-unprovisioned forever. So a failure here has
+ * to reach Stripe as a failed delivery.
+ * ------------------------------------------------------------------------- */
+
+test("Y1: a failing webhook provisioning is reported AND demands a redelivery", async () => {
+  const captured: string[] = []
+  const outcome = await provisionFreemiumCheckoutSession(
     freemiumSession(),
     {
       freemiumEnabled: () => true,
       provisionFreemiumPurchase: async () => {
         throw new Error("provisioning down")
       },
-      captureFreemiumProvisioningException: ((error: unknown) => {
-        captured.push(error)
+      captureFreemiumProvisioningException: ((_error: unknown, context: { reason?: string }) => {
+        captured.push(String(context.reason))
       }) as never,
     },
     { userId: USER },
   )
-  // `claimWebhookEvent` has already claimed this event id, so no redelivery will retry it:
-  // the buyer is billed and unprovisioned until someone sees this.
-  assert.equal(captured.length, 1)
+  assert.deepEqual(outcome, { status: "retryable", reason: "provisioning_error" })
+  assert.deepEqual(captured, ["freemium_webhook_provisioning_failed"])
+})
+
+test("Y1: a plan with no accepted Routine is a retry, not a success", async () => {
+  // Admitted, pinned and derived is not enough: `resolvePersonalPlanJourneyAccess` needs an
+  // ACTIVE routine version, so this buyer still sees a gate.
+  const outcome = await provisionFreemiumCheckoutSession(
+    freemiumSession(),
+    {
+      freemiumEnabled: () => true,
+      provisionFreemiumPurchase: async () => ({ ...provisioned, routineAccepted: false }),
+    },
+    { userId: USER },
+  )
+  assert.deepEqual(outcome, { status: "retryable", reason: "routine_not_accepted" })
+})
+
+test("Y1: a failure a redelivery cannot fix is blocked, not retried forever", async () => {
+  for (const [result, reason] of BLOCKED_OUTCOMES) {
+    const outcome = await provisionFreemiumCheckoutSession(
+      freemiumSession(),
+      { freemiumEnabled: () => true, provisionFreemiumPurchase: async () => result },
+      { userId: USER },
+    )
+    assert.deepEqual(outcome, { status: "blocked", reason })
+  }
+})
+
+test("Y1: a successful provisioning asks for nothing", async () => {
+  const outcome = await provisionFreemiumCheckoutSession(
+    freemiumSession(),
+    { freemiumEnabled: () => true, provisionFreemiumPurchase: async () => provisioned },
+    { userId: USER },
+  )
+  assert.deepEqual(outcome, { status: "provisioned" })
+})
+
+test("Y1: the runner throws exactly when the delivery has to be failed", async () => {
+  const enabled = { freemiumEnabled: () => true }
+  await assert.rejects(
+    () =>
+      runFreemiumCheckoutProvisioning(
+        freemiumSession(),
+        {
+          ...enabled,
+          provisionFreemiumPurchase: async () => {
+            throw new Error("down")
+          },
+        },
+        { userId: USER },
+      ),
+    (error: unknown) => {
+      assert.ok(error instanceof FreemiumWebhookProvisioningRetryError)
+      assert.equal(error.reason, "provisioning_error")
+      assert.equal(error.checkoutSessionId, SESSION_ID)
+      return true
+    },
+  )
+
+  // Success and blocked both return; only `retryable` throws, because only `retryable` is
+  // improved by asking Stripe again.
+  assert.deepEqual(
+    await runFreemiumCheckoutProvisioning(
+      freemiumSession(),
+      { ...enabled, provisionFreemiumPurchase: async () => provisioned },
+      { userId: USER },
+    ),
+    { status: "provisioned" },
+  )
+  assert.deepEqual(
+    await runFreemiumCheckoutProvisioning(
+      freemiumSession(),
+      { ...enabled, provisionFreemiumPurchase: async () => ({ outcome: "no_quiz_artifact" }) },
+      { userId: USER },
+    ),
+    { status: "blocked", reason: "no_quiz_artifact" },
+  )
+})
+
+test("Y1: a chain that outruns the budget fails the delivery instead of being killed", async () => {
+  // Stripe gives a webhook ~30s. If the chain ran past that, the platform would kill the
+  // invocation with the event still CLAIMED — and the redelivery would then be dropped as a
+  // duplicate. Giving up first keeps the failure where the claim can be released.
+  await assert.rejects(
+    () =>
+      runFreemiumCheckoutProvisioning(
+        freemiumSession(),
+        {
+          freemiumEnabled: () => true,
+          provisionFreemiumPurchase: () => new Promise(() => {}),
+        },
+        { userId: USER },
+        { budgetMs: 5 },
+      ),
+    (error: unknown) => {
+      assert.ok(error instanceof FreemiumWebhookProvisioningRetryError)
+      assert.equal(error.reason, "provisioning_budget_exhausted")
+      return true
+    },
+  )
+})
+
+test("Y1: redelivery converges — one enrollment, one Routine, whatever the retry count", async () => {
+  // The idempotency claim the retry lane depends on, driven through the real service in
+  // `freemium-plan-provisioning.test.ts`; here it is the LANE that is checked: a first
+  // delivery fails and demands a retry, the retry succeeds and demands nothing, and the
+  // provider reference both carried is the same one.
+  const references: string[] = []
+  let attempts = 0
+  const deps = {
+    freemiumEnabled: () => true,
+    provisionFreemiumPurchase: async (input: { userId: string; providerReference: string }) => {
+      references.push(input.providerReference)
+      attempts += 1
+      if (attempts === 1) throw new Error("transient")
+      return provisioned
+    },
+    captureFreemiumProvisioningException: (() => {}) as never,
+  }
+
+  await assert.rejects(() =>
+    runFreemiumCheckoutProvisioning(freemiumSession(), deps, { userId: USER }),
+  )
+  assert.deepEqual(
+    await runFreemiumCheckoutProvisioning(freemiumSession(), deps, { userId: USER }),
+    { status: "provisioned" },
+  )
+  assert.deepEqual(references, [SESSION_ID, SESSION_ID])
 })
