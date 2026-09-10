@@ -7,12 +7,19 @@ import type { EmailOtpType } from "@supabase/supabase-js"
 import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 import { isPartnerAccessReturnPath } from "@/lib/auth/partner-access-return"
 import {
+  buildFreeRegistrationBindSkippedLandingPath,
   buildFreeRegistrationRecoveryPath,
+  FREE_REGISTRATION_LANDING_PATH,
   isFreeRegistrationConfirmRequest,
   isFreeRegistrationLeadId,
+  resolveFreeRegistrationBind,
+  type FreeRegistrationBindEvidence,
 } from "@/lib/auth/free-registration"
+import { loadFreeRegistrationBindEvidence } from "@/lib/auth/free-registration-bind-evidence"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import { provisionFreeInitialSnapshotForUser } from "@/lib/personal-plan/persistence/free-snapshot-supabase"
+import type { ProvisionFreeInitialSnapshotResult } from "@/lib/personal-plan/persistence/free-snapshot-service"
+import { reportFreeProvisioningOutcome } from "@/lib/observability/free-registration"
 
 type AuthConfirmUser = { id: string; email?: string }
 
@@ -39,7 +46,17 @@ export interface AuthConfirmDeps {
    * confirm path — payment activation included — is byte-identical.
    */
   freemiumScannerFirstEnabled?: () => boolean
-  provisionFreeSnapshot?: (input: { userId: string; email?: string }) => Promise<unknown>
+  provisionFreeSnapshot?: (input: {
+    userId: string
+    email?: string
+  }) => Promise<ProvisionFreeInitialSnapshotResult>
+  /** T18 fix round 1 (W1b): evidence for `resolveFreeRegistrationBind`. */
+  loadFreeBindEvidence?: (input: {
+    userId: string
+    leadId: string
+  }) => Promise<FreeRegistrationBindEvidence>
+  /** T18 fix round 1 (W2): every non-success provisioning outcome is reported. */
+  reportFreeProvisioning?: typeof reportFreeProvisioningOutcome
 }
 
 export type AuthConfirmRouteDeps = {
@@ -47,7 +64,15 @@ export type AuthConfirmRouteDeps = {
   linkQuizToProfile: (userId: string, email?: string, leadId?: string) => Promise<unknown>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   freemiumScannerFirstEnabled?: () => boolean
-  provisionFreeSnapshot?: (input: { userId: string; email?: string }) => Promise<unknown>
+  provisionFreeSnapshot?: (input: {
+    userId: string
+    email?: string
+  }) => Promise<ProvisionFreeInitialSnapshotResult>
+  loadFreeBindEvidence?: (input: {
+    userId: string
+    leadId: string
+  }) => Promise<FreeRegistrationBindEvidence>
+  reportFreeProvisioning?: typeof reportFreeProvisioningOutcome
 }
 
 const defaultDeps: AuthConfirmRouteDeps = {
@@ -56,6 +81,8 @@ const defaultDeps: AuthConfirmRouteDeps = {
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   freemiumScannerFirstEnabled: isFreemiumScannerFirstEnabled,
   provisionFreeSnapshot: provisionFreeInitialSnapshotForUser,
+  loadFreeBindEvidence: loadFreeRegistrationBindEvidence,
+  reportFreeProvisioning: reportFreeProvisioningOutcome,
 }
 
 const AUTH_ONLY_QUERY_PARAMETERS = new Set([
@@ -156,6 +183,8 @@ async function handleAuthConfirmGet(request: Request, deps: AuthConfirmRouteDeps
       ? { freemiumScannerFirstEnabled: deps.freemiumScannerFirstEnabled }
       : {}),
     ...(deps.provisionFreeSnapshot ? { provisionFreeSnapshot: deps.provisionFreeSnapshot } : {}),
+    ...(deps.loadFreeBindEvidence ? { loadFreeBindEvidence: deps.loadFreeBindEvidence } : {}),
+    ...(deps.reportFreeProvisioning ? { reportFreeProvisioning: deps.reportFreeProvisioning } : {}),
   })
 }
 
@@ -189,9 +218,19 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   const isRecovery = type === "recovery" || next === "/auth/update-password"
   // Freemium scanner-first (T18): a link minted by `/api/auth/free-registration`.
   // Everything below is inert for every other confirm request.
+  //
+  // Fix round 1 (review finding W3): `?free=1` is caller-supplied, so the marker
+  // alone is not evidence of origin — appended to a payment-activation link it
+  // used to run the free branch, whose write pins
+  // `enrollment_purchase_source_id = null` PERMANENTLY and breaks that user's
+  // paid plan forever. The branch now additionally requires the exact shape only
+  // `buildFreeRegistrationEmailRedirect` produces: a UUID `lead` and the `/scan`
+  // landing. A payment token with `?free=1` bolted on carries neither.
   const isFreeRegistration =
     !isRecovery &&
     isFreeRegistrationConfirmRequest(searchParams) &&
+    isFreeRegistrationLeadId(leadId) &&
+    next === FREE_REGISTRATION_LANDING_PATH &&
     (deps.freemiumScannerFirstEnabled?.() ?? false)
   let verified = false
   let verificationAttempted = false
@@ -215,7 +254,31 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
   } = await deps.getUser()
 
   if (verified) {
-    if (user && !isModeratorReturnPath(next) && !isPartnerAccessReturnPath(next)) {
+    // T18 fix round 1 (review finding W1b): the free branch must not adopt a
+    // lead into an account that already has its own hair profile — see
+    // `resolveFreeRegistrationBind`. Resolved BEFORE `linkQuizToProfile`,
+    // because that is the call whose existing-row branch would overwrite it.
+    // Any failure here resolves to "skip" (fail closed).
+    let freeBind: "bind" | "skip" = "bind"
+    if (isFreeRegistration && user && isFreeRegistrationLeadId(leadId)) {
+      try {
+        const evidence = deps.loadFreeBindEvidence
+          ? await deps.loadFreeBindEvidence({ userId: user.id, leadId })
+          : null
+        freeBind = evidence ? resolveFreeRegistrationBind(evidence) : "skip"
+      } catch (e) {
+        console.error("free-registration bind evidence unavailable:", e)
+        freeBind = "skip"
+      }
+    }
+    const freeBindSkipped = isFreeRegistration && freeBind === "skip"
+
+    if (
+      user &&
+      !freeBindSkipped &&
+      !isModeratorReturnPath(next) &&
+      !isPartnerAccessReturnPath(next)
+    ) {
       try {
         await deps.linkQuizToProfile(user.id, user.email, leadId)
       } catch (e) {
@@ -232,17 +295,31 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     // The free account's scanner prerequisite: derive the initial need snapshot
     // from the quiz artifact just linked above, with the AUTH e-mail supplied
     // (T6 carry-forward — the paid-access guard needs it). Failures never block
-    // the landing; the scanner surfaces its own preparing/`profile_missing`
-    // state and the next confirm/visit can provision idempotently.
-    if (isFreeRegistration && user && deps.provisionFreeSnapshot) {
+    // the landing — but they are no longer silent, and the recovery the old
+    // comment promised is now real: `/scan` retries provisioning for a free
+    // account that has no snapshot yet (see `free-registration-recovery.ts`).
+    //
+    // Fix round 1 (review finding W2): the service signals most failures as
+    // TYPED outcomes that resolve normally, so the `catch` never saw them and
+    // nothing was logged. Every outcome other than `provisioned`/`paid_user` is
+    // reported now. Skipped entirely on a bind-skip: provisioning over an
+    // established account is exactly what W1b refuses.
+    if (isFreeRegistration && user && !freeBindSkipped && deps.provisionFreeSnapshot) {
       try {
-        await deps.provisionFreeSnapshot({
+        const result = await deps.provisionFreeSnapshot({
           userId: user.id,
           ...(user.email ? { email: user.email } : {}),
         })
+        deps.reportFreeProvisioning?.(result, { stage: "confirm", userId: user.id })
       } catch (e) {
         console.error("free snapshot provisioning failed:", e)
       }
+    }
+
+    // The account kept its own data; say so instead of silently landing them on
+    // a scanner that answers with someone else's plan.
+    if (freeBindSkipped) {
+      return deps.redirect(`${origin}${buildFreeRegistrationBindSkippedLandingPath()}`)
     }
 
     return deps.redirect(`${origin}${next}`)
