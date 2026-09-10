@@ -205,11 +205,26 @@ function createEffectHarness(renderComponent: () => ReactElement | null, context
   }
 }
 
+/**
+ * The poll schedule starts at 2s (`purchase-poll.ts`). Collapsing every delay to a
+ * macrotask keeps the suite fast while still driving the REAL effect wiring — the schedule
+ * itself is asserted in `premium-sheet-purchase-state`/`purchase-poll`'s own unit tests.
+ */
+const realSetTimeout = globalThis.setTimeout
+globalThis.setTimeout = ((handler: TimerHandler, _delay?: number, ...args: unknown[]) =>
+  realSetTimeout(
+    handler as never,
+    0,
+    ...(args as never[]),
+  )) as unknown as typeof globalThis.setTimeout
+
 type SheetHarness = {
   tree: ReactElement | null
   calls: string[]
   toasts: { title: string; description?: string }[]
   opened: (PremiumSheetContext | null)[]
+  completionRequests: number
+  storage: MemoryStorage
   open: boolean
   settle: () => Promise<void>
 }
@@ -280,6 +295,10 @@ async function mountSheet(options: {
     calls,
     toasts,
     opened,
+    storage,
+    get completionRequests() {
+      return completionRequests.length
+    },
     get open() {
       return state.open
     },
@@ -420,5 +439,206 @@ test("F2: nothing happens without a return parameter — the ordinary mount is u
   })
 
   assert.deepEqual(sheet.calls, [])
+  assert.equal(byData(sheet.tree, "data-premium-sheet-plans").length, 1)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Y3 — the pending state polls, and survives a refresh.
+ * ------------------------------------------------------------------------- */
+
+const PENDING_SESSION_KEY = "chaarlie.premium-sheet.pending-session"
+const CONTEXT_KEY = "chaarlie.premium-sheet.checkout-context"
+
+test("Y3: a pending payment that settles unlocks the mounted sheet — no reload", async () => {
+  // Before this the sheet asked once and then sat there: the webhook finished the purchase
+  // minutes later and the buyer stayed gated until they reloaded the page.
+  let answered = 0
+  const sheet = await mountSheet({
+    completion: () => {
+      answered += 1
+      return answered === 1
+        ? json({ status: "pending" })
+        : json({ status: "complete", routineReady: true })
+    },
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  // Let the poll fire and land.
+  await sheet.settle()
+  await sheet.settle()
+
+  assert.ok(sheet.completionRequests >= 2, "the pending state must ask again on its own")
+  assert.ok(sheet.calls.includes("unlocked"), "the settled payment unlocks in place")
+  assert.deepEqual(sheet.toasts, [{ title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast }])
+  assert.equal(sheet.open, false)
+})
+
+test("Y3: a refresh during a pending payment resumes verification from storage", async () => {
+  // The return effect strips `?freemium_checkout=` immediately, so after one reload the URL
+  // carries nothing. `sessionStorage` is the only handle left on the Session.
+  const sheet = await mountSheet({
+    completion: () => json({ status: "pending" }),
+    search: "",
+    storage: memoryStorage({
+      [CONTEXT_KEY]: JSON.stringify(REMEMBERED),
+      [PENDING_SESSION_KEY]: SESSION_ID,
+    }),
+    open: false,
+    context: null,
+  })
+
+  assert.ok(sheet.completionRequests >= 1, "the resumed verification must actually run")
+  assert.ok(sheet.calls.includes("requestOpen"))
+  assert.deepEqual(sheet.opened, [REMEMBERED], "and on the gate the purchase started from")
+  assert.equal(
+    byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]?.props[
+      "data-premium-sheet-purchase-phase"
+    ],
+    "pending",
+  )
+})
+
+test("Y3: the remembered gate is NOT consumed while the payment is still settling", async () => {
+  const storage = memoryStorage({ [CONTEXT_KEY]: JSON.stringify(REMEMBERED) })
+  const sheet = await mountSheet({
+    completion: () => json({ status: "pending" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    storage,
+    open: false,
+    context: null,
+  })
+  assert.equal(storage.getItem(CONTEXT_KEY), JSON.stringify(REMEMBERED))
+  assert.equal(storage.getItem(PENDING_SESSION_KEY), SESSION_ID, "the Session stays resumable")
+  assert.deepEqual(sheet.opened, [REMEMBERED])
+})
+
+test("Y3: both memos are dropped once the purchase is terminal", async () => {
+  const storage = memoryStorage({
+    [CONTEXT_KEY]: JSON.stringify(REMEMBERED),
+    [PENDING_SESSION_KEY]: SESSION_ID,
+  })
+  await mountSheet({
+    completion: () => json({ status: "complete", routineReady: true }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    storage,
+    open: true,
+    context: REMEMBERED,
+  })
+  assert.equal(storage.getItem(CONTEXT_KEY), null)
+  assert.equal(storage.getItem(PENDING_SESSION_KEY), null)
+})
+
+test("Y3: a manual „Status prüfen“ is offered and drives the same verification", async () => {
+  let answered = 0
+  const sheet = await mountSheet({
+    completion: () => {
+      answered += 1
+      return json({ status: "pending" })
+    },
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const recheck = byData(sheet.tree, "data-premium-sheet-recheck")[0]
+  assert.ok(recheck, "a bounded poll must always leave a button to press")
+  assert.equal(textContent(recheck), PREMIUM_SHEET_PURCHASE_COPY.recheck)
+
+  const before = answered
+  recheck.props.onClick()
+  await sheet.settle()
+  assert.ok(answered > before)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Y1 — paid, entitled, plan not built: said out loud, never as „freigeschaltet".
+ * ------------------------------------------------------------------------- */
+
+test("Y1: a provisioning failure never raises the unlock toast", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "provisioning", retryable: true, reason: "acceptance" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+
+  const panel = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(panel?.props["data-premium-sheet-purchase-phase"], "provisioning")
+  assert.ok(textContent(panel).includes(PREMIUM_SHEET_PURCHASE_COPY.provisioningTitle))
+  assert.ok(textContent(panel).includes(PREMIUM_SHEET_PURCHASE_COPY.provisioningBody))
+  assert.deepEqual(sheet.toasts, [], "„Alles freigeschaltet“ over an empty plan is a lie")
+  assert.equal(sheet.calls.includes("close"), false, "the sheet keeps saying what is happening")
+  // The ACCESS half is true and is applied: client-held locks flip, the gates re-render.
+  assert.ok(sheet.calls.includes("unlocked"))
+  assert.ok(sheet.calls.includes("refresh"))
+})
+
+test("Y1: a provisioning failure that polling can fix converges to the unlock", async () => {
+  let answered = 0
+  const sheet = await mountSheet({
+    completion: () => {
+      answered += 1
+      return answered === 1
+        ? json({ status: "provisioning", retryable: true, reason: "acceptance" })
+        : json({ status: "complete", routineReady: true })
+    },
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  await sheet.settle()
+  await sheet.settle()
+
+  assert.deepEqual(sheet.toasts, [{ title: PREMIUM_SHEET_PURCHASE_COPY.unlockToast }])
+  assert.equal(sheet.open, false)
+})
+
+test("Y1: a provisioning failure polling cannot fix stops asking and says so", async () => {
+  const sheet = await mountSheet({
+    completion: () =>
+      json({ status: "provisioning", retryable: false, reason: "no_quiz_artifact" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const requestsAfterFirstAnswer = sheet.completionRequests
+  await sheet.settle()
+  await sheet.settle()
+
+  assert.equal(sheet.completionRequests, requestsAfterFirstAnswer, "no endless polling")
+  const panel = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.ok(textContent(panel).includes(PREMIUM_SHEET_PURCHASE_COPY.provisioningStalledBody))
+  assert.equal(byData(sheet.tree, "data-premium-sheet-recheck").length, 0)
+})
+
+/* ------------------------------------------------------------------------- *
+ * Y4 — an expired or abandoned Session reads as what it is.
+ * ------------------------------------------------------------------------- */
+
+test("Y4: an expired Session gets its own line and a fresh checkout, not a spinner", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "failed", reason: "checkout_session_expired" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const alert = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(alert.props["data-premium-sheet-purchase-phase"], "failed")
+  assert.equal(textContent(alert), PREMIUM_SHEET_PURCHASE_COPY.checkoutExpired)
+  assert.equal(
+    textContent(byData(sheet.tree, "data-premium-sheet-cta")[0]),
+    PREMIUM_SHEET_PURCHASE_COPY.retry,
+  )
+})
+
+test("Y4: an abandoned Session says so, and the plan rows are back", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "failed", reason: "checkout_session_abandoned" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const alert = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(textContent(alert), PREMIUM_SHEET_PURCHASE_COPY.checkoutAbandoned)
   assert.equal(byData(sheet.tree, "data-premium-sheet-plans").length, 1)
 })

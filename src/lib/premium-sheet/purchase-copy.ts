@@ -1,3 +1,5 @@
+import type { PremiumSheetPurchaseFailure } from "@/lib/premium-sheet/purchase-state"
+
 /**
  * Every German string the purchase step of the Premium sheet introduces
  * (freemium-scanner-first T14), in one place so the invented copy is countable and
@@ -18,18 +20,30 @@ export const PREMIUM_SHEET_PURCHASE_COPY = {
   /** Asynchronous payment method still settling. */
   pendingTitle: "Zahlung wird noch geprüft",
   pendingBody: "Sobald sie durch ist, schalten wir frei. Du musst nichts weiter tun.",
+  /**
+   * Paid, entitled — but the plan could not be built on this call (Codex fix wave, Y1).
+   * Says exactly that, because „Alles freigeschaltet" would be false.
+   */
+  provisioningTitle: "Zahlung bestätigt",
+  provisioningBody: "Dein Plan wird noch vorbereitet. Das kann einen Moment dauern.",
+  /** The same state, once retrying stopped helping — no false promise of a wait. */
+  provisioningStalledBody: "Dein Plan konnte noch nicht erstellt werden. Wir kümmern uns darum.",
+  /** Manual fallback whenever the automatic poll is running or exhausted. */
+  recheck: "Status prüfen",
   /** Recoverable failures. One line each, then the retry. */
   checkoutUnavailable: "Checkout konnte nicht geladen werden.",
   providerUnavailable: "Zahlung konnte nicht gestartet werden.",
   verificationFailed: "Wir konnten deine Zahlung nicht bestätigen.",
+  checkoutExpired: "Die Zahlung ist abgelaufen.",
+  checkoutAbandoned: "Die Zahlung wurde abgebrochen.",
   /** Existing repo-wide retry label. */
   retry: "Erneut versuchen",
 } as const
 
-export function premiumSheetPurchaseFailureCopy(
-  reason: "checkout_unavailable" | "provider_unavailable" | "verification_failed",
-): string {
+export function premiumSheetPurchaseFailureCopy(reason: PremiumSheetPurchaseFailure): string {
   if (reason === "checkout_unavailable") return PREMIUM_SHEET_PURCHASE_COPY.checkoutUnavailable
   if (reason === "provider_unavailable") return PREMIUM_SHEET_PURCHASE_COPY.providerUnavailable
+  if (reason === "checkout_expired") return PREMIUM_SHEET_PURCHASE_COPY.checkoutExpired
+  if (reason === "checkout_abandoned") return PREMIUM_SHEET_PURCHASE_COPY.checkoutAbandoned
   return PREMIUM_SHEET_PURCHASE_COPY.verificationFailed
 }
