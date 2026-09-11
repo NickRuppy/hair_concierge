@@ -98,6 +98,12 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
      branches on). **This one is hard-required, not degrade-safe:** without the column the
      bind-evidence read errors, every free confirm fails closed, and free registration lands
      on `/scan?konto=bestehend` with nothing provisioned. Apply it BEFORE the flip.
+   - `supabase/migrations/20260911090000_paypal_checkout_intents_premium_sheet_source.sql`
+     (docket rework R1 — widens the `paypal_checkout_intents.source` CHECK to admit
+     `premium_sheet`). **Hard-required for the sheet's PayPal button:** without it every
+     PayPal intent the sheet creates is rejected by the constraint, so the button starts and
+     then fails. Additive and independent of the four above — every existing row still
+     satisfies the widened CHECK.
 
    Verify with the Supabase MCP `list_migrations` against the target project before flipping;
    this session had no live Supabase access, so these are _documented as required_, not
@@ -262,9 +268,9 @@ Any smoke-checklist failure is a rollback trigger — see below, not a "monitor 
   (T14's freemium-purchase → enrollment → provisioning chain) — these buyers are now ordinary
   paying customers regardless of the flag and are entirely unaffected by rollback.
 - Any Sentry/PostHog/analytics events already emitted during the window.
-- The three migrations — rollback is a flag change only; no migration is reverted, and none of
-  the schema added is destructive to roll back independently even if ever desired (out of
-  scope for this runbook).
+- The migrations listed in precondition 1 — rollback is a flag change only; no migration is
+  reverted, and none of the schema added is destructive to roll back independently even if
+  ever desired (out of scope for this runbook).
 
 **Does undo (reverts immediately on flag-off):**
 
