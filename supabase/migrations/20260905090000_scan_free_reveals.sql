@@ -3,7 +3,7 @@
 --
 -- A row's existence is the used/unused signal: the PRIMARY KEY on user_id
 -- caps the ledger at one row per user, so the free-tier credit can only
--- ever be spent once. product_id records what the credit was spent on.
+-- ever be spent once. product_id records what the credit was spent on (catalog product uuid; deliberately no FK — this is a historical spend record that must survive catalog renames/merges/deletions).
 --
 -- Deliberately separate from the scan attempt log (public.scan_resolve_events
 -- and friends) -- this table is the credit ledger, not usage telemetry.
@@ -14,7 +14,7 @@
 CREATE TABLE public.scan_free_reveals (
   user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   revealed_at timestamptz NOT NULL DEFAULT now(),
-  product_id text NOT NULL
+  product_id uuid NOT NULL
 );
 
 ALTER TABLE public.scan_free_reveals ENABLE ROW LEVEL SECURITY;

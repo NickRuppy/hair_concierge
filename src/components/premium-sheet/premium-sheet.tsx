@@ -60,7 +60,8 @@ import { useToast } from "@/providers/toast-provider"
  *     first (plum, the repo's selected/accent colour) and fills the other two slots from
  *     the core order, so the sheet never reads as a single-feature paywall;
  *  2. the three plans at standard-catalog prices (`@/lib/premium-sheet/pricing` — never
- *     the launch catalog, whatever the launch-pricing flag says), Jährlich preselected;
+ *     the launch catalog, whatever the launch-pricing flag says), Vierteljährlich
+ *     preselected and marked „Beliebteste Wahl" (docket rework R2, ruling A3);
  *  3. one coral CTA, and an escape that is always one tap away. Declining costs nothing:
  *     the free scanner keeps working exactly as before.
  *
