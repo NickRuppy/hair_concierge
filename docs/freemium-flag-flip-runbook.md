@@ -86,7 +86,15 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
 ## Preconditions (verify ALL before flipping)
 
 1. **Migrations applied** to the target Supabase project (`pqdkhefxsxkyeqelqegq`), in order:
-   - `supabase/migrations/20260905090000_scan_free_reveals.sql` (T7 — reveal-credit ledger)
+   - `supabase/migrations/20260905090000_scan_free_reveals.sql` (T7 — reveal-credit ledger).
+     **Before applying, verify this migration has not already run anywhere** (`list_migrations`
+     against every environment, not just production): the rework wave edited this file IN
+     PLACE to change `product_id` from `text` to `uuid` (Nick's b1 ruling — FK-free historical
+     record) rather than adding a follow-up migration. That edit is safe only while the
+     original file has never been applied — a target where the `text` version already ran
+     needs a corrective migration (`ALTER COLUMN product_id TYPE uuid …`) instead of re-running
+     this file, which would either no-op against the wrong column type or be skipped entirely
+     by the migration runner's already-applied bookkeeping.
    - `supabase/migrations/20260910090000_freemium_plan_admissions.sql` (T14 — freemium
      enrollment admission)
    - `supabase/migrations/20260910091500_leads_free_provisioning_terminal_outcome.sql` (T18

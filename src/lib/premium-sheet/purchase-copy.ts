@@ -50,6 +50,12 @@ export const PREMIUM_SHEET_PURCHASE_COPY = {
   checkoutAbandoned: "Die Zahlung wurde abgebrochen.",
   /** Existing repo-wide retry label. */
   retry: "Erneut versuchen",
+  /**
+   * `subscription_already_active`'s own CTA (final cleanup batch, Nick-approved). Retrying
+   * would only hit the duplicate guard again — the buyer already has what they were trying
+   * to buy, so the primary action is closing the sheet, not another attempt.
+   */
+  close: "Schließen",
 } as const
 
 export function premiumSheetPurchaseFailureCopy(reason: PremiumSheetPurchaseFailure): string {

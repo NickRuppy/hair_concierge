@@ -143,6 +143,13 @@ export function PremiumSheet({
   const returnPath = sanitizeFreemiumCheckoutReturnPath(pathname)
   const planSelectionActive = isPremiumSheetPlanSelectionActive(purchase)
   const showsCheckout = premiumSheetShowsCheckout(purchase)
+  /**
+   * Terminal-Abo state (final cleanup batch, Nick-approved): the duplicate guard already
+   * cancelled this attempt and the buyer keeps the subscription they had — retrying only
+   * re-hits the same guard. The CTA becomes a plain dismiss instead of another attempt.
+   */
+  const isSubscriptionAlreadyActiveFailure =
+    purchase.phase === "failed" && purchase.reason === "subscription_already_active"
 
   /**
    * Verification. The only path to an unlocked state — and the only place the server is
@@ -499,13 +506,17 @@ export function PremiumSheet({
                 className="w-full"
                 data-premium-sheet-cta="true"
                 data-premium-sheet-selected-interval={selectedInterval}
-                onClick={startCheckout}
+                onClick={isSubscriptionAlreadyActiveFailure ? onClose : startCheckout}
               >
                 {/* After a failure the CTA is a retry, not a fresh offer — the repo-wide
-                    „Erneut versuchen" (fix round 1, F2). */}
-                {purchase.phase === "failed"
-                  ? PREMIUM_SHEET_PURCHASE_COPY.retry
-                  : selectedPlan.ctaLabel}
+                    „Erneut versuchen" (fix round 1, F2) — except `subscription_already_active`,
+                    where retrying only re-hits the duplicate guard: the CTA closes the sheet
+                    instead (final cleanup batch). */}
+                {isSubscriptionAlreadyActiveFailure
+                  ? PREMIUM_SHEET_PURCHASE_COPY.close
+                  : purchase.phase === "failed"
+                    ? PREMIUM_SHEET_PURCHASE_COPY.retry
+                    : selectedPlan.ctaLabel}
               </Button>
             ) : null}
             {/* One escape, always present and always one tap away — including mid-payment,

@@ -5,7 +5,11 @@ import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { PremiumSheetCheckout } from "@/components/premium-sheet/premium-sheet-checkout"
-import { resolvePayPalCheckoutPricingCatalog } from "@/app/api/paypal/create-subscription-intent/route"
+import {
+  PayPalSubscriptionIntentRequestSchema,
+  resolvePayPalCheckoutPricingCatalog,
+} from "@/app/api/paypal/create-subscription-intent/route"
+import { StripeCheckoutSessionRequestSchema } from "@/app/api/stripe/create-checkout-session/route"
 import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import {
   premiumSheetCompletionBody,
@@ -272,4 +276,58 @@ test("R1: the sheet's PayPal plan is pinned to the standard catalog, whatever th
       else process.env.PERSONAL_PLAN_LAUNCH_PRICING_ENABLED = previous
     }
   }
+})
+
+// --- intent contract alignment (cleanup batch) -------------------------------
+
+const paypalSheetRequest = {
+  interval: "year" as const,
+  source: "premium_sheet" as const,
+  checkoutAttemptId: "9f2a8ad0-2b23-4f2f-9e9f-2b64bd4a1d20",
+  funnelEventId: "9f2a8ad0-2b23-4f2f-9e9f-2b64bd4a1d24",
+}
+
+const stripeSheetRequest = {
+  interval: "year" as const,
+  source: "premium_sheet" as const,
+  checkoutAttemptId: paypalSheetRequest.checkoutAttemptId,
+  returnPath: "/scan",
+}
+
+test("PayPal's premium_sheet contract now refuses what Stripe's has always refused", () => {
+  assert.equal(PayPalSubscriptionIntentRequestSchema.safeParse(paypalSheetRequest).success, true)
+  assert.equal(StripeCheckoutSessionRequestSchema.safeParse(stripeSheetRequest).success, true)
+
+  const extraFields: Record<string, unknown>[] = [
+    { leadId: "9f2a8ad0-2b23-4f2f-9e9f-2b64bd4a1d22" },
+    { checkoutContext: "membership_reactivation" },
+    { returnDestination: "/profile" },
+  ]
+  for (const extra of extraFields) {
+    assert.equal(
+      PayPalSubscriptionIntentRequestSchema.safeParse({ ...paypalSheetRequest, ...extra }).success,
+      false,
+      `PayPal premium_sheet must refuse ${JSON.stringify(extra)}, same as Stripe's route`,
+    )
+    // The mirrored direction: Stripe's own schema already refuses the equivalent shape —
+    // this is not a new restriction invented here, only PayPal catching up to it.
+    assert.equal(
+      StripeCheckoutSessionRequestSchema.safeParse({ ...stripeSheetRequest, ...extra }).success,
+      false,
+      "Stripe's contract is the one being mirrored — it must still refuse the same shape",
+    )
+  }
+})
+
+test("funnelEventId and checkoutAttemptId stay allowed for premium_sheet on both routes", () => {
+  assert.equal(PayPalSubscriptionIntentRequestSchema.safeParse(paypalSheetRequest).success, true)
+  assert.equal(
+    StripeCheckoutSessionRequestSchema.safeParse({
+      interval: "year",
+      source: "premium_sheet",
+      checkoutAttemptId: paypalSheetRequest.checkoutAttemptId,
+      returnPath: "/scan",
+    }).success,
+    true,
+  )
 })

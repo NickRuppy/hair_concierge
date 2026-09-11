@@ -669,6 +669,25 @@ test('copy polish: a duplicate-guarded PayPal checkout says so, not „nicht bes
   )
 })
 
+test("terminal-Abo state: the CTA is a plain dismiss, not a retry, and closes the sheet", async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "failed", reason: "paypal_duplicate_checkout" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const cta = byData(sheet.tree, "data-premium-sheet-cta")[0]
+  assert.equal(textContent(cta), PREMIUM_SHEET_PURCHASE_COPY.close)
+  assert.notEqual(
+    textContent(cta),
+    PREMIUM_SHEET_PURCHASE_COPY.retry,
+    "retrying only re-hits the duplicate guard — the buyer already has what they wanted",
+  )
+
+  cta.props.onClick()
+  assert.equal(sheet.open, false, "the free session stays intact; the sheet just closes")
+})
+
 /* ------------------------------------------------------------------------- *
  * Codex fix wave round 2 — R1: a transient error on the RESUME lane stays
  * pending, never fails the purchase outright; an authoritative verdict still

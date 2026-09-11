@@ -50,6 +50,22 @@ export const PayPalSubscriptionIntentRequestSchema = z
     returnDestination: z.string().max(500).optional(),
   })
   .strict()
+  .superRefine(({ source, leadId, checkoutContext, returnDestination }, context) => {
+    // Cleanup batch: mirror Stripe's `create-checkout-session` premium_sheet contract
+    // (`StripeCheckoutSessionRequestSchema`'s `superRefine`). The Premium sheet sells
+    // exactly one thing — a standard-catalog subscription for an already-authenticated
+    // free user — and `leadId` (the lead/funnel offer contract) and `checkoutContext` /
+    // `returnDestination` (membership reactivation's own protocol) belong to OTHER
+    // checkout paths this endpoint speaks. `funnelEventId` and `checkoutAttemptId` stay
+    // allowed: both are legitimately used for premium_sheet, same as on the Stripe route.
+    if (source === "premium_sheet" && (leadId || checkoutContext || returnDestination)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "invalid Premium-sheet checkout contract",
+        path: ["source"],
+      })
+    }
+  })
 
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
 

@@ -11,7 +11,10 @@
 -- consumeFreeReveal (src/lib/entitlements/free-reveal.ts) relies on this PK
 -- for atomicity via an INSERT unique-violation check, never read-then-write.
 
-CREATE TABLE public.scan_free_reveals (
+-- T7 deferred minor (final triage): IF NOT EXISTS / DROP POLICY IF EXISTS guards,
+-- matching the billing precedent and sibling public.scan_wishlist migration
+-- (20260820100200) — a rerun of this file must be a no-op, not an error.
+CREATE TABLE IF NOT EXISTS public.scan_free_reveals (
   user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   revealed_at timestamptz NOT NULL DEFAULT now(),
   product_id uuid NOT NULL
@@ -29,6 +32,8 @@ REVOKE ALL ON TABLE public.scan_free_reveals FROM anon, authenticated;
 GRANT SELECT ON TABLE public.scan_free_reveals TO authenticated;
 GRANT ALL ON TABLE public.scan_free_reveals TO service_role;
 
+DROP POLICY IF EXISTS scan_free_reveals_select_own
+  ON public.scan_free_reveals;
 CREATE POLICY scan_free_reveals_select_own
   ON public.scan_free_reveals
   FOR SELECT
