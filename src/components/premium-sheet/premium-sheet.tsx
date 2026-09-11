@@ -37,6 +37,7 @@ import {
   premiumSheetPurchaseFailureCopy,
 } from "@/lib/premium-sheet/purchase-copy"
 import { premiumSheetPollDelayMs } from "@/lib/premium-sheet/purchase-poll"
+import { premiumSheetCompletionBody } from "@/lib/premium-sheet/purchase-reference"
 import {
   initialPremiumSheetPurchaseState,
   isPremiumSheetPlanSelectionActive,
@@ -66,9 +67,10 @@ import { useToast } from "@/providers/toast-provider"
  *     the free scanner keeps working exactly as before.
  *
  * **T14 — contextual purchase completion.** The CTA no longer dismisses: it swaps the
- * sheet's body for Stripe embedded checkout, in place. The whole purchase happens inside
- * this component, which is why the opener contract still does not change — no navigation,
- * no `/welcome`, no lost scan state.
+ * sheet's body for Stripe embedded checkout plus the offer page's native PayPal button
+ * (docket rework R1), in place. The whole purchase happens inside this component, which is
+ * why the opener contract still does not change — no navigation, no `/welcome`, no lost
+ * scan state, whichever provider the buyer picks.
  *
  * What this component may and may not conclude:
  *  - Stripe's `onComplete` moves it to „prüfen", never to unlocked. Only
@@ -101,11 +103,15 @@ export function PremiumSheet({
    */
   onUnlocked?: () => void
   /**
-   * Asks the opener to open the sheet. Used only by the redirect return (PayPal), where
-   * the buyer comes back on a fresh page load with the sheet closed: a pending or failed
-   * payment must be visible, not silently dispatched into a closed sheet (fix round 1,
-   * F2). Carries the context the purchase started from, so the reopened sheet is the gate
-   * they left, not the surface's default.
+   * Asks the opener to open the sheet. Used by the redirect return and the resume lane,
+   * where the buyer comes back on a fresh page load with the sheet closed: a pending or
+   * failed payment must be visible, not silently dispatched into a closed sheet (fix round
+   * 1, F2). Carries the context the purchase started from, so the reopened sheet is the
+   * gate they left, not the surface's default.
+   *
+   * Not PayPal's path any more (docket rework R1): the sheet's PayPal button approves in a
+   * popup and calls back into the live component, so it never leaves the page. It still
+   * reaches this when the buyer reloads mid-settlement.
    */
   onRequestOpen?: (context: PremiumSheetContext | null) => void
 }) {
@@ -173,7 +179,9 @@ export function PremiumSheet({
         const response = await fetch("/api/freemium/purchase/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId }),
+          // Stripe or PayPal, decided by the reference itself (docket rework R1) — the only
+          // place the two lanes differ on this side of the purchase.
+          body: JSON.stringify(premiumSheetCompletionBody(sessionId)),
         })
         if (response.status === 429) {
           rateLimited = true
@@ -248,10 +256,10 @@ export function PremiumSheet({
   }, [verifyingSessionId, verify])
 
   /**
-   * The contextual return for redirect-based payment methods (PayPal above all). Stripe
-   * navigates back to the ORIGINATING surface — never `/welcome` — carrying the Session id,
-   * and this sheet, which is mounted on every gate, picks it up and finishes exactly the
-   * same verification the in-place completion runs.
+   * The contextual return for redirect-based payment methods (a bank redirect, 3DS on a
+   * separate page). Stripe navigates back to the ORIGINATING surface — never `/welcome` —
+   * carrying the Session id, and this sheet, which is mounted on every gate, picks it up
+   * and finishes exactly the same verification the in-place completion runs.
    */
   const consumedReturnRef = useRef<string | null>(null)
   const returnedContextRef = useRef<PremiumSheetContext | null>(null)
@@ -657,7 +665,11 @@ export function PremiumSheet({
                       <span className="block text-[15px] font-bold text-[var(--brand-plum-darkest)]">
                         {plan.name}
                         {plan.recommended ? (
-                          <span className="ml-2 rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white">
+                          /* `whitespace-nowrap` + `inline-block`: „Beliebteste Wahl" is
+                             twice the length of the „empfohlen" it replaced (R2), and an
+                             inline pill that long breaks INSIDE itself into two half-pills.
+                             It now moves to the next line whole, or not at all. */
+                          <span className="ml-2 inline-block whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2 py-0.5 align-middle font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white">
                             {PREMIUM_SHEET_RECOMMENDED_BADGE}
                           </span>
                         ) : null}
@@ -697,5 +709,8 @@ export function PremiumSheet({
 function verificationFailureReason(reason: unknown): PremiumSheetPurchaseFailure {
   if (reason === "checkout_session_expired") return "checkout_expired"
   if (reason === "checkout_session_abandoned") return "checkout_abandoned"
+  // PayPal's equivalent of an expired Session: the checkout intent outlived its 24h TTL
+  // (docket rework R1). Same sentence, because it is the same thing to the buyer.
+  if (reason === "paypal_checkout_intent_expired") return "checkout_expired"
   return "verification_failed"
 }

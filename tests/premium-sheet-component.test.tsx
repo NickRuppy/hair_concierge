@@ -328,6 +328,15 @@ test("plan rows are Jährlich · Vierteljährlich (Beliebteste Wahl, preselected
     1,
     "only Vierteljährlich is marked Beliebteste Wahl",
   )
+  // Driven in /labs/premium-sheet at 375px: the marker is twice the length of the
+  // „empfohlen" it replaced, and as a plain inline pill it broke INSIDE itself into two
+  // half-pills („BELIEBTESTE" / „WAHL"). It moves to the next line whole instead.
+  const badge = findAll(
+    rows[1],
+    (element) => textContent(element).trim() === "Beliebteste Wahl",
+  ).at(-1)!
+  assert.match(badge.props.className as string, /whitespace-nowrap/)
+  assert.match(badge.props.className as string, /inline-block/)
   assert.equal(
     rows.filter((row) => textContent(row).includes("empfohlen")).length,
     0,
