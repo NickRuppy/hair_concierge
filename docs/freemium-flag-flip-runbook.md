@@ -119,24 +119,37 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
    preview/local environment that never sets it (it degrades, it does not error), so verify
    the secret explicitly rather than trusting the absence of an incident.
 
-3. **Stripe/PayPal test-mode verification state.** The in-sheet contextual purchase completion
-   (T14) must have a green local/test-mode purchase on record for this branch (see T14's
-   report / `docs/local-qa-access.md` §3's caveat about analytics side effects from a local
-   test purchase — verify the destination env keys before running one). Confirm before
-   flipping in any environment that will see real purchase attempts:
-   - Stripe test-mode webhook delivery is healthy for `checkout.session.completed`.
-   - PayPal completion lands in the same contextual finish (no bare `/welcome` navigation from
-     the sheet — T14's rewrite of the PayPal button).
+3. **Payment flow exercised locally, as far as local can take it** (Nick's ruling D — there is
+   deliberately NO test-environment gate on this flip). A green test-mode purchase is not a
+   precondition, because there is no environment in which the full production payment path can
+   be rehearsed. The sequence is: exercise what local can exercise, flip, then test a real
+   production payment immediately (the first smoke-check item below).
+
+   Locally, with Stripe test keys when they are configured (`docs/local-qa-access.md` §3 — note
+   its caveat about analytics side effects, and verify the destination env keys before running
+   anything that charges):
+   - The sheet's Stripe embedded checkout mounts, takes a test card, and finishes **in place** —
+     the sheet reaches „Wir prüfen deine Zahlung …" and then unlocks, with no navigation.
+   - The sheet's PayPal button mounts below the card form and starts a PayPal approval (the
+     sandbox client id is enough to see the button render and open the approval window). Its
+     completion must land in the SAME contextual finish as the card lane — no bare `/welcome`
+     navigation from the sheet (docket rework R1).
    - The standard price catalog (`src/lib/stripe/pricing-plans.ts`, 14,99 / 34,99 / 99,99) is
-     what the sheet actually serves, independent of the launch-pricing flag (T13's pinned
-     assertion — re-verify live, not just in `test:node`).
+     what the sheet actually serves, and Vierteljährlich is preselected — independent of the
+     launch-pricing flag (T13's pinned assertion, docket rework R2; re-verify on screen, not
+     just in `test:node`).
+
+   Whatever local cannot reach (real card networks, live PayPal, production webhook delivery)
+   is deliberately deferred to the post-flip production payment test — it is the first smoke
+   check, run immediately after promotion, not "later that day".
 
 4. **The standard-test-account journey drive, and Nick's explicit go.** Re-drive the plan's §6
    journey on the environment about to receive the flip, using the standard test account
    (complete profile, products, wash days — Nick's stated requirement in plan §9
    "Evidence-sensitive"): quiz → registration → magic link → `/scan` → a mismatch verdict → the
-   reveal CTA → a proactive trigger → the sheet → a real test-mode purchase → provisioned
-   Routine/Anwendung. Capture screenshots per the plan's evidence-sensitive pass. **Do not flip
+   reveal CTA → a proactive trigger → the sheet → a purchase as far as that environment allows
+   (per precondition 3) → provisioned Routine/Anwendung.
+   Capture screenshots per the plan's evidence-sensitive pass. **Do not flip
    without Nick's recorded GO** — this is evidence-sensitive by the plan's own §9 ruling, not a
    mechanical checklist item.
 
@@ -177,6 +190,19 @@ consulted for visibility, both fail safely to the pre-existing behavior when the
 
 Run immediately after the flip, on production, before calling it done:
 
+- **A real production payment — FIRST, before anything else** (Nick's ruling D). Since there is
+  no test-environment gate on the flip, this is where the payment path is actually proven. Buy
+  one real subscription from the sheet, with real money, on the live site:
+  - **Card (Stripe):** the sheet's embedded form takes the payment and finishes **in place** —
+    „Wir prüfen deine Zahlung …" → unlocked, no navigation, no `/welcome`.
+  - **PayPal:** the separate PayPal button below the card form completes through the SAME
+    contextual finish (docket rework R1). Run this as its own purchase — the two lanes verify
+    through different provider evidence and only a real run proves the PayPal one.
+  - Both: entitlement activates, the initial Routine is provisioned, and the buyer lands on
+    unlocked Routine/Anwendung content immediately (T14's "no dead ends" contract).
+  - Confirm the amount charged is the standard catalog price for the row that was selected
+    (Vierteljährlich 34,99 € by default), then refund/cancel the test purchase.
+  A failure here is an immediate rollback trigger — do not continue down this checklist.
 - **New-user journey**: fresh quiz completion → `/registrierung` (not the paid reveal) → magic
   link → `/auth/confirm` → `/scan` (not `/reactivate`) → five-tab nav with lock markers → a
   mismatch verdict shows the masked comparison table → first reveal CTA works → a second
@@ -187,9 +213,6 @@ Run immediately after the flip, on production, before calling it done:
 - **Lapsed keepsakes**: a lapsed subscriber can still read `/profile`, the Merkliste
   ("Gemerkt"), and their routine (no bounce to `/reactivate` on those reads); a mutation
   attempt on a premium surface still 403s / prompts payment.
-- **Purchase completion**: one real test-mode purchase from the sheet completes in-sheet,
-  activates entitlement, provisions the initial routine, and lands the buyer on unlocked
-  Routine/Anwendung content immediately (T14's "no dead ends" contract).
 - **Legacy offer routes**: `/pricing`, `/lp/<slug>`, `/lp/<slug>/angebot`,
   `/result/<leadId>/reveal` (an existing shareable link) all still load normally — confirms the
   "legacy offer routes remain routable" constraint held live, not just in `classifyRoute`'s
