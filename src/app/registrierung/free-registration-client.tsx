@@ -17,10 +17,10 @@ const RESEND_COOLDOWN_MS = 45_000
 const SENT_MARKER_PREFIX = "chaarlie_free_registration_sent:"
 
 const COPY = {
-  inboxTitle: "Prüf dein Postfach.",
+  inboxTitle: "Schau in dein Postfach.",
   inboxBodyWithEmail: (email: string) => `Wir haben dir einen Link an ${email} geschickt.`,
   inboxBody: "Wir haben dir einen Link geschickt.",
-  inboxHint: "Tipp darauf – dann geht es direkt weiter.",
+  inboxHint: "Tipp darauf, dann geht es weiter.",
   sending: "Dein Link wird gesendet.",
   resend: "Link erneut senden",
   resent: "Link gesendet.",
@@ -32,16 +32,16 @@ const COPY = {
   cancel: "Abbrechen",
   busy: "Wird gesendet…",
   expiredTitle: "Dieser Link ist abgelaufen.",
-  expiredBody: "Kein Problem – wir schicken dir einen neuen.",
+  expiredBody: "Wir schicken dir gern einen neuen.",
   expiredCta: "Neuen Link senden",
   noLeadTitle: "Wir konnten deine Haaranalyse nicht finden.",
-  noLeadBody: "Starte sie kurz neu – es dauert nur ein paar Minuten.",
+  noLeadBody: "Starte sie neu – das dauert nur wenige Minuten.",
   noLeadCta: "Zur Haaranalyse",
   claimedTitle: "Für diese Haaranalyse gibt es schon ein Konto.",
   claimedCta: "Zum Login",
   correctionBlockedTitle: "Die Adresse lässt sich hier nicht mehr ändern.",
   correctionBlockedBody:
-    "Aus Sicherheitsgründen geht das nur direkt nach der Haaranalyse. Starte sie kurz neu – dann schicken wir den Link an deine neue Adresse.",
+    "Aus Sicherheitsgründen geht das nur direkt nach der Haaranalyse. Starte sie neu – dann geht der Link an deine neue Adresse.",
   genericErrorTitle: "Das hat gerade nicht geklappt.",
   genericError: "Das hat gerade nicht geklappt. Bitte versuche es noch einmal.",
   retry: "Erneut versuchen",

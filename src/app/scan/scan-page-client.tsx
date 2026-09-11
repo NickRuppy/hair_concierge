@@ -29,7 +29,7 @@ import { scanAnalytics } from "@/lib/scan/scan-analytics"
  * find themselves logged in with none of the answers they had expected.
  */
 const BIND_SKIPPED_NOTICE =
-  "Du bist mit deinem bestehenden Konto angemeldet. Deine gespeicherte Haaranalyse haben wir unverändert gelassen – die neue wurde nicht übernommen."
+  "Du bist mit deinem bestehenden Konto angemeldet. Deine gespeicherte Haaranalyse bleibt unverändert – die neue wurde nicht übernommen."
 
 export function ScanPageClient({
   tier,

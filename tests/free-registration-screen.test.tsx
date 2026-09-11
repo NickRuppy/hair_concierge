@@ -38,7 +38,7 @@ function render(overrides: Partial<Parameters<typeof FreeRegistrationScreen>[0]>
 test("inbox names the address the link went to and offers resend + correction", () => {
   const html = render()
   assert.match(html, /data-free-registration-state="inbox"/)
-  assert.match(html, /Prüf dein Postfach\./)
+  assert.match(html, /Schau in dein Postfach\./)
   assert.match(html, /Wir haben dir einen Link an lena@example\.com geschickt\./)
   assert.match(html, /Link erneut senden/)
   assert.match(html, /Andere E-Mail-Adresse/)
@@ -90,7 +90,7 @@ test("W1a: the missing/refused-capability state is honest and points back to the
   const html = render({ phase: "correction_blocked" })
   assert.match(html, /data-free-registration-state="correction_blocked"/)
   assert.match(html, /Die Adresse lässt sich hier nicht mehr ändern\./)
-  assert.match(html, /Starte sie kurz neu/)
+  assert.match(html, /Starte sie neu – dann geht der Link an deine neue Adresse\./)
   assert.match(html, /href="\/lp\/haarplan"/)
   // It is a dead end for the correction only — no form to retry into.
   assert.doesNotMatch(html, /free-registration-email/)
@@ -100,7 +100,7 @@ test("expired explains itself and offers a fresh link", () => {
   const html = render({ phase: "expired" })
   assert.match(html, /data-free-registration-state="expired"/)
   assert.match(html, /Dieser Link ist abgelaufen\./)
-  assert.match(html, /Kein Problem – wir schicken dir einen neuen\./)
+  assert.match(html, /Wir schicken dir gern einen neuen\./)
   assert.match(html, /Neuen Link senden/)
 })
 
@@ -108,6 +108,7 @@ test("no_lead sends the visitor back to the quiz", () => {
   const html = render({ phase: "no_lead" })
   assert.match(html, /data-free-registration-state="no_lead"/)
   assert.match(html, /Wir konnten deine Haaranalyse nicht finden\./)
+  assert.match(html, /Starte sie neu – das dauert nur wenige Minuten\./)
   assert.match(html, /href="\/lp\/haarplan"/)
 })
 
@@ -134,6 +135,6 @@ test("W7: a failed send prints the reason once, not twice", () => {
 test("resolving renders the empty shell (no flash of the wrong state)", () => {
   const html = render({ phase: "resolving" })
   assert.match(html, /data-free-registration/)
-  assert.doesNotMatch(html, /Prüf dein Postfach/)
+  assert.doesNotMatch(html, /Schau in dein Postfach/)
   assert.doesNotMatch(html, /Haaranalyse nicht finden/)
 })

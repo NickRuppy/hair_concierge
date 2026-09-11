@@ -652,6 +652,23 @@ test("Y4: an abandoned Session says so, and the plan rows are back", async () =>
   assert.equal(byData(sheet.tree, "data-premium-sheet-plans").length, 1)
 })
 
+test('copy polish: a duplicate-guarded PayPal checkout says so, not „nicht bestätigt"', async () => {
+  const sheet = await mountSheet({
+    completion: () => json({ status: "failed", reason: "paypal_duplicate_checkout" }),
+    search: `?freemium_checkout=${SESSION_ID}`,
+    open: true,
+    context: REMEMBERED,
+  })
+  const alert = byData(sheet.tree, "data-premium-sheet-purchase-phase")[0]
+  assert.equal(alert.props["data-premium-sheet-purchase-phase"], "failed")
+  assert.equal(textContent(alert), PREMIUM_SHEET_PURCHASE_COPY.subscriptionAlreadyActive)
+  assert.notEqual(
+    textContent(alert),
+    PREMIUM_SHEET_PURCHASE_COPY.verificationFailed,
+    "the duplicate guard cancelled the payment on purpose — it was not left unverified",
+  )
+})
+
 /* ------------------------------------------------------------------------- *
  * Codex fix wave round 2 — R1: a transient error on the RESUME lane stays
  * pending, never fails the purchase outright; an authoritative verdict still

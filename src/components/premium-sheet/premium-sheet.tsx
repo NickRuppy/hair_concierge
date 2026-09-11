@@ -712,5 +712,9 @@ function verificationFailureReason(reason: unknown): PremiumSheetPurchaseFailure
   // PayPal's equivalent of an expired Session: the checkout intent outlived its 24h TTL
   // (docket rework R1). Same sentence, because it is the same thing to the buyer.
   if (reason === "paypal_checkout_intent_expired") return "checkout_expired"
+  // The duplicate guard already cancelled the second subscription and the buyer keeps the
+  // access they had — a generic „nicht bestätigt" would misstate what happened (copy
+  // polish wave): the payment was stopped on purpose, not left unverified.
+  if (reason === "paypal_duplicate_checkout") return "subscription_already_active"
   return "verification_failed"
 }
