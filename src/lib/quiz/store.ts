@@ -10,6 +10,8 @@ interface QuizState {
   answers: QuizAnswers
   lead: LeadData
   leadId: string | null
+  /** Funnel package the running quiz belongs to; `null` = organic. */
+  funnelPackageKey: string | null
 
   goNext: () => void
   goBack: () => void
@@ -20,6 +22,8 @@ interface QuizState {
   setPartnerLeadIdentity: (identity: { name: string; email: string }) => void
   setRegularLeadCapture: () => void
   setStep: (step: QuizStep) => void
+  setFunnelPackageKey: (key: string | null) => void
+  fillFunnelPackageKeyIfMissing: (key: string | null) => void
   restoreDraft: () => boolean
   clearDraft: () => void
   reset: () => void
@@ -47,6 +51,7 @@ const initialState = {
   answers: {} as QuizAnswers,
   lead: { name: "", email: "", marketingConsent: false } as LeadData,
   leadId: null as string | null,
+  funnelPackageKey: null as string | null,
 }
 
 export const useQuizStore = create<QuizState>((set, get) => ({
@@ -90,20 +95,32 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     })),
   setRegularLeadCapture: () => set({ leadCaptureMode: "regular" }),
   setStep: (step) => set({ step }),
+  // The signed funnel cookie is authoritative, including when it resolves to no
+  // package: a quiz without attribution has to behave organically.
+  setFunnelPackageKey: (key) => set({ funnelPackageKey: key }),
+  // The browser bootstrap is a fallback for a request that carried no readable
+  // cookie, so it must never overwrite a server-resolved package.
+  fillFunnelPackageKeyIfMissing: (key) =>
+    set((s) => (s.funnelPackageKey === null ? { funnelPackageKey: key } : s)),
   restoreDraft: () => {
     const draft = loadQuizDraft()
     if (!draft) return false
 
-    set({
+    // The draft holds quiz progress only. The funnel package belongs to the
+    // running session and survives a restore (see `reset` below).
+    set((s) => ({
       ...initialState,
+      funnelPackageKey: s.funnelPackageKey,
       step: draft.step,
       answers: draft.answers,
-    })
+    }))
     return true
   },
   clearDraft: () => clearQuizDraft(),
   reset: () => {
     clearQuizDraft()
-    set(initialState)
+    // A moderator fresh start drops another person's answers, not the funnel
+    // package this browser was attributed to.
+    set((s) => ({ ...initialState, funnelPackageKey: s.funnelPackageKey }))
   },
 }))
