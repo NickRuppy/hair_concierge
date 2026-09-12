@@ -28,7 +28,6 @@ import {
 import { intervalFromPrice } from "./intervals"
 import { getStripePriceCatalogForId } from "./client"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
-import { resolveCheckoutFunnelPackageKey } from "@/lib/billing/checkout-funnel-package"
 
 export interface CheckoutActivationDeps {
   supabase: SupabaseClient
@@ -82,8 +81,6 @@ export interface CheckoutAccountResult {
   stripeSubscriptionId?: string
   subscriptionStatus?: string
   legacyQuizFuturePurchaseEligible?: boolean
-  /** Server-resolved funnel package of `leadId`; feeds the first-time destination options. */
-  funnelPackageKey?: string | null
 }
 
 interface OneTimeCheckoutPaymentResult {
@@ -343,7 +340,6 @@ export async function ensureCheckoutAccount(
     stripeSubscriptionId: sub.id,
     subscriptionStatus: sub.status ?? "active",
     legacyQuizFuturePurchaseEligible,
-    funnelPackageKey: await resolveCheckoutFunnelPackageKey(session.metadata?.lead_id),
   }
 }
 
@@ -444,7 +440,6 @@ export async function ensureOneTimeCheckoutAccount(
       deps.supabase,
       { userId, leadId: valid.leadId, paidAt: valid.paidAt, provider: "stripe" },
     ),
-    funnelPackageKey: await resolveCheckoutFunnelPackageKey(valid.leadId),
   }
 }
 

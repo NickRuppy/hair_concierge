@@ -18,7 +18,6 @@ import {
 } from "./subscription-shapes"
 import { getPayPalIntervalForPlanId } from "./plans"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
-import { resolveCheckoutFunnelPackageKey } from "@/lib/billing/checkout-funnel-package"
 
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
@@ -72,8 +71,6 @@ export type PayPalCheckoutAccountResult =
       leadId?: string | null
       checkoutContext?: string | null
       legacyQuizFuturePurchaseEligible?: boolean
-      /** Server-resolved funnel package of `leadId`; feeds the first-time destination options. */
-      funnelPackageKey?: string | null
     }
   | { status: "pending" }
   | { status: "duplicate" }
@@ -109,7 +106,6 @@ export async function ensurePayPalOneTimePurchaseAccount(
       deps.supabase,
       { userId, leadId: input.leadId, paidAt: input.paidAt, provider: "paypal" },
     ),
-    funnelPackageKey: await resolveCheckoutFunnelPackageKey(input.leadId),
   }
 }
 
@@ -270,7 +266,6 @@ export async function ensurePayPalCheckoutAccount(
     leadId: deps.leadId ?? null,
     checkoutContext: deps.checkoutContext ?? null,
     legacyQuizFuturePurchaseEligible,
-    funnelPackageKey: await resolveCheckoutFunnelPackageKey(deps.leadId),
   }
 }
 
