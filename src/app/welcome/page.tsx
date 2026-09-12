@@ -18,6 +18,7 @@ import {
   resolveCheckoutFirstTimeDestination,
   type CheckoutFirstTimeDestination,
 } from "@/lib/billing/checkout-success-redirect"
+import { resolveCheckoutFunnelPackageKey } from "@/lib/billing/checkout-funnel-package"
 import { findPayPalCheckoutIntentByToken } from "@/lib/paypal/checkout-intents"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { getPersonalPlanNewBuyerCohortCutoff } from "@/lib/personal-plan/release"
@@ -117,6 +118,7 @@ async function renderStripeWelcome(session_id: string) {
     admin,
     session.metadata?.lead_id,
     session.metadata?.checkout_context,
+    { funnelPackageKey: await resolveCheckoutFunnelPackageKey(session.metadata?.lead_id) },
   )
   const purchaseAnalytics = isOneTimePurchase
     ? null
@@ -146,6 +148,7 @@ async function renderStripeWelcome(session_id: string) {
       admin,
       session.metadata?.lead_id,
       session.metadata?.checkout_context,
+      { funnelPackageKey: await resolveCheckoutFunnelPackageKey(session.metadata?.lead_id) },
     )
     let account
     try {
@@ -345,6 +348,7 @@ async function renderPayPalOneTimeWelcome(
       admin,
       intent.lead_id,
       checkoutContext,
+      { funnelPackageKey: await resolveCheckoutFunnelPackageKey(intent.lead_id) },
     )
     return (
       <WelcomeClient

@@ -32,6 +32,16 @@ export type CheckoutFirstTimeDestinationOptions = {
    * future purchase qualifies; it must never come from checkout query state.
    */
   legacyQuizFuturePurchaseEligible?: boolean
+  /**
+   * Server-resolved funnel package of the lead (`funnel_sessions`), never client input.
+   *
+   * The scanner-first package (`scan_v1`) deliberately does NOT change any destination
+   * here: a scan_v1 buyer takes the same eligibility-gated `/plan-bereit?lead=…`
+   * provisioning step as any other legacy-quiz buyer, and only that page decides to
+   * continue into `/scan` instead of `/plan-start`. The field is carried so the
+   * destination matrix is decided with the package in hand rather than blind to it.
+   */
+  funnelPackageKey?: string | null
 }
 
 /**
@@ -43,13 +53,13 @@ export type CheckoutFirstTimeDestinationOptions = {
 export function getCheckoutFirstTimeDestinationOptionsFromAccount(
   input: object,
 ): CheckoutFirstTimeDestinationOptions {
-  const legacyQuizFuturePurchaseEligible = (
-    input as {
-      legacyQuizFuturePurchaseEligible?: unknown
-    }
-  ).legacyQuizFuturePurchaseEligible
+  const { legacyQuizFuturePurchaseEligible, funnelPackageKey } = input as {
+    legacyQuizFuturePurchaseEligible?: unknown
+    funnelPackageKey?: unknown
+  }
   return {
     legacyQuizFuturePurchaseEligible: legacyQuizFuturePurchaseEligible === true,
+    funnelPackageKey: typeof funnelPackageKey === "string" ? funnelPackageKey : null,
   }
 }
 
