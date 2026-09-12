@@ -952,6 +952,34 @@
   }
 }
 
+/*
+ * The example card on a scan funnel insert: the photo reads first, then the
+ * scanner verdict slides in over it. The card is visible without the animation,
+ * so a reduced-motion viewer simply gets it right away.
+ */
+@keyframes scanInsertCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scan-insert-example-card {
+  animation: scanInsertCardUp 1s 0.8s cubic-bezier(0.22, 0.8, 0.36, 1) both;
+}
+
+/* The verdict carries the display serif of the quiz headlines, one notch bolder. */
+.scan-insert-example-verdict {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
 .personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
   animation: personalPlanScreenEnterForward 200ms ease-out both;
 }
@@ -1360,6 +1388,12 @@
     background: none !important;
     color: hsl(var(--muted-foreground));
     -webkit-text-fill-color: currentColor;
+  }
+
+  .scan-insert-example-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .personal-plan-screen-enter,

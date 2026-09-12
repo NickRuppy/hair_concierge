@@ -14,14 +14,20 @@ import { QuizPreparation } from "@/components/quiz/quiz-preparation"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
-import { ScanInsertPlaceholder } from "@/components/quiz/scan-inserts/scan-insert-placeholder"
+import { ScanInsertHome } from "@/components/quiz/scan-inserts/scan-insert-home"
+import { ScanInsertProblem } from "@/components/quiz/scan-inserts/scan-insert-problem"
+import { ScanInsertSolution } from "@/components/quiz/scan-inserts/scan-insert-solution"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import {
   getLegacyQuizScreenPosition,
   seedLegacyQuizBrowserHistoryToDepth,
 } from "@/lib/quiz/browser-history"
-import { normalizeQuizStepForPackage, shouldTrackQuizStepViewed } from "@/lib/quiz/screen-order"
+import {
+  getQuizProgressStep,
+  normalizeQuizStepForPackage,
+  shouldTrackQuizStepViewed,
+} from "@/lib/quiz/screen-order"
 import {
   deriveMigrationQuizPrefillState,
   fallbackMigrationQuizContextPayload,
@@ -54,6 +60,7 @@ const STEP_NAMES: Record<number, string> = {
 
 export default function QuizPage() {
   const step = useQuizStore((s) => s.step)
+  const funnelPackageKey = useQuizStore((s) => s.funnelPackageKey)
   const restoreDraft = useQuizStore((s) => s.restoreDraft)
   const [draftStatus, setDraftStatus] = useState<"checking" | "ready" | "unavailable">("checking")
   const [migrationRecoveryAttempt, setMigrationRecoveryAttempt] = useState(0)
@@ -161,9 +168,13 @@ export default function QuizPage() {
 
     if (!quizStartedRef.current) {
       quizStartedRef.current = true
+      // A funnel insert is no question. Should a session open on one (a restored
+      // draft), the start event reports the question the insert sits behind, so
+      // the funnel's first step stays comparable across packages.
+      const startStep = getQuizProgressStep(step, funnelPackageKey)
       trackAppEvent("quiz_started", {
-        stepName,
-        stepNumber: step,
+        stepName: STEP_NAMES[startStep] || `step_${startStep}`,
+        stepNumber: startStep,
       })
     }
 
@@ -175,7 +186,7 @@ export default function QuizPage() {
         stepNumber: step, // deprecated: use stepName after Phase 4 resequencing
       })
     }
-  }, [draftStatus, step])
+  }, [draftStatus, funnelPackageKey, step])
 
   if (draftStatus === "checking") {
     return null
@@ -219,9 +230,11 @@ export default function QuizPage() {
     case 14:
       return <QuizWelcome />
     case 16:
+      return <ScanInsertProblem />
     case 17:
+      return <ScanInsertSolution />
     case 18:
-      return <ScanInsertPlaceholder step={step} />
+      return <ScanInsertHome />
     default:
       // Unknown step — shouldn't happen with a healthy store. Surface a 404
       // rather than silently rendering a placeholder (would hide bugs).
