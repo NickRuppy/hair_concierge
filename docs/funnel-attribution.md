@@ -51,6 +51,13 @@ recorded sessions merely to improve presentation.
 
 - `FUNNEL_ATTRIBUTION_ENABLED=true` enables signed cookies and Supabase recording. It defaults off.
 - `FUNNEL_COOKIE_SIGNING_SECRET` is required when attribution is enabled. Use a long random secret.
+- `PERSONAL_PLAN_QUIZ_V1_ENABLED=true` makes the placeholder `meta_personal_plan_v1` package
+  (`/lp/haarplan`) attributable and reachable. It defaults off.
+- `SCAN_FUNNEL_ENABLED=true` gates the placeholder `scan_v1` package (`/lp/scan`): while the package
+  status stays `placeholder`, attribution and the `/lp/scan` route itself both require this flag. It
+  defaults off. Attribution treats an `active` `scan_v1` package as attributable regardless of this
+  flag, but the `/lp/[slug]` route gate still requires it independent of status (mirroring the
+  `meta_personal_plan_v1` gate) until a later task revisits that gate for launch.
 - `FUNNEL_META_CUSTOM_DATA_ENABLED=true` allows only `funnel_package_key` into Meta custom data. It
   defaults off. Set the matching `NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED=true` so browser Pixel
   events include the same package key. The public flag must be configured before a fresh production

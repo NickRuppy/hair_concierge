@@ -7,6 +7,7 @@ import {
   isPersonalPlanQuizCrossBrowserResumeEnabled,
   isPersonalPlanQuizV1Enabled,
   isPersonalPlanResultReturnEnabled,
+  isScanFunnelEnabled,
 } from "@/lib/funnel/flags"
 import { getFunnelPackageBySlug } from "@/lib/funnel/packages"
 import {
@@ -52,6 +53,9 @@ export default async function CampaignLandingPage({
   }
   if (funnelPackage.status === "archived") notFound()
   if (funnelPackage.key === "meta_personal_plan_v1" && !isPersonalPlanQuizV1Enabled()) {
+    notFound()
+  }
+  if (funnelPackage.key === "scan_v1" && !isScanFunnelEnabled()) {
     notFound()
   }
 

@@ -54,6 +54,11 @@ export function isPersonalPlanQuizV1Enabled() {
   return process.env.PERSONAL_PLAN_QUIZ_V1_ENABLED === "true"
 }
 
+/** Placeholder attribution + route reachability for the scan_v1 (/lp/scan) funnel package. */
+export function isScanFunnelEnabled() {
+  return process.env.SCAN_FUNNEL_ENABLED === "true"
+}
+
 /** Server-backed, cross-browser recovery for the Meta personal-plan quiz. */
 export function isPersonalPlanQuizCrossBrowserResumeEnabled() {
   return process.env.PERSONAL_PLAN_QUIZ_CROSS_BROWSER_RESUME_ENABLED === "true"
