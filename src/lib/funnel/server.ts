@@ -64,11 +64,7 @@ export async function resolveFunnelCookieContext(value?: string) {
   return value ? decodeFunnelContext(value, secret) : null
 }
 
-export async function resolveFunnelContextForLead(
-  leadId?: string | null,
-  funnelSessionId?: string | null,
-) {
-  if (!isFunnelAttributionEnabled() || !leadId) return null
+function queryFunnelSessionForLead(leadId: string, funnelSessionId?: string | null) {
   let query = createAdminClient()
     .from("funnel_sessions")
     .select(
@@ -78,8 +74,14 @@ export async function resolveFunnelContextForLead(
     .order("first_seen_at", { ascending: false })
     .limit(1)
   if (funnelSessionId) query = query.eq("id", funnelSessionId)
-  const { data } = await query.maybeSingle()
-  if (!data) return null
+  return query.maybeSingle()
+}
+
+type FunnelLeadSessionRow = NonNullable<
+  Awaited<ReturnType<typeof queryFunnelSessionForLead>>["data"]
+>
+
+function toFunnelLeadContext(data: FunnelLeadSessionRow) {
   return {
     visitorId: data.visitor_id,
     sessionId: data.id,
@@ -91,6 +93,50 @@ export async function resolveFunnelContextForLead(
     testKind: data.test_kind,
     fieldTestCampaignId: data.field_test_campaign_id,
     issuedAt: Date.parse(data.first_seen_at),
+  }
+}
+
+export type FunnelLeadContext = ReturnType<typeof toFunnelLeadContext>
+
+/**
+ * Attribution-shaped lookup: a query error is dropped and read as "no session", the
+ * same way every caller that only decorates analytics has always treated it.
+ * Anything that has to act on package identity uses `lookupFunnelContextForLead`.
+ */
+export async function resolveFunnelContextForLead(
+  leadId?: string | null,
+  funnelSessionId?: string | null,
+) {
+  if (!isFunnelAttributionEnabled() || !leadId) return null
+  const { data } = await queryFunnelSessionForLead(leadId, funnelSessionId)
+  if (!data) return null
+  return toFunnelLeadContext(data)
+}
+
+export type FunnelLeadContextLookup =
+  | { kind: "resolved"; context: FunnelLeadContext | null }
+  | { kind: "unavailable" }
+
+/**
+ * The same lookup, but it never lies about a broken database: a returned or thrown
+ * error yields `unavailable`, and only a genuinely absent row yields
+ * `{ kind: "resolved", context: null }` (an organic visitor, no funnel session).
+ *
+ * Callers that route or provision on package identity must use this — reading a
+ * failed query as "organic" would send a `scan_v1` buyer to the plan destination
+ * with no scanner provisioning.
+ */
+export async function lookupFunnelContextForLead(
+  leadId?: string | null,
+  funnelSessionId?: string | null,
+): Promise<FunnelLeadContextLookup> {
+  if (!isFunnelAttributionEnabled() || !leadId) return { kind: "resolved", context: null }
+  try {
+    const { data, error } = await queryFunnelSessionForLead(leadId, funnelSessionId)
+    if (error) return { kind: "unavailable" }
+    return { kind: "resolved", context: data ? toFunnelLeadContext(data) : null }
+  } catch {
+    return { kind: "unavailable" }
   }
 }
 

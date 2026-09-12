@@ -4,6 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { readFileSync } from "node:fs"
 
+import { mountComponent, flushAsync } from "./helpers/react-hook-mount"
 import { PlanBereitArrival } from "../src/app/plan-bereit/plan-ready-arrival"
 import { PersonalPlanReadyClient } from "../src/app/plan-bereit/personal-plan-ready-client"
 import { ScanWelcomeHint, resetScanWelcomeHintForTests } from "../src/app/scan/scan-page-client"
@@ -224,7 +225,6 @@ function renderReadyClient(funnelPackageKey: string | null) {
   const tree = renderWithHooks(() =>
     PersonalPlanReadyClient({
       leadId: "lead-1",
-      funnelPackageKey,
       initialReadiness: {
         status: "ready",
         leadId: "lead-1",
@@ -232,6 +232,7 @@ function renderReadyClient(funnelPackageKey: string | null) {
         sourceVersion: null,
         missingFacts: [],
         initialAction: "none",
+        funnelPackageKey,
       },
     }),
   )
@@ -269,14 +270,96 @@ test("the package key reaches the ready client from the server, never from the c
     "utf8",
   )
 
-  assert.match(pageSource, /resolveFunnelContextForLead\(leadId\)/)
+  // One resolution, shared with the readiness/provisioning path — never the
+  // error-swallowing attribution lookup, and never a second, independent one.
+  assert.doesNotMatch(pageSource, /resolveFunnelContextForLead/)
+  assert.match(pageSource, /resolvePlanBereitFunnelPackage\(leadId\)/)
+
   // Every render site of the ready client carries the package, not just the ready one:
   // a waiting or error screen can reach `ready` through the poll without a new render.
   const renderSites = pageSource.match(/<PersonalPlanReadyClient/g) ?? []
-  const packageProps = pageSource.match(/funnelPackageKey=\{/g) ?? []
   assert.ok(renderSites.length >= 4, `expected every render site, found ${renderSites.length}`)
-  assert.equal(packageProps.length, renderSites.length)
-  // The client receives the package as a prop; it never imports the server lookup.
+  const literalReadiness = pageSource.match(/initialReadiness=\{\{[\s\S]*?\n\s*\}\}/g) ?? []
+  assert.equal(literalReadiness.length, renderSites.length - 1, "one site passes the resolved one")
+  for (const literal of literalReadiness) {
+    assert.match(literal, /funnelPackageKey:/)
+  }
+  // The package travels on the readiness itself — no separate prop that a second
+  // lookup could fill with a different answer.
+  assert.doesNotMatch(pageSource, /funnelPackageKey=\{/)
+  // The client receives the package from the server; it never imports the lookup.
   assert.doesNotMatch(clientSource, /from "@\/lib\/funnel\/server"/)
   assert.doesNotMatch(clientSource, /resolveFunnelContextForLead\(/)
+})
+
+test("the ready client follows the package in the poll payload, not the first render", async () => {
+  // The first server render can miss the package (its own lookup flaked, or the
+  // surface is one of the literal waiting screens). The poll response is the same
+  // resolution that decided the provisioning, so it wins — otherwise a provisioned
+  // scanner buyer keeps the plan CTA.
+  const requested: string[] = []
+  const originalWindow = Reflect.get(globalThis, "window")
+  const originalFetch = globalThis.fetch
+  Object.defineProperty(globalThis, "window", {
+    value: {
+      sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+      location: { assign() {} },
+    },
+    configurable: true,
+  })
+  globalThis.fetch = (async (url: string) => {
+    requested.push(String(url))
+    if (String(url).startsWith("/plan-bereit/status")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          status: "ready",
+          leadId: "lead-1",
+          sourceVersion: null,
+          missingFacts: [],
+          initialAction: "none",
+          funnelPackageKey: "scan_v1",
+        }),
+      }
+    }
+    return { ok: false, status: 404, json: async () => ({}) }
+  }) as never
+
+  try {
+    const mounted = mountComponent(() =>
+      PersonalPlanReadyClient({
+        leadId: "lead-1",
+        initialReadiness: {
+          status: "source_pending",
+          leadId: "lead-1",
+          quizSourceKind: "legacy",
+          sourceVersion: null,
+          missingFacts: [],
+          initialAction: "poll",
+          funnelPackageKey: null,
+        },
+      }),
+    )
+
+    const before = findAll(mounted.tree, (element) => element.type === PlanBereitArrival)[0]
+    assert.equal(before.props.actionHref, "/plan-start", "first render knows no package")
+    assert.equal(before.props.variant, "plan")
+
+    await flushAsync()
+
+    const after = findAll(mounted.tree, (element) => element.type === PlanBereitArrival)[0]
+    assert.equal(after.props.actionHref, "/scan?welcome=scan")
+    assert.equal(after.props.variant, "scan")
+    assert.equal(after.props.onAction, undefined, "/scan is not a Personal-Plan stage route")
+    assert.ok(
+      requested.some((url) => url.startsWith("/plan-bereit/status?lead=lead-1")),
+      "the package came from the server payload, not a client lookup",
+    )
+    mounted.unmount()
+  } finally {
+    globalThis.fetch = originalFetch
+    if (originalWindow === undefined) Reflect.deleteProperty(globalThis, "window")
+    else Object.defineProperty(globalThis, "window", { value: originalWindow, configurable: true })
+  }
 })

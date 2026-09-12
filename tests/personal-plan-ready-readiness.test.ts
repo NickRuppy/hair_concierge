@@ -5,6 +5,7 @@ import {
   linkExactPlanBereitSourceToProfile,
   loadPlanBereitInitialReadiness,
   loadPlanBereitReadiness,
+  resolvePlanBereitFunnelPackage,
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
 } from "../src/app/plan-bereit/readiness"
@@ -745,6 +746,14 @@ test("Personal Plan POST keeps the authoritative artifact owner race rejection",
 
 // --- scanner-first provisioning (scan_v1) -----------------------------------
 
+/** A package lookup that answered: `null` is an organic buyer, not a broken lookup. */
+function resolvedPackage(packageKey: string | null) {
+  return { kind: "resolved", packageKey } as const
+}
+
+/** A package lookup that could not answer at all (query error, thrown or returned). */
+const unavailablePackage = { kind: "unavailable" } as const
+
 function scanFunnelDb() {
   return new FakeSupabase({
     leads: [
@@ -776,9 +785,9 @@ test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link
   const provisioned: string[] = []
 
   await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
-    resolveFunnelPackageKey: async (leadId) => {
+    resolveFunnelPackage: async (leadId: string) => {
       packageLookups.push(leadId)
-      return "scan_v1"
+      return resolvedPackage("scan_v1")
     },
     provisionStage1Plan: async (_supabase, userId) => {
       provisioned.push(userId)
@@ -786,7 +795,9 @@ test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link
     },
   })
 
-  assert.deepEqual(packageLookups, ["lead-scan"])
+  // One resolution per readiness pass, and the link performs two: the link itself
+  // and the readiness read it returns. Both see the same lead.
+  assert.deepEqual(packageLookups, ["lead-scan", "lead-scan"])
   assert.deepEqual(provisioned, ["user-1"])
   // Stage 1 resolves the entitlement through the enrollment, which needs the lead link
   // to exist first — so the link update must already have happened by then.
@@ -802,7 +813,7 @@ test("scanner provisioning repeats safely once the lead is already linked", asyn
   const provisioned: string[] = []
 
   await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
-    resolveFunnelPackageKey: async () => "scan_v1",
+    resolveFunnelPackage: async () => resolvedPackage("scan_v1"),
     provisionStage1Plan: async (_supabase, userId) => {
       provisioned.push(userId)
       return { status: "completed" }
@@ -822,7 +833,7 @@ test("organic legacy buyers keep the pre-scanner link behaviour", async () => {
     let provisionCalls = 0
 
     await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
-      resolveFunnelPackageKey: async () => packageKey,
+      resolveFunnelPackage: async () => resolvedPackage(packageKey),
       provisionStage1Plan: async () => {
         provisionCalls += 1
         return { status: "completed" }
@@ -867,9 +878,9 @@ test("a personal-plan lead never triggers scanner provisioning", async () => {
       expectedQuizSourceKind: "personal_plan",
     },
     {
-      resolveFunnelPackageKey: async () => {
+      resolveFunnelPackage: async () => {
         packageLookups += 1
-        return "scan_v1"
+        return resolvedPackage("scan_v1")
       },
       provisionStage1Plan: async () => {
         provisionCalls += 1
@@ -888,7 +899,7 @@ test("failed scanner provisioning reports transient_error instead of an empty ca
       scanFunnelDb() as never,
       scanLinkInput(),
       {
-        resolveFunnelPackageKey: async () => "scan_v1",
+        resolveFunnelPackage: async () => resolvedPackage("scan_v1"),
         provisionStage1Plan: async () => ({ status }),
       },
     )
@@ -897,15 +908,15 @@ test("failed scanner provisioning reports transient_error instead of an empty ca
   }
 })
 
-test("an unresolvable funnel session keeps the plan behaviour, like the real lookup does", async () => {
-  // `resolveFunnelContextForLead` never throws for a query failure: it drops the error
-  // and returns null. A missing package therefore reads exactly like an organic buyer —
-  // no provisioning, plan destination — instead of blocking a paid buyer.
+test("a lead with no funnel session at all is an organic buyer, not a blocked one", async () => {
+  // A *missing* `funnel_sessions` row is a resolved answer: organic. It must keep the
+  // pre-scanner behaviour — no provisioning, plan destination — instead of blocking a
+  // paid buyer. Only a lookup that could not answer at all is treated as an error.
   const db = scanFunnelDb()
   let provisionCalls = 0
 
   const readiness = await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
-    resolveFunnelPackageKey: async () => null,
+    resolveFunnelPackage: async () => resolvedPackage(null),
     provisionStage1Plan: async () => {
       provisionCalls += 1
       return { status: "completed" }
@@ -915,6 +926,116 @@ test("an unresolvable funnel session keeps the plan behaviour, like the real loo
   assert.equal(provisionCalls, 0)
   assert.equal(db.upserts.length, 1)
   assert.equal(readiness.status, "source_pending", "unchanged pre-scanner link outcome")
+  assert.equal(readiness.funnelPackageKey, null, "organic, and said so explicitly")
+})
+
+test("a missing funnel session still reaches ready — organic, with no package", async () => {
+  const readiness = await loadPlanBereitInitialReadiness(
+    linkedScanFunnelDb() as never,
+    scanLinkInput(),
+    {
+      resolveFunnelPackage: async () => resolvedPackage(null),
+      provisionStage1Plan: async () => ({ status: "completed" }),
+    },
+  )
+
+  assert.equal(readiness.status, "ready")
+  assert.equal(readiness.funnelPackageKey, null)
+})
+
+test("a package lookup that cannot answer never reports ready, on either status path", async () => {
+  // The blocker this replaces: a swallowed DB error read as "organic" sent a paid
+  // scanner buyer to /plan-start with no need snapshot. Both the GET path (read) and
+  // the POST path (link) have to refuse instead.
+  for (const unavailableLookup of [
+    async () => unavailablePackage,
+    async () => {
+      throw new Error("funnel_sessions lookup exploded")
+    },
+  ]) {
+    let provisionCalls = 0
+    const deps = {
+      resolveFunnelPackage: unavailableLookup,
+      provisionStage1Plan: async () => {
+        provisionCalls += 1
+        return { status: "completed" }
+      },
+    }
+
+    const read = await loadPlanBereitInitialReadiness(
+      linkedScanFunnelDb() as never,
+      scanLinkInput(),
+      deps,
+    )
+    assert.equal(read.status, "transient_error", "GET path")
+    assert.equal(read.leadId, "lead-scan")
+    assert.equal(read.funnelPackageKey, null, "an unavailable lookup never claims a package")
+
+    const linked = await linkExactPlanBereitSourceToProfile(
+      scanFunnelDb() as never,
+      scanLinkInput(),
+      deps,
+    )
+    assert.equal(linked.status, "transient_error", "POST path")
+    assert.equal(linked.leadId, "lead-scan")
+
+    assert.equal(provisionCalls, 0, "nothing is provisioned on a package we could not read")
+  }
+})
+
+test("the resolved package travels with every readiness outcome", async () => {
+  for (const packageKey of ["scan_v1", "default_organic", null]) {
+    const readiness = await loadPlanBereitInitialReadiness(
+      linkedScanFunnelDb() as never,
+      scanLinkInput(),
+      {
+        resolveFunnelPackage: async () => resolvedPackage(packageKey),
+        provisionStage1Plan: async () => ({ status: "completed" }),
+      },
+    )
+
+    assert.equal(readiness.status, "ready", `package ${packageKey}`)
+    assert.equal(readiness.funnelPackageKey, packageKey, `package ${packageKey}`)
+  }
+
+  // A waiting outcome carries it too: the client renders the arrival copy long
+  // before it ever reaches `ready`.
+  const waiting = await loadPlanBereitInitialReadiness(scanFunnelDb() as never, scanLinkInput(), {
+    resolveFunnelPackage: async () => resolvedPackage("scan_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+  })
+  assert.equal(waiting.status, "checking")
+  assert.equal(waiting.funnelPackageKey, "scan_v1")
+})
+
+test("the production package resolver separates a missing row from a broken lookup", async () => {
+  assert.deepEqual(
+    await resolvePlanBereitFunnelPackage("lead-scan", async () => ({
+      kind: "resolved",
+      context: null,
+    })),
+    { kind: "resolved", packageKey: null },
+    "no funnel session — organic",
+  )
+  assert.deepEqual(
+    await resolvePlanBereitFunnelPackage("lead-scan", async () => ({
+      kind: "resolved",
+      context: { packageKey: "scan_v1" } as never,
+    })),
+    { kind: "resolved", packageKey: "scan_v1" },
+  )
+  assert.deepEqual(
+    await resolvePlanBereitFunnelPackage("lead-scan", async () => ({ kind: "unavailable" })),
+    { kind: "unavailable" },
+    "a returned query error",
+  )
+  assert.deepEqual(
+    await resolvePlanBereitFunnelPackage("lead-scan", async () => {
+      throw new Error("network down")
+    }),
+    { kind: "unavailable" },
+    "a thrown query error",
+  )
 })
 
 // --- scanner-first provisioning on the read paths (C1 / I1) ------------------
@@ -934,9 +1055,9 @@ test("a scan_v1 buyer whose profile is already linked is provisioned before read
   const events: string[] = []
 
   const readiness = await loadPlanBereitInitialReadiness(db as never, scanLinkInput(), {
-    resolveFunnelPackageKey: async (leadId) => {
+    resolveFunnelPackage: async (leadId: string) => {
       events.push(`lookup:${leadId}`)
-      return "scan_v1"
+      return resolvedPackage("scan_v1")
     },
     provisionStage1Plan: async (_supabase, userId) => {
       events.push(`provision:${userId}`)
@@ -955,7 +1076,7 @@ test("a scan_v1 buyer never sees ready while provisioning fails, and a plain ret
   const db = linkedScanFunnelDb()
   let attempts = 0
   const deps = {
-    resolveFunnelPackageKey: async () => "scan_v1",
+    resolveFunnelPackage: async () => resolvedPackage("scan_v1"),
     provisionStage1Plan: async () => {
       attempts += 1
       return { status: attempts === 1 ? "temporarily_unavailable" : "completed" }
@@ -976,7 +1097,7 @@ test("an organic lead reaches ready without any provisioning call", async () => 
   let provisionCalls = 0
 
   const readiness = await loadPlanBereitInitialReadiness(db as never, scanLinkInput(), {
-    resolveFunnelPackageKey: async () => "default_organic",
+    resolveFunnelPackage: async () => resolvedPackage("default_organic"),
     provisionStage1Plan: async () => {
       provisionCalls += 1
       return { status: "completed" }
@@ -1020,9 +1141,9 @@ test("a personal_plan source is never even looked up on the read path", async ()
       expectedQuizSourceKind: "personal_plan",
     },
     {
-      resolveFunnelPackageKey: async () => {
+      resolveFunnelPackage: async () => {
         packageLookups += 1
-        return "scan_v1"
+        return resolvedPackage("scan_v1")
       },
       provisionStage1Plan: async () => ({ status: "completed" }),
     },

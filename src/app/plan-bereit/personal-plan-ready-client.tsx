@@ -39,6 +39,7 @@ type PlanBereitStatusBody = {
   sourceVersion?: string | null
   missingFacts?: PlanBereitMissingSourceFact[]
   initialAction?: PlanBereitInitialAction
+  funnelPackageKey?: string | null
 }
 
 type ClientReadiness = {
@@ -46,17 +47,30 @@ type ClientReadiness = {
   leadId: string | null
   sourceVersion: string | null
   missingFacts: PlanBereitMissingSourceFact[]
+  funnelPackageKey: string | null
 }
 
+/**
+ * A payload that carries a package (every readiness-backed response does, `null`
+ * included, because it is the same resolution the provisioning used) replaces the
+ * one the client holds. A payload without the field — the route's own literals,
+ * e.g. `forbidden` — leaves it untouched.
+ */
 function toClientReadiness(
   body: PlanBereitStatusBody,
   fallbackLeadId: string | null,
+  fallbackFunnelPackageKey: string | null,
 ): ClientReadiness {
+  const funnelPackageKey =
+    typeof body.funnelPackageKey === "string" || body.funnelPackageKey === null
+      ? body.funnelPackageKey
+      : fallbackFunnelPackageKey
   return {
     status: body.status ?? "transient_error",
     leadId: body.leadId ?? fallbackLeadId,
     sourceVersion: body.sourceVersion ?? null,
     missingFacts: Array.isArray(body.missingFacts) ? body.missingFacts : [],
+    funnelPackageKey,
   }
 }
 
@@ -71,25 +85,25 @@ export function PersonalPlanReadyClient({
   initialStatus = "checking",
   initialReadiness,
   nextHref = "/plan-start",
-  funnelPackageKey = null,
 }: {
   leadId: string | null
   initialStatus?: PersonalPlanReadinessPhase
+  /**
+   * Carries the server-resolved package identity of the canonical lead
+   * (`funnel_sessions`) alongside the status — the same resolution that decided the
+   * scanner provisioning. Never looked up client-side: the client has no authority
+   * over package identity, and a second lookup could disagree with the first.
+   */
   initialReadiness?: PlanBereitInitialReadiness
   nextHref?: "/plan-start"
-  /**
-   * Server-resolved package identity of the canonical lead (`funnel_sessions`).
-   * Never looked up client-side — the client has no authority over package identity.
-   */
-  funnelPackageKey?: string | null
 }) {
-  const scanFunnel = funnelPackageKey === SCAN_FUNNEL_PACKAGE_KEY
   const serverReadiness = initialReadiness ?? {
     status: initialStatus,
     leadId,
     sourceVersion: null,
     missingFacts: [],
     initialAction: initialStatus === "checking" ? "link" : "none",
+    funnelPackageKey: null,
   }
   const initialAction = serverReadiness.initialAction
   const initialLeadId = serverReadiness.leadId ?? leadId
@@ -98,7 +112,11 @@ export function PersonalPlanReadyClient({
     leadId: initialLeadId,
     sourceVersion: serverReadiness.sourceVersion ?? null,
     missingFacts: serverReadiness.missingFacts,
+    funnelPackageKey: serverReadiness.funnelPackageKey ?? null,
   })
+  // The poll's payload is the freshest server resolution, so the destination follows
+  // it rather than the first render's value.
+  const scanFunnel = readiness.funnelPackageKey === SCAN_FUNNEL_PACKAGE_KEY
   const [retryKey, setRetryKey] = useState(0)
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
   const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
@@ -180,10 +198,10 @@ export function PersonalPlanReadyClient({
           window.location.assign(body.nextHref)
           return
         }
-        const next = toClientReadiness(body, pollLeadId)
         requestState = applyPersonalPlanReadyPollResponse(body.initialAction)
-        setReadiness(next)
-        if (next.status !== "checking" && next.status !== "source_pending") {
+        setReadiness((current) => toClientReadiness(body, pollLeadId, current.funnelPackageKey))
+        const nextStatus = body.status ?? "transient_error"
+        if (nextStatus !== "checking" && nextStatus !== "source_pending") {
           return
         }
       } catch {
@@ -233,7 +251,7 @@ export function PersonalPlanReadyClient({
         setReadiness((current) => ({ ...current, status: "transient_error" }))
         return
       }
-      setReadiness(toClientReadiness(body, currentLeadId))
+      setReadiness((current) => toClientReadiness(body, currentLeadId, current.funnelPackageKey))
     } catch {
       setReadiness((current) => ({ ...current, status: "transient_error" }))
     } finally {

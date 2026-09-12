@@ -67,6 +67,7 @@ function fixture() {
         quizSourceKind: "legacy" as const,
         sourceVersion: "v1",
         missingFacts: [],
+        funnelPackageKey: null,
       }
     },
     loadReadiness: async () => {
@@ -78,6 +79,7 @@ function fixture() {
         sourceVersion: "v1",
         missingFacts: [],
         initialAction: "none" as const,
+        funnelPackageKey: null,
       }
     },
   }
@@ -140,4 +142,82 @@ test("the app rollout cannot be bypassed by posting migration preparation direct
   )
   assert.equal(response.status, 403)
   assert.deepEqual(calls, [])
+})
+
+test("both status payloads carry the package the readiness resolved", async () => {
+  // The client renders the destination and the arrival copy from the poll payload,
+  // so the package the provisioning resolved has to survive the route boundary —
+  // on the read (GET) and on the link (POST) alike.
+  const { deps } = fixture()
+  const scanReadiness = {
+    status: "ready" as const,
+    leadId,
+    quizSourceKind: "legacy" as const,
+    sourceVersion: "v1",
+    missingFacts: [],
+    initialAction: "none" as const,
+    funnelPackageKey: "scan_v1",
+  }
+  const handlers = createPlanBereitStatusHandlers({
+    ...deps,
+    findEnrollment: async () => ({
+      ...empty,
+      accessState: "active" as const,
+      sourceId: "migration",
+      qualifiedAt: "2026-08-28T00:00:00Z",
+      artifactLeadId: leadId,
+      quizSourceKind: "legacy" as const,
+      sourceKind: "migration" as const,
+    }),
+    loadReadiness: async () => scanReadiness,
+    linkSource: async () => scanReadiness,
+  })
+  const url = `http://localhost/plan-bereit/status?lead=${leadId}`
+
+  const read = await handlers.GET(new Request(url))
+  assert.equal((await read.json()).funnelPackageKey, "scan_v1")
+
+  const written = await handlers.POST(
+    new Request(url, { method: "POST", headers: { origin: "http://localhost" } }),
+  )
+  assert.equal((await written.json()).funnelPackageKey, "scan_v1")
+})
+
+test("a readiness that could not resolve the package reports transient_error, not organic ready", async () => {
+  const { deps } = fixture()
+  const unavailable = {
+    status: "transient_error" as const,
+    leadId,
+    quizSourceKind: "legacy" as const,
+    sourceVersion: null,
+    missingFacts: [],
+    initialAction: "none" as const,
+    funnelPackageKey: null,
+  }
+  const handlers = createPlanBereitStatusHandlers({
+    ...deps,
+    findEnrollment: async () => ({
+      ...empty,
+      accessState: "active" as const,
+      sourceId: "migration",
+      qualifiedAt: "2026-08-28T00:00:00Z",
+      artifactLeadId: leadId,
+      quizSourceKind: "legacy" as const,
+      sourceKind: "migration" as const,
+    }),
+    loadReadiness: async () => unavailable,
+    linkSource: async () => unavailable,
+  })
+  const url = `http://localhost/plan-bereit/status?lead=${leadId}`
+
+  for (const response of [
+    await handlers.GET(new Request(url)),
+    await handlers.POST(
+      new Request(url, { method: "POST", headers: { origin: "http://localhost" } }),
+    ),
+  ]) {
+    const body = await response.json()
+    assert.equal(body.status, "transient_error")
+    assert.notEqual(body.status, "ready")
+  }
 })
