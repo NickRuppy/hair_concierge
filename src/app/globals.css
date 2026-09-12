@@ -980,6 +980,48 @@
   line-height: 1.15;
 }
 
+/*
+ * Scanner hero demo on the `scan-regal-v1` offer. The phases are React state,
+ * so these keyframes only decorate them; every user of them is behind
+ * `motion-safe:`, and reduced motion never leaves the finished state.
+ */
+@keyframes scanHeroDemoLine {
+  0% {
+    top: 8%;
+  }
+  50% {
+    top: 88%;
+  }
+  100% {
+    top: 8%;
+  }
+}
+
+@keyframes scanHeroDemoPop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.06);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes scanHeroDemoSheetUp {
+  from {
+    opacity: 0.2;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
   animation: personalPlanScreenEnterForward 200ms ease-out both;
 }
