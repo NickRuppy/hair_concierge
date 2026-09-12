@@ -109,23 +109,29 @@ PostHog, Customer.io, and Meta. Confirmed purchases reuse the existing billing e
 
 ## Comparing Packages in PostHog
 
-To compare funnel packages, break each of the following PostHog events down by
-`funnel_package_key` (`default_organic`, `meta_personal_plan_v1`, `scan_v1`):
+To compare funnel packages, build the PostHog funnel from the five milestones every
+package emits, broken down by `funnel_package_key` (`default_organic`,
+`meta_personal_plan_v1`, `scan_v1`):
 
 1. `landing_viewed`
 2. `quiz_started`
-3. `quiz_insert_viewed` — new, `scan_v1` only. Fired when a visitor sees one of the
-   three quiz inserts, with `insert_id` (`problem` | `solution` | `home`) and
-   `funnel_package_key`. Inserts are not questions: they do not emit
-   `quiz_step_viewed`, so they never appear in a `quiz_step_viewed` funnel and do
-   not shift `default_organic`/`meta_personal_plan_v1` step counts.
-4. `quiz_completed`
-5. `offer_viewed`
-6. `purchase_completed`
+3. `quiz_completed`
+4. `offer_viewed`
+5. `purchase_completed`
 
-A package-comparison PostHog funnel or trend uses these six events in order,
-broken down by `funnel_package_key`, and gives a like-for-like read on where
-each package's journey gains or loses visitors relative to the others.
+These five are the like-for-like read on where each package's journey gains or loses
+visitors relative to the others. Only shared steps belong in that funnel: a step one
+package cannot emit would drop the others to zero at that stage (or, as an optional
+step, silently change the comparison's denominators).
+
+`quiz_insert_viewed` is therefore analysed **separately, within `scan_v1` only** —
+never as a step of the cross-package funnel. It is fired when a visitor sees one of
+the three quiz inserts, with `insert_id` (`problem` | `solution` | `home`) and
+`funnel_package_key`. Inserts are not questions: they do not emit `quiz_step_viewed`,
+so they never appear in a `quiz_step_viewed` funnel and do not shift
+`default_organic`/`meta_personal_plan_v1` step counts. Use it inside the `scan_v1`
+segment — insert reach and per-insert drop-off between `quiz_started` and
+`quiz_completed` — to explain a `scan_v1` movement the shared funnel surfaces.
 
 `scan-regal-v1` (the `scan_v1` offer) also introduces seven offer section IDs
 that do not exist on any other offer: `scan_criteria`, `product_tour`,

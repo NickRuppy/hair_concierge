@@ -320,7 +320,7 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   )
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts --project=webkit-mobile-action/,
+    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-funnel-journey\.spec\.ts --project=webkit-mobile-action/,
   )
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 
