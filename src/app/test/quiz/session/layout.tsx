@@ -3,6 +3,9 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
 import { QuizShell } from "@/app/quiz/quiz-shell"
+import { QuizFunnelPackageProvider } from "@/components/quiz/quiz-funnel-package-provider"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
+import { resolveQuizFunnelPackageKey } from "@/lib/quiz/funnel-package-context"
 import { createClient } from "@/lib/supabase/server"
 import {
   REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE,
@@ -27,9 +30,18 @@ export default async function RegularQuizFieldTestSessionLayout({
   } = await supabase.auth.getUser()
   if (user) redirect("/auth")
 
-  const value = (await cookies()).get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value
+  const cookieStore = await cookies()
+  const value = cookieStore.get(REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE)?.value
   const campaign = await resolveRegularQuizFieldTestCampaignCookie(value)
   if (campaign.kind !== "eligible") redirect("/test/quiz/beendet")
 
-  return <QuizShell regularFieldTest>{children}</QuizShell>
+  const funnelPackageKey = await resolveQuizFunnelPackageKey(
+    cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+  )
+
+  return (
+    <QuizFunnelPackageProvider funnelPackageKey={funnelPackageKey}>
+      <QuizShell regularFieldTest>{children}</QuizShell>
+    </QuizFunnelPackageProvider>
+  )
 }

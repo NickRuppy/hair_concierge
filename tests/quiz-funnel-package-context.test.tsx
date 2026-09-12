@@ -1,5 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFileSync } from "node:fs"
+import { renderToStaticMarkup } from "react-dom/server"
+
+import { QuizFunnelPackageProvider } from "../src/components/quiz/quiz-funnel-package-provider"
+import { resolveQuizFunnelPackageKey } from "../src/lib/quiz/funnel-package-context"
 import { QUIZ_DRAFT_STORAGE_KEY, saveQuizDraft } from "../src/lib/quiz/draft"
 import { useQuizStore } from "../src/lib/quiz/store"
 
@@ -105,4 +110,61 @@ test("a moderator fresh start clears quiz progress but keeps the funnel package"
     assert.deepEqual(state.answers, {})
     assert.equal(state.lead.name, "")
   })
+})
+
+test("the provider never mutates the shared store during a server render", () => {
+  useQuizStore.getState().setFunnelPackageKey(null)
+
+  const html = renderToStaticMarkup(
+    <QuizFunnelPackageProvider funnelPackageKey="scan_v1">
+      <span>Quiz</span>
+    </QuizFunnelPackageProvider>,
+  )
+
+  assert.equal(html, "<span>Quiz</span>")
+  assert.equal(useQuizStore.getState().funnelPackageKey, null)
+})
+
+test("the provider applies the package key before the first child renders", () => {
+  withBrowser(() => {
+    useQuizStore.getState().setFunnelPackageKey(null)
+    const seen: (string | null)[] = []
+
+    function Child() {
+      seen.push(useQuizStore.getState().funnelPackageKey)
+      return <span>Quiz</span>
+    }
+
+    renderToStaticMarkup(
+      <QuizFunnelPackageProvider funnelPackageKey="scan_v1">
+        <Child />
+      </QuizFunnelPackageProvider>,
+    )
+
+    assert.deepEqual(seen, ["scan_v1"])
+    assert.equal(useQuizStore.getState().funnelPackageKey, "scan_v1")
+  })
+})
+
+test("the quiz reads the package key out of the signed funnel cookie", async () => {
+  assert.equal(
+    await resolveQuizFunnelPackageKey("signed-cookie", async () => ({
+      visitorId: "10000000-0000-4000-8000-000000000001",
+      sessionId: "20000000-0000-4000-8000-000000000002",
+      packageKey: "scan_v1",
+      issuedAt: Date.now(),
+    })),
+    "scan_v1",
+  )
+  assert.equal(await resolveQuizFunnelPackageKey(undefined, async () => null), null)
+  assert.equal(await resolveQuizFunnelPackageKey("tampered", async () => null), null)
+})
+
+test("both quiz layouts initialize the store from the signed cookie", () => {
+  for (const path of ["src/app/quiz/layout.tsx", "src/app/test/quiz/session/layout.tsx"]) {
+    const source = readFileSync(new URL(`../${path}`, import.meta.url), "utf8")
+    assert.match(source, /resolveQuizFunnelPackageKey\(/, path)
+    assert.match(source, /FUNNEL_SESSION_COOKIE/, path)
+    assert.match(source, /<QuizFunnelPackageProvider funnelPackageKey=\{funnelPackageKey\}>/, path)
+  }
 })
