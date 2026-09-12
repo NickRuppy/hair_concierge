@@ -269,8 +269,13 @@ test("the package key reaches the ready client from the server, never from the c
     "utf8",
   )
 
-  assert.match(pageSource, /resolveFunnelContextForLead\(canonicalLeadId\)/)
-  assert.match(pageSource, /funnelPackageKey=\{funnelPackageKey\}/)
+  assert.match(pageSource, /resolveFunnelContextForLead\(leadId\)/)
+  // Every render site of the ready client carries the package, not just the ready one:
+  // a waiting or error screen can reach `ready` through the poll without a new render.
+  const renderSites = pageSource.match(/<PersonalPlanReadyClient/g) ?? []
+  const packageProps = pageSource.match(/funnelPackageKey=\{/g) ?? []
+  assert.ok(renderSites.length >= 4, `expected every render site, found ${renderSites.length}`)
+  assert.equal(packageProps.length, renderSites.length)
   // The client receives the package as a prop; it never imports the server lookup.
   assert.doesNotMatch(clientSource, /from "@\/lib\/funnel\/server"/)
   assert.doesNotMatch(clientSource, /resolveFunnelContextForLead\(/)

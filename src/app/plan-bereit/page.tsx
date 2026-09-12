@@ -20,6 +20,26 @@ import {
 
 export const dynamic = "force-dynamic"
 
+/**
+ * Package identity is server-owned (`funnel_sessions`), never a client field: a
+ * `scan_v1` buyer continues into the scanner instead of `/plan-start`, and every
+ * other package (plus an unavailable lookup) keeps the plan destination and copy.
+ *
+ * Every render site resolves it, not just the ready one — a waiting or error screen
+ * can reach `ready` through the poll without another server render, and would
+ * otherwise flip a scanner buyer back to the plan CTA and plan copy.
+ */
+async function loadPlanBereitFunnelPackageKey(leadId: string | null): Promise<string | null> {
+  if (!leadId) return null
+  return resolveFunnelContextForLead(leadId).then(
+    (context) => context?.packageKey ?? null,
+    (error) => {
+      console.warn("[plan-bereit] funnel package unavailable", error)
+      return null
+    },
+  )
+}
+
 export type PlanBereitAccessSurface =
   | "pricing"
   | "paid_pending_recovery"
@@ -103,6 +123,7 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: "none",
           }}
+          funnelPackageKey={await loadPlanBereitFunnelPackageKey(requestedLeadId)}
         />
       )
     }
@@ -141,6 +162,7 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: migration ? "link" : "none",
           }}
+          funnelPackageKey={await loadPlanBereitFunnelPackageKey(requestedLeadId)}
         />
       )
     }
@@ -181,6 +203,9 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: "poll",
           }}
+          funnelPackageKey={await loadPlanBereitFunnelPackageKey(
+            canonicalLeadId ?? requestedLeadId,
+          )}
         />
       )
     case "transient_error":
@@ -195,6 +220,9 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: "none",
           }}
+          funnelPackageKey={await loadPlanBereitFunnelPackageKey(
+            canonicalLeadId ?? requestedLeadId,
+          )}
         />
       )
     case "ready":
@@ -223,18 +251,7 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: "none",
           }
-      // Package identity is server-owned (`funnel_sessions` for the canonical lead).
-      // A `scan_v1` buyer continues into the scanner instead of `/plan-start`; every
-      // other package (and an unavailable lookup) keeps the plan destination and copy.
-      const funnelPackageKey = canonicalLeadId
-        ? await resolveFunnelContextForLead(canonicalLeadId).then(
-            (context) => context?.packageKey ?? null,
-            (error) => {
-              console.warn("[plan-bereit] funnel package unavailable", error)
-              return null
-            },
-          )
-        : null
+      const funnelPackageKey = await loadPlanBereitFunnelPackageKey(canonicalLeadId)
       return (
         <PersonalPlanReadyClient
           leadId={canonicalLeadId}
