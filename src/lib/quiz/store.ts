@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
-import { QUIZ_QUESTION_STEPS } from "./questions"
+import { getQuizStepOrder, normalizeQuizStepForPackage } from "./screen-order"
 import type { QuizStep, LeadCaptureMode, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
 interface QuizState {
@@ -29,16 +29,18 @@ interface QuizState {
   reset: () => void
 }
 
-const STEP_ORDER: QuizStep[] = [...QUIZ_QUESTION_STEPS, 9, 10, 11, 14]
-
-function nextStep(current: QuizStep): QuizStep {
-  const idx = STEP_ORDER.indexOf(current)
-  return idx < STEP_ORDER.length - 1 ? STEP_ORDER[idx + 1] : current
+// The screen sequence is a function of the funnel package the quiz runs under;
+// organic traffic keeps the sequence it has always had.
+function nextStep(current: QuizStep, packageKey: string | null): QuizStep {
+  const order = getQuizStepOrder(packageKey)
+  const idx = order.indexOf(current)
+  return idx >= 0 && idx < order.length - 1 ? order[idx + 1] : current
 }
 
-function prevStep(current: QuizStep): QuizStep {
-  const idx = STEP_ORDER.indexOf(current)
-  return idx > 0 ? STEP_ORDER[idx - 1] : current
+function prevStep(current: QuizStep, packageKey: string | null): QuizStep {
+  const order = getQuizStepOrder(packageKey)
+  const idx = order.indexOf(current)
+  return idx > 0 ? order[idx - 1] : current
 }
 
 const initialState = {
@@ -59,7 +61,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
 
   goNext: () => {
     const current = get()
-    const step = nextStep(current.step)
+    const step = nextStep(current.step, current.funnelPackageKey)
     set({ step })
 
     if (step === 14) {
@@ -67,9 +69,13 @@ export const useQuizStore = create<QuizState>((set, get) => ({
       return
     }
 
-    saveQuizDraft({ step, answers: get().answers })
+    saveQuizDraft({
+      step,
+      answers: get().answers,
+      funnelPackageKey: current.funnelPackageKey,
+    })
   },
-  goBack: () => set((s) => ({ step: prevStep(s.step) })),
+  goBack: () => set((s) => ({ step: prevStep(s.step, s.funnelPackageKey) })),
 
   setAnswer: (key, value) =>
     set((s) => {
@@ -97,7 +103,11 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   setStep: (step) => set({ step }),
   // The signed funnel cookie is authoritative, including when it resolves to no
   // package: a quiz without attribution has to behave organically.
-  setFunnelPackageKey: (key) => set({ funnelPackageKey: key }),
+  // A screen the new package does not run (a scan insert after a client
+  // navigation without attribution) falls back to its preceding question, so no
+  // question can be skipped.
+  setFunnelPackageKey: (key) =>
+    set((s) => ({ funnelPackageKey: key, step: normalizeQuizStepForPackage(s.step, key) })),
   // The browser bootstrap is a fallback for a request that carried no readable
   // cookie, so it must never overwrite a server-resolved package.
   fillFunnelPackageKeyIfMissing: (key) =>
@@ -107,11 +117,13 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     if (!draft) return false
 
     // The draft holds quiz progress only. The funnel package belongs to the
-    // running session and survives a restore (see `reset` below).
+    // running session and survives a restore (see `reset` below) — a draft
+    // saved under another package keeps its answers but resumes on a screen the
+    // running package actually has.
     set((s) => ({
       ...initialState,
       funnelPackageKey: s.funnelPackageKey,
-      step: draft.step,
+      step: normalizeQuizStepForPackage(draft.step, s.funnelPackageKey),
       answers: draft.answers,
     }))
     return true

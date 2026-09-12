@@ -15,6 +15,11 @@ export type QuizStep =
   | 11 // results
   | 12 // goals
   | 14 // welcome
+  // Funnel-package screens. They carry no question and only run for the package
+  // that declares them (see `screen-order.ts`).
+  | 16 // scan_insert_problem (scan_v1, after 13)
+  | 17 // scan_insert_solution (scan_v1, after 6)
+  | 18 // scan_insert_home (scan_v1, after 12)
 
 export type LeadCaptureSubStep = "name" | "email" | "consent"
 export type LeadCaptureMode = "regular" | "partner"

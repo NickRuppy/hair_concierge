@@ -7,7 +7,8 @@ import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 export function QuizBrandPanel() {
   const step = useQuizStore((s) => s.step)
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
-  const content = getQuizBrandPanelContent(step, leadCaptureSubStep)
+  const funnelPackageKey = useQuizStore((s) => s.funnelPackageKey)
+  const content = getQuizBrandPanelContent(step, leadCaptureSubStep, funnelPackageKey)
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">
