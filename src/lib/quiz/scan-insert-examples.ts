@@ -42,6 +42,12 @@ const SHAMPOO: ScanExampleProduct = {
   price: "ca. 1,95 €",
 }
 
+const PROBLEM_SHAMPOO: ScanExampleProduct = {
+  name: "OGX Argan Oil of Morocco Shampoo",
+  category: "Shampoo",
+  price: "ca. 6,95 €",
+}
+
 const MASK: ScanExampleProduct = {
   name: "Balea Professional Repair Kur",
   category: "Haarmaske",
@@ -80,6 +86,9 @@ const SCALP_CONDITION_LABELS: Record<string, string> = {
 /** Care weight and repair depth are ordered: one step apart is a restriction. */
 const CARE_WEIGHT_SCALE = ["leicht", "mittel", "reichhaltig"]
 const REPAIR_SCALE = ["mittel", "hoch"]
+
+/** `fein` · `mittel` · `dick` — one step apart from the product is a restriction. */
+const THICKNESS_SCALE = ["fein", "mittel", "dick"]
 
 const CARE_WEIGHT_BY_THICKNESS: Record<string, string> = {
   fine: "leicht",
@@ -167,6 +176,16 @@ function thicknessRow(answers: QuizAnswers): ScanExampleRow {
   }
 }
 
+function problemThicknessRow(answers: QuizAnswers): ScanExampleRow {
+  const targetValue = getScanInsertThicknessLabel(answers)
+  return {
+    label: "Haardicke",
+    productValue: "dick",
+    targetValue,
+    status: scaleStatus(THICKNESS_SCALE, "dick", targetValue),
+  }
+}
+
 function buildDeviation(rows: ScanExampleRow[]): string {
   const deviations = rows
     .filter((row) => row.status !== "ok")
@@ -193,17 +212,11 @@ function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; hea
 
 /**
  * Insert 16 runs before the scalp question, so its card is deliberately
- * partial: it shows what the quiz already knows and says the scalp is next.
+ * partial: it shows what the quiz already knows, cleansing and thickness only.
  */
 function buildProblemExample(answers: QuizAnswers): ScanExampleCard {
-  const rows = [cleansingRow({}), thicknessRow(answers)]
-  return {
-    product: SHAMPOO,
-    rows,
-    verdict: "ok",
-    headline: "Passt zu deinem Haar",
-    deviation: `Haardicke: ${getScanInsertThicknessLabel(answers)} · Kopfhaut kommt gleich dazu.`,
-  }
+  const rows = [cleansingRow({}), problemThicknessRow(answers)]
+  return { product: PROBLEM_SHAMPOO, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }
 }
 
 function buildSolutionExample(answers: QuizAnswers): ScanExampleCard {

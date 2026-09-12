@@ -23,9 +23,9 @@ function answers(overrides: QuizAnswers = {}): QuizAnswers {
 test("insert 16 stays partial: cleansing and thickness, no scalp row", () => {
   const card = getScanInsertExample(16, answers({ structure: "wavy", thickness: "fine" }))
 
-  assert.equal(card.product.name, "Alverde Balance Shampoo Melisse")
+  assert.equal(card.product.name, "OGX Argan Oil of Morocco Shampoo")
   assert.equal(card.product.category, "Shampoo")
-  assert.equal(card.product.price, "ca. 1,95 €")
+  assert.equal(card.product.price, "ca. 6,95 €")
   assert.deepEqual(
     card.rows.map((row) => row.label),
     ["Reinigung", "Haardicke"],
@@ -38,26 +38,35 @@ test("insert 16 stays partial: cleansing and thickness, no scalp row", () => {
   })
   assert.deepEqual(card.rows[1], {
     label: "Haardicke",
-    productValue: "jede",
+    productValue: "dick",
     targetValue: "fein",
-    status: "ok",
+    status: "bad",
   })
-  assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt zu deinem Haar")
-  assert.equal(card.deviation, "Haardicke: fein · Kopfhaut kommt gleich dazu.")
+  assert.equal(card.verdict, "bad")
+  assert.equal(card.headline, "Passt nicht zu deinem Haar")
+  assert.equal(card.deviation, "Haardicke: dick statt fein")
 })
 
-test("insert 16 names the thickness the quiz already knows", () => {
-  const expected: [string, string][] = [
-    ["fine", "fein"],
-    ["normal", "mittel"],
-    ["coarse", "dick"],
+test("insert 16 weighs the fixed thick product against every thickness", () => {
+  const expected: [string, string, "ok" | "warn" | "bad", string][] = [
+    ["fine", "fein", "bad", "Haardicke: dick statt fein"],
+    ["normal", "mittel", "warn", "Haardicke: dick statt mittel"],
+    ["coarse", "dick", "ok", "Alles im Ziel."],
   ]
-  for (const [thickness, label] of expected) {
+  for (const [thickness, label, status, deviation] of expected) {
     const card = getScanInsertExample(16, answers({ thickness }))
     assert.equal(card.rows[1].targetValue, label, thickness)
-    assert.equal(card.rows[1].status, "ok", thickness)
-    assert.equal(card.deviation, `Haardicke: ${label} · Kopfhaut kommt gleich dazu.`)
+    assert.equal(card.rows[1].status, status, thickness)
+    assert.equal(card.deviation, deviation, thickness)
+    assert.equal(
+      card.headline,
+      status === "bad"
+        ? "Passt nicht zu deinem Haar"
+        : status === "warn"
+          ? "Passt mit Einschränkung"
+          : "Passt zu deinem Haar",
+      thickness,
+    )
   }
 })
 
@@ -65,8 +74,10 @@ test("insert 16 falls back to the default thickness before the question is answe
   const card = getScanInsertExample(16, answers())
 
   assert.equal(card.rows[1].targetValue, "fein")
-  assert.equal(card.verdict, "ok")
-  assert.equal(card.deviation, "Haardicke: fein · Kopfhaut kommt gleich dazu.")
+  assert.equal(card.rows[1].status, "bad")
+  assert.equal(card.verdict, "bad")
+  assert.equal(card.headline, "Passt nicht zu deinem Haar")
+  assert.equal(card.deviation, "Haardicke: dick statt fein")
 })
 
 test("insert 17 reads the scalp type when the user reported no complaint", () => {
