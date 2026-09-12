@@ -3,6 +3,10 @@ import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { HAIR_LENGTH_OPTIONS, HAIR_LENGTHS, type HairLength } from "@/lib/vocabulary/hair-length"
 import { buildLegacyQuizStage1Source } from "@/lib/personal-plan/input"
 import { canLinkDirectQuizLead } from "@/lib/quiz/link-to-profile"
+import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
+import { resolveFunnelContextForLead } from "@/lib/funnel/server"
+import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
+import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
 import {
   buildProfileDataFromPersonalPlanCanonicalProfile,
   buildProfileDataFromQuizAnswers,
@@ -583,9 +587,31 @@ async function persistProfileOutput(
   }
 }
 
+/**
+ * The two server lookups the scanner-first provisioning needs, injected so the
+ * readiness tests can drive the `scan_v1` branch without a funnel session or a
+ * Stage-1 stack.
+ */
+export type PlanBereitLinkDependencies = {
+  /** Package identity of a lead — always server-owned (`funnel_sessions`), never client input. */
+  resolveFunnelPackageKey: (leadId: string) => Promise<string | null>
+  /** The exact provisioning `/plan-start` performs on render; idempotent (reuses an existing plan). */
+  provisionStage1Plan: (supabase: SupabaseClient, userId: string) => Promise<{ status: string }>
+}
+
+const planBereitLinkDefaults: PlanBereitLinkDependencies = {
+  resolveFunnelPackageKey: async (leadId) =>
+    (await resolveFunnelContextForLead(leadId))?.packageKey ?? null,
+  provisionStage1Plan: (supabase, userId) =>
+    createStage1PersistenceService(
+      createStage1SupabaseDependencies(supabase as never),
+    ).loadOrCreate({ userId }),
+}
+
 export async function linkExactPlanBereitSourceToProfile(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitLinkDependencies = planBereitLinkDefaults,
 ): Promise<PlanBereitReadiness> {
   const candidate = await loadPlanBereitLinkCandidate(supabase, input)
   if (candidate.status !== "linkable") return candidate
@@ -600,6 +626,7 @@ export async function linkExactPlanBereitSourceToProfile(
         .eq("id", lead.id)
       if (linked.error) throw new Error(`leads.user_id update failed: ${linked.error.message}`)
     }
+    await provisionScannerPlanForScanFunnel(supabase, input.userId, lead.id, deps)
     return loadPlanBereitReadiness(supabase, input)
   }
 
@@ -620,6 +647,30 @@ export async function linkExactPlanBereitSourceToProfile(
   }
 
   return loadPlanBereitReadiness(supabase, input)
+}
+
+/**
+ * A `scan_v1` buyer lands on `/scan`, not `/plan-start` — so the initial need
+ * snapshot `/plan-start` used to create on render has to exist by the end of this
+ * poll, otherwise the scanner opens with no profile (`profile_missing`). This runs
+ * AFTER the `leads.user_id` link above on purpose: Stage 1 resolves the entitlement
+ * through the enrollment, which needs exactly that link.
+ *
+ * Anything short of a created/reused plan is thrown, so it surfaces through the poll's
+ * existing `transient_error` retry instead of forwarding the buyer to an empty camera.
+ * Other funnel packages keep the pre-existing behaviour untouched.
+ */
+async function provisionScannerPlanForScanFunnel(
+  supabase: SupabaseClient,
+  userId: string,
+  leadId: string,
+  deps: PlanBereitLinkDependencies,
+) {
+  if ((await deps.resolveFunnelPackageKey(leadId)) !== SCAN_FUNNEL_PACKAGE_KEY) return
+  const provisioned = await deps.provisionStage1Plan(supabase, userId)
+  if (provisioned.status !== "completed") {
+    throw new Error(`scanner plan provisioning failed: ${provisioned.status}`)
+  }
 }
 
 export async function updateMissingPlanBereitSourceFact(
