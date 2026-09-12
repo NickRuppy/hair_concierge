@@ -11,6 +11,13 @@ import { createClient } from "@/lib/supabase/server"
 
 import { ScanPageClient } from "./scan-page-client"
 
+/**
+ * The hand-over marker /plan-bereit appends for a `scan_v1` buyer (`/scan?welcome=scan`).
+ * Anything else — including no query at all — renders the scanner exactly as before.
+ */
+const SCAN_WELCOME_PARAM = "welcome"
+const SCAN_WELCOME_VALUE = "scan"
+
 export default async function ScanPage({
   searchParams,
 }: {
@@ -65,6 +72,7 @@ export default async function ScanPage({
       tier={tier}
       merklisteEnabled={merklisteEnabled}
       bindSkippedNotice={bindSkippedNotice}
+      welcomeHint={params[SCAN_WELCOME_PARAM] === SCAN_WELCOME_VALUE}
     />
   )
 }

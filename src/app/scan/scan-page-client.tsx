@@ -1,5 +1,6 @@
 "use client"
 
+import { useSyncExternalStore } from "react"
 import { useRouter } from "next/navigation"
 
 import { ScanFlow } from "@/components/scan/scan-flow"
@@ -31,18 +32,95 @@ import { scanAnalytics } from "@/lib/scan/scan-analytics"
 const BIND_SKIPPED_NOTICE =
   "Du bist mit deinem bestehenden Konto angemeldet. Deine gespeicherte Haaranalyse bleibt unverändert – die neue wurde nicht übernommen."
 
+/**
+ * The arrival line a `scan_v1` buyer sees once, right after /plan-bereit hands them
+ * over (`/scan?welcome=scan`). It is a greeting, not a state of the scanner, so it
+ * lives beside `ScanFlow` and never touches its state machine. Dismissed for the rest
+ * of the session via `sessionStorage`, and hidden on the first render of a session
+ * that already dismissed it — a storage failure simply shows it again.
+ */
+const SCAN_WELCOME_HINT = "Dein Scanner ist startklar. Dein Plan wartet daneben."
+const SCAN_WELCOME_HINT_DISMISS = "Verstanden"
+const SCAN_WELCOME_HINT_STORAGE_KEY = "chaarlie.scan.welcome-hint-dismissed"
+
+// One session-scoped flag shared by the store below. `useSyncExternalStore` is what
+// lets the client read `sessionStorage` on its very first render without a
+// setState-in-effect cascade: the server snapshot is "already dismissed" (renders
+// nothing), and React re-renders with the real value right after hydration.
+let welcomeHintDismissed: boolean | null = null
+const welcomeHintListeners = new Set<() => void>()
+
+function readWelcomeHintDismissed(): boolean {
+  if (welcomeHintDismissed === null) {
+    try {
+      welcomeHintDismissed = window.sessionStorage.getItem(SCAN_WELCOME_HINT_STORAGE_KEY) === "true"
+    } catch {
+      // A blocked session store only means the hint may greet them once more.
+      welcomeHintDismissed = false
+    }
+  }
+  return welcomeHintDismissed
+}
+
+function subscribeToWelcomeHint(listener: () => void) {
+  welcomeHintListeners.add(listener)
+  return () => {
+    welcomeHintListeners.delete(listener)
+  }
+}
+
+function dismissWelcomeHint() {
+  welcomeHintDismissed = true
+  try {
+    window.sessionStorage.setItem(SCAN_WELCOME_HINT_STORAGE_KEY, "true")
+  } catch {
+    // See above: losing the marker costs one extra greeting, nothing more.
+  }
+  for (const listener of welcomeHintListeners) listener()
+}
+
+function ScanWelcomeHint() {
+  const dismissed = useSyncExternalStore(
+    subscribeToWelcomeHint,
+    readWelcomeHintDismissed,
+    () => true,
+  )
+
+  if (dismissed) return null
+  return (
+    <div
+      className="mx-auto flex max-w-[36rem] items-center justify-between gap-3 px-5 pt-4"
+      data-scan-welcome-hint
+      role="status"
+    >
+      <p className="text-sm leading-6 text-[var(--text-sub)]">{SCAN_WELCOME_HINT}</p>
+      <button
+        type="button"
+        className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground"
+        onClick={dismissWelcomeHint}
+      >
+        {SCAN_WELCOME_HINT_DISMISS}
+      </button>
+    </div>
+  )
+}
+
 export function ScanPageClient({
   tier,
   merklisteEnabled,
   bindSkippedNotice = false,
+  welcomeHint = false,
 }: {
   tier: EntitlementTier
   merklisteEnabled: boolean
   bindSkippedNotice?: boolean
+  /** Set by `?welcome=scan`, the hand-over from /plan-bereit for a scan_v1 buyer. */
+  welcomeHint?: boolean
 }) {
   const router = useRouter()
   return (
     <>
+      {welcomeHint ? <ScanWelcomeHint /> : null}
       {bindSkippedNotice ? (
         <p
           className="mx-auto max-w-[36rem] px-5 pt-4 text-sm leading-6 text-[var(--text-sub)]"
