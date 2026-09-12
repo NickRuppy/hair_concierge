@@ -14,12 +14,14 @@ import { QuizPreparation } from "@/components/quiz/quiz-preparation"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
+import { ScanInsertPlaceholder } from "@/components/quiz/scan-inserts/scan-insert-placeholder"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import {
   getLegacyQuizScreenPosition,
   seedLegacyQuizBrowserHistoryToDepth,
 } from "@/lib/quiz/browser-history"
+import { normalizeQuizStepForPackage, shouldTrackQuizStepViewed } from "@/lib/quiz/screen-order"
 import {
   deriveMigrationQuizPrefillState,
   fallbackMigrationQuizContextPayload,
@@ -45,6 +47,9 @@ const STEP_NAMES: Record<number, string> = {
   11: "results",
   12: "goals",
   14: "auth_transition",
+  16: "scan_insert_problem",
+  17: "scan_insert_solution",
+  18: "scan_insert_home",
 }
 
 export default function QuizPage() {
@@ -79,6 +84,7 @@ export default function QuizPage() {
           currentStep: latestState.step,
           currentAnswers: latestState.answers,
           payload: migrationPayload,
+          funnelPackageKey: latestState.funnelPackageKey,
         })
         if (migrationState.status === "recover") {
           window.location.assign(MIGRATION_LEAD_CAPTURE_NEXT_HREF)
@@ -89,7 +95,12 @@ export default function QuizPage() {
           return
         }
         if (migrationState.status === "prefill") {
-          const restoredPosition = getLegacyQuizScreenPosition(migrationState.step, "name")
+          const restoredPosition = getLegacyQuizScreenPosition(
+            migrationState.step,
+            "name",
+            "regular",
+            latestState.funnelPackageKey,
+          )
           seedLegacyQuizBrowserHistoryToDepth(Math.max(0, restoredPosition - 1))
           useQuizStore.setState({
             step: migrationState.step,
@@ -112,7 +123,16 @@ export default function QuizPage() {
       const freshModeratorStart = consumeModeratorOrganicFreshStart()
       const draft = freshModeratorStart ? null : loadQuizDraft()
       if (draft) {
-        const restoredPosition = getLegacyQuizScreenPosition(draft.step, "name")
+        // A draft can hold a screen the running funnel package does not have
+        // (a scan insert restored without attribution). `restoreDraft` resumes
+        // on the normalized screen, so history has to be seeded for that one.
+        const restoredStep = normalizeQuizStepForPackage(draft.step, state.funnelPackageKey)
+        const restoredPosition = getLegacyQuizScreenPosition(
+          restoredStep,
+          "name",
+          "regular",
+          state.funnelPackageKey,
+        )
         // The store transition below adds the final entry. Seed the earlier
         // screens first so browser/system Back maps to one quiz screen at a time.
         seedLegacyQuizBrowserHistoryToDepth(Math.max(0, restoredPosition - 1))
@@ -147,10 +167,14 @@ export default function QuizPage() {
       })
     }
 
-    trackAppEvent("quiz_step_viewed", {
-      stepName,
-      stepNumber: step, // deprecated: use stepName after Phase 4 resequencing
-    })
+    // Funnel inserts are not quiz questions and must not enter the per-step
+    // funnel event that routes to Customer.io; they report their own event.
+    if (shouldTrackQuizStepViewed(step)) {
+      trackAppEvent("quiz_step_viewed", {
+        stepName,
+        stepNumber: step, // deprecated: use stepName after Phase 4 resequencing
+      })
+    }
   }, [draftStatus, step])
 
   if (draftStatus === "checking") {
@@ -194,6 +218,10 @@ export default function QuizPage() {
       return <QuizGoals />
     case 14:
       return <QuizWelcome />
+    case 16:
+    case 17:
+    case 18:
+      return <ScanInsertPlaceholder step={step} />
     default:
       // Unknown step — shouldn't happen with a healthy store. Surface a 404
       // rather than silently rendering a placeholder (would hide bugs).
