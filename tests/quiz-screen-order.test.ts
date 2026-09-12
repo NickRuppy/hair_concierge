@@ -201,6 +201,19 @@ test("a step that the current package does not run falls back to the preceding q
   for (const step of TODAYS_STEP_ORDER) {
     assert.equal(normalizeQuizStepForPackage(step, null), step)
   }
+
+  // The fallback is a walk back through the order that owns the step, not a
+  // rule about inserts: whatever comes out has to be a screen the target
+  // package actually runs.
+  for (const packageKey of [null, SCAN_FUNNEL_PACKAGE_KEY]) {
+    const order = getQuizStepOrder(packageKey)
+    for (const step of [...SCAN_STEP_ORDER, ...TODAYS_STEP_ORDER]) {
+      assert.ok(
+        order.includes(normalizeQuizStepForPackage(step, packageKey)),
+        `step ${step} under ${packageKey}`,
+      )
+    }
+  }
 })
 
 test("the scan store walks forward through the inserts", () => {

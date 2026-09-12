@@ -130,12 +130,30 @@ export function getQuizProgressStep(step: QuizStep, packageKey: string | null): 
   return step
 }
 
+/** Every screen sequence this app knows, for resolving a foreign step. */
+const KNOWN_SCREEN_ORDERS: readonly (readonly QuizStep[])[] = [
+  SCAN_SCREEN_ORDER,
+  ORGANIC_SCREEN_ORDER,
+]
+
 /**
- * Maps a step that the current package does not run onto the nearest preceding
- * question, so a restored draft or a changed funnel cookie can never skip one.
+ * Maps a step that the current package does not run onto the last screen this
+ * package does run before it, so a restored draft or a changed funnel cookie
+ * can never skip a question.
  */
 export function normalizeQuizStepForPackage(step: QuizStep, packageKey: string | null): QuizStep {
-  return getQuizStepOrder(packageKey).includes(step) ? step : getQuizProgressStep(step, packageKey)
+  const order = getQuizStepOrder(packageKey)
+  if (order.includes(step)) return step
+
+  // The step belongs to another package. Walk back through the order that does
+  // contain it until a screen this package runs turns up.
+  const sourceOrder = KNOWN_SCREEN_ORDERS.find((candidate) => candidate.includes(step))
+  if (!sourceOrder) return step
+  for (let index = sourceOrder.indexOf(step) - 1; index >= 0; index--) {
+    const candidate = sourceOrder[index]
+    if (order.includes(candidate)) return candidate
+  }
+  return order[0]
 }
 
 /**

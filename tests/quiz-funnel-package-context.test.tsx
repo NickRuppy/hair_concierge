@@ -168,3 +168,45 @@ test("both quiz layouts initialize the store from the signed cookie", () => {
     assert.match(source, /<QuizFunnelPackageProvider funnelPackageKey=\{funnelPackageKey\}>/, path)
   }
 })
+
+test("a scan draft resumes on the insert it was saved on", () => {
+  for (const step of [17, 18] as const) {
+    withBrowser((storage) => {
+      saveQuizDraft(
+        {
+          step,
+          answers: { structure: "wavy", thickness: "fine", hair_length: "medium" },
+          funnelPackageKey: "scan_v1",
+        },
+        storage,
+      )
+
+      useQuizStore.getState().setFunnelPackageKey("scan_v1")
+      assert.equal(useQuizStore.getState().restoreDraft(), true)
+      assert.equal(useQuizStore.getState().step, step, `reload on insert ${step}`)
+    })
+  }
+})
+
+test("the same draft resumes organically on the question the insert sits behind", () => {
+  const expected: [17 | 18, number][] = [
+    [17, 6],
+    [18, 12],
+  ]
+  for (const [step, question] of expected) {
+    withBrowser((storage) => {
+      saveQuizDraft(
+        {
+          step,
+          answers: { structure: "wavy", thickness: "fine", hair_length: "medium" },
+          funnelPackageKey: "scan_v1",
+        },
+        storage,
+      )
+
+      useQuizStore.getState().setFunnelPackageKey(null)
+      assert.equal(useQuizStore.getState().restoreDraft(), true)
+      assert.equal(useQuizStore.getState().step, question, `organic reload of insert ${step}`)
+    })
+  }
+})

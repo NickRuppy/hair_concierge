@@ -20,11 +20,16 @@ function asStateRecord(state: unknown): Record<string, unknown> {
     : {}
 }
 
+/**
+ * Where a screen sits in the browser history of this quiz. Mode and funnel
+ * package are both required: the screen sequence is a function of them, and a
+ * defaulted package would silently place a funnel screen at position 0.
+ */
 export function getLegacyQuizScreenPosition(
   step: QuizStep,
   leadCaptureSubStep: LeadCaptureSubStep,
-  leadCaptureMode: LeadCaptureMode = "regular",
-  funnelPackageKey: string | null = null,
+  leadCaptureMode: LeadCaptureMode,
+  funnelPackageKey: string | null,
 ): number {
   const screenOrder = getQuizHistoryScreenOrder(funnelPackageKey, leadCaptureMode)
   const index = screenOrder.findIndex(
