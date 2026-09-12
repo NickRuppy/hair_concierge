@@ -16,19 +16,44 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
  *
  * LOCAL GATE (same shape as tests/tracker-page.spec.ts): the spec writes rows to
  * the configured Supabase project, so it only runs with live secrets AND
- * `PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE=1`. The CI journey lane sets that variable
- * (plus `SCAN_FUNNEL_ENABLED`, `FUNNEL_ATTRIBUTION_ENABLED` and
- * `FUNNEL_COOKIE_SIGNING_SECRET`) in its own env block. Locally:
+ * `PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE=1`. "Live secrets" excludes ci.yml's placeholder
+ * fallback values (`https://placeholder.supabase.co` / `placeholder`) — on every
+ * non-full-CI run those are the only values in scope, so the gate below evaluates to
+ * "skip", not "throw in beforeAll".
+ *
+ * CI GATE: `quality-personal-plan-journey` runs on every PR (it also carries the
+ * non-live Personal Plan journey specs), but this spec's own live run inside that lane
+ * is reserved for the same manual full-CI gate `playwright-payment-feedback-v2` uses
+ * (`needs.detect-ci-scope.outputs.full_ci`) — the job sets
+ * `PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE` to `"1"` only when `full_ci` is true AND a real
+ * `SUPABASE_SERVICE_ROLE_KEY` secret is configured, `"0"` otherwise. A plain PR run
+ * therefore executes every other spec in the lane but skips this one; it also carries
+ * `SCAN_FUNNEL_ENABLED`, `FUNNEL_ATTRIBUTION_ENABLED` and `FUNNEL_COOKIE_SIGNING_SECRET`
+ * for when it does run. Locally:
  *
  *   PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE=1 PLAYWRIGHT_BASE_URL=http://localhost:3405 \
  *     npx playwright test tests/scan-funnel-journey.spec.ts --project=chromium
  *
- * Every row this spec creates is removed again in `afterAll`.
+ * Every row this spec creates is removed again in `afterAll`, which itself is a no-op
+ * (no admin calls at all) whenever the test above was skipped.
  */
+
+// .github/workflows/ci.yml falls back to these exact strings when the real secrets are
+// unset (`secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'` etc.), so
+// every non-full-CI run has non-empty but fake values in scope. Without this check
+// `hasLiveSecrets` would be true on every PR and `beforeAll` would throw trying to reach
+// `https://placeholder.supabase.co`, instead of the spec cleanly skipping.
+const PLACEHOLDER_SUPABASE_URL = "https://placeholder.supabase.co"
+const PLACEHOLDER_SERVICE_ROLE_KEY = "placeholder"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-const hasLiveSecrets = Boolean(supabaseUrl && serviceRoleKey)
+const hasLiveSecrets = Boolean(
+  supabaseUrl &&
+  serviceRoleKey &&
+  supabaseUrl !== PLACEHOLDER_SUPABASE_URL &&
+  serviceRoleKey !== PLACEHOLDER_SERVICE_ROLE_KEY,
+)
 const runScanFunnelJourney = hasLiveSecrets && process.env.PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE === "1"
 
 const admin: SupabaseClient | null = hasLiveSecrets
@@ -37,8 +62,14 @@ const admin: SupabaseClient | null = hasLiveSecrets
     })
   : null
 
-/** Nivea Shampoo — a real EAN with a valid GS1 check digit, used across the scan tests. */
-const SCAN_EAN = "4006381333931"
+/**
+ * OGX Renewing + Argan Oil of Morocco Shampoo — a real, active product in the production
+ * catalog (`products.id = 2ecd3c9d-90f6-45a3-a72c-daefed50be10`), confirmed present via
+ * `product_identifiers` before wiring this in. Resolving it proves the profile-gated
+ * verdict path actually runs, unlike an EAN the catalog has never heard of (see the
+ * assertion below).
+ */
+const SCAN_EAN = "3574661799438"
 
 async function hideCookieBanner(page: Page) {
   await page.addInitScript(() => {
@@ -160,7 +191,10 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
   })
 
   test.afterAll(async () => {
-    if (!admin) return
+    // Skipped runs (no live secrets, or PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE unset) must make
+    // zero admin calls: beforeAll never ran, so there is nothing to clean up, and this
+    // spec's whole point is not touching production Supabase outside its own live gate.
+    if (!runScanFunnelJourney || !admin) return
 
     function report(step: string, error: { message: string } | null) {
       // Teardown must never mask a green run, but a silent failure would leave
@@ -177,10 +211,17 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
     }
 
     // funnel_sessions.lead_id is ON DELETE SET NULL, so the sessions have to go
-    // before the lead they point at or they can no longer be found.
+    // before the lead they point at or they can no longer be found. Two sources: the
+    // session ids the journey observed directly (funnelSessionIds), and — belt and
+    // braces — every session the lead ended up attached to, in case the funnel created
+    // one this spec never read back (e.g. a session rotation the journey didn't poll for).
     for (const sessionId of funnelSessionIds) {
       const { error } = await admin.from("funnel_sessions").delete().eq("id", sessionId)
       report("funnel_sessions", error)
+    }
+    if (leadId) {
+      const { error } = await admin.from("funnel_sessions").delete().eq("lead_id", leadId)
+      report("funnel_sessions (by lead_id)", error)
     }
     report("leads", (await admin.from("leads").delete().eq("email", email)).error)
 
@@ -195,6 +236,11 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
   })
 
   test("scan_v1 carries a visitor from /lp/scan to a real scan verdict", async ({ page }) => {
+    // Observed real runs are 36-45s (see task-10-report.md); this budget is sized for CI
+    // slowness while leaving the 20-minute quality-personal-plan-journey job (M1) with
+    // room for its other specs, browser install, and this test's own afterAll cleanup
+    // even if the run hits its ceiling.
+    test.setTimeout(300_000)
     await hideCookieBanner(page)
     await test.step("Landing sets the scan_v1 funnel session", async () => {
       await page.goto("/lp/scan", { waitUntil: "networkidle" })
@@ -473,17 +519,26 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
       await expect(page.locator("[data-scan-welcome-hint]")).toHaveCount(0)
     })
 
-    await test.step("A real /api/scan/resolve call clears the profile gate", async () => {
+    await test.step("A real /api/scan/resolve call reaches an actual verdict", async () => {
       const response = await page.request.post("/api/scan/resolve", {
         data: { identifier: { type: "ean", value: SCAN_EAN } },
       })
 
-      // The catalog content decides whether this EAN yields a verdict or an
-      // unknown-product outcome; both prove the snapshot exists. Only the
-      // profile gate (409 `profile_missing`) is a journey failure.
-      expect(response.status()).not.toBe(409)
-      const body = await response.text()
-      expect(body).not.toContain("profile_missing")
+      // SCAN_EAN is a real, active product in the catalog (see the constant above), so a
+      // provisioned, profile-having buyer resolving it must reach a genuine verdict, not
+      // merely clear the profile gate — an unknown-product outcome (catalog miss),
+      // `profile_missing` (409), `rate_limited` (429) or an unhandled failure would all
+      // pass a "not 409" check without proving anything about provisioning.
+      // `ScanResolveResult` (src/lib/scan/types.ts) only ever puts a `verdict` field on an
+      // `in_catalog` payload, so asserting both the discriminator and the verdict value
+      // rules out `unknown_product`, `pending_submission` and `not_needed` too. A
+      // free-tier caller gets the masked variant of this exact same shape (still
+      // `kind: "in_catalog"`, still 200) — this buyer is entitled, so masking never
+      // applies here.
+      expect(response.status()).toBe(200)
+      const body = (await response.json()) as { kind?: string; verdict?: string }
+      expect(body.kind).toBe("in_catalog")
+      expect(["ideal", "supportive", "mismatch", "unknown"]).toContain(body.verdict)
     })
   })
 })
