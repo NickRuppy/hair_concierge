@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { QuizFunnelPackageProvider } from "../src/components/quiz/quiz-funnel-package-provider"
+import { QuizInfoStrip } from "../src/components/quiz/quiz-info-strip"
+import { flushAsync, mountComponent } from "./helpers/react-hook-mount"
 import { resolveQuizFunnelPackageKey } from "../src/lib/quiz/funnel-package-context"
 import { QUIZ_DRAFT_STORAGE_KEY, saveQuizDraft } from "../src/lib/quiz/draft"
 import { useQuizStore } from "../src/lib/quiz/store"
@@ -208,5 +210,74 @@ test("the same draft resumes organically on the question the insert sits behind"
       assert.equal(useQuizStore.getState().restoreDraft(), true)
       assert.equal(useQuizStore.getState().step, question, `organic reload of insert ${step}`)
     })
+  }
+})
+
+// --- the bootstrap fallback reaches context consumers, not only the store ----
+
+const DEFAULT_INFO_STRIP_BODY =
+  "10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte."
+const SCAN_INFO_STRIP_BODY = "10 schnelle Fragen zur Basis, dann prüft der Scanner deine Produkte."
+
+test("a server-rendered package reaches the consumer copy without any bootstrap", () => {
+  useQuizStore.getState().setFunnelPackageKey(null)
+
+  const html = renderToStaticMarkup(
+    <QuizFunnelPackageProvider funnelPackageKey="scan_v1">
+      <QuizInfoStrip onDismiss={() => {}} />
+    </QuizFunnelPackageProvider>,
+  )
+
+  assert.ok(html.includes(SCAN_INFO_STRIP_BODY), "SSR renders the server value")
+  assert.equal(useQuizStore.getState().funnelPackageKey, null, "and never touches the store")
+})
+
+test("the bootstrap fallback publishes the effective package to the context too", async () => {
+  // The regression: the bootstrap filled the store, but the context kept the null
+  // the server render carried — so the quiz inserts appeared with organic copy.
+  let releaseBootstrap = () => {}
+  const bootstrapped = new Promise<void>((resolve) => {
+    releaseBootstrap = resolve
+  })
+  const originalFetch = globalThis.fetch
+  const storage = new MemoryStorage()
+  Object.defineProperty(globalThis, "window", {
+    value: { localStorage: storage },
+    configurable: true,
+  })
+  globalThis.fetch = (async () => {
+    await bootstrapped
+    return {
+      ok: true,
+      json: async () => ({
+        funnelSessionId: "20000000-0000-4000-8000-000000000002",
+        funnelPackageKey: "scan_v1",
+      }),
+    }
+  }) as never
+
+  try {
+    useQuizStore.getState().setFunnelPackageKey(null)
+    const mounted = mountComponent(() =>
+      QuizFunnelPackageProvider({
+        funnelPackageKey: null,
+        children: <QuizInfoStrip onDismiss={() => {}} />,
+      }),
+    )
+
+    const beforeBootstrap = renderToStaticMarkup(mounted.tree)
+    assert.ok(beforeBootstrap.includes(DEFAULT_INFO_STRIP_BODY), "first paint is hydration-safe")
+
+    releaseBootstrap()
+    await flushAsync()
+
+    const afterBootstrap = renderToStaticMarkup(mounted.tree)
+    assert.ok(afterBootstrap.includes(SCAN_INFO_STRIP_BODY), "context switched with the store")
+    assert.equal(useQuizStore.getState().funnelPackageKey, "scan_v1")
+    mounted.unmount()
+  } finally {
+    globalThis.fetch = originalFetch
+    Reflect.deleteProperty(globalThis, "window")
+    useQuizStore.getState().setFunnelPackageKey(null)
   }
 })
