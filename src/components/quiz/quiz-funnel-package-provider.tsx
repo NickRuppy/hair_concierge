@@ -1,9 +1,26 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { createContext, useContext, useEffect, useRef } from "react"
 
 import { bootstrapFunnelContext } from "@/lib/funnel/client"
 import { useQuizStore } from "@/lib/quiz/store"
+
+// `null` (organic) is the correct default for a component rendered outside the
+// provider, e.g. in isolation in a test.
+const QuizFunnelPackageKeyContext = createContext<string | null>(null)
+
+/**
+ * The funnel package key for copy that must render identically on the server
+ * and the client's first paint (e.g. the quiz's first-question info strip).
+ *
+ * Unlike `useQuizStore().funnelPackageKey`, this value comes straight from the
+ * provider's `funnelPackageKey` prop — the same value the server used to
+ * render — so it is available during SSR and cannot mismatch the client's
+ * first render the way a store read (store starts empty on the client) would.
+ */
+export function useQuizFunnelPackageKey(): string | null {
+  return useContext(QuizFunnelPackageKeyContext)
+}
 
 /**
  * Delivers the server-resolved funnel package key into the quiz store before the
@@ -12,7 +29,8 @@ import { useQuizStore } from "@/lib/quiz/store"
  * The quiz store is a module singleton. On the server that singleton is shared
  * by every request, so a server render must not touch it; the browser applies
  * the key during this provider's own render, which React runs before any child
- * reads the store.
+ * reads the store. The same key is also exposed via React context (see
+ * `useQuizFunnelPackageKey`) for copy that needs to be SSR-safe.
  */
 export function QuizFunnelPackageProvider({
   funnelPackageKey,
@@ -55,5 +73,9 @@ export function QuizFunnelPackageProvider({
     }
   }, [funnelPackageKey])
 
-  return <>{children}</>
+  return (
+    <QuizFunnelPackageKeyContext.Provider value={funnelPackageKey}>
+      {children}
+    </QuizFunnelPackageKeyContext.Provider>
+  )
 }
