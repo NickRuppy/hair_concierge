@@ -204,6 +204,23 @@ jobs:
     timeout-minutes: 10
     needs: [detect-ci-scope]
     if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    # tests/scan-funnel-journey.spec.ts drives the scan_v1 package end to end, so
+    # this lane needs the scan route gate, funnel attribution and a signing secret
+    # in the dev server it boots, plus the spec's own live-run opt-in. Job level so
+    # both the Playwright process and that server inherit them; no other lane is
+    # affected.
+    env:
+      SCAN_FUNNEL_ENABLED: "true"
+      FUNNEL_ATTRIBUTION_ENABLED: "true"
+      FUNNEL_COOKIE_SIGNING_SECRET: "ci-scan-funnel-secret"
+      PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE: "1"
+      # scan_v1 runs the LEGACY quiz, so its buyer's lead is a legacy lead. Without
+      # the production legacy-quiz cutover release configuration,
+      # `findPersonalPlanEnrollmentForUser` refuses every legacy lead and
+      # /plan-bereit can never report ready — the scanner hand-over would be
+      # untestable. These two mirror the production release state for this lane only.
+      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true"
+      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: "2020-01-01T00:00:00Z"
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6

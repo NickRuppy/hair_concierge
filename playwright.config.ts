@@ -41,6 +41,7 @@ export default defineConfig({
         "offer-payment-overlay.spec.ts",
         "personal-plan-stage3-focus.spec.ts",
         "personal-plan-preparation-browser.spec.ts",
+        "scan-funnel-journey.spec.ts",
       ],
       use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
