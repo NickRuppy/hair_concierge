@@ -527,6 +527,7 @@ async function loadPlanBereitLinkCandidate(
 export async function loadPlanBereitInitialReadiness(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitInitialReadiness> {
   const candidate = await loadPlanBereitLinkCandidate(supabase, input)
   if (candidate.status !== "linkable") {
@@ -546,6 +547,30 @@ export async function loadPlanBereitInitialReadiness(
         profileMatchesProjected(profile, candidate.projectedProfile)
 
   if (alreadyProjected) {
+    // `ready` is the CTA gate. For a `scan_v1` buyer it must additionally mean "the
+    // initial need snapshot exists", so provisioning runs here — the single place
+    // every `ready` outcome passes through (first page render, status GET, and the
+    // tail of the link POST). A failure reports `transient_error`, whose retry is a
+    // plain GET and therefore re-enters exactly this branch.
+    const provisioning = await ensureScanBuyerProvisioned(
+      supabase,
+      {
+        userId: input.userId,
+        leadId: candidate.lead.id,
+        quizSourceKind: candidate.lead.quiz_kind,
+      },
+      deps,
+    )
+    if (provisioning.status === "failed") {
+      return {
+        status: "transient_error",
+        leadId: candidate.lead.id,
+        quizSourceKind: candidate.lead.quiz_kind,
+        sourceVersion: candidate.lead.updated_at ?? null,
+        missingFacts: [],
+        initialAction: "none",
+      }
+    }
     return {
       status: "ready",
       leadId: candidate.lead.id,
@@ -569,8 +594,9 @@ export async function loadPlanBereitInitialReadiness(
 export async function loadPlanBereitReadiness(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
-  return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input))
+  return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input, deps))
 }
 
 async function persistProfileOutput(
@@ -592,14 +618,14 @@ async function persistProfileOutput(
  * readiness tests can drive the `scan_v1` branch without a funnel session or a
  * Stage-1 stack.
  */
-export type PlanBereitLinkDependencies = {
+export type PlanBereitProvisioningDependencies = {
   /** Package identity of a lead — always server-owned (`funnel_sessions`), never client input. */
   resolveFunnelPackageKey: (leadId: string) => Promise<string | null>
   /** The exact provisioning `/plan-start` performs on render; idempotent (reuses an existing plan). */
   provisionStage1Plan: (supabase: SupabaseClient, userId: string) => Promise<{ status: string }>
 }
 
-const planBereitLinkDefaults: PlanBereitLinkDependencies = {
+const planBereitProvisioningDefaults: PlanBereitProvisioningDependencies = {
   resolveFunnelPackageKey: async (leadId) =>
     (await resolveFunnelContextForLead(leadId))?.packageKey ?? null,
   provisionStage1Plan: (supabase, userId) =>
@@ -611,7 +637,7 @@ const planBereitLinkDefaults: PlanBereitLinkDependencies = {
 export async function linkExactPlanBereitSourceToProfile(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
-  deps: PlanBereitLinkDependencies = planBereitLinkDefaults,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
   const candidate = await loadPlanBereitLinkCandidate(supabase, input)
   if (candidate.status !== "linkable") return candidate
@@ -626,8 +652,20 @@ export async function linkExactPlanBereitSourceToProfile(
         .eq("id", lead.id)
       if (linked.error) throw new Error(`leads.user_id update failed: ${linked.error.message}`)
     }
-    await provisionScannerPlanForScanFunnel(supabase, input.userId, lead.id, deps)
-    return loadPlanBereitReadiness(supabase, input)
+    const provisioning = await ensureScanBuyerProvisioned(
+      supabase,
+      { userId: input.userId, leadId: lead.id, quizSourceKind: "legacy" },
+      deps,
+    )
+    if (provisioning.status === "failed") {
+      return {
+        status: "transient_error",
+        leadId: lead.id,
+        quizSourceKind: "legacy",
+        sourceVersion: lead.updated_at ?? null,
+      }
+    }
+    return loadPlanBereitReadiness(supabase, input, deps)
   }
 
   const artifactLink = await supabase.rpc("link_personal_plan_artifact_to_user", {
@@ -646,31 +684,41 @@ export async function linkExactPlanBereitSourceToProfile(
     )
   }
 
-  return loadPlanBereitReadiness(supabase, input)
+  return loadPlanBereitReadiness(supabase, input, deps)
 }
 
+export type ScanBuyerProvisioningResult =
+  | { status: "not_applicable" }
+  | { status: "provisioned" }
+  | { status: "failed"; reason: string }
+
 /**
- * A `scan_v1` buyer lands on `/scan`, not `/plan-start` — so the initial need
- * snapshot `/plan-start` used to create on render has to exist by the end of this
- * poll, otherwise the scanner opens with no profile (`profile_missing`). This runs
- * AFTER the `leads.user_id` link above on purpose: Stage 1 resolves the entitlement
- * through the enrollment, which needs exactly that link.
+ * A `scan_v1` buyer lands on `/scan`, not `/plan-start` — so the initial need snapshot
+ * `/plan-start` used to create on render has to exist before the buyer ever sees the
+ * ready CTA, otherwise the scanner opens with no profile (`profile_missing`).
  *
- * Anything short of a created/reused plan is thrown, so it surfaces through the poll's
- * existing `transient_error` retry instead of forwarding the buyer to an empty camera.
- * Other funnel packages keep the pre-existing behaviour untouched.
+ * Idempotent: it is the same `loadOrCreate` `/plan-start` performs on render and reuses
+ * an existing plan. Callers therefore run it on every path that can report `ready`.
+ * It must run AFTER the `leads.user_id` link: Stage 1 resolves the entitlement through
+ * the enrollment, which needs exactly that link.
+ *
+ * A failure is reported, never swallowed — the callers turn it into `transient_error`
+ * so the buyer sees a retry instead of an empty camera. Other funnel packages and
+ * `personal_plan` sources keep the pre-existing behaviour untouched (no lookup, no write).
  */
-async function provisionScannerPlanForScanFunnel(
+export async function ensureScanBuyerProvisioned(
   supabase: SupabaseClient,
-  userId: string,
-  leadId: string,
-  deps: PlanBereitLinkDependencies,
-) {
-  if ((await deps.resolveFunnelPackageKey(leadId)) !== SCAN_FUNNEL_PACKAGE_KEY) return
-  const provisioned = await deps.provisionStage1Plan(supabase, userId)
-  if (provisioned.status !== "completed") {
-    throw new Error(`scanner plan provisioning failed: ${provisioned.status}`)
+  input: { userId: string; leadId: string; quizSourceKind: PlanBereitQuizSourceKind },
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
+): Promise<ScanBuyerProvisioningResult> {
+  if (input.quizSourceKind !== "legacy") return { status: "not_applicable" }
+  if ((await deps.resolveFunnelPackageKey(input.leadId)) !== SCAN_FUNNEL_PACKAGE_KEY) {
+    return { status: "not_applicable" }
   }
+  const provisioned = await deps.provisionStage1Plan(supabase, input.userId)
+  return provisioned.status === "completed"
+    ? { status: "provisioned" }
+    : { status: "failed", reason: provisioned.status }
 }
 
 export async function updateMissingPlanBereitSourceFact(
