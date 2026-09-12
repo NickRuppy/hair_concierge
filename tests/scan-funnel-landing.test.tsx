@@ -67,11 +67,27 @@ test("the scan landing shows insert 16's example card and sends every CTA to the
   assert.match(html, /Passt nicht zu deinem Haar/)
   assert.match(html, /Haardicke: dick statt fein/)
 
-  // Header CTA plus the primary CTA, both to /quiz, with the fine print once.
-  assert.equal((html.match(/href="\/quiz"/g) ?? []).length, 2)
-  assert.equal((html.match(/Haarprofil erstellen/g) ?? []).length, 2)
+  // Header, mid-page, and bottom CTA all point to /quiz.
+  const quizLinkCount = (html.match(/href="\/quiz"/g) ?? []).length
+  assert.ok(quizLinkCount >= 3, `expected at least 3 links to /quiz, saw ${quizLinkCount}`)
+  const ctaLabelCount = (html.match(/Haarprofil erstellen/g) ?? []).length
+  assert.ok(
+    ctaLabelCount >= 3,
+    `expected the CTA label at least 3 times (header, mid-page, bottom), saw ${ctaLabelCount}`,
+  )
   assert.match(html, /10 Fragen · 2 Minuten · danach ist dein Scanner startklar/)
   assert.match(html, /Impressum/)
+})
+
+test("the scan landing shows Anmelden at every breakpoint, not just from sm up", () => {
+  const html = renderScanRegal()
+  assert.match(html, />Anmelden</)
+
+  const anmeldenLink = landingSource.match(
+    /href="\/auth\?next=\/chat"[\s\S]*?className="([^"]*)"[\s\S]*?Anmelden/,
+  )
+  assert.ok(anmeldenLink, "Anmelden link markup not found in source")
+  assert.doesNotMatch(anmeldenLink[1], /\bhidden\b/)
 })
 
 test("the scan landing variant mounts no tracking of its own", () => {

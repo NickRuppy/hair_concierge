@@ -54,14 +54,14 @@ export default function FunnelScanRegalLandingVariant() {
               <Link
                 href="/auth?next=/chat"
                 prefetch={false}
-                className="hidden min-h-11 items-center rounded-md px-1 text-[13px] font-semibold text-[var(--brand-plum)] underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 sm:inline-flex"
+                className="inline-flex min-h-11 items-center rounded-md px-0.5 text-[13px] font-semibold text-[var(--brand-plum)] underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 sm:px-1"
               >
                 Anmelden
               </Link>
               <Link
                 href="/quiz"
                 prefetch={false}
-                className="inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-3.5 text-[13px] font-bold text-white transition-colors hover:bg-[var(--brand-plum-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+                className="inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-[var(--brand-plum)] px-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[var(--brand-plum-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 sm:px-3.5"
               >
                 {CTA_LABEL}
               </Link>
@@ -108,6 +108,24 @@ export default function FunnelScanRegalLandingVariant() {
               Häufigste Antwort · eigene Umfrage, 4.024 Frauen
             </figcaption>
           </figure>
+
+          {/*
+            Mid-page CTA — same markup/style as the bottom CTA, placed right after
+            the quote on mobile and, on lg, dropped into row 3 of the text column
+            so it does not disturb the two-row hero grid or duplicate the photo.
+          */}
+          <div className="mx-auto flex w-full max-w-[440px] flex-col items-center lg:col-start-1 lg:row-start-3">
+            <Link
+              href="/quiz"
+              prefetch={false}
+              className="flex min-h-[56px] w-full items-center justify-center rounded-full bg-[var(--brand-coral)] px-[22px] text-center text-base font-bold text-white transition-colors hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral-dark)] focus-visible:ring-offset-2"
+            >
+              {CTA_LABEL}
+            </Link>
+            <p className="mt-2 text-center text-[11.5px] text-[var(--text-caption)]">
+              {CTA_FINE_PRINT}
+            </p>
+          </div>
         </section>
 
         {/* The three steps are a real sequence, so they carry numbers. */}
