@@ -9,7 +9,7 @@ import {
   isPersonalPlanResultReturnEnabled,
   isScanFunnelEnabled,
 } from "@/lib/funnel/flags"
-import { getFunnelPackageBySlug } from "@/lib/funnel/packages"
+import { getFunnelPackageBySlug, type FunnelPackage } from "@/lib/funnel/packages"
 import {
   PERSONAL_PLAN_QUIZ_DRAFT_COOKIE,
   PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY,
@@ -55,7 +55,7 @@ export default async function CampaignLandingPage({
   if (funnelPackage.key === "meta_personal_plan_v1" && !isPersonalPlanQuizV1Enabled()) {
     notFound()
   }
-  if (funnelPackage.key === "scan_v1" && !isScanFunnelEnabled()) {
+  if (shouldBlockPlaceholderScanRoute(funnelPackage, isScanFunnelEnabled())) {
     notFound()
   }
 
@@ -193,4 +193,19 @@ export function buildRetiredRoutineRedirect(
 
 function getSingleSearchParam(value: string | string[] | undefined) {
   return typeof value === "string" && value.length > 0 ? value : null
+}
+
+/**
+ * `scan_v1` route gate, mirroring `isAttributableFunnelPackage`'s scan branch in
+ * `src/proxy.ts`: once the package status is `active`, the route renders
+ * regardless of `SCAN_FUNNEL_ENABLED`. While it stays `placeholder`, the flag
+ * is still required (today's behaviour, same pattern as `meta_personal_plan_v1`).
+ */
+export function shouldBlockPlaceholderScanRoute(
+  funnelPackage: Pick<FunnelPackage, "key" | "status">,
+  scanFunnelEnabled: boolean,
+) {
+  return (
+    funnelPackage.key === "scan_v1" && funnelPackage.status === "placeholder" && !scanFunnelEnabled
+  )
 }

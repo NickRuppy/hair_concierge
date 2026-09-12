@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 
-import { buildRetiredRoutineRedirect } from "../src/app/lp/[slug]/page"
+import {
+  buildRetiredRoutineRedirect,
+  shouldBlockPlaceholderScanRoute,
+} from "../src/app/lp/[slug]/page"
 import {
   isAttributableFunnelPackage,
   resolveAttributablePackageForPath,
@@ -34,7 +37,7 @@ test("the retired scalp route is rejected and routine redirects before attributi
   assert.match(proxySource, /NextResponse\.redirect\(url, 307\)/)
 })
 
-test("the scan_v1 landing route 404s without its flag, mirroring the personal-plan gate", () => {
+test("the placeholder scan_v1 landing route 404s without its flag, mirroring the personal-plan gate", () => {
   const routeSource = readFileSync(
     new URL("../src/app/lp/[slug]/page.tsx", import.meta.url),
     "utf8",
@@ -45,8 +48,30 @@ test("the scan_v1 landing route 404s without its flag, mirroring the personal-pl
   )
   assert.match(
     routeSource,
-    /funnelPackage\.key === "scan_v1" && !isScanFunnelEnabled\(\)\) \{\s*\n\s*notFound\(\)/,
+    /shouldBlockPlaceholderScanRoute\(funnelPackage, isScanFunnelEnabled\(\)\)\) \{\s*\n\s*notFound\(\)/,
   )
+})
+
+test("the scan_v1 route gate is status-aware: active renders regardless of the flag, placeholder still needs it", () => {
+  const placeholderScanPackage = getFunnelPackageBySlug("scan")
+  assert.ok(placeholderScanPackage)
+  assert.equal(placeholderScanPackage.status, "placeholder")
+
+  // placeholder + flag off -> blocked (today's behaviour, unchanged)
+  assert.equal(shouldBlockPlaceholderScanRoute(placeholderScanPackage, false), true)
+  // placeholder + flag on -> not blocked
+  assert.equal(shouldBlockPlaceholderScanRoute(placeholderScanPackage, true), false)
+
+  const activeScanPackage: FunnelPackage = { ...placeholderScanPackage, status: "active" }
+  // active + flag off -> renders regardless of the flag
+  assert.equal(shouldBlockPlaceholderScanRoute(activeScanPackage, false), false)
+  assert.equal(shouldBlockPlaceholderScanRoute(activeScanPackage, true), false)
+
+  // meta_personal_plan_v1's own gate is untouched by this helper: it only ever
+  // targets scan_v1 and never blocks another package's route.
+  const personalPlanPackage = getFunnelPackageBySlug("haarplan")
+  assert.ok(personalPlanPackage)
+  assert.equal(shouldBlockPlaceholderScanRoute(personalPlanPackage, false), false)
 })
 
 test("archived landing routes cannot mint or preserve a live quiz journey", () => {
