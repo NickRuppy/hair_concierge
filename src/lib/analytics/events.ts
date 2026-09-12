@@ -564,6 +564,14 @@ export type AppEventMap = {
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
   }
+  /**
+   * Ein Funnel-Einschub im Quiz wurde gesehen. Einschübe sind keine Fragen und
+   * bleiben deshalb aus `quiz_step_viewed` heraus.
+   */
+  quiz_insert_viewed: {
+    insertId: "problem" | "solution" | "home"
+    funnelPackageKey: string
+  }
   quiz_started: FunnelAnalyticsEnvelope & {
     stepName: string
     stepNumber: number
