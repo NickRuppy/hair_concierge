@@ -69,6 +69,11 @@ function subscribeToWelcomeHint(listener: () => void) {
   }
 }
 
+/** Test seam: drops the cached session flag so each case starts from a clean store. */
+export function resetScanWelcomeHintForTests() {
+  welcomeHintDismissed = null
+}
+
 function dismissWelcomeHint() {
   welcomeHintDismissed = true
   try {
@@ -79,7 +84,7 @@ function dismissWelcomeHint() {
   for (const listener of welcomeHintListeners) listener()
 }
 
-function ScanWelcomeHint() {
+export function ScanWelcomeHint() {
   const dismissed = useSyncExternalStore(
     subscribeToWelcomeHint,
     readWelcomeHintDismissed,

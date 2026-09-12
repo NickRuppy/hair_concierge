@@ -7,7 +7,9 @@ import {
   getCheckoutFirstTimeDestinationOptionsFromAccount,
   getCheckoutFirstTimeDestination,
   resolvePersonalPlanCheckoutReadiness,
+  isCheckoutFirstTimeDestination,
   resolveCheckoutFirstTimeDestination,
+  type CheckoutFirstTimeDestinationOptions,
 } from "../src/lib/billing/checkout-success-redirect"
 
 const welcomeSource = readFileSync("src/app/welcome/page.tsx", "utf8")
@@ -65,12 +67,100 @@ test("a legacy-quiz buyer enters readiness only with server-provided future-purc
 test("activation-account eligibility ignores non-boolean values", () => {
   assert.deepEqual(
     getCheckoutFirstTimeDestinationOptionsFromAccount({ legacyQuizFuturePurchaseEligible: true }),
-    { legacyQuizFuturePurchaseEligible: true },
+    { legacyQuizFuturePurchaseEligible: true, funnelPackageKey: null },
   )
   assert.deepEqual(
     getCheckoutFirstTimeDestinationOptionsFromAccount({ legacyQuizFuturePurchaseEligible: "true" }),
-    { legacyQuizFuturePurchaseEligible: false },
+    { legacyQuizFuturePurchaseEligible: false, funnelPackageKey: null },
   )
+})
+
+test("activation-account options carry the server-resolved funnel package", () => {
+  assert.deepEqual(
+    getCheckoutFirstTimeDestinationOptionsFromAccount({
+      legacyQuizFuturePurchaseEligible: true,
+      funnelPackageKey: "scan_v1",
+    }),
+    { legacyQuizFuturePurchaseEligible: true, funnelPackageKey: "scan_v1" },
+  )
+  for (const value of [undefined, null, 42, { key: "scan_v1" }]) {
+    assert.deepEqual(
+      getCheckoutFirstTimeDestinationOptionsFromAccount({ funnelPackageKey: value }),
+      { legacyQuizFuturePurchaseEligible: false, funnelPackageKey: null },
+      `funnelPackageKey ${JSON.stringify(value)}`,
+    )
+  }
+})
+
+test("a scan_v1 buyer takes the same eligibility-gated provisioning step as any legacy buyer", () => {
+  // The scanner hand-over happens on /plan-bereit, not here: this package must not
+  // create a destination of its own, and must not bypass the cutover eligibility gate.
+  assert.equal(
+    getCheckoutFirstTimeDestination("legacy", "scan-lead", null, {
+      legacyQuizFuturePurchaseEligible: true,
+      funnelPackageKey: "scan_v1",
+    }),
+    "/plan-bereit?lead=scan-lead",
+  )
+  assert.equal(
+    getCheckoutFirstTimeDestination("legacy", "scan-lead", null, {
+      legacyQuizFuturePurchaseEligible: false,
+      funnelPackageKey: "scan_v1",
+    }),
+    "/onboarding",
+  )
+  assert.equal(
+    getCheckoutFirstTimeDestination("legacy", "scan-lead", null, { funnelPackageKey: "scan_v1" }),
+    "/onboarding",
+  )
+})
+
+test("the funnel package never changes a destination any other option already decided", () => {
+  const cases: Array<[string | null, string | null, CheckoutFirstTimeDestinationOptions]> = [
+    ["legacy", "lead-1", {}],
+    ["legacy", "lead-1", { legacyQuizFuturePurchaseEligible: true }],
+    ["legacy", null, { legacyQuizFuturePurchaseEligible: true }],
+    ["personal_plan", "lead-1", {}],
+    ["personal_plan", "lead-1", { personalPlanActivationReady: true }],
+    ["personal_plan", "lead-1", { personalPlanLegacy: true }],
+    ["unsupported", "lead-1", { legacyQuizFuturePurchaseEligible: true }],
+    [null, "lead-1", {}],
+  ]
+  for (const [quizKind, leadId, options] of cases) {
+    assert.equal(
+      getCheckoutFirstTimeDestination(quizKind, leadId, null, {
+        ...options,
+        funnelPackageKey: "scan_v1",
+      }),
+      getCheckoutFirstTimeDestination(quizKind, leadId, null, options),
+      `${quizKind} / ${leadId} / ${JSON.stringify(options)}`,
+    )
+  }
+})
+
+test("reactivation keeps precedence over the scan_v1 package", () => {
+  assert.equal(
+    getCheckoutFirstTimeDestination("legacy", "scan-lead", "membership_reactivation", {
+      legacyQuizFuturePurchaseEligible: true,
+      funnelPackageKey: "scan_v1",
+    }),
+    "/onboarding",
+  )
+  assert.equal(
+    getCheckoutFirstTimeDestination("personal_plan", "scan-lead", "membership_reactivation", {
+      personalPlanActivationReady: true,
+      funnelPackageKey: "scan_v1",
+    }),
+    "/onboarding",
+  )
+})
+
+test("the destination union stays closed — /scan is reached from plan-bereit, not from here", () => {
+  assert.equal(isCheckoutFirstTimeDestination("/scan?welcome=scan"), false)
+  assert.equal(isCheckoutFirstTimeDestination("/scan"), false)
+  assert.equal(isCheckoutFirstTimeDestination("/onboarding"), true)
+  assert.equal(isCheckoutFirstTimeDestination("/plan-start"), true)
+  assert.equal(isCheckoutFirstTimeDestination("/plan-bereit?lead=scan-lead"), true)
 })
 
 test("a proven eligible legacy purchase keeps readiness recovery when quiz-kind reload fails", async () => {

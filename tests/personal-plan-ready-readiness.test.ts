@@ -742,3 +742,168 @@ test("Personal Plan POST keeps the authoritative artifact owner race rejection",
   ])
   assert.equal(db.upserts.length, 0)
 })
+
+// --- scanner-first provisioning (scan_v1) -----------------------------------
+
+function scanFunnelDb() {
+  return new FakeSupabase({
+    leads: [
+      {
+        id: "lead-scan",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: COMPLETE_LEGACY_ANSWERS,
+        user_id: null,
+        updated_at: "2026-09-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [],
+  })
+}
+
+function scanLinkInput() {
+  return {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-scan",
+    expectedQuizSourceKind: "legacy" as const,
+  }
+}
+
+test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link poll", async () => {
+  const db = scanFunnelDb()
+  const packageLookups: string[] = []
+  const provisioned: string[] = []
+
+  await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
+    resolveFunnelPackageKey: async (leadId) => {
+      packageLookups.push(leadId)
+      return "scan_v1"
+    },
+    provisionStage1Plan: async (_supabase, userId) => {
+      provisioned.push(userId)
+      return { status: "completed" }
+    },
+  })
+
+  assert.deepEqual(packageLookups, ["lead-scan"])
+  assert.deepEqual(provisioned, ["user-1"])
+  // Stage 1 resolves the entitlement through the enrollment, which needs the lead link
+  // to exist first — so the link update must already have happened by then.
+  assert.deepEqual(
+    db.updates.map((update) => [update.table, update.values]),
+    [["leads", { user_id: "user-1", status: "linked" }]],
+  )
+})
+
+test("scanner provisioning repeats safely once the lead is already linked", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  const provisioned: string[] = []
+
+  await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
+    resolveFunnelPackageKey: async () => "scan_v1",
+    provisionStage1Plan: async (_supabase, userId) => {
+      provisioned.push(userId)
+      return { status: "completed" }
+    },
+  })
+
+  // Every poll pass re-runs the idempotent loadOrCreate (it reuses an existing plan),
+  // while the lead link itself is only written while it is still missing.
+  assert.deepEqual(provisioned, ["user-1"])
+  assert.equal(db.updates.length, 0)
+})
+
+test("organic legacy buyers keep the pre-scanner link behaviour", async () => {
+  for (const packageKey of [null, "organic", "personal_plan_v1"]) {
+    const db = scanFunnelDb()
+    let provisionCalls = 0
+
+    await linkExactPlanBereitSourceToProfile(db as never, scanLinkInput(), {
+      resolveFunnelPackageKey: async () => packageKey,
+      provisionStage1Plan: async () => {
+        provisionCalls += 1
+        return { status: "completed" }
+      },
+    })
+
+    assert.equal(provisionCalls, 0, `package ${packageKey}`)
+    assert.equal(db.upserts.length, 1, `package ${packageKey} still projects the profile`)
+    assert.equal(db.updates.length, 1, `package ${packageKey} still links the lead`)
+  }
+})
+
+test("a personal-plan lead never triggers scanner provisioning", async () => {
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          user_id: null,
+          updated_at: "2026-09-12T08:00:00.000Z",
+        },
+      ],
+      personal_plan_prepared_artifacts: [
+        { id: "artifact-1", lead_id: "lead-pp", user_id: null, status: "attached" },
+      ],
+    },
+    {
+      link_personal_plan_artifact_to_user: { data: null, error: null },
+    },
+  )
+  let provisionCalls = 0
+  let packageLookups = 0
+
+  await linkExactPlanBereitSourceToProfile(
+    db as never,
+    {
+      userId: "user-1",
+      email: "lea@example.test",
+      leadId: "lead-pp",
+      expectedQuizSourceKind: "personal_plan",
+    },
+    {
+      resolveFunnelPackageKey: async () => {
+        packageLookups += 1
+        return "scan_v1"
+      },
+      provisionStage1Plan: async () => {
+        provisionCalls += 1
+        return { status: "completed" }
+      },
+    },
+  )
+
+  assert.equal(packageLookups, 0)
+  assert.equal(provisionCalls, 0)
+})
+
+test("failed scanner provisioning surfaces instead of forwarding to an empty camera", async () => {
+  for (const status of ["temporarily_unavailable", "activation_pending", "invalid_source"]) {
+    await assert.rejects(
+      () =>
+        linkExactPlanBereitSourceToProfile(scanFunnelDb() as never, scanLinkInput(), {
+          resolveFunnelPackageKey: async () => "scan_v1",
+          provisionStage1Plan: async () => ({ status }),
+        }),
+      new RegExp(`scanner plan provisioning failed: ${status}`),
+      status,
+    )
+  }
+})
+
+test("a failing package lookup surfaces through the poll rather than silently skipping", async () => {
+  await assert.rejects(
+    () =>
+      linkExactPlanBereitSourceToProfile(scanFunnelDb() as never, scanLinkInput(), {
+        resolveFunnelPackageKey: async () => {
+          throw new Error("funnel_sessions unavailable")
+        },
+        provisionStage1Plan: async () => ({ status: "completed" }),
+      }),
+    /funnel_sessions unavailable/,
+  )
+})
