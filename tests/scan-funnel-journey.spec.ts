@@ -132,11 +132,10 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
         stripe_customer_id: `cus_scan_${userId}`,
         subscription_status: "active",
         current_period_end: currentPeriodEnd,
-        // Same QA convention as the repo's dev login (src/lib/dev/local-login.ts):
-        // a seeded test account is provisioned past legacy onboarding. Without it
-        // the proxy's intake gate bounces /scan to /onboarding for a plain
-        // subscription buyer (see the report's concern about that gate).
-        onboarding_completed: true,
+        // Deliberately NOT `onboarding_completed: true`: a real scan_v1 buyer
+        // never passes legacy onboarding, so the seed must not paper over the
+        // intake gate. Reaching /scan below is what proves the gate lets a
+        // plain subscription buyer through.
       },
       { onConflict: "id" },
     )
@@ -446,6 +445,17 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
     })
 
     await test.step("The scanner greets the buyer once", async () => {
+      // Premise of the next assertion: this buyer never passed legacy
+      // onboarding, so reaching /scan proves the intake gate lets a plain
+      // subscription buyer through instead of bouncing them to /onboarding.
+      const { data: profileRow, error: profileReadError } = await admin!
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", userId!)
+        .maybeSingle()
+      if (profileReadError) throw profileReadError
+      expect(profileRow?.onboarding_completed ?? false).toBe(false)
+
       await page.getByRole("link", { name: "Scanner öffnen" }).click()
       await page.waitForURL(
         (url) => url.pathname === "/scan" && url.searchParams.get("welcome") === "scan",
