@@ -831,3 +831,71 @@ test("synthetic guest access does not depend on the unrelated moderator membersh
   )
   assert.equal(response.status, 200)
 })
+
+test("flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    // The scan_v1 funnel buyer: current app access from the subscription, no
+    // one-time purchase, no guest marker, no moderator grant — i.e. no
+    // Personal-Plan routine entitlement — and legacy onboarding unfinished.
+    const observedTables: string[] = []
+    const response = await createMiddleware({
+      currentAccess: true,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+      observedTables,
+    })(new NextRequest("https://chaarlie.de/scan?welcome=scan"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+    // The /scan paid-access bypass never reads routine pointers.
+    assert.ok(!observedTables.includes("personal_plans"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    for (const pathname of ["/chat", "/anwendung"]) {
+      const response = await createMiddleware({
+        currentAccess: true,
+        userAppMetadata: {},
+        oneTimeAccessState: "none",
+        moderatorAccess: "none",
+      })(new NextRequest(`https://chaarlie.de${pathname}`))
+
+      assert.equal(response.status, 307)
+      assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+    }
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: a user without any paid access is still bounced off /scan by the paywall", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/scan"))
+
+    // No paid access at all: the subscription paywall owns this request and
+    // sends the user to /reactivate, never into the scan shell.
+    assert.equal(response.status, 307)
+    assert.ok(response.headers.get("location")?.startsWith("https://chaarlie.de/reactivate"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})

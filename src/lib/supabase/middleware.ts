@@ -701,33 +701,49 @@ export function createUpdateSession(
       let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
       if (
         intakeState === "needs_onboarding" &&
-        hasActivePersonalPlanEntitlement &&
+        (hasActivePersonalPlanEntitlement || hasPaidAppAccessResult) &&
         isPersonalPlanOnboardingBypassRoute(pathname)
       ) {
-        try {
-          const { data: plan, error } = await supabase
-            .from("personal_plans")
-            .select("pending_routine_proposal_id,active_routine_version_id")
-            .eq("user_id", user.id)
-            .maybeSingle()
-
-          if (error) {
-            console.warn("[personal-plan] routine access check failed", error)
-          } else {
-            personalPlanRoutineAccess = {
-              hasActivePersonalPlanEntitlement,
-              pendingRoutineProposalId:
-                typeof plan?.pending_routine_proposal_id === "string"
-                  ? plan.pending_routine_proposal_id
-                  : null,
-              activeRoutineVersionId:
-                typeof plan?.active_routine_version_id === "string"
-                  ? plan.active_routine_version_id
-                  : null,
-            }
+        if (!hasActivePersonalPlanEntitlement) {
+          // Scanner funnel (`scan_v1`): a plain subscription buyer holds no
+          // Personal-Plan routine entitlement, but paid app access alone opens
+          // `/scan` (see canBypassLegacyOnboardingForPersonalPlanRoutine). That
+          // rule never reads the routine pointers, so skip the extra query —
+          // and the entitlement-gated /routine, /anwendung and /chat rules keep
+          // resolving exactly as before against the null pointers.
+          personalPlanRoutineAccess = {
+            hasActivePersonalPlanEntitlement: false,
+            hasPaidAppAccess: true,
+            pendingRoutineProposalId: null,
+            activeRoutineVersionId: null,
           }
-        } catch (error) {
-          console.warn("[personal-plan] routine access check failed", error)
+        } else {
+          try {
+            const { data: plan, error } = await supabase
+              .from("personal_plans")
+              .select("pending_routine_proposal_id,active_routine_version_id")
+              .eq("user_id", user.id)
+              .maybeSingle()
+
+            if (error) {
+              console.warn("[personal-plan] routine access check failed", error)
+            } else {
+              personalPlanRoutineAccess = {
+                hasActivePersonalPlanEntitlement,
+                hasPaidAppAccess: hasPaidAppAccessResult,
+                pendingRoutineProposalId:
+                  typeof plan?.pending_routine_proposal_id === "string"
+                    ? plan.pending_routine_proposal_id
+                    : null,
+                activeRoutineVersionId:
+                  typeof plan?.active_routine_version_id === "string"
+                    ? plan.active_routine_version_id
+                    : null,
+              }
+            }
+          } catch (error) {
+            console.warn("[personal-plan] routine access check failed", error)
+          }
         }
       }
       const rawRedirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
