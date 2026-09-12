@@ -225,6 +225,7 @@ export default async function OfferPageLab({
     return (
       <ScanRegalOfferVariant
         entryContext="quiz_completion"
+        isInternalTest
         leadId={null}
         name="Lea"
         narrative={narrative}

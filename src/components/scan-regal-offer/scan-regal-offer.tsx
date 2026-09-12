@@ -228,7 +228,10 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
   const isRegularFieldTest = Boolean(regularFieldTest)
   const isPartnerAccess = Boolean(partnerAccess)
   const isNonCommercialOffer = isRegularFieldTest || isPartnerAccess
-  if (isNonCommercialOffer) return <OrganicPlanOffer {...props} />
+  // The organic offer's own section order (`ORGANIC_PLAN_SECTION_ORDER`) is keyed off
+  // `offerVariant`, so the scanner's `scan-regal-v1` must not leak into it here — it
+  // would otherwise resolve engagement tracking against the scanner's section order.
+  if (isNonCommercialOffer) return <OrganicPlanOffer {...props} offerVariant="organic-plan-v1" />
 
   const criteria = getScanCriteria(quizAnswers)
 
@@ -368,7 +371,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           <div className="mx-auto max-w-4xl">
             <SectionEyebrow>Was du bekommst</SectionEyebrow>
             <SectionHeading>Scanner, Plan und Chat – in einer App.</SectionHeading>
-            <SectionSub>Alles im Chaarlie-Abo. Echte Screenshots.</SectionSub>
+            <SectionSub>Alles im Chaarlie-Abo.</SectionSub>
             <ul className="-mx-5 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2">
               {productTour.map((card) => (
                 <li
@@ -409,9 +412,6 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           <SectionEyebrow>Freischalten</SectionEyebrow>
           <SectionHeading>Scanner und Plan freischalten.</SectionHeading>
           <div className="mt-6">{pricingSlot}</div>
-          <p className="mt-3 text-center text-[11px] text-[var(--text-caption)]">
-            14 Tage Geld-zurück-Garantie · Details in den Bedingungen
-          </p>
         </section>
 
         <section

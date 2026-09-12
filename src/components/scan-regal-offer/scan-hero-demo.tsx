@@ -42,9 +42,10 @@ export function ScanHeroDemoView({
     >
       <Image
         alt=""
-        className="object-cover object-top"
+        className="object-cover"
         sizes="(max-width: 640px) 100vw, 26rem"
-        src="/images/funnels/scan/tour-scanner.png"
+        src="/images/funnels/scan/hero-camera.png"
+        style={{ objectPosition: "50% 3%" }}
         fill
       />
       {/* Top-right: the centred barcode pill and the frame's own hint keep the middle. */}
