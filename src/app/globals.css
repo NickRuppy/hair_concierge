@@ -997,17 +997,22 @@
   }
 }
 
+/*
+ * Scale only. Tailwind v4 centres the pill with the standalone `translate`
+ * property, which composes with `transform` — a translate here would shift it
+ * by half its width twice.
+ */
 @keyframes scanHeroDemoPop {
   0% {
     opacity: 0;
-    transform: translateX(-50%) scale(0.6);
+    transform: scale(0.6);
   }
   70% {
     opacity: 1;
-    transform: translateX(-50%) scale(1.06);
+    transform: scale(1.06);
   }
   100% {
-    transform: translateX(-50%) scale(1);
+    transform: scale(1);
   }
 }
 
