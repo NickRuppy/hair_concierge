@@ -196,18 +196,35 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
     // spec's whole point is not touching production Supabase outside its own live gate.
     if (!runScanFunnelJourney || !admin) return
 
-    function report(step: string, error: { message: string } | null) {
-      // Teardown must never mask a green run, but a silent failure would leave
-      // rows in the shared project — so every failure is at least visible.
-      if (error) console.warn(`[scan-funnel-journey] cleanup failed: ${step}: ${error.message}`)
+    // Every step is attempted even after an earlier one failed — a leaked row in the
+    // shared project is worse than an early exit — and the failures are collected and
+    // thrown at the end, so a leak fails the run instead of hiding in the log.
+    const failures: string[] = []
+
+    async function attempt(
+      step: string,
+      run: () => PromiseLike<{ error: { message: string } | null }>,
+    ) {
+      try {
+        const { error } = await run()
+        if (!error) return
+        console.warn(`[scan-funnel-journey] cleanup failed: ${step}: ${error.message}`)
+        failures.push(`${step}: ${error.message}`)
+      } catch (thrown) {
+        const message = thrown instanceof Error ? thrown.message : String(thrown)
+        console.warn(`[scan-funnel-journey] cleanup threw: ${step}: ${message}`)
+        failures.push(`${step}: ${message}`)
+      }
     }
 
     if (userId) {
       // Provisioning writes immutable `personal_plan_*` version rows that also
       // hold an FK on the lead; plain DELETEs are rejected by the immutability
       // trigger. This is the erasure RPC the repo's own account reset uses.
-      const { error } = await admin.rpc("personal_plan_erase_owner_data", { p_user_id: userId })
-      report("personal_plan_erase_owner_data", error)
+      const ownerId = userId
+      await attempt("personal_plan_erase_owner_data", () =>
+        admin.rpc("personal_plan_erase_owner_data", { p_user_id: ownerId }),
+      )
     }
 
     // funnel_sessions.lead_id is ON DELETE SET NULL, so the sessions have to go
@@ -216,23 +233,36 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
     // braces — every session the lead ended up attached to, in case the funnel created
     // one this spec never read back (e.g. a session rotation the journey didn't poll for).
     for (const sessionId of funnelSessionIds) {
-      const { error } = await admin.from("funnel_sessions").delete().eq("id", sessionId)
-      report("funnel_sessions", error)
+      await attempt(`funnel_sessions (${sessionId})`, () =>
+        admin.from("funnel_sessions").delete().eq("id", sessionId),
+      )
     }
     if (leadId) {
-      const { error } = await admin.from("funnel_sessions").delete().eq("lead_id", leadId)
-      report("funnel_sessions (by lead_id)", error)
+      await attempt("funnel_sessions (by lead_id)", () =>
+        admin.from("funnel_sessions").delete().eq("lead_id", leadId),
+      )
     }
-    report("leads", (await admin.from("leads").delete().eq("email", email)).error)
+    await attempt("leads", () => admin.from("leads").delete().eq("email", email))
 
-    if (!userId) return
-
-    for (const table of ["user_product_usage", "billing_subscriptions", "hair_profiles"]) {
-      report(table, (await admin.from(table).delete().eq("user_id", userId)).error)
+    if (userId) {
+      const ownerId = userId
+      for (const table of ["user_product_usage", "billing_subscriptions", "hair_profiles"]) {
+        await attempt(table, () => admin.from(table).delete().eq("user_id", ownerId))
+      }
+      await attempt("profiles", () => admin.from("profiles").delete().eq("id", ownerId))
+      await attempt("auth user", () => admin.auth.admin.deleteUser(ownerId))
     }
-    report("profiles", (await admin.from("profiles").delete().eq("id", userId)).error)
-    const { error: userError } = await admin.auth.admin.deleteUser(userId)
-    report("auth user", userError)
+
+    if (failures.length > 0) {
+      throw new Error(
+        [
+          `scan_v1 journey cleanup left rows in ${supabaseUrl}.`,
+          `Fixtures: email=${email}, leadId=${leadId ?? "n/a"}, userId=${userId ?? "n/a"}, ` +
+            `funnelSessionIds=${[...funnelSessionIds].join(",") || "none"}.`,
+          `Failed operations: ${failures.join(" | ")}`,
+        ].join("\n"),
+      )
+    }
   })
 
   test("scan_v1 carries a visitor from /lp/scan to a real scan verdict", async ({ page }) => {
