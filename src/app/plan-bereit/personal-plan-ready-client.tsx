@@ -25,6 +25,7 @@ import {
   readPlanOpeningStart,
   remainingPlanOpeningDelayMs,
 } from "./opening-beat"
+import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
 import { PlanBereitArrival } from "./plan-ready-arrival"
 import type {
   PlanBereitInitialAction,
@@ -59,17 +60,30 @@ function toClientReadiness(
   }
 }
 
+/**
+ * Where a `scan_v1` buyer goes instead of `/plan-start`: the scanner they bought,
+ * with the one-time arrival hint (`/scan` reads the query, then forgets it).
+ */
+export const SCAN_ARRIVAL_HREF = "/scan?welcome=scan"
+
 export function PersonalPlanReadyClient({
   leadId,
   initialStatus = "checking",
   initialReadiness,
   nextHref = "/plan-start",
+  funnelPackageKey = null,
 }: {
   leadId: string | null
   initialStatus?: PersonalPlanReadinessPhase
   initialReadiness?: PlanBereitInitialReadiness
   nextHref?: "/plan-start"
+  /**
+   * Server-resolved package identity of the canonical lead (`funnel_sessions`).
+   * Never looked up client-side — the client has no authority over package identity.
+   */
+  funnelPackageKey?: string | null
 }) {
+  const scanFunnel = funnelPackageKey === SCAN_FUNNEL_PACKAGE_KEY
   const serverReadiness = initialReadiness ?? {
     status: initialStatus,
     leadId,
@@ -264,8 +278,11 @@ export function PersonalPlanReadyClient({
   if (canContinue || showWaiting || (startedInOpeningFlow && !openingBeatDone)) {
     return (
       <PlanBereitArrival
-        actionHref={nextHref}
-        onAction={() => markPersonalPlanStageNavigation("/plan-start")}
+        actionHref={scanFunnel ? SCAN_ARRIVAL_HREF : nextHref}
+        // The stage-navigation marker belongs to the Personal-Plan stage routes only;
+        // /scan is not one of them, so the scanner CTA sets nothing.
+        onAction={scanFunnel ? undefined : () => markPersonalPlanStageNavigation("/plan-start")}
+        variant={scanFunnel ? "scan" : "plan"}
         phase={canContinue && openingBeatDone ? "ready" : "loading"}
         interactive={canContinue}
         slowHint={openingSlowHint}

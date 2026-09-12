@@ -7,6 +7,7 @@ import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
 import { resolvePersonalPlanMigrationAdmission } from "@/lib/personal-plan/migration-admission"
+import { resolveFunnelContextForLead } from "@/lib/funnel/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanAppV1AllowedForUser } from "@/lib/personal-plan/rollout-access"
@@ -222,6 +223,18 @@ export default async function PersonalPlanReadyPage({
             missingFacts: [],
             initialAction: "none",
           }
+      // Package identity is server-owned (`funnel_sessions` for the canonical lead).
+      // A `scan_v1` buyer continues into the scanner instead of `/plan-start`; every
+      // other package (and an unavailable lookup) keeps the plan destination and copy.
+      const funnelPackageKey = canonicalLeadId
+        ? await resolveFunnelContextForLead(canonicalLeadId).then(
+            (context) => context?.packageKey ?? null,
+            (error) => {
+              console.warn("[plan-bereit] funnel package unavailable", error)
+              return null
+            },
+          )
+        : null
       return (
         <PersonalPlanReadyClient
           leadId={canonicalLeadId}
@@ -232,6 +245,7 @@ export default async function PersonalPlanReadyPage({
               : initialReadiness
           }
           nextHref="/plan-start"
+          funnelPackageKey={funnelPackageKey}
         />
       )
     case "pricing":
