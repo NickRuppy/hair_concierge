@@ -90,6 +90,9 @@ const REPAIR_SCALE = ["mittel", "hoch"]
 /** `fein` · `mittel` · `dick` — one step apart from the product is a restriction. */
 const THICKNESS_SCALE = ["fein", "mittel", "dick"]
 
+/** The quiz asks no direction question yet, so every profile aims at balance. */
+const CARE_DIRECTION_TARGET = "ausgeglichen"
+
 const CARE_WEIGHT_BY_THICKNESS: Record<string, string> = {
   fine: "leicht",
   normal: "mittel",
@@ -236,8 +239,8 @@ function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
     },
     {
       label: "Pflegerichtung",
-      productValue: "ausgeglichen",
-      targetValue: "ausgeglichen",
+      productValue: CARE_DIRECTION_TARGET,
+      targetValue: CARE_DIRECTION_TARGET,
       status: "ok",
     },
     {
@@ -248,6 +251,30 @@ function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
     },
   ]
   return { product: MASK, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }
+}
+
+/**
+ * The criteria the scanner holds a product against, as the offer lists them.
+ *
+ * Same targets the example cards compare with — the offer only names them, so
+ * the chips and the card rows can never drift apart.
+ */
+export interface ScanCriterion {
+  label: string
+  value: string
+}
+
+export function getScanCriteria(answers: QuizAnswers): ScanCriterion[] {
+  return [
+    { label: "Haardicke", value: getScanInsertThicknessLabel(answers) },
+    { label: "Kopfhaut", value: getScanInsertScalpTarget(answers) },
+    { label: "Reinigung", value: getCleansingTarget(answers) },
+    {
+      label: "Pflegegewicht",
+      value: CARE_WEIGHT_BY_THICKNESS[answers.thickness ?? ""] ?? "leicht",
+    },
+    { label: "Richtung", value: CARE_DIRECTION_TARGET },
+  ]
 }
 
 /** The example card the given insert screen shows for these quiz answers. */

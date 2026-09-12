@@ -50,6 +50,15 @@ export type OfferSectionId =
   | "personal_plan_method"
   | "personal_plan_before_after"
   | "personal_plan_survey"
+  // `scan-regal-v1` sections. The scanner offer keeps its own vocabulary
+  // instead of reusing the plan-shaped ids, so its funnel stays readable.
+  | "scan_criteria"
+  | "product_tour"
+  | "scan_coverage"
+  | "highlights"
+  | "method"
+  | "before_after"
+  | "survey"
   | "founder_letter"
   | "mini_routine"
   | "locked_routine"
