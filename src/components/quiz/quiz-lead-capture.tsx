@@ -38,6 +38,9 @@ function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
 }
 
+/** Shown on blur of a malformed address — the server never sees that request. */
+const INVALID_EMAIL_MESSAGE = "Bitte eine gültige E-Mail-Adresse eingeben."
+
 export function QuizLeadCapture() {
   const { user, loading: authLoading } = useAuth()
   const {
@@ -62,6 +65,10 @@ export function QuizLeadCapture() {
   const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
   const [contextAttempt, setContextAttempt] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
+  // A rejected address sends the user back to the e-mail step. The consent
+  // question was already answered by then, so it must not be asked a second
+  // time: the stored answer is resubmitted with the corrected address.
+  const consentAnsweredRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
   const contextLookupKey = getPartnerQuizContextLookupKey({
     authLoading,
@@ -148,12 +155,24 @@ export function QuizLeadCapture() {
     }
   }
 
+  const handleEmailBlur = () => {
+    if (!lead.email.trim()) return
+    if (!isValidEmail(lead.email)) setError(INVALID_EMAIL_MESSAGE)
+  }
+
   const handleEmailSubmit = () => {
-    if (isValidEmail(lead.email)) {
-      setError("")
-      setServerSuggestion(null)
-      setLeadCaptureSubStep("consent")
+    if (saving) return
+    if (!isValidEmail(lead.email)) {
+      setError(INVALID_EMAIL_MESSAGE)
+      return
     }
+    setError("")
+    setServerSuggestion(null)
+    if (consentAnsweredRef.current) {
+      void handleConsent(lead.marketingConsent)
+      return
+    }
+    setLeadCaptureSubStep("consent")
   }
 
   const handleBack = useCallback(() => {
@@ -177,6 +196,7 @@ export function QuizLeadCapture() {
     if (saving) return
 
     setLeadField("marketingConsent", accepted)
+    consentAnsweredRef.current = true
     setSaving(true)
     setError("")
 
@@ -355,7 +375,8 @@ export function QuizLeadCapture() {
               onClick={handleNameSubmit}
               disabled={!lead.name.trim()}
               variant="unstyled"
-              className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${lead.name.trim() ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+              /* Dimmed, never de-shaped: `.quiz-btn-primary:disabled` carries the 40 % opacity. */
+              className="quiz-btn-primary h-14 w-full rounded-xl text-base font-bold tracking-wide"
             >
               Weiter zum Ergebnis
             </Button>
@@ -378,6 +399,7 @@ export function QuizLeadCapture() {
             aria-invalid={Boolean(error)}
             aria-describedby={error ? "legacy-quiz-email-error" : undefined}
             className="h-14 rounded-xl bg-muted border-border text-foreground placeholder:text-muted-foreground text-base mb-3"
+            onBlur={handleEmailBlur}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleEmailSubmit()
             }}
@@ -414,7 +436,8 @@ export function QuizLeadCapture() {
               onClick={handleEmailSubmit}
               disabled={!isValidEmail(lead.email) || saving}
               variant="unstyled"
-              className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${isValidEmail(lead.email) ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+              /* Dimmed, never de-shaped: `.quiz-btn-primary:disabled` carries the 40 % opacity. */
+              className="quiz-btn-primary h-14 w-full rounded-xl text-base font-bold tracking-wide"
             >
               {saving ? "Wird gespeichert..." : "Weiter"}
             </Button>

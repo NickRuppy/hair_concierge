@@ -140,12 +140,40 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     await expect(email).toHaveAttribute("aria-invalid", "false")
     await expect(email).not.toHaveAttribute("aria-describedby", /.+/)
 
+    // The consent question was already answered before the rejection, so the
+    // corrected address must resubmit with that answer instead of asking again.
     await page.getByRole("button", { name: "Weiter" }).click()
-    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
+    await expect(consentNo).toHaveCount(0)
     await expect(page.getByRole("button", { name: "Ja, zeig mir meine Analyse" })).toBeVisible({
       timeout: 15_000,
     })
     expect(submissionCount).toBe(2)
+  })
+
+  test("an invalid address is named on blur and the CTA stays a dimmed button", async ({
+    page,
+  }) => {
+    await openEmailCapture(page)
+    const email = page.getByPlaceholder("name@beispiel.de")
+    const weiter = page.getByRole("button", { name: "Weiter" })
+
+    // Empty and untouched: button-shaped and dimmed, no accusation yet.
+    await expect(weiter).toBeDisabled()
+    await expect(weiter).toHaveClass(/quiz-btn-primary/)
+    await expect(page.locator("#legacy-quiz-email-error")).toHaveCount(0)
+
+    await email.fill("maria@@test")
+    await email.blur()
+    await expect(page.locator("#legacy-quiz-email-error")).toHaveText(
+      "Bitte eine gültige E-Mail-Adresse eingeben.",
+    )
+    await expect(email).toHaveAttribute("aria-invalid", "true")
+    await expect(weiter).toBeDisabled()
+    await expect(weiter).toHaveClass(/quiz-btn-primary/)
+
+    await email.fill("maria@beispiel.de")
+    await expect(page.locator("#legacy-quiz-email-error")).toHaveCount(0)
+    await expect(weiter).toBeEnabled()
   })
 
   test("manual editing clears a stale server error and suggestion", async ({ page }) => {
