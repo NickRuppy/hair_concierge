@@ -405,7 +405,7 @@ test.describe.serial("@scan-funnel scan_v1 funnel journey", () => {
       leadId = (await fetchLatestLead())!.id
 
       await commitButton.click()
-      await expect(page.getByText("Wir richten deinen Scanner ein.")).toBeVisible({
+      await expect(page.getByText(/Wir legen dein Haarprofil an\./)).toBeVisible({
         timeout: 10_000,
       })
       await page.waitForURL((url) => url.pathname === `/result/${leadId}`, { timeout: 30_000 })

@@ -41,7 +41,10 @@ test("scan_v1 swaps the info strip body, lead headline, commit copy, and loading
   )
   assert.equal(copy.leadCaptureHeadline, "Dein Haarprofil ist fertig.")
   assert.equal(copy.commitButton, "Ja, zeig mir meinen Scanner")
-  assert.equal(copy.analysisLoadingHeadline, "Wir richten deinen Scanner ein.")
+  assert.equal(
+    copy.analysisLoadingHeadline,
+    "Wir legen dein Haarprofil an. Damit misst der Scanner jedes Produkt an deinem Haar – nicht am Durchschnitt.",
+  )
 })
 
 test("scan_v1 commitHeading personalizes with a trimmed name and falls back grammatically", () => {
@@ -65,6 +68,23 @@ test("scan_v1 copy never contains the retired verdict wording", () => {
 
   assert.doesNotMatch(flattened, /urteilt/i)
   assert.doesNotMatch(flattened, /Urteil/)
+})
+
+// The pre-offer loading screen runs before anything is paid for. The arrival
+// page after a successful payment (`plan-ready-arrival.tsx`) is the only place
+// that may promise a scanner is being set up.
+test("no funnel package promises a set-up scanner before the offer", () => {
+  for (const packageKey of [null, "scan_v1", "default_organic"]) {
+    const copy = getQuizFunnelCopy(packageKey)
+    assert.doesNotMatch(copy.analysisLoadingHeadline, /richten deinen Scanner ein/)
+  }
+})
+
+test("the scan_v1 loading line explains what the quiz answers are for", () => {
+  const copy = getQuizFunnelCopy("scan_v1")
+
+  assert.match(copy.analysisLoadingHeadline, /Wir legen dein Haarprofil an\./)
+  assert.match(copy.analysisLoadingHeadline, /an deinem Haar – nicht am Durchschnitt\./)
 })
 
 // SSR safety: the info strip is on question 1, the quiz's first paint. Its copy
