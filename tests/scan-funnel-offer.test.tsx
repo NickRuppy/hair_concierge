@@ -113,7 +113,9 @@ test("the scanner offer carries the criteria, the tour, coverage and the proof b
   assert.match(html, /Haardicke: mittel/)
   assert.match(html, /Hitzeschutz/)
   assert.match(html, /Repair-Pflege/)
-  assert.match(html, /Jede Zeile im Ergebnis lässt sich antippen und erklärt sich\./)
+  // The chips are plain spans, so the caption must not promise a tap here.
+  assert.match(html, /Im Scanner lässt sich jede Zeile antippen und erklärt sich\./)
+  assert.doesNotMatch(html, /Jede Zeile im Ergebnis lässt sich antippen/)
 
   assert.match(html, /Scanner, Plan und Chat – in einer App\./)
   assert.match(html, /Alles im Chaarlie-Abo\./)

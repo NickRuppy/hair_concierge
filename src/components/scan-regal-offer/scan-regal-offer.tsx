@@ -354,8 +354,9 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
               </span>
             ))}
           </div>
+          {/* The chips here are plain text; only the scan result is tappable. */}
           <SectionCaption>
-            Jede Zeile im Ergebnis lässt sich antippen und erklärt sich.
+            Im Scanner lässt sich jede Zeile antippen und erklärt sich.
           </SectionCaption>
         </section>
 
