@@ -332,6 +332,110 @@ test("an active partner grant admits the exact legacy quiz indefinitely without 
   )
 })
 
+test("a claimed partner invitation without a lead binding or activation never grants access", async () => {
+  const admin = client({
+    billing_one_time_purchases: [],
+    billing_subscriptions: [],
+    partner_access_invitations: [
+      {
+        id: "partner-invitation-unbound",
+        claimed_user_id: "user-1",
+        lead_id: null,
+        activated_at: null,
+        revoked_at: null,
+        current_manual_access_grant_id: "partner-grant-unbound",
+        current_grant: {
+          id: "partner-grant-unbound",
+          user_id: "user-1",
+          reason: "partner",
+          expires_at: null,
+          revoked_at: null,
+          partner_access_invitation_id: "partner-invitation-unbound",
+        },
+      },
+    ],
+  })
+
+  const enrollment = await findPersonalPlanEnrollmentForUser(
+    admin as never,
+    "user-1",
+    new Date("2026-09-13"),
+  )
+
+  assert.deepEqual(enrollment, {
+    accessState: "none",
+    sourceId: null,
+    paidAt: null,
+    qualifiedAt: null,
+    artifactLeadId: null,
+    quizSourceKind: null,
+    sourceKind: null,
+  })
+})
+
+test("a claimed partner's revoked tester enrollments never resurrect the old tester lead", async () => {
+  const admin = client({
+    billing_one_time_purchases: [],
+    billing_subscriptions: [],
+    partner_access_invitations: [],
+    personal_plan_test_enrollments: [
+      {
+        id: "field-test-enrollment-stale",
+        user_id: "user-1",
+        lead_id: "old-tester-lead",
+        manual_access_grant_id: "grant-stale",
+        status: "revoked",
+        activated_at: "2026-01-01T00:00:00.000Z",
+        expires_at: "2026-11-08T00:00:00.000Z",
+        revoked_at: "2026-09-01T00:00:00.000Z",
+        quiz_source_kind: "personal_plan",
+        manual_access_grants: {
+          id: "grant-stale",
+          user_id: "user-1",
+          reason: "tester",
+          expires_at: "2026-11-08T00:00:00.000Z",
+          revoked_at: "2026-09-01T00:00:00.000Z",
+        },
+      },
+    ],
+    regular_quiz_test_enrollments: [
+      {
+        id: "regular-field-test-enrollment-stale",
+        user_id: "user-1",
+        lead_id: "old-legacy-tester-lead",
+        manual_access_grant_id: "grant-stale-legacy",
+        status: "revoked",
+        activated_at: "2026-01-01T00:00:00.000Z",
+        expires_at: "2026-11-08T00:00:00.000Z",
+        revoked_at: "2026-09-01T00:00:00.000Z",
+        manual_access_grants: {
+          id: "grant-stale-legacy",
+          user_id: "user-1",
+          reason: "tester",
+          expires_at: "2026-11-08T00:00:00.000Z",
+          revoked_at: "2026-09-01T00:00:00.000Z",
+        },
+      },
+    ],
+  })
+
+  const enrollment = await findPersonalPlanEnrollmentForUser(
+    admin as never,
+    "user-1",
+    new Date("2026-09-13"),
+  )
+
+  assert.deepEqual(enrollment, {
+    accessState: "none",
+    sourceId: null,
+    paidAt: null,
+    qualifiedAt: null,
+    artifactLeadId: null,
+    quizSourceKind: null,
+    sourceKind: null,
+  })
+})
+
 test("a post-cutoff owned legacy lead is eligible only behind the independent cutover", async () => {
   const responses = {
     billing_one_time_purchases: [],

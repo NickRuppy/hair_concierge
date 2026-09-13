@@ -55,6 +55,17 @@ test("resolveIntakeState returns needs_quiz for quizless users", () => {
   assert.equal(resolveIntakeState({ onboarding_completed: false }, null), "needs_quiz")
 })
 
+// partner-access-robust: an existing account claiming a partner invitation
+// gets a "fresh start" (onboarding_completed reset to false, hair profile
+// row deleted). Pin that this profile shape routes exactly like a brand-new
+// account — into the quiz, not onboarding or straight into the app.
+test("a partner's fresh-start profile (reset onboarding, no hair profile) resolves to needs_quiz and routes /chat through /quiz", () => {
+  const freshStartProfile = { onboarding_completed: false }
+  assert.equal(resolveIntakeState(freshStartProfile, null), "needs_quiz")
+  assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_quiz"), null)
+  assert.equal(getAuthenticatedAppRedirect("/chat", "needs_quiz"), "/quiz")
+})
+
 test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
   assert.equal(getAuthenticatedAppRedirect("/auth", "needs_quiz"), "/quiz")
   assert.equal(getAuthenticatedAppRedirect("/auth", "needs_onboarding"), "/onboarding")

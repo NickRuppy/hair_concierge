@@ -39,6 +39,7 @@ function createMiddleware({
   moderatorAccess = "none",
   oneTimeAccessState = "none",
   hairProfile = completeQuizProfile as Record<string, unknown> | null,
+  onboardingCompleted = false,
   observedTables,
   frontierCalls,
 }: {
@@ -65,6 +66,7 @@ function createMiddleware({
   moderatorAccess?: "active" | "ended" | "none" | "unavailable"
   oneTimeAccessState?: "none" | "paid_pending" | "active" | "revoked"
   hairProfile?: Record<string, unknown> | null
+  onboardingCompleted?: boolean
   observedTables?: string[]
   frontierCalls?: { count: number }
 } = {}) {
@@ -120,7 +122,7 @@ function createMiddleware({
                       data:
                         columns === "is_admin"
                           ? { is_admin: false }
-                          : { onboarding_completed: false },
+                          : { onboarding_completed: onboardingCompleted },
                     }
                   }
                   if (table === "hair_profiles") {
@@ -602,6 +604,37 @@ test("an ended moderator without paid or partner access is still routed to the e
 
   assert.equal(response.status, 307)
   assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
+})
+
+// partner-access-robust: the grant-at-claim partner journey resolves through
+// ordinary hasCurrentAppAccess (not the moderator lookup), and a claim onto
+// an existing account leaves it with a "fresh start" profile (onboarding
+// reset, hair profile deleted). Pin that this composed state lands on /quiz,
+// not /reactivate (which would fire if `active` were false) and not
+// /onboarding (which would fire if a stale hair profile survived the reset).
+test("a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    hairProfile: null,
+    onboardingCompleted: false,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/quiz")
+})
+
+test("a paid-exempt partner with a completed profile passes through /chat unredirected", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: true,
+    userAppMetadata: { access_kind: "partner" },
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
 })
 
 test("a moderator access lookup outage is unavailable rather than an expiry or paywall", async () => {
