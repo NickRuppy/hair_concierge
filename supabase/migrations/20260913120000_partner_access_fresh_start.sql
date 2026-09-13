@@ -98,6 +98,9 @@ BEGIN
        SELECT lead.id FROM public.leads AS lead WHERE lead.user_id = p_user_id
      );
 
+  -- Fires personal_plan_user_products_enqueue_source_change: bumps personal_plans.source_revision
+  -- and enqueues one outbox row per archived product. Harmless here because the plan carries no
+  -- active routine at this point in the reset.
   UPDATE public.user_products AS row
      SET ownership_status = 'archived', updated_at = reset_time
    WHERE row.user_id = p_user_id AND row.ownership_status = 'owned';
@@ -283,7 +286,27 @@ BEGIN
    WHERE row.id = p_invitation_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'partner invitation not found' USING ERRCODE = 'P0002'; END IF;
   IF invitation.revoked_at IS NULL THEN
-    RETURN QUERY SELECT invitation.id, invitation.current_manual_access_grant_id, false;
+    -- A legacy claimed row (claimed before the grant moved to the claim, never activated,
+    -- never revoked) holds no grant at all. derive_partner_invitation_status shows it as
+    -- "Widerrufen" and the admin only offers "Reaktivieren", so this action has to restore
+    -- access for it too instead of returning an inert changed = false.
+    IF invitation.claimed_user_id IS NULL OR EXISTS (
+      SELECT 1 FROM public.manual_access_grants AS row
+       WHERE row.partner_access_invitation_id = invitation.id
+         AND row.revoked_at IS NULL
+    ) THEN
+      RETURN QUERY SELECT invitation.id, invitation.current_manual_access_grant_id, false;
+      RETURN;
+    END IF;
+    INSERT INTO public.manual_access_grants (
+      user_id, email, reason, expires_at, partner_access_invitation_id
+    ) VALUES (
+      invitation.claimed_user_id, NULL, 'partner', NULL, invitation.id
+    ) RETURNING * INTO grant_row;
+    UPDATE public.partner_access_invitations AS row
+       SET current_manual_access_grant_id = grant_row.id
+     WHERE row.id = invitation.id;
+    RETURN QUERY SELECT invitation.id, grant_row.id, true;
     RETURN;
   END IF;
   IF invitation.claimed_user_id IS NOT NULL AND NOT EXISTS (

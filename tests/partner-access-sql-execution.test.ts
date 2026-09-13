@@ -463,6 +463,56 @@ test("a claimed but never activated invitation regains a grant on reactivation",
   assert.equal(await activePartnerGrants(pg, invitationId), "1")
 })
 
+test("reactivation repairs a legacy claimed row that was never revoked, exactly once", async (t) => {
+  const pg = await migratedDatabase(t)
+  const invitationId = await createInvitation(pg)
+  await seedAccount(pg)
+
+  await reserve(pg, invitationId, ids.attempt)
+  await completeClaim(pg, invitationId, false)
+  // Shape the row the way a pre-migration claim left it: claimed, never activated,
+  // never revoked, holding no grant. The admin badge reads "Widerrufen" for this and
+  // the only offered action is "Reaktivieren".
+  await pg.query(
+    `UPDATE public.partner_access_invitations
+        SET current_manual_access_grant_id = NULL, activated_at = NULL, fresh_start_at = NULL
+      WHERE id = $1`,
+    [invitationId],
+  )
+  await pg.query(
+    "DELETE FROM public.manual_access_grants WHERE partner_access_invitation_id = $1",
+    [invitationId],
+  )
+  assert.equal(await activePartnerGrants(pg, invitationId), "0")
+
+  const repaired = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(
+    "SELECT * FROM public.reactivate_partner_access($1)",
+    [invitationId],
+  )
+  assert.equal(repaired.rows[0].changed, true)
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  const pinned = await pg.query<{
+    current_manual_access_grant_id: string
+    revoked_at: string | null
+  }>(
+    "SELECT current_manual_access_grant_id, revoked_at FROM public.partner_access_invitations WHERE id = $1",
+    [invitationId],
+  )
+  assert.equal(
+    pinned.rows[0].current_manual_access_grant_id,
+    repaired.rows[0].manual_access_grant_id,
+  )
+  assert.equal(pinned.rows[0].revoked_at, null)
+
+  const replay = await pg.query<{ manual_access_grant_id: string; changed: boolean }>(
+    "SELECT * FROM public.reactivate_partner_access($1)",
+    [invitationId],
+  )
+  assert.equal(replay.rows[0].changed, false)
+  assert.equal(replay.rows[0].manual_access_grant_id, repaired.rows[0].manual_access_grant_id)
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+})
+
 test("activation is replay-safe, indefinite, revocable, and preserves independent paid access", async (t) => {
   const pg = await migratedDatabase(t)
   const invitationId = await createInvitation(pg)

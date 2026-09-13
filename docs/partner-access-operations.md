@@ -23,6 +23,8 @@ Der Admin zeigt pro Zeile genau einen der folgenden vier Zustände:
 | **Plan gestartet** | Aktiviert — der Creator hat das Quiz abgeschlossen und einen Plan gestartet; der Grant ist weiterhin aktiv. |
 | **Widerrufen** | Entweder explizit widerrufen, oder geclaimt/aktiviert ohne aktiven Grant (z. B. nach einem älteren, noch nicht selbstheilenden Zustand). |
 
+Bei alten "Konto erstellt"-Zeilen (geclaimt, nie aktiviert, nie widerrufen, ohne Grant) steht das Badge auf **Widerrufen**, bis entweder der Creator den Link erneut öffnet (Selbstheilung, siehe unten) oder im Admin **Reaktivieren** gedrückt wird — das legt für solche Zeilen jetzt den fehlenden Grant an und stellt den Zugang wieder her.
+
 ### Neustart: was ein Claim zurücksetzt
 
 Beim ersten Claim einer Einladung setzt der Server das claimende Konto in denselben Zustand wie ein brandneues Partnerkonto zurück ("Neustart"), außer bei der bezahlten Ausnahme unten. Das läuft in derselben Datenbank-Transaktion wie der Claim — schlägt irgendein Schritt fehl, wird der gesamte Claim zurückgerollt, es bleibt kein halb-zurückgesetztes Konto.
@@ -45,7 +47,7 @@ Der Neustart läuft nur beim **ersten** Claim einer Einladung (`fresh_start_at` 
 
 ### Bezahlte Ausnahme (P1)
 
-Ein Konto mit aktueller **unabhängiger** bezahlter Berechtigung (laufendes Abo, One-Time-Kauf oder Legacy-Profil-Zeitraum) wird beim Claim **nicht** zurückgesetzt — der Creator behält seinen bezahlten Plan, der Partnerzugang kommt nur als zusätzliche, unabhängige Berechtigung hinzu. Ein neu erstelltes Konto (Claim ohne bestehendes Konto) wird immer neu gestartet. Läuft die bezahlte Berechtigung später ab, hält der Partner-Grant die App weiterhin offen, aber es entsteht **kein** neuer Partner-Neustart — für einen frischen Partnerplan braucht es eine neue Einladung an dieselbe E-Mail (siehe Re-Test-Rezept).
+Ein Konto mit aktueller **unabhängiger** bezahlter Berechtigung (laufendes Abo, One-Time-Kauf oder Legacy-Profil-Zeitraum) wird beim Claim **nicht** zurückgesetzt — der Creator behält seinen bezahlten Plan, der Partnerzugang kommt nur als zusätzliche, unabhängige Berechtigung hinzu. Ein neu erstelltes Konto (Claim ohne bestehendes Konto) wird immer neu gestartet. Läuft die bezahlte Berechtigung später ab, hält der Partner-Grant die App weiterhin offen, aber es entsteht **kein** neuer Partner-Neustart — für einen frischen Partnerplan braucht es eine neue Einladung an dieselbe E-Mail (siehe Re-Test-Rezept). Umgekehrt gilt: Ein bereits neu gestarteter Partner, der später ein Abo kauft, behält den auf die Einladung verankerten Plan (Stage 1 meldet für die neue bezahlte Quelle `enrollment_mismatch`) — ob so ein Konto einen neuen bezahlten Plan bekommt, ist eine separate Betreiber-Entscheidung.
 
 ### Re-Test-Rezept: einen Creator von null neu testen
 
