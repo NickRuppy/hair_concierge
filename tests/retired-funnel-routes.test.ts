@@ -53,9 +53,11 @@ test("the placeholder scan_v1 landing route 404s without its flag, mirroring the
 })
 
 test("the scan_v1 route gate is status-aware: active renders regardless of the flag, placeholder still needs it", () => {
-  const placeholderScanPackage = getFunnelPackageBySlug("scan")
-  assert.ok(placeholderScanPackage)
-  assert.equal(placeholderScanPackage.status, "placeholder")
+  const registryScanPackage = getFunnelPackageBySlug("scan")
+  assert.ok(registryScanPackage)
+  // Activated 2026-09-13; the placeholder semantics stay covered via a derived package.
+  assert.equal(registryScanPackage.status, "active")
+  const placeholderScanPackage: FunnelPackage = { ...registryScanPackage, status: "placeholder" }
 
   // placeholder + flag off -> blocked (today's behaviour, unchanged)
   assert.equal(shouldBlockPlaceholderScanRoute(placeholderScanPackage, false), true)
@@ -103,23 +105,25 @@ test("archived landing routes cannot mint or preserve a live quiz journey", () =
   )
 })
 
-test("the placeholder scan_v1 package is attributable only behind its own flag", () => {
-  assert.equal(resolveAttributablePackageForPath("/lp/scan", true, false), null)
+test("a placeholder scan_v1 package is attributable only behind its own flag", () => {
+  const registryScanPackage = getFunnelPackageBySlug("scan")
+  assert.ok(registryScanPackage)
+  const placeholderScanPackage: FunnelPackage = { ...registryScanPackage, status: "placeholder" }
 
-  const scanPackage = resolveAttributablePackageForPath("/lp/scan", true, true)
-  assert.ok(scanPackage)
-  assert.equal(scanPackage.key, "scan_v1")
+  assert.equal(isAttributableFunnelPackage(placeholderScanPackage, true, false), false)
+  assert.equal(isAttributableFunnelPackage(placeholderScanPackage, false, true), true)
 
-  // The personal-plan flag must not leak into scan_v1 attribution, and vice versa.
+  // The registry package is active since activation: the real path resolver attributes
+  // /lp/scan without the flag, and the personal-plan flag still never leaks into it.
+  assert.equal(resolveAttributablePackageForPath("/lp/scan", true, false)?.key, "scan_v1")
   assert.equal(resolveAttributablePackageForPath("/lp/haarplan", false, true), null)
 })
 
 test("an active scan_v1 package is attributable regardless of the placeholder flag", () => {
-  const placeholderScanPackage = getFunnelPackageBySlug("scan")
-  assert.ok(placeholderScanPackage)
-  assert.equal(placeholderScanPackage.status, "placeholder")
+  const activeScanPackage = getFunnelPackageBySlug("scan")
+  assert.ok(activeScanPackage)
+  assert.equal(activeScanPackage.status, "active")
 
-  const activeScanPackage: FunnelPackage = { ...placeholderScanPackage, status: "active" }
   assert.equal(isAttributableFunnelPackage(activeScanPackage, false, false), true)
   assert.equal(isAttributableFunnelPackage(activeScanPackage, true, false), true)
 })

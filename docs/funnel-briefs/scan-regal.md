@@ -52,7 +52,7 @@ table (`src/lib/quiz/scan-insert-examples.ts`) that is always labeled `Beispiel`
 | ---------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ |
 | 1 — "Das Problem"      | After density (question 3)          | Photo of a woman with a bottle; example row keyed off the visitor's `thickness` answer      |
 | 2 — "Die Lösung"       | After scalp (question 8)            | Photo of a shelf scan; example row keyed off the visitor's scalp type/condition answers      |
-| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; a fixed example row (Balea Repair Kur) independent of answers      |
+| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; example rows (Balea Repair Kur) keyed off the visitor's thickness and goal answers      |
 
 Each insert fires `quiz_insert_viewed { insertId, funnelPackageKey }` (PostHog only) and does
 not fire `quiz_step_viewed` — see `docs/funnel-attribution.md` for why that split matters for
@@ -73,10 +73,9 @@ that actually ship live under `public/images/funnels/scan/`:
   section's four screenshots. These four are currently prototype/dev-seed captures and must be
   replaced before launch — see Activation checklist, item 1.
 
-The result-card overlay composited onto each lifestyle photo mirrors the product actually named
-in that insert's example row (see the example table above), so a photo and fresh example data
-never disagree with each other; if a photo is replaced, the corresponding row in
-`scan-insert-examples.ts` must be re-checked for the same reason.
+The phone in each lifestyle photo shows only the camera viewfinder (no verdict of its own), so
+the answer-aware overlay card is the only result a visitor sees on an insert and can never
+disagree with the photo. Keep that invariant if a photo is replaced.
 
 ## Rollout
 
@@ -95,9 +94,10 @@ remains reachable from navigation. See `plans/scanner-funnel.md` for the full te
 Do not execute this checklist as part of building the package — it is the launch gate for
 flipping `scan_v1` from `placeholder` to `active`, and runs only after Nick's explicit GO.
 
-1. Replace `public/images/funnels/scan/tour-{scanner,plan,anwendung,chat}.png` with fresh
-   captures from the standard test account with a complete profile. The current files are
-   prototype/dev-seed captures and are not launch-ready.
+1. Product-tour captures: `tour-scanner.png` (locked scan design) and `tour-chat.png` (real chat
+   answer) are launch-ready; `tour-plan.png` is the real Stage-1 plan composition
+   (`/labs/personal-plan-start`, 2026-09-13); `tour-anwendung.png` is a capture from a real
+   Personal-Plan account (2026-09-13). Done.
 2. In the real `/result` context (not a lab/harness), verify the shared pricing slot's fine
    print and CTA (`Plan sichern`) read correctly for this package's scanner-first framing.
 3. Confirm production environment variables: `PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED=true`
