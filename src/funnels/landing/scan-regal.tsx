@@ -71,10 +71,13 @@ export default function FunnelScanRegalLandingVariant() {
 
         {/*
           Hero. One column on mobile — claim, photo, quote — and on large screens
-          the photo moves beside the text by spanning both rows of the grid, so
-          the markup renders the image exactly once.
+          the photo moves beside the text by spanning all three rows of the grid,
+          so the markup renders the image exactly once. The last row takes the
+          slack (`1fr`): without it the photo's height is shared out between the
+          rows and tears a hole between subline and quote, pushing the CTA below
+          the fold.
         */}
-        <section className="mx-auto grid max-w-6xl gap-5 px-5 pb-10 pt-6 sm:pb-14 sm:pt-12 lg:grid-cols-[1fr_0.8fr] lg:items-center lg:gap-12">
+        <section className="mx-auto grid max-w-6xl gap-5 px-5 pb-10 pt-6 sm:pb-14 sm:pt-12 lg:grid-cols-[1fr_0.8fr] lg:grid-rows-[auto_auto_1fr] lg:items-start lg:gap-x-12 lg:gap-y-6">
           <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-1">
             <p className="self-start rounded-full bg-[var(--brand-plum-ice)] px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[var(--brand-plum-dark)]">
               Drogerie-Regal
@@ -88,7 +91,7 @@ export default function FunnelScanRegalLandingVariant() {
             </p>
           </div>
 
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[24px] bg-[var(--brand-plum-ice)] shadow-[0_30px_70px_-40px_rgba(42,24,69,0.6)] sm:aspect-[4/5] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:aspect-[3/4]">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[24px] bg-[var(--brand-plum-ice)] shadow-[0_30px_70px_-40px_rgba(42,24,69,0.6)] sm:aspect-[4/5] lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:aspect-[3/4]">
             <Image
               alt="Frau vor dem Drogerieregal mit einer Shampoo-Flasche in der Hand"
               className="object-cover"
@@ -114,7 +117,7 @@ export default function FunnelScanRegalLandingVariant() {
             the quote on mobile and, on lg, dropped into row 3 of the text column
             so it does not disturb the two-row hero grid or duplicate the photo.
           */}
-          <div className="mx-auto flex w-full max-w-[440px] flex-col items-center lg:col-start-1 lg:row-start-3">
+          <div className="mx-auto flex w-full max-w-[440px] flex-col items-center lg:col-start-1 lg:row-start-3 lg:mx-0 lg:items-start">
             <Link
               href="/quiz"
               prefetch={false}
@@ -122,7 +125,7 @@ export default function FunnelScanRegalLandingVariant() {
             >
               {CTA_LABEL}
             </Link>
-            <p className="mt-2 text-center text-[11.5px] text-[var(--text-caption)]">
+            <p className="mt-2 text-center text-[11.5px] text-[var(--text-caption)] lg:text-left">
               {CTA_FINE_PRINT}
             </p>
           </div>
