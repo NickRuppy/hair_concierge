@@ -96,8 +96,8 @@ flipping `scan_v1` from `placeholder` to `active`, and runs only after Nick's ex
 
 1. Product-tour captures: `tour-scanner.png` (locked scan design) and `tour-chat.png` (real chat
    answer) are launch-ready; `tour-plan.png` is the real Stage-1 plan composition
-   (`/labs/personal-plan-start`, 2026-09-13). `tour-anwendung.png` still shows lab fixture
-   data and must be replaced with a capture from a real Personal-Plan account.
+   (`/labs/personal-plan-start`, 2026-09-13); `tour-anwendung.png` is a capture from a real
+   Personal-Plan account (2026-09-13). Done.
 2. In the real `/result` context (not a lab/harness), verify the shared pricing slot's fine
    print and CTA (`Plan sichern`) read correctly for this package's scanner-first framing.
 3. Confirm production environment variables: `PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED=true`
