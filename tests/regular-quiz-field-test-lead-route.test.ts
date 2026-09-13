@@ -8,6 +8,7 @@ import {
   createMigrationQuizContextCookie,
 } from "../src/lib/personal-plan/migration-quiz-context"
 import { REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE } from "../src/lib/personal-plan-field-test"
+import { MODERATOR_INTENT_COOKIE } from "../src/lib/personal-plan-field-test/moderator-contract"
 
 const leadId = "10000000-0000-4000-8000-000000000001"
 const migrationUserId = "50000000-0000-4000-8000-000000000005"
@@ -101,6 +102,7 @@ function existingLeadClient(
     marketing_consent: boolean
     status: string
     moderator_campaign_id?: string | null
+    partner_access_invitation_id?: string | null
   }> = [
     {
       id: leadId,
@@ -109,23 +111,37 @@ function existingLeadClient(
       status: "captured",
     },
   ],
+  insertedLeadId = leadId,
+  onInsert: (row: unknown) => void = () => {},
 ) {
+  const recent = {
+    gte: () => ({
+      order: () => ({
+        limit: async () => ({
+          data: leads,
+          error: null,
+        }),
+      }),
+    }),
+  }
   return {
     from: () => ({
       select: () => ({
         eq: () => ({
-          eq: () => ({
-            gte: () => ({
-              order: () => ({
-                limit: async () => ({
-                  data: leads,
-                  error: null,
-                }),
-              }),
-            }),
-          }),
+          // `is` is the partner-lead exclusion: an ordinary dedupe candidate must
+          // carry no `partner_access_invitation_id`.
+          eq: () => ({ is: () => recent }),
         }),
       }),
+      insert: (row: unknown) => ({
+        select: () => ({
+          single: async () => {
+            onInsert(row)
+            return { data: { id: insertedLeadId }, error: null }
+          },
+        }),
+      }),
+      update: () => ({ eq: async () => ({ error: null }) }),
     }),
   }
 }
@@ -137,6 +153,8 @@ function handler({
   onSync = () => {},
   onMeta = () => {},
   recentLeads,
+  insertedLeadId,
+  onInsert,
 }: {
   campaignCookie?: string
   enabled?: boolean
@@ -144,6 +162,8 @@ function handler({
   onSync?: () => void
   onMeta?: () => void
   recentLeads?: Parameters<typeof existingLeadClient>[0]
+  insertedLeadId?: string
+  onInsert?: (row: unknown) => void
 } = {}) {
   return createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
@@ -161,7 +181,7 @@ function handler({
           ? { value: campaignCookie }
           : undefined,
     })) as never,
-    createAdminClient: (() => existingLeadClient(recentLeads)) as never,
+    createAdminClient: (() => existingLeadClient(recentLeads, insertedLeadId, onInsert)) as never,
     isRegularQuizFieldTestEnabled: () => enabled,
     resolveFunnelCookieContext: async () => (campaignCookie ? funnelContext : null),
     resolvePendingFunnelTouchValue: async () => null,
@@ -820,18 +840,20 @@ test("plain migration query parameters carry no authority without the signed coo
         select: () => ({
           eq: () => ({
             eq: () => ({
-              gte: () => ({
-                order: () => ({
-                  limit: async () => ({
-                    data: [
-                      {
-                        id: leadId,
-                        quiz_answers: requestBody.quizAnswers,
-                        marketing_consent: false,
-                        status: "captured",
-                      },
-                    ],
-                    error: null,
+              is: () => ({
+                gte: () => ({
+                  order: () => ({
+                    limit: async () => ({
+                      data: [
+                        {
+                          id: leadId,
+                          quiz_answers: requestBody.quizAnswers,
+                          marketing_consent: false,
+                          status: "captured",
+                        },
+                      ],
+                      error: null,
+                    }),
                   }),
                 }),
               }),
@@ -864,4 +886,74 @@ test("plain migration query parameters carry no authority without the signed coo
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { leadId })
   assert.equal(migrationRpcCalled, false)
+})
+
+test("a leftover moderator intent cookie never blocks an authorized partner lead", async () => {
+  const calls: unknown[] = []
+  let moderatorConsulted = false
+  const forbidden = () => {
+    throw Error("partner must not use commercial persistence")
+  }
+  const partner = {
+    kind: "authorized" as const,
+    invitationId: "40000000-0000-4000-8000-000000000004",
+    userId: "50000000-0000-4000-8000-000000000005",
+    name: "Lea Sommer",
+    email: requestBody.email,
+    funnelSessionId: funnelContext.sessionId,
+  }
+  const post = createQuizLeadPostHandler({
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({
+      get: (name: string) =>
+        name === MODERATOR_INTENT_COOKIE ? { value: "leftover-moderator-intent" } : undefined,
+    })) as never,
+    resolveFunnelCookieContext: async () => funnelContext,
+    // A former moderator keeps the intent cookie forever; their campaign is long
+    // gone, so the moderator resolver fails closed with `unavailable` (503).
+    resolveModeratorJourney: async () => {
+      moderatorConsulted = true
+      return { kind: "unavailable" as const }
+    },
+    resolvePartnerJourney: async () => partner,
+    savePartnerAccessLead: async (input) => {
+      calls.push(input)
+      return { leadId, reused: false }
+    },
+    createAdminClient: forbidden,
+    checkEmailDeliverability: forbidden,
+    syncQuizLeadToCustomerIo: forbidden,
+    enqueueMetaLead: forbidden,
+    bindRegularQuizFieldTestLead: forbidden,
+    scheduleAfter: forbidden,
+  })
+
+  const response = await post(request())
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId })
+  assert.equal(calls.length, 1)
+  assert.equal(moderatorConsulted, false)
+})
+
+test("ordinary lead reuse excludes a partner-owned lead with the same email and answers", async () => {
+  const inserted: unknown[] = []
+  const freshLeadId = "10000000-0000-4000-8000-000000000012"
+  const response = await handler({
+    insertedLeadId: freshLeadId,
+    onInsert: (row) => inserted.push(row),
+    recentLeads: [
+      {
+        id: leadId,
+        quiz_answers: requestBody.quizAnswers,
+        marketing_consent: false,
+        status: "captured",
+        partner_access_invitation_id: "40000000-0000-4000-8000-000000000004",
+      },
+    ],
+  })(request())
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId: freshLeadId })
+  assert.equal(inserted.length, 1)
 })

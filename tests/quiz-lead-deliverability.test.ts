@@ -86,11 +86,13 @@ test("legacy lead passes a normalized fail-open address into persistence", async
             eq: (_column: string, value: unknown) => {
               queriedEmail = value
               return {
-                gte: () => ({
-                  order: () => ({
-                    limit: async () => {
-                      throw new Error("stop after persistence boundary")
-                    },
+                is: () => ({
+                  gte: () => ({
+                    order: () => ({
+                      limit: async () => {
+                        throw new Error("stop after persistence boundary")
+                      },
+                    }),
                   }),
                 }),
               }
