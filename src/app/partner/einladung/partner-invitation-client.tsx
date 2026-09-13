@@ -1,7 +1,8 @@
 "use client"
 
 import { type FormEvent, useEffect, useRef, useState } from "react"
-import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
+import { PARTNER_QUIZ_ENTRY_HREF, shouldClearQuizDraft } from "@/lib/partner-access/quiz-context"
+import { clearQuizDraft } from "@/lib/quiz/draft"
 
 type InvitationMode =
   | "ready"
@@ -62,6 +63,7 @@ export function PartnerInvitationClient() {
         return
       }
       if (isDestination(body)) {
+        if (shouldClearQuizDraft(body)) clearQuizDraft()
         window.location.assign(body.destination)
         return
       }

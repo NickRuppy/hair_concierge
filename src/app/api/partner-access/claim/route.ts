@@ -18,6 +18,7 @@ import {
 } from "@/lib/partner-access/intent"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
+import { hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
 
 const NO_STORE_HEADERS = { "Cache-Control": "private, no-store" }
 const CLAIM_ATTEMPT_COOKIE = "chaarlie_partner_claim_attempt"
@@ -62,7 +63,9 @@ type ClaimDependencies = {
     attemptId: string
     userId: string
     funnelSessionId: string
-  }) => Promise<unknown>
+    freshStart: boolean
+  }) => Promise<{ freshStart: boolean }>
+  hasCurrentPaidAppAccess: (userId: string) => Promise<boolean>
   signIn: (input: { email: string; password: string }) => Promise<unknown>
   sendMagicLink: (input: { email: string; redirectTo: string }) => Promise<unknown>
   createIntent: typeof createPartnerAccessIntent
@@ -221,6 +224,19 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
       }
     }
 
+    let freshStart: boolean
+    try {
+      freshStart =
+        password !== null
+          ? true
+          : !(await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id))
+    } catch {
+      return copyResponseCookies(
+        response,
+        jsonError("Dein Zugang ist gerade nicht verfügbar.", 503),
+      )
+    }
+
     let funnel =
       invitation.claimedUserId && invitation.funnelSessionId && invitation.funnelVisitorId
         ? {
@@ -246,11 +262,12 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
         })
         createdFunnel = true
       }
-      await (overrides.complete ?? completeClaim)({
+      const completion = await (overrides.complete ?? completeClaim)({
         intent,
         attemptId,
         userId: user.id,
         funnelSessionId: funnel.funnelSessionId,
+        freshStart,
       })
       claimCompleted = true
       if (password) await signIn({ email: invitation.email, password })
@@ -264,7 +281,17 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
         funnelSecret,
       )
       response.cookies.set(FUNNEL_SESSION_COOKIE, funnelCookie, funnelSessionCookieOptions)
-      return response
+      return copyResponseCookies(
+        response,
+        NextResponse.json(
+          {
+            destination: PARTNER_QUIZ_ENTRY_HREF,
+            requiresEmail: false,
+            freshStart: completion.freshStart,
+          },
+          { headers: NO_STORE_HEADERS },
+        ),
+      )
     } catch {
       if (!claimCompleted) {
         if (createdFunnel && funnel) {
@@ -427,15 +454,25 @@ async function completeClaim(input: {
   attemptId: string
   userId: string
   funnelSessionId: string
+  freshStart: boolean
 }) {
-  const { error } = await createAdminClient().rpc("complete_partner_access_claim", {
+  const { data, error } = await createAdminClient().rpc("complete_partner_access_claim", {
     p_invitation_id: input.intent.invitationId,
     p_token_version: input.intent.tokenVersion,
     p_claim_attempt_id: input.attemptId,
     p_user_id: input.userId,
     p_funnel_session_id: input.funnelSessionId,
+    p_fresh_start: input.freshStart,
   })
-  if (error) throw error
+  const row = Array.isArray(data) ? data[0] : null
+  if (error || !row || typeof row.fresh_start !== "boolean") {
+    throw error ?? new Error("Partner claim completion failed")
+  }
+  return { freshStart: row.fresh_start as boolean }
+}
+
+async function hasPaidAppAccessForUser(userId: string): Promise<boolean> {
+  return hasCurrentPaidAppAccess(createAdminClient(), { userId })
 }
 
 async function sendExistingAccountLink(input: {

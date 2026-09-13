@@ -17,6 +17,17 @@ export function isPartnerQuizEntrySearch(search: string): boolean {
   return new URLSearchParams(search).get("partner") === "1"
 }
 
+/** A claim response carrying `freshStart: true` means the browser's stale quiz draft
+ * (if any) belongs to a state the claim just reset, so it must not be restored. */
+export function shouldClearQuizDraft(body: unknown): boolean {
+  return Boolean(
+    body &&
+    typeof body === "object" &&
+    !Array.isArray(body) &&
+    (body as Record<string, unknown>).freshStart === true,
+  )
+}
+
 export function getPartnerQuizContextLookupKey({
   authLoading,
   hasMetadataHint,

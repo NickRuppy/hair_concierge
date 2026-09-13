@@ -171,6 +171,7 @@ test("claiming a partner invitation grants free access and restarts an existing 
     resultReturnRevoked: true,
     ownedProducts: "0",
     archivedProducts: "1",
+    nudgeDismissedUntilCleared: true,
   })
 })
 
@@ -225,6 +226,7 @@ test("a paying account can claim partner access without a fresh start", async (t
     resultReturnRevoked: false,
     ownedProducts: "1",
     archivedProducts: "0",
+    nudgeDismissedUntilCleared: false,
   })
 })
 
@@ -632,9 +634,9 @@ async function seedUsedAccountState(pg: PGlite): Promise<SeededState> {
        user_id, enrollment_purchase_source_id, current_initial_need_version_id,
        current_refined_need_version_id, active_routine_version_id, pending_routine_proposal_id,
        unrefined_direct_accept, last_evaluated_source_fingerprint, last_rejected_auto_fingerprint,
-       legacy_prefill_v1, revision
+       legacy_prefill_v1, nudge_dismissed_until, revision
      ) VALUES ($1, $2, $3, $3, $4, $5, true, 'fingerprint-evaluated', 'fingerprint-rejected',
-       '{"prefill": true}'::jsonb, 4)
+       '{"prefill": true}'::jsonb, pg_catalog.now() + interval '30 days', 4)
      ON CONFLICT (user_id) DO UPDATE SET
        enrollment_purchase_source_id = EXCLUDED.enrollment_purchase_source_id,
        current_initial_need_version_id = EXCLUDED.current_initial_need_version_id,
@@ -645,6 +647,7 @@ async function seedUsedAccountState(pg: PGlite): Promise<SeededState> {
        last_evaluated_source_fingerprint = EXCLUDED.last_evaluated_source_fingerprint,
        last_rejected_auto_fingerprint = EXCLUDED.last_rejected_auto_fingerprint,
        legacy_prefill_v1 = EXCLUDED.legacy_prefill_v1,
+       nudge_dismissed_until = EXCLUDED.nudge_dismissed_until,
        revision = EXCLUDED.revision
      RETURNING id`,
     [ids.creator, enrollmentSourceId, ids.needVersion, ids.routineVersion, ids.proposal],
@@ -770,7 +773,8 @@ async function readResetState(pg: PGlite, seeded: SeededState) {
        (SELECT status FROM public.personal_plan_quiz_drafts WHERE funnel_session_id = $3) AS "quizDraftStatus",
        (SELECT revoked_at IS NOT NULL FROM public.personal_plan_result_returns WHERE lead_id = $4) AS "resultReturnRevoked",
        (SELECT count(*)::text FROM public.user_products WHERE user_id = $1 AND ownership_status = 'owned') AS "ownedProducts",
-       (SELECT count(*)::text FROM public.user_products WHERE user_id = $1 AND ownership_status = 'archived') AS "archivedProducts"`,
+       (SELECT count(*)::text FROM public.user_products WHERE user_id = $1 AND ownership_status = 'archived') AS "archivedProducts",
+       (SELECT nudge_dismissed_until IS NULL FROM public.personal_plans WHERE user_id = $1) AS "nudgeDismissedUntilCleared"`,
     [ids.creator, seeded.testerGrantIds, ids.legacyFunnel, seeded.leadId],
   )
   return result.rows[0]
@@ -864,6 +868,7 @@ CREATE TABLE public.personal_plans (
   last_evaluated_source_fingerprint text,
   last_rejected_auto_fingerprint text,
   legacy_prefill_v1 jsonb,
+  nudge_dismissed_until timestamptz,
   revision bigint NOT NULL DEFAULT 0 CHECK (revision >= 0),
   created_at timestamptz NOT NULL DEFAULT pg_catalog.now(),
   updated_at timestamptz NOT NULL DEFAULT pg_catalog.now(),

@@ -54,7 +54,11 @@ function dependencies(overrides: Record<string, unknown> = {}) {
       deleteFunnel: async (input: unknown) => calls.push(["deleteFunnel", input]),
       deleteUser: async (input: unknown) => calls.push(["deleteUser", input]),
       ensureUserMetadata: async (input: unknown) => calls.push(["ensureUserMetadata", input]),
-      complete: async (input: unknown) => calls.push(["complete", input]),
+      complete: async (input: unknown) => {
+        calls.push(["complete", input])
+        return { freshStart: (input as { freshStart: boolean }).freshStart }
+      },
+      hasCurrentPaidAppAccess: async () => false,
       signIn: async (input: unknown) => calls.push(["signIn", input]),
       sendMagicLink: async (input: unknown) => calls.push(["magicLink", input]),
       encodeFunnelContext: async () => "signed-funnel-cookie",
@@ -75,6 +79,7 @@ test("new creator claim creates and signs into the exact named account without a
   assert.deepEqual(await response.json(), {
     destination: "/quiz?partner=1",
     requiresEmail: false,
+    freshStart: true,
   })
   assert.deepEqual(
     calls.map(([name]) => name),
@@ -83,6 +88,10 @@ test("new creator claim creates and signs into the exact named account without a
   const createInput = calls.find(([name]) => name === "createUser")?.[1] as Record<string, unknown>
   assert.equal(createInput.email, "lea@example.test")
   assert.equal(createInput.name, "Lea")
+  assert.equal(
+    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+    true,
+  )
   assert.equal(response.headers.get("set-cookie")?.includes("hidden-random-password"), false)
   assert.equal(response.cookies.get("chaarlie_funnel_session")?.value, "signed-funnel-cookie")
 })
@@ -175,6 +184,16 @@ test("authenticated continuation completes only the invitation email account", a
     calls.map(([name]) => name),
     ["reserve", "ensureUserMetadata", "createFunnel", "complete"],
   )
+  // Default mock has no current paid access, so a lapsed/never-paying account gets a fresh start.
+  assert.equal(
+    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+    true,
+  )
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz?partner=1",
+    requiresEmail: false,
+    freshStart: true,
+  })
 
   const mismatch = dependencies({
     getUser: async () => ({ id: ids.user, email: "other@example.test" }),
@@ -182,6 +201,72 @@ test("authenticated continuation completes only the invitation email account", a
   const rejected = await createPartnerAccessClaimHandler(mismatch.deps)(request())
   assert.equal(rejected.status, 403)
   assert.deepEqual(mismatch.calls, [])
+})
+
+test("a currently paying account claims without a fresh start", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => true,
+  })
+  const response = await createPartnerAccessClaimHandler(deps)(request())
+  assert.equal(response.status, 200)
+  assert.equal(
+    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+    false,
+  )
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz?partner=1",
+    requiresEmail: false,
+    freshStart: false,
+  })
+})
+
+test("a lapsed account claims with a fresh start", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => false,
+  })
+  const response = await createPartnerAccessClaimHandler(deps)(request())
+  assert.equal(response.status, 200)
+  assert.equal(
+    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+    true,
+  )
+  assert.deepEqual(await response.json(), {
+    destination: "/quiz?partner=1",
+    requiresEmail: false,
+    freshStart: true,
+  })
+})
+
+test("a new account always claims with a fresh start, without consulting billing", async () => {
+  const { calls, deps } = dependencies({
+    hasCurrentPaidAppAccess: async () => {
+      throw new Error("must not be called for a just-created account")
+    },
+  })
+  const response = await createPartnerAccessClaimHandler(deps)(request())
+  assert.equal(response.status, 200)
+  assert.equal(
+    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
+    true,
+  )
+})
+
+test("a paid-access lookup failure fails closed instead of assuming a fresh start", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => {
+      throw new Error("billing lookup unavailable")
+    },
+  })
+  const response = await createPartnerAccessClaimHandler(deps)(request())
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { error: "Dein Zugang ist gerade nicht verfügbar." })
+  assert.deepEqual(
+    calls.map(([name]) => name),
+    ["reserve"],
+  )
 })
 
 test("a failed claim completion removes only the new unbound funnel and releases the reservation", async () => {

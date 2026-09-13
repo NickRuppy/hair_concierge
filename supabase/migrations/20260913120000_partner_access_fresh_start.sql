@@ -45,6 +45,7 @@ BEGIN
          last_evaluated_source_fingerprint = NULL,
          last_rejected_auto_fingerprint = NULL,
          legacy_prefill_v1 = NULL,
+         nudge_dismissed_until = NULL,
          revision = personal_plans.revision + 1,
          updated_at = reset_time;
 
@@ -114,7 +115,7 @@ CREATE OR REPLACE FUNCTION public.complete_partner_access_claim(
   p_claim_attempt_id uuid,
   p_user_id uuid,
   p_funnel_session_id uuid,
-  p_fresh_start boolean DEFAULT true
+  p_fresh_start boolean DEFAULT false
 )
 RETURNS TABLE (
   invitation_id uuid,
