@@ -18,7 +18,10 @@ test("creator invitation keeps the approved concise identity and account-creatio
   assert.match(html, /lea@example\.test/)
   assert.match(html, /Nicht deine E-Mail\? Ändern/)
   assert.match(html, /Los geht’s/)
-  assert.match(html, /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\./)
+  assert.match(
+    html,
+    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\. Hast du schon eins, startest du damit neu\./,
+  )
   assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)
 })
 

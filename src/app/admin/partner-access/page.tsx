@@ -268,9 +268,9 @@ function CopyButton({ children, value }: { children: string; value: string }) {
 function Status({ value }: { value: PartnerInvitationListItem["status"] }) {
   const label =
     value === "active"
-      ? "Aktiv"
+      ? "Plan gestartet"
       : value === "claimed"
-        ? "Konto erstellt"
+        ? "Zugang aktiv · Quiz offen"
         : value === "revoked"
           ? "Widerrufen"
           : "Eingeladen"

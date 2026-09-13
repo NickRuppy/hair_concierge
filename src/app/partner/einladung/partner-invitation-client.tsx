@@ -204,7 +204,8 @@ export function PartnerInvitationCard({
             {mode === "claiming" ? "Wird geöffnet …" : "Los geht’s"}
           </button>
           <p className="mt-3 text-xs leading-5 text-[var(--text-caption)]">
-            Damit erstellst du dein Chaarlie Konto mit dieser E-Mail.
+            Damit erstellst du dein Chaarlie Konto mit dieser E-Mail. Hast du schon eins, startest
+            du damit neu.
           </p>
         </>
       )}
