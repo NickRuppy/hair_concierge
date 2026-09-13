@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { createQuizLeadPostHandler } from "../src/app/api/quiz/lead/route"
+import { defaultGetUser, resolvePartnerJourney } from "../src/lib/partner-access/journey"
 import {
   MIGRATION_QUIZ_CONTEXT_COOKIE,
   createMigrationQuizContextCookie,
@@ -18,6 +19,35 @@ const funnelContext = {
   sessionId: "30000000-0000-4000-8000-000000000003",
   packageKey: "default_organic",
   issuedAt: Date.now(),
+}
+
+/**
+ * The real partner resolver, driven through its real `defaultGetUser` with an
+ * injected session-less Supabase client — exactly what `@supabase/ssr` answers
+ * for an anonymous request (`user: null` plus an `AuthSessionMissingError`).
+ * Stubbing `resolvePartnerJourney` away here would hide a signed-out resolver
+ * regression from every ordinary-lead test: a resolver that reports
+ * `unavailable` for anonymous visitors turns each of them into a 503.
+ */
+function anonymousPartnerJourney() {
+  return resolvePartnerJourney({
+    getUser: () =>
+      defaultGetUser({
+        auth: {
+          async getUser() {
+            return {
+              data: { user: null },
+              error: Object.assign(new Error("Auth session missing!"), {
+                name: "AuthSessionMissingError",
+              }),
+            }
+          },
+        },
+      } as unknown as Parameters<typeof defaultGetUser>[0]),
+    loadInvitation: async () => {
+      throw new Error("an anonymous lead must never read partner invitations")
+    },
+  })
 }
 
 function migrationCookie(userId = migrationUserId, enrollmentId = migrationEnrollmentId) {
@@ -117,7 +147,7 @@ function handler({
 } = {}) {
   return createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
-    resolvePartnerJourney: async () => ({ kind: "none" }),
+    resolvePartnerJourney: anonymousPartnerJourney,
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: (async () => ({
       ok: true,

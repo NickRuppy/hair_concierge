@@ -266,7 +266,10 @@ export async function hasCurrentPaidAppAccess(
  * recomputes `hasIndependentPaidEntitlement` (middleware.ts, entitlements/
  * access.ts). Deliberately narrower than `findCurrentManualAccessGrant`:
  * only an unrevoked, non-expiring (`expires_at IS NULL`) `reason = 'partner'`
- * row counts, so a revoked invitation's grant never keeps counting.
+ * row counts. The query never reads `partner_access_invitations`, so "a revoked
+ * invitation never keeps counting" holds only because `revoke_partner_access`
+ * revokes the invitation's `current_manual_access_grant_id` in the same
+ * statement — the grant row itself is the sole source of truth here.
  */
 export async function hasCurrentPartnerAccess(
   supabase: SupabaseBillingClient,

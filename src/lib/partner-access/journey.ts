@@ -1,5 +1,6 @@
 import "server-only"
 
+import { hasPartnerAccessQuizHint } from "@/lib/partner-access/quiz-context"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -22,8 +23,12 @@ export type PartnerJourneyInvitationRow = {
   funnel_session_id: string
 }
 
+/** `app_metadata` is carried along so the invitation lookup can be gated on the
+ * claim's `partner_access_invitation_id` stamp — see `resolvePartnerJourney`. */
+export type PartnerJourneyUser = { id: string; app_metadata?: unknown }
+
 export type PartnerJourneyDependencies = {
-  getUser: () => Promise<{ id: string } | null>
+  getUser: () => Promise<PartnerJourneyUser | null>
   loadInvitation: (userId: string) => Promise<PartnerJourneyInvitationRow | null>
 }
 
@@ -33,6 +38,13 @@ export type PartnerJourneyDependencies = {
  * `partner_access_one_current_claimed_user` (claimed_user_id WHERE
  * claimed_user_id IS NOT NULL AND revoked_at IS NULL) guarantees at most one
  * matching row, so an unrevoked claimed invitation is unambiguous.
+ *
+ * Only an account whose `app_metadata` carries the claim's
+ * `partner_access_invitation_id` stamp ever reads `partner_access_invitations`.
+ * That keeps the blast radius of `unavailable` (which makes the quiz refuse to
+ * save a lead) inside partner accounts: a signed-out or unstamped visitor
+ * resolves `none` without touching the table, so a read failure there can never
+ * block an ordinary quiz submission.
  */
 export async function resolvePartnerJourney(
   overrides: Partial<PartnerJourneyDependencies> = {},
@@ -42,8 +54,9 @@ export async function resolvePartnerJourney(
   try {
     const user = await getUser()
     if (!user?.id) return { kind: "none" }
+    if (!hasPartnerAccessQuizHint(user)) return { kind: "none" }
     const data = await loadInvitation(user.id)
-    if (!data) return { kind: "none" }
+    if (!data?.funnel_session_id) return { kind: "none" }
     return {
       kind: "authorized",
       invitationId: data.id,
@@ -58,14 +71,34 @@ export async function resolvePartnerJourney(
   }
 }
 
-async function defaultGetUser() {
-  const session = await createClient()
+/**
+ * Exported (with the server client as an injectable, defaulted parameter, like
+ * `defaultLoadInvitation`) so tests can drive the real signed-out branch below
+ * instead of stubbing the whole resolver away.
+ *
+ * With no session `@supabase/ssr` answers `getUser()` with
+ * `{ data: { user: null }, error: AuthSessionMissingError }`. That is the
+ * ordinary anonymous visit, not an outage, so it must resolve to "signed out"
+ * — throwing here would turn every signed-out quiz lead into `unavailable`.
+ * A different error is a real auth failure and still propagates.
+ */
+export async function defaultGetUser(
+  authClient?: Awaited<ReturnType<typeof createClient>>,
+): Promise<PartnerJourneyUser | null> {
+  const session = authClient ?? (await createClient())
   const {
     data: { user },
     error,
   } = await session.auth.getUser()
-  if (error) throw error
-  return user ? { id: user.id } : null
+  if (!user) {
+    if (error && !isMissingAuthSessionError(error)) throw error
+    return null
+  }
+  return { id: user.id, app_metadata: user.app_metadata }
+}
+
+function isMissingAuthSessionError(error: { name?: string }) {
+  return error.name === "AuthSessionMissingError"
 }
 
 /**
@@ -83,9 +116,13 @@ export async function defaultLoadInvitation(
     .select("id,display_name,normalized_email,funnel_session_id")
     .eq("claimed_user_id", userId)
     .is("revoked_at", null)
+    .not("funnel_session_id", "is", null)
     .maybeSingle()
   if (error) throw error
-  return (data as PartnerJourneyInvitationRow | null) ?? null
+  const row = (data as PartnerJourneyInvitationRow | null) ?? null
+  // Keeps the non-nullable `funnel_session_id` on the returned type honest even
+  // if the predicate above is ever relaxed; `offer.ts` guards the same way.
+  return row?.funnel_session_id ? row : null
 }
 
 export async function savePartnerAccessLead(input: {

@@ -2,10 +2,15 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  defaultGetUser,
   defaultLoadInvitation,
   resolvePartnerJourney,
   type PartnerJourneyDependencies,
 } from "../src/lib/partner-access/journey"
+
+/** Both claim paths stamp this on the account, so it is what marks a user as
+ * worth an invitation lookup at all. */
+const partnerMetadata = { partner_access_invitation_id: "10000000-0000-4000-8000-000000000001" }
 
 const invitationRow = {
   id: "10000000-0000-4000-8000-000000000001",
@@ -18,7 +23,7 @@ function dependencies(
   overrides: Partial<PartnerJourneyDependencies> = {},
 ): PartnerJourneyDependencies {
   return {
-    getUser: async () => ({ id: "creator-user" }),
+    getUser: async () => ({ id: "creator-user", app_metadata: partnerMetadata }),
     loadInvitation: async () => invitationRow,
     ...overrides,
   }
@@ -54,6 +59,11 @@ function fakeInvitationsAdminClient(rows: FakeInvitationDbRow[]) {
         },
         is(column: keyof FakeInvitationDbRow, value: null) {
           filtered = filtered.filter((row) => row[column] === value)
+          return builder
+        },
+        not(column: keyof FakeInvitationDbRow, operator: "is", value: null) {
+          assert.equal(operator, "is")
+          filtered = filtered.filter((row) => row[column] !== value)
           return builder
         },
         async maybeSingle() {
@@ -134,7 +144,7 @@ test("another user's claimed invitation never authorizes this user", async () =>
   }
   const resolution = await resolvePartnerJourney(
     dependencies({
-      getUser: async () => ({ id: "this-user" }),
+      getUser: async () => ({ id: "this-user", app_metadata: partnerMetadata }),
       loadInvitation: (userId) =>
         defaultLoadInvitation(userId, fakeInvitationsAdminClient([otherUsersRow])),
     }),
@@ -165,4 +175,117 @@ test("an auth-service error on getUser() is unavailable, not none", async () => 
     }),
   )
   assert.deepEqual(resolution, { kind: "unavailable" })
+})
+
+/**
+ * Fake `@supabase/ssr` server client, injected into the real `defaultGetUser`
+ * so the signed-out branch is exercised for real instead of stubbed away.
+ */
+function fakeAuthClient(result: {
+  user: { id: string; app_metadata?: unknown } | null
+  error: { name: string; message?: string } | null
+}) {
+  return {
+    auth: {
+      async getUser() {
+        return { data: { user: result.user }, error: result.error }
+      },
+    },
+  } as unknown as Parameters<typeof defaultGetUser>[0]
+}
+
+/** What `@supabase/ssr` actually returns for a request without a session. */
+function authSessionMissingError() {
+  const error = new Error("Auth session missing!")
+  error.name = "AuthSessionMissingError"
+  return error as unknown as { name: string; message: string }
+}
+
+test("no auth session is an ordinary signed-out visit, not an outage", async () => {
+  const resolution = await resolvePartnerJourney({
+    getUser: () => defaultGetUser(fakeAuthClient({ user: null, error: authSessionMissingError() })),
+    loadInvitation: async () => {
+      throw new Error("must not look up an invitation without a signed-in user")
+    },
+  })
+  assert.deepEqual(resolution, { kind: "none" })
+})
+
+test("a real auth failure on the default getUser path is unavailable, not none", async () => {
+  const resolution = await resolvePartnerJourney({
+    getUser: () =>
+      defaultGetUser(
+        fakeAuthClient({ user: null, error: { name: "AuthRetryableFetchError", message: "down" } }),
+      ),
+    loadInvitation: async () => {
+      throw new Error("must not look up an invitation when getUser() failed")
+    },
+  })
+  assert.deepEqual(resolution, { kind: "unavailable" })
+})
+
+test("the default getUser path carries app_metadata through to the hint check", async () => {
+  const resolution = await resolvePartnerJourney({
+    getUser: () =>
+      defaultGetUser(
+        fakeAuthClient({
+          user: { id: "creator-user", app_metadata: partnerMetadata },
+          error: null,
+        }),
+      ),
+    loadInvitation: async () => invitationRow,
+  })
+  assert.equal(resolution.kind, "authorized")
+})
+
+test("a signed-in user without the claim stamp never reads the invitation table", async () => {
+  let lookups = 0
+  const resolution = await resolvePartnerJourney(
+    dependencies({
+      getUser: async () => ({ id: "ordinary-user", app_metadata: { provider: "email" } }),
+      loadInvitation: async () => {
+        lookups += 1
+        return invitationRow
+      },
+    }),
+  )
+  assert.deepEqual(resolution, { kind: "none" })
+  assert.equal(lookups, 0)
+})
+
+test("only a stamped account can be made unavailable by an invitation read error", async () => {
+  const unstamped = await resolvePartnerJourney(
+    dependencies({
+      getUser: async () => ({ id: "ordinary-user", app_metadata: {} }),
+      loadInvitation: async () => {
+        throw new Error("database unavailable")
+      },
+    }),
+  )
+  assert.deepEqual(unstamped, { kind: "none" })
+
+  const stamped = await resolvePartnerJourney(
+    dependencies({
+      loadInvitation: async () => {
+        throw new Error("database unavailable")
+      },
+    }),
+  )
+  assert.deepEqual(stamped, { kind: "unavailable" })
+})
+
+test("an invitation row without a funnel session stays an ordinary journey", async () => {
+  const sessionlessRow: FakeInvitationDbRow = {
+    ...invitationRow,
+    funnel_session_id: null as unknown as string,
+    claimed_user_id: "creator-user",
+    revoked_at: null,
+  }
+  const resolution = await resolvePartnerJourney(
+    dependencies({
+      loadInvitation: (userId) =>
+        defaultLoadInvitation(userId, fakeInvitationsAdminClient([sessionlessRow])),
+    }),
+  )
+  assert.deepEqual(resolution, { kind: "none" })
 })
