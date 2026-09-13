@@ -68,6 +68,12 @@ export function QuizLeadCapture() {
   // A rejected address sends the user back to the e-mail step. The consent
   // question was already answered by then, so it must not be asked a second
   // time: the stored answer is resubmitted with the corrected address.
+  //
+  // The marker belongs to that one submission and to nothing else. It survives
+  // as long as the user stays on the e-mail step correcting the address, and is
+  // dropped the moment the recovery ends — the Back button leaves the step, a
+  // successful save finishes it. Otherwise a later, unrelated address would be
+  // sent with a consent answer the user never gave for it.
   const consentAnsweredRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
   const contextLookupKey = getPartnerQuizContextLookupKey({
@@ -178,19 +184,43 @@ export function QuizLeadCapture() {
   const handleBack = useCallback(() => {
     if (leadCaptureSubStep === "consent") {
       if (leadCaptureMode === "partner") {
+        consentAnsweredRef.current = false
         goBack()
         return
       }
+      // The rejection recovery routes through this branch, so the stored
+      // consent must survive it — it belongs to the submission being corrected.
       setLeadCaptureSubStep("email")
     } else if (leadCaptureSubStep === "email") {
+      // Leaving the e-mail step ends that recovery. The next submission is a
+      // fresh one, so the consent question is asked again.
+      consentAnsweredRef.current = false
       setError("")
       setServerSuggestion(null)
       setLeadCaptureSubStep("name")
     } else if (leadCaptureSubStep === "name") {
+      consentAnsweredRef.current = false
       goBack()
     }
   }, [goBack, leadCaptureMode, leadCaptureSubStep, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
+
+  /**
+   * Where a failed save puts the user: always the e-mail step, with the server
+   * message and the suggestion still on screen.
+   *
+   * The retry after a rejection is submitted from the e-mail step itself, so a
+   * second rejection must not move at all — a Back request from there would
+   * step on to the name screen and clear both the message and the suggestion.
+   * Partner capture has no e-mail step; its error stays on the consent sheet.
+   */
+  const returnToEmailStep = () => {
+    if (leadCaptureMode === "partner") return
+    if (leadCaptureSubStep !== "consent") return
+    // Routed through the Back request so the browser history depth stays in
+    // sync; the consent branch of `handleBack` keeps the error and suggestion.
+    requestBack()
+  }
 
   const handleConsent = async (accepted: boolean) => {
     if (saving) return
@@ -240,7 +270,7 @@ export function QuizLeadCapture() {
                 ? "Dein persönlicher Zugang konnte gerade nicht bestätigt werden."
                 : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
             )
-            if (leadCaptureMode !== "partner") requestBack()
+            returnToEmailStep()
             window.scrollTo(0, 0)
             return
           }
@@ -254,13 +284,15 @@ export function QuizLeadCapture() {
           }
           setServerSuggestion(suggestion)
           setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
-          requestBack()
+          returnToEmailStep()
           window.scrollTo(0, 0)
           return
         }
         throw new Error("Speichern fehlgeschlagen")
       }
 
+      // The submission is done, so the recovery it belonged to is over too.
+      consentAnsweredRef.current = false
       setLeadId(data.leadId)
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
@@ -275,7 +307,7 @@ export function QuizLeadCapture() {
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
-      if (leadCaptureMode !== "partner") requestBack()
+      returnToEmailStep()
     } finally {
       setSaving(false)
     }

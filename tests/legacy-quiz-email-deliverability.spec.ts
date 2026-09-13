@@ -150,6 +150,90 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     expect(submissionCount).toBe(2)
   })
 
+  // The retry is submitted from the e-mail step, so the recovery may not lean on
+  // the Back button any more: that would step on to the name screen and wipe the
+  // very message the second rejection just wrote.
+  test("a second rejection keeps the user on the e-mail step with the message", async ({
+    page,
+  }) => {
+    let submissionCount = 0
+    await page.route("**/api/quiz/lead", async (route) => {
+      submissionCount += 1
+      await route.fulfill({
+        contentType: "application/json",
+        status: 422,
+        body: JSON.stringify(rejectedLeadResponse),
+      })
+    })
+
+    await openEmailCapture(page)
+    const email = page.getByPlaceholder("name@beispiel.de")
+    const error = page.locator("#legacy-quiz-email-error")
+    await email.fill("legacy.test@gmail.vom")
+    await page.getByRole("button", { name: "Weiter" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
+
+    await expect(page.getByRole("heading", { name: "Deine E-Mail Adresse" })).toBeVisible()
+    await expect(error).toContainText("Diese E-Mail-Domain kann keine E-Mails empfangen")
+
+    // Retry with a second undeliverable address, straight from the e-mail step.
+    await email.fill("legacy.test@gmail.vpm")
+    await expect(error).toHaveCount(0)
+    await page.getByRole("button", { name: "Weiter" }).click()
+
+    await expect.poll(() => submissionCount).toBe(2)
+    await expect(page.getByRole("heading", { name: "Deine E-Mail Adresse" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Wie heißt du?" })).toHaveCount(0)
+    await expect(error).toContainText("Diese E-Mail-Domain kann keine E-Mails empfangen")
+    await expect(
+      page.getByRole("button", { name: /Korrektur übernehmen.*legacy\.test@gmail\.com/i }),
+    ).toBeVisible()
+    await expect(email).toHaveValue("legacy.test@gmail.vpm")
+  })
+
+  // The kept consent belongs to the submission being corrected. Back ends that
+  // recovery, so the next address is a fresh submission and must ask again.
+  test("Back after a rejection asks the consent question again", async ({ page }) => {
+    const submittedConsents: unknown[] = []
+    await page.route("**/api/quiz/lead", async (route) => {
+      const payload = route.request().postDataJSON() as { marketingConsent?: unknown }
+      submittedConsents.push(payload.marketingConsent)
+      if (submittedConsents.length === 1) {
+        await route.fulfill({
+          contentType: "application/json",
+          status: 422,
+          body: JSON.stringify(rejectedLeadResponse),
+        })
+        return
+      }
+      await route.fulfill({
+        contentType: "application/json",
+        status: 200,
+        body: JSON.stringify({ leadId: "legacy-consent-reset-lead" }),
+      })
+    })
+
+    await openEmailCapture(page)
+    const email = page.getByPlaceholder("name@beispiel.de")
+    await email.fill("legacy.test@gmail.vom")
+    await page.getByRole("button", { name: "Weiter" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
+    await expect(page.locator("#legacy-quiz-email-error")).toBeVisible()
+
+    // Back to the name step and forward again: a new submission, not a recovery.
+    await page.getByRole("button", { name: "Zurück" }).click()
+    await expect(page.getByRole("heading", { name: "Wie heißt du?" })).toBeVisible()
+    await page.getByRole("button", { name: "Weiter zum Ergebnis" }).click()
+    await expect(page.getByRole("heading", { name: "Deine E-Mail Adresse" })).toBeVisible()
+    await page.getByPlaceholder("name@beispiel.de").fill("legacy.test@gmail.com")
+    await page.getByRole("button", { name: "Weiter" }).click()
+
+    const consentYes = page.getByRole("button", { name: "Ja, weiter zu meiner Auswertung" })
+    await expect(consentYes).toBeVisible()
+    await consentYes.click()
+    await expect.poll(() => submittedConsents).toEqual([false, true])
+  })
+
   test("an invalid address is named on blur and the CTA stays a dimmed button", async ({
     page,
   }) => {
