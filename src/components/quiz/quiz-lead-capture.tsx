@@ -181,7 +181,24 @@ export function QuizLeadCapture() {
     setLeadCaptureSubStep("consent")
   }
 
+  // Set immediately before `returnToEmailStep()` calls `requestBack()`, so
+  // `handleBack` can tell that one intentional call apart from every other
+  // route into it (the header button — disabled while saving — a real
+  // browser-history pop from hardware/OS back, or a stale `requestBack`).
+  // `requestBack()` may invoke the registered handler synchronously (no
+  // history depth left) or only later via `popstate`; either way this is the
+  // one flag that is true exactly for that call, so it is read and cleared as
+  // the very first thing `handleBack` does.
+  const recoveryBackRef = useRef(false)
+
   const handleBack = useCallback(() => {
+    const isRecoveryBack = recoveryBackRef.current
+    recoveryBackRef.current = false
+    // A save is in flight (submitted from the consent step). Ignore any
+    // other route into this handler so a stale sub-step can't win a race
+    // against the pending response — the recovery call above is exempt, it
+    // is what moves the user to the e-mail step once the response lands.
+    if (saving && !isRecoveryBack) return
     if (leadCaptureSubStep === "consent") {
       if (leadCaptureMode === "partner") {
         consentAnsweredRef.current = false
@@ -202,7 +219,7 @@ export function QuizLeadCapture() {
       consentAnsweredRef.current = false
       goBack()
     }
-  }, [goBack, leadCaptureMode, leadCaptureSubStep, setLeadCaptureSubStep])
+  }, [goBack, leadCaptureMode, leadCaptureSubStep, saving, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
 
   /**
@@ -219,6 +236,10 @@ export function QuizLeadCapture() {
     if (leadCaptureSubStep !== "consent") return
     // Routed through the Back request so the browser history depth stays in
     // sync; the consent branch of `handleBack` keeps the error and suggestion.
+    // This call is still made while `saving` is true (it runs before
+    // `handleConsent`'s `finally` clears it), so it must get through the
+    // saving-guard in `handleBack` — mark it as the one exempt call.
+    recoveryBackRef.current = true
     requestBack()
   }
 
@@ -356,9 +377,11 @@ export function QuizLeadCapture() {
       {/* Progress bar */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={requestBack}
+          onClick={saving ? undefined : requestBack}
           aria-label="Zurück"
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          aria-disabled={saving}
+          disabled={saving}
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>

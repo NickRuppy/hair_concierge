@@ -150,6 +150,65 @@ test.describe("@ci legacy quiz email deliverability recovery", () => {
     expect(submissionCount).toBe(2)
   })
 
+  // A Back attempt while the consent submission is still in flight must not win
+  // a race against the pending response: the header button is disabled, and a
+  // real browser-back (hardware/OS gesture) must not advance the sub-step
+  // either, or the stale-closure recovery below would land on the name screen.
+  test("Back during an in-flight submission is ignored and recovery still lands on the e-mail step", async ({
+    page,
+  }) => {
+    let submissionCount = 0
+    let releaseFirstResponse!: () => void
+    let markFirstRequestReceived!: () => void
+    const firstResponseGate = new Promise<void>((resolve) => {
+      releaseFirstResponse = resolve
+    })
+    const firstRequestReceived = new Promise<void>((resolve) => {
+      markFirstRequestReceived = resolve
+    })
+
+    await page.route("**/api/quiz/lead", async (route) => {
+      submissionCount += 1
+      markFirstRequestReceived()
+      await firstResponseGate
+      await route.fulfill({
+        contentType: "application/json",
+        status: 422,
+        body: JSON.stringify(rejectedLeadResponse),
+      })
+    })
+
+    await openEmailCapture(page)
+    const email = page.getByPlaceholder("name@beispiel.de")
+    await email.fill("legacy.test@example.com")
+    await page.getByRole("button", { name: "Weiter" }).click()
+    await page.getByRole("button", { name: "Nein, nur meine Auswertung schicken" }).click()
+    await firstRequestReceived
+
+    const backButton = page.getByRole("button", { name: "Zurück" })
+    await expect(backButton).toBeDisabled()
+
+    // A real browser-back during the in-flight request (hardware/OS gesture) —
+    // the disabled header button already blocks a click, so this exercises the
+    // `handleBack` guard directly.
+    await page.goBack()
+
+    // Still mid-flight on the consent step: unmoved, buttons still disabled.
+    await expect(
+      page.getByRole("button", { name: "Ja, weiter zu meiner Auswertung" }),
+    ).toBeDisabled()
+    await expect(page.getByRole("heading", { name: "Wie heißt du?" })).toHaveCount(0)
+
+    releaseFirstResponse()
+
+    await expect(page.getByRole("heading", { name: "Deine E-Mail Adresse" })).toBeVisible()
+    await expect(page.locator("#legacy-quiz-email-error")).toContainText(
+      "Diese E-Mail-Domain kann keine E-Mails empfangen",
+    )
+    await expect(page.getByRole("heading", { name: "Wie heißt du?" })).toHaveCount(0)
+    expect(submissionCount).toBe(1)
+  })
+
   // The retry is submitted from the e-mail step, so the recovery may not lean on
   // the Back button any more: that would step on to the name screen and wipe the
   // very message the second rejection just wrote.
