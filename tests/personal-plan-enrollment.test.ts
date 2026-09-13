@@ -373,11 +373,35 @@ test("a claimed partner invitation without a lead binding or activation never gr
   })
 })
 
+// The user must actually be a claimed partner (a partner_access_invitations
+// row bound to them) for this to be the composed case the fresh-start reset
+// guards against: a claimed partner whose invitation hasn't granted active
+// partner access on its own (no lead binding or activation yet, same shape
+// as "a claimed partner invitation without a lead binding or activation
+// never grants access" above) must not fall through to a stale, revoked
+// tester enrollment and resurrect the old tester's lead/sourceKind.
 test("a claimed partner's revoked tester enrollments never resurrect the old tester lead", async () => {
   const admin = client({
     billing_one_time_purchases: [],
     billing_subscriptions: [],
-    partner_access_invitations: [],
+    partner_access_invitations: [
+      {
+        id: "partner-invitation-fresh-start",
+        claimed_user_id: "user-1",
+        lead_id: null,
+        activated_at: null,
+        revoked_at: null,
+        current_manual_access_grant_id: "partner-grant-fresh-start",
+        current_grant: {
+          id: "partner-grant-fresh-start",
+          user_id: "user-1",
+          reason: "partner",
+          expires_at: null,
+          revoked_at: null,
+          partner_access_invitation_id: "partner-invitation-fresh-start",
+        },
+      },
+    ],
     personal_plan_test_enrollments: [
       {
         id: "field-test-enrollment-stale",

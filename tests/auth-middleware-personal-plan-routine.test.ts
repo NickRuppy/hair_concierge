@@ -625,7 +625,15 @@ test("a partner grant with a fresh-start profile is routed from /chat to /quiz, 
   assert.equal(response.headers.get("location"), "https://chaarlie.de/quiz")
 })
 
-test("a paid-exempt partner with a completed profile passes through /chat unredirected", async () => {
+// Note on scope: with the default moderatorAccess: "none", this pass-through
+// is driven entirely by `hasCurrentAppAccess` (`currentAccess: true`) plus a
+// completed profile — the moderator-ended/unavailable recomputation branch
+// that actually calls `hasCurrentPaidAppAccess`/`hasCurrentPartnerAccess`
+// (middleware.ts ~L504-513) never runs here. `paidAccess` and the partner
+// metadata are incidental; this only pins that a currently paying account
+// which also happens to carry partner metadata keeps ordinary /chat access.
+// See the two tests below for the actual paid/partner composition guard.
+test("a currently paying account that also carries partner metadata keeps ordinary /chat access", async () => {
   const response = await createMiddleware({
     currentAccess: true,
     paidAccess: true,
@@ -635,6 +643,45 @@ test("a paid-exempt partner with a completed profile passes through /chat unredi
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
+})
+
+// Composed case: once a moderator record has ended, the middleware
+// recomputes access from `hasCurrentPaidAppAccess` OR `hasCurrentPartnerAccess`
+// alone (middleware.ts ~L504-518) — `hasCurrentAppAccess`/`currentAccess` is
+// discarded. Pin that independently verified paid access keeps a
+// partner-labelled, fully onboarded account on /chat, mirroring "an ended
+// moderator with independently verified paid access remains admitted".
+test("an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    paidAccess: true,
+    partnerAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    moderatorAccess: "ended",
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
+// Negative twin: carrying `access_kind: "partner"` metadata alone is not an
+// independently verified grant — without `hasCurrentPaidAppAccess` or
+// `hasCurrentPartnerAccess` resolving true, an ended moderator is still
+// routed to the ended screen, mirroring "an ended moderator without paid or
+// partner access is still routed to the ended screen".
+test("an ended moderator with partner metadata but no independently verified access is still routed to the ended screen", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    paidAccess: false,
+    partnerAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    moderatorAccess: "ended",
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
 })
 
 test("a moderator access lookup outage is unavailable rather than an expiry or paywall", async () => {
