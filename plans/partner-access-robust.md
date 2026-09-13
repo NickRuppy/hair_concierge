@@ -140,7 +140,7 @@ Journey sign-off: **confirmed** (Nick, 2026-09-13, no corrections).
 
 ## 8. Ordered tasks
 
-### T1 Migration + SQL tests — grant at claim, fresh start, activation stamps
+### Task 1: Migration + SQL tests — grant at claim, fresh start, activation stamps
 
 **Produces:** `supabase/migrations/20260913120000_partner_access_fresh_start.sql`; RPC signatures below.
 
@@ -169,7 +169,7 @@ Journey sign-off: **confirmed** (Nick, 2026-09-13, no corrections).
 
 Completion: `npm run test:node -- tests/partner-access-sql-execution.test.ts` green.
 
-### T2 User-bound partner journey, offer authorization and partner-grant predicate
+### Task 2: User-bound partner journey, offer authorization and partner-grant predicate
 
 **Consumes:** nothing new from T1 (reads existing columns). **Produces:** `resolvePartnerJourney({ getUser })`, `resolvePartnerOfferAuthorization({ userId, leadId })`, `hasCurrentPartnerAccess(supabase, { userId })`.
 
@@ -182,7 +182,7 @@ Completion: `npm run test:node -- tests/partner-access-sql-execution.test.ts` gr
 
 Completion: a signed-in claimed user gets partner context with zero partner cookies; a revoked partner submits a regular lead.
 
-### T3 Claim route + clients — paid exemption, fresh-start signal, draft clearing
+### Task 3: Claim route + clients — paid exemption, fresh-start signal, draft clearing
 
 **Consumes:** T1 RPC signature; T2 predicates.
 
@@ -192,7 +192,7 @@ Completion: a signed-in claimed user gets partner context with zero partner cook
 
 Completion: a browser with a stale quiz draft starts the partner quiz at step 1 after a fresh-start claim and keeps its draft on a replay.
 
-### T4 Admin status + copy
+### Task 4: Admin status + copy
 
 **Consumes:** grant-at-claim semantics from T1; Variant B labels.
 
@@ -202,7 +202,7 @@ Completion: a browser with a stale quiz draft starts the partner quiz at step 1 
 
 Completion: badge for today's Stefanie row after self-heal reads "Zugang aktiv · Quiz offen".
 
-### T5 Enrollment, intake and routing regression guards
+### Task 5: Enrollment, intake and routing regression guards
 
 - `tests/personal-plan-enrollment.test.ts`: claimed partner with grant but no `lead_id`/`activated_at` → `emptyEnrollment`; claimed partner whose tester enrollment was revoked by fresh start → `emptyEnrollment` (not the old tester lead).
 - `tests/auth-intake-state.test.ts`: profile after fresh start → `needs_quiz`; `/quiz` not redirected; `/chat` → `/quiz`.
@@ -210,7 +210,7 @@ Completion: badge for today's Stefanie row after self-heal reads "Zugang aktiv �
 
 Completion: suites green; no production code change expected beyond T2.
 
-### T6 Docs
+### Task 6: Docs
 
 - `docs/partner-access-operations.md`: state table (four badges), what a fresh start clears and keeps, paid-exemption rule (P1), re-test recipe (revoke → create), self-heal note, post-revocation behavior (P3).
 - `docs/local-qa-access.md` partner section: local recipe for the existing-account and former-moderator cases.
