@@ -12,6 +12,11 @@ import { getQuizScreenOrder, isQuizInsertStep } from "../src/lib/quiz/screen-ord
 import type { QuizAnswers, QuizStep } from "../src/lib/quiz/types"
 
 const quizPageSource = readFileSync(new URL("../src/app/quiz/page.tsx", import.meta.url), "utf8")
+const scanOfferSource = readFileSync(
+  new URL("../src/components/scan-regal-offer/scan-regal-offer.tsx", import.meta.url),
+  "utf8",
+)
+const SURVEY_SOURCE_LINE = "Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich"
 const globalsSource = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8")
 
 function renderInsert(step: QuizStep, answers: QuizAnswers) {
@@ -44,6 +49,16 @@ test("the problem insert names the shelf moment and the answers already given", 
   assert.match(html, /Drei Antworten, die der Scanner ab jetzt kennt\./)
   assert.match(html, imageUrl("frau-regal-aha.webp"))
   assert.match(html, /Weiter/)
+})
+
+// The landing and the offer both carry the survey's source; the insert used to
+// print the number bare. The string is the offer page's, verbatim, so the two
+// places cannot drift into two different sample sizes.
+test("the 63 % statistic names the same source the offer page prints", () => {
+  const html = renderInsert(16, { structure: "wavy", thickness: "fine", density: "medium" })
+
+  assert.ok(html.includes(SURVEY_SOURCE_LINE), "the insert prints the source line")
+  assert.ok(scanOfferSource.includes(SURVEY_SOURCE_LINE), "the offer page prints the same line")
 })
 
 test("the solution insert quotes the scalp answer the user just gave", () => {
