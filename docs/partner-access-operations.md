@@ -23,7 +23,7 @@ Der Admin zeigt pro Zeile genau einen der folgenden vier Zustände:
 | **Plan gestartet** | Aktiviert — der Creator hat das Quiz abgeschlossen und einen Plan gestartet; der Grant ist weiterhin aktiv. |
 | **Widerrufen** | Entweder explizit widerrufen, oder geclaimt/aktiviert ohne aktiven Grant (z. B. nach einem älteren, noch nicht selbstheilenden Zustand). |
 
-Bei alten "Konto erstellt"-Zeilen (geclaimt, nie aktiviert, nie widerrufen, ohne Grant) steht das Badge auf **Widerrufen**, bis entweder der Creator den Link erneut öffnet (Selbstheilung, siehe unten) oder im Admin **Reaktivieren** gedrückt wird — das legt für solche Zeilen jetzt den fehlenden Grant an und stellt den Zugang wieder her.
+Bei alten "Konto erstellt"-Zeilen (geclaimt, nie aktiviert, nie widerrufen, ohne Grant) steht das Badge auf **Widerrufen**, bis entweder der Creator den Link erneut öffnet (Selbstheilung, siehe unten) oder im Admin **Reaktivieren** gedrückt wird — das legt für solche Zeilen jetzt den fehlenden Grant an und stellt den Zugang wieder her. **Reaktivieren** stellt dabei nur den Zugang wieder her; der noch offene Neustart passiert, sobald der Creator den Link das nächste Mal öffnet.
 
 ### Neustart: was ein Claim zurücksetzt
 
@@ -43,7 +43,7 @@ Beim ersten Claim einer Einladung setzt der Server das claimende Konto in densel
 
 **Bleibt erhalten:** Chat-Verläufe, Tracker-Einträge, Scans und Merkliste. Alte Plan-Versionen bleiben als Historie in der Datenbank stehen — nur die aktuellen Zeiger im Personal Plan werden auf leer gesetzt, nichts wird gelöscht.
 
-Der Neustart läuft nur beim **ersten** Claim einer Einladung (`fresh_start_at` wird einmalig gesetzt). Ein erneutes Öffnen desselben Links danach setzt nichts zurück.
+Der Neustart läuft nur beim **ersten** Claim einer Einladung, der eine Neustart-Entscheidung mitbringt (`fresh_start_decided_at` wird einmalig gesetzt, `fresh_start_at` nur bei einem tatsächlichen Neustart). Ein erneutes Öffnen desselben Links danach setzt nichts zurück — auch dann nicht, wenn die erste Entscheidung "kein Neustart" lautete.
 
 ### Bezahlte Ausnahme (P1)
 
@@ -61,7 +61,7 @@ Ein bereits geclaimter (oder aktivierter) Zugang setzt sich bei erneutem Linkauf
 
 ### Selbstheilung alter "Konto erstellt"-Zeilen
 
-Vor diesem Feature wurde der Zugriffs-Grant erst bei Aktivierung erzeugt, nicht beim Claim. Eine Einladung, die bereits geclaimt, aber nie aktiviert wurde (z. B. Stefanies Zeile), hatte deshalb keinen Grant. Beim nächsten Öffnen ihres Links erkennt der Server das (geclaimt, kein aktiver Grant, nicht aktiviert, noch kein Neustart erfolgt) und heilt sich selbst: er legt den fehlenden Grant nach und führt — sofern kein unabhängiger bezahlter Zugang vorliegt — denselben Neustart wie ein Erstclaim aus. Kein manueller Eingriff nötig.
+Vor diesem Feature wurde der Zugriffs-Grant erst bei Aktivierung erzeugt, nicht beim Claim. Eine Einladung, die bereits geclaimt, aber nie aktiviert wurde (z. B. Stefanies Zeile), hatte deshalb keinen Grant. Beim nächsten Öffnen ihres Links erkennt der Server das (geclaimt, nicht aktiviert, noch keine Neustart-Entscheidung getroffen) und heilt sich selbst: er legt einen fehlenden Grant nach und führt — sofern kein unabhängiger bezahlter Zugang vorliegt — denselben Neustart wie ein Erstclaim aus. Das gilt auch, wenn bereits ein Grant besteht (Claim im Rollout-Fenster oder nach **Reaktivieren**): dann bleibt der Grant, und nur der Neustart wird nachgeholt. Kein manueller Eingriff nötig.
 
 ### Verhalten nach Widerruf
 
@@ -85,7 +85,7 @@ Widerrufe immer über `revoke_partner_access` beziehungsweise die Admin-Oberflä
 
 Die Migration `20260901120000_partner_access.sql` muss vor dem Anwendungscode ausgerollt werden. Wegen der abweichenden lokalen und entfernten Migrationshistorie darf sie nicht mit einem pauschalen `supabase db push` ausgerollt werden; dafür ist ein separat geprüfter, gezielter Migrationsschritt erforderlich.
 
-Ebenso muss die Migration `20260913120000_partner_access_fresh_start.sql` vor dem zugehörigen Anwendungscode ausgerollt werden. Der RPC-Parameter `p_fresh_start` von `complete_partner_access_claim` ist standardmäßig `false`: solange alter Anwendungscode (der diesen Parameter nicht kennt) läuft, kann er während des Rollout-Fensters keinen Neustart auslösen und damit kein Konto ungewollt zurücksetzen.
+Ebenso muss die Migration `20260913120000_partner_access_fresh_start.sql` vor dem zugehörigen Anwendungscode ausgerollt werden. Der RPC-Parameter `p_fresh_start` von `complete_partner_access_claim` hat keinen Vorgabewert `false`, sondern `NULL` — der RPC wertet einen fehlenden Parameter als "noch keine Entscheidung". Ein Claim im Rollout-Fenster (alter Anwendungscode, der den Parameter nicht kennt) schaltet den Zugang also sofort frei, setzt aber nichts zurück; der Neustart wird beim nächsten Linkaufruf des Creators nachgeholt, sobald der neue Code die Entscheidung mitliefert. Kein Konto wird dadurch ungewollt zurückgesetzt, und keine Einladung bleibt dauerhaft ohne Neustart hängen.
 
 ## Konfiguration
 

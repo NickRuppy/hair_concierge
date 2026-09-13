@@ -230,7 +230,7 @@ test("a paying account can claim partner access without a fresh start", async (t
   })
 })
 
-test("omitting p_fresh_start relies on the safe DEFAULT false and behaves like a no-fresh-start claim", async (t) => {
+test("omitting p_fresh_start grants access, records no decision and performs no reset", async (t) => {
   const pg = await migratedDatabase(t)
   const invitationId = await createInvitation(pg)
   await seedAccount(pg)
@@ -247,15 +247,10 @@ test("omitting p_fresh_start relies on the safe DEFAULT false and behaves like a
   )
 
   assert.equal(await activePartnerGrants(pg, invitationId), "1")
-  assert.equal(
-    (
-      await pg.query<{ stamped: boolean }>(
-        "SELECT fresh_start_at IS NOT NULL AS stamped FROM public.partner_access_invitations WHERE id = $1",
-        [invitationId],
-      )
-    ).rows[0].stamped,
-    false,
-  )
+  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {
+    fresh_start_stamped: false,
+    fresh_start_decided: false,
+  })
   assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "1")
   const plan = await readPlan(pg)
   assert.deepEqual(plan, {
@@ -288,6 +283,115 @@ test("omitting p_fresh_start relies on the safe DEFAULT false and behaves like a
   })
 })
 
+test("a claim from the rollout window still restarts on the next decided claim", async (t) => {
+  const pg = await migratedDatabase(t)
+  const invitationId = await createInvitation(pg)
+  await seedAccount(pg)
+  await seedUsedAccountState(pg)
+
+  // Application code from before the migration calls the five-argument form: it
+  // binds the invitation and grants access, but decides no fresh start.
+  await reserve(pg, invitationId, ids.attempt)
+  await pg.query("SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)", [
+    invitationId,
+    ids.attempt,
+    ids.creator,
+    ids.funnel,
+  ])
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {
+    fresh_start_stamped: false,
+    fresh_start_decided: false,
+  })
+  assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "1")
+
+  // The deployed code opens the same link again and now carries the decision.
+  const decided = await completeClaim(pg, invitationId)
+  assert.deepEqual(
+    { reused: decided.reused, fresh_start: decided.fresh_start },
+    { reused: true, fresh_start: true },
+  )
+  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {
+    fresh_start_stamped: true,
+    fresh_start_decided: true,
+  })
+  assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "0")
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  assert.equal(await readPlan(pg).then((plan) => plan.enrollment_purchase_source_id), invitationId)
+})
+
+test("an admin repair leaves the pending fresh start for the creator's next link open", async (t) => {
+  const pg = await migratedDatabase(t)
+  const invitationId = await createInvitation(pg)
+  await seedAccount(pg)
+  await seedUsedAccountState(pg)
+
+  // Shape a legacy claimed row: bound to the account, no grant, no decision.
+  await reserve(pg, invitationId, ids.attempt)
+  await pg.query("SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)", [
+    invitationId,
+    ids.attempt,
+    ids.creator,
+    ids.funnel,
+  ])
+  await pg.query(
+    "UPDATE public.partner_access_invitations SET current_manual_access_grant_id = NULL WHERE id = $1",
+    [invitationId],
+  )
+  await pg.query(
+    "DELETE FROM public.manual_access_grants WHERE partner_access_invitation_id = $1",
+    [invitationId],
+  )
+
+  const repaired = await pg.query<{ changed: boolean }>(
+    "SELECT * FROM public.reactivate_partner_access($1)",
+    [invitationId],
+  )
+  assert.equal(repaired.rows[0].changed, true)
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  // The repair restores access only — it must not consume the fresh-start decision.
+  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {
+    fresh_start_stamped: false,
+    fresh_start_decided: false,
+  })
+
+  const decided = await completeClaim(pg, invitationId)
+  assert.deepEqual(
+    { reused: decided.reused, fresh_start: decided.fresh_start },
+    { reused: true, fresh_start: true },
+  )
+  assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "0")
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+})
+
+test("a recorded no-reset decision survives a later fresh-start claim (P1)", async (t) => {
+  const pg = await migratedDatabase(t)
+  const invitationId = await createInvitation(pg)
+  await seedAccount(pg)
+  const seeded = await seedUsedAccountState(pg)
+
+  await reserve(pg, invitationId, ids.attempt)
+  const paying = await completeClaim(pg, invitationId, false)
+  assert.equal(paying.fresh_start, false)
+  assert.deepEqual(await readFreshStartStamps(pg, invitationId), {
+    fresh_start_stamped: false,
+    fresh_start_decided: true,
+  })
+
+  // The paid entitlement lapses and a later link open would decide "restart" — but
+  // the decision for this invitation is already recorded, so nothing is reset.
+  const lapsed = await completeClaim(pg, invitationId)
+  assert.deepEqual(
+    { reused: lapsed.reused, fresh_start: lapsed.fresh_start },
+    { reused: true, fresh_start: false },
+  )
+  assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "1")
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  const plan = await readPlan(pg)
+  assert.equal(plan.enrollment_purchase_source_id, seeded.enrollmentSourceId)
+  assert.equal(plan.current_initial_need_version_id, ids.needVersion)
+})
+
 test("a replayed claim completion neither re-grants nor restarts the account again", async (t) => {
   const pg = await migratedDatabase(t)
   const invitationId = await createInvitation(pg)
@@ -315,8 +419,14 @@ test("a legacy claimed invitation self-heals its grant and restart exactly once"
   const invitationId = await createInvitation(pg)
   await seedAccount(pg)
 
+  // A claim from before this feature: bound to the account, no grant, no decision.
   await reserve(pg, invitationId, ids.attempt)
-  await completeClaim(pg, invitationId, false)
+  await pg.query("SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)", [
+    invitationId,
+    ids.attempt,
+    ids.creator,
+    ids.funnel,
+  ])
   await pg.query(
     "UPDATE public.manual_access_grants SET revoked_at = pg_catalog.now() WHERE partner_access_invitation_id = $1",
     [invitationId],
@@ -691,6 +801,16 @@ async function scalarCount(pg: PGlite, fromClause: string, params: unknown[] = [
     params,
   )
   return result.rows[0].count
+}
+
+async function readFreshStartStamps(pg: PGlite, invitationId: string) {
+  const result = await pg.query<{ fresh_start_stamped: boolean; fresh_start_decided: boolean }>(
+    `SELECT fresh_start_at IS NOT NULL AS fresh_start_stamped,
+            fresh_start_decided_at IS NOT NULL AS fresh_start_decided
+       FROM public.partner_access_invitations WHERE id = $1`,
+    [invitationId],
+  )
+  return result.rows[0]
 }
 
 async function activePartnerGrants(pg: PGlite, invitationId: string) {

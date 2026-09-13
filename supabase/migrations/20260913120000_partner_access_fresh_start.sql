@@ -4,10 +4,14 @@
 -- failure rolls the whole completion back instead of leaving a half-reset account.
 
 ALTER TABLE public.partner_access_invitations
-  ADD COLUMN fresh_start_at timestamptz;
+  ADD COLUMN fresh_start_at timestamptz,
+  ADD COLUMN fresh_start_decided_at timestamptz;
 
 COMMENT ON COLUMN public.partner_access_invitations.fresh_start_at IS
   'Set once when the claim archived the claiming account''s quiz/plan state. Guards the reset against replays.';
+
+COMMENT ON COLUMN public.partner_access_invitations.fresh_start_decided_at IS
+  'Set when a claim carried an explicit fresh-start decision, true or false. NULL = no decision yet, so a later claim that does carry one may still perform (or skip) the reset exactly once.';
 
 GRANT USAGE ON SCHEMA private TO service_role;
 
@@ -118,7 +122,11 @@ CREATE OR REPLACE FUNCTION public.complete_partner_access_claim(
   p_claim_attempt_id uuid,
   p_user_id uuid,
   p_funnel_session_id uuid,
-  p_fresh_start boolean DEFAULT false
+  -- NULL means "the caller does not know the decision" — application code from
+  -- before this migration calls the five-argument form during the rollout window.
+  -- Such a claim grants access but leaves the fresh start undecided, so the next
+  -- claim that does carry a decision still performs it exactly once.
+  p_fresh_start boolean DEFAULT NULL
 )
 RETURNS TABLE (
   invitation_id uuid,
@@ -133,7 +141,6 @@ AS $$
 DECLARE
   invitation public.partner_access_invitations%ROWTYPE;
   grant_row public.manual_access_grants%ROWTYPE;
-  has_active_grant boolean;
   did_fresh_start boolean := false;
   completed_at timestamptz := pg_catalog.now();
 BEGIN
@@ -147,27 +154,33 @@ BEGIN
        OR invitation.funnel_session_id IS DISTINCT FROM p_funnel_session_id THEN
       RAISE EXCEPTION 'partner invitation already claimed' USING ERRCODE = '23505';
     END IF;
-    -- Self-heal: a claim completed before free access moved to the claim never got a
-    -- grant. Repair it once, while the invitation is still pre-activation and unreset.
-    SELECT EXISTS (
-      SELECT 1 FROM public.manual_access_grants AS row
+    -- Self-heal: a claim that ran before this feature, or during the window between
+    -- this migration and its application code, bound the invitation without deciding
+    -- the fresh start. Carry that decision out on the creator's next link open —
+    -- whether or not the claim already left an active grant behind. An invitation
+    -- whose decision is already recorded is never reset again (A2/P1), and an
+    -- activated one is past the point where a restart is safe.
+    IF invitation.activated_at IS NULL
+       AND invitation.fresh_start_decided_at IS NULL
+       AND p_fresh_start IS NOT NULL THEN
+      SELECT * INTO grant_row FROM public.manual_access_grants AS row
        WHERE row.partner_access_invitation_id = invitation.id
          AND row.revoked_at IS NULL
-    ) INTO has_active_grant;
-    IF NOT has_active_grant
-       AND invitation.activated_at IS NULL
-       AND invitation.fresh_start_at IS NULL THEN
-      INSERT INTO public.manual_access_grants (
-        user_id, email, reason, expires_at, partner_access_invitation_id
-      ) VALUES (p_user_id, NULL, 'partner', NULL, invitation.id)
-      RETURNING * INTO grant_row;
+       LIMIT 1;
+      IF NOT FOUND THEN
+        INSERT INTO public.manual_access_grants (
+          user_id, email, reason, expires_at, partner_access_invitation_id
+        ) VALUES (p_user_id, NULL, 'partner', NULL, invitation.id)
+        RETURNING * INTO grant_row;
+      END IF;
       IF p_fresh_start THEN
         PERFORM private.partner_access_fresh_start(p_user_id, invitation.id);
         did_fresh_start := true;
       END IF;
       UPDATE public.partner_access_invitations AS row
          SET current_manual_access_grant_id = grant_row.id,
-             fresh_start_at = CASE WHEN p_fresh_start THEN completed_at ELSE row.fresh_start_at END
+             fresh_start_decided_at = completed_at,
+             fresh_start_at = CASE WHEN did_fresh_start THEN completed_at ELSE row.fresh_start_at END
        WHERE row.id = invitation.id;
     END IF;
     RETURN QUERY SELECT invitation.id, invitation.claimed_user_id,
@@ -200,7 +213,8 @@ BEGIN
      SET claimed_user_id = p_user_id, funnel_session_id = p_funnel_session_id,
          claimed_at = completed_at, claim_attempt_id = NULL, claim_attempt_expires_at = NULL,
          current_manual_access_grant_id = grant_row.id,
-         fresh_start_at = CASE WHEN p_fresh_start THEN completed_at ELSE NULL END
+         fresh_start_decided_at = CASE WHEN p_fresh_start IS NOT NULL THEN completed_at ELSE NULL END,
+         fresh_start_at = CASE WHEN did_fresh_start THEN completed_at ELSE NULL END
    WHERE row.id = invitation.id;
   RETURN QUERY SELECT invitation.id, p_user_id, p_funnel_session_id, false, did_fresh_start;
 END;
@@ -289,7 +303,9 @@ BEGIN
     -- A legacy claimed row (claimed before the grant moved to the claim, never activated,
     -- never revoked) holds no grant at all. derive_partner_invitation_status shows it as
     -- "Widerrufen" and the admin only offers "Reaktivieren", so this action has to restore
-    -- access for it too instead of returning an inert changed = false.
+    -- access for it too instead of returning an inert changed = false. It restores access
+    -- only: fresh_start_decided_at and fresh_start_at stay untouched, so the creator's next
+    -- link open still performs the Neustart the original claim never decided.
     IF invitation.claimed_user_id IS NULL OR EXISTS (
       SELECT 1 FROM public.manual_access_grants AS row
        WHERE row.partner_access_invitation_id = invitation.id
