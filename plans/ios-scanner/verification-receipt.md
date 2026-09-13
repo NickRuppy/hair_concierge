@@ -4,7 +4,7 @@
 
 Branch: `codex/ios-connected-scanner`. Base: `469d41f5e81f44702c94829c0ed312e732b01172`. Worktree: `/Users/nick/.codex/worktrees/a475/hair_conscierge`.
 
-Canonical content fingerprint: `c5352d597877d67a136ec3e932ee4263c39a8cc8d588846ebefe047d0e92b860`. This is SHA256 of the sorted manifest of228 changed/task-owned untracked paths, each represented as `content-sha256 path` plus newline. Deletions would use `DELETED`. The two administrative receipts are excluded to avoid self-reference; all implementation, tests, operator scripts, approved plans and retained screenshots are included. Staging identical bytes does not change the identity.
+Canonical content fingerprint: `811ce8962c8ed1d9f0d017b58d6aa928ecf41c5d509b3f9a0153ea9ce1897353`. This is SHA256 of the sorted manifest of231 changed/task-owned untracked paths, each represented as `content-sha256 path` plus newline. Deletions would use `DELETED`. The two administrative receipts are excluded to avoid self-reference; all implementation, tests, operator scripts, approved plans and retained screenshots are included. Staging identical bytes does not change the identity.
 
 ## Coverage acknowledgement
 
@@ -73,7 +73,7 @@ Local history lacks some original schema/data. The isolated runner reconstructs 
 
 ## Artifact and runtime disposition
 
-Keep all228 fingerprinted files and these two receipts for eventual authorized publication. All62 original planning files are byte-identical and included in the Git inventory. Sanitized implementation screenshots have a local ignore exception so they are included as durable evidence.
+Keep all231 fingerprinted files and these two receipts for authorized publication. All62 original planning files remain in the Git inventory; the CI follow-up below hardens one retained HTML prototype. Sanitized implementation screenshots have a local ignore exception so they are included as durable evidence.
 
 Transient raw reviewer reports are discarded after their dispositions are recorded in [review-receipt.md](review-receipt.md). Sanitized test logs and Xcode results stay outside Git; generated dependencies, the synthetic database volume, local credentials and DerivedData remain ignored/outside the repository. No secret, mail body, credential URL or production user row is in retained evidence.
 
@@ -139,3 +139,20 @@ Commit all228 fingerprinted task artifacts plus these two administrative receipt
 Publication hook normalization changed only formatting in `tests/scan-profile-context.test.ts`. Main inspected the delta and compared parsed TypeScript trees (identical after excluding the inserted no-op semicolon). All six tests in that file passed again. Other228-file content remained unchanged. Both receipts now identify the hook-normalized tree; broader unchanged verification/reviews were reused.
 
 Final publication hygiene removed trailing whitespace from the two bundled OFL text files without changing license text or font binaries. Explicit configured pre-commit checks (`lint-staged` and `tsc --noEmit`) passed; the six formatter-affected tests passed. Full base-to-tree `git diff --check` passed, including newly tracked files. These mechanical changes were reviewed locally; no runtime behavior changed.
+
+## PR533 CI correction — 2026-09-13
+
+Remote head `9f59daeeadbed49ea367931a96666efae26043bf` had10 Node failures, all `unexpected rpc scanner_context_read_source` in the free-registration journey and free-snapshot acceptance doubles. Main reproduced all10, inspected the composed production loader and SQL contract, and corrected only the test transport/fixture persistence: owner-filtered source reads, required input/schema/computation provenance and revision-checked immutable publication. Linked hair diagnostics are an explicit independent prerequisite. Existing attack, missing-source and paid-access refusal assertions are unchanged. Added missing-profile, corrupted-hash and concurrent-source-publication refusal cases, plus publication idempotency.
+
+The separate CodeQL aggregate check reported one new high alert in retained `evidence/assessment-refined.html`: a DOM dataset name flowed into `innerHTML`. The prototype now assigns that name through `textContent`. Its actual click script was exercised in an ephemeral Node VM DOM harness with an ordinary name and HTML-shaped text: both reached the text property, neither entered the HTML template. This is script verification, not a browser rendering run. Native and production service code remain unchanged.
+
+Verification on Node22.12.0:
+
+- Focused journey/acceptance/context/SQL suites:36 passed, including28 journey/acceptance cases.
+- Full `npm run test:node`:6453 passed,0 failed/skipped.
+- `npm run test:personal-plan:nested`:855 passed.
+- `npm run personal-plan:application-audit`:309 reviewed/composable rows,0 explicit blockers.
+- `npm run test:agent`:967 passed with the CI workflow's explicit synthetic placeholder variables. The earlier env-less run failed26 Supabase client constructors (`supabaseUrl is required`); no source change or production credential was used for the successful rerun.
+- `npm run typecheck`, Prettier check, explicit configured `lint-staged` and base-to-tree whitespace check passed. ESLint follows repository configuration that ignores test files; no lint coverage of those tests is claimed. Formatting did not change the reviewed fingerprint.
+
+Fetched origin again: PR533 remains NickRuppy's open draft on the expected old head; main remains4935b271. The new canonical231-path fingerprint above includes the helper and the two preexisting journey files now changed relative to the original base. Original planning artifacts are preserved with only the recorded prototype text-sink correction. Administrative receipts are excluded. Device-QA plan/proxy work is separate and paused. No merge, migration application, production write or device activation occurred. The migration state from publication remains a dated read-only snapshot and must be refreshed before merge.

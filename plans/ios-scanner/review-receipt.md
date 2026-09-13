@@ -2,7 +2,7 @@
 
 2026-09-12. **Ready for review; no blocking verified findings remain.** Publication is not authorized by this receipt.
 
-Branch `codex/ios-connected-scanner`, base `469d41f5e81f44702c94829c0ed312e732b01172`. Canonical228-file fingerprint: `c5352d597877d67a136ec3e932ee4263c39a8cc8d588846ebefe047d0e92b860`. Same manifest convention and administrative exclusions as [verification-receipt.md](verification-receipt.md).
+Branch `codex/ios-connected-scanner`, base `469d41f5e81f44702c94829c0ed312e732b01172`. Canonical231-file fingerprint: `811ce8962c8ed1d9f0d017b58d6aa928ecf41c5d509b3f9a0153ea9ce1897353`. Same manifest convention and administrative exclusions as [verification-receipt.md](verification-receipt.md).
 
 ## Scope and lanes
 
@@ -79,3 +79,11 @@ Commit all228 fingerprinted task artifacts plus these two administrative receipt
 Publication hook normalization changed only formatting in `tests/scan-profile-context.test.ts`. Main inspected the delta and compared parsed TypeScript trees (identical after excluding the inserted no-op semicolon). All six tests in that file passed again. Other228-file content remained unchanged. Both receipts now identify the hook-normalized tree; broader unchanged verification/reviews were reused.
 
 Final publication hygiene removed trailing whitespace from the two bundled OFL text files without changing license text or font binaries. Explicit configured pre-commit checks (`lint-staged` and `tsc --noEmit`) passed; the six formatter-affected tests passed. Full base-to-tree `git diff --check` passed, including newly tracked files. These mechanical changes were reviewed locally; no runtime behavior changed.
+
+## PR533 CI correction review — 2026-09-13
+
+No blocking findings. Bounded delta from published head `9f59daeeadbed49ea367931a96666efae26043bf`: two journey database doubles, their new shared transport helper, and one retained HTML prototype. Main applied correctness/security/regression review; a new structural pass was not warranted for isolated tests and a localized text sink. One read-only terminal Claude Opus4.8/high delta review independently ran the28 journey/acceptance cases and confirmed that production source validation still executes, missing diagnostics remain unavailable, corrupted hashes fail, stale publication is refused, and repeated publication is idempotent. Unchanged whole-branch conclusions are reused.
+
+The helper models owner-filtered reads and the tested publication contract; it does not emulate SQL trigger/privilege enforcement, ABA revisions or every source writer. `mobile-profile-migration.test.ts` remains the SQL authority. Existing cross-account journey assertions remain intact. No product loader, access guard, source precedence or migration changed. CodeQL's single new dataset-to-HTML alert was verified locally and corrected with `textContent`; no alert suppression or dismissal.
+
+Main inspected every changed path including the untracked helper. The canonical fingerprint above identifies this integrated content; administrative receipts remain excluded. Raw `/tmp/pr533-ci-delta-review.md` and run log are discarded after this disposition. Detailed test logs stay outside Git. Device-QA work remains in its separate dependent worktree; no merge, deployment, production write or device activation is part of this correction.
