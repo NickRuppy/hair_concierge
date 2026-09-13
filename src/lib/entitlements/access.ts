@@ -1,7 +1,11 @@
 import "server-only"
 
 import { resolveOneTimeAccessStateForUser } from "@/lib/billing/purchases"
-import { hasCurrentAppAccess, hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
+import {
+  hasCurrentAppAccess,
+  hasCurrentPaidAppAccess,
+  hasCurrentPartnerAccess,
+} from "@/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "@/lib/billing/types"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import {
@@ -70,6 +74,7 @@ export type HasFreemiumPaidAccessDeps = {
   client?: SupabaseBillingClient
   hasAppAccess?: typeof hasCurrentAppAccess
   hasPaidAppAccess?: typeof hasCurrentPaidAppAccess
+  hasPartnerAccess?: typeof hasCurrentPartnerAccess
   resolveOneTimeAccessState?: typeof resolveOneTimeAccessStateForUser
   resolveModeratorAccess?: typeof resolveModeratorAccess
 }
@@ -110,6 +115,7 @@ export async function resolvePaidAppAccess(
   const client = deps.client ?? createAdminClient()
   const hasAppAccess = deps.hasAppAccess ?? hasCurrentAppAccess
   const hasPaidAppAccess = deps.hasPaidAppAccess ?? hasCurrentPaidAppAccess
+  const hasPartnerAccess = deps.hasPartnerAccess ?? hasCurrentPartnerAccess
   const resolveOneTimeAccessState =
     deps.resolveOneTimeAccessState ?? resolveOneTimeAccessStateForUser
   const resolveModerator = deps.resolveModeratorAccess ?? resolveModeratorAccess
@@ -133,7 +139,11 @@ export async function resolvePaidAppAccess(
   // counting as paid.
   let hasIndependentPaidEntitlement = oneTimeAccessState === "active"
   if (moderatorAccess.kind === "ended" || moderatorAccess.kind === "unavailable") {
-    hasIndependentPaidEntitlement = await hasPaidAppAccess(client, { userId })
+    const [hasCurrentPaidAccess, hasPartnerAccessResult] = await Promise.all([
+      hasPaidAppAccess(client, { userId }),
+      hasPartnerAccess(client, { userId }),
+    ])
+    hasIndependentPaidEntitlement = hasCurrentPaidAccess || hasPartnerAccessResult
     active = hasIndependentPaidEntitlement
   }
 

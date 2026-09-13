@@ -9,32 +9,16 @@ import {
   parsePartnerQuizContextPayload,
 } from "../src/lib/partner-access/quiz-context"
 
-const funnelContext = {
-  visitorId: "20000000-0000-4000-8000-000000000002",
-  sessionId: "30000000-0000-4000-8000-000000000003",
-  packageKey: "default_organic",
-  issuedAt: 1,
-}
-
-function cookieStore() {
-  return { get: (name: string) => ({ value: `${name}-value` }) }
-}
-
-test("creator quiz context returns only the server-authorized invitation identity", async () => {
+test("creator quiz context returns only the server-authorized invitation identity, resolved from the user alone", async () => {
   const handler = createPartnerQuizContextGetHandler({
-    cookies: async () => cookieStore(),
-    resolveFunnelCookieContext: async () => funnelContext,
-    resolvePartnerJourney: async ({ funnelContext: received }) => {
-      assert.deepEqual(received, funnelContext)
-      return {
-        kind: "authorized",
-        invitationId: "10000000-0000-4000-8000-000000000001",
-        userId: "creator-user",
-        name: "Lea Sommer",
-        email: "lea@example.test",
-        funnelSessionId: funnelContext.sessionId,
-      }
-    },
+    resolvePartnerJourney: async () => ({
+      kind: "authorized",
+      invitationId: "10000000-0000-4000-8000-000000000001",
+      userId: "creator-user",
+      name: "Lea Sommer",
+      email: "lea@example.test",
+      funnelSessionId: "30000000-0000-4000-8000-000000000003",
+    }),
   })
 
   const response = await handler()
@@ -52,12 +36,19 @@ test("creator quiz context distinguishes ordinary and temporarily unavailable jo
     ["unavailable", { status: "unavailable" }],
   ] as const) {
     const handler = createPartnerQuizContextGetHandler({
-      cookies: async () => cookieStore(),
-      resolveFunnelCookieContext: async () => funnelContext,
       resolvePartnerJourney: async () => ({ kind }),
     })
     assert.deepEqual(await (await handler()).json(), expected)
   }
+})
+
+test("creator quiz context reports unavailable when the journey lookup throws", async () => {
+  const handler = createPartnerQuizContextGetHandler({
+    resolvePartnerJourney: async () => {
+      throw new Error("database unavailable")
+    },
+  })
+  assert.deepEqual(await (await handler()).json(), { status: "unavailable" })
 })
 
 test("creator quiz context parser and metadata hint fail closed", () => {

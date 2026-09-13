@@ -142,6 +142,41 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
+      // The partner journey resolves from the signed-in account, the moderator
+      // journey from an intent cookie. A former moderator who later becomes a
+      // partner still carries that cookie, and its resolver fails closed with
+      // `unavailable` once the campaign is gone — so partner authorization has to
+      // be decided first, otherwise a stale cookie would 503 an entitled partner.
+      // The resolver is cheap for everyone else: an anonymous or unstamped visitor
+      // returns `none` without reading `partner_access_invitations`.
+      const partner = await dependencies.resolvePartnerJourney()
+      if (partner.kind === "authorized") {
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        if (email !== partner.email) {
+          return NextResponse.json(
+            {
+              code: "invited_email_mismatch",
+              error: "Bitte verwende die E-Mail-Adresse deines Kontos.",
+            },
+            { status: 422 },
+          )
+        }
+        const saved = await dependencies
+          .savePartnerAccessLead({
+            invitationId: partner.invitationId,
+            userId: partner.userId,
+            funnelSessionId: partner.funnelSessionId,
+            email: partner.email,
+            name: partner.name,
+            marketingConsent: parsed.marketingConsent,
+            quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers) as Record<string, unknown>,
+          })
+          .catch(() => null)
+        return saved ? leadResponse(saved.leadId, false) : partnerUnavailableResponse()
+      }
       const moderator = await dependencies.resolveModeratorJourney({
         cookies: cookieStore,
         funnelContext,
@@ -175,38 +210,10 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           .catch(() => null)
         return saved ? leadResponse(saved.leadId, false, true) : fieldTestUnavailableResponse()
       }
-      const partner = await dependencies.resolvePartnerJourney({
-        cookies: cookieStore,
-        funnelContext,
-      })
+      // A partner lookup that failed still fails closed for everyone the moderator
+      // branch did not claim — an entitled partner must never silently fall through
+      // into the paid funnel.
       if (partner.kind === "unavailable") return partnerUnavailableResponse()
-      if (partner.kind === "authorized") {
-        const origin = request.headers.get("origin")
-        if (origin && origin !== new URL(request.url).origin) {
-          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
-        }
-        if (email !== partner.email) {
-          return NextResponse.json(
-            {
-              code: "invited_email_mismatch",
-              error: "Bitte verwende die E-Mail-Adresse deines Kontos.",
-            },
-            { status: 422 },
-          )
-        }
-        const saved = await dependencies
-          .savePartnerAccessLead({
-            invitationId: partner.invitationId,
-            userId: partner.userId,
-            funnelSessionId: partner.funnelSessionId,
-            email: partner.email,
-            name: partner.name,
-            marketingConsent: parsed.marketingConsent,
-            quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers) as Record<string, unknown>,
-          })
-          .catch(() => null)
-        return saved ? leadResponse(saved.leadId, false) : partnerUnavailableResponse()
-      }
       const deliverability = await dependencies.checkEmailDeliverability(email)
       dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
       if (!deliverability.ok) {
@@ -242,9 +249,15 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
 
       const { data: recentLeads, error: recentLeadsError } = await supabase
         .from("leads")
-        .select("id, quiz_answers, marketing_consent, status, moderator_campaign_id")
+        .select(
+          "id, quiz_answers, marketing_consent, status, moderator_campaign_id, partner_access_invitation_id",
+        )
         .eq("quiz_kind", "legacy")
         .eq("email", deliverableEmail)
+        // A partner lead carries the blocked partner result screen. After a
+        // revocation the same person repeating the same answers must get a fresh
+        // ordinary lead, not their old partner one handed back by the dedupe.
+        .is("partner_access_invitation_id", null)
         .gte("created_at", recentThreshold)
         .order("created_at", { ascending: false })
         .limit(MAX_RECENT_DUPLICATE_CANDIDATES)
@@ -260,8 +273,9 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
             id: string
             quiz_answers: Record<string, unknown> | null
             moderator_campaign_id?: string | null
+            partner_access_invitation_id?: string | null
           }> | null) ?? []
-        ).filter((lead) => !lead.moderator_campaign_id),
+        ).filter((lead) => !lead.moderator_campaign_id && !lead.partner_access_invitation_id),
         quizAnswers,
       )
 

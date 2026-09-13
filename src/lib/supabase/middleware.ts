@@ -8,7 +8,11 @@ import {
   type PersonalPlanRoutineAccess,
 } from "@/lib/auth/intake-state"
 import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
-import { hasCurrentAppAccess, hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
+import {
+  hasCurrentAppAccess,
+  hasCurrentPaidAppAccess,
+  hasCurrentPartnerAccess,
+} from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
@@ -308,6 +312,7 @@ export type UpdateSessionDependencies = {
   createServerClient: typeof createServerClient
   hasCurrentAppAccess: typeof hasCurrentAppAccess
   hasCurrentPaidAppAccess?: typeof hasCurrentPaidAppAccess
+  hasCurrentPartnerAccess?: typeof hasCurrentPartnerAccess
   resolveOneTimeAccessState: typeof resolveOneTimeAccessState
   resolveModeratorAccess?: (input: {
     client: Pick<SupabaseClient, "from">
@@ -339,6 +344,7 @@ const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
   createServerClient,
   hasCurrentAppAccess,
   hasCurrentPaidAppAccess,
+  hasCurrentPartnerAccess,
   resolveOneTimeAccessState,
   // Moderator membership is deliberately service-only. Never pass the browser
   // session client here or RLS would convert ordinary protected requests into
@@ -496,12 +502,19 @@ export function createUpdateSession(
         ])
         let hasIndependentPaidEntitlement = oneTimeAccessState === "active"
         if (moderatorAccess === "ended" || moderatorAccess === "unavailable") {
-          hasIndependentPaidEntitlement = dependencies.hasCurrentPaidAppAccess
-            ? await dependencies.hasCurrentPaidAppAccess(supabase, { userId: user.id })
-            : false
+          const [hasCurrentPaidAccess, hasPartnerAccess] = await Promise.all([
+            dependencies.hasCurrentPaidAppAccess
+              ? dependencies.hasCurrentPaidAppAccess(supabase, { userId: user.id })
+              : Promise.resolve(false),
+            dependencies.hasCurrentPartnerAccess
+              ? dependencies.hasCurrentPartnerAccess(supabase, { userId: user.id })
+              : Promise.resolve(false),
+          ])
+          hasIndependentPaidEntitlement = hasCurrentPaidAccess || hasPartnerAccess
           // `active` includes a manual tester grant. Once its matching
           // moderator record has ended or cannot be read, only independently
-          // verified paid access may keep the protected route open.
+          // verified paid access (paid app access or an active partner
+          // grant) may keep the protected route open.
           active = hasIndependentPaidEntitlement
         }
         if (moderatorAccess === "unavailable" && !hasIndependentPaidEntitlement) {

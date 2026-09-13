@@ -1,7 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { PARTNER_QUIZ_ENTRY_HREF } from "@/lib/partner-access/quiz-context"
+import { PARTNER_QUIZ_ENTRY_HREF, shouldClearQuizDraft } from "@/lib/partner-access/quiz-context"
+import { clearQuizDraft } from "@/lib/quiz/draft"
 
 export function PartnerAccessContinuation() {
   const startedRef = useRef(false)
@@ -23,6 +24,7 @@ export function PartnerAccessContinuation() {
           ? (body as Record<string, unknown>).destination
           : null
       if (!response.ok || destination !== PARTNER_QUIZ_ENTRY_HREF) throw new Error("claim failed")
+      if (shouldClearQuizDraft(body)) clearQuizDraft()
       window.location.assign(destination)
     } catch {
       setError(true)

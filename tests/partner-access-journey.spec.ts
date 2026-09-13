@@ -36,7 +36,10 @@ test("creator invitation stays personal and lets the recipient correct the email
   await expect(page.getByText("lea@studio-example.de", { exact: true })).toBeVisible()
   await expect(page.getByRole("button", { name: "Los geht’s" })).toBeVisible()
   await expect(
-    page.getByText("Damit erstellst du dein Chaarlie Konto mit dieser E-Mail.", { exact: true }),
+    page.getByText(
+      "Damit erstellst du dein Chaarlie Konto mit dieser E-Mail. Hast du schon eins, startest du damit neu.",
+      { exact: true },
+    ),
   ).toBeVisible()
 
   await page.getByRole("button", { name: "Nicht deine E-Mail? Ändern" }).click()

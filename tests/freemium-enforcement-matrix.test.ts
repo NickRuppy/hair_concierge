@@ -308,6 +308,7 @@ function accessDeps(overrides: Partial<HasFreemiumPaidAccessDeps> = {}): HasFree
     client: {} as never,
     hasAppAccess: async () => false,
     hasPaidAppAccess: async () => false,
+    hasPartnerAccess: async () => false,
     resolveOneTimeAccessState: async () => "none",
     resolveModeratorAccess: async () => ({ kind: "none" }) satisfies ModeratorAccessResolution,
     ...overrides,
@@ -427,6 +428,44 @@ test("hasFreemiumPaidAccess: an ended moderator with independently verified paid
       }),
     )
     assert.equal(result, "allowed")
+  })
+})
+
+// Codex F4: an active partner ("Partnerzugang") grant is its own independent
+// entitlement, distinct from `hasPaidAppAccess` (provider subscription /
+// one-time / legacy profile only) — it must keep an ended-moderator account
+// admitted on its own, exactly like an independent paid entitlement does.
+test("hasFreemiumPaidAccess: an ended moderator with an active partner grant remains admitted", async () => {
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true,
+        hasPaidAppAccess: async () => false,
+        hasPartnerAccess: async () => true,
+        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
+      }),
+    )
+    assert.equal(result, "allowed")
+  })
+})
+
+test("hasFreemiumPaidAccess: an ended moderator without paid or partner access is denied", async () => {
+  await withFlagOn(async () => {
+    const result = await hasFreemiumPaidAccess(
+      userId,
+      userEmail,
+      false,
+      accessDeps({
+        hasAppAccess: async () => true,
+        hasPaidAppAccess: async () => false,
+        hasPartnerAccess: async () => false,
+        resolveModeratorAccess: async () => ({ kind: "ended", campaignId: "c1" }),
+      }),
+    )
+    assert.equal(result, "denied")
   })
 })
 
@@ -642,6 +681,7 @@ for (const scenario of parityScenarios) {
           client: {} as never,
           hasAppAccess: async (_client, lookup) => scenario.hasCurrentAppAccess(lookup),
           hasPaidAppAccess: async (_client, lookup) => scenario.hasCurrentPaidAppAccess(lookup),
+          hasPartnerAccess: async () => false,
           resolveOneTimeAccessState: async () => scenario.oneTimeAccessState,
           resolveModeratorAccess: async () => scenario.moderatorAccess,
         },
