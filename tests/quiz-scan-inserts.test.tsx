@@ -40,7 +40,7 @@ test("the problem insert names the shelf moment and the answers already given", 
     /suchen Klarheit, welche Produkte wirklich zu ihnen passen\. Raten kostet Geld, Zeit und ein Regal voller halbleerer Flaschen\./,
   )
   assert.match(html, /Dein Anfang der Lösung:/)
-  assert.match(html, /lockiges Haar, dick\./)
+  assert.match(html, /lockiges Haar, dick, hohe Dichte\./)
   assert.match(html, /Drei Antworten, die der Scanner ab jetzt kennt\./)
   assert.match(html, imageUrl("frau-regal-aha.webp"))
   assert.match(html, /Weiter/)

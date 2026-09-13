@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  getScanInsertDensityLabel,
   getScanInsertExample,
   getScanInsertScalpTarget,
   getScanInsertTextureAdjective,
@@ -301,6 +302,17 @@ test("the copy helpers name the hair the quiz already knows", () => {
 
   assert.equal(getScanInsertThicknessLabel({ thickness: "coarse" }), "dick")
   assert.equal(getScanInsertThicknessLabel({}), "fein")
+
+  const densities: [string, string][] = [
+    ["low", "geringe Dichte"],
+    ["medium", "mittlere Dichte"],
+    ["high", "hohe Dichte"],
+  ]
+  for (const [density, label] of densities) {
+    assert.equal(getScanInsertDensityLabel({ density }), label, density)
+  }
+  assert.equal(getScanInsertDensityLabel({}), "mittlere Dichte")
+  assert.equal(getScanInsertDensityLabel({ density: "unbekannt" }), "mittlere Dichte")
 
   assert.equal(getScanInsertScalpTarget({ scalp_type: "fettig", has_scalp_issue: false }), "fettig")
   assert.equal(

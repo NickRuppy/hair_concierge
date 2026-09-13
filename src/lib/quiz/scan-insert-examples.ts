@@ -64,6 +64,13 @@ const THICKNESS_LABELS: Record<string, string> = {
   coarse: "dick",
 }
 
+/** `geringe` · `mittlere` · `hohe` Dichte — the density the quiz asked for in step 13. */
+const DENSITY_LABELS: Record<string, string> = {
+  low: "geringe Dichte",
+  medium: "mittlere Dichte",
+  high: "hohe Dichte",
+}
+
 const TEXTURE_ADJECTIVES: Record<string, string> = {
   straight: "glattes",
   wavy: "welliges",
@@ -106,6 +113,11 @@ const REPAIR_CONCERNS = new Set(["hair_damage", "breakage", "split_ends"])
 /** `fein` · `mittel` · `dick` — the thickness the quiz asked for in step 3. */
 export function getScanInsertThicknessLabel(answers: QuizAnswers): string {
   return THICKNESS_LABELS[answers.thickness ?? ""] ?? "fein"
+}
+
+/** `geringe Dichte` · `mittlere Dichte` · `hohe Dichte` — reads as a list item in copy. */
+export function getScanInsertDensityLabel(answers: QuizAnswers): string {
+  return DENSITY_LABELS[answers.density ?? ""] ?? "mittlere Dichte"
 }
 
 /** `glattes` · `welliges` · `lockiges` · `krauses` — reads as "… Haar" in copy. */

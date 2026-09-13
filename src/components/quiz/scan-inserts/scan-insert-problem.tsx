@@ -2,6 +2,7 @@
 
 import { ScanInsertFrame, type ScanInsertViewProps } from "./scan-insert-frame"
 import {
+  getScanInsertDensityLabel,
   getScanInsertExample,
   getScanInsertTextureAdjective,
   getScanInsertThicknessLabel,
@@ -33,7 +34,7 @@ export function ScanInsertProblemView({ answers, funnelPackageKey }: ScanInsertV
       </span>
       <span>
         <strong className="font-semibold text-foreground">Dein Anfang der Lösung:</strong>{" "}
-        {`${getScanInsertTextureAdjective(answers)} Haar, ${getScanInsertThicknessLabel(answers)}. Drei Antworten, die der Scanner ab jetzt kennt.`}
+        {`${getScanInsertTextureAdjective(answers)} Haar, ${getScanInsertThicknessLabel(answers)}, ${getScanInsertDensityLabel(answers)}. Drei Antworten, die der Scanner ab jetzt kennt.`}
       </span>
     </ScanInsertFrame>
   )
