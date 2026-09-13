@@ -258,8 +258,12 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
             <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
               chaarlie
             </Link>
+            {/*
+              The only permanently visible CTA on a very long page, so it holds
+              the 44 px touch target — through padding, not a bigger label.
+            */}
             <a
-              className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-plum)] px-5 text-sm font-bold text-white"
               data-offer-cta="sticky_header"
               data-offer-destination="pricing"
               data-offer-source-section="hero"
