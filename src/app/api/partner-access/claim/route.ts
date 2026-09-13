@@ -95,6 +95,8 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
     )
     if (!intent) return jsonError("Diese Einladung ist nicht verfügbar.", 410)
 
+    // On the success path this object only carries cookies — the sent body is
+    // rebuilt later once `freshStart` is known (see the `completion` response below).
     const response = NextResponse.json(
       { destination: PARTNER_QUIZ_ENTRY_HREF, requiresEmail: false },
       { headers: NO_STORE_HEADERS },
@@ -231,6 +233,14 @@ export function createPartnerAccessClaimHandler(overrides: Partial<ClaimDependen
           ? true
           : !(await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id))
     } catch {
+      try {
+        await (overrides.release ?? releaseClaim)({ intent, attemptId })
+      } catch {
+        return copyResponseCookies(
+          response,
+          jsonError("Dein Zugang konnte nicht geöffnet werden.", 503),
+        )
+      }
       return copyResponseCookies(
         response,
         jsonError("Dein Zugang ist gerade nicht verfügbar.", 503),

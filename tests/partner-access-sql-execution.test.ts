@@ -230,6 +230,64 @@ test("a paying account can claim partner access without a fresh start", async (t
   })
 })
 
+test("omitting p_fresh_start relies on the safe DEFAULT false and behaves like a no-fresh-start claim", async (t) => {
+  const pg = await migratedDatabase(t)
+  const invitationId = await createInvitation(pg)
+  await seedAccount(pg)
+  const seeded = await seedUsedAccountState(pg)
+
+  await reserve(pg, invitationId, ids.attempt)
+  const claim = await pg.query<{ reused: boolean; fresh_start: boolean }>(
+    "SELECT * FROM public.complete_partner_access_claim($1, 1, $2, $3, $4)",
+    [invitationId, ids.attempt, ids.creator, ids.funnel],
+  )
+  assert.deepEqual(
+    { reused: claim.rows[0].reused, fresh_start: claim.rows[0].fresh_start },
+    { reused: false, fresh_start: false },
+  )
+
+  assert.equal(await activePartnerGrants(pg, invitationId), "1")
+  assert.equal(
+    (
+      await pg.query<{ stamped: boolean }>(
+        "SELECT fresh_start_at IS NOT NULL AS stamped FROM public.partner_access_invitations WHERE id = $1",
+        [invitationId],
+      )
+    ).rows[0].stamped,
+    false,
+  )
+  assert.equal(await scalarCount(pg, "public.hair_profiles WHERE user_id = $1", [ids.creator]), "1")
+  const plan = await readPlan(pg)
+  assert.deepEqual(plan, {
+    enrollment_purchase_source_id: seeded.enrollmentSourceId,
+    current_initial_need_version_id: ids.needVersion,
+    current_refined_need_version_id: ids.needVersion,
+    active_routine_version_id: ids.routineVersion,
+    pending_routine_proposal_id: ids.proposal,
+    unrefined_direct_accept: true,
+    last_evaluated_source_fingerprint: "fingerprint-evaluated",
+    last_rejected_auto_fingerprint: "fingerprint-rejected",
+    legacy_prefill_v1: { prefill: true },
+    revision: "4",
+  })
+  assert.deepEqual(await readResetState(pg, seeded), {
+    refinementDraftStatus: "in_progress",
+    productDraftStatus: "active",
+    proposalStatus: "pending",
+    lifecycleMarks: "1",
+    personalPlanEnrollmentStatus: "active",
+    personalPlanEnrollmentRevoked: false,
+    regularQuizEnrollmentStatus: "active",
+    regularQuizEnrollmentRevoked: false,
+    testerGrantsRevoked: "0",
+    quizDraftStatus: "active",
+    resultReturnRevoked: false,
+    ownedProducts: "1",
+    archivedProducts: "0",
+    nudgeDismissedUntilCleared: false,
+  })
+})
+
 test("a replayed claim completion neither re-grants nor restarts the account again", async (t) => {
   const pg = await migratedDatabase(t)
   const invitationId = await createInvitation(pg)

@@ -265,7 +265,7 @@ test("a paid-access lookup failure fails closed instead of assuming a fresh star
   assert.deepEqual(await response.json(), { error: "Dein Zugang ist gerade nicht verfügbar." })
   assert.deepEqual(
     calls.map(([name]) => name),
-    ["reserve"],
+    ["reserve", "release"],
   )
 })
 

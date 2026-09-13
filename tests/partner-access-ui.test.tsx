@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -56,4 +57,17 @@ test("the quiz draft is cleared only when the claim response signals a fresh sta
   assert.equal(shouldClearQuizDraft({ destination: "/quiz?partner=1" }), false)
   assert.equal(shouldClearQuizDraft(null), false)
   assert.equal(shouldClearQuizDraft("freshStart"), false)
+})
+
+test("the invitation client wires the draft-clearing predicate before navigating away", async () => {
+  const source = await readFile("src/app/partner/einladung/partner-invitation-client.tsx", "utf8")
+  assert.match(source, /shouldClearQuizDraft\(body\)/)
+  assert.match(source, /clearQuizDraft\(\)/)
+  const guardIndex = source.indexOf("isDestination(body)")
+  const clearIndex = source.indexOf("clearQuizDraft()")
+  const assignIndex = source.indexOf("window.location.assign(body.destination)")
+  assert.ok(
+    guardIndex > 0 && clearIndex > guardIndex && assignIndex > clearIndex,
+    "draft must be cleared after the destination guard and before navigating",
+  )
 })
