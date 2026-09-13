@@ -262,3 +262,26 @@ deploy per `CLAUDE.local.md`.
 | G2 rollback/interleaving tests | defect (test) | — | partly accepted | induced-failure test added; PGlite has no concurrency, race closed by design (F6) | Rev.2 |
 | G3 composed routing tests | defect (test) | `middleware.ts:498-505` | accepted | T2/T5 middleware cases | Rev.2 |
 | G4 lifecycle/recovery tests | defect (test) | — | accepted | T2/T3 revoked + re-invitation cases | Rev.2 |
+
+## 12. Implementation review ledger (2026-09-13)
+
+Execution: subagent-driven, six tasks, each task-reviewed; one whole-branch review (internal), one Codex
+whole-branch review, one Codex re-check of the last fix wave.
+
+| ID | Source | Type | Decision | Fix |
+| --- | --- | --- | --- | --- |
+| C1 anonymous `auth.getUser()` returns `AuthSessionMissingError` → journey `unavailable` → `/api/quiz/lead` 503 for every anonymous submission | final review | defect (regression from Task 2 fix round) | accepted | 28c1c14e: no session = signed out; hint gate; unstubbed anonymous lead-route test |
+| I1 admin "Reaktivieren" inert for legacy claimed rows | final review | defect | accepted | 87e9b9d0: `reactivate_partner_access` repairs claimed rows without an active grant |
+| I2 partner read error could 503 ordinary leads | final review | defect | accepted | 28c1c14e: only users with the `partner_access_invitation_id` app_metadata hint reach the invitation read |
+| M1–M3, M5 | final review | minor | accepted | 28c1c14e / 87e9b9d0 |
+| M4 `activate_partner_access` returned timestamp on repair path | final review | minor | deferred | pre-existing, cosmetic |
+| M6 PGlite harness runs as superuser, no triggers | final review | verification | open | real-database check before merge (§9) |
+| A moderator-cookie branch ran before the partner resolver | Codex branch review | defect | accepted | c217cc2a: partner journey resolved first |
+| B regular dedupe could reuse a revoked partner lead | Codex branch review | defect | accepted | c217cc2a: partner leads excluded from dedupe |
+| C grant-without-reset rows never self-healed (migration window, Reaktivieren repair) | Codex branch review | defect | accepted | 8efd4d32: `p_fresh_start DEFAULT NULL`, `fresh_start_decided_at`, self-heal independent of grant presence; P1/A2 preserved |
+| Codex M4 `user_memory_entries` reset target | Codex plan review | — | rejected again | `to_regclass('public.user_memory_entries')` is NULL in production (2026-09-13) |
+| Predicate coverage (middleware/activation tests inject booleans) | Codex branch review | test gap | deferred | production wiring verified by reviewers; follow-up |
+| G2 concurrent interleavings untested | Codex plan review | test gap | accepted as residual | PGlite has no concurrency; race closed by design (F6) |
+
+Verification on the reviewed head: `npm run ci:verify` green; `npm run test:node` green except the
+pre-existing `tests/billing-plan-change-route.test.ts` failure that exists on `origin/main`.
