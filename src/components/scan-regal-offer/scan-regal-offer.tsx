@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 
+import { SiteFooter } from "@/components/landing/site-footer"
 import { OrganicPlanOffer } from "@/components/organic-plan-offer/organic-plan-offer"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ScanHeroDemo } from "@/components/scan-regal-offer/scan-hero-demo"
@@ -588,6 +589,11 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           </div>
         </section>
       </main>
+      {/*
+        The purchase starts on this page, so it carries the same legal footer
+        the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
+      */}
+      <SiteFooter />
     </OfferTrackingProvider>
   )
 }

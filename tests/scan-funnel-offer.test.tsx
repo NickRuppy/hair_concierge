@@ -156,6 +156,17 @@ test("both offer CTAs carry the tracking attributes the provider listens for", (
   assert.equal((html.match(/data-offer-faq="scan-regal-\d"/g) ?? []).length, 5)
 })
 
+// § 5 DDG plus the consumer information: the page the purchase starts on must
+// carry the same unified legal footer the landing does (PR #519).
+test("the scanner offer carries the unified legal footer", () => {
+  const html = renderScanOffer()
+
+  assert.equal((html.match(/<footer/g) ?? []).length, 1)
+  for (const label of ["Impressum", "Datenschutz", "AGB", "Widerruf", "Kontakt"]) {
+    assert.match(html, new RegExp(`>${label}</a>`), label)
+  }
+})
+
 test("the sticky header CTA keeps the 44 px touch target", () => {
   const html = renderScanOffer()
   const stickyCta = html.match(/<a[^>]*data-offer-cta="sticky_header"[^>]*>/)
