@@ -15,14 +15,14 @@ export type PartnerJourneyResolution =
       funnelSessionId: string
     }
 
-type PartnerJourneyInvitationRow = {
+export type PartnerJourneyInvitationRow = {
   id: string
   display_name: string
   normalized_email: string
   funnel_session_id: string
 }
 
-type PartnerJourneyDependencies = {
+export type PartnerJourneyDependencies = {
   getUser: () => Promise<{ id: string } | null>
   loadInvitation: (userId: string) => Promise<PartnerJourneyInvitationRow | null>
 }
@@ -38,10 +38,10 @@ export async function resolvePartnerJourney(
   overrides: Partial<PartnerJourneyDependencies> = {},
 ): Promise<PartnerJourneyResolution> {
   const getUser = overrides.getUser ?? defaultGetUser
-  const user = await getUser()
-  if (!user?.id) return { kind: "none" }
   const loadInvitation = overrides.loadInvitation ?? defaultLoadInvitation
   try {
+    const user = await getUser()
+    if (!user?.id) return { kind: "none" }
     const data = await loadInvitation(user.id)
     if (!data) return { kind: "none" }
     return {
@@ -52,7 +52,8 @@ export async function resolvePartnerJourney(
       email: data.normalized_email,
       funnelSessionId: data.funnel_session_id,
     }
-  } catch {
+  } catch (error) {
+    console.warn("Partner journey lookup failed:", error)
     return { kind: "unavailable" }
   }
 }
@@ -61,12 +62,23 @@ async function defaultGetUser() {
   const session = await createClient()
   const {
     data: { user },
+    error,
   } = await session.auth.getUser()
+  if (error) throw error
   return user ? { id: user.id } : null
 }
 
-async function defaultLoadInvitation(userId: string) {
-  const { data, error } = await createAdminClient()
+/**
+ * Exported (with the admin client as an injectable, defaulted parameter) so
+ * tests can exercise the real `claimed_user_id`/`revoked_at` predicate
+ * against a fake query builder instead of stubbing this function's return
+ * value away. Production callers never pass `adminClient` explicitly.
+ */
+export async function defaultLoadInvitation(
+  userId: string,
+  adminClient: ReturnType<typeof createAdminClient> = createAdminClient(),
+) {
+  const { data, error } = await adminClient
     .from("partner_access_invitations")
     .select("id,display_name,normalized_email,funnel_session_id")
     .eq("claimed_user_id", userId)

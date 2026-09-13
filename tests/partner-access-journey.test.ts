@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { resolvePartnerJourney } from "../src/lib/partner-access/journey"
+import {
+  defaultLoadInvitation,
+  resolvePartnerJourney,
+  type PartnerJourneyDependencies,
+} from "../src/lib/partner-access/journey"
 
 const invitationRow = {
   id: "10000000-0000-4000-8000-000000000001",
@@ -10,12 +14,57 @@ const invitationRow = {
   funnel_session_id: "30000000-0000-4000-8000-000000000003",
 }
 
-function dependencies(overrides: Record<string, unknown> = {}) {
+function dependencies(
+  overrides: Partial<PartnerJourneyDependencies> = {},
+): PartnerJourneyDependencies {
   return {
     getUser: async () => ({ id: "creator-user" }),
     loadInvitation: async () => invitationRow,
     ...overrides,
   }
+}
+
+/**
+ * Fake `partner_access_invitations` admin-client query builder. Unlike a
+ * stubbed `loadInvitation`, this actually applies `.eq()`/`.is()` as row
+ * filters against an in-memory table, so a test built on it fails if
+ * `defaultLoadInvitation` stops applying one of those filters.
+ */
+type FakeInvitationDbRow = {
+  id: string
+  display_name: string
+  normalized_email: string
+  funnel_session_id: string
+  claimed_user_id: string | null
+  revoked_at: string | null
+}
+
+function fakeInvitationsAdminClient(rows: FakeInvitationDbRow[]) {
+  const client = {
+    from(table: string) {
+      assert.equal(table, "partner_access_invitations")
+      let filtered = rows
+      const builder = {
+        select() {
+          return builder
+        },
+        eq(column: keyof FakeInvitationDbRow, value: unknown) {
+          filtered = filtered.filter((row) => row[column] === value)
+          return builder
+        },
+        is(column: keyof FakeInvitationDbRow, value: null) {
+          filtered = filtered.filter((row) => row[column] === value)
+          return builder
+        },
+        async maybeSingle() {
+          if (filtered.length > 1) throw new Error("expected at most one matching row")
+          return { data: filtered[0] ?? null, error: null }
+        },
+      }
+      return builder
+    },
+  }
+  return client as unknown as Parameters<typeof defaultLoadInvitation>[1]
 }
 
 test("a signed-out visitor gets an ordinary journey with zero lookups", async () => {
@@ -52,26 +101,42 @@ test("a claimed, unrevoked invitation authorizes the partner journey from the us
 })
 
 test("a revoked invitation makes the account an ordinary user again, never blocked", async () => {
-  // The predicate query (claimed_user_id = user.id AND revoked_at IS NULL)
-  // simply finds no row once revoked — it never surfaces as "unavailable".
+  // Exercises the real `defaultLoadInvitation` query against a fake admin
+  // client that actually filters on `revoked_at`: the row belongs to this
+  // user (claimed_user_id matches) but is revoked, so the `.is("revoked_at",
+  // null)` predicate must exclude it. If that filter is ever dropped from
+  // the source, this fake still returns the row and the test fails.
+  const revokedRow: FakeInvitationDbRow = {
+    ...invitationRow,
+    claimed_user_id: "creator-user",
+    revoked_at: "2026-01-01T00:00:00.000Z",
+  }
   const resolution = await resolvePartnerJourney(
     dependencies({
-      loadInvitation: async () => null,
+      loadInvitation: (userId) =>
+        defaultLoadInvitation(userId, fakeInvitationsAdminClient([revokedRow])),
     }),
   )
   assert.deepEqual(resolution, { kind: "none" })
 })
 
 test("another user's claimed invitation never authorizes this user", async () => {
+  // Exercises the real `defaultLoadInvitation` query against a fake admin
+  // client that actually filters on `claimed_user_id`: the only row in the
+  // table is unrevoked but claimed by a different user, so the
+  // `.eq("claimed_user_id", userId)` predicate must exclude it. If that
+  // filter is ever dropped from the source, this fake still returns the
+  // row and the test fails.
+  const otherUsersRow: FakeInvitationDbRow = {
+    ...invitationRow,
+    claimed_user_id: "other-user-actual-owner",
+    revoked_at: null,
+  }
   const resolution = await resolvePartnerJourney(
     dependencies({
-      getUser: async () => ({ id: "other-user" }),
-      loadInvitation: async (userId: string) => {
-        assert.equal(userId, "other-user")
-        // The lookup is scoped to this user's id; a different creator's row
-        // never comes back for someone else's user id.
-        return null
-      },
+      getUser: async () => ({ id: "this-user" }),
+      loadInvitation: (userId) =>
+        defaultLoadInvitation(userId, fakeInvitationsAdminClient([otherUsersRow])),
     }),
   )
   assert.deepEqual(resolution, { kind: "none" })
@@ -82,6 +147,20 @@ test("a read error is unavailable, not none or a thrown exception", async () => 
     dependencies({
       loadInvitation: async () => {
         throw new Error("database unavailable")
+      },
+    }),
+  )
+  assert.deepEqual(resolution, { kind: "unavailable" })
+})
+
+test("an auth-service error on getUser() is unavailable, not none", async () => {
+  const resolution = await resolvePartnerJourney(
+    dependencies({
+      getUser: async () => {
+        throw new Error("auth service blip")
+      },
+      loadInvitation: async () => {
+        throw new Error("must not look up an invitation when getUser() failed")
       },
     }),
   )
