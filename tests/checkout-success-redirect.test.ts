@@ -7,6 +7,7 @@ import {
   getCheckoutFirstTimeDestinationOptionsFromAccount,
   getCheckoutFirstTimeDestination,
   resolvePersonalPlanCheckoutReadiness,
+  isCheckoutFirstTimeDestination,
   resolveCheckoutFirstTimeDestination,
 } from "../src/lib/billing/checkout-success-redirect"
 
@@ -71,6 +72,16 @@ test("activation-account eligibility ignores non-boolean values", () => {
     getCheckoutFirstTimeDestinationOptionsFromAccount({ legacyQuizFuturePurchaseEligible: "true" }),
     { legacyQuizFuturePurchaseEligible: false },
   )
+})
+
+test("the destination union stays closed — /scan is reached from plan-bereit, not from here", () => {
+  // The scanner hand-over is decided on /plan-bereit with the lead's package in hand;
+  // checkout activation stays package-blind and keeps its three destinations.
+  assert.equal(isCheckoutFirstTimeDestination("/scan?welcome=scan"), false)
+  assert.equal(isCheckoutFirstTimeDestination("/scan"), false)
+  assert.equal(isCheckoutFirstTimeDestination("/onboarding"), true)
+  assert.equal(isCheckoutFirstTimeDestination("/plan-start"), true)
+  assert.equal(isCheckoutFirstTimeDestination("/plan-bereit?lead=scan-lead"), true)
 })
 
 test("a proven eligible legacy purchase keeps readiness recovery when quiz-kind reload fails", async () => {

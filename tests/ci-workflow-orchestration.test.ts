@@ -201,6 +201,21 @@ test("payment feedback V2 smoke is reserved for scheduled or explicit full CI", 
   )
 })
 
+test("scan funnel journey live run is reserved for the same full CI gate as payment feedback V2", () => {
+  const qualityPersonalPlanJourney = jobSource(ciWorkflow, "quality-personal-plan-journey")
+
+  // I1: the job itself still runs on every PR carrying a personal-plan-journey change
+  // (it also runs the non-live journey specs), but tests/scan-funnel-journey.spec.ts's
+  // own live run is gated on the same manual full_ci signal as
+  // playwright-payment-feedback-v2, AND on a real (non-empty) service-role secret —
+  // never ci.yml's placeholder fallback — so a plain PR never writes to production
+  // Supabase and never sees a beforeAll throw instead of a clean skip.
+  assert.match(
+    qualityPersonalPlanJourney,
+    /^      PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE: \$\{\{ \(needs\.detect-ci-scope\.outputs\.full_ci == 'true' && secrets\.SUPABASE_SERVICE_ROLE_KEY != ''\) && '1' \|\| '0' \}\}$/m,
+  )
+})
+
 test("quality core preserves its required name as a fail-closed parallel aggregate", () => {
   const qualityCore = jobSource(ciWorkflow, "quality-core")
   const expectedChildren = [
@@ -301,11 +316,11 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(journeyCommand, /PLAYWRIGHT_BASE_URL=http:\/\/127\.0\.0\.1:3217/)
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-flow\.spec\.ts --project=chromium/,
+    /playwright test tests\/personal-plan-start\.spec\.ts tests\/personal-plan-feinschliff-journey\.spec\.ts tests\/personal-plan-stage2-refinement\.spec\.ts tests\/personal-plan-stage1-2-3\.spec\.ts tests\/personal-plan-application-transition\.spec\.ts tests\/personal-plan-routine-editor\.spec\.ts tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-flow\.spec\.ts tests\/scan-funnel-journey\.spec\.ts --project=chromium/,
   )
   assert.match(
     journeyCommand,
-    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts --project=webkit-mobile-action/,
+    /playwright test tests\/personal-plan-stage3-focus\.spec\.ts tests\/personal-plan-preparation-browser\.spec\.ts tests\/scan-funnel-journey\.spec\.ts --project=webkit-mobile-action/,
   )
   assert.doesNotMatch(journeyCommand, /tests\/personal-plan-stage3\.spec\.ts/)
 
@@ -337,7 +352,9 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
     /- name: Install Playwright browsers\n        run: npx playwright install --with-deps chromium webkit/,
   )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
-  assert.match(qualityPersonalPlanJourney, /^    timeout-minutes: 10$/m)
+  // M1: raised from 10 so a run cannot be SIGKILLed mid-afterAll while the live
+  // tests/scan-funnel-journey.spec.ts run is cleaning up its production Supabase rows.
+  assert.match(qualityPersonalPlanJourney, /^    timeout-minutes: 20$/m)
 })
 
 test("the tracker product drawer smoke does not wait for network silence", () => {

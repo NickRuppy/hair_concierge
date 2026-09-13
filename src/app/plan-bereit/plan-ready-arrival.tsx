@@ -33,6 +33,43 @@ const ARRIVAL_HIGHLIGHTS = [
 ] as const
 
 /**
+ * What a `scan_v1` buyer owns: the scanner is the surface they bought, the plan
+ * is the thing waiting next to it. Same frame, same choreography — only the
+ * three lines and the two headlines differ, so every other package keeps the
+ * copy above byte-identical.
+ */
+const SCAN_ARRIVAL_HIGHLIGHTS = [
+  { name: "Dein Scanner", detail: "Barcode scannen, Ergebnis sehen." },
+  { name: "Dein Plan", detail: "Wartet daneben." },
+  { name: "Dein Chat", detail: "Fragen? Immer offen." },
+] as const
+
+export type PlanBereitArrivalVariant = "plan" | "scan"
+
+const ARRIVAL_COPY = {
+  plan: {
+    loadingHeadline: "Dein Plan wird geöffnet.",
+    readyHeadline: "Dein Plan ist fertig.",
+    cta: "Plan ansehen",
+    highlights: ARRIVAL_HIGHLIGHTS,
+  },
+  scan: {
+    loadingHeadline: "Wir richten deinen Scanner ein.",
+    readyHeadline: "Dein Scanner ist startklar.",
+    cta: "Scanner öffnen",
+    highlights: SCAN_ARRIVAL_HIGHLIGHTS,
+  },
+} as const satisfies Record<
+  PlanBereitArrivalVariant,
+  {
+    loadingHeadline: string
+    readyHeadline: string
+    cta: string
+    highlights: readonly { name: string; detail: string }[]
+  }
+>
+
+/**
  * The post-payment arrival, as one persistent two-state frame. /welcome (redirect
  * branch), plan-bereit/loading.tsx and the checking state all render the identical
  * `phase="loading"` frame — spinner ring, „Zahlung bestätigt“, „Dein Plan wird
@@ -50,6 +87,7 @@ export function PlanBereitArrival({
   slowHint,
   loadingShellId,
   noscriptFallback,
+  variant = "plan",
 }: {
   actionHref?: string
   onAction?: () => void
@@ -69,7 +107,10 @@ export function PlanBereitArrival({
   /** Renders the frame as a route loading shell with the matching a11y attributes. */
   loadingShellId?: string
   noscriptFallback?: ReactNode
+  /** Which package this arrival belongs to. Defaults to the plan copy every other package uses. */
+  variant?: PlanBereitArrivalVariant
 }) {
+  const copy = ARRIVAL_COPY[variant]
   const ready = phase === "ready"
   const serverKnowsReady = interactive ?? ready
   // Without JS the noscript style already SHOWS the ready content on a
@@ -153,10 +194,10 @@ export function PlanBereitArrival({
 
           <div className="grid">
             <h1 aria-hidden={loadingHidden} className={cn(headlineClassName, "plan-opening-exit")}>
-              Dein Plan wird geöffnet.
+              {copy.loadingHeadline}
             </h1>
             <h1 aria-hidden={revealHidden} className={cn(headlineClassName, "plan-opening-enter")}>
-              Dein Plan ist fertig.
+              {copy.readyHeadline}
             </h1>
           </div>
 
@@ -171,12 +212,12 @@ export function PlanBereitArrival({
             aria-hidden={revealHidden}
             className="plan-opening-reveal plan-opening-reveal-2 mx-auto mt-6 w-full max-w-[270px]"
           >
-            {ARRIVAL_HIGHLIGHTS.map(({ name, detail }, index) => (
+            {copy.highlights.map(({ name, detail }, index) => (
               <li
                 key={name}
                 className={cn(
                   "flex items-baseline gap-2.5 py-[9px]",
-                  index < ARRIVAL_HIGHLIGHTS.length - 1 && "border-b border-[#f0ebe4]",
+                  index < copy.highlights.length - 1 && "border-b border-[#f0ebe4]",
                 )}
               >
                 <span className="whitespace-nowrap font-header text-[16.5px] leading-[1.2] text-[var(--brand-plum-darkest)]">
@@ -218,7 +259,7 @@ export function PlanBereitArrival({
             `}</style>
             {actionHref ? (
               <a href={actionHref} className={ctaBaseClassName}>
-                Plan ansehen
+                {copy.cta}
               </a>
             ) : null}
           </noscript>
@@ -233,11 +274,11 @@ export function PlanBereitArrival({
             tabIndex={ctaUsable ? undefined : -1}
             className={ctaClassName}
           >
-            Plan ansehen
+            {copy.cta}
           </Link>
         ) : (
           <span aria-hidden="true" className={ctaClassName}>
-            Plan ansehen
+            {copy.cta}
           </span>
         )}
       </main>

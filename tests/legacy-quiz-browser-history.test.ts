@@ -31,20 +31,35 @@ function createWindowLike(initialState: unknown = null) {
 }
 
 test("legacy quiz screen positions include each lead-capture substep", () => {
-  assert.ok(getLegacyQuizScreenPosition(3, "name") > getLegacyQuizScreenPosition(2, "name"))
-  assert.ok(getLegacyQuizScreenPosition(9, "email") > getLegacyQuizScreenPosition(9, "name"))
-  assert.ok(getLegacyQuizScreenPosition(9, "consent") > getLegacyQuizScreenPosition(9, "email"))
-  assert.ok(getLegacyQuizScreenPosition(10, "consent") > getLegacyQuizScreenPosition(9, "consent"))
+  assert.ok(
+    getLegacyQuizScreenPosition(3, "name", "regular", null) >
+      getLegacyQuizScreenPosition(2, "name", "regular", null),
+  )
+  assert.ok(
+    getLegacyQuizScreenPosition(9, "email", "regular", null) >
+      getLegacyQuizScreenPosition(9, "name", "regular", null),
+  )
+  assert.ok(
+    getLegacyQuizScreenPosition(9, "consent", "regular", null) >
+      getLegacyQuizScreenPosition(9, "email", "regular", null),
+  )
+  assert.ok(
+    getLegacyQuizScreenPosition(10, "consent", "regular", null) >
+      getLegacyQuizScreenPosition(9, "consent", "regular", null),
+  )
 })
 
 test("creator quiz history collapses hidden identity screens without changing regular positions", () => {
-  const finalQuestionPosition = getLegacyQuizScreenPosition(12, "name")
-  const regularConsentPosition = getLegacyQuizScreenPosition(9, "consent")
-  const creatorConsentPosition = getLegacyQuizScreenPosition(9, "consent", "partner")
+  const finalQuestionPosition = getLegacyQuizScreenPosition(12, "name", "regular", null)
+  const regularConsentPosition = getLegacyQuizScreenPosition(9, "consent", "regular", null)
+  const creatorConsentPosition = getLegacyQuizScreenPosition(9, "consent", "partner", null)
 
   assert.equal(creatorConsentPosition, finalQuestionPosition + 1)
   assert.ok(regularConsentPosition > creatorConsentPosition)
-  assert.equal(getLegacyQuizScreenPosition(10, "consent", "partner"), creatorConsentPosition + 1)
+  assert.equal(
+    getLegacyQuizScreenPosition(10, "consent", "partner", null),
+    creatorConsentPosition + 1,
+  )
 })
 
 test("legacy quiz browser history preserves unrelated state while incrementing depth", () => {

@@ -7,10 +7,10 @@ import { QuizProgressTransitionProvider } from "@/components/quiz/quiz-progress-
 import { RegularQuizFieldTestBanner } from "@/components/regular-quiz-field-test/banner"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import { getQuizMotionOrder, getQuizProgressStep } from "@/lib/quiz/screen-order"
 import type { QuizStep } from "@/lib/quiz/types"
 import { useEffect, useRef, useState } from "react"
 
-const QUIZ_MOTION_ORDER: readonly QuizStep[] = [2, 3, 13, 15, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
 const LEAD_CAPTURE_MOTION_ORDER = ["name", "email", "consent"]
 const SCREEN_EXIT_MS = 200
 
@@ -20,9 +20,14 @@ type QuizOutgoingLayer = {
   id: number
 }
 
-function getTransitionDirection(previousStep: QuizStep, nextStep: QuizStep) {
-  const previousIndex = QUIZ_MOTION_ORDER.indexOf(previousStep)
-  const nextIndex = QUIZ_MOTION_ORDER.indexOf(nextStep)
+function getTransitionDirection(
+  previousStep: QuizStep,
+  nextStep: QuizStep,
+  funnelPackageKey: string | null,
+) {
+  const motionOrder = getQuizMotionOrder(funnelPackageKey)
+  const previousIndex = motionOrder.indexOf(previousStep)
+  const nextIndex = motionOrder.indexOf(nextStep)
 
   if (previousIndex === -1 || nextIndex === -1) return "forward"
   return nextIndex < previousIndex ? "back" : "forward"
@@ -34,8 +39,10 @@ function getLeadCaptureTransitionDirection(previous: string, next: string) {
     : "forward"
 }
 
-function getProgressCurrent(step: QuizStep) {
-  return getQuizQuestionNumber(step) ?? QUIZ_TOTAL_QUESTIONS
+// A funnel insert adds no question: bar and counter stay on the state of the
+// question right before it.
+function getProgressCurrent(step: QuizStep, funnelPackageKey: string | null) {
+  return getQuizQuestionNumber(getQuizProgressStep(step, funnelPackageKey)) ?? QUIZ_TOTAL_QUESTIONS
 }
 
 export function QuizShell({
@@ -76,13 +83,13 @@ export function QuizShell({
               previousState.leadCaptureSubStep,
               nextState.leadCaptureSubStep,
             )
-          : getTransitionDirection(previousState.step, nextState.step)
+          : getTransitionDirection(previousState.step, nextState.step, nextState.funnelPackageKey)
       setTransitionDirection(direction)
 
       outgoingLayerIdRef.current += 1
       const transitionId = outgoingLayerIdRef.current
       setProgressTransition({
-        fromCurrent: getProgressCurrent(previousState.step),
+        fromCurrent: getProgressCurrent(previousState.step, previousState.funnelPackageKey),
         id: transitionId,
       })
 

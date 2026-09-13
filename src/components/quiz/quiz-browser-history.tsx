@@ -31,9 +31,15 @@ export function QuizBrowserHistoryProvider({ children }: { children: ReactNode }
   const step = useQuizStore((state) => state.step)
   const leadCaptureSubStep = useQuizStore((state) => state.leadCaptureSubStep)
   const leadCaptureMode = useQuizStore((state) => state.leadCaptureMode)
+  const funnelPackageKey = useQuizStore((state) => state.funnelPackageKey)
   const goBack = useQuizStore((state) => state.goBack)
   const setLeadCaptureSubStep = useQuizStore((state) => state.setLeadCaptureSubStep)
-  const currentPosition = getLegacyQuizScreenPosition(step, leadCaptureSubStep, leadCaptureMode)
+  const currentPosition = getLegacyQuizScreenPosition(
+    step,
+    leadCaptureSubStep,
+    leadCaptureMode,
+    funnelPackageKey,
+  )
   const previousPositionRef = useRef(currentPosition)
   const currentDepthRef = useRef(0)
   const customBackHandlerRef = useRef<(() => void) | null>(null)

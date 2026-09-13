@@ -224,7 +224,9 @@ test("result and quiz routing consume only server-derived regular field-test sta
     "utf8",
   )
 
-  assert.doesNotMatch(quizLayoutSource, /cookies\(\)/)
+  // The public quiz layout may read the signed funnel session cookie (package
+  // attribution). What it must never do is derive field-test state itself.
+  assert.doesNotMatch(quizLayoutSource, /REGULAR_QUIZ_FIELD_TEST|regularFieldTest/)
   assert.doesNotMatch(quizLayoutSource, /searchParams/)
   assert.match(resultPageSource, /resolveRegularQuizFieldTestOfferAuthorization/)
   assert.match(resultPageSource, /funnelContext\.testKind === "field_test"/)

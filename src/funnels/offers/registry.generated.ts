@@ -4,9 +4,11 @@
 import OfferVariant0 from "./organic-plan-before-after-v1"
 import OfferVariant1 from "./organic-plan-v1"
 import OfferVariant2 from "./personal-plan-v1"
+import OfferVariant3 from "./scan-regal-v1"
 
 export const OFFER_VARIANTS = {
   "organic-plan-before-after-v1": OfferVariant0,
   "organic-plan-v1": OfferVariant1,
   "personal-plan-v1": OfferVariant2,
+  "scan-regal-v1": OfferVariant3,
 } as const

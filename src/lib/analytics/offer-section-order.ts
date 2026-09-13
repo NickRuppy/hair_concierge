@@ -30,13 +30,32 @@ const PERSONAL_PLAN_SECTION_ORDER = [
   "final_cta",
 ] as const satisfies readonly OfferSectionId[]
 
+/** `scan-regal-v1` — the scanner offer's own top-to-bottom order (variant B). */
+const SCAN_REGAL_SECTION_ORDER = [
+  "hero",
+  "before_after",
+  "scan_criteria",
+  "product_tour",
+  "pricing",
+  "scan_coverage",
+  "highlights",
+  "method",
+  "survey",
+  "testimonials",
+  "guarantee",
+  "faq",
+  "final_cta",
+] as const satisfies readonly OfferSectionId[]
+
 export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
   const presentationVariant = resolveOfferPresentationVariant(offerVariant)
   const order: readonly OfferSectionId[] =
-    presentationVariant === "personal-plan-v1" ||
-    isPersonalPlanPricingExperimentVariant(presentationVariant)
-      ? PERSONAL_PLAN_SECTION_ORDER
-      : ORGANIC_PLAN_SECTION_ORDER
+    presentationVariant === "scan-regal-v1"
+      ? SCAN_REGAL_SECTION_ORDER
+      : presentationVariant === "personal-plan-v1" ||
+          isPersonalPlanPricingExperimentVariant(presentationVariant)
+        ? PERSONAL_PLAN_SECTION_ORDER
+        : ORGANIC_PLAN_SECTION_ORDER
   const index = order.indexOf(sectionId)
   return index >= 0 ? index : order.length
 }

@@ -952,6 +952,81 @@
   }
 }
 
+/*
+ * The example card on a scan funnel insert: the photo reads first, then the
+ * scanner verdict slides in over it. The card is visible without the animation,
+ * so a reduced-motion viewer simply gets it right away.
+ */
+@keyframes scanInsertCardUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scan-insert-example-card {
+  animation: scanInsertCardUp 1s 0.8s cubic-bezier(0.22, 0.8, 0.36, 1) both;
+}
+
+/* The verdict carries the display serif of the quiz headlines, one notch bolder. */
+.scan-insert-example-verdict {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/*
+ * Scanner hero demo on the `scan-regal-v1` offer. The phases are React state,
+ * so these keyframes only decorate them; every user of them is behind
+ * `motion-safe:`, and reduced motion never leaves the finished state.
+ */
+@keyframes scanHeroDemoLine {
+  0% {
+    top: 8%;
+  }
+  50% {
+    top: 88%;
+  }
+  100% {
+    top: 8%;
+  }
+}
+
+/*
+ * Scale only. Tailwind v4 centres the pill with the standalone `translate`
+ * property, which composes with `transform` — a translate here would shift it
+ * by half its width twice.
+ */
+@keyframes scanHeroDemoPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scanHeroDemoSheetUp {
+  from {
+    opacity: 0.2;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
   animation: personalPlanScreenEnterForward 200ms ease-out both;
 }
@@ -1360,6 +1435,12 @@
     background: none !important;
     color: hsl(var(--muted-foreground));
     -webkit-text-fill-color: currentColor;
+  }
+
+  .scan-insert-example-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   .personal-plan-screen-enter,

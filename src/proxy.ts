@@ -12,7 +12,11 @@ import {
   type FunnelCookieContext,
   type FunnelTouch,
 } from "@/lib/funnel/cookie"
-import { isFunnelAttributionEnabled, isPersonalPlanQuizV1Enabled } from "@/lib/funnel/flags"
+import {
+  isFunnelAttributionEnabled,
+  isPersonalPlanQuizV1Enabled,
+  isScanFunnelEnabled,
+} from "@/lib/funnel/flags"
 import {
   getFunnelPackageByKey,
   getFunnelPackageBySlug,
@@ -90,9 +94,11 @@ export async function proxy(request: NextRequest) {
   }
 
   const personalPlanEnabled = isPersonalPlanQuizV1Enabled()
+  const scanFunnelEnabled = isScanFunnelEnabled()
   const selectedPackage = resolveAttributablePackageForPath(
     request.nextUrl.pathname,
     personalPlanEnabled,
+    scanFunnelEnabled,
   )
   if (!selectedPackage) {
     return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
@@ -109,6 +115,7 @@ export async function proxy(request: NextRequest) {
     existingPackageKey: existing?.packageKey ?? null,
     explicitlySelectsPackage,
     personalPlanEnabled,
+    scanFunnelEnabled,
     selectedPackage,
   })
   const context: FunnelCookieContext =
@@ -250,20 +257,29 @@ const SAFE_RETIRED_ROUTINE_QUERY_KEYS = new Set([
 export function isAttributableFunnelPackage(
   funnelPackage: FunnelPackage,
   personalPlanEnabled: boolean,
+  scanFunnelEnabled: boolean,
 ) {
   if (funnelPackage.key === "default_organic") return funnelPackage.status === "active"
+  if (funnelPackage.key === "meta_personal_plan_v1") {
+    return funnelPackage.status === "placeholder" && personalPlanEnabled
+  }
   return (
-    funnelPackage.key === "meta_personal_plan_v1" &&
-    funnelPackage.status === "placeholder" &&
-    personalPlanEnabled
+    funnelPackage.key === "scan_v1" &&
+    (funnelPackage.status === "active" ||
+      (funnelPackage.status === "placeholder" && scanFunnelEnabled))
   )
 }
 
-export function resolveAttributablePackageForPath(pathname: string, personalPlanEnabled: boolean) {
+export function resolveAttributablePackageForPath(
+  pathname: string,
+  personalPlanEnabled: boolean,
+  scanFunnelEnabled: boolean,
+) {
   if (pathname === "/" || pathname === "/quiz") return resolveDefaultFunnelPackage()
   const match = pathname.match(/^\/lp\/([^/]+)\/?$/)
   const funnelPackage = match ? getFunnelPackageBySlug(match[1]) : null
-  return funnelPackage && isAttributableFunnelPackage(funnelPackage, personalPlanEnabled)
+  return funnelPackage &&
+    isAttributableFunnelPackage(funnelPackage, personalPlanEnabled, scanFunnelEnabled)
     ? funnelPackage
     : null
 }
@@ -272,16 +288,21 @@ export function shouldStartNewFunnelSession({
   existingPackageKey,
   explicitlySelectsPackage,
   personalPlanEnabled,
+  scanFunnelEnabled,
   selectedPackage,
 }: {
   existingPackageKey: string | null
   explicitlySelectsPackage: boolean
   personalPlanEnabled: boolean
+  scanFunnelEnabled: boolean
   selectedPackage: FunnelPackage
 }) {
   if (!existingPackageKey) return true
   const existingPackage = getFunnelPackageByKey(existingPackageKey)
-  if (!existingPackage || !isAttributableFunnelPackage(existingPackage, personalPlanEnabled)) {
+  if (
+    !existingPackage ||
+    !isAttributableFunnelPackage(existingPackage, personalPlanEnabled, scanFunnelEnabled)
+  ) {
     return true
   }
   return explicitlySelectsPackage && existingPackageKey !== selectedPackage.key

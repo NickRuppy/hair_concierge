@@ -7,6 +7,15 @@ export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
 
 export type PersonalPlanRoutineAccess = {
   hasActivePersonalPlanEntitlement: boolean
+  /**
+   * Current paid app access, mirroring the subscription paywall's own
+   * composite (`hasCurrentAppAccess` OR an active one-time purchase OR an
+   * active moderator grant). Distinct from
+   * `hasActivePersonalPlanEntitlement`, which deliberately excludes plain
+   * subscribers. Only the `/scan` rule reads it; omitted means "unknown",
+   * treated as no paid access.
+   */
+  hasPaidAppAccess?: boolean
   pendingRoutineProposalId: string | null
   activeRoutineVersionId: string | null
 }
@@ -98,7 +107,16 @@ export function canBypassLegacyOnboardingForPersonalPlanRoutine(
     return true
   }
 
-  if (!access?.hasActivePersonalPlanEntitlement) return false
+  if (!access?.hasActivePersonalPlanEntitlement) {
+    // Scanner funnel (`scan_v1`): the funnel sells the *subscription* and lands
+    // the buyer on `/scan`, but a plain subscriber holds no Personal-Plan
+    // routine entitlement (that composite covers one-time access, field-test /
+    // partner guests and moderators only). Current paid app access alone opens
+    // `/scan`; the profile prerequisite stays enforced downstream by the scan
+    // page's own gate (loadScanRouteAccess -> redirect to /quiz).
+    if (isRoute(pathname, "/scan") && access?.hasPaidAppAccess) return true
+    return false
+  }
 
   const hasPendingOrActiveRoutine = Boolean(
     access.pendingRoutineProposalId || access.activeRoutineVersionId,

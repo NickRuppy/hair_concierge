@@ -14,10 +14,35 @@ import { PersonalPlanReadyClient } from "./personal-plan-ready-client"
 import {
   loadPlanBereitInitialReadiness,
   needsFreshMigrationQuiz,
+  resolvePlanBereitFunnelPackage,
   type PlanBereitInitialReadiness,
 } from "./readiness"
 
 export const dynamic = "force-dynamic"
+
+/**
+ * Package identity is server-owned (`funnel_sessions`), never a client field: a
+ * `scan_v1` buyer continues into the scanner instead of `/plan-start`, and every
+ * other package keeps the plan destination and copy.
+ *
+ * Only the surfaces that never compute a readiness use this — the access surfaces
+ * below are literals. Every readiness-backed outcome carries the package the
+ * provisioning itself resolved (`PlanBereitInitialReadiness.funnelPackageKey`), so
+ * the destination can never disagree with what was provisioned.
+ *
+ * These surfaces are all non-ready by construction, so an unavailable lookup only
+ * costs the waiting screen its scanner wording: the poll's first response carries
+ * the authoritative package, and a failing lookup reports `transient_error` there.
+ */
+async function loadPlanBereitFunnelPackageKey(leadId: string | null): Promise<string | null> {
+  if (!leadId) return null
+  const resolution = await resolvePlanBereitFunnelPackage(leadId)
+  if (resolution.kind === "unavailable") {
+    console.warn("[plan-bereit] funnel package unavailable for lead", leadId)
+    return null
+  }
+  return resolution.packageKey
+}
 
 export type PlanBereitAccessSurface =
   | "pricing"
@@ -101,6 +126,7 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: "none",
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(requestedLeadId),
           }}
         />
       )
@@ -139,6 +165,7 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: migration ? "link" : "none",
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(requestedLeadId),
           }}
         />
       )
@@ -179,6 +206,9 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: "poll",
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(
+              canonicalLeadId ?? requestedLeadId,
+            ),
           }}
         />
       )
@@ -193,6 +223,9 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: "none",
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(
+              canonicalLeadId ?? requestedLeadId,
+            ),
           }}
         />
       )
@@ -212,6 +245,7 @@ export default async function PersonalPlanReadyPage({
               sourceVersion: null,
               missingFacts: [],
               initialAction: "none",
+              funnelPackageKey: null,
             }
           })
         : {
@@ -221,8 +255,11 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: "none",
+            funnelPackageKey: null,
           }
       return (
+        // The readiness carries the package the provisioning resolved — no second
+        // lookup here, so the destination and the provisioning can never disagree.
         <PersonalPlanReadyClient
           leadId={canonicalLeadId}
           initialReadiness={

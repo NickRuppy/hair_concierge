@@ -50,6 +50,15 @@ export type OfferSectionId =
   | "personal_plan_method"
   | "personal_plan_before_after"
   | "personal_plan_survey"
+  // `scan-regal-v1` sections. The scanner offer keeps its own vocabulary
+  // instead of reusing the plan-shaped ids, so its funnel stays readable.
+  | "scan_criteria"
+  | "product_tour"
+  | "scan_coverage"
+  | "highlights"
+  | "method"
+  | "before_after"
+  | "survey"
   | "founder_letter"
   | "mini_routine"
   | "locked_routine"
@@ -563,6 +572,14 @@ export type AppEventMap = {
     phase?: "precheck" | "lead_submit"
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
+  }
+  /**
+   * Ein Funnel-Einschub im Quiz wurde gesehen. Einschübe sind keine Fragen und
+   * bleiben deshalb aus `quiz_step_viewed` heraus.
+   */
+  quiz_insert_viewed: {
+    insertId: "problem" | "solution" | "home"
+    funnelPackageKey: string
   }
   quiz_started: FunnelAnalyticsEnvelope & {
     stepName: string

@@ -51,6 +51,14 @@ recorded sessions merely to improve presentation.
 
 - `FUNNEL_ATTRIBUTION_ENABLED=true` enables signed cookies and Supabase recording. It defaults off.
 - `FUNNEL_COOKIE_SIGNING_SECRET` is required when attribution is enabled. Use a long random secret.
+- `PERSONAL_PLAN_QUIZ_V1_ENABLED=true` makes the placeholder `meta_personal_plan_v1` package
+  (`/lp/haarplan`) attributable and reachable. It defaults off.
+- `SCAN_FUNNEL_ENABLED=true` gates the placeholder `scan_v1` package (`/lp/scan`): while the package
+  status stays `placeholder`, attribution and the `/lp/scan` route itself both require this flag. It
+  defaults off. Both attribution and the `/lp/[slug]` route gate treat an `active` `scan_v1` package
+  as reachable regardless of this flag; once launch flips `scan_v1` to `active` in
+  `src/funnels/packages.json`, this flag is no longer required for the route or for attribution and
+  only needs to remain set while testing the package pre-launch.
 - `FUNNEL_META_CUSTOM_DATA_ENABLED=true` allows only `funnel_package_key` into Meta custom data. It
   defaults off. Set the matching `NEXT_PUBLIC_FUNNEL_META_CUSTOM_DATA_ENABLED=true` so browser Pixel
   events include the same package key. The public flag must be configured before a fresh production
@@ -98,6 +106,41 @@ The session summary records the first occurrence of:
 
 `funnel_events` keeps every genuine occurrence. Browser event IDs are reused across Supabase,
 PostHog, Customer.io, and Meta. Confirmed purchases reuse the existing billing event key.
+
+## Comparing Packages in PostHog
+
+To compare funnel packages, build the PostHog funnel from the five milestones every
+package emits, broken down by `funnel_package_key` (`default_organic`,
+`meta_personal_plan_v1`, `scan_v1`):
+
+1. `landing_viewed`
+2. `quiz_started`
+3. `quiz_completed`
+4. `offer_viewed`
+5. `purchase_completed`
+
+These five are the like-for-like read on where each package's journey gains or loses
+visitors relative to the others. Only shared steps belong in that funnel: a step one
+package cannot emit would drop the others to zero at that stage (or, as an optional
+step, silently change the comparison's denominators).
+
+`quiz_insert_viewed` is therefore analysed **separately, within `scan_v1` only** —
+never as a step of the cross-package funnel. It is fired when a visitor sees one of
+the three quiz inserts, with `insert_id` (`problem` | `solution` | `home`) and
+`funnel_package_key`. Inserts are not questions: they do not emit `quiz_step_viewed`,
+so they never appear in a `quiz_step_viewed` funnel and do not shift
+`default_organic`/`meta_personal_plan_v1` step counts. Use it inside the `scan_v1`
+segment — insert reach and per-insert drop-off between `quiz_started` and
+`quiz_completed` — to explain a `scan_v1` movement the shared funnel surfaces.
+
+`scan-regal-v1` (the `scan_v1` offer) also introduces seven offer section IDs
+that do not exist on any other offer: `scan_criteria`, `product_tour`,
+`scan_coverage`, `highlights`, `method`, `before_after`, and `survey` (see
+`OfferSectionId` in `src/lib/analytics/events.ts`). Any hand-maintained
+Customer.io funnel that keeps its own closed section-ID schema (see
+`docs/analytics/offer-page-tracking.md`) must add these seven IDs before
+`scan_v1` ships, or `offer_section_viewed` events for this package will be
+dropped or rejected by that schema.
 
 Stripe and PayPal metadata stays deliberately compact:
 

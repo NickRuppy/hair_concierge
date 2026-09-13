@@ -1,5 +1,5 @@
 import { normalizeStoredQuizAnswers } from "./normalization"
-import { QUIZ_QUESTION_STEPS } from "./questions"
+import { getQuizQuestionStepOrder } from "./screen-order"
 import type { QuizAnswers, QuizStep } from "./types"
 
 export const MIGRATION_QUIZ_CONTEXT_ENDPOINT = "/api/personal-plan/migration-quiz-context"
@@ -56,6 +56,7 @@ export function deriveMigrationQuizPrefillState(input: {
   currentStep: QuizStep
   currentAnswers: QuizAnswers
   payload: MigrationQuizContextPayload
+  funnelPackageKey?: string | null
 }): MigrationQuizPrefillState {
   if (input.payload.status === "recover") return { status: "recover" }
   if (input.payload.status === "unavailable") return { status: "unavailable" }
@@ -66,7 +67,7 @@ export function deriveMigrationQuizPrefillState(input: {
   if (input.payload.status !== "prefill") return { status: "ignore" }
   return {
     status: "prefill",
-    step: firstMissingQuestionStep(input.payload.answers),
+    step: firstMissingQuestionStep(input.payload.answers, input.funnelPackageKey ?? null),
     answers: input.payload.answers,
   }
 }
@@ -88,8 +89,8 @@ export function resolveLeadCaptureRecoveryNextHref(
   return null
 }
 
-function firstMissingQuestionStep(answers: QuizAnswers): QuizStep {
-  for (const step of QUIZ_QUESTION_STEPS) {
+function firstMissingQuestionStep(answers: QuizAnswers, packageKey: string | null): QuizStep {
+  for (const step of getQuizQuestionStepOrder(packageKey)) {
     if (!isStepAnswered(step, answers)) return step
   }
   return 9

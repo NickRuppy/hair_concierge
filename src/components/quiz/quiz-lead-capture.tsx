@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
+import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
+import { getQuizFunnelCopy } from "@/lib/quiz/funnel-copy"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
@@ -51,6 +53,8 @@ export function QuizLeadCapture() {
     goNext,
     goBack,
   } = useQuizStore()
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const copy = getQuizFunnelCopy(funnelPackageKey)
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
@@ -327,9 +331,7 @@ export function QuizLeadCapture() {
             />
           </svg>
         </span>
-        <span className="text-base font-medium text-foreground">
-          Dein persönlicher Pflegeplan ist bereit!
-        </span>
+        <span className="text-base font-medium text-foreground">{copy.leadCaptureHeadline}</span>
       </div>
 
       {/* Sub-step content */}

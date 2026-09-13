@@ -3,6 +3,10 @@ import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { HAIR_LENGTH_OPTIONS, HAIR_LENGTHS, type HairLength } from "@/lib/vocabulary/hair-length"
 import { buildLegacyQuizStage1Source } from "@/lib/personal-plan/input"
 import { canLinkDirectQuizLead } from "@/lib/quiz/link-to-profile"
+import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
+import { lookupFunnelContextForLead, type FunnelLeadContextLookup } from "@/lib/funnel/server"
+import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
+import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
 import {
   buildProfileDataFromPersonalPlanCanonicalProfile,
   buildProfileDataFromQuizAnswers,
@@ -57,32 +61,40 @@ export type PlanBereitMissingSourceFact = {
   options: typeof HAIR_LENGTH_OPTIONS
 }
 
+/**
+ * The server-resolved funnel package of the readiness lead, carried on every
+ * outcome so the destination and the copy come from the same resolution that
+ * decided provisioning. `null` means organic (no funnel session, or attribution
+ * disabled) — never "the lookup failed", which is a `transient_error` instead.
+ */
+export type PlanBereitResolvedPackage = { funnelPackageKey: string | null }
+
 export type PlanBereitReadiness =
-  | {
+  | ({
       status: "ready"
       leadId: string
       quizSourceKind: PlanBereitQuizSourceKind
       sourceVersion: string | null
-    }
-  | {
+    } & PlanBereitResolvedPackage)
+  | ({
       status: "source_pending"
       leadId: string | null
       quizSourceKind: PlanBereitQuizSourceKind | null
       sourceVersion: string | null
-    }
-  | {
+    } & PlanBereitResolvedPackage)
+  | ({
       status: "missing_source_facts"
       leadId: string
       quizSourceKind: "legacy"
       sourceVersion: string | null
       missingFacts: PlanBereitMissingSourceFact[]
-    }
-  | {
+    } & PlanBereitResolvedPackage)
+  | ({
       status: "invalid_source" | "forbidden" | "transient_error"
       leadId: string | null
       quizSourceKind: PlanBereitQuizSourceKind | null
       sourceVersion: string | null
-    }
+    } & PlanBereitResolvedPackage)
 
 export type PlanBereitInitialAction = "none" | "link" | "poll"
 
@@ -93,7 +105,7 @@ export type PlanBereitInitialReadiness = {
   sourceVersion: string | null
   missingFacts: PlanBereitMissingSourceFact[]
   initialAction: PlanBereitInitialAction
-}
+} & PlanBereitResolvedPackage
 
 export function needsFreshMigrationQuiz(readiness: {
   status: string
@@ -145,6 +157,7 @@ type LinkablePlanBereitSource = {
   lead: PersonalPlanLead
   projectedProfile: Record<string, unknown>
   artifact: PersonalPlanPreparedArtifact | null
+  funnelPackage: PlanBereitFunnelPackageResolution
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -405,6 +418,7 @@ function readinessFromInitial(initial: PlanBereitInitialReadiness): PlanBereitRe
       leadId: initial.leadId,
       quizSourceKind: initial.quizSourceKind,
       sourceVersion: initial.sourceVersion,
+      funnelPackageKey: initial.funnelPackageKey,
     }
   }
   if (initial.status === "missing_source_facts") {
@@ -414,6 +428,7 @@ function readinessFromInitial(initial: PlanBereitInitialReadiness): PlanBereitRe
       quizSourceKind: "legacy",
       sourceVersion: initial.sourceVersion,
       missingFacts: initial.missingFacts,
+      funnelPackageKey: initial.funnelPackageKey,
     }
   }
   return {
@@ -421,12 +436,14 @@ function readinessFromInitial(initial: PlanBereitInitialReadiness): PlanBereitRe
     leadId: initial.leadId,
     quizSourceKind: initial.quizSourceKind,
     sourceVersion: initial.sourceVersion,
+    funnelPackageKey: initial.funnelPackageKey,
   } as PlanBereitReadiness
 }
 
 async function loadPlanBereitLinkCandidate(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness | LinkablePlanBereitSource> {
   if (!input.leadId) {
     return {
@@ -434,6 +451,7 @@ async function loadPlanBereitLinkCandidate(
       leadId: null,
       quizSourceKind: null,
       sourceVersion: null,
+      funnelPackageKey: null,
     }
   }
 
@@ -444,6 +462,7 @@ async function loadPlanBereitLinkCandidate(
       leadId: input.leadId,
       quizSourceKind: null,
       sourceVersion: null,
+      funnelPackageKey: null,
     }
   }
   if (!lead) {
@@ -452,14 +471,23 @@ async function loadPlanBereitLinkCandidate(
       leadId: input.leadId,
       quizSourceKind: null,
       sourceVersion: null,
+      funnelPackageKey: null,
     }
   }
+
+  // Resolved once per readiness pass, before any outcome is built: provisioning and
+  // the destination/copy the client renders must never come from two lookups that
+  // can disagree.
+  const funnelPackage = await resolveLeadFunnelPackage(lead, deps)
+  const funnelPackageKey = resolvedPackageKey(funnelPackage)
+
   if (input.expectedQuizSourceKind && lead.quiz_kind !== input.expectedQuizSourceKind) {
     return {
       status: "invalid_source",
       leadId: lead.id,
       quizSourceKind: lead.quiz_kind,
       sourceVersion: lead.updated_at ?? null,
+      funnelPackageKey,
     }
   }
 
@@ -471,6 +499,7 @@ async function loadPlanBereitLinkCandidate(
         leadId: lead.id,
         quizSourceKind: lead.quiz_kind,
         sourceVersion: lead.updated_at ?? null,
+        funnelPackageKey,
       }
     }
     try {
@@ -481,6 +510,7 @@ async function loadPlanBereitLinkCandidate(
         projectedProfile: buildProfileDataFromPersonalPlanCanonicalProfile(
           artifact.canonical_profile,
         ),
+        funnelPackage,
       }
     } catch {
       return {
@@ -488,6 +518,7 @@ async function loadPlanBereitLinkCandidate(
         leadId: lead.id,
         quizSourceKind: lead.quiz_kind,
         sourceVersion: lead.updated_at ?? null,
+        funnelPackageKey,
       }
     }
   }
@@ -500,6 +531,7 @@ async function loadPlanBereitLinkCandidate(
       quizSourceKind: "legacy",
       sourceVersion: lead.updated_at ?? null,
       missingFacts: source.missingFacts,
+      funnelPackageKey,
     }
   }
 
@@ -509,6 +541,7 @@ async function loadPlanBereitLinkCandidate(
       leadId: lead.id,
       quizSourceKind: "legacy",
       sourceVersion: lead.updated_at ?? null,
+      funnelPackageKey,
     }
   }
 
@@ -517,14 +550,16 @@ async function loadPlanBereitLinkCandidate(
     lead,
     artifact: null,
     projectedProfile: buildProfileDataFromQuizAnswers(lead.quiz_answers as QuizAnswers),
+    funnelPackage,
   }
 }
 
 export async function loadPlanBereitInitialReadiness(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitInitialReadiness> {
-  const candidate = await loadPlanBereitLinkCandidate(supabase, input)
+  const candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
   if (candidate.status !== "linkable") {
     return {
       ...candidate,
@@ -542,6 +577,32 @@ export async function loadPlanBereitInitialReadiness(
         profileMatchesProjected(profile, candidate.projectedProfile)
 
   if (alreadyProjected) {
+    // `ready` is the CTA gate. For a `scan_v1` buyer it must additionally mean "the
+    // initial need snapshot exists", so provisioning runs here — the single place
+    // every `ready` outcome passes through (first page render, status GET, and the
+    // tail of the link POST). A failure reports `transient_error`, whose retry is a
+    // plain GET and therefore re-enters exactly this branch.
+    const provisioning = await ensureScanBuyerProvisioned(
+      supabase,
+      {
+        userId: input.userId,
+        leadId: candidate.lead.id,
+        quizSourceKind: candidate.lead.quiz_kind,
+        funnelPackage: candidate.funnelPackage,
+      },
+      deps,
+    )
+    if (provisioning.status === "failed") {
+      return {
+        status: "transient_error",
+        leadId: candidate.lead.id,
+        quizSourceKind: candidate.lead.quiz_kind,
+        sourceVersion: candidate.lead.updated_at ?? null,
+        missingFacts: [],
+        initialAction: "none",
+        funnelPackageKey: provisioning.funnelPackageKey,
+      }
+    }
     return {
       status: "ready",
       leadId: candidate.lead.id,
@@ -549,6 +610,7 @@ export async function loadPlanBereitInitialReadiness(
       sourceVersion: candidate.lead.updated_at ?? null,
       missingFacts: [],
       initialAction: "none",
+      funnelPackageKey: provisioning.funnelPackageKey,
     }
   }
 
@@ -559,14 +621,16 @@ export async function loadPlanBereitInitialReadiness(
     sourceVersion: candidate.lead.updated_at ?? null,
     missingFacts: [],
     initialAction: "link",
+    funnelPackageKey: resolvedPackageKey(candidate.funnelPackage),
   }
 }
 
 export async function loadPlanBereitReadiness(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
-  return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input))
+  return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input, deps))
 }
 
 async function persistProfileOutput(
@@ -583,11 +647,77 @@ async function persistProfileOutput(
   }
 }
 
+/**
+ * Package identity of a readiness lead. `resolved` with a `null` key is an organic
+ * buyer (no funnel session, or attribution switched off); `unavailable` is a broken
+ * lookup and must never be read as organic — the scanner destination, the arrival
+ * copy and the Stage-1 provisioning all hang off this one answer.
+ */
+export type PlanBereitFunnelPackageResolution =
+  | { kind: "resolved"; packageKey: string | null }
+  | { kind: "unavailable" }
+
+function resolvedPackageKey(resolution: PlanBereitFunnelPackageResolution): string | null {
+  return resolution.kind === "resolved" ? resolution.packageKey : null
+}
+
+/**
+ * The two server lookups the scanner-first provisioning needs, injected so the
+ * readiness tests can drive the `scan_v1` branch without a funnel session or a
+ * Stage-1 stack.
+ */
+export type PlanBereitProvisioningDependencies = {
+  /** Package identity of a lead — always server-owned (`funnel_sessions`), never client input. */
+  resolveFunnelPackage: (leadId: string) => Promise<PlanBereitFunnelPackageResolution>
+  /** The exact provisioning `/plan-start` performs on render; idempotent (reuses an existing plan). */
+  provisionStage1Plan: (supabase: SupabaseClient, userId: string) => Promise<{ status: string }>
+}
+
+/**
+ * The production package lookup: a returned or thrown database error becomes
+ * `unavailable`, a missing `funnel_sessions` row becomes `resolved` with a null key.
+ */
+export async function resolvePlanBereitFunnelPackage(
+  leadId: string,
+  lookup: (leadId: string) => Promise<FunnelLeadContextLookup> = lookupFunnelContextForLead,
+): Promise<PlanBereitFunnelPackageResolution> {
+  const result = await lookup(leadId).catch(() => ({ kind: "unavailable" }) as const)
+  return result.kind === "resolved"
+    ? { kind: "resolved", packageKey: result.context?.packageKey ?? null }
+    : { kind: "unavailable" }
+}
+
+const planBereitProvisioningDefaults: PlanBereitProvisioningDependencies = {
+  resolveFunnelPackage: resolvePlanBereitFunnelPackage,
+  provisionStage1Plan: (supabase, userId) =>
+    createStage1PersistenceService(
+      createStage1SupabaseDependencies(supabase as never),
+    ).loadOrCreate({ userId }),
+}
+
+/**
+ * `personal_plan` sources are never scanner buyers (the `scan_v1` package runs the
+ * legacy quiz), so they keep their pre-scanner behaviour: no lookup, organic copy.
+ * An injected lookup that throws is an unavailable lookup, not an organic buyer.
+ */
+async function resolveLeadFunnelPackage(
+  lead: PersonalPlanLead,
+  deps: PlanBereitProvisioningDependencies,
+): Promise<PlanBereitFunnelPackageResolution> {
+  if (lead.quiz_kind !== "legacy") return { kind: "resolved", packageKey: null }
+  try {
+    return await deps.resolveFunnelPackage(lead.id)
+  } catch {
+    return { kind: "unavailable" }
+  }
+}
+
 export async function linkExactPlanBereitSourceToProfile(
   supabase: SupabaseClient,
   input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
-  const candidate = await loadPlanBereitLinkCandidate(supabase, input)
+  const candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
   if (candidate.status !== "linkable") return candidate
   const { lead } = candidate
 
@@ -600,7 +730,26 @@ export async function linkExactPlanBereitSourceToProfile(
         .eq("id", lead.id)
       if (linked.error) throw new Error(`leads.user_id update failed: ${linked.error.message}`)
     }
-    return loadPlanBereitReadiness(supabase, input)
+    const provisioning = await ensureScanBuyerProvisioned(
+      supabase,
+      {
+        userId: input.userId,
+        leadId: lead.id,
+        quizSourceKind: "legacy",
+        funnelPackage: candidate.funnelPackage,
+      },
+      deps,
+    )
+    if (provisioning.status === "failed") {
+      return {
+        status: "transient_error",
+        leadId: lead.id,
+        quizSourceKind: "legacy",
+        sourceVersion: lead.updated_at ?? null,
+        funnelPackageKey: provisioning.funnelPackageKey,
+      }
+    }
+    return loadPlanBereitReadiness(supabase, input, deps)
   }
 
   const artifactLink = await supabase.rpc("link_personal_plan_artifact_to_user", {
@@ -619,7 +768,52 @@ export async function linkExactPlanBereitSourceToProfile(
     )
   }
 
-  return loadPlanBereitReadiness(supabase, input)
+  return loadPlanBereitReadiness(supabase, input, deps)
+}
+
+export type ScanBuyerProvisioningResult =
+  | { status: "not_applicable"; funnelPackageKey: string | null }
+  | { status: "provisioned"; funnelPackageKey: string }
+  | { status: "failed"; reason: string; funnelPackageKey: string | null }
+
+/**
+ * A `scan_v1` buyer lands on `/scan`, not `/plan-start` — so the initial need snapshot
+ * `/plan-start` used to create on render has to exist before the buyer ever sees the
+ * ready CTA, otherwise the scanner opens with no profile (`profile_missing`).
+ *
+ * Idempotent: it is the same `loadOrCreate` `/plan-start` performs on render and reuses
+ * an existing plan. Callers therefore run it on every path that can report `ready`.
+ * It must run AFTER the `leads.user_id` link: Stage 1 resolves the entitlement through
+ * the enrollment, which needs exactly that link.
+ *
+ * A failure is reported, never swallowed — the callers turn it into `transient_error`
+ * so the buyer sees a retry instead of an empty camera. Other funnel packages and
+ * `personal_plan` sources keep the pre-existing behaviour untouched (no lookup, no write).
+ */
+export async function ensureScanBuyerProvisioned(
+  supabase: SupabaseClient,
+  input: {
+    userId: string
+    leadId: string
+    quizSourceKind: PlanBereitQuizSourceKind
+    funnelPackage: PlanBereitFunnelPackageResolution
+  },
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
+): Promise<ScanBuyerProvisioningResult> {
+  if (input.quizSourceKind !== "legacy") return { status: "not_applicable", funnelPackageKey: null }
+  if (input.funnelPackage.kind === "unavailable") {
+    // Reading a broken lookup as organic would hand a paid scanner buyer the plan
+    // destination and no need snapshot. A retryable error is the safe answer.
+    return { status: "failed", reason: "funnel_package_unavailable", funnelPackageKey: null }
+  }
+  const funnelPackageKey = input.funnelPackage.packageKey
+  if (funnelPackageKey !== SCAN_FUNNEL_PACKAGE_KEY) {
+    return { status: "not_applicable", funnelPackageKey }
+  }
+  const provisioned = await deps.provisionStage1Plan(supabase, input.userId)
+  return provisioned.status === "completed"
+    ? { status: "provisioned", funnelPackageKey: SCAN_FUNNEL_PACKAGE_KEY }
+    : { status: "failed", reason: provisioned.status, funnelPackageKey }
 }
 
 export async function updateMissingPlanBereitSourceFact(
@@ -632,6 +826,7 @@ export async function updateMissingPlanBereitSourceFact(
       leadId: input.leadId,
       quizSourceKind: null,
       sourceVersion: null,
+      funnelPackageKey: null,
     }
   }
 
@@ -665,6 +860,7 @@ export async function updateMissingPlanBereitSourceFact(
       leadId: input.leadId,
       quizSourceKind: "legacy",
       sourceVersion: null,
+      funnelPackageKey: readiness.funnelPackageKey,
     }
   }
 
