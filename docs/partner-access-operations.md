@@ -1,6 +1,6 @@
 # Partnerzugänge betreiben
 
-Partnerzugänge sind persönliche, namens- und E-Mail-gebundene Creator-Zugänge. Sie laufen nicht ab, können aber jederzeit widerrufen und später reaktiviert werden. Widerruf löscht weder Konto noch Quiz- oder Plandaten und entfernt keine unabhängig bezahlte Berechtigung.
+Partnerzugänge sind persönliche, namens- und E-Mail-gebundene Creator-Zugänge. Sie laufen nicht ab, können aber jederzeit widerrufen und später reaktiviert werden. Widerruf löscht weder Konto noch Quiz- oder Plandaten und entfernt keine unabhängig bezahlte Berechtigung. Der Zugang entsteht bereits beim Claim (nicht erst bei Aktivierung) und hängt am angemeldeten Konto, nicht an Cookies oder Browser — ein Creator kann den Link in einer neuen Sitzung, einem anderen Browser oder nach Cookie-Verlust weiterverwenden, solange er sich mit dem eingeladenen Konto anmeldet.
 
 ## Admin-Ablauf
 
@@ -11,6 +11,59 @@ Partnerzugänge sind persönliche, namens- und E-Mail-gebundene Creator-Zugänge
 5. Bei Bedarf `Neuer Link`, `Widerrufen` oder `Reaktivieren` wählen.
 
 Ein WhatsApp-Link darf von einer Vorschau geöffnet werden: erst `Los geht’s` reserviert und erstellt das Konto. Der Creator sieht vorab Name und vollständige E-Mail und kann die E-Mail mit Mailbox-Bestätigung korrigieren.
+
+### Badge-Zustände
+
+Der Admin zeigt pro Zeile genau einen der folgenden vier Zustände:
+
+| Badge | Bedeutung |
+| --- | --- |
+| **Eingeladen** | Link erstellt, noch nicht geclaimt. |
+| **Zugang aktiv · Quiz offen** | Claim abgeschlossen, der Partner-Zugriff (Grant) ist aktiv, das Quiz wurde noch nicht abgeschlossen. Der Creator kann die App bereits nutzen. |
+| **Plan gestartet** | Aktiviert — der Creator hat das Quiz abgeschlossen und einen Plan gestartet; der Grant ist weiterhin aktiv. |
+| **Widerrufen** | Entweder explizit widerrufen, oder geclaimt/aktiviert ohne aktiven Grant (z. B. nach einem älteren, noch nicht selbstheilenden Zustand). |
+
+### Neustart: was ein Claim zurücksetzt
+
+Beim ersten Claim einer Einladung setzt der Server das claimende Konto in denselben Zustand wie ein brandneues Partnerkonto zurück ("Neustart"), außer bei der bezahlten Ausnahme unten. Das läuft in derselben Datenbank-Transaktion wie der Claim — schlägt irgendein Schritt fehl, wird der gesamte Claim zurückgerollt, es bleibt kein halb-zurückgesetztes Konto.
+
+**Wird zurückgesetzt:**
+- Profil: Onboarding-Status, Onboarding-Schritt, "Willkommens-Popup gesehen"
+- Haarprofil (`hair_profiles`): gelöscht
+- Personal-Plan-Zeiger (`personal_plans`): auf die Einladung neu verankert, aktueller Bedarf/Routine/Vorschlag/Fingerprint-Zeiger auf leer
+- Offene Verfeinerungs- und Produkt-Entwürfe: auf "veraltet" gesetzt (nicht gelöscht)
+- Offene Routine-Vorschläge: auf "überholt" gesetzt
+- UI-Lifecycle-Marken (z. B. gesehene Onboarding-Hinweise): gelöscht
+- Aktive Tester-Einschreibungen (Personal-Plan- und Quiz-Testgruppen) samt ihrer manuellen Zugriffs-Grants: widerrufen
+- Offene Quiz-Entwürfe (`personal_plan_quiz_drafts`) auf den Funnel-Sessions des Kontos: abgelaufen gesetzt
+- Offene Ergebnis-Rückkehr-Links (`personal_plan_result_returns`) zu den Leads des Kontos: widerrufen
+- Besessene Produkte (`user_products`, Status "owned"): archiviert
+
+**Bleibt erhalten:** Chat-Verläufe, Tracker-Einträge, Scans und Merkliste. Alte Plan-Versionen bleiben als Historie in der Datenbank stehen — nur die aktuellen Zeiger im Personal Plan werden auf leer gesetzt, nichts wird gelöscht.
+
+Der Neustart läuft nur beim **ersten** Claim einer Einladung (`fresh_start_at` wird einmalig gesetzt). Ein erneutes Öffnen desselben Links danach setzt nichts zurück.
+
+### Bezahlte Ausnahme (P1)
+
+Ein Konto mit aktueller **unabhängiger** bezahlter Berechtigung (laufendes Abo, One-Time-Kauf oder Legacy-Profil-Zeitraum) wird beim Claim **nicht** zurückgesetzt — der Creator behält seinen bezahlten Plan, der Partnerzugang kommt nur als zusätzliche, unabhängige Berechtigung hinzu. Ein neu erstelltes Konto (Claim ohne bestehendes Konto) wird immer neu gestartet. Läuft die bezahlte Berechtigung später ab (Lapse), hält der Partner-Grant die App weiterhin offen, aber es entsteht **kein** neuer Partner-Neustart — für einen frischen Partnerplan braucht es eine neue Einladung an dieselbe E-Mail (siehe Re-Test-Rezept).
+
+### Re-Test-Rezept: einen Creator von null neu testen
+
+Ein bereits geclaimter (oder aktivierter) Zugang setzt sich bei erneutem Linkaufruf nicht mehr zurück. Um denselben Menschen noch einmal bei null starten zu lassen:
+
+1. Im Admin **Widerrufen** für die bestehende Einladung.
+2. Für dieselbe E-Mail-Adresse eine **neue** Einladung anlegen (Schritt 2 im Admin-Ablauf).
+3. Den neuen Link an den Creator senden. Der Claim auf die neue Einladung läuft wieder als "erster Claim" und setzt das Konto vollständig zurück (vorbehaltlich der bezahlten Ausnahme oben).
+
+`Reaktivieren` auf derselben Einladung reicht für einen echten Neustart nicht aus — es stellt nur den bestehenden Grant wieder her, ohne Quiz- oder Plandaten zurückzusetzen.
+
+### Selbstheilung alter "Konto erstellt"-Zeilen
+
+Vor diesem Feature wurde der Zugriffs-Grant erst bei Aktivierung erzeugt, nicht beim Claim. Eine Einladung, die bereits geclaimt, aber nie aktiviert wurde (z. B. Stefanies Zeile), hatte deshalb keinen Grant. Beim nächsten Öffnen ihres Links erkennt der Server das (geclaimt, kein aktiver Grant, nicht aktiviert, noch kein Neustart erfolgt) und heilt sich selbst: er legt den fehlenden Grant nach und führt — sofern kein unabhängiger bezahlter Zugang vorliegt — denselben Neustart wie ein Erstclaim aus. Kein manueller Eingriff nötig.
+
+### Verhalten nach Widerruf
+
+Ein Widerruf entfernt den Partner-Grant, lässt aber Konto, Chat, Tracker, Scans, Merkliste und Planhistorie unangetastet. Danach läuft das Konto als gewöhnlicher Nutzer: das reguläre Quiz und das reguläre Angebot greifen wieder, unabhängig vom früheren Partnerstatus. Eine unabhängig bezahlte Berechtigung (Abo, One-Time-Kauf, Legacy-Zeitraum) bleibt vom Partner-Widerruf unberührt.
 
 ## CLI
 
@@ -30,6 +83,8 @@ Widerrufe immer über `revoke_partner_access` beziehungsweise die Admin-Oberflä
 
 Die Migration `20260901120000_partner_access.sql` muss vor dem Anwendungscode ausgerollt werden. Wegen der abweichenden lokalen und entfernten Migrationshistorie darf sie nicht mit einem pauschalen `supabase db push` ausgerollt werden; dafür ist ein separat geprüfter, gezielter Migrationsschritt erforderlich.
 
+Ebenso muss die Migration `20260913120000_partner_access_fresh_start.sql` vor dem zugehörigen Anwendungscode ausgerollt werden. Der RPC-Parameter `p_fresh_start` von `complete_partner_access_claim` ist standardmäßig `false`: solange alter Anwendungscode (der diesen Parameter nicht kennt) läuft, kann er während des Rollout-Fensters keinen Neustart auslösen und damit kein Konto ungewollt zurücksetzen.
+
 ## Konfiguration
 
 - `PARTNER_ACCESS_INVITATION_SIGNING_SECRET`: mindestens 32 zufällige Zeichen; nicht rotieren, solange bestehende Links weiter funktionieren sollen.
@@ -46,3 +101,5 @@ Customer.io `sent` bedeutet nur, dass die API die Sendung mit einem gültigen Re
 - E-Mail-Versand fehlgeschlagen: den persönlichen Link direkt senden; keine Einladung neu anlegen.
 - Nach Widerruf weiterhin Zugriff: zuerst auf unabhängige bezahlte Berechtigung prüfen. Der Partner-Widerruf darf diese nicht entfernen.
 - Reaktivierung kollidiert mit neuer Einladung: Pro E-Mail und Konto kann nur ein aktueller Partnerzugang bestehen. Den neueren Zugang behalten oder widerrufen, bevor der alte reaktiviert wird.
+- "Creator sagt, im neuen Browser/Handy ist der Partner-Modus weg": Der Partner-Modus hängt am angemeldeten Konto, nicht mehr an Cookies oder Browser. Sicherstellen, dass der Creator mit dem eingeladenen Konto angemeldet ist (Login über den Link genügt) — dann funktionieren Quiz-Fortsetzung, Lead-Speicherung und Angebots-Aktivierung wie im Ursprungsbrowser.
+- Widerrufene Einladung, Creator will das reguläre Quiz nutzen: funktioniert. Nach Widerruf läuft das Konto als gewöhnlicher Nutzer und bekommt das reguläre Quiz und Angebot, nicht mehr die Partner-Variante — kein Blocker.

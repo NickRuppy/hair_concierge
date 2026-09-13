@@ -193,3 +193,20 @@ Do not use a production creator or send real Customer.io messages. The personal 
 projected locally with `PARTNER_ACCESS_INVITATION_SIGNING_SECRET`; verify that opening or refreshing
 the URL does not mutate the invitation and that only `Los geht’s` begins the claim. For the complete
 operator contract and environment keys, see `docs/partner-access-operations.md`.
+
+**Existing-account case (fresh start on an already-used account):** sign up a plain test account —
+not the §1 dev-login fixture, which already seeds a paid legacy `profiles` period and would hit the
+paid exemption instead of a fresh start — and either complete the legacy `/onboarding` flow, or take
+it through a full Personal Plan via the local post-payment lane (§3) to get a finished plan. Note its
+e-mail, then create and claim a partner invitation for that same e-mail in `/admin/partner-access`.
+Verify the quiz starts at step 1 (not resumed) and that opening `/chat` mid-quiz routes to `/quiz`
+rather than the chat surface — this exercises the claim's fresh-start reset
+(`docs/partner-access-operations.md`, "Neustart") end to end.
+
+**Former field-test moderator case:** take an account whose email-bound field-test moderator
+membership has already ended or been revoked (§4 pointer, `docs/personal-plan-field-test-access.md`
+— creating or resetting a moderator roster is production-authorized tooling, not a local seed), then
+create and claim a partner invitation for that same e-mail and sign in as that account. Verify it
+gets independent app access from the partner grant instead of being blocked as an ended moderator —
+this exercises the middleware re-check at `src/lib/supabase/middleware.ts` where an active partner
+grant is checked once a moderator membership is found `ended`/`unavailable`.
