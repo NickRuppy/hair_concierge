@@ -157,19 +157,34 @@ test("insert 17 asks for a clarifying wash when the scalp runs oily", () => {
   )
 })
 
-test("insert 17 passes when the scalp matches and nothing else deviates", () => {
+// Insert 17 sits right behind the scalp question and judges a scalp shampoo:
+// its positive verdict must say "Kopfhaut" like its negative one already does,
+// and the line below it must name the criterion that was met.
+test("insert 17 passes on the scalp and says so, naming the matched criterion", () => {
   const card = getScanInsertExample(
     17,
     answers({ scalp_type: "trocken", has_scalp_issue: false, thickness: "normal" }),
   )
 
   assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt zu deinem Haar")
-  assert.equal(card.deviation, "Alles im Ziel.")
+  assert.equal(card.headline, "Passt zu deiner Kopfhaut")
+  assert.equal(card.deviation, "Kopfhaut trocken, gereizt – genau dein Profil.")
   assert.equal(
     card.rows.every((row) => row.status === "ok"),
     true,
   )
+})
+
+test("inserts 16 and 18 carry no scalp row, so they keep the hair verdict", () => {
+  const problem = getScanInsertExample(16, answers({ thickness: "coarse" }))
+  assert.equal(problem.verdict, "ok")
+  assert.equal(problem.headline, "Passt zu deinem Haar")
+  assert.equal(problem.deviation, "Alles im Ziel.")
+
+  const home = getScanInsertExample(18, answers({ thickness: "normal" }))
+  assert.equal(home.verdict, "ok")
+  assert.equal(home.headline, "Passt zu deinem Haar")
+  assert.equal(home.deviation, "Alles im Ziel.")
 })
 
 test("insert 17 keeps the restriction verdict when only the wash deviates", () => {

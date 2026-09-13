@@ -54,6 +54,9 @@ const MASK: ScanExampleProduct = {
   price: "ca. 1,95 €",
 }
 
+/** The row label the scalp criterion carries, on the card and in the copy. */
+const SCALP_ROW_LABEL = "Kopfhaut"
+
 /** The shampoo is formulated for a dry or irritated scalp, not for one target. */
 const SHAMPOO_SCALP_VALUE = "trocken, gereizt"
 const SHAMPOO_SCALP_COVERAGE = new Set(["trocken", "gereizt"])
@@ -174,7 +177,7 @@ function cleansingRow(answers: QuizAnswers): ScanExampleRow {
 function scalpRow(answers: QuizAnswers): ScanExampleRow {
   const targetValue = getScanInsertScalpTarget(answers)
   return {
-    label: "Kopfhaut",
+    label: SCALP_ROW_LABEL,
     productValue: SHAMPOO_SCALP_VALUE,
     targetValue,
     status: SHAMPOO_SCALP_COVERAGE.has(targetValue) ? "ok" : "bad",
@@ -205,7 +208,13 @@ function buildDeviation(rows: ScanExampleRow[]): string {
   const deviations = rows
     .filter((row) => row.status !== "ok")
     .map((row) => `${row.label}: ${row.productValue} statt ${row.targetValue}`)
-  return deviations.length > 0 ? deviations.join(" · ") : "Alles im Ziel."
+  if (deviations.length > 0) return deviations.join(" · ")
+  // A card that clears every row still has to name why. Where the scalp is one
+  // of the criteria, it is the answer the screen just collected — naming it is
+  // the only proof on the card that the answer changed anything.
+  const scalpRow = rows.find((row) => row.label === SCALP_ROW_LABEL)
+  if (scalpRow) return `${scalpRow.label} ${scalpRow.productValue} – genau dein Profil.`
+  return "Alles im Ziel."
 }
 
 function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; headline: string } {
@@ -214,7 +223,7 @@ function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; hea
     return {
       verdict: "bad",
       headline:
-        firstBad.label === "Kopfhaut"
+        firstBad.label === SCALP_ROW_LABEL
           ? "Passt nicht zu deiner Kopfhaut"
           : "Passt nicht zu deinem Haar",
     }
@@ -222,7 +231,14 @@ function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; hea
   if (rows.some((row) => row.status === "warn")) {
     return { verdict: "warn", headline: "Passt mit Einschränkung" }
   }
-  return { verdict: "ok", headline: "Passt zu deinem Haar" }
+  // A card carrying a scalp row judges a scalp product; the negative verdict
+  // above already says "Kopfhaut", so the positive one must match it.
+  return {
+    verdict: "ok",
+    headline: rows.some((row) => row.label === SCALP_ROW_LABEL)
+      ? "Passt zu deiner Kopfhaut"
+      : "Passt zu deinem Haar",
+  }
 }
 
 /**

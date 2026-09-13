@@ -78,6 +78,19 @@ test("the solution insert quotes the scalp answer the user just gave", () => {
   assert.match(html, /Passt nicht zu deiner Kopfhaut/)
 })
 
+test("the solution insert's positive card judges the scalp and names the match", () => {
+  const html = renderInsert(17, {
+    scalp_type: "trocken",
+    has_scalp_issue: false,
+    thickness: "normal",
+  })
+
+  assert.match(html, /Passt zu deiner Kopfhaut/)
+  assert.doesNotMatch(html, /Passt zu deinem Haar/)
+  assert.match(html, /Kopfhaut trocken, gereizt – genau dein Profil\./)
+  assert.doesNotMatch(html, /Alles im Ziel\./)
+})
+
 test("the home insert turns the user's own bathroom into the first shelf", () => {
   const html = renderInsert(18, { thickness: "coarse", treatment: ["blondiert"] })
 
