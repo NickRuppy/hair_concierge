@@ -45,7 +45,7 @@ Der Neustart läuft nur beim **ersten** Claim einer Einladung (`fresh_start_at` 
 
 ### Bezahlte Ausnahme (P1)
 
-Ein Konto mit aktueller **unabhängiger** bezahlter Berechtigung (laufendes Abo, One-Time-Kauf oder Legacy-Profil-Zeitraum) wird beim Claim **nicht** zurückgesetzt — der Creator behält seinen bezahlten Plan, der Partnerzugang kommt nur als zusätzliche, unabhängige Berechtigung hinzu. Ein neu erstelltes Konto (Claim ohne bestehendes Konto) wird immer neu gestartet. Läuft die bezahlte Berechtigung später ab (Lapse), hält der Partner-Grant die App weiterhin offen, aber es entsteht **kein** neuer Partner-Neustart — für einen frischen Partnerplan braucht es eine neue Einladung an dieselbe E-Mail (siehe Re-Test-Rezept).
+Ein Konto mit aktueller **unabhängiger** bezahlter Berechtigung (laufendes Abo, One-Time-Kauf oder Legacy-Profil-Zeitraum) wird beim Claim **nicht** zurückgesetzt — der Creator behält seinen bezahlten Plan, der Partnerzugang kommt nur als zusätzliche, unabhängige Berechtigung hinzu. Ein neu erstelltes Konto (Claim ohne bestehendes Konto) wird immer neu gestartet. Läuft die bezahlte Berechtigung später ab, hält der Partner-Grant die App weiterhin offen, aber es entsteht **kein** neuer Partner-Neustart — für einen frischen Partnerplan braucht es eine neue Einladung an dieselbe E-Mail (siehe Re-Test-Rezept).
 
 ### Re-Test-Rezept: einen Creator von null neu testen
 
@@ -63,7 +63,7 @@ Vor diesem Feature wurde der Zugriffs-Grant erst bei Aktivierung erzeugt, nicht 
 
 ### Verhalten nach Widerruf
 
-Ein Widerruf entfernt den Partner-Grant, lässt aber Konto, Chat, Tracker, Scans, Merkliste und Planhistorie unangetastet. Danach läuft das Konto als gewöhnlicher Nutzer: das reguläre Quiz und das reguläre Angebot greifen wieder, unabhängig vom früheren Partnerstatus. Eine unabhängig bezahlte Berechtigung (Abo, One-Time-Kauf, Legacy-Zeitraum) bleibt vom Partner-Widerruf unberührt.
+Ein Widerruf entfernt den Partner-Grant, lässt aber Konto, Chat, Tracker, Scans, Merkliste und Planhistorie unangetastet. Danach läuft das Konto als gewöhnlicher Nutzer: das reguläre Quiz und das reguläre Angebot greifen wieder, unabhängig vom früheren Partnerstatus. Eine unabhängig bezahlte Berechtigung (Abo, One-Time-Kauf, Legacy-Profil-Zeitraum) bleibt vom Partner-Widerruf unberührt.
 
 ## CLI
 
@@ -101,5 +101,5 @@ Customer.io `sent` bedeutet nur, dass die API die Sendung mit einem gültigen Re
 - E-Mail-Versand fehlgeschlagen: den persönlichen Link direkt senden; keine Einladung neu anlegen.
 - Nach Widerruf weiterhin Zugriff: zuerst auf unabhängige bezahlte Berechtigung prüfen. Der Partner-Widerruf darf diese nicht entfernen.
 - Reaktivierung kollidiert mit neuer Einladung: Pro E-Mail und Konto kann nur ein aktueller Partnerzugang bestehen. Den neueren Zugang behalten oder widerrufen, bevor der alte reaktiviert wird.
-- "Creator sagt, im neuen Browser/Handy ist der Partner-Modus weg": Der Partner-Modus hängt am angemeldeten Konto, nicht mehr an Cookies oder Browser. Sicherstellen, dass der Creator mit dem eingeladenen Konto angemeldet ist (Login über den Link genügt) — dann funktionieren Quiz-Fortsetzung, Lead-Speicherung und Angebots-Aktivierung wie im Ursprungsbrowser.
+- "Creator sagt, im neuen Browser/Handy ist der Partner-Modus weg": Der Partner-Modus hängt am angemeldeten Konto, nicht mehr an Cookies oder Browser. Sicherstellen, dass der Creator mit dem eingeladenen Konto angemeldet ist (Login über den Link genügt) — dann funktionieren Partner-Modus, Lead-Speicherung und Angebots-Aktivierung in jedem Browser. Noch nicht gespeicherte Quiz-Antworten (vor der Lead-Erfassung) bleiben im Browser, in dem sie eingegeben wurden — dort weitermachen oder das Quiz im neuen Browser neu beginnen.
 - Widerrufene Einladung, Creator will das reguläre Quiz nutzen: funktioniert. Nach Widerruf läuft das Konto als gewöhnlicher Nutzer und bekommt das reguläre Quiz und Angebot, nicht mehr die Partner-Variante — kein Blocker.
