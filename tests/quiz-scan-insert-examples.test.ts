@@ -168,11 +168,41 @@ test("insert 17 passes on the scalp and says so, naming the matched criterion", 
 
   assert.equal(card.verdict, "ok")
   assert.equal(card.headline, "Passt zu deiner Kopfhaut")
-  assert.equal(card.deviation, "Kopfhaut trocken, gereizt – genau dein Profil.")
+  assert.equal(card.deviation, "Kopfhaut trocken – genau dein Profil.")
   assert.equal(
     card.rows.every((row) => row.status === "ok"),
     true,
   )
+})
+
+// The shampoo covers "trocken, gereizt" — printing that product value told a
+// user who answered only one of the two that they had both. The line quotes the
+// answer instead, so each scalp answer reads its own word back.
+test("insert 17's matched line quotes the scalp answer, not the product's range", () => {
+  const dry = getScanInsertExample(
+    17,
+    answers({ scalp_type: "trocken", has_scalp_issue: false, thickness: "normal" }),
+  )
+  const irritated = getScanInsertExample(
+    17,
+    answers({
+      scalp_type: "ausgeglichen",
+      has_scalp_issue: true,
+      scalp_condition: "gereizt",
+      thickness: "normal",
+    }),
+  )
+
+  assert.equal(dry.deviation, "Kopfhaut trocken – genau dein Profil.")
+  assert.equal(irritated.verdict, "ok")
+  assert.equal(irritated.deviation, "Kopfhaut gereizt – genau dein Profil.")
+  for (const card of [dry, irritated]) {
+    assert.equal(
+      card.rows.find((row) => row.label === "Kopfhaut")?.productValue,
+      "trocken, gereizt",
+    )
+    assert.ok(!card.deviation.includes("trocken, gereizt"), "the card never reads back both words")
+  }
 })
 
 test("inserts 16 and 18 carry no scalp row, so they keep the hair verdict", () => {

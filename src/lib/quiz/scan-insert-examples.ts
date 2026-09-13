@@ -211,9 +211,12 @@ function buildDeviation(rows: ScanExampleRow[]): string {
   if (deviations.length > 0) return deviations.join(" · ")
   // A card that clears every row still has to name why. Where the scalp is one
   // of the criteria, it is the answer the screen just collected — naming it is
-  // the only proof on the card that the answer changed anything.
+  // the only proof on the card that the answer changed anything. It is the
+  // user's own target that gets printed, never the product's: the shampoo
+  // covers "trocken, gereizt", and someone who answered only "trocken" must not
+  // read back that their scalp is irritated.
   const scalpRow = rows.find((row) => row.label === SCALP_ROW_LABEL)
-  if (scalpRow) return `${scalpRow.label} ${scalpRow.productValue} – genau dein Profil.`
+  if (scalpRow) return `${scalpRow.label} ${scalpRow.targetValue} – genau dein Profil.`
   return "Alles im Ziel."
 }
 
