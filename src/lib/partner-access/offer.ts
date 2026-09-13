@@ -11,10 +11,9 @@ export type PartnerOfferAuthorization = {
 
 export async function resolvePartnerOfferAuthorization(input: {
   userId: string | null
-  funnelSessionId: string | null | undefined
   leadId: string
 }): Promise<PartnerOfferAuthorization | null> {
-  if (!input.userId || !input.funnelSessionId) return null
+  if (!input.userId) return null
   const { data, error } = await createAdminClient()
     .from("partner_access_invitations")
     .select("id,claimed_user_id,funnel_session_id,lead_id,revoked_at")
@@ -25,15 +24,15 @@ export async function resolvePartnerOfferAuthorization(input: {
     !data ||
     data.revoked_at ||
     data.claimed_user_id !== input.userId ||
-    data.funnel_session_id !== input.funnelSessionId ||
-    data.lead_id !== input.leadId
+    data.lead_id !== input.leadId ||
+    !data.funnel_session_id
   ) {
     return null
   }
   return {
     invitationId: data.id,
     userId: input.userId,
-    funnelSessionId: input.funnelSessionId,
+    funnelSessionId: data.funnel_session_id,
     leadId: input.leadId,
   }
 }

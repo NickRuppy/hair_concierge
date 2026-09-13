@@ -175,10 +175,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           .catch(() => null)
         return saved ? leadResponse(saved.leadId, false, true) : fieldTestUnavailableResponse()
       }
-      const partner = await dependencies.resolvePartnerJourney({
-        cookies: cookieStore,
-        funnelContext,
-      })
+      const partner = await dependencies.resolvePartnerJourney()
       if (partner.kind === "unavailable") return partnerUnavailableResponse()
       if (partner.kind === "authorized") {
         const origin = request.headers.get("origin")

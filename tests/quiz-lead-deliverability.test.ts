@@ -31,6 +31,7 @@ test("legacy lead rejects a definitively undeliverable address before persistenc
     cookies: (async () => ({ get: () => undefined })) as typeof import("next/headers").cookies,
     resolveFunnelCookieContext: async () => null,
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: async () => ({ kind: "none" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async (email) => {
       checkedEmail = email
@@ -68,6 +69,8 @@ test("legacy lead passes a normalized fail-open address into persistence", async
   const errorLog = context.mock.method(console, "error", () => {})
   let queriedEmail: unknown
   const handler = createQuizLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: async () => ({ kind: "none" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: async () => ({
       ok: true,

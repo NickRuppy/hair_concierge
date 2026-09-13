@@ -258,6 +258,36 @@ export async function hasCurrentPaidAppAccess(
   return profile ? hasCurrentLegacyProfileAccess(profile, now) : false
 }
 
+/**
+ * An active partner ("Partnerzugang") grant is, like a provider subscription
+ * or one-time purchase, an independent entitlement that does not depend on
+ * a moderator/field-test membership — so it must count alongside
+ * `hasCurrentPaidAppAccess` wherever a moderator's ended/unavailable state
+ * recomputes `hasIndependentPaidEntitlement` (middleware.ts, entitlements/
+ * access.ts). Deliberately narrower than `findCurrentManualAccessGrant`:
+ * only an unrevoked, non-expiring (`expires_at IS NULL`) `reason = 'partner'`
+ * row counts, so a revoked invitation's grant never keeps counting.
+ */
+export async function hasCurrentPartnerAccess(
+  supabase: SupabaseBillingClient,
+  lookup: { userId: string },
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("manual_access_grants")
+    .select("id")
+    .eq("user_id", lookup.userId)
+    .eq("reason", "partner")
+    .is("expires_at", null)
+    .is("revoked_at", null)
+    .limit(1)
+    .maybeSingle()
+  if (error) {
+    if (isMissingManualAccessGrantsTableError(error)) return false
+    throw error
+  }
+  return Boolean(data)
+}
+
 export async function findCurrentManualAccessGrant(
   supabase: SupabaseBillingClient,
   lookup: { userId?: string | null; email?: string | null },

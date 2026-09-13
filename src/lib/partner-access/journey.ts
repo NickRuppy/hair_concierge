@@ -1,15 +1,7 @@
 import "server-only"
 
-import type { FunnelCookieContext } from "@/lib/funnel/cookie"
-import {
-  decodePartnerAccessIntent,
-  PARTNER_ACCESS_INTENT_COOKIE,
-  type PartnerAccessIntent,
-} from "@/lib/partner-access/intent"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
-
-type CookieStore = { get: (name: string) => { value: string } | undefined }
 
 export type PartnerJourneyResolution =
   | { kind: "none" }
@@ -23,55 +15,45 @@ export type PartnerJourneyResolution =
       funnelSessionId: string
     }
 
-type PartnerJourneyInvitation = {
+type PartnerJourneyInvitationRow = {
+  id: string
   display_name: string
   normalized_email: string
-  token_version: number
-  claimed_user_id: string | null
-  funnel_session_id: string | null
-  revoked_at: string | null
+  funnel_session_id: string
 }
 
 type PartnerJourneyDependencies = {
-  decodeIntent: (value: string, secret: string) => PartnerAccessIntent | null
-  getUser: () => Promise<{ id: string; email?: string } | null>
-  loadInvitation: (invitationId: string) => Promise<PartnerJourneyInvitation | null>
+  getUser: () => Promise<{ id: string } | null>
+  loadInvitation: (userId: string) => Promise<PartnerJourneyInvitationRow | null>
 }
 
+/**
+ * Resolves partner ("Partnerzugang") context purely from the authenticated
+ * user — no intent or funnel cookies are read. The partial unique index
+ * `partner_access_one_current_claimed_user` (claimed_user_id WHERE
+ * claimed_user_id IS NOT NULL AND revoked_at IS NULL) guarantees at most one
+ * matching row, so an unrevoked claimed invitation is unambiguous.
+ */
 export async function resolvePartnerJourney(
-  input: {
-    cookies: CookieStore
-    funnelContext: FunnelCookieContext | null
-  },
   overrides: Partial<PartnerJourneyDependencies> = {},
 ): Promise<PartnerJourneyResolution> {
-  const value = input.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value
-  if (!value) return { kind: "none" }
-  const secret = process.env.PARTNER_ACCESS_INVITATION_SIGNING_SECRET
-  const decodeIntent = overrides.decodeIntent ?? decodePartnerAccessIntent
-  const intent = secret || overrides.decodeIntent ? decodeIntent(value, secret ?? "") : null
-  if (!intent || !input.funnelContext || input.funnelContext.packageKey !== "default_organic") {
-    return { kind: "none" }
-  }
   const getUser = overrides.getUser ?? defaultGetUser
   const user = await getUser()
-  if (!user?.id || !user.email) return { kind: "none" }
+  if (!user?.id) return { kind: "none" }
   const loadInvitation = overrides.loadInvitation ?? defaultLoadInvitation
-  const data = await loadInvitation(intent.invitationId)
-  if (!data || data.token_version !== intent.tokenVersion) return { kind: "none" }
-  const exactJourney =
-    data.claimed_user_id === user.id &&
-    data.funnel_session_id === input.funnelContext.sessionId &&
-    data.normalized_email === user.email.trim().toLowerCase()
-  if (!exactJourney) return { kind: "none" }
-  if (data.revoked_at) return { kind: "unavailable" }
-  return {
-    kind: "authorized",
-    invitationId: intent.invitationId,
-    userId: user.id,
-    name: data.display_name,
-    email: data.normalized_email,
-    funnelSessionId: input.funnelContext.sessionId,
+  try {
+    const data = await loadInvitation(user.id)
+    if (!data) return { kind: "none" }
+    return {
+      kind: "authorized",
+      invitationId: data.id,
+      userId: user.id,
+      name: data.display_name,
+      email: data.normalized_email,
+      funnelSessionId: data.funnel_session_id,
+    }
+  } catch {
+    return { kind: "unavailable" }
   }
 }
 
@@ -80,19 +62,18 @@ async function defaultGetUser() {
   const {
     data: { user },
   } = await session.auth.getUser()
-  return user ? { id: user.id, email: user.email } : null
+  return user ? { id: user.id } : null
 }
 
-async function defaultLoadInvitation(invitationId: string) {
+async function defaultLoadInvitation(userId: string) {
   const { data, error } = await createAdminClient()
     .from("partner_access_invitations")
-    .select(
-      "display_name,normalized_email,token_version,claimed_user_id,funnel_session_id,revoked_at",
-    )
-    .eq("id", invitationId)
+    .select("id,display_name,normalized_email,funnel_session_id")
+    .eq("claimed_user_id", userId)
+    .is("revoked_at", null)
     .maybeSingle()
   if (error) throw error
-  return (data as PartnerJourneyInvitation | null) ?? null
+  return (data as PartnerJourneyInvitationRow | null) ?? null
 }
 
 export async function savePartnerAccessLead(input: {

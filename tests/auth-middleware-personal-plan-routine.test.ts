@@ -27,6 +27,7 @@ type RoutinePlanResult =
 function createMiddleware({
   currentAccess = true,
   paidAccess = false,
+  partnerAccess = false,
   frontierResult = { data: { eligible: false, source_ready: false, plan: null }, error: null },
   planResult = {
     data: { pending_routine_proposal_id: "proposal-1", active_routine_version_id: null },
@@ -43,6 +44,7 @@ function createMiddleware({
 }: {
   currentAccess?: boolean
   paidAccess?: boolean
+  partnerAccess?: boolean
   frontierResult?: {
     data: {
       eligible: boolean
@@ -145,6 +147,8 @@ function createMiddleware({
       currentAccess) as UpdateSessionDependencies["hasCurrentAppAccess"],
     hasCurrentPaidAppAccess: (async () =>
       paidAccess) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
+    hasCurrentPartnerAccess: (async () =>
+      partnerAccess) as UpdateSessionDependencies["hasCurrentPartnerAccess"],
     resolveOneTimeAccessState: (async () =>
       oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
     resolveModeratorAccess: (async () =>
@@ -569,6 +573,35 @@ test("an ended moderator with independently verified paid access remains admitte
   })(new NextRequest("https://chaarlie.de/tracker"))
 
   assert.equal(response.status, 200)
+})
+
+// Codex F4: an active partner ("Partnerzugang") grant is its own independent
+// entitlement, distinct from `hasCurrentPaidAppAccess` (provider
+// subscription / one-time / legacy profile only) — it must keep an
+// ended-moderator account admitted on its own.
+test("an ended moderator with an active partner grant remains admitted", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    partnerAccess: true,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/tracker"))
+
+  assert.equal(response.status, 200)
+})
+
+test("an ended moderator without paid or partner access is still routed to the ended screen", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    partnerAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/routine"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
 })
 
 test("a moderator access lookup outage is unavailable rather than an expiry or paywall", async () => {

@@ -117,6 +117,7 @@ function handler({
 } = {}) {
   return createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: async () => ({ kind: "none" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: (async () => ({
       ok: true,
@@ -170,6 +171,7 @@ test("field-test cookie fails closed without persistence or commercial side effe
   let syncs = 0
   let metas = 0
   const fieldTestHandler = createQuizLeadPostHandler({
+    resolvePartnerJourney: async () => ({ kind: "none" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: (async () => ({
       ok: true,
@@ -481,6 +483,7 @@ test("ordinary lead capture ignores leftover migration cookies unless recovery i
     let migrationRpcCalled = false
     const post = createQuizLeadPostHandler({
       resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+      resolvePartnerJourney: async () => ({ kind: "none" }),
       checkRateLimit: async () => ({ allowed: true }),
       checkEmailDeliverability: (async () => ({
         ok: true,
@@ -773,6 +776,7 @@ test("plain migration query parameters carry no authority without the signed coo
   let migrationRpcCalled = false
   const post = createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: async () => ({ kind: "none" }),
     checkRateLimit: async () => ({ allowed: true }),
     checkEmailDeliverability: (async () => ({
       ok: true,

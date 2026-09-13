@@ -1,21 +1,12 @@
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
 
-import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
-import { resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { resolvePartnerJourney } from "@/lib/partner-access/journey"
 
-type CookieStore = { get: (name: string) => { value: string } | undefined }
-
 type PartnerQuizContextDependencies = {
-  cookies: () => Promise<CookieStore>
-  resolveFunnelCookieContext: typeof resolveFunnelCookieContext
   resolvePartnerJourney: typeof resolvePartnerJourney
 }
 
 const defaultDependencies: PartnerQuizContextDependencies = {
-  cookies,
-  resolveFunnelCookieContext,
   resolvePartnerJourney,
 }
 
@@ -26,14 +17,7 @@ export function createPartnerQuizContextGetHandler(
 
   return async function GET() {
     try {
-      const cookieStore = await dependencies.cookies()
-      const funnelContext = await dependencies.resolveFunnelCookieContext(
-        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-      )
-      const partner = await dependencies.resolvePartnerJourney({
-        cookies: cookieStore,
-        funnelContext,
-      })
+      const partner = await dependencies.resolvePartnerJourney()
       if (partner.kind === "none") return response({ status: "regular" })
       if (partner.kind === "unavailable") return response({ status: "unavailable" })
       return response({ status: "creator", name: partner.name, email: partner.email })
