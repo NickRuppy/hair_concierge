@@ -9,6 +9,7 @@ import {
 } from "@paypal/react-paypal-js"
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
+import { readReactivationStatusDestination } from "@/lib/reactivation/return-destination"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
@@ -21,7 +22,11 @@ import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
-import type { CheckoutFailure } from "./payment-method-checkout"
+import {
+  readReactivationCheckoutRecovery,
+  type CheckoutFailure,
+  type ReactivationCheckoutRecovery,
+} from "./payment-method-checkout"
 import type { CheckoutContext } from "@/lib/analytics/events"
 import { reportPayPalScriptFailureOnce } from "./paypal-script-failure"
 import {
@@ -95,6 +100,14 @@ class CheckoutAccessAlreadyExistsError extends Error {
   }
 }
 
+class ReactivationStatusRedirectError extends Error {}
+class ReactivationAuthenticationRequiredError extends Error {}
+class ReactivationRecoveryError extends Error {
+  constructor(readonly recovery: ReactivationCheckoutRecovery) {
+    super("reactivation checkout recovery required")
+  }
+}
+
 export function buildPayPalWelcomeUrl(token: string) {
   const params = new URLSearchParams({
     provider: "paypal",
@@ -162,6 +175,8 @@ export function PayPalSubscriptionButton({
   interval,
   leadId,
   onApproved,
+  onReactivationAuthenticationRequired,
+  onReactivationRecovery,
   onCheckoutCancelled,
   onCheckoutFailed,
   onClientMounted,
@@ -192,6 +207,8 @@ export function PayPalSubscriptionButton({
    * differs between the two mounts.
    */
   onApproved?: (token: string) => void
+  onReactivationAuthenticationRequired?: () => void
+  onReactivationRecovery?: (recovery: ReactivationCheckoutRecovery) => void
   onCheckoutCancelled?: () => void
   onCheckoutFailed?: (failure: CheckoutFailure) => void
   onClientMounted?: () => void
@@ -499,6 +516,33 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch (err) {
+              if (
+                checkoutContext === "membership_reactivation" &&
+                err instanceof ReactivationStatusRedirectError
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                throw err
+              }
+              if (
+                checkoutContext === "membership_reactivation" &&
+                err instanceof ReactivationAuthenticationRequiredError
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationAuthenticationRequired?.()
+                throw err
+              }
+              if (
+                checkoutContext === "membership_reactivation" &&
+                !(err instanceof CheckoutAccessAlreadyExistsError)
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationRecovery?.(
+                  err instanceof ReactivationRecoveryError
+                    ? err.recovery
+                    : { provider: "paypal", state: "resume" },
+                )
+                throw err
+              }
               if (err instanceof CheckoutAccessAlreadyExistsError) {
                 suppressNextPayPalErrorRef.current = true
                 setDuplicateEmail(err.email ?? null)
@@ -577,6 +621,11 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch (err) {
+              if (checkoutContext === "membership_reactivation") {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                throw err
+              }
               setError(paypalStartError)
               suppressNextPayPalErrorRef.current = true
               capturePayPalSubscriptionCustomerPaymentError({
@@ -601,6 +650,10 @@ export function PayPalSubscriptionButton({
           onApprove={async (data: OnApproveData) => {
             const token = intentTokenRef.current
             if (!data.subscriptionID || !token) {
+              if (checkoutContext === "membership_reactivation") {
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                return
+              }
               setError(paypalStartError)
               capturePayPalSubscriptionCustomerPaymentError({
                 checkoutAttemptId,
@@ -664,6 +717,10 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch {
+              if (checkoutContext === "membership_reactivation") {
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                return
+              }
               setError(paypalStartError)
               capturePayPalSubscriptionCustomerPaymentError({
                 checkoutAttemptId,
@@ -758,6 +815,10 @@ export function PayPalSubscriptionButton({
               suppressNextPayPalErrorRef.current = false
               return
             }
+            if (checkoutContext === "membership_reactivation") {
+              onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+              return
+            }
             setError(paypalStartError)
             capturePayPalSubscriptionCustomerPaymentError({
               checkoutAttemptId,
@@ -842,6 +903,20 @@ async function createSubscriptionIntent({
     }),
   })
   const body = await response.json().catch(() => ({}))
+  if (checkoutContext === "membership_reactivation") {
+    if (response.status === 401 && body?.error === "reactivation_authentication_required") {
+      throw new ReactivationAuthenticationRequiredError("reactivation authentication required")
+    }
+    const statusDestination = response.ok
+      ? readReactivationStatusDestination(body.statusUrl, window.location.origin)
+      : null
+    if (statusDestination) {
+      window.location.assign(statusDestination)
+      throw new ReactivationStatusRedirectError("reactivation checkout verification required")
+    }
+    const recovery = readReactivationCheckoutRecovery(body)
+    if (recovery) throw new ReactivationRecoveryError(recovery)
+  }
   if (!response.ok) {
     if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
       throw new CheckoutAccessAlreadyExistsError(readCheckoutAccessAlreadyExistsEmail(body))

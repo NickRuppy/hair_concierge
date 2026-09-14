@@ -1,3 +1,6 @@
+import type { BillingInterval } from "@/lib/stripe/intervals"
+import { DEFAULT_PRICING_INTERVAL } from "@/lib/stripe/pricing-plans"
+
 export const DEFAULT_REACTIVATION_RETURN_DESTINATION = "/chat"
 
 const ALLOWED_RETURN_PATHS = new Set(["/chat", "/routine", "/tracker", "/profile", "/onboarding"])
@@ -68,4 +71,39 @@ export function sanitizeReactivationReturnDestination(
   }
 
   return `${pathname}?${query}`
+}
+
+export function parseReactivationInterval(value: string | null | undefined): BillingInterval {
+  return value === "month" || value === "quarter" || value === "year"
+    ? value
+    : DEFAULT_PRICING_INTERVAL
+}
+
+/** Navigation contains preferences only; the server resolves the signed-in account's attempt. */
+export function buildReactivationSignInUrl(
+  interval: string | null | undefined,
+  returnDestination: string | null | undefined,
+): string {
+  const destination = new URLSearchParams({
+    interval: parseReactivationInterval(interval),
+    next: sanitizeReactivationReturnDestination(returnDestination),
+  })
+  const auth = new URLSearchParams({
+    reason: "session_expired",
+    next: `/reactivate?${destination.toString()}`,
+  })
+  return `/auth?${auth.toString()}`
+}
+
+/** A provider response may only continue through our existing payment verifier. */
+export function readReactivationStatusDestination(value: unknown, origin: string): string | null {
+  if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) return null
+  try {
+    const destination = new URL(value, origin)
+    if (destination.origin !== origin || destination.pathname !== "/welcome" || destination.hash)
+      return null
+    return destination.pathname + destination.search
+  } catch {
+    return null
+  }
 }

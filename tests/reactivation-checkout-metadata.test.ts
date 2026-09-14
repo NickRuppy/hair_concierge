@@ -410,10 +410,9 @@ test("reactivation retries preserve the attempt and provider start locks plan ch
   assert.match(componentSource, /lockedProvider=\{lockedProvider\}/)
   assert.doesNotMatch(componentSource, /onPaymentMethodSelected=\{lockCheckoutToProvider\}/)
 
-  const stripeLockIndex = componentSource.indexOf('lockCheckoutToProvider("stripe")')
-  const clientSecretValidationIndex = componentSource.indexOf("if (!clientSecret)")
-  assert.ok(clientSecretValidationIndex > -1)
-  assert.ok(stripeLockIndex > clientSecretValidationIndex)
+  // Provider locking now starts before the external request, so a lost response
+  // cannot expose a competing provider. Mounted recovery coverage exercises the
+  // actual request/CTA lifecycle in reactivation-checkout-recovery.spec.ts.
   assert.match(
     componentSource,
     /capturePaymentFailure\(\{[\s\S]*source: "reactivation"[\s\S]*checkoutAttemptId: attemptId/,

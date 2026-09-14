@@ -9,9 +9,16 @@ import {
   isCheckoutAccessAlreadyExistsResponse,
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
+import { Button } from "@/components/ui/button"
+import {
+  buildReactivationSignInUrl,
+  readReactivationStatusDestination,
+} from "@/lib/reactivation/return-destination"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
 import {
+  readReactivationCheckoutRecovery,
+  type ReactivationCheckoutRecovery,
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
 } from "@/components/checkout/payment-method-checkout"
@@ -72,6 +79,11 @@ export function MembershipReactivationCheckout({
   const [checkoutAttemptId, setCheckoutAttemptId] = useState<string | null>(null)
   const [checkoutRetryKey, setCheckoutRetryKey] = useState(0)
   const [lockedProvider, setLockedProvider] = useState<LockedCheckoutProvider | null>(null)
+  const [authenticationRequired, setAuthenticationRequired] = useState(false)
+  const [recovery, setRecovery] = useState<ReactivationCheckoutRecovery | null>(null)
+  const [checkingStatus, setCheckingStatus] = useState(false)
+  const checkingStatusRef = useRef(false)
+  const recoveredSecretRef = useRef<string | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [checkoutStripePromise, setCheckoutStripePromise] =
     useState<Promise<Stripe | null>>(unloadedStripePromise)
@@ -90,6 +102,60 @@ export function MembershipReactivationCheckout({
     feedback: duplicateFeedback,
   })
   const selectedPlan = getStripePricingPlan(selectedInterval, pricingCatalog)
+  const recoveryFeedback = recovery
+    ? {
+        ...paymentFeedback(
+          recovery.state === "not_started"
+            ? "provider_temporarily_unavailable"
+            : "payment_status_pending",
+          {
+            provider: recovery.provider ?? "checkout",
+            confirmationPhase:
+              recovery.state === "not_started" ? "before_confirm" : "after_confirm",
+          },
+        ),
+        ...(recovery.state === "resume"
+          ? {
+              title: "Verbindung unterbrochen",
+              description:
+                "Wir konnten den bisherigen Bezahlvorgang noch nicht bestätigen. Setze ihn fort, bevor du eine neue Zahlung startest.",
+              primaryAction: { type: "check_status" as const, label: "Bezahlvorgang fortsetzen" },
+            }
+          : recovery.state === "pending"
+            ? {
+                description:
+                  "Wir konnten deinen bisherigen Bezahlvorgang noch nicht sicher zuordnen. Bitte prüfe den Status oder melde uns das Problem.",
+                primaryAction: { type: "check_status" as const, label: "Status prüfen" },
+              }
+            : {
+                title: "Zahlung konnte nicht gestartet werden",
+                description: "Versuche es erneut oder wähle eine andere Zahlungsart.",
+                safetyNote: "Für diesen Versuch wurde keine Zahlung gestartet.",
+                secondaryAction: undefined,
+              }),
+      }
+    : null
+  const recoveryReport = usePaymentSupportReport({
+    checkoutAttemptId,
+    checkoutContext: "reactivation",
+    feedback: recoveryFeedback,
+  })
+  const requireAuthentication = useCallback(() => {
+    setAuthenticationRequired(true)
+    setCheckoutError(null)
+    setRecovery(null)
+  }, [])
+  const handleRecovery = useCallback((next: ReactivationCheckoutRecovery) => {
+    // Only the authenticated server response can replace a locally selected provider.
+    lockedProviderRef.current = next.provider
+    setLockedProvider(next.provider)
+    if (next.interval) {
+      setCheckoutInterval(next.interval)
+      setSelectedInterval(next.interval)
+    }
+    setCheckoutError(null)
+    setRecovery(next)
+  }, [])
 
   const reportStripeCustomerError = useCallback(
     (errorFamily: PaymentErrorFamily, status?: number, attemptId = checkoutAttemptId) => {
@@ -150,6 +216,8 @@ export function MembershipReactivationCheckout({
 
   function choosePlan(interval: BillingInterval) {
     if (!canChangeReactivationCheckoutPlan(lockedProviderRef.current)) return
+    setRecovery(null)
+    recoveredSecretRef.current = null
     setSelectedInterval(interval)
     checkoutAttemptController.close()
     setCheckoutAttemptId(null)
@@ -159,6 +227,7 @@ export function MembershipReactivationCheckout({
   }
 
   function openCheckout() {
+    if (authenticationRequired || recovery) return
     const nextAttempt = checkoutAttemptController.open()
     if (!nextAttempt.isNew) {
       checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -189,6 +258,11 @@ export function MembershipReactivationCheckout({
       throw new Error("stripe publishable key missing")
     }
 
+    if (lockedProviderRef.current && lockedProviderRef.current !== "stripe") {
+      throw new Error("another payment provider is already active")
+    }
+    if (recoveredSecretRef.current) return recoveredSecretRef.current
+    lockCheckoutToProvider("stripe")
     setCheckoutError(null)
     const funnelEventId = createFunnelEventId()
     const plan = getStripePricingPlan(checkoutInterval, pricingCatalog)
@@ -214,24 +288,36 @@ export function MembershipReactivationCheckout({
         }),
       })
     } catch (error) {
-      setCheckoutError(checkoutStartError)
+      handleRecovery({ provider: "stripe", state: "resume" })
       reportStripeCustomerError("network")
       throw error
     }
 
     const body = await response.json().catch(() => ({}))
+    if (response.status === 401 && body?.error === "reactivation_authentication_required") {
+      requireAuthentication()
+      reportStripeCustomerError("authentication", response.status)
+      throw new Error("reactivation authentication required")
+    }
+    const statusDestination = response.ok
+      ? readReactivationStatusDestination(body.statusUrl, window.location.origin)
+      : null
+    if (statusDestination) {
+      window.location.assign(statusDestination)
+      throw new Error("reactivation checkout verification required")
+    }
+    const serverRecovery = readReactivationCheckoutRecovery(body)
+    if (serverRecovery) {
+      handleRecovery(serverRecovery)
+      throw new Error("reactivation checkout recovery required")
+    }
     if (!response.ok) {
       if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
         setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
         setDuplicateDialogOpen(true)
         throw new Error("checkout access already exists")
       }
-      if (body?.error === "reactivation_checkout_terminal") {
-        checkoutAttemptController.close()
-        const replacementAttempt = checkoutAttemptController.open()
-        setCheckoutAttemptId(replacementAttempt.checkoutAttemptId)
-      }
-      setCheckoutError(checkoutStartError)
+      handleRecovery({ provider: "stripe", state: "pending" })
       const error = new Error("failed to create checkout session")
       reportStripeCustomerError("provider_session", response.status)
       throw error
@@ -239,7 +325,7 @@ export function MembershipReactivationCheckout({
 
     const clientSecret = typeof body.client_secret === "string" ? body.client_secret : null
     if (!clientSecret) {
-      setCheckoutError(checkoutStartError)
+      handleRecovery({ provider: "stripe", state: "pending" })
       reportStripeCustomerError("provider_session", response.status)
       throw new Error("checkout session response missing client secret")
     }
@@ -262,14 +348,93 @@ export function MembershipReactivationCheckout({
     })
     return clientSecret
   }, [
-    checkoutAttemptController,
     checkoutAttemptId,
     checkoutInterval,
     lockCheckoutToProvider,
+    handleRecovery,
+    requireAuthentication,
     pricingCatalog,
     reportStripeCustomerError,
     returnDestination,
   ])
+
+  async function checkRecoveryStatus() {
+    if (!recovery || checkingStatusRef.current || !checkoutInterval || !checkoutAttemptId) return
+    if (recovery.state === "not_started") {
+      // The server proved the old attempt cannot charge. Rotate only after the
+      // explicit retry action, never on receipt of an error or during sign-in.
+      checkoutAttemptController.close()
+      setCheckoutAttemptId(checkoutAttemptController.open().checkoutAttemptId)
+      recoveredSecretRef.current = null
+      setRecovery(null)
+      setCheckoutRetryKey((current) => current + 1)
+      return
+    }
+    checkingStatusRef.current = true
+    setCheckingStatus(true)
+    const provider = recovery.provider ?? "stripe"
+    try {
+      const response = await fetch(
+        provider === "stripe"
+          ? "/api/stripe/create-checkout-session"
+          : "/api/paypal/create-subscription-intent",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            checkoutAttemptId,
+            checkoutContext,
+            interval: checkoutInterval,
+            source: "pricing_page",
+            returnDestination,
+            funnelEventId: createFunnelEventId(),
+            recoveryOnly: true,
+          }),
+        },
+      )
+      const body = await response.json().catch(() => ({}))
+      if (response.status === 401 && body?.error === "reactivation_authentication_required") {
+        requireAuthentication()
+        return
+      }
+      if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
+        setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
+        setDuplicateDialogOpen(true)
+        setRecovery(null)
+        return
+      }
+      const next = readReactivationCheckoutRecovery(body)
+      if (next) {
+        handleRecovery(next)
+        return
+      }
+      const statusDestination = response.ok
+        ? readReactivationStatusDestination(body.statusUrl, window.location.origin)
+        : null
+      if (statusDestination) {
+        window.location.assign(statusDestination)
+        return
+      }
+      if (
+        response.ok &&
+        provider === "stripe" &&
+        typeof body.client_secret === "string" &&
+        body.client_secret
+      ) {
+        recoveredSecretRef.current = body.client_secret
+        setRecovery(null)
+        setCheckoutRetryKey((current) => current + 1)
+        return
+      }
+      // A PayPal token alone never authorizes another SDK subscription.create.
+      handleRecovery({ provider, state: "pending" })
+    } catch {
+      handleRecovery({ provider, state: "pending" })
+    } finally {
+      checkingStatusRef.current = false
+      setCheckingStatus(false)
+    }
+  }
 
   const handlePayPalCheckoutStarted = useCallback(
     (funnelEventId: string) => {
@@ -304,7 +469,7 @@ export function MembershipReactivationCheckout({
           open={duplicateDialogOpen}
         />
       ) : null}
-      {lockedProvider === null ? (
+      {lockedProvider === null && !authenticationRequired && !recovery ? (
         <SubscriptionPlanSelector
           actionLabel={`${selectedPlan.price} · Mitgliedschaft reaktivieren`}
           onContinue={openCheckout}
@@ -315,10 +480,58 @@ export function MembershipReactivationCheckout({
         />
       ) : null}
       <div ref={checkoutRef}>
-        {checkoutInterval &&
-        duplicateDialogOpen &&
-        isPaymentFeedbackV2Enabled() &&
-        duplicateFeedback ? (
+        {checkoutInterval && (authenticationRequired || recovery) ? (
+          <p className="mb-3 mt-5 text-sm font-semibold text-muted-foreground">
+            {getStripePricingPlan(checkoutInterval, pricingCatalog).name}
+          </p>
+        ) : null}
+        {checkoutInterval && authenticationRequired ? (
+          <section
+            role="status"
+            aria-live="polite"
+            className="mt-5 rounded-2xl border border-border bg-white p-4 sm:p-5"
+          >
+            <h2 className="text-base font-bold">Bitte melde dich erneut an</h2>
+            <p className="mt-2 text-[13px] leading-5 text-muted-foreground">
+              Deine Anmeldung ist nicht mehr gültig. Danach kommst du direkt zu diesem Bezahlvorgang
+              zurück.
+            </p>
+            <p className="my-4 rounded-xl bg-[var(--brand-plum-ice)] p-3 text-xs font-bold">
+              Deine Planauswahl bleibt erhalten.
+            </p>
+            <Button asChild className="min-h-[44px] w-full">
+              <a href={buildReactivationSignInUrl(checkoutInterval, returnDestination)}>
+                Einloggen und fortfahren
+              </a>
+            </Button>
+          </section>
+        ) : checkoutInterval && recovery && recoveryFeedback ? (
+          <div className="mt-5" aria-busy={checkingStatus}>
+            <PaymentFeedbackCard
+              feedback={
+                checkingStatus
+                  ? {
+                      ...recoveryFeedback,
+                      primaryAction: {
+                        ...recoveryFeedback.primaryAction,
+                        label: "Status wird geprüft …",
+                      },
+                    }
+                  : recoveryFeedback
+              }
+              onAction={() => {
+                void checkRecoveryStatus()
+              }}
+              onReportProblem={
+                checkoutAttemptId && isPaymentSupportUiEnabled() ? recoveryReport.report : undefined
+              }
+              reportState={recoveryReport.state}
+            />
+          </div>
+        ) : checkoutInterval &&
+          duplicateDialogOpen &&
+          isPaymentFeedbackV2Enabled() &&
+          duplicateFeedback ? (
           <PaymentFeedbackCard
             feedback={duplicateFeedback}
             onAction={() => window.location.assign("/profile")}
@@ -343,6 +556,13 @@ export function MembershipReactivationCheckout({
               setCheckoutInterval(null)
               setCheckoutRetryKey(0)
               setCheckoutError(null)
+            }}
+            onReactivationAuthenticationRequired={requireAuthentication}
+            onReactivationRecovery={handleRecovery}
+            onProviderLockClaim={(provider) => {
+              if (lockedProviderRef.current && lockedProviderRef.current !== provider) return false
+              lockCheckoutToProvider(provider)
+              return true
             }}
             onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
             onRetry={() => {

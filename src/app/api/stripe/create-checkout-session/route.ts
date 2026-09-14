@@ -1,7 +1,7 @@
 import { after, NextResponse, type NextRequest } from "next/server"
 import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
-import { createServerClient } from "@supabase/ssr"
+import { createClient as createRequestClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
@@ -48,13 +48,19 @@ import {
 } from "@/lib/billing/offer-products"
 import {
   acquireMembershipReactivationCheckout,
-  bindMembershipReactivationProviderReference,
-  claimMembershipReactivationProvider,
   expireMembershipReactivationCheckoutReservation,
   markMembershipReactivationReconciliationRequired,
-  MembershipReactivationCheckoutConflictError,
   type MembershipReactivationCheckoutReservation,
 } from "@/lib/reactivation/checkout-reservations"
+import {
+  findOwnedReactivationCheckout,
+  reactivationRecoveryPayload,
+} from "@/lib/reactivation/checkout-recovery"
+import {
+  createDurableStripeReactivationCheckout,
+  preflightStripeReactivationCustomer,
+  verifyStripeReactivationProvider,
+} from "@/lib/reactivation/stripe-checkout-recovery"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { createHash, timingSafeEqual } from "node:crypto"
 import type Stripe from "stripe"
@@ -93,6 +99,7 @@ export const StripeCheckoutSessionRequestSchema = z
     checkoutAttemptId: z.string().uuid().optional(),
     checkoutSessionAttemptId: z.string().uuid().optional(),
     checkoutContext: z.literal("membership_reactivation").optional(),
+    recoveryOnly: z.boolean().optional(),
     returnDestination: z.string().max(500).optional(),
     presentation: z.literal("offer_overlay_elements").optional(),
     action: z.enum(["create", "prepare", "claim"]).default("create"),
@@ -114,6 +121,7 @@ export const StripeCheckoutSessionRequestSchema = z
         checkoutAttemptId,
         checkoutSessionAttemptId,
         checkoutContext,
+        recoveryOnly,
         funnelEventId,
         funnelSessionId,
         interval,
@@ -129,6 +137,12 @@ export const StripeCheckoutSessionRequestSchema = z
       },
       context,
     ) => {
+      if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "recovery is limited to reactivation",
+          path: ["recoveryOnly"],
+        })
       // T14: the Premium sheet sells exactly one thing — a standard-catalog subscription,
       // created in one step for an already-authenticated free user. Every other protocol
       // this endpoint speaks (one-time product, lead/funnel offer contract, prepared/claim,
@@ -488,6 +502,7 @@ export async function POST(req: NextRequest) {
     checkoutAttemptId,
     checkoutSessionAttemptId,
     checkoutContext,
+    recoveryOnly,
     action,
     preparationId,
     preparationToken,
@@ -510,11 +525,13 @@ export async function POST(req: NextRequest) {
   const subscriptionInterval = interval as BillingInterval
   const commerceInterval = isOneTimePurchase ? "one_time" : subscriptionInterval
   let checkoutIsInternalTest: boolean | undefined
+  let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
   try {
     // Identity resolution: prefer existing Stripe customer > email > 400
     // Priority: leadId email → authed user's stripe_customer_id → authed user's email → 400
     let customerId: string | undefined
     let customerEmail: string | undefined
+    let profileCustomerId: string | null = null
     let resolvedLeadId: string | null = null
     const preparedControlContext = () => ({
       commerceKind: isOneTimePurchase ? ("one_time" as const) : ("subscription" as const),
@@ -525,16 +542,7 @@ export async function POST(req: NextRequest) {
     })
 
     const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => cookieStore.getAll(),
-          setAll: () => {},
-        },
-      },
-    )
+    const supabase = await createRequestClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -544,7 +552,6 @@ export async function POST(req: NextRequest) {
       adminSupabase ??= createBillingAdminClient()
       return adminSupabase
     }
-    let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
     let oneTimeProviderLocked: "stripe" | null = null
 
@@ -685,7 +692,25 @@ export async function POST(req: NextRequest) {
 
     if (checkoutContext === "membership_reactivation") {
       if (!authenticatedUserId || !checkoutAttemptId || leadId) {
-        return NextResponse.json({ error: "authenticated reactivation required" }, { status: 401 })
+        captureServerPaymentFailure({
+          signal: "payment_checkout_initialization_failed",
+          origin: "provider_api",
+          method: "unknown",
+          truth: "unknown",
+          provider: "stripe",
+          stage: "stripe_checkout_session_create",
+          source,
+          commerceKind: "subscription",
+          interval: subscriptionInterval,
+          errorFamily: "authentication",
+          status: "reactivation_authentication_required",
+          live: resolvePaymentRuntime({
+            STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+            VERCEL_ENV: process.env.VERCEL_ENV,
+          }).stripeLive,
+          isInternalTest: checkoutIsInternalTest ?? false,
+        })
+        return NextResponse.json({ error: "reactivation_authentication_required" }, { status: 401 })
       }
     }
 
@@ -726,29 +751,28 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      if (checkoutContext === "membership_reactivation" && checkoutAttemptId) {
-        const returnDestination = sanitizeReactivationReturnDestination(rawReturnDestination)
-        try {
-          reactivationReservation = await acquireMembershipReactivationCheckout(adminSupabase, {
-            userId: authenticatedUserId,
-            checkoutAttemptId,
-            interval: subscriptionInterval,
-            returnDestination,
-          })
-          reactivationReservation = await claimMembershipReactivationProvider(
-            adminSupabase,
-            reactivationReservation.id,
-            authenticatedUserId,
-            "stripe",
+      if (checkoutContext === "membership_reactivation") {
+        reactivationReservation = await findOwnedReactivationCheckout(
+          adminSupabase,
+          authenticatedUserId,
+        )
+        if (recoveryOnly && !reactivationReservation?.provider) {
+          return NextResponse.json(
+            {
+              error: "reactivation_checkout_unavailable",
+              recovery: { provider: null, state: "not_started" },
+            },
+            { status: 409 },
           )
-        } catch (error) {
-          if (error instanceof MembershipReactivationCheckoutConflictError) {
-            return NextResponse.json(
-              { error: "reactivation_checkout_in_progress" },
-              { status: 409 },
-            )
-          }
-          throw error
+        }
+        if (
+          reactivationReservation?.provider &&
+          (reactivationReservation.provider !== "stripe" ||
+            reactivationReservation.interval !== subscriptionInterval)
+        ) {
+          return NextResponse.json(reactivationRecoveryPayload(reactivationReservation, "resume"), {
+            status: 409,
+          })
         }
       }
     }
@@ -801,12 +825,14 @@ export async function POST(req: NextRequest) {
     if (!customerId && !customerEmail) {
       // Resubscribe, direct-entry, or stale lead path — lock to the authenticated user's identity.
       if (user?.id) {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("stripe_customer_id")
           .eq("id", user.id)
           .single()
 
+        if (profileError) throw profileError
+        profileCustomerId = profile?.stripe_customer_id ?? null
         if (profile?.stripe_customer_id) {
           customerId = profile.stripe_customer_id
         } else {
@@ -881,29 +907,60 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "price not configured" }, { status: 500 })
     }
 
+    let reactivationProvider: Awaited<ReturnType<typeof verifyStripeReactivationProvider>> | null =
+      null
+    if (checkoutContext === "membership_reactivation") {
+      const frozenPrice =
+        reactivationReservation?.stripe_checkout_context?.initial_params.line_items?.[0]?.price
+      reactivationProvider = await verifyStripeReactivationProvider(
+        stripe,
+        typeof frozenPrice === "string" ? frozenPrice : priceId,
+      )
+      const frozen = reactivationReservation?.stripe_checkout_context
+      if (
+        frozen &&
+        (frozen.stripe_account_id !== reactivationProvider.stripeAccountId ||
+          frozen.livemode !== reactivationProvider.livemode)
+      ) {
+        throw new Error("reactivation Stripe provider changed")
+      }
+    }
+
     if (reactivationReservation?.provider_reference) {
       const providerReference = reactivationReservation.provider_reference
       try {
         const existingSession = await stripe.checkout.sessions.retrieve(providerReference)
+        const frozen = reactivationReservation.stripe_checkout_context
+        if (
+          frozen &&
+          (existingSession.livemode !== frozen.livemode ||
+            existingSession.metadata?.reactivation_reservation_id !== reactivationReservation.id)
+        ) {
+          throw new Error("reactivation Stripe session context mismatch")
+        }
         if (existingSession.status === "expired") {
           await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
             reservationId: reactivationReservation.id,
             userId: authenticatedUserId!,
             providerReference,
           })
-          return NextResponse.json({ error: "reactivation_checkout_terminal" }, { status: 409 })
+          return NextResponse.json(
+            {
+              error: "reactivation_checkout_terminal",
+              recovery: { provider: null, state: "not_started" },
+            },
+            { status: 409 },
+          )
         }
-        if (!existingSession.client_secret) throw new Error("existing session has no client secret")
+        if (existingSession.status === "complete") {
+          return NextResponse.json({
+            statusUrl: `/welcome?session_id=${encodeURIComponent(existingSession.id)}`,
+          })
+        }
+        if (existingSession.status !== "open" || !existingSession.client_secret)
+          throw new Error("existing session has no client secret")
         return NextResponse.json({ client_secret: existingSession.client_secret })
       } catch (error) {
-        if (isDefinitivelyMissingStripeResource(error)) {
-          await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
-            reservationId: reactivationReservation.id,
-            userId: authenticatedUserId!,
-            providerReference,
-          })
-          return NextResponse.json({ error: "reactivation_checkout_terminal" }, { status: 409 })
-        }
         await markMembershipReactivationReconciliationRequired(
           getAdminSupabase(),
           reactivationReservation.id,
@@ -915,7 +972,9 @@ export async function POST(req: NextRequest) {
           interval: commerceInterval as never,
           reason: "reactivation_session_reconciliation_required",
         })
-        return NextResponse.json({ error: "reactivation_checkout_unavailable" }, { status: 409 })
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+          status: 409,
+        })
       }
     }
     // The Premium sheet is not a funnel surface: there is no lead, no quiz session and no
@@ -951,6 +1010,45 @@ export async function POST(req: NextRequest) {
       typeof funnelContext.isInternalTest === "boolean"
     ) {
       checkoutIsInternalTest = funnelContext.isInternalTest
+    }
+
+    if (checkoutContext === "membership_reactivation") {
+      if (!user?.email) throw new Error("reactivation account email unavailable")
+      if (!reactivationReservation?.stripe_checkout_context) {
+        const originalCustomerId = customerId
+        customerId = await preflightStripeReactivationCustomer(
+          stripe,
+          customerId,
+          reactivationProvider!.livemode,
+        )
+        customerEmail = customerId ? undefined : user.email
+        if (originalCustomerId && !customerId)
+          console.info("[stripe] reactivation customer recovery", { outcome: "customer_unusable" })
+      }
+      reactivationReservation = await acquireMembershipReactivationCheckout(getAdminSupabase(), {
+        userId: authenticatedUserId!,
+        checkoutAttemptId: reactivationReservation?.checkout_attempt_id ?? checkoutAttemptId!,
+        interval: subscriptionInterval,
+        returnDestination:
+          reactivationReservation?.return_destination ??
+          sanitizeReactivationReturnDestination(rawReturnDestination),
+      })
+      if (
+        reactivationReservation.provider &&
+        (reactivationReservation.provider !== "stripe" ||
+          reactivationReservation.interval !== subscriptionInterval)
+      ) {
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation, "resume"), {
+          status: 409,
+        })
+      }
+      // Recheck access after awaited preflight; a parallel successful purchase must not start another.
+      const accessConflict = await createStripeCheckoutAccessConflictResponse(
+        getAdminSupabase(),
+        authenticatedUserId!,
+        user.email,
+      )
+      if (accessConflict) return accessConflict
     }
 
     const preparedMetadata = isPreparation
@@ -996,7 +1094,13 @@ export async function POST(req: NextRequest) {
         checkoutIsInternalTest !== undefined)
         ? {
             metadata: {
-              ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
+              ...(checkoutAttemptId
+                ? {
+                    checkout_attempt_id:
+                      reactivationReservation?.checkout_attempt_id ?? checkoutAttemptId,
+                  }
+                : {}),
+              ...(reactivationReservation ? { stripe_checkout_context_version: "1" } : {}),
               ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
               ...(!isOneTimePurchase
                 ? { pricing_catalog: pricingCatalog, stripe_price_id: priceId }
@@ -1024,24 +1128,53 @@ export async function POST(req: NextRequest) {
           }
         : {}),
     })
-    const session = await stripe.checkout.sessions.create(
-      params,
-      resolveStripeCheckoutSessionCreateOptions({
-        reactivationReservationId: reactivationReservation?.id,
-        isPreparation,
-        preparationId,
-        isOneTimePurchase,
-        source,
-        checkoutAttemptId,
-        checkoutSessionAttemptId,
-      }),
-    )
+    // recoveryOnly resumes the existing frozen request (including an idempotent
+    // create after a lost response); it never opens a new reservation/provider.
+    const session =
+      reactivationReservation && reactivationProvider
+        ? await createDurableStripeReactivationCheckout({
+            stripe,
+            client: getAdminSupabase(),
+            reservation: reactivationReservation,
+            userId: authenticatedUserId!,
+            accountEmail: user!.email!,
+            profileCustomerId,
+            ...reactivationProvider,
+            params,
+          })
+        : await stripe.checkout.sessions.create(
+            params,
+            resolveStripeCheckoutSessionCreateOptions({
+              reactivationReservationId: reactivationReservation?.id,
+              isPreparation,
+              preparationId,
+              isOneTimePurchase,
+              source,
+              checkoutAttemptId,
+              checkoutSessionAttemptId,
+            }),
+          )
     if (reactivationReservation) {
-      await bindMembershipReactivationProviderReference(
-        getAdminSupabase(),
-        reactivationReservation.id,
-        session.id,
-      )
+      if (session.status === "complete")
+        return NextResponse.json({
+          statusUrl: `/welcome?session_id=${encodeURIComponent(session.id)}`,
+        })
+      if (session.status === "expired") {
+        await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
+          reservationId: reactivationReservation.id,
+          userId: authenticatedUserId!,
+          providerReference: session.id,
+        })
+        return NextResponse.json(
+          {
+            error: "reactivation_checkout_terminal",
+            recovery: { provider: null, state: "not_started" },
+          },
+          { status: 409 },
+        )
+      }
+      if (session.status !== "open" || !session.client_secret)
+        throw new Error("reactivation Stripe session unavailable")
     }
     if (oneTimeConsentId) {
       await bindPersonalPlanOneTimeConsentProviderReference(getAdminSupabase(), oneTimeConsentId, {
@@ -1118,6 +1251,21 @@ export async function POST(req: NextRequest) {
       leadId,
       source,
     })
+    if (checkoutContext === "membership_reactivation") {
+      if (reactivationReservation) {
+        reactivationReservation =
+          (await findOwnedReactivationCheckout(
+            createBillingAdminClient(),
+            reactivationReservation.user_id,
+          ).catch(() => reactivationReservation)) ?? reactivationReservation
+      }
+      return NextResponse.json(
+        reactivationReservation
+          ? reactivationRecoveryPayload(reactivationReservation)
+          : { error: "reactivation_checkout_unavailable" },
+        { status: 409 },
+      )
+    }
     throw error
   }
 }
