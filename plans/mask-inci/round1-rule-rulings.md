@@ -32,3 +32,15 @@ Standard v0.2 + lexicon v0.2 + charter correction → regenerate the affected re
 (02, 04, 05, 06, 08, 10, 12 + echo re-derivations) with updated evidence text → refresh
 agreement + lab → Nick's per-product review on the 7-row layout. Freeze gate (full rerun +
 example-disjoint unseen set) comes after his review, per the shortened path.
+
+## Escalation rulings (round-1b interview, Nick, 2026-09-14)
+
+The v0.2 regeneration applied the rules honestly and flagged five mismatches; Nick ruled:
+
+| # | Ruling | Decision |
+|---|---|---|
+| E1 | Tail-edge species | **Count normally, cap confidence** at moderate + hinweise note (replaces the strike). Rationale: relative order above Parfum is legally reliable; only the 1%-line is fuzzy; ~1% of a co-conditioner is a real dose. Effect: #01 Hask + #03 Bali SOS regain conditioning `high` (moderate confidence); #06 MONDAY + #12 Guhl stay `moderate` via the S1-mandatory rule. Applies uniformly across all fields (resolves the former point 5 / AP-04-R5TAILEDGE). |
+| E2 | #11 Glycolic Gloss marker | **Route to review** under the R2 plausibility rule: an allergen at rank 12 with Parfum at rank 30 is implausible ordering → marker `unresolved`, the weight and shine-vs-smoothing calls carry both readings, confidence capped. The R8 colourant demotion itself stands; only this product's cascade is not trusted. |
+| E3 | #07 Pantene | **balanced / neither_dominant accepted** — the film genuinely carries the product; the moisture default was convention, not evidence. |
+| E4 | Weight `low` | **Reachable for creams**: the structural fatty-alcohol top-three condition is dropped from the leanness test (light = no R4b above marker + no occlusive stack + single cationic). Expected: #12 Guhl 2in1 → light. Grounded in the catalog's 10 curated light masks. |
+| E5 | (folded into E1) | The confidence-cap treatment of border species is field-uniform. |
