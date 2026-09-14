@@ -31,9 +31,13 @@ export function ScanInsertProblemView({ answers, funnelPackageKey }: ScanInsertV
         </span>
         suchen Klarheit, welche Produkte wirklich zu ihnen passen. Raten kostet Geld, Zeit und ein
         Regal voller halbleerer Flaschen.
-        {/* Same source line the offer page prints under the same survey. */}
+        {/*
+          Short form of the offer page's source line. The insert has to fit a
+          375 x 812 viewport above the sticky "Weiter"; the survey's sample size
+          is the part that must not drift, the multi-answer note is not.
+        */}
         <span className="mt-2 block text-xs text-[var(--text-caption)]">
-          Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich
+          Quelle: eigene Umfrage · 4.024 Antworten
         </span>
       </span>
       <span>
