@@ -597,7 +597,7 @@ export function OrganicPlanOffer({
           </section>
         ) : null}
 
-        <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
+        <section className="mx-auto max-w-4xl px-4 pt-1" data-offer-section="faq">
           <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
             Häufige Fragen
           </h2>
@@ -653,7 +653,7 @@ export function OrganicPlanOffer({
         The purchase starts on this page, so it carries the same legal footer
         the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
       */}
-      <SiteFooter />
+      <SiteFooter className="mt-10" />
     </OfferTrackingProvider>
   )
 }

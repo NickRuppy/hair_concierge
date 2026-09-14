@@ -576,7 +576,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-5 pb-24" data-offer-section="final_cta">
+        <section className="mx-auto max-w-4xl px-5" data-offer-section="final_cta">
           <div className="rounded-[1.5rem] bg-[var(--brand-plum)] p-6 text-center text-white">
             <h2 className="font-serif text-3xl leading-tight">Dein Scanner wartet.</h2>
             <p className="mx-auto mt-2 max-w-[32rem] text-[15px] leading-[1.55] text-white/85">
@@ -598,7 +598,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
         The purchase starts on this page, so it carries the same legal footer
         the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
       */}
-      <SiteFooter />
+      <SiteFooter className="mt-10" />
     </OfferTrackingProvider>
   )
 }

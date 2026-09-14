@@ -2,10 +2,16 @@ import Link from "next/link"
 
 import { FooterCookieSettingsButton, FooterLink, legalFooterLinks } from "./footer-links"
 import { Wordmark } from "./wordmark"
+import { cn } from "@/lib/utils"
 
-export function SiteFooter() {
+/**
+ * `className` is here for the top margin: pages whose last section already
+ * closes tightly (the offer pages) would otherwise show a ~160 px empty band
+ * between the final card and the footer rule.
+ */
+export function SiteFooter({ className }: { className?: string } = {}) {
   return (
-    <footer className="mt-16 border-t border-border bg-background px-6 py-10">
+    <footer className={cn("mt-16 border-t border-border bg-background px-6 py-10", className)}>
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
         <Link
           href="/"
