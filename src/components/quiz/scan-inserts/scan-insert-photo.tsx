@@ -21,7 +21,7 @@ export function ScanInsertPhoto({
       third off inserts 2 and 3. The cap is above every phone width, so the
       mobile crop is untouched and the desktop one matches it.
     */
-    <div className="relative mx-auto h-[400px] w-full max-w-[400px] overflow-hidden rounded-[24px] bg-[var(--brand-plum-ice)] shadow-[0_30px_70px_-40px_rgba(42,24,69,0.6)]">
+    <div className="relative mx-auto h-[340px] w-full max-w-[400px] sm:h-[400px] overflow-hidden rounded-[24px] bg-[var(--brand-plum-ice)] shadow-[0_30px_70px_-40px_rgba(42,24,69,0.6)]">
       <Image
         alt={alt}
         className="object-cover"

@@ -16,7 +16,8 @@ const scanOfferSource = readFileSync(
   new URL("../src/components/scan-regal-offer/scan-regal-offer.tsx", import.meta.url),
   "utf8",
 )
-const SURVEY_SOURCE_LINE = "Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich"
+const SURVEY_SOURCE_LINE_SHORT = "Quelle: eigene Umfrage · 4.024 Antworten"
+const SURVEY_SOURCE_LINE_OFFER = `${SURVEY_SOURCE_LINE_SHORT} · Mehrfachauswahl möglich`
 const globalsSource = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8")
 
 function renderInsert(step: QuizStep, answers: QuizAnswers) {
@@ -52,13 +53,22 @@ test("the problem insert names the shelf moment and the answers already given", 
 })
 
 // The landing and the offer both carry the survey's source; the insert used to
-// print the number bare. The string is the offer page's, verbatim, so the two
-// places cannot drift into two different sample sizes.
+// print the number bare. The insert prints the short form — on 375 x 812 the
+// second line pushed the verdict card under the sticky "Weiter" — but the
+// sample size is shared verbatim, so the two places cannot drift into two
+// different numbers.
 test("the 63 % statistic names the same source the offer page prints", () => {
   const html = renderInsert(16, { structure: "wavy", thickness: "fine", density: "medium" })
 
-  assert.ok(html.includes(SURVEY_SOURCE_LINE), "the insert prints the source line")
-  assert.ok(scanOfferSource.includes(SURVEY_SOURCE_LINE), "the offer page prints the same line")
+  assert.ok(html.includes(SURVEY_SOURCE_LINE_SHORT), "the insert prints the short source line")
+  assert.ok(
+    !html.includes("Mehrfachauswahl möglich"),
+    "and stays on one line inside the mobile viewport",
+  )
+  assert.ok(
+    scanOfferSource.includes(SURVEY_SOURCE_LINE_OFFER),
+    "the offer page prints the same sample size, with the multi-answer note",
+  )
 })
 
 test("the solution insert quotes the scalp answer the user just gave", () => {

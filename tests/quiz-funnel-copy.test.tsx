@@ -13,7 +13,7 @@ test("the default copy (organic, or any unknown package key) matches today's str
     assert.equal(copy.infoStripLead, "Lass uns deine Haare verstehen — Schritt für Schritt.")
     assert.equal(
       copy.infoStripBody,
-      "10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.",
+      "10 schnelle Fragen zur Basis, dann geht’s an deine Routine und Produkte.",
     )
     assert.equal(copy.leadCaptureHeadline, "Dein persönlicher Pflegeplan ist bereit!")
     assert.equal(copy.commitButton, "Ja, zeig mir meine Analyse")
@@ -99,7 +99,7 @@ test("the info strip renders the scan copy through the provider during a server 
   )
 
   assert.match(html, /10 schnelle Fragen zur Basis, dann prüft der Scanner deine Produkte\./)
-  assert.doesNotMatch(html, /dann gehts an deine Routine und Produkte/)
+  assert.doesNotMatch(html, /dann geht’s an deine Routine und Produkte/)
 })
 
 test("the info strip renders the default copy through the provider for an unattributed visit", () => {
@@ -109,6 +109,6 @@ test("the info strip renders the default copy through the provider for an unattr
     </QuizFunnelPackageProvider>,
   )
 
-  assert.match(html, /10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte\./)
+  assert.match(html, /10 schnelle Fragen zur Basis, dann geht’s an deine Routine und Produkte\./)
   assert.doesNotMatch(html, /prüft der Scanner/)
 })

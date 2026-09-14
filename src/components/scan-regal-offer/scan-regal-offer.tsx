@@ -185,9 +185,7 @@ function SectionSub({ children }: { children: string }) {
 }
 
 function SectionCaption({ children }: { children: string }) {
-  return (
-    <p className="mt-3 text-center text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">{children}</p>
-  )
+  return <p className="mt-3 text-center text-xs text-[var(--text-caption)]">{children}</p>
 }
 
 function FaqItem({ answer, faqId, question }: { answer: string; faqId: string; question: string }) {
@@ -287,7 +285,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           <SectionSub>{profileLine(quizAnswers)}</SectionSub>
           <figure className="mx-auto mt-5 max-w-[420px]">
             <ScanHeroDemo quizAnswers={quizAnswers} />
-            <figcaption className="mt-3 text-center text-xs leading-[1.5] text-[rgba(var(--brand-plum-rgb),0.58)]">
+            <figcaption className="mt-3 text-center text-xs leading-[1.5] text-[var(--text-caption)]">
               So prüft der Scanner Produkte für dein Profil – bei den gängigen Produkten von dm und
               Rossmann.
             </figcaption>
@@ -393,7 +391,14 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
                       src={card.src}
                       width={375}
                     />
-                    <span className="absolute left-2.5 top-2.5 rounded-full bg-[var(--brand-plum)] px-2 py-[3px] text-[9.5px] font-extrabold uppercase tracking-[0.12em] text-white">
+                    {/*
+                      Bottom left, not top left: three of the four screenshots
+                      open with the app header, and a tag in the top corner sat
+                      on the chaarlie wordmark — it read as a rendering fault.
+                      Down here it pairs with the tile title right below it, and
+                      all four tiles keep their natural top-aligned crop.
+                    */}
+                    <span className="absolute bottom-2.5 left-2.5 rounded-full bg-[var(--brand-plum)] px-2 py-[3px] text-[9.5px] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_4px_12px_-4px_rgba(42,24,69,0.7)]">
                       {card.tag}
                     </span>
                   </div>
@@ -482,7 +487,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-center text-[11px] text-[rgba(var(--brand-plum-rgb),0.58)] sm:text-xs">
+              <p className="mt-3 text-center text-[11px] text-[var(--text-caption)] sm:text-xs">
                 Entwickelt gemeinsam mit Friseurmeistern.
               </p>
             </div>
@@ -571,7 +576,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-5 pb-24" data-offer-section="final_cta">
+        <section className="mx-auto max-w-4xl px-5" data-offer-section="final_cta">
           <div className="rounded-[1.5rem] bg-[var(--brand-plum)] p-6 text-center text-white">
             <h2 className="font-serif text-3xl leading-tight">Dein Scanner wartet.</h2>
             <p className="mx-auto mt-2 max-w-[32rem] text-[15px] leading-[1.55] text-white/85">
@@ -593,7 +598,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
         The purchase starts on this page, so it carries the same legal footer
         the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
       */}
-      <SiteFooter />
+      <SiteFooter className="mt-10" />
     </OfferTrackingProvider>
   )
 }
