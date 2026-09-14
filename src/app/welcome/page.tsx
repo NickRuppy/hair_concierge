@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation"
+import { WelcomeReturnRecovery } from "./return-recovery-client"
+import { paypalWelcomeReturnExpiresAt } from "./return-recovery"
 import { after } from "next/server"
 import { createHash } from "node:crypto"
 import { createClient } from "@/lib/supabase/server"
@@ -60,7 +62,7 @@ export default async function WelcomePage({
     return renderPayPalWelcome(token)
   }
 
-  if (!session_id) redirect("/")
+  if (!session_id) return <WelcomeReturnRecovery />
   return renderStripeWelcome(session_id)
 }
 
@@ -446,6 +448,7 @@ async function renderPayPalWelcome(token: string | undefined) {
   }
 
   const intent = await findPayPalCheckoutIntentByToken(admin, token)
+  const returnRecoveryExpiresAt = paypalWelcomeReturnExpiresAt(intent)
   const checkoutContext =
     typeof intent?.metadata?.checkout_context === "string" ? intent.metadata.checkout_context : null
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
@@ -496,6 +499,7 @@ async function renderPayPalWelcome(token: string | undefined) {
       providerSubscriberEmail={activation.providerSubscriberEmail}
       purchase={null}
       activationRedirectTo={firstTimeDestination}
+      returnRecoveryExpiresAt={returnRecoveryExpiresAt}
     />
   )
 }

@@ -14,6 +14,7 @@ import { PlanBereitArrival } from "@/app/plan-bereit/plan-ready-arrival"
 import { PlanStartOpening } from "@/components/personal-plan-start/plan-start-opening"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
+import { clearWelcomeReturn } from "./return-recovery"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import { capturePaymentFailure } from "@/lib/observability/payment-client"
 import {
@@ -34,6 +35,7 @@ interface WelcomeClientProps {
   mode?: "activation" | "pending" | "duplicate"
   oneTimeReturnState?: Exclude<OneTimePendingState, "pending">
   activationRedirectTo?: CheckoutFirstTimeDestination
+  returnRecoveryExpiresAt?: number
 }
 
 type CheckoutActivationSource =
@@ -85,6 +87,7 @@ export function WelcomeClient({
   mode = "activation",
   oneTimeReturnState,
   activationRedirectTo = "/onboarding",
+  returnRecoveryExpiresAt,
 }: WelcomeClientProps) {
   const { paypalLive } = usePaymentRuntime()
   const router = useRouter()
@@ -372,6 +375,7 @@ export function WelcomeClient({
       const resolvedNext = isCheckoutFirstTimeDestination(body.next)
         ? body.next
         : activationRedirectTo
+      clearWelcomeReturn(window)
       router.replace(resolvedNext)
     } catch (err) {
       setMessage(normalizeError(err))
@@ -433,6 +437,7 @@ export function WelcomeClient({
     return (
       <>
         <CheckoutReturnAnalytics
+          returnRecoveryExpiresAt={returnRecoveryExpiresAt}
           isTrialCheckout={isTrialCheckout}
           purchase={purchase}
           purchaseKind={activationSource.purchaseKind}
@@ -604,6 +609,7 @@ export function WelcomeClient({
     return (
       <>
         <CheckoutReturnAnalytics
+          returnRecoveryExpiresAt={returnRecoveryExpiresAt}
           isTrialCheckout={isTrialCheckout}
           purchase={purchase}
           purchaseKind={activationSource.purchaseKind}
@@ -630,6 +636,7 @@ export function WelcomeClient({
   return (
     <>
       <CheckoutReturnAnalytics
+        returnRecoveryExpiresAt={returnRecoveryExpiresAt}
         isTrialCheckout={isTrialCheckout}
         purchase={purchase}
         purchaseKind={activationSource.purchaseKind}
