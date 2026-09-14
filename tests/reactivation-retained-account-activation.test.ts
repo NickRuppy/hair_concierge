@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { createHash } from "node:crypto"
 import { ensureCheckoutAccount } from "../src/lib/stripe/checkout-activation"
+import { handleCheckoutSessionCompleted } from "../src/lib/stripe/webhook-handlers"
+import { findOwnedReactivationCheckout } from "../src/lib/reactivation/checkout-recovery"
 
 const reservationId = "00000000-0000-4000-8000-000000000001"
 const userId = "00000000-0000-4000-8000-000000000002"
@@ -57,6 +59,7 @@ function fixture() {
   const links: any[] = []
   let beforeProfileUpdate: (() => void) | undefined
   let beforeBillingInsert: (() => void) | undefined
+  let completionError = false
   const supabase: any = {
     auth: {
       admin: {
@@ -86,6 +89,9 @@ function fixture() {
       let insert: any
       let insertOnly = false
       const execute = () => {
+        if (patch && table === "membership_reactivation_checkout_reservations" && completionError) {
+          return { data: null, error: new Error("completion temporarily unavailable") }
+        }
         if (patch && table === "profiles" && beforeProfileUpdate) {
           const action = beforeProfileUpdate
           beforeProfileUpdate = undefined
@@ -119,6 +125,12 @@ function fixture() {
       }
       const builder: any = {
         select: () => builder,
+        order: () => builder,
+        limit: () => builder,
+        in: (key: string, values: unknown[]) => {
+          filters.push((r) => values.includes(r[key]))
+          return builder
+        },
         eq: (key: string, value: unknown) => {
           filters.push((r) => r[key] === value)
           return builder
@@ -182,6 +194,9 @@ function fixture() {
     writes,
     links,
     deps,
+    failCompletion: (fail: boolean) => {
+      completionError = fail
+    },
     race: (fn: () => void) => {
       beforeProfileUpdate = fn
     },
@@ -190,6 +205,52 @@ function fixture() {
     },
   }
 }
+
+test("Stripe webhook completes a paid reactivation without browser return and no longer offers the old attempt", async () => {
+  const f = fixture()
+  f.reservation.status = "reconciliation_required"
+  await handleCheckoutSessionCompleted(f.session, f.deps)
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.billing[0].user_id, userId)
+  assert.equal(await findOwnedReactivationCheckout(f.deps.supabase, userId), null)
+  // Later expiry must not make the old reservation eligible for recovery again.
+  f.profiles[0].subscription_status = "canceled"
+  f.profiles[0].current_period_end = "2020-01-01T00:00:00Z"
+  f.billing[0].entitlement_status = "inactive"
+  assert.equal(await findOwnedReactivationCheckout(f.deps.supabase, userId), null)
+})
+
+test("Stripe duplicate webhook safely repeats completion of the same bound reservation", async () => {
+  const f = fixture()
+  await handleCheckoutSessionCompleted(f.session, f.deps)
+  await handleCheckoutSessionCompleted(f.session, f.deps)
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.billing.length, 1)
+  assert.equal(f.users.length, 1)
+})
+
+test("Stripe completion persistence failure rejects webhook processing and the retry closes the attempt", async () => {
+  const f = fixture()
+  f.failCompletion(true)
+  await assert.rejects(
+    handleCheckoutSessionCompleted(f.session, f.deps),
+    /completion temporarily unavailable/,
+  )
+  assert.equal(f.reservation.status, "provider_created")
+  f.failCompletion(false)
+  await handleCheckoutSessionCompleted(f.session, f.deps)
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.billing.length, 1)
+})
+
+test("Stripe activation cannot complete a reservation whose provider binding changed during activation", async () => {
+  const f = fixture()
+  f.race(() => {
+    f.reservation.provider_reference = "cs_other"
+  })
+  await assert.rejects(handleCheckoutSessionCompleted(f.session, f.deps), /could not be completed/)
+  assert.equal(f.reservation.status, "provider_created")
+})
 
 test("versioned reactivation keeps login account/email even if Stripe billing email belongs to another account", async () => {
   const f = fixture()

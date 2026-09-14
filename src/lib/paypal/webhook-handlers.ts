@@ -41,6 +41,7 @@ import {
 } from "@/lib/paypal/checkout-intents"
 import {
   ensurePayPalCheckoutAccount,
+  completePayPalReactivationCheckout,
   type PayPalCheckoutAccountResult,
 } from "@/lib/paypal/checkout-activation"
 import {
@@ -663,6 +664,7 @@ async function activateOrRefreshSubscription(
   if (activation.status === "duplicate") return { kind: "none", reason: "duplicate" }
   if (
     boundIntent &&
+    boundIntent.reactivation_reservation_id == null &&
     (["created", "approved", "activated"] as PayPalCheckoutIntentRow["status"][]).includes(
       boundIntent.status,
     )
@@ -679,6 +681,12 @@ async function activateOrRefreshSubscription(
       `PayPal subscription ${subscription.id} activation did not create a billing row`,
     )
   }
+  await completePayPalReactivationCheckout(deps.supabase, {
+    intent: boundIntent,
+    subscription,
+    activation,
+    billingRow,
+  })
   return {
     kind: "active",
     billingRow,

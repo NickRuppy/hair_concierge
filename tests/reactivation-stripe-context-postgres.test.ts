@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import { after, before, beforeEach, test } from "node:test"
 import { PGlite } from "@electric-sql/pglite"
+import { markMembershipReactivationCheckoutCompleted } from "../src/lib/reactivation/checkout-reservations"
+import { findOwnedReactivationCheckout } from "../src/lib/reactivation/checkout-recovery"
 
 const USER = "00000000-0000-4000-8000-000000000001"
 const OTHER = "00000000-0000-4000-8000-000000000002"
@@ -10,6 +12,52 @@ const ATTEMPT = "00000000-0000-4000-8000-000000000004"
 const pg = new PGlite()
 const migration = (name: string) =>
   readFileSync(new URL(`../supabase/migrations/${name}.sql`, import.meta.url), "utf8")
+
+// Execute the completion helper's real predicates against PostgreSQL semantics.
+// Only the PostgREST transport is replaced; lifecycle/uniqueness SQL stays real.
+const completionClient = {
+  from(table: string) {
+    assert.equal(table, "membership_reactivation_checkout_reservations")
+    const predicates: string[] = []
+    const parameters: unknown[] = []
+    let patch: Record<string, unknown> | undefined
+    const parameter = (value: unknown) => {
+      parameters.push(value)
+      return `$${parameters.length}`
+    }
+    const column = (key: string) => {
+      assert.match(key, /^(id|user_id|provider|provider_reference|status|updated_at)$/)
+      return key
+    }
+    const builder = {
+      select: () => builder,
+      order: () => builder,
+      limit: () => builder,
+      eq: (key: string, value: unknown) => {
+        predicates.push(`${column(key)} = ${parameter(value)}`)
+        return builder
+      },
+      in: (key: string, values: unknown[]) => {
+        predicates.push(`${column(key)} IN (${values.map(parameter).join(",")})`)
+        return builder
+      },
+      update: (value: Record<string, unknown>) => {
+        patch = value
+        return builder
+      },
+      maybeSingle: async () => {
+        const statement = patch
+          ? `UPDATE public.${table} SET ${Object.entries(patch)
+              .map(([key, value]) => `${column(key)}=${parameter(value)}`)
+              .join(",")} WHERE ${predicates.join(" AND ")} RETURNING *`
+          : `SELECT * FROM public.${table} WHERE ${predicates.join(" AND ")} ORDER BY created_at DESC LIMIT 1`
+        const { rows } = await pg.query(statement, parameters)
+        return { data: rows[0] ?? null, error: null }
+      },
+    }
+    return builder
+  },
+} as unknown as Parameters<typeof markMembershipReactivationCheckoutCompleted>[0]
 
 before(async () => {
   await pg.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
@@ -94,6 +142,91 @@ async function recover(
   )
   return rows[0].reservation
 }
+
+for (const provider of ["stripe", "paypal"] as const) {
+  test(`${provider} completed payment releases the old reservation for later repurchase and duplicate completion leaves the new attempt alone`, async () => {
+    const reference = provider === "stripe" ? "cs_paid" : "00000000-0000-4000-8000-000000000005"
+    await pg.query(
+      `UPDATE public.membership_reactivation_checkout_reservations SET provider=$1, provider_reference=$2, status='reconciliation_required', stripe_checkout_context=$3, expires_at=now()-interval '1 day' WHERE id=$4`,
+      [provider, reference, provider === "stripe" ? { version: 1 } : null, RESERVATION],
+    )
+    if (provider === "paypal") {
+      await pg.query(
+        `INSERT INTO public.paypal_checkout_intents(id,user_id,reactivation_reservation_id,provider_subscription_id,metadata) VALUES($1,$2,$3,'I_PAID','{"reactivation_client_creation_issued_at":"2026-09-14"}')`,
+        [reference, USER, RESERVATION],
+      )
+    }
+    assert.equal((await findOwnedReactivationCheckout(completionClient, USER))?.id, RESERVATION)
+    await markMembershipReactivationCheckoutCompleted(completionClient, RESERVATION, USER, {
+      provider,
+      providerReference: reference,
+    })
+    assert.equal(await findOwnedReactivationCheckout(completionClient, USER), null)
+    const { rows } = await pg.query<{
+      reservation: { id: string; checkout_attempt_id: string; status: string }
+    }>(
+      `SELECT to_jsonb(public.acquire_membership_reactivation_checkout($1,$2,'month','/chat')) AS reservation`,
+      [USER, OTHER],
+    )
+    assert.notEqual(rows[0].reservation.id, RESERVATION)
+    assert.equal(rows[0].reservation.checkout_attempt_id, OTHER)
+    assert.equal(rows[0].reservation.status, "open")
+    await markMembershipReactivationCheckoutCompleted(completionClient, RESERVATION, USER, {
+      provider,
+      providerReference: reference,
+    })
+    assert.equal(
+      (await findOwnedReactivationCheckout(completionClient, USER))?.id,
+      rows[0].reservation.id,
+    )
+  })
+}
+
+test("completion refuses wrong owner, provider, reference, missing binding and terminal-expired state", async () => {
+  await pg.query(
+    `UPDATE public.membership_reactivation_checkout_reservations SET provider='stripe', provider_reference='cs_paid', status='reconciliation_required' WHERE id=$1`,
+    [RESERVATION],
+  )
+  for (const [user, provider, reference] of [
+    [OTHER, "stripe", "cs_paid"],
+    [USER, "paypal", "cs_paid"],
+    [USER, "stripe", "cs_other"],
+  ] as const) {
+    await assert.rejects(
+      markMembershipReactivationCheckoutCompleted(completionClient, RESERVATION, user, {
+        provider,
+        providerReference: reference,
+      }),
+      /could not be completed/,
+    )
+  }
+  assert.equal(
+    (await findOwnedReactivationCheckout(completionClient, USER))?.status,
+    "reconciliation_required",
+  )
+  await pg.query(
+    `UPDATE public.membership_reactivation_checkout_reservations SET provider_reference=NULL WHERE id=$1`,
+    [RESERVATION],
+  )
+  await assert.rejects(
+    markMembershipReactivationCheckoutCompleted(completionClient, RESERVATION, USER, {
+      provider: "stripe",
+      providerReference: "cs_paid",
+    }),
+    /could not be completed/,
+  )
+  await pg.query(
+    `UPDATE public.membership_reactivation_checkout_reservations SET provider_reference='cs_paid',status='expired' WHERE id=$1`,
+    [RESERVATION],
+  )
+  await assert.rejects(
+    markMembershipReactivationCheckoutCompleted(completionClient, RESERVATION, USER, {
+      provider: "stripe",
+      providerReference: "cs_paid",
+    }),
+    /could not be completed/,
+  )
+})
 
 test("prepare atomically freezes one request and retries ignore changed profile, email and price", async () => {
   const original = await context()

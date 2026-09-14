@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto"
+import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import type { BillingInterval } from "@/lib/billing/types"
+import type { BillingInterval, BillingSubscriptionRow } from "@/lib/billing/types"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
   findBillingSubscriptionByProviderId,
@@ -11,6 +12,7 @@ import {
   findPayPalCheckoutIntentByToken,
   isPayPalCheckoutIntentExpired,
   markPayPalCheckoutIntentActivated,
+  type PayPalCheckoutIntentRow,
 } from "./checkout-intents"
 import {
   toBillingSubscriptionInputFromPayPal,
@@ -22,6 +24,7 @@ import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
   premiumTierId: string
+  retrievePayPalSubscription?: (subscriptionId: string) => Promise<PayPalSubscription>
   activationKey?: string
   accountEmail?: string | null
   interval?: BillingInterval
@@ -150,7 +153,9 @@ export async function ensurePayPalCheckoutAccountForToken(
   if (intent.status === "duplicate") return { status: "duplicate" }
   if (!intent.provider_subscription_id) return { status: "pending" }
 
-  const subscription = await verifyPayPalSubscriptionForActivation(intent.provider_subscription_id)
+  const subscription = await (
+    deps.retrievePayPalSubscription ?? verifyPayPalSubscriptionForActivation
+  )(intent.provider_subscription_id)
   const result = await ensurePayPalCheckoutAccount(subscription, {
     ...deps,
     activationKey: token,
@@ -163,9 +168,84 @@ export async function ensurePayPalCheckoutAccountForToken(
         : null,
   })
   if (result.status === "active") {
-    await markPayPalCheckoutIntentActivated(deps.supabase, token)
+    if (intent.reactivation_reservation_id != null) {
+      const billingRow = await findBillingSubscriptionByProviderId(
+        deps.supabase,
+        "paypal",
+        subscription.id!,
+      )
+      await completePayPalReactivationCheckout(deps.supabase, {
+        intent,
+        subscription,
+        activation: result,
+        billingRow,
+      })
+    } else {
+      await markPayPalCheckoutIntentActivated(deps.supabase, token)
+    }
   }
   return result
+}
+
+/** Close only the local intent that owns this verified, durable subscription activation. */
+export async function completePayPalReactivationCheckout(
+  supabase: SupabaseClient,
+  input: {
+    intent: PayPalCheckoutIntentRow | null
+    subscription: PayPalSubscription
+    activation: PayPalCheckoutAccountResult
+    billingRow: BillingSubscriptionRow | null
+  },
+): Promise<void> {
+  const { intent, subscription, activation, billingRow } = input
+  if (!intent || intent.reactivation_reservation_id == null) return
+  const reservationId = intent.reactivation_reservation_id
+  if (activation.status !== "active" || subscription.status !== "ACTIVE") return
+
+  // Re-read the durable intent, then guard its activation mark against concurrent quarantine.
+  const current = await findPayPalCheckoutIntentByToken(supabase, intent.token)
+  if (
+    !current ||
+    current.id !== intent.id ||
+    current.reactivation_reservation_id !== reservationId ||
+    !["created", "approved", "activated"].includes(current.status) ||
+    current.metadata.checkout_context !== "membership_reactivation" ||
+    current.metadata.reactivation_reservation_id !== reservationId ||
+    !current.user_id ||
+    current.user_id !== activation.userId ||
+    !billingRow ||
+    billingRow.user_id !== current.user_id ||
+    billingRow.provider !== "paypal" ||
+    billingRow.entitlement_status !== "active" ||
+    current.provider_subscription_id !== subscription.id ||
+    billingRow.provider_subscription_id !== subscription.id
+  ) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_existing_subscription_owner_mismatch",
+      "PayPal reactivation binding does not match verified activation",
+    )
+  }
+  const { data: activatedIntent, error } = await supabase
+    .from("paypal_checkout_intents")
+    .update({ status: "activated", updated_at: new Date().toISOString() })
+    .eq("id", current.id)
+    .eq("reactivation_reservation_id", reservationId)
+    .eq("user_id", current.user_id)
+    .eq("provider_subscription_id", subscription.id!)
+    .in("status", ["created", "approved", "activated"])
+    .select("id")
+    .maybeSingle()
+  if (error) throw error
+  if (!activatedIntent) {
+    throw new PayPalCheckoutActivationError(
+      "paypal_existing_subscription_owner_mismatch",
+      "PayPal reactivation intent changed before activation was recorded",
+    )
+  }
+  await markMembershipReactivationCheckoutCompleted(supabase, reservationId, current.user_id, {
+    provider: "paypal",
+    providerReference: current.id,
+  })
 }
 
 export async function ensurePayPalCheckoutAccount(

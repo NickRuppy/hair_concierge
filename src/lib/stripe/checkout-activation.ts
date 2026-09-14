@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import {
@@ -341,6 +342,20 @@ export async function ensureCheckoutAccount(
           provider: "stripe",
         })
       : false
+
+  if (
+    session.metadata?.checkout_context === "membership_reactivation" &&
+    session.metadata.reactivation_reservation_id
+  ) {
+    // Activation is server-owned: a lost browser return must not leave the
+    // reservation blocking a future purchase. Failure propagates for webhook retry.
+    await markMembershipReactivationCheckoutCompleted(
+      deps.supabase,
+      session.metadata.reactivation_reservation_id,
+      userId,
+      { provider: "stripe", providerReference: valid.id },
+    )
+  }
 
   console.info("[checkout-activation] account ensured", {
     sessionHash,
