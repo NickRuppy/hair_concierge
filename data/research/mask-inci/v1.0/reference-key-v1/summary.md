@@ -138,3 +138,9 @@ boundary patches, and two more (#01, #03) came from the width of the tail-edge b
 gate, settle (a) whether R3's tail-edge exclusion reaches §9.3 as well as §9.1/§9.2, (b) the band's
 width, and (c) the coconut-oil lexicon/standard divergence. All three are marker-adjacent, all three
 move values in this cohort, and none of them is a threshold inside a field.
+
+---
+**STALE NOTICE (2026-09-14):** the tables above reflect the v0.2 regeneration and predate the
+E1–E6 escalation passes. Current per-record truth: the record files; delta history:
+`changes-from-v0.md`. Final round-1 distributions: weight high 5 / moderate 3 / low 4;
+focus general 5 / repair 2 / smoothing 2 / moisture 2 / shine 1; `lightness` removed (E6).

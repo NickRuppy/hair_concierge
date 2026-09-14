@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.2",
+  "standardVersion": "mask-inci-v0.3",
   "productId": "09-balea-professional-aqua-hyaluron",
   "identity": {
     "brand": "Balea Professional (dm own brand)",
@@ -147,30 +147,39 @@
       ]
     },
     "weightPotential": {
-      "value": "moderate",
+      "value": "low",
       "confidence": "moderate",
       "evidenceLevel": "E2",
-      "evidenceScope": "Formula-only, above-tail ranks 1–8; an ingredient-informed matching prior, not a prediction of visible finish.",
-      "rationale": "The `high` anchor fails on cationic count and heavy-lipid absence; the `low` anchor fails on the cetearyl-class conjunct alone. `moderate` is the residual. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceScope": "Formula-only, above-tail ranks 1–8 (marker PARFUM @9, resolved and plausible on all three §3.1.1 limbs); an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "CHANGED under v0.3 (E4, applied uniformly per E6, 2026-09-14): `moderate` → `low`. E4 deleted the structural fatty-alcohol conjunct from the leanness test and E6 rules the restated test applies uniformly across the cohort. All three remaining conjuncts are positively observed here: no R4b heavy lipid above the marker (HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil), no occlusive silicone stack (no silicone at any rank), and a single cationic species above the tail (DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4). The v0.2 record called this the third cohort product 'whose lean architecture is refused `low` on the rank cut alone'. It is refused no longer. One caveat travels with the value and is recorded rather than smoothed over: conjunct 3 holds on the above-tail segment, and this formula carries two further cationics below the marker (AP-09-CATIONICSCOPE). E2 ceiling: weight deposition potential, never measured finish.",
       "evidenceSignals": [
-        "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE (rank 4) — a single cationic species above the tail (low-anchor conjunct 1: SATISFIED)",
-        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
-        "no butter, heavy triglyceride, hydrogenated oil or occlusive hydrocarbon at any rank (low-anchor conjunct 3: SATISFIED)",
-        "no silicone at any rank, so the occlusive-stack alternative is unavailable"
+        "CONJUNCT 1 — no R4b heavy lipid above the marker: SATISFIED. HELIANTHUS ANNUUS HYBRID OIL @8 is the formula's only lipid; lexicon family 3 places conventional plant triglycerides in the MID band and reserves heavy for butters, Ricinus, petrolatum, hydrogenated fats and lanolin, so it is R4a and cannot carry a heavy-lipid core. No butter, hydrogenated fat or occlusive hydrocarbon at ANY rank of the 15-entry list: the conjunct holds on the full list",
+        "CONJUNCT 2 — no occlusive silicone stack above the tail: SATISFIED, absolutely. No silicone species at any rank, consistent with (but established independently of) the 'ohne Mikroplastik und wasserlösliche rein synthetische Polymere' positioning",
+        "CONJUNCT 3 — a single cationic species: SATISFIED on the above-tail segment. DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4 is the only S1-family species above PARFUM @9. BEHENTRIMONIUM CHLORIDE @11 and CETRIMONIUM CHLORIDE @12 are a second and third cationic on the full list and are demoted by the marker — the same structural fact that makes this the D5 anchor product (a humectant-led rather than cationic-led credited segment) also carries the leanness conjunct. See AP-09-CATIONICSCOPE",
+        "CETEARYL ALCOHOL @2 — the single species that refused this product `low` under v0.1 (top-three cut) and v0.2 (R4's thin-fatty-base test, same cut retained). E4 deletes the conjunct: lexicon family 2 records a structurant fatty alcohol at rank 2 as near-universal here, 'presence therefore carries no signal at all'",
+        "tail marker PARFUM @9, resolved and `plausible: true` — CETEARYL ALCOHOL @2, the esterquat @4 and the humectant cluster @3/@5/@6/@7 all outrank it in a conventional O/W emulsion. §9.2 makes `low` unavailable on an unreadable segment; this segment is readable",
+        "boundary check (E1): the tail_index − 1 species is HELIANTHUS ANNUUS HYBRID OIL @8, which under E1 now counts normally rather than being struck. It is NOT load-bearing for this value — it is R4a, so conjunct 1 holds whether it is credited or not, and it is not a fatty alcohol, silicone or cationic. No mandatory `moderate` cap from this route and no `boundary_position_ingredient` flag"
       ],
-      "derivation": "§9.2 `high` required base leg 1 fails (one cationic above the tail). §9.2 `low` conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "derivation": "§9.2 `low` under E4's restated leanness test (E6: applied uniformly), all three conjuncts required and all three positively observed on a readable above-tail segment (ranks 1–8; marker PARFUM @9, resolved and plausible): (1) no R4b heavy lipid above the marker — HOLDS, the sole lipid being mid-band; (2) no occlusive silicone stack — HOLDS, no silicone at any rank; (3) a single cationic species above the tail — HOLDS on the counted segment, with two further cationics tail-side. §9.2 `high` fails at its required core for the same reason conjunct 1 holds. `moderate`, the residual, is not reached: `low` is positively established.",
       "thresholdReasoning": [
-        "Clears `moderate`: the residual bucket, which §9.2 calls the expected majority.",
-        "`high` does not apply: one cationic, one mid lipid, no silicone.",
-        "`low` does not apply on the cetearyl conjunct alone — the third cohort instance of AP-07-LOWUNREACHABLE.",
-        "§9.2 conflict fallback not engaged: no `high` reached and no lightness positioning.",
-        "Re-derived under v0.2 (R4): the value `moderate` STANDS. `high` fails on its required core — HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil, not R4b, and is the tail_index − 1 species. `low` fails on the thin-fatty-base conjunct: CETEARYL ALCOHOL @2 is within the top three ranks, which R4's test excludes whatever else the formula lacks. Residual = `moderate` — and this is the third cohort product whose lean architecture is refused `low` on the rank cut alone."
+        "Clears `low`: E4's three conjuncts, each positively observed rather than inferred from absence, on a marker that is resolved and plausible.",
+        "`moderate` does not apply, and this is the value that MOVED. Under v0.1 and v0.2 the same single species — CETEARYL ALCOHOL @2 — refused it, and the v0.2 record escalated this as the third cohort instance of AP-07-LOWUNREACHABLE. E4 deleted the conjunct; E6 applies the deletion uniformly.",
+        "`high` does not apply: no R4b heavy lipid at any rank, one mid plant oil, no silicone. The anchor has no required core.",
+        "COUNTING SCOPE, the material caveat on this call: conjunct 3 holds because BEHENTRIMONIUM CHLORIDE @11 and CETRIMONIUM CHLORIDE @12 sit below the marker. On the full list this formula runs THREE cationic species — more than #07, where the same caveat costs one species. §9.2 counts the conjunct on the above-tail segment, as it counts every other term in that section, and its own [judgment call — review] marks that counting scope as this standard's unruled addition, first in line for calibration (§15, §18.2). A reviewer counting on the full list would hold this record at `moderate`. Recorded, not smoothed over: AP-09-CATIONICSCOPE.",
+        "WHY-NOT-ADJACENT on conjunct 1: were HELIANTHUS ANNUUS HYBRID OIL @8 read as R4b rather than R4a, conjunct 1 would fail and the value would be `moderate`. The lexicon settles it — family 3 lists sunflower oil with the plant triglycerides and places conventional plant triglycerides in the mid band — so this is not a live alternative reading, unlike the counting-scope question above.",
+        "§9.2 conflict fallback checked and NOT engaged in either direction: no `high` value exists to be contradicted, and no lightness positioning was used to reach `low` — the pack's claims are 'geschmeidiges und glänzendes Haar' and the Mikroplastik statement, neither of which is a lightness or a richness claim. `weight_high_conflict` cannot fire on a `low` value.",
+        "Confidence `moderate`, not `high`, on TWO independent grounds, either of which would cap it alone: (a) the counting-scope question above is exactly the kind of realistic unknown §4.1 says moves a value to its neighbour; and (b) the INCI rests on a fallback-tier source (hautschutzengel.de, dm.de being JS-blocked) with identityState `verified_with_minor_source_difference` — the same sourcing cap that holds #12's weight value at `moderate`. Contrast #08, which reaches `high` with neither defect."
       ],
       "counterSignals": [
-        "The graded `weight_deposition_potential` reads `lower` against a profile value of `moderate` — the anchor's structure, not the evidence."
+        "COUNTING SCOPE (the material caveat): three cationic species on the full list, one above the marker. This is the cohort's strongest instance of a leanness conjunct resting on the marker cut, and AP-09-CATIONICSCOPE carries it alongside the parallel, milder case on #07.",
+        "The graded `weight_deposition_potential` reads `lower` and `body_lightness_potential` reads `likely_preserving`. Under v0.1 and v0.2 both sat against a profile value of `moderate`, recorded as the anchor's divergence rather than the evidence's; under v0.3 the graded readings and the anchor agree.",
+        "The weight move does NOT move the focus on this record, and E6 is why: this product reads `body_lightness_potential: likely_preserving`, so under the deleted §9.5.2 step-3 route a `low` weight would have displaced the `moisture` headline with `lightness` — on the D5 guard's own ruled anchor product. E6 removes the value from the vocabulary and the headline stands on its cluster evidence. See the primaryFocus re-check.",
+        "Sourcing: the fallback-tier INCI source is a standing limitation of this record and is not introduced by this pass; it caps this field independently of the rule question."
       ],
       "limitations": [
-        "A soft preference with a stated reason, never an exclusion."
+        "A soft preference with a stated reason, never an exclusion. Fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule); `low` is a desired-finish and dosage prior, never a claim that the product is weak.",
+        "An ingredient-informed matching prior at E2, never a prediction about visible body or finish.",
+        "The `low` anchor became reachable on 2026-09-14 and has no calibration behind it; it is first in line for the calibration set (§15)."
       ]
     },
     "careDirection": {
@@ -240,7 +249,7 @@
         "HELIANTHUS ANNUUS HYBRID OIL (rank 8) — the only lipid, confirming the cluster is not riding on an emollient base",
         "no protein, no bond token, no silicone, no cationic polymer at any rank"
       ],
-      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation, one M5 cluster observation — disjoint per §6 rule 3. Step 3: `repair` blocked (no R5, no bond); `curl_support` blocked (single cationic, no polymer, no high-slip breadth); `color_care` blocked (no candidate, no positioning); `lightness` blocked (weight `moderate`, not `low`). Step 4: the D5 guard is applied and clears on all four criteria.",
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation, one M5 cluster observation — disjoint per §6 rule 3. Step 3: `repair` blocked (no R5, no bond); `curl_support` blocked (single cationic, no polymer, no high-slip breadth); `color_care` blocked (no candidate, no positioning). Step 3 has NO fourth leg under v0.3: E6 deletes the `lightness` route and removes the value from the vocabulary (§9.5, §9.5.2 step 3). Step 4: the D5 guard is applied and clears on all four criteria.",
       "thresholdReasoning": [
         "Clears `moisture`: D5 guard criterion 1 (≥3 distinct humectants above the tail with ≥2 non-glycerin) is met with four and three; criterion 2 (not the baseline) is met unusually cleanly, because there is no rich R1/R4 architecture here at all — one esterquat and one plant oil — so the cluster cannot be an M1 product in M5 clothing; criterion 3 (no richer special-purpose route wins) is met because every step-3 route was blocked; criterion 4 (hydrolyzed proteins not counted) is vacuous, there are none.",
         "`general` does not apply: a candidate cleared its threshold at step 4.",
@@ -248,11 +257,13 @@
         "`shine` does not apply: §9.5.4 criterion 1 fails outright (no alignment-oriented R2/R3 route above the tail), so the 'glänzendes Haar' claim never reaches criterion 3.",
         "Confidence `high` is earned under §9.5.3's own confidence rule: ≥3 distinct qualifying humectants above the tail with at least one within the first five ranks (Glycerin @3, Panthenol @5), a resolved tail marker, and no competing route. This is the only `high`-confidence focus in the cohort.",
         "Discrimination check against the ruled anchor set: D5 was tested on four real formulas, and this product is one of the two the ruling says should CLEAR. It clears, on the same evidence the ruling cited (four humectants above the tail, no protein/bond/silicone routes).",
-        "Re-checked under v0.2 (R5). The `moisture` headline SURVIVES the new lipid-led disqualifier, as the ruling ledger anticipated for true Feuchtigkeitsmasken. Limb (i) does not fire: there is no R4b heavy lipid above the marker at all — HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil and is additionally the tail_index − 1 species. Limb (ii) cannot fire without an R4b lipid to rank the cluster against. Criterion 2's baseline sentence is also satisfied: the credited segment is humectant-led, not a rich R1/R4 base."
+        "Re-checked under v0.2 (R5). The `moisture` headline SURVIVES the new lipid-led disqualifier, as the ruling ledger anticipated for true Feuchtigkeitsmasken. Limb (i) does not fire: there is no R4b heavy lipid above the marker at all — HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil and is additionally the tail_index − 1 species. Limb (ii) cannot fire without an R4b lipid to rank the cluster against. Criterion 2's baseline sentence is also satisfied: the credited segment is humectant-led, not a rich R1/R4 base.",
+        "RE-CHECKED under v0.3 (E4/E6), value UNCHANGED at `moisture` — and the re-check matters here more than anywhere in the cohort, because this is the D5 guard's own ruled anchor product. `weight_potential` moved to `low` and `body_lightness_potential` has read `likely_preserving` since v0.1: the two conditions of the DELETED §9.5.2 step-3 `lightness` route. Under the v0.3 text as it stood before E6, a weight ruling would have taken the headline off the product the moisture guard was ruled on — with no focus evidence moving and no focus rule changing. E6 removes `lightness` from the vocabulary, so step 3 tests three routes, all blocked, and step 4's guard decides the headline on the four-member cluster exactly as under v0.1 and v0.2. The other rules that could touch this field were checked against the moved weight value: `shine` §9.5.4 criterion 1 reads lipid load rather than the weight value and fails outright for want of an alignment-oriented R2/R3 route; `curl_support` reads slip plus weight/body architecture and stays blocked on a single credited cationic with no polymer; the §9.5.3 guard never reads weight. No rule forces a move, and the `high` confidence stands on §9.5.3's own rule (≥3 humectants with one in the first five ranks, resolved marker, no competing route)."
       ],
       "counterSignals": [
         "Aloe is reconstituted powder ('Leaf Juice Powder' in the source list) at unquantifiable level; counted once, never strong. Excluding it entirely still leaves three members with two non-glycerin, so the guard clears either way.",
-        "No glycol appears in the cluster, so lexicon family 7's solvent-role discount is not engaged at all — unusual, and it makes this the cleanest cluster in the cohort."
+        "No glycol appears in the cluster, so lexicon family 7's solvent-role discount is not engaged at all — unusual, and it makes this the cleanest cluster in the cohort.",
+        "Recorded because it is a structural dependency rather than a close call: the D5 anchor product's headline survives v0.3 because of E6. If `lightness` were ever restored to the vocabulary, the discrimination set D5 was ruled on (this product CLEARS) would no longer be discriminating on this record — the product would clear the guard and still not carry the headline."
       ],
       "limitations": [
         "Wording rule observed absolutely (D5, binding): never 'hydrates', 'proven hydration', 'moisturizes', or 'restores moisture balance'. The humectant evidence base is weak at the hair-fibre outcome level (lexicon W1) and this value is a comparative architecture signal only.",
@@ -280,23 +291,23 @@
     "hairThicknessFit": {
       "value": [
         "fine",
-        "normal",
-        "coarse"
+        "normal"
       ],
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "derivedEcho": true,
       "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
       "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
-      "rationale": "weight_potential `moderate` maps to the full set.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4, applied uniformly per E6). `coarse` drops out of the set.",
       "evidenceSignals": [
-        "derived from weight_potential = moderate"
+        "derived from weight_potential = low (E4/E6, 2026-09-14)"
       ],
-      "derivation": "§9.6 table row 2.",
+      "derivation": "§9.6 table row 1 (`low` → {fine, normal}).",
       "thresholdReasoning": [
-        "Clears {fine, normal, coarse}: the moderate row.",
-        "{fine, normal} does not apply: it requires weight_potential `low`, refused on the cetearyl conjunct.",
-        "{normal, coarse} does not apply: it requires weight_potential `high`."
+        "Clears {fine, normal}: the `low` row.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`, the value under v0.1 and v0.2 while the structural fatty-alcohol conjunct blocked `low`.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`.",
+        "The wording rule governs the reading: `coarse` dropping out does not mean coarse hair must avoid the product; it means the product is not the broad prior for it."
       ],
       "counterSignals": [],
       "limitations": [
@@ -335,23 +346,23 @@
     "textureFit": {
       "value": [
         "straight",
-        "wavy",
-        "curly"
+        "wavy"
       ],
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "derivedEcho": true,
       "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
       "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
-      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4, applied uniformly per E6). `curly` drops out of the set.",
       "evidenceSignals": [
-        "weight_potential = moderate"
+        "weight_potential = low (E4/E6, 2026-09-14)"
       ],
-      "derivation": "§9.8 row 2.",
+      "derivation": "§9.8 row 1 (low-weight architecture, `weight_potential: low` → {straight, wavy}); the row label was restated by E6 and its mapping is unchanged.",
       "thresholdReasoning": [
-        "Clears {straight, wavy, curly}: the balanced row.",
-        "{wavy, curly, coily} does not apply: weight_potential is not `high` and there is no high-slip R1/R3 breadth above the tail.",
-        "{straight, wavy} does not apply: it requires weight_potential `low`."
+        "Clears {straight, wavy}: the low-weight row.",
+        "{straight, wavy, curly} does not apply: it requires weight_potential `moderate`, the value under v0.1 and v0.2.",
+        "{wavy, curly, coily} does not apply: weight is not `high`, and there is no high-slip R1/R3 breadth above the tail on a single credited cationic with no polymer.",
+        "Curl branding alone never determines the result, and there is none here."
       ],
       "counterSignals": [],
       "limitations": [
@@ -381,21 +392,36 @@
   ],
   "projectedOutputs": {
     "concentration": "medium",
-    "weight": "medium",
+    "weight": "light",
     "balance_direction": "moisture",
     "repair_support_level": "low",
     "functional_benefits": [],
     "suitable_thicknesses": [
       "fine",
-      "normal",
-      "coarse"
+      "normal"
     ]
   },
-  "adjudicationPoints": [],
+  "adjudicationPoints": [
+    {
+      "id": "AP-09-CATIONICSCOPE",
+      "title": "`weight_potential: low` rests on the above-tail counting scope — this formula runs three cationics on the full list (the cohort's strongest instance; see also AP-07-CATIONICSCOPE)",
+      "body": "E4's leanness test requires 'a single cationic species', and §9.2 counts it on the ABOVE-TAIL segment. Here DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4 is the only S1-family species above PARFUM @9, so the conjunct holds — but BEHENTRIMONIUM CHLORIDE @11 and CETRIMONIUM CHLORIDE @12 are a second and third cationic on the full list, demoted by an early marker in a 15-entry list. The other two conjuncts are scope-independent: no lipid above mid band and no silicone at ANY rank. So the entire `low` call turns on conjunct 3's counting scope, which §9.2's own [judgment call — review] names as this standard's unruled addition and puts first in line for the calibration set. Two observations that make this record the sharpest case. FIRST, the same marker cut is what makes this the D5 anchor product — the tail demotion of the second and third cationics is exactly why the credited segment reads humectant-led rather than cationic-led — so one rank cut is now carrying two of the record's headline findings. That is not double counting in the §6 rule 1 sense (one observation, two fields, not one observation read as two instances of richness), but it does mean a single reading of §3.1 moves both. SECOND, a formula running three deposition species is precisely what E4's own reasoning describes as NOT structurally lean ('a formula running one deposition species is structurally lean in a way a formula running three is not'), and this formula runs three — just not above the marker. WHAT NICK DECIDES: nothing today; the value is recorded as the standard produces it, at `moderate` confidence, which is the honest statement that a neighbouring value is reachable on a rule reading. If the calibration set moves the counting scope to the full list, this record and #07 return to `moderate` while #08 and #12 keep `low`.",
+      "source": "§9.2 `low` leanness test conjunct 3 and its [judgment call — review] (E4, 2026-09-14; applied uniformly per E6); §3.1 tail cut; §15 anchor priority 1; §18 open question 2; parallel case AP-07-CATIONICSCOPE"
+    }
+  ],
   "uncertainFields": [
-    "conditioningLevel"
+    "conditioningLevel",
+    "weightPotential"
   ],
   "assumptionNotes": [
+    "Re-derived under v0.3 (E4 restated leanness test, applied UNIFORMLY per E6; E6's removal of the `lightness` focus, which is what holds the `moisture` headline in place on this record), not patched.",
+    "Fields whose value moved under v0.3: weightPotential (moderate → low, i.e. medium → light, E4/E6); hairThicknessFit (echo: {fine, normal, coarse} → {fine, normal}); textureFit (echo: {straight, wavy, curly} → {straight, wavy}); projectedOutputs weight and suitable_thicknesses.",
+    "Fields re-checked under v0.3 WITHOUT a value move: primaryFocus (`moisture`, at `high` confidence — E6 is load-bearing, not incidental: this record carries `body_lightness_potential: likely_preserving`, so the deleted §9.5.2 step-3 route would have taken the headline off the D5 guard's own ruled anchor product); secondaryFocus (empty); careDirection, conditioningLevel, repairSupportLevel, damageFit, bondRoute, focusCareVerdict, tailMarker, hinweise.",
+    "E1 produces NO `boundary_position_ingredient` flag on this record. HELIANTHUS ANNUUS HYBRID OIL @8 sits at tail_index − 1 and now counts normally rather than being struck, but it is not load-bearing anywhere: it is R4a, so §9.2 conjunct 1 holds with or without it, and it is the formula's only lipid, so S3 fails either way in §9.1.",
+    "Blind-lane record re-checked for the moved field: the three leanness conjuncts are formula readings available in the blind packet, and no unblinded claim was used to reach `low` — the pack carries no lightness positioning at all, as the v0.1 blind note already recorded. No entry in blindToFinalChanges moves.",
+    "`weightPotential` is ADDED to uncertainFields under v0.3, and the same is done on #07 for the same reason: the single-cationic conjunct holds only on the above-tail counting scope, a cut §9.2 itself marks as unruled, so the field is completed and recorded but not settled (§9.9, and the `moderate` confidence that states a neighbouring value is reachable). #08 is treated differently — its conjuncts hold on the full list, so its `weightPotential` is removed from that list rather than added to it. AP-09-CATIONICSCOPE carries the question for this record.",
+    "Review triggers under v0.3 — FIRED: none. NOT fired: `weight_high_conflict` (cannot fire on a `low` value; and no richness claim exists for a `low` to contradict), `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `bond_claim_review`, `specialist_damage_fit`, `low_confidence_field` (no field at `low` CONFIDENCE — note the distinction from `weight_potential: low`, which is a value).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
     "Re-derived under v0.2 (R5 disqualifier checked and NOT fired; R6 readings checked; R3/R4 re-checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched. No value moves on this record.",
     "This is the D5 anchor product and it behaves under v0.2 exactly as the ruling ledger predicted for a true Feuchtigkeitsmaske: the `moisture` headline survives R5's lipid-led disqualifier because there is no R4b heavy lipid above the marker at all. conditioningLevel `moderate` survives R3 (a single above-tail cationic; S1 fails), and weightPotential `moderate` survives R4 (no heavy-lipid core for `high`; cetearyl @2 in the top three defeats the thin-base conjunct for `low`).",
     "Review triggers under v0.2 — FIRED: none. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `bond_claim_review`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`.",
@@ -406,7 +432,7 @@
     "multi_use envelope recorded per §2.2; charter F1 names this product as a live boundary case eligible mode-scoped.",
     "The claim 'ohne Mikroplastik und wasserlösliche rein synthetische Polymere' is consistent with the absence of any cationic polymer in the list, but was treated as claim context and created no property."
   ],
-  "derivedFrom": "reference-key-v0/09-balea-professional-aqua-hyaluron.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "derivedFrom": "reference-key-v1/09-balea-professional-aqua-hyaluron.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-derived under Standard v0.3 (E4 applied uniformly per E6, and E6 itself), not patched: E4 and E6 are systemic, so no v0.2 field approval, fingerprint, agreement or distribution statement carries into this revision.",
   "hinweise": {
     "fired": [
       {
@@ -418,6 +444,7 @@
   },
   "v0AdjudicationPointStatus": {
     "AP-09-ANCHORHOLDS": "CONFIRMED under v0.2. The D5 anchor product survives R5's lipid-led disqualifier cleanly — no R4b heavy lipid above the marker at all.",
-    "AP-09-MODEASYMMETRY": "STILL LIVE — carried forward from reference-key-v0."
+    "AP-09-MODEASYMMETRY": "STILL LIVE — carried forward from reference-key-v0.",
+    "AP-07-LOWUNREACHABLE-COHORT": "CLOSED for this record by E4 (2026-09-14) as applied uniformly under E6. This was the third cohort instance of the point: a lean, humectant-led, silicone-free formula refused `low` by CETEARYL ALCOHOL @2 alone. `weight_potential` is now `low`. A NARROWER successor point stays open on this record and is raised as AP-09-CATIONICSCOPE: the single-cationic conjunct holds only because the formula's second and third cationics are tail-side."
   }
 }

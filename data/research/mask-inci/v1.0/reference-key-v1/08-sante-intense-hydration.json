@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.2",
+  "standardVersion": "mask-inci-v0.3",
   "productId": "08-sante-intense-hydration",
   "identity": {
     "brand": "Sante Naturkosmetik",
@@ -92,7 +92,7 @@
     },
     "body_lightness_potential": {
       "value": "likely_preserving",
-      "note": "Lean lipid load corroborated by explicit 'ohne zu beschweren' positioning — but see the weight field, where the anchor structure refuses `low`."
+      "note": "Lean lipid load corroborated by explicit 'ohne zu beschweren' positioning. Cross-reference updated under v0.3: the weight field no longer contradicts this reading — E4's restated leanness test, applied uniformly per E6, gives `weight_potential: low`, so the graded property and the anchor now agree. The value itself is unchanged and was not re-derived."
     },
     "repair_lubrication_protection": {
       "value": "candidate",
@@ -146,32 +146,40 @@
       ]
     },
     "weightPotential": {
-      "value": "moderate",
-      "confidence": "moderate",
+      "value": "low",
+      "confidence": "high",
       "evidenceLevel": "E2",
-      "evidenceScope": "Formula-only, above-tail ranks 1–17; an ingredient-informed matching prior, not a prediction of visible finish.",
-      "rationale": "The `high` anchor fails on cationic count and lipid load; the `low` anchor fails on a single conjunct, the cetearyl-class fatty alcohol at rank 2. `moderate` is the residual, despite a lean lipid load and an explicit 'ohne zu beschweren' claim pointing the other way. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceScope": "Formula-only, above-tail ranks 1–17 (marker POTASSIUM SORBATE @18, resolved and plausible on all three §3.1.1 limbs) — the cohort's second-longest credited segment; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "CHANGED under v0.3 (E4, applied uniformly per E6, 2026-09-14): `moderate` → `low`. E4 deleted the structural fatty-alcohol conjunct from the leanness test and E6 rules the restated test applies uniformly across the cohort. This record satisfies all three remaining conjuncts on the FULL list, not merely above the marker: no R4b heavy lipid (the sole lipid, HELIANTHUS ANNUUS SEED OIL @17, is a conventional plant triglyceride and sits in the lexicon's MID band), no occlusive silicone stack (no silicone at any rank), and a single cationic species (DISTEAROYLETHYL DIMONIUM CHLORIDE @4). The v0.2 record called this the cohort's most striking refusal of `low`, because the pack's own 'ohne zu beschweren' positioning corroborated a lightness the anchor would not grant. It grants it now, on formula evidence, with the claim as corroboration it does not need. E2 ceiling: weight deposition potential, never measured finish.",
       "evidenceSignals": [
-        "DISTEAROYLETHYL DIMONIUM CHLORIDE (rank 4) — a single cationic species (low-anchor conjunct 1: SATISFIED)",
-        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
-        "no butter, heavy triglyceride, hydrogenated oil or occlusive hydrocarbon at any rank (low-anchor conjunct 3: SATISFIED)",
-        "HELIANTHUS ANNUUS SEED OIL (rank 17) — the only lipid, a mid-band plant oil at the far end of the above-tail segment",
-        "claim: 'verbessert die Kämmbarkeit ohne zu beschweren' — an explicit lightness positioning"
+        "CONJUNCT 1 — no R4b heavy lipid above the marker: SATISFIED. HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL @17 is the formula's only lipid of any class. Lexicon family 3 places it with the conventional plant triglycerides in the MID weight band (heavy = butters, Ricinus, petrolatum, hydrogenated fats, lanolin), so it is R4a and cannot carry the heavy-lipid core. No butter, no hydrogenated fat and no occlusive hydrocarbon at ANY rank: the conjunct holds on the full 21-entry list",
+        "CONJUNCT 2 — no occlusive silicone stack above the tail: SATISFIED, absolutely. No silicone species at any rank — a NATRUE-certified Naturkosmetik formula. The occlusive-stack completer needs two silicone species or a dimethicone/dimethiconol pair; there is not one",
+        "CONJUNCT 3 — a single cationic species: SATISFIED on the above-tail segment AND on the full list. DISTEAROYLETHYL DIMONIUM CHLORIDE @4 is the only S1-family species anywhere in the formula; the tail holds only POTASSIUM SORBATE @18, PARFUM @19 and two declared allergens, so no cationic is hidden by the marker cut. This is the difference between this record and #07/#09, whose conjunct-3 counts depend on the above-tail scope (AP-07-CATIONICSCOPE)",
+        "CETEARYL ALCOHOL @2 and BEHENYL ALCOHOL @5 — the two long-chain fatty alcohols that refused this product `low` under v0.1 and v0.2. E4 deletes the conjunct they failed: lexicon family 2 records a structurant fatty alcohol at rank 2 as near-universal in this category, so a leanness test failing on it was failing on the category baseline",
+        "tail marker POTASSIUM SORBATE @18, resolved and `plausible: true` — seventeen credited entries carry the entire architecture and all outrank it. §9.2 makes `low` unavailable on an unreadable segment; here the segment is the cohort's most readable",
+        "boundary check (E1): the tail_index − 1 species is HELIANTHUS ANNUUS SEED OIL @17, and under E1 it now counts normally rather than being struck. It is NOT load-bearing for this value in either direction — it is R4a, so conjunct 1 holds whether it is credited or not, and it is not a fatty alcohol, silicone or cationic. No mandatory `moderate` cap from this route and no `boundary_position_ingredient` flag",
+        "claim corroboration, recorded and not needed: 'verbessert die Kämmbarkeit ohne zu beschweren'. Positioning may corroborate but never creates (§9.5.2 step 9); the three conjuncts are formula facts and would hold with the pack copy removed"
       ],
-      "derivation": "§9.2 `high` = required base (≥2 cationics above tail AND cetearyl-class in top three): leg 1 fails. §9.2 `low` = single cationic AND no cetearyl-class fatty alcohol in the top three AND no R4b heavy lipid above the tail: conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "derivation": "§9.2 `low` under E4's restated leanness test (E6: applied uniformly), all three conjuncts required and all three positively observed on a readable above-tail segment (ranks 1–17; marker POTASSIUM SORBATE @18, resolved and plausible): (1) no R4b heavy lipid above the marker — HOLDS, the sole lipid being a mid-band plant triglyceride; (2) no occlusive silicone stack — HOLDS, no silicone at any rank; (3) a single cationic species — HOLDS, on the above-tail segment and on the full list alike. §9.2 `high` fails at its required core, having no R4b lipid to build on. `moderate`, the residual, is not reached: `low` is positively established.",
       "thresholdReasoning": [
-        "Clears `moderate`: the residual bucket.",
-        "`high` does not apply: one cationic, one mid lipid at rank 17, no silicone.",
-        "`low` does not apply on the cetearyl conjunct alone — the second instance in the cohort of AP-07-LOWUNREACHABLE, and the more striking one, because here the exact-product positioning explicitly claims lightness and the formula corroborates it. §9.2 provides a conflict fallback for the opposite case (formula-only `high` contradicted by lightness positioning) but no symmetric mechanism for a formula-plus-claim lightness reading that the anchor refuses.",
-        "§9.2 conflict fallback not engaged: it applies only when a formula-only `high` is contradicted, and no `high` was reached.",
-        "Re-derived under v0.2 (R4): the value `moderate` STANDS. `high` fails on its required core — HELIANTHUS ANNUUS SEED OIL @17 is a mid-band R4a plant oil, not R4b, and is additionally the tail_index − 1 species, so it could not carry the core in any case. `low` fails on the thin-fatty-base conjunct: two long-chain fatty alcohols above the tail (CETEARYL ALCOHOL @2, BEHENYL ALCOHOL @5), one of them at rank 2. Residual = `moderate`. The 'verbessert die Kämmbarkeit ohne zu beschweren' claim meets a `moderate` value, so no §9.2 conflict arises."
+        "Clears `low`: E4's three conjuncts, each positively observed on the most readable segment in the cohort, and each holding on the FULL list rather than only above the marker.",
+        "`moderate` does not apply, and this is the value that MOVED. Under v0.1 the cetearyl top-three cut refused it; under v0.2 R4's thin-fatty-base test kept the same cut and refused it again, which the v0.2 record escalated as the second and more striking instance of AP-07-LOWUNREACHABLE — more striking because here the exact-product positioning explicitly claimed lightness and the formula corroborated it, and the anchor still said no. E4 deleted the conjunct; E6 applies the deletion uniformly.",
+        "`high` does not apply: no R4b heavy lipid at any rank, one mid-band plant oil at rank 17, one cationic, no silicone. The anchor has no required core.",
+        "WHY-NOT-ADJACENT on the one term that could flip this: conjunct 1 turns on HELIANTHUS ANNUUS SEED OIL @17 being R4a rather than R4b. That is lexicon-backed rather than a reviewer judgment — family 3 lists sunflower oil among the triglycerides/plant oils and puts 'conventional plant triglycerides' in the mid band, reserving heavy for butters, Ricinus, petrolatum, hydrogenated fats and lanolin. The evidence note that singles sunflower oil out (P-3, Rele & Mohile) does so for NON-penetration, which is a penetration finding and not a weight one, and §9.2 reads weight from lipid class and load. Were it R4b, conjunct 1 would fail and the value would be `moderate` — but nothing in the lexicon or the evidence base supports that reading.",
+        "COUNTING SCOPE is NOT a live caveat here, unlike on #07 and #09: conjunct 3 holds on the full list, so the above-tail counting scope §9.2 flags as its own unruled addition does no work on this record and could not move the value.",
+        "§9.2 conflict fallback checked and NOT engaged: it applies to a formula-only `high` contradicted by lightness positioning. Here the formula and the positioning AGREE — 'ohne zu beschweren' meets a `low` value — so the asymmetry the v0.2 record complained about (no mechanism for a formula-plus-claim lightness reading the anchor refuses) has no subject any more. `weight_high_conflict` cannot fire on a `low` value.",
+        "Confidence `high`, and this is the cohort's only `high`-confidence weight value — stated explicitly because it is a departure from the surrounding records. §4.1's bar is 'exact complete input, no material gap, converging independent signals, reasonable unknowns would not move the value', and §9.2's own rule asks for the full anchor pattern on a resolved and plausible marker with no positioning conflict. All four hold: a brand-direct verbatim fetch of the exact SKU (identityState `verified`), a seventeen-entry credited segment, three conjuncts that each hold on the full list, and positioning that corroborates rather than conflicts. The only identified unknown — the sunflower oil's weight band — is lexicon-settled. Contrast #07, #09 and #12, each capped at `moderate` for a named and different reason."
       ],
       "counterSignals": [
-        "The graded `body_lightness_potential` reads `likely_preserving` with claim corroboration, while the profile field reads `moderate`. The divergence is the anchor's, not the evidence's.",
-        "'ohne zu beschweren' recorded as claim context; positioning corroborates but never creates, and there is no channel in §11 step 4 through which it could have moved this field downward."
+        "The graded `body_lightness_potential` reads `likely_preserving` with claim corroboration, and `weight_deposition_potential` reads `lower`. Under v0.1 and v0.2 both sat against a profile value of `moderate` and the divergence was recorded as the anchor's rather than the evidence's; under v0.3 the graded readings and the anchor agree.",
+        "A `high`-confidence value on an anchor that became reachable on 2026-09-14 and has no calibration behind it. The two statements are compatible — confidence measures classification robustness on this record, not the anchor's calibrated accuracy (§4.1, §15) — but a reviewer who reads cohort confidence as a proxy for method maturity should see it named here rather than infer it.",
+        "The weight move does NOT move the focus on this record, and that is E6's doing rather than a coincidence: this product carries `body_lightness_potential: likely_preserving`, so under the deleted §9.5.2 step-3 route a `low` weight would have displaced the `moisture` headline with `lightness`. E6 removes the value from the vocabulary, so the headline stands on its own D5 cluster evidence. See the primaryFocus re-check.",
+        "Naturkosmetik asymmetry, carried from AP-08-NATURKOSMETIK: this formula's short preservative and fragrance blocks give it an unusually long credited segment, which helps every conjunct here. A conventional formula with early Parfum would have less of its list read. The tail rule is not weight-neutral across formulation philosophies, and this record benefits from that."
       ],
       "limitations": [
-        "A soft preference with a stated reason, never an exclusion."
+        "A soft preference with a stated reason, never an exclusion. Fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule); `low` is a desired-finish and dosage prior, never a claim that the product is weak.",
+        "An ingredient-informed matching prior at E2, never a prediction about visible body or finish.",
+        "The `low` anchor became reachable on 2026-09-14 and has no calibration behind it; it is first in line for the calibration set (§15)."
       ]
     },
     "careDirection": {
@@ -250,12 +258,14 @@
         "§9.5.3 criterion 3 is satisfied in the direction that matters here: no RICHER special-purpose route wins. `repair` cleared, but the tie-break assigned it the secondary slot, and criterion 3's own text contemplates exactly this pairing.",
         "R5's lipid-led disqualifier was tested and does NOT fire: one R4a mid-band oil at rank 17, no R4b heavy lipid above the marker. This formula is the opposite of lipid-led — it is the cohort's leanest humectant-forward architecture after #09.",
         "`smoothing` does not apply: its claim ('glättet die Haarstruktur & wirkt Frizz entgegen') has no architecture behind it — no silicone, no substantive polymer, one lipid at rank 17.",
-        "`general` does not apply: two differentiators cleared."
+        "`general` does not apply: two differentiators cleared.",
+        "RE-CHECKED under v0.3 (E4/E6), value UNCHANGED at `moisture` — and on this record the re-check is not a formality. `weight_potential` moved to `low`, and `body_lightness_potential` has read `likely_preserving` since v0.1, which are exactly the two conditions the DELETED §9.5.2 step-3 `lightness` route required. Under the v0.3 text as it stood before E6, this product's headline would have been displaced from `moisture` to `lightness` by a weight ruling, with no focus rule changing and no focus evidence moving. E6 removes `lightness` from the vocabulary and deletes the route, so step 3 now tests three routes — `repair` (clears, and takes the secondary slot on the R7 tie-break), `curl_support` (blocked) and `color_care` (blocked) — and step 4's D5 guard decides the headline on the humectant cluster, exactly as it did under v0.1 and v0.2. Every other rule that could touch this field was checked against the moved weight value: `shine` §9.5.4 criterion 1 reads lipid load, not the weight value, and fails for want of any alignment-oriented R2/R3 route; `curl_support` reads slip plus weight/body architecture and is blocked on a single cationic with no polymer; the §9.5.3 guard never reads weight. No rule forces a move."
       ],
       "counterSignals": [
         "Confidence stays `moderate`: §9.5.3's confidence rule requires 'no competing route' for `high`, and `repair` is a live competing route sitting in the secondary slot.",
-        "'verbessert die Kämmbarkeit ohne zu beschweren' is a lightness claim. It is recorded and creates nothing: `weight_potential` is `moderate`, so no §9.2 conflict arises and `weight_high_conflict` does not fire.",
-        "The tie-break is claim-dependent by construction. A reviewer who read the verdict as `repair_supported` rather than `dual_supported` would not reach the tie-break at all — but the cluster's independent clearance of all four D5 criteria is what makes the verdict dual, and that is a formula finding."
+        "'verbessert die Kämmbarkeit ohne zu beschweren' is a lightness claim. RESTATED under v0.3: it is still recorded and still creates nothing, but the reason has changed. Under v0.1 and v0.2 it met a `moderate` weight value and no §9.2 conflict arose; under v0.3 it meets `weight_potential: low`, so formula and positioning now agree and there is nothing to reconcile. `weight_high_conflict` cannot fire on a `low` value in any case, and the claim reached no focus field in either revision — E6 having removed the only focus route that read leanness.",
+        "The tie-break is claim-dependent by construction. A reviewer who read the verdict as `repair_supported` rather than `dual_supported` would not reach the tie-break at all — but the cluster's independent clearance of all four D5 criteria is what makes the verdict dual, and that is a formula finding.",
+        "The headline is stable under v0.3 only because of E6. This is the clearest cohort instance of the effect E6 was ruled against: a Feuchtigkeitsmaske with a five-member humectant cluster, whose D5 guard clears with room, would have had its forced headline spent on a deposition property the `weight_potential` field already reports. Recorded so the dependency is visible rather than implicit — if `lightness` were ever restored to the vocabulary, this record moves."
       ],
       "limitations": [
         "Wording rule (D5, binding) observed absolutely: this record says 'humectant-forward comparative direction' and never 'hydrates', 'proven hydration', 'moisturizes' or 'restores moisture balance' — notwithstanding that the product's own name is 'Intense Hydration'.",
@@ -294,23 +304,24 @@
     "hairThicknessFit": {
       "value": [
         "fine",
-        "normal",
-        "coarse"
+        "normal"
       ],
-      "confidence": "moderate",
+      "confidence": "high",
       "evidenceLevel": "E2",
       "derivedEcho": true,
       "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
       "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
-      "rationale": "weight_potential `moderate` maps to the full set.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4, applied uniformly per E6). `coarse` drops out of the set.",
       "evidenceSignals": [
-        "derived from weight_potential = moderate"
+        "derived from weight_potential = low (E4/E6, 2026-09-14)"
       ],
-      "derivation": "§9.6 table row 2.",
+      "derivation": "§9.6 table row 1 (`low` → {fine, normal}).",
       "thresholdReasoning": [
-        "Clears {fine, normal, coarse}: the moderate row.",
-        "{fine, normal} does not apply: it requires weight_potential `low`, which the cetearyl conjunct refused despite a lean lipid load and an explicit 'ohne zu beschweren' claim.",
-        "{normal, coarse} does not apply: it requires weight_potential `high`."
+        "Clears {fine, normal}: the `low` row.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`, the value under v0.1 and v0.2 while the structural fatty-alcohol conjunct blocked `low`.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`.",
+        "Confidence tracks the driver and is `high` with it (§9.5E: an echo cannot be more confident than what it echoes — it is not required to be less).",
+        "The wording rule governs the reading: `coarse` dropping out does not mean coarse hair must avoid the product; it means the product is not the broad prior for it."
       ],
       "counterSignals": [],
       "limitations": [
@@ -351,23 +362,23 @@
     "textureFit": {
       "value": [
         "straight",
-        "wavy",
-        "curly"
+        "wavy"
       ],
-      "confidence": "moderate",
+      "confidence": "high",
       "evidenceLevel": "E2",
       "derivedEcho": true,
       "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
       "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
-      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "rationale": "Echo field (R9): re-derived under v0.3 because its driver moved to `low` (E4, applied uniformly per E6). `curly` drops out of the set.",
       "evidenceSignals": [
-        "weight_potential = moderate"
+        "weight_potential = low (E4/E6, 2026-09-14)"
       ],
-      "derivation": "§9.8 row 2.",
+      "derivation": "§9.8 row 1 (low-weight architecture, `weight_potential: low` → {straight, wavy}); the row label was restated by E6 and its mapping is unchanged.",
       "thresholdReasoning": [
-        "Clears {straight, wavy, curly}: the balanced row.",
-        "{wavy, curly, coily} does not apply: weight_potential is not `high` and there is no high-slip R1/R3 breadth.",
-        "{straight, wavy} does not apply: it requires weight_potential `low`."
+        "Clears {straight, wavy}: the low-weight row.",
+        "{straight, wavy, curly} does not apply: it requires weight_potential `moderate`, the value under v0.1 and v0.2.",
+        "{wavy, curly, coily} does not apply: weight is not `high`, and there is no high-slip R1/R3 breadth on a single-cationic, silicone-free formula.",
+        "Curl branding alone never determines the result, and there is none here."
       ],
       "counterSignals": [],
       "limitations": [
@@ -432,24 +443,30 @@
   ],
   "projectedOutputs": {
     "concentration": "medium",
-    "weight": "medium",
+    "weight": "light",
     "balance_direction": "balanced",
     "repair_support_level": "medium",
     "functional_benefits": [],
     "suitable_thicknesses": [
       "fine",
-      "normal",
-      "coarse"
+      "normal"
     ]
   },
   "adjudicationPoints": [],
   "uncertainFields": [
     "primaryFocus",
     "secondaryFocus",
-    "weightPotential",
     "damageFit"
   ],
   "assumptionNotes": [
+    "Re-derived under v0.3 (E4 restated leanness test, applied UNIFORMLY per E6; E6's removal of the `lightness` focus, which is what holds the `moisture` headline in place on this record), not patched.",
+    "Fields whose value moved under v0.3: weightPotential (moderate → low, i.e. medium → light, E4/E6) with its confidence stepped moderate → high; hairThicknessFit (echo: {fine, normal, coarse} → {fine, normal}, confidence tracking its driver to high); textureFit (echo: {straight, wavy, curly} → {straight, wavy}, likewise); projectedOutputs weight and suitable_thicknesses.",
+    "Fields re-checked under v0.3 WITHOUT a value move: primaryFocus (`moisture`) and secondaryFocus (`{repair}`) — E6 is load-bearing here, not incidental: this record carries `body_lightness_potential: likely_preserving`, so the deleted §9.5.2 step-3 route would have displaced the `moisture` headline with `lightness` off the back of the weight move alone. Also unchanged: careDirection (`balanced` / `both_substantive`), conditioningLevel, repairSupportLevel, damageFit, bondRoute, focusCareVerdict, tailMarker, hinweise (D4 protein payload still fired).",
+    "E1 produces NO `boundary_position_ingredient` flag on this record. HELIANTHUS ANNUUS SEED OIL @17 sits at tail_index − 1 and now counts normally rather than being struck, but it is not load-bearing anywhere: it is R4a, so §9.2 conjunct 1 holds with or without it, and it is the formula's only lipid, so S3 fails either way in §9.1 — which is what the v0.2 tail-marker note already recorded.",
+    "Blind-lane record re-checked for the moved field: the three leanness conjuncts are formula readings available in the blind packet (one mid-band plant oil, no silicone, one cationic), so the blind lane reaches `low` too; the 'ohne zu beschweren' claim corroborates and was not needed. No entry in blindToFinalChanges moves.",
+    "`weightPotential` is REMOVED from uncertainFields: it is now positively established by three observed conjuncts rather than held as the residual bucket, and unlike #07 and #09 its conjuncts do not depend on the above-tail counting scope. The remaining entries are unchanged and unrelated to this pass.",
+    "Review triggers under v0.3 — FIRED: `protein_payload_review` (D4, unchanged). NOT fired: `weight_high_conflict` (cannot fire on a `low` value; and the pack's lightness positioning now AGREES with the value rather than contradicting it), `bond_claim_review`, `tail_marker_anomaly`, `tail_marker_unresolved`, `specialist_damage_fit`, `low_confidence_field` (no field at `low` CONFIDENCE — note the distinction from `weight_potential: low`, which is a value).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
     "Re-derived under v0.2 (R7 tie-break scope; R6 `balanced` reading recorded; R5 disqualifier checked and not fired; R3/R4 re-checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
     "Fields whose value moved: primaryFocus (repair → moisture) and secondaryFocus (moisture → repair) — the same two values, swapped, under R7. careDirection keeps `balanced` and now records `balanced_reading: both_substantive`, the reading R6 preserves unchanged; this product never used the deleted lipid-leg path.",
     "Review triggers under v0.2 — FIRED: `protein_payload_review` (D4, unchanged). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `tail_marker_unresolved`, `specialist_damage_fit` (damage_fit is {healthy, moderately_damaged}), `weight_high_conflict` (the 'ohne zu beschweren' claim meets a `moderate` weight value, so there is no conflict to resolve).",
@@ -460,7 +477,7 @@
     "'NATRUE-zertifizierte Naturkosmetik, vegan' is certification context and creates no property; it is explicitly NOT read as a fragrance-free, hypoallergenic, or safety claim (R8: no listed signal is not allergy-safe, and this product declares Parfum plus two allergens).",
     "Arginine was excluded from the humectant cluster on the ground that R9's enumeration does not list it; including it would not change any value."
   ],
-  "derivedFrom": "reference-key-v0/08-sante-intense-hydration.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "derivedFrom": "reference-key-v1/08-sante-intense-hydration.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-derived under Standard v0.3 (E4 applied uniformly per E6, and E6 itself), not patched: E4 and E6 are systemic, so no v0.2 field approval, fingerprint, agreement or distribution statement carries into this revision.",
   "hinweise": {
     "fired": [
       {
@@ -473,6 +490,7 @@
   "v0AdjudicationPointStatus": {
     "AP-08-TIEBREAK": "CLOSED by R7. The tie-break is not confined to one step of the §9.5.2 hierarchy; on a genuinely `dual_supported` verdict exact-product positioning decides, including which candidate takes primary and which takes a secondary slot. `moisture` primary, `repair` secondary.",
     "AP-08-SPECIALISTGATE": "STILL LIVE — carried forward from reference-key-v0; `damage_fit` remains in `uncertain_fields`.",
-    "AP-08-NATURKOSMETIK": "STILL LIVE — carried forward. The tail rule is not weight-neutral across formulation philosophies, and this run adds two more instances (#11's and #12's markers both moved under R8)."
+    "AP-08-NATURKOSMETIK": "STILL LIVE — carried forward. The tail rule is not weight-neutral across formulation philosophies, and this run adds two more instances (#11's and #12's markers both moved under R8).",
+    "AP-07-LOWUNREACHABLE-COHORT": "CLOSED for this record by E4 (2026-09-14) as applied uniformly under E6. Under v0.1 and v0.2 this product was the SECOND and, the v0.2 record argued, the most striking instance of the cohort-wide unreachable-`low` point: the formula was lean, the pack claimed 'ohne zu beschweren', and the anchor still refused `low` on CETEARYL ALCOHOL @2 alone. `weight_potential` is now `low`, at `high` confidence, with all three conjuncts holding on the full list. No residual question attaches to THIS record — the counting-scope caveat that survives on #07 and #09 (AP-07-CATIONICSCOPE) does not bite here, because the single-cationic count does not depend on the marker cut."
   }
 }

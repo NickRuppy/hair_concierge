@@ -432,3 +432,183 @@ under a superseded standard — they were checked against E1–E4 and only §5.5
 **the cohort is not internally consistent until they are re-derived and re-stamped.** That re-derivation, the
 §5.5 decision, and the §5.4 focus question are the three things standing between this cohort and a
 freeze-gate rerun.
+
+---
+
+# Part III — the E6 ruling and the uniform application of E4, applied 2026-09-14
+
+Standard of record remains **`mask-classification-standard.v0.1.md` at v0.3**; E6 is folded into it without a
+version bump, marked `(E6, 2026-09-14)` throughout.
+Ruling ledger: `plans/mask-inci/round1-rule-rulings.md`, section **"Escalation rulings (round-1b)"**, row E6.
+
+Parts I and II above are **unchanged** and are the provenance for what E6 was ruled on — §5.4 raised the focus
+move E6 answers, and §5.5 raised the three records E6 rules must be re-derived. This part records that pass,
+which touches **four records** — `07`, `08`, `09`, `12` — plus this file. Records `01`–`06`, `10`, `11` and
+`13` are **not** in this pass's write scope; §5.5's checks for them are unchanged and none of them reaches
+`low` (`01`, `03`, `05`, `06`, `10` fail conjunct 1 on an R4b heavy lipid above the marker; `04` fails
+conjunct 3 on three above-tail cationics; `02` and `11` have unresolved markers, which makes the leanness test
+unavailable rather than failed). **They do, however, still carry `standardVersion: "mask-inci-v0.2"`** — see
+§6.7.
+
+## 6.1 What E6 ruled, and what it did to the standard
+
+| Half of the ruling | Effect |
+|---|---|
+| **`lightness` leaves the focus vocabulary** | §9.5's vocabulary drops from nine values to **eight** — `moisture` · `detangling` · `smoothing` · `repair` · `shine` · `curl_support` · `color_care` · `general`. §9.5.2 **step 3's fourth leg is deleted**, so step 3 tests three special-purpose routes; step 4's ordering sentence and §9.5.3 criterion 3's list drop `lightness` with it. §9.8's row-1 label is restated ("Low-weight architecture") with **no mapping change**. §7.1 gains a note that `body_lightness_potential` survives with no §9 consumer. §15's priority item 4 withdraws its `lightness` half; §16.1 gains row **7a** as a conditioner-parity delta; §18's open question 13 moves to the closed table |
+| **E4's leanness test applies uniformly** | Every record satisfying the three conjuncts reads `low`, not only the one record E4's expected-effects column named. §5.5's flagged three are re-derived accordingly |
+
+**Nick's ground, recorded as the rule's own reasoning:** masks are not bought for lightness. The forced headline
+exists to name the job a product is chosen for; "light" is a deposition and dosage property, and
+`weight_potential: low` already owns it and already projects it into both echo fields. A `lightness` focus
+therefore said nothing new at the cost of the one field meant to say something new. **The value is removed
+rather than re-thresholded** — the objection is not that step 3's two-condition test was too easy.
+
+**Why the two halves are one ruling.** E4 applied uniformly reaches four lean masks. Three of them
+(`08`, `09`, `12`) carry `body_lightness_potential: likely_preserving`, so under the pre-E6 text their headlines
+would have been rewritten by a **weight** ruling, with no focus evidence moving. E6 is what stops that.
+
+## 6.2 Per-record conjunct verification (E4's three conjuncts, checked against each record's own INCI)
+
+| # | Conjunct 1 — no R4b heavy lipid above the marker | Conjunct 2 — no occlusive silicone stack | Conjunct 3 — single cationic species | Verdict |
+|---|---|---|---|---|
+| **07** Pantene Molecular Bond Repair (marker `PARFUM` @7) | **PASS**, strongest form: no lipid of **any** class, R4a or R4b, at any rank of 23 | **PASS**: `Bis-Aminopropyl Dimethicone` @5 is a single silicone; no second species and no dimethicone/dimethiconol pair | **PASS on the above-tail segment** — `Stearamidopropyl Dimethylamine` @3 only. ⚠ `Behentrimonium Methosulfate` @11 is a second cationic **tail-side** | **`low`**, confidence `moderate` |
+| **08** Sante Intense Hydration (marker `Potassium Sorbate` @18) | **PASS**: `Helianthus Annuus Seed Oil` @17 is the sole lipid and is a conventional plant triglyceride — lexicon family 3 **mid** band, therefore R4a. No butter, hydrogenated fat or occlusive hydrocarbon at any rank | **PASS, absolutely**: no silicone at any rank (NATRUE Naturkosmetik) | **PASS on the full list** — `Distearoylethyl Dimonium Chloride` @4 is the only S1-family species anywhere; the tail holds only the preservative, `Parfum` and two allergens | **`low`**, confidence **`high`** |
+| **09** Balea Aqua Hyaluron (marker `PARFUM` @9) | **PASS**: `Helianthus Annuus Hybrid Oil` @8 is the sole lipid, mid band, R4a. No heavy lipid at any rank of 15 | **PASS, absolutely**: no silicone at any rank | **PASS on the above-tail segment** — `Distearoylethyl Hydroxyethylmonium Methosulfate` @4 only. ⚠ `Behentrimonium Chloride` @11 **and** `Cetrimonium Chloride` @12 are tail-side: **three** cationics on the full list | **`low`**, confidence `moderate` |
+| **12** Guhl Panthenol 2in1 (marker `Tetrasodium Glutamate Diacetate` @7) | **PASS** (unchanged from §5.2): `Cetyl Esters` @5 is a wax ester, `Avena Sativa Kernel Oil` @11 light/mid and tail-side | **PASS**: no silicone at any rank | **PASS on the full list** — `Behentrimonium Chloride` @3 is the only cationic anywhere | **`low`** (already applied under E4), confidence `moderate` |
+
+**No record was forced.** Every conjunct above is a positive observation on a readable above-tail segment with a
+resolved, plausible marker, which §9.2 requires before `low` is available at all. **E1 boundary check on each:**
+the `tail_index − 1` species is `Glutamic Acid` @6 (`07`), `Helianthus Annuus Seed Oil` @17 (`08`),
+`Helianthus Annuus Hybrid Oil` @8 (`09`) and `Panthenol` @6 (`12`) — **none load-bearing** for the weight value
+under §9.2's four named terms, so no mandatory `moderate` cap and no `boundary_position_ingredient` flag fires
+from that route on any of the four.
+
+## 6.3 ⚠ FLAG — two of the four `low` calls rest on the above-tail counting scope, which §9.2 marks as unruled
+
+`07` and `09` pass conjunct 3 **only because their further cationics sit below the marker**: two species on the
+full list for `07`, three for `09`. `08` and `12` pass it on the full list and do not depend on the cut at all.
+
+This is not a rule violation — §9.2 counts the conjunct on the above-tail segment, as it counts every term in
+that section — but §9.2's own `[judgment call — review]` says in terms that after E4 the three conjuncts are
+ruled and "what remains this standard's addition there is the **counting scope**", listing it **first** among the
+anchors most likely to move on first contact with real formulas (§15, §18.2). Two observations sharpen it:
+
+- On `09` the same §3.1 marker cut is doing **two** headline jobs — it is also what makes the credited segment
+  humectant-led rather than cationic-led, which is why this is the D5 guard's ruled anchor product. Not double
+  counting in the §6 rule 1 sense, but one reading of §3.1 moves both findings.
+- E4's own reasoning says "a formula running one deposition species is structurally lean in a way a formula
+  running three is not". `09` runs three — just not above the marker.
+
+Recorded, not acted on. Both values are recorded as the standard produces them, at `moderate` confidence, which
+is the honest statement that a neighbouring value is reachable on a rule reading, and both carry an adjudication
+point (**`AP-07-CATIONICSCOPE`**, **`AP-09-CATIONICSCOPE`**) plus `weightPotential` in `uncertainFields`. **If
+the calibration set moves the counting scope to the full list, `07` and `09` return to `moderate` and the
+cohort's `low` count drops from 4 to 2.**
+
+## 6.4 Changed cells, per product (v1.1 → v1.2)
+
+| # | Product | Field | v1.1 → v1.2 | Ruling |
+|---|---|---|---|---|
+| 07 | Pantene Molecular Bond Repair | `weight_potential` | moderate → **low** (medium → **light**) | **E4 applied uniformly per E6** |
+| 07 | | `hair_thickness_fit` `[echo]` | {fine, normal, coarse} → **{fine, normal}** | echo of the moved driver |
+| 07 | | `texture_fit` `[echo]` | {straight, wavy, curly} → **{straight, wavy}** | echo of the moved driver |
+| 07 | | `projectedOutputs` | weight medium → **light**, thicknesses → {fine, normal} | consequent |
+| 07 | | `primary_focus` | **unchanged** (`smoothing`) | verified against every rule that reads weight; `body_lightness_potential` is `balanced`, so even the deleted route would have failed |
+| 07 | | `uncertainFields` | **`weightPotential` retained** | counting-scope caveat (§6.3) |
+| 07 | | adjudication points | +**`AP-07-CATIONICSCOPE`**; `AP-07-LOWUNREACHABLE` **CLOSED** | E4/E6 |
+| 08 | Sante Intense Hydration | `weight_potential` | moderate → **low** (medium → **light**), confidence moderate → **high** | **E4 applied uniformly per E6** |
+| 08 | | `hair_thickness_fit` `[echo]` | {fine, normal, coarse} → **{fine, normal}**, confidence → high | echo, confidence tracking its driver |
+| 08 | | `texture_fit` `[echo]` | {straight, wavy, curly} → **{straight, wavy}**, confidence → high | echo |
+| 08 | | `projectedOutputs` | weight medium → **light**, thicknesses → {fine, normal} | consequent |
+| 08 | | `primary_focus` | **unchanged** (`moisture`) — **E6 is load-bearing here** | without E6 the `likely_preserving` body plus the new `low` weight would have displaced the headline |
+| 08 | | `uncertainFields` | `weightPotential` **removed** | positively established, conjuncts hold on the full list |
+| 08 | | `body_lightness_potential` note | stale cross-reference corrected | the weight field no longer contradicts the graded reading; **value unchanged** |
+| 09 | Balea Aqua Hyaluron | `weight_potential` | moderate → **low** (medium → **light**) | **E4 applied uniformly per E6** |
+| 09 | | `hair_thickness_fit` `[echo]` | {fine, normal, coarse} → **{fine, normal}** | echo |
+| 09 | | `texture_fit` `[echo]` | {straight, wavy, curly} → **{straight, wavy}** | echo |
+| 09 | | `projectedOutputs` | weight medium → **light**, thicknesses → {fine, normal} | consequent |
+| 09 | | `primary_focus` | **unchanged** (`moisture`, `high` confidence) — **E6 is load-bearing here** | the D5 guard's own ruled anchor product would otherwise have lost its headline to a weight ruling |
+| 09 | | `uncertainFields` | +**`weightPotential`** | counting-scope caveat (§6.3) |
+| 09 | | adjudication points | +**`AP-09-CATIONICSCOPE`** | E4/E6 |
+| 12 | Guhl Panthenol 2in1 | `primary_focus` | lightness → **general** | **E6** — §9.5.2 step 3's route deleted; step 8 reached, as under v0.1 and v0.2 |
+| 12 | | `focus_care_verdict.value` | not_applicable → **nonspecific** (restored) | consequent — the focus is a repair/moisture decision again |
+| 12 | | `uncertainFields` | {conditioningLevel, primaryFocus} → **{conditioningLevel}** | `primaryFocus` was listed only for the escalation E6 closes |
+| 12 | | `weight_potential` | **unchanged** (`low`/`light`) | E6 confirms E4 rather than narrowing it |
+| 12 | | adjudication points | `AP-12-LIGHTNESSUNLOCKED` **CLOSED**; list now empty | E6 |
+
+**All four records additionally carry:** `standardVersion: "mask-inci-v0.3"` (new on `07`, `08`, `09`), an
+updated `derivedFrom` chain, E-marked `assumptionNotes` naming every moved and every re-checked field, and — on
+`12` — the superseded pre-E6 notes retained verbatim and labelled as provenance rather than rewritten.
+
+## 6.5 Headline verification — no focus value moved except the one E6 moved
+
+Requested explicitly and done exhaustively, because a weight move on a lean record is exactly where a headline
+can drift unnoticed. The rules that could read `weight_potential`, and their state on the moved records:
+
+| Rule | Reads weight? | Effect on 07 / 08 / 09 |
+|---|---|---|
+| §9.5.2 step 3 `lightness` | **Did** — `weight_potential: low` was one of its two conditions | **Deleted by E6.** No route, no effect |
+| §9.5.2 step 3 `curl_support` | Reads "high slip **plus** compatible weight/body architecture" | Blocked on all three before reaching weight: single credited cationic, no polymer, no curl positioning |
+| §9.5.4 criterion 1 (`shine`) | **No** — reads *lipid load* ("no R4b heavy lipid above the tail"), not the weight value | `07` still fails criteria 2 and 3; `08` and `09` still fail criterion 1 outright for want of any alignment-oriented R2/R3 route |
+| §9.5.3 moisture guard | No | `08` and `09` clear on their clusters exactly as before; `07` still fails at zero cluster members |
+| §9.5.2 steps 6–8 | No | architecture-only |
+
+**Result: `07` stays `smoothing`, `08` stays `moisture` (+ `repair` secondary), `09` stays `moisture`.** On `07`
+the headline is stable for two independent reasons — the route is gone, and `body_lightness_potential: balanced`
+would have failed its second condition anyway. On `08` and `09` E6 is the only thing holding it.
+
+## 6.6 Fields whose confidence changed (v1.1 → v1.2)
+
+| # | Field | v1.1 → v1.2 | Reason |
+|---|---|---|---|
+| 07 | `weight_potential` | moderate → **moderate** (held, new basis) | The old cap came from the residual `moderate` bucket; the new one is the §6.3 counting-scope question. Identity and formula inputs are the cohort's best (direct retailer verbatim fetch), so the cap rests on the rule question alone |
+| 08 | `weight_potential` | moderate → **high** | §4.1's bar met: brand-direct verbatim fetch of the exact SKU, a 17-entry credited segment, three conjuncts each holding on the full list, positioning corroborating rather than conflicting, and the one identified unknown (the sunflower oil's weight band) lexicon-settled. **The cohort's only `high`-confidence weight value** |
+| 08 | `hair_thickness_fit`, `texture_fit` `[echo]` | moderate → **high** | §9.5E: an echo cannot exceed its driver's confidence; it is not required to fall below it |
+| 09 | `weight_potential` | moderate → **moderate** (held, two new grounds) | (a) the §6.3 counting-scope question; (b) the fallback-tier INCI source (`hautschutzengel.de`, dm.de JS-blocked, identityState `verified_with_minor_source_difference`) — the same sourcing cap that independently holds `12` |
+| 12 | `primary_focus` | moderate → **moderate** | Different value, same level: `general` is a step-8 fallback rather than a positively earned route, and the moisture near-miss below is one counted species away |
+
+**Cohort confidence after this pass: 20 high / 88 moderate / 0 low** across 108 profile fields (from 17/91/0).
+All three moves are on `08` — `weight_potential` plus the two echoes that track it, each counted as its own
+field on the 12 × 9 basis §5.6 used. No other record's confidence moves, and `low_confidence_field` still fires
+nowhere.
+
+## 6.7 Final cohort distributions after E1–E4 + E6
+
+| Field | Distribution |
+|---|---|
+| `conditioning_level` | **high 5** (01, 03, 04, 05, 10) · **moderate 7** (02, 06, 07, 08, 09, 11, 12) · low 0 — *unchanged by this pass* |
+| `weight_potential` | **high 5** (01, 03, 05, 06, 10) · **moderate 3** (02, 04, 11) · **low 4** (07, 08, 09, 12) |
+| `primary_focus` | **general 5** (01, 02, 03, 10, 12) · **repair 2** (04, 05) · **smoothing 2** (06, 07) · **moisture 2** (08, 09) · **shine 1** (11) · **`lightness` 0 — the value no longer exists** |
+| `secondary_focus` | one only: 08 `{repair}` — *unchanged* |
+| `care_direction` | **moisture 8** · **protein 2** (04, 05) · **balanced 2** (07 `neither_dominant`, 08 `both_substantive`) — *unchanged* |
+| `hair_thickness_fit` `[echo]` | **{fine, normal} 4** (07, 08, 09, 12) · {fine, normal, coarse} 3 (02, 04, 11) · {normal, coarse} 5 (01, 03, 05, 06, 10) |
+| `texture_fit` `[echo]` | **{straight, wavy} 4** (07, 08, 09, 12) · {straight, wavy, curly} 3 (02, 04, 11) · {wavy, curly, coily} 5 |
+| `damage_fit` `[echo]` | {healthy, moderately_damaged} 10 · {moderately_damaged, highly_damaged} 2 (04, 05) — *unchanged* |
+
+**Read against the standard's own expectations, as findings and never as thresholds to tune (§15):**
+`weight_potential: low` goes from **1 to 4 of 12**, which is §5.5's projection executed rather than a new
+result — and **§5.5's question (b) is still open**: is four in twelve the reachability E4 intended against the
+catalog's ten curated light masks, or does the test over-select? §6.3 adds the sharper version: **two of those
+four rest on an unruled counting scope**, so the defensible range is 2–4 depending on a cut the calibration set
+has yet to settle. `lightness` is now **structurally** zero rather than observed-zero, so watch-list item 2 is
+moot rather than confirmed. `conditioning_level: low` is still never selected.
+
+## 6.8 Rerun obligation and what is still outstanding
+
+E6 is **systemic** — it removes a value from field 5's vocabulary and deletes a step from the hierarchy every
+record's fields 5 and 6 run — so §15's rerun obligation runs again, and the standard's header records it. **No
+agreement, repeatability or distribution statement made before E6 carries past it.**
+
+Still outstanding, and unchanged in kind by this pass:
+
+1. **Eight records still carry `standardVersion: "mask-inci-v0.2"`** — `01`–`06`, `10`, `11`, `13`. They were
+   checked against E1–E4 and again against E6, and **none of them moves**: none reaches `low` (§6.2's opening
+   note), and none carried a `lightness` focus to lose. But they are strictly derived under a superseded
+   standard and **the cohort is not internally consistent until they are re-derived and re-stamped.**
+2. **§6.3's counting-scope question** — a calibration item, carried on `AP-07-CATIONICSCOPE` and
+   `AP-09-CATIONICSCOPE`, and the one thing that could still move two of this pass's four values.
+3. **`12`'s moisture near-miss, newly un-blocked.** With step 3 now clearing nothing on that record,
+   §9.5.3 criterion 3 no longer blocks the moisture headline, so the two-versus-three humectant count
+   (`Dipropylene Glycol` @4, `Panthenol` @6, with `Glycine` @10 not counted) is the **only** thing between it
+   and `moisture`. Under v0.2 that near-miss was doubly blocked; it is now singly blocked. Recorded, not acted
+   on — the count is the rule and the rule is applied as written.
