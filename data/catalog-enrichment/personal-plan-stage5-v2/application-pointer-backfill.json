@@ -88,6 +88,10 @@
       "sha256": "4a6694959985138baf17701025e479387c827bd4f89948cd12f58aae29efe4dd"
     },
     {
+      "path": "data/catalog-enrichment/personal-plan-stage5-v1/S5R-05-leave-in-calibration-protocol-carry-forward.json",
+      "sha256": "8e66724ab329069f7705537fd891d72fb3b5692ae11b6b4badf9c0c78f25efc5"
+    },
+    {
       "path": "data/catalog-enrichment/oil-authority-enrichment-v1/manifest.json",
       "sha256": "fb0804392095be430a0f6c69b705576c53fdac820a9c3e35dfad45d9801e6131"
     },
@@ -101,11 +105,11 @@
     }
   ],
   "observed_counts": {
-    "rows": 309,
+    "rows": 310,
     "products": 240,
     "exact_workflows": 4,
     "family_templates": 28,
-    "composable_rows": 309,
+    "composable_rows": 310,
     "blocked_rows": 0,
     "by_category": {
       "bondbuilder": 3,
@@ -113,7 +117,7 @@
       "deep_cleansing_shampoo": 6,
       "dry_shampoo": 10,
       "heat_protectant": 7,
-      "leave_in": 79,
+      "leave_in": 80,
       "mask": 34,
       "oil": 71,
       "scalp_care": 8,
@@ -4259,6 +4263,59 @@
             "sourceUrl": "https://www.redkenpro.com/products/hair-care/extreme-anti-snap",
             "sourceType": "manufacturer",
             "checkedAt": "2026-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "key": "2b7db7e3-2058-4178-8a03-7d05f4a1d447:pre_heat_protection:pre_heat_damp",
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "product_name": "Redken Extreme Anti-Snap",
+      "source_role": "pre_heat_protection",
+      "source_fingerprint": "8e1b1bbc51ce497047f75891d18bc5b87125dbe6a0b20b01a95f7b5f8fa7b8cb",
+      "template_keys": [
+        "heat.damp.leave-in.v2"
+      ],
+      "exact_workflow_id": null,
+      "before_visible_step_fingerprint": "6c5a8dcfd6f14438103cc713c1fa3bd0f880be9b56d9dba6e56ac0f124dbd2bc",
+      "after_visible_step_fingerprint": "99457aa2f0cf54faef4de68774efad9ccb86bd30d94564e7a9c878f903672df7",
+      "guidance_payload_v2": {
+        "schemaVersion": 2,
+        "contractKind": "product_pointer",
+        "scope": {
+          "kind": "product",
+          "category": "leave_in",
+          "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+        },
+        "sourceRole": "pre_heat_protection",
+        "role": "heat_protection",
+        "applicationFamily": "pre_heat_damp",
+        "facts": {
+          "applicationState": "damp_hair",
+          "applicationArea": "hair_lengths_ends",
+          "rinse": "leave_in",
+          "contactTime": null,
+          "amount": null,
+          "heat": {
+            "supportedStates": [
+              "damp_hair"
+            ],
+            "activationRequired": false,
+            "maximumClaimedTemperatureC": null,
+            "reapplication": "each_separate_heat_event"
+          },
+          "conditionerPolicy": "not_applicable"
+        },
+        "workflowId": null,
+        "requiredCompanionProductId": null,
+        "runtimeBlockerCode": null,
+        "exactSteps": [],
+        "cautionCodes": [],
+        "evidence": [
+          {
+            "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+            "sourceType": "manufacturer",
+            "checkedAt": "2026-09-13"
           }
         ]
       }
