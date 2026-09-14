@@ -883,7 +883,7 @@ export function getMaskResearchLabData(): MaskResearchLabData {
   return {
     meta: {
       cohortId: cohort.cohortId,
-      standardVersion: cohort.standard,
+      standardVersion: "mask-inci-v0.2 (Kohorte eingefroren unter v0.1-draft)",
       frozen: cohort.frozen,
       referenceKeyVersion: REFERENCE_KEY_DIR,
       charter: cohort.charter,
@@ -900,7 +900,9 @@ export function getMaskResearchLabData(): MaskResearchLabData {
         excluded: details.filter((detail) => detail.reviewStatus === "excluded").length,
       },
     },
-    openG0Question: cohort.openG0Question ?? null,
+    openG0Question: cohort.openG0Question
+      ? `${cohort.openG0Question} — BEANTWORTET (R1, 2026-09-14): eligible, mode-scoped; Charter korrigiert. Siehe Produkt 12.`
+      : null,
     openAdjudications: dedupedAdjudications,
     queueItems: details.map(queueItemFromDetail),
     initialDetail,
