@@ -692,3 +692,76 @@ helpers and changes zero rows) and one Stage-5 protocol input file; no migration
 has been run against production, no RPC has been called, and no catalog row has
 been written. Applying the migration and running the data apply are separate,
 later, explicitly authorized steps — see the gate table in §6.
+
+---
+
+## Amendment — §6 step 4b superseded (2026-09-14)
+
+Everything above stays as written; this section replaces only the **commands** in
+[Step 4b](#step-4b--v2-pointer-for-the-new-row). The decision, the carry-forward
+route, and the fingerprint requirement are unchanged.
+
+### What was measured
+
+Step 4b assumed the "standard `stage5-v2-apply` run". That lane cannot run, for
+two independent reasons measured against production on 2026-09-14:
+
+1. **The full-apply ledger was migration-reset three times.** Each time the
+   artifact grew, a migration re-seeded `apply_personal_plan_stage5_v2_artifact_v1`
+   with the ledger of the generation before it: `…2026-08-12` 273 rows,
+   `…2026-08-14-use-case-coverage` 289, `…2026-09-01-protocol-amendment` 309. The
+   artifact now holds 310 items, so the live RPC refuses with
+   `Stage 5 V2 ledger is partial`.
+2. **The catalog outgrew the registry.** The artifact snapshot predates
+   `20260903083832_simplify_oil_heat_capability.sql` (which deleted 8
+   `pre_heat_protection` oil rows the artifact still lists and edited 13 V1
+   payloads) and the scan-DB expansion waves (~90 products whose pointers are
+   written at intake by `product_intake_approve_reviewed_product`). The
+   reverse-coverage check in `stage5-v2-application.ts` has no exemption
+   mechanism, so the preflight reports 128 `active_protocol_missing_from_artifact`
+   blockers and 15 stale-artifact blockers and can never go green.
+
+Every lane except the Stage-5 V1 protocol batch writes its V2 pointer at write
+time, so the backfill machine's ongoing purpose is gone. The artifact stays
+frozen as the reviewed historical record; it is **not** regenerated.
+
+### What replaces it
+
+An incremental, per-item pointer-delta lane. Its manifest may only re-emit items
+that already passed Stage-5 review — the builder refuses any delta item that is
+not byte-identical (canonical JSON) to the matching item in
+`application-pointer-backfill.json`.
+
+- Migration: `supabase/migrations/20260914170000_personal_plan_stage5_v2_pointer_delta_executor.sql`
+  (functions only, zero rows) → `public.apply_personal_plan_stage5_v2_pointer_delta_v1`.
+- Reviewed delta: `data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/S5V2D-01-leave-in-calibration-redken.json`
+  — one item, the Redken `pre_heat_protection` / `pre_heat_damp` pointer, whose
+  `source_fingerprint` is the `8e1b1bbc…` the step-4b text already requires.
+
+```bash
+# read-only: classifies each delta item will_write / already_applied / conflict
+npm run products:intake:stage5-v2-pointer-delta:preflight
+
+# dry run (writes nothing), then the guarded apply
+npm run products:intake:stage5-v2-pointer-delta:apply
+ALLOW_PERSONAL_PLAN_STAGE5_V2_PRODUCTION_WRITE=1 \
+  npm run products:intake:stage5-v2-pointer-delta:apply -- --apply \
+  --confirm-project=pqdkhefxsxkyeqelqegq \
+  --reviewed-head=<40-char-sha> --expected-fingerprint=<sha256 of the delta>
+
+# the real coverage invariant (replaces the artifact's reverse-coverage claim):
+# every live curated protocol row with V1 guidance must also carry a V2 pointer
+npm run personal-plan:pointer-coverage-audit
+```
+
+`products:intake:stage5-v2-application:apply` now refuses at the top and prints
+these commands. `…:preflight` still runs read-only and prints a retirement
+banner — it is the historical record of the 2026-08-12 registry, nothing more.
+
+### Gate order (each separately authorized)
+
+1. Apply `20260914170000` (functions only, zero rows).
+2. Run the delta apply — writes exactly **one** pointer. Pre-apply the coverage
+   audit must list exactly the Redken row; afterwards, zero.
+3. `npm run products:intake:leave-in-calibration:preflight` → must be `ok: true`.
+4. Then, and only then, §6 step 6 — the nine-product enrichment apply.

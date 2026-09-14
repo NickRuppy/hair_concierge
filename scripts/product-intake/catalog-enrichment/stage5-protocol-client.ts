@@ -5,6 +5,10 @@ import {
   type Stage5ProtocolPreflightRead,
 } from "@/lib/product-intake/catalog-enrichment/stage5-protocols"
 import type { Stage5V2ApplicationPreflightRead } from "@/lib/product-intake/catalog-enrichment/stage5-v2-application"
+import {
+  STAGE5_V2_POINTER_DELTA_RPC,
+  type Stage5V2PointerCoverageRow,
+} from "@/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta"
 import { embedProductSpec } from "@/lib/catalog-authority/product-spec-relationships"
 
 type QueryResult<T> = Promise<{ data: T | null; error: { message: string } | null }>
@@ -22,7 +26,8 @@ type Stage5ProtocolClient = {
   rpc: (
     name:
       | "apply_personal_plan_stage5_protocol_batch_v1"
-      | "apply_personal_plan_stage5_v2_artifact_v1",
+      | "apply_personal_plan_stage5_v2_artifact_v1"
+      | typeof STAGE5_V2_POINTER_DELTA_RPC,
     args:
       | {
           p_batch_json: string
@@ -32,6 +37,11 @@ type Stage5ProtocolClient = {
       | {
           p_artifact_json: string
           p_expected_artifact_fingerprint: string
+          p_reviewed_by: "nick"
+        }
+      | {
+          p_delta_json: string
+          p_expected_delta_fingerprint: string
           p_reviewed_by: "nick"
         },
   ) => QueryResult<Record<string, unknown>[]>
@@ -270,6 +280,45 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
       return data ?? []
     },
     v2: {
+      /** The live pointer-delta lane (`stage5-v2-pointer-delta-apply.ts`). */
+      async applyPointerDelta(deltaJson: string, fingerprint: string) {
+        const { data, error } = await client.rpc(STAGE5_V2_POINTER_DELTA_RPC, {
+          p_delta_json: deltaJson,
+          p_expected_delta_fingerprint: fingerprint,
+          p_reviewed_by: "nick",
+        })
+        if (error) throw new Error(`Stage 5 V2 pointer delta apply failed: ${error.message}`)
+        return data ?? []
+      },
+      /**
+       * Every live curated protocol row, with both payload columns, for the
+       * pointer-coverage audit. The V1/V2 gap is computed in the library so the
+       * invariant is unit-testable rather than embedded in a query.
+       */
+      async listPointerCoverage(): Promise<Stage5V2PointerCoverageRow[]> {
+        const { data, error } = await client
+          .from("product_application_protocols")
+          .select<{
+            product_id: string
+            category: string
+            role: string
+            application_family: string
+            guidance_payload: unknown
+            guidance_payload_v2: unknown
+            products: { name: string | null; brand: string | null } | null
+          }>(
+            "product_id,category,role,application_family,guidance_payload,guidance_payload_v2,products!inner(name,brand,origin,is_active,lifecycle_status)",
+          )
+          .eq("products.origin", "curated")
+          .eq("products.is_active", true)
+          .eq("products.lifecycle_status", "active")
+        if (error) throw new Error(`Stage 5 V2 pointer coverage audit failed: ${error.message}`)
+        return (data ?? []).map(({ products, ...protocol }) => ({
+          ...protocol,
+          product_name: products?.name ?? null,
+          brand: products?.brand ?? null,
+        }))
+      },
       async apply(artifactJson: string, fingerprint: string) {
         const { data, error } = await client.rpc("apply_personal_plan_stage5_v2_artifact_v1", {
           p_artifact_json: artifactJson,
