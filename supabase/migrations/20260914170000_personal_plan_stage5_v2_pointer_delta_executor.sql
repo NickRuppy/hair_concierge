@@ -58,20 +58,28 @@ DECLARE
   v_content_fingerprint text;
   v_outcome text;
   v_ledger_state text;
+  v_product public.products%ROWTYPE;
   v_existing_protocol public.product_application_protocols%ROWTYPE;
   v_existing_ledger public.catalog_enrichment_applied_items%ROWTYPE;
 BEGIN
-  IF p_reviewed_by <> 'nick' THEN
+  -- Null-safe guards throughout: `x <> 'nick'` and `x !~ '…'` are NULL — not
+  -- true — for NULL input, so plain comparisons would let a NULL argument slip
+  -- past the approval pins entirely.
+  IF p_reviewed_by IS DISTINCT FROM 'nick' THEN
     RAISE EXCEPTION 'Stage 5 V2 pointer delta reviewer must be nick';
   END IF;
-  IF p_expected_delta_fingerprint !~ '^[a-f0-9]{64}$' THEN
+  IF p_expected_delta_fingerprint IS NULL
+     OR p_expected_delta_fingerprint !~ '^[a-f0-9]{64}$' THEN
     RAISE EXCEPTION 'Stage 5 V2 pointer delta fingerprint must be lowercase sha256';
+  END IF;
+  IF p_delta_json IS NULL THEN
+    RAISE EXCEPTION 'Stage 5 V2 pointer delta payload is required';
   END IF;
   v_computed_fingerprint := pg_catalog.encode(
     extensions.digest(pg_catalog.convert_to(p_delta_json, 'UTF8'), 'sha256'),
     'hex'
   );
-  IF v_computed_fingerprint <> p_expected_delta_fingerprint THEN
+  IF v_computed_fingerprint IS DISTINCT FROM p_expected_delta_fingerprint THEN
     RAISE EXCEPTION 'Stage 5 V2 pointer delta fingerprint mismatch';
   END IF;
 
@@ -136,15 +144,21 @@ BEGIN
       RAISE EXCEPTION 'Stage 5 V2 pointer delta item is invalid: %', v_product_key;
     END IF;
 
-    IF NOT EXISTS (
-      SELECT 1
-      FROM public.products product
-      WHERE product.id = v_product_id
-        AND product.category_key = v_category
-        AND product.origin = 'curated'
-        AND product.is_active = true
-        AND product.lifecycle_status = 'active'
-    ) THEN
+    -- Locked, not merely read: an unlocked existence check is a
+    -- time-of-check/time-of-use race — a concurrent deactivation or
+    -- recategorization could land between this check and the pointer write.
+    -- With the row locked, a concurrent writer waits behind this transaction
+    -- (or committed first and is seen here). Lock order is products before
+    -- product_application_protocols, matching 20260914163000.
+    SELECT product.* INTO v_product
+    FROM public.products product
+    WHERE product.id = v_product_id
+    FOR UPDATE;
+    IF NOT FOUND
+       OR v_product.category_key IS DISTINCT FROM v_category
+       OR v_product.origin IS DISTINCT FROM 'curated'
+       OR v_product.is_active IS DISTINCT FROM true
+       OR v_product.lifecycle_status IS DISTINCT FROM 'active' THEN
       RAISE EXCEPTION 'Stage 5 V2 pointer delta product is missing, inactive, or recategorized: %',
         v_product_key;
     END IF;

@@ -18,6 +18,8 @@ type SelectBuilder<T> = PromiseLike<{
 }> & {
   in: (column: string, values: string[]) => QueryResult<T[]>
   eq: (column: string, value: string | boolean) => SelectBuilder<T>
+  order: (column: string, options: { ascending: boolean }) => SelectBuilder<T>
+  range: (from: number, to: number) => SelectBuilder<T>
 }
 type Stage5ProtocolClient = {
   from: (table: string) => {
@@ -296,28 +298,43 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
        * invariant is unit-testable rather than embedded in a query.
        */
       async listPointerCoverage(): Promise<Stage5V2PointerCoverageRow[]> {
-        const { data, error } = await client
-          .from("product_application_protocols")
-          .select<{
-            product_id: string
-            category: string
-            role: string
-            application_family: string
-            guidance_payload: unknown
-            guidance_payload_v2: unknown
-            products: { name: string | null; brand: string | null } | null
-          }>(
-            "product_id,category,role,application_family,guidance_payload,guidance_payload_v2,products!inner(name,brand,origin,is_active,lifecycle_status)",
+        // Paginated with a stable order: PostgREST caps a response at its
+        // configured max-rows, and a silently truncated audit could report a
+        // false all-covered. The loop only stops on a short page.
+        const pageSize = 500
+        const rows: Stage5V2PointerCoverageRow[] = []
+        for (let offset = 0; ; offset += pageSize) {
+          const { data, error } = await client
+            .from("product_application_protocols")
+            .select<{
+              product_id: string
+              category: string
+              role: string
+              application_family: string
+              guidance_payload: unknown
+              guidance_payload_v2: unknown
+              products: { name: string | null; brand: string | null } | null
+            }>(
+              "product_id,category,role,application_family,guidance_payload,guidance_payload_v2,products!inner(name,brand,origin,is_active,lifecycle_status)",
+            )
+            .eq("products.origin", "curated")
+            .eq("products.is_active", true)
+            .eq("products.lifecycle_status", "active")
+            .order("product_id", { ascending: true })
+            .order("role", { ascending: true })
+            .order("application_family", { ascending: true })
+            .range(offset, offset + pageSize - 1)
+          if (error) throw new Error(`Stage 5 V2 pointer coverage audit failed: ${error.message}`)
+          const page = data ?? []
+          rows.push(
+            ...page.map(({ products, ...protocol }) => ({
+              ...protocol,
+              product_name: products?.name ?? null,
+              brand: products?.brand ?? null,
+            })),
           )
-          .eq("products.origin", "curated")
-          .eq("products.is_active", true)
-          .eq("products.lifecycle_status", "active")
-        if (error) throw new Error(`Stage 5 V2 pointer coverage audit failed: ${error.message}`)
-        return (data ?? []).map(({ products, ...protocol }) => ({
-          ...protocol,
-          product_name: products?.name ?? null,
-          brand: products?.brand ?? null,
-        }))
+          if (page.length < pageSize) return rows
+        }
       },
       async apply(artifactJson: string, fingerprint: string) {
         const { data, error } = await client.rpc("apply_personal_plan_stage5_v2_artifact_v1", {

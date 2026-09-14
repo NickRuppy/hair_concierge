@@ -544,6 +544,14 @@ test("a ledger row from a different batch run blocks the replay instead of rewri
   await seedReviewedState(pg)
   await callExecutor(pg, built.canonical_json, { fingerprint: built.fingerprint })
 
+  // Capture the fingerprint the executor itself booked, so each mutation below
+  // trips exactly one guard: phase A the content-fingerprint comparison, phase B
+  // (original fingerprint restored) the reviewer comparison alone.
+  const original = await pg.query<{ content_fingerprint: string }>(
+    `SELECT content_fingerprint FROM public.catalog_enrichment_applied_items`,
+  )
+  const originalContentFingerprint = original.rows[0]!.content_fingerprint
+
   await pg.query(`UPDATE public.catalog_enrichment_applied_items SET content_fingerprint = $1`, [
     "c".repeat(64),
   ])
@@ -555,18 +563,64 @@ test("a ledger row from a different batch run blocks the replay instead of rewri
   await pg.query(
     `UPDATE public.catalog_enrichment_applied_items
        SET content_fingerprint = $1, reviewed_by = 'someone-else'`,
-    [
-      (
-        await pg.query<{ fingerprint: string }>(
-          `SELECT encode(extensions.digest(convert_to($1, 'UTF8'), 'sha256'), 'hex') AS fingerprint`,
-          [JSON.stringify(built.delta.items[0])],
-        )
-      ).rows[0]!.fingerprint,
-    ],
+    [originalContentFingerprint],
   )
   await assert.rejects(
     callExecutor(pg, built.canonical_json, { fingerprint: built.fingerprint }),
     /ledger conflicts with retry/,
+  )
+})
+
+test("NULL reviewer, fingerprint, or payload cannot slip past the approval guards", async (t) => {
+  const pg = await migratedDatabase(t)
+  const built = await loadDelta()
+  await seedReviewedState(pg)
+
+  const call = (json: string | null, fingerprint: string | null, reviewer: string | null) =>
+    pg.query(`SELECT * FROM public.${STAGE5_V2_POINTER_DELTA_RPC}($1, $2, $3)`, [
+      json,
+      fingerprint,
+      reviewer,
+    ])
+
+  // Each NULL argument individually, and all at once. `x <> 'nick'` and
+  // `x !~ '…'` are NULL — not true — for NULL input, so without null-safe
+  // guards every one of these calls would write the pointer and a ledger row.
+  await assert.rejects(call(built.canonical_json, built.fingerprint, null), /reviewer must be nick/)
+  await assert.rejects(
+    call(built.canonical_json, null, "nick"),
+    /fingerprint must be lowercase sha256/,
+  )
+  await assert.rejects(call(null, built.fingerprint, "nick"), /delta payload is required/)
+  await assert.rejects(call(null, null, null), /reviewer must be nick/)
+
+  assert.equal(await livePointer(pg), null)
+  const ledger = await pg.query<{ count: string }>(
+    `SELECT count(*)::text AS count FROM public.catalog_enrichment_applied_items`,
+  )
+  assert.equal(ledger.rows[0]!.count, "0")
+})
+
+test("a product deactivated between check and write is refused, not written", async (t) => {
+  // The eligibility read now locks the product row (FOR UPDATE) and re-validates
+  // from the locked row, so a concurrent deactivation either waits and is then
+  // seen, or committed earlier and is seen. Single-connection PGlite cannot
+  // interleave two transactions, so this asserts the executor sees a
+  // deactivation that lands before the call — plus a source-pin on the lock.
+  const pg = await migratedDatabase(t)
+  const built = await loadDelta()
+  await seedReviewedState(pg)
+  await pg.query(`UPDATE public.products SET is_active = false WHERE id = $1`, [REDKEN_ID])
+  await assert.rejects(
+    callExecutor(pg, built.canonical_json, { fingerprint: built.fingerprint }),
+    /product is missing, inactive, or recategorized/,
+  )
+  assert.equal(await livePointer(pg), null)
+
+  const source = await readFile(new URL(MIGRATION, ROOT), "utf8")
+  assert.match(
+    source,
+    /FROM public\.products product\s+WHERE product\.id = v_product_id\s+FOR UPDATE/,
   )
 })
 
