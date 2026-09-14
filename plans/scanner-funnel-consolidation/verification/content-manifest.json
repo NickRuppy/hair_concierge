@@ -1,0 +1,991 @@
+{
+  "base": "92f00b8c16f899278222401e8d6bf43a553730ab",
+  "fingerprint": "7db344b3bcac89849856935868ed82e2594a77718583fcb5472d9b77923ac680",
+  "method": "SHA256 of sorted relative-path TAB content-sha256 LF; self-referential receipt and manifest excluded",
+  "files": [
+    {
+      "path": "eslint.config.mjs",
+      "sha256": "e630234bbf25589e9cbcebcf354715c1a218195ee8e5cd31cdd09b347f5dde5e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "3b54e30dd36185536372832d729611780fff7f44b0baadfc9ff0adebc34ef377"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/comparison.md",
+      "sha256": "c590f1130add54ba53a3981aa31590973086245e2de81b5adab56ab451bda668"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/implementation-handoff.md",
+      "sha256": "1dceab186e4b8fa7878e0f2dc544fe7f91d6e1a9acc9b1d068f0e7797f8d8f8f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/landing-draft.md",
+      "sha256": "d871ca7166e500f4c19465598869ef781b551aea336efd1dfc85f1ec978f594d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/README.md",
+      "sha256": "f83e2f60cd0752d5c6c5daf7d11ebc1afc444513b361502b5dc86b565b227504"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/approval-manifest.json",
+      "sha256": "c063467cc96c40d46bd08676c02c4db34d32b7e50a790c44fe2010d0f6cd0a26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/captions/README.md",
+      "sha256": "33e8698d9fc488e5ebd2b434d9af27f1b9394d4979733c1be71edd64568707a1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/captions/steffi-de.vtt",
+      "sha256": "49661884d99500c2da13cf91e453d7ec63c69f6e340833b3740ec91dc117a738"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/captions/transcription-source.json",
+      "sha256": "8879e76bd193666ec075e0864d0dac64094ec589995dcaf1f3263e1af9caaeb1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/texture-coily.webp",
+      "sha256": "5e0e56dd4d0f3d84a58bce8dd21d1429b4d92302c900c4460ab7cb8378a33aa2"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/texture-curly.webp",
+      "sha256": "9db6a81d7a46ee1849fdb157f90a63d34e926b668d627d5377b3288f71d81def"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/texture-straight.webp",
+      "sha256": "10d4f3c552f34c2389050b31161df64ee95ccc836a338aa3932039453c689428"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/texture-wavy.webp",
+      "sha256": "62e2bfd59f8162818f97818790c7137ebf72d76fffa75955101397bb1fdf9789"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/thickness-coarse.webp",
+      "sha256": "fcbe5029d96cbc070b584bac28511c8da615fefec17ffd91fe246dfe3181f928"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/thickness-fine.webp",
+      "sha256": "32b0de4f2b398118fa54180a429384ef3774439f56504b2298f2705c38f30a26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/personal-plan-quiz/thickness-normal.webp",
+      "sha256": "e6f5bbde39f5c5fc6ecd61170d67a177468db93a4aff91345028b2d10ea8b3ea"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/bad-ablage.webp",
+      "sha256": "fa8702fe4107e5430a7517932fd1b808f35c778444cdf2ba09bc149326609552"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/frau-regal-aha.webp",
+      "sha256": "bc27dcbb1775d2e997e0596a79357f3c35c410347cfcd1e0251d28d716f5c982"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/hero-camera.png",
+      "sha256": "6c49fd10d5376d875680736b85d7d39e9a2a091e8da26ed83633534f28b24f5a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/packshot-ogx.png",
+      "sha256": "0ec24ef38b240f8b7cda7c833a5702be6adaeb2a3477bd141c94e3f236539221"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/regal-scan-flasche.webp",
+      "sha256": "38c37a40b554e4ff8c287fd3e75c61a0827924c6420784e978e31bb2d5bcb18f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/tour-anwendung.png",
+      "sha256": "85bc51e3103f8d6d9929a66974f88508b34944aa795ac7c71d8128e71fe5aa54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/tour-chat.png",
+      "sha256": "1a27d5f52b20ade475f338532bb85d6bd8fe411a327f9385c3ca52f0c7e2c052"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/tour-plan.png",
+      "sha256": "d5144b2283d2a38a89b094c46127d4cf6425e3fd8ab22aa9a0a78677f7b4551d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scan/tour-scanner.png",
+      "sha256": "a15a491524a54b20304ea963e0a6457681ead5b024135a89594cc3b8c0e39a54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scanner-offer/device-scan-example.webp",
+      "sha256": "a31c2abb3460906aa497840f91ef78635044abfb8f47cb83f151332b7ac5685c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scanner-offer/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/funnels/scanner-offer/steffi-scanner-poster.jpg",
+      "sha256": "ac6f3a75b0f5c55b40b2ff892314aaac76d36ad98c40cdb5d36462e90b846329"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/production/ogx-production-scan-390x844.jpg",
+      "sha256": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/images/production/provenance.md",
+      "sha256": "7e977d70e9b07c11c1fc7d13e4a19a1f9521442e6685ff869a2edb3405c6eb14"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/production-screen.js",
+      "sha256": "068ff2e07542f8e8e3902540f546a25820475172986b4d9b80466e62774dad75"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/refinements.css",
+      "sha256": "79d2699f2ef1689706d21fd946c60603d50e1077a73826efeacd3d8e307defa5"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/refinements.js",
+      "sha256": "dc49198ca103acc405eebbf852eeb84ea923ea829590138785041da23c4a473a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/result-draft-render.css",
+      "sha256": "6ea43c32608474adaf4b2102fda024d5bfe33c86c59b20e06f7500d899eb8903"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/result-draft.css",
+      "sha256": "df73bbb57792e67a928e13986f5539b6ad1af978692aea17cb1d629ee5617de1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/result-scanner-draft.html",
+      "sha256": "77f7fd6d281c41b9867b35f1fa4d2a966364cc3bf1eb1851195996eb3c4bceef"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/result-scanner-interactions.js",
+      "sha256": "33909dafd0ee684ce0594383e20deb52236700256e02d230f135598c98adb84f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/scan-result-options.css",
+      "sha256": "18cc1a51353921daffc6906cc3bdb8ac03b2d7507b9d10c2e337c19e6e71b120"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/scanner-mobile-polish.css",
+      "sha256": "0ab6e342239043914260f021f542a78f7d3b85fd2bbcb200850a2de89773efb3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/approved-v20/videos/funnels/scanner-offer/steffi-scanner.mp4",
+      "sha256": "8b85862287771d8b9485608427668cc0523b0f65ff4ea68f8ab7b6109836df26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/build-quiz-entry.cjs",
+      "sha256": "d5e39a7407f8a02024b3bb7683d2d530d1b04da193b13aea3f39588e771c3b42"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/build-quiz-progress.cjs",
+      "sha256": "e96860b9f8f5117399634d59c31687d03b2da630ec9e44cee0d316907f589d30"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/build-result-draft.cjs",
+      "sha256": "b0a3156b19b93301c21d74a8d540bf2919f59a94a3def805b8dc64f9aefc561b"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/build.cjs",
+      "sha256": "085083e97062e4ce66d7c90fe4e22991a1db1fdccfefcd42f331f772f92a1f33"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/combined-landing-preview.html",
+      "sha256": "5cc06e13d49a49ca2a406e14a2c069804be5a3ec10215f790c449d7288951e38"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/combined-landing.html",
+      "sha256": "f71f3adbd3ad5979950a3a57dcd4410d44449882671ced027302b7212b160097"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/compare.css",
+      "sha256": "0b363251d6d163c533a43a40fc86b01c4ae929b194a2faa0faa163eb469b6f77"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/compare.js",
+      "sha256": "cf1814cd89651399fdc2b766ddc4d776cda78acd410295e37220e25fa296464d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/device-scan-example.webp",
+      "sha256": "a31c2abb3460906aa497840f91ef78635044abfb8f47cb83f151332b7ac5685c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/frame.css",
+      "sha256": "09d6b85a2977d4fb54054ea5325e33a8d85fa550e7b70c604f8a831374b6701e"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/frame.js",
+      "sha256": "d2f105307e14b2feb76db32ea56ff85491472c4601109f12066165356d5b3eca"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/full-draft-comparison.html",
+      "sha256": "5597655a564f99415b864d4dd94e54369812175c89c8142c2ce66d18fecf2237"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/texture-coily.webp",
+      "sha256": "5e0e56dd4d0f3d84a58bce8dd21d1429b4d92302c900c4460ab7cb8378a33aa2"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/texture-curly.webp",
+      "sha256": "9db6a81d7a46ee1849fdb157f90a63d34e926b668d627d5377b3288f71d81def"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/texture-straight.webp",
+      "sha256": "10d4f3c552f34c2389050b31161df64ee95ccc836a338aa3932039453c689428"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/texture-wavy.webp",
+      "sha256": "62e2bfd59f8162818f97818790c7137ebf72d76fffa75955101397bb1fdf9789"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/thickness-coarse.webp",
+      "sha256": "fcbe5029d96cbc070b584bac28511c8da615fefec17ffd91fe246dfe3181f928"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/thickness-fine.webp",
+      "sha256": "32b0de4f2b398118fa54180a429384ef3774439f56504b2298f2705c38f30a26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/personal-plan-quiz/thickness-normal.webp",
+      "sha256": "e6f5bbde39f5c5fc6ecd61170d67a177468db93a4aff91345028b2d10ea8b3ea"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/bad-ablage.webp",
+      "sha256": "fa8702fe4107e5430a7517932fd1b808f35c778444cdf2ba09bc149326609552"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/frau-regal-aha.webp",
+      "sha256": "bc27dcbb1775d2e997e0596a79357f3c35c410347cfcd1e0251d28d716f5c982"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/hero-camera.png",
+      "sha256": "6c49fd10d5376d875680736b85d7d39e9a2a091e8da26ed83633534f28b24f5a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/packshot-ogx.png",
+      "sha256": "0ec24ef38b240f8b7cda7c833a5702be6adaeb2a3477bd141c94e3f236539221"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/regal-scan-flasche.webp",
+      "sha256": "38c37a40b554e4ff8c287fd3e75c61a0827924c6420784e978e31bb2d5bcb18f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/tour-anwendung.png",
+      "sha256": "85bc51e3103f8d6d9929a66974f88508b34944aa795ac7c71d8128e71fe5aa54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/tour-chat.png",
+      "sha256": "1a27d5f52b20ade475f338532bb85d6bd8fe411a327f9385c3ca52f0c7e2c052"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/tour-plan.png",
+      "sha256": "d5144b2283d2a38a89b094c46127d4cf6425e3fd8ab22aa9a0a78677f7b4551d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scan/tour-scanner.png",
+      "sha256": "a15a491524a54b20304ea963e0a6457681ead5b024135a89594cc3b8c0e39a54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scanner-offer/device-scan-example.webp",
+      "sha256": "a31c2abb3460906aa497840f91ef78635044abfb8f47cb83f151332b7ac5685c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scanner-offer/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/funnels/scanner-offer/steffi-scanner-poster.jpg",
+      "sha256": "ac6f3a75b0f5c55b40b2ff892314aaac76d36ad98c40cdb5d36462e90b846329"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/production/ogx-production-scan-390x844.jpg",
+      "sha256": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/images/production/provenance.md",
+      "sha256": "7e977d70e9b07c11c1fc7d13e4a19a1f9521442e6685ff869a2edb3405c6eb14"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/index.html",
+      "sha256": "f7abbc285fdcb8db24d2a33287640bfd56c8af68a4169dcb185b9cefa48233c3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/jonas-original-quiz.html",
+      "sha256": "0cbe22dd87456b307f71df52d2c7bd42379bb8b000af8d1e34b9879aab0cb934"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/jonas-quiz.html",
+      "sha256": "d10d8b17c2759ec843ea408462104a22d26830fccb5302de605f89736768217f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/jonas.html",
+      "sha256": "06f540c612af3f28b63b8679803d92538ca5fad661cdbc808983a1c93a42d19c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/baseline-manifest.json",
+      "sha256": "2abdb8be6c2163432c9c892ca99e7d83d08dc4860919e9ba652be03d85df7883"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/texture-coily.webp",
+      "sha256": "5e0e56dd4d0f3d84a58bce8dd21d1429b4d92302c900c4460ab7cb8378a33aa2"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/texture-curly.webp",
+      "sha256": "9db6a81d7a46ee1849fdb157f90a63d34e926b668d627d5377b3288f71d81def"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/texture-straight.webp",
+      "sha256": "10d4f3c552f34c2389050b31161df64ee95ccc836a338aa3932039453c689428"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/texture-wavy.webp",
+      "sha256": "62e2bfd59f8162818f97818790c7137ebf72d76fffa75955101397bb1fdf9789"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/thickness-coarse.webp",
+      "sha256": "fcbe5029d96cbc070b584bac28511c8da615fefec17ffd91fe246dfe3181f928"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/thickness-fine.webp",
+      "sha256": "32b0de4f2b398118fa54180a429384ef3774439f56504b2298f2705c38f30a26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/personal-plan-quiz/thickness-normal.webp",
+      "sha256": "e6f5bbde39f5c5fc6ecd61170d67a177468db93a4aff91345028b2d10ea8b3ea"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/bad-ablage.webp",
+      "sha256": "fa8702fe4107e5430a7517932fd1b808f35c778444cdf2ba09bc149326609552"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/frau-regal-aha.webp",
+      "sha256": "bc27dcbb1775d2e997e0596a79357f3c35c410347cfcd1e0251d28d716f5c982"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/hero-camera.png",
+      "sha256": "6c49fd10d5376d875680736b85d7d39e9a2a091e8da26ed83633534f28b24f5a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/packshot-ogx.png",
+      "sha256": "0ec24ef38b240f8b7cda7c833a5702be6adaeb2a3477bd141c94e3f236539221"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/regal-scan-flasche.webp",
+      "sha256": "38c37a40b554e4ff8c287fd3e75c61a0827924c6420784e978e31bb2d5bcb18f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/tour-anwendung.png",
+      "sha256": "85bc51e3103f8d6d9929a66974f88508b34944aa795ac7c71d8128e71fe5aa54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/tour-chat.png",
+      "sha256": "1a27d5f52b20ade475f338532bb85d6bd8fe411a327f9385c3ca52f0c7e2c052"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/tour-plan.png",
+      "sha256": "d5144b2283d2a38a89b094c46127d4cf6425e3fd8ab22aa9a0a78677f7b4551d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scan/tour-scanner.png",
+      "sha256": "a15a491524a54b20304ea963e0a6457681ead5b024135a89594cc3b8c0e39a54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scanner-offer/device-scan-example.webp",
+      "sha256": "a31c2abb3460906aa497840f91ef78635044abfb8f47cb83f151332b7ac5685c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scanner-offer/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/funnels/scanner-offer/steffi-scanner-poster.jpg",
+      "sha256": "ac6f3a75b0f5c55b40b2ff892314aaac76d36ad98c40cdb5d36462e90b846329"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/production/ogx-production-scan-390x844.jpg",
+      "sha256": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/images/production/provenance.md",
+      "sha256": "7e977d70e9b07c11c1fc7d13e4a19a1f9521442e6685ff869a2edb3405c6eb14"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/production-screen.js",
+      "sha256": "068ff2e07542f8e8e3902540f546a25820475172986b4d9b80466e62774dad75"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/result-draft-render.css",
+      "sha256": "6ea43c32608474adaf4b2102fda024d5bfe33c86c59b20e06f7500d899eb8903"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/result-draft.css",
+      "sha256": "df73bbb57792e67a928e13986f5539b6ad1af978692aea17cb1d629ee5617de1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/result-scanner-draft.html",
+      "sha256": "be03b69c5762caea81e8033f1465daadaabd167eb481302174dd109d9ee1b786"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/result-scanner-interactions.js",
+      "sha256": "33909dafd0ee684ce0594383e20deb52236700256e02d230f135598c98adb84f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/scan-result-options.css",
+      "sha256": "18cc1a51353921daffc6906cc3bdb8ac03b2d7507b9d10c2e337c19e6e71b120"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/scanner-mobile-polish.css",
+      "sha256": "0ab6e342239043914260f021f542a78f7d3b85fd2bbcb200850a2de89773efb3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/locked-v12/videos/funnels/scanner-offer/steffi-scanner.mp4",
+      "sha256": "8b85862287771d8b9485608427668cc0523b0f65ff4ea68f8ab7b6109836df26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/nick.html",
+      "sha256": "6252603eb058f2dbf2eaf0f2eedbb0305e6128823c86d069b5d210f742b88194"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-mobile-preview.html",
+      "sha256": "f92cb12657601651204afea74bf4e1c5e86b808b9839750635b7e23354b29cc1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-options.css",
+      "sha256": "deb462b9f4a7ee7fb2a74c5cf9a50aafc5553bd5fb80752e7133d8b890817c3f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-style-a.html",
+      "sha256": "c08939b443e0e692de64077b7ff016dafaa04445cbf61827e2e4e1d2e37ed846"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-style-b.html",
+      "sha256": "f3f88fa34b70d75392ec173022bf89f8e122ad43013dc89dba8f88f28611cdd8"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-style-c.html",
+      "sha256": "d841a9cf44e9cfdd0f1a4934642173f0ff7455719fbbd1a2dad21085f200c787"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/outcome-styles.html",
+      "sha256": "df9757ecf4316526f2dfb2ce345b4f1ba303c2058560f476381712ae8e06d564"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/pricing-data.js",
+      "sha256": "7125aa24e2e62e23489a7ebcdf390c55e45383fe20b0869bbd3d157c81da9a80"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/production-screen.js",
+      "sha256": "068ff2e07542f8e8e3902540f546a25820475172986b4d9b80466e62774dad75"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/captions/README.md",
+      "sha256": "33e8698d9fc488e5ebd2b434d9af27f1b9394d4979733c1be71edd64568707a1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/captions/steffi-de.vtt",
+      "sha256": "49661884d99500c2da13cf91e453d7ec63c69f6e340833b3740ec91dc117a738"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/captions/transcription-source.json",
+      "sha256": "8879e76bd193666ec075e0864d0dac64094ec589995dcaf1f3263e1af9caaeb1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/texture-coily.webp",
+      "sha256": "5e0e56dd4d0f3d84a58bce8dd21d1429b4d92302c900c4460ab7cb8378a33aa2"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/texture-curly.webp",
+      "sha256": "9db6a81d7a46ee1849fdb157f90a63d34e926b668d627d5377b3288f71d81def"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/texture-straight.webp",
+      "sha256": "10d4f3c552f34c2389050b31161df64ee95ccc836a338aa3932039453c689428"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/texture-wavy.webp",
+      "sha256": "62e2bfd59f8162818f97818790c7137ebf72d76fffa75955101397bb1fdf9789"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/thickness-coarse.webp",
+      "sha256": "fcbe5029d96cbc070b584bac28511c8da615fefec17ffd91fe246dfe3181f928"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/thickness-fine.webp",
+      "sha256": "32b0de4f2b398118fa54180a429384ef3774439f56504b2298f2705c38f30a26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/personal-plan-quiz/thickness-normal.webp",
+      "sha256": "e6f5bbde39f5c5fc6ecd61170d67a177468db93a4aff91345028b2d10ea8b3ea"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/bad-ablage.webp",
+      "sha256": "fa8702fe4107e5430a7517932fd1b808f35c778444cdf2ba09bc149326609552"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/frau-regal-aha.webp",
+      "sha256": "bc27dcbb1775d2e997e0596a79357f3c35c410347cfcd1e0251d28d716f5c982"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/hero-camera.png",
+      "sha256": "6c49fd10d5376d875680736b85d7d39e9a2a091e8da26ed83633534f28b24f5a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/packshot-ogx.png",
+      "sha256": "0ec24ef38b240f8b7cda7c833a5702be6adaeb2a3477bd141c94e3f236539221"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/regal-scan-flasche.webp",
+      "sha256": "38c37a40b554e4ff8c287fd3e75c61a0827924c6420784e978e31bb2d5bcb18f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/tour-anwendung.png",
+      "sha256": "85bc51e3103f8d6d9929a66974f88508b34944aa795ac7c71d8128e71fe5aa54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/tour-chat.png",
+      "sha256": "1a27d5f52b20ade475f338532bb85d6bd8fe411a327f9385c3ca52f0c7e2c052"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/tour-plan.png",
+      "sha256": "d5144b2283d2a38a89b094c46127d4cf6425e3fd8ab22aa9a0a78677f7b4551d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scan/tour-scanner.png",
+      "sha256": "a15a491524a54b20304ea963e0a6457681ead5b024135a89594cc3b8c0e39a54"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scanner-offer/device-scan-example.webp",
+      "sha256": "a31c2abb3460906aa497840f91ef78635044abfb8f47cb83f151332b7ac5685c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scanner-offer/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/funnels/scanner-offer/steffi-scanner-poster.jpg",
+      "sha256": "ac6f3a75b0f5c55b40b2ff892314aaac76d36ad98c40cdb5d36462e90b846329"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/production/ogx-production-scan-390x844.jpg",
+      "sha256": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/images/production/provenance.md",
+      "sha256": "7e977d70e9b07c11c1fc7d13e4a19a1f9521442e6685ff869a2edb3405c6eb14"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/production-screen.js",
+      "sha256": "068ff2e07542f8e8e3902540f546a25820475172986b4d9b80466e62774dad75"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/refinements.css",
+      "sha256": "79d2699f2ef1689706d21fd946c60603d50e1077a73826efeacd3d8e307defa5"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/refinements.js",
+      "sha256": "dc49198ca103acc405eebbf852eeb84ea923ea829590138785041da23c4a473a"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/result-draft-render.css",
+      "sha256": "6ea43c32608474adaf4b2102fda024d5bfe33c86c59b20e06f7500d899eb8903"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/result-draft.css",
+      "sha256": "df73bbb57792e67a928e13986f5539b6ad1af978692aea17cb1d629ee5617de1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/result-scanner-draft.html",
+      "sha256": "77f7fd6d281c41b9867b35f1fa4d2a966364cc3bf1eb1851195996eb3c4bceef"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/result-scanner-interactions.js",
+      "sha256": "33909dafd0ee684ce0594383e20deb52236700256e02d230f135598c98adb84f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/scan-result-options.css",
+      "sha256": "18cc1a51353921daffc6906cc3bdb8ac03b2d7507b9d10c2e337c19e6e71b120"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/scanner-mobile-polish.css",
+      "sha256": "0ab6e342239043914260f021f542a78f7d3b85fd2bbcb200850a2de89773efb3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/proposed-v13/videos/funnels/scanner-offer/steffi-scanner.mp4",
+      "sha256": "8b85862287771d8b9485608427668cc0523b0f65ff4ea68f8ab7b6109836df26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry-approval.json",
+      "sha256": "c1a800ae07d484d0831dddd9920f924b7fb7de6581a5d4e036df88c712ccbea1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry-preview.html",
+      "sha256": "f276c390c9a804e1d4c164b9225b0f15dd247c4e1ee5e93a20def77300fd09b8"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry-render.css",
+      "sha256": "6a2913b98c3f4e90faba245d8c3d89c39a32489c6449365f01362185614d4854"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry-source.json",
+      "sha256": "559d8b57ac47bc28833190513a7b1aa5ef540a2241370a7c48fc20c2c0b4899f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry.css",
+      "sha256": "d95d105420d20eee1fef6d16ae8b2534cbd793590103cc6a309eb1cd8fd185aa"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry.html",
+      "sha256": "e68e61f9db89d39aa29fc3d6d252f31e7dc493df7773a4095f63b97a3dbfe16c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-entry.js",
+      "sha256": "d68bcf41ce35e2db8305f0c39e1f37739fc6d3928930ab6993c5579238a4620b"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-progress-current.html",
+      "sha256": "2fbf9b603fce15bef814cd2d7afefc0a0b57b83234fdbcbbb89b5c3c98bdb621"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-progress-jonas.html",
+      "sha256": "1fd50a687be92740d74543be5f94cabbf65291feca358a3a0fc2e2be2889a501"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-progress-preview.html",
+      "sha256": "7251e6c5fb91ca5439197bd2be67b34f544f78cd881f2cf98346057dcc9ffd3c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-progress-render.css",
+      "sha256": "fa34cd80aa3a9b3b3a50590592ea7e5c2af0ebee37804dd6bae7ebd301cb8e73"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/quiz-progress-source.json",
+      "sha256": "1a3ab84e355dc3b6e4658fd5284e59d1b80e54b528187d69d7ece52e12bc7f39"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/refinement-comparison.html",
+      "sha256": "5cd6ddd88d434a8e9a0671fc0e58c252e84fbfd1d4863fb1e28492d81c0fef0d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/render.css",
+      "sha256": "63fe6e55b69474067adb7c51100d8317585d7948143e5e0b3b84306b5e0212e1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-draft-preview.html",
+      "sha256": "755fe6b0cebba6f05dd36cd16ff477b46c6ae464b7297b45fda8ecd13d988516"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-draft-render.css",
+      "sha256": "6ea43c32608474adaf4b2102fda024d5bfe33c86c59b20e06f7500d899eb8903"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-draft-source.json",
+      "sha256": "a95d8acd1fb57c955da976a2ac432f5f75805d4d05f628d8642db1f838963ffa"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-draft.css",
+      "sha256": "df73bbb57792e67a928e13986f5539b6ad1af978692aea17cb1d629ee5617de1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-organic-source.html",
+      "sha256": "448f960376f43c7e01272268a6cd9647df00b20e217b01a47b30ab2b3ac7ed91"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-scanner-draft.html",
+      "sha256": "be03b69c5762caea81e8033f1465daadaabd167eb481302174dd109d9ee1b786"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-scanner-interactions.js",
+      "sha256": "33909dafd0ee684ce0594383e20deb52236700256e02d230f135598c98adb84f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/result-scanner-sections.html",
+      "sha256": "62308f80b0cf879748ca3a93a082cbb7704249b49c0c50d8075cedf01c3f07bc"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scan-result-options.css",
+      "sha256": "18cc1a51353921daffc6906cc3bdb8ac03b2d7507b9d10c2e337c19e6e71b120"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scan-result-style-a.html",
+      "sha256": "c1a348f66301916cfffda54e8bd5faee73bce31598eb40cf460db7ae4b197906"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scan-result-style-b.html",
+      "sha256": "4b045a4ee01d1475938d918b7aecbd8b718817c795790acffd08adefb0a5aaa0"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scan-result-style-c.html",
+      "sha256": "7f4cc78ae21b8c5a07f5d8cc1a9da3ab1337ef6a8e19f6467147747a8854317d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scan-result-styles.html",
+      "sha256": "c41e10fe0a9f5a33b3fdbc67f6394b47dc705c2a40d9de60296acbe64efc6ac1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/scanner-mobile-polish.css",
+      "sha256": "0ab6e342239043914260f021f542a78f7d3b85fd2bbcb200850a2de89773efb3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/sources.json",
+      "sha256": "9f18855730a81cdc16b8bf84a5c66d257c62286b3c8e0b092842dd4239575f06"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/preview/videos/funnels/scanner-offer/steffi-scanner.mp4",
+      "sha256": "8b85862287771d8b9485608427668cc0523b0f65ff4ea68f8ab7b6109836df26"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/refinement-plan.md",
+      "sha256": "167e445d6f37fa1b678c34a53fcc5859528d6162aed4208c203eb864c206a0d3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/adversarial-ux-review.md",
+      "sha256": "6864cb0743f99538398c5df66243ba22f23f9fe571b8c21050bc9072bc4359be"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/claude-ux-review-input.md",
+      "sha256": "2edebce6b90e72ab461093e0c77078cb96280f6d90f1a3487b63251be4420322"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/claude-ux-review-raw.md",
+      "sha256": "54f2ab140cd3113bf4abc02ceebeaa018e2c752d2627608dca9ac81b85f8cbb7"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/claude-ux-review.md",
+      "sha256": "f6052057d986150e503df7085c7a75c761ce923e4a37472afae892da5d207456"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-faq-footer.png",
+      "sha256": "55025774f175ceb98b2f7234fe78bc99c764760365f1810362d3a21b3bf21a56"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-pricing-monthly.png",
+      "sha256": "6cd470ad7bfe92e51856cff94c63d47b26341fdcc7c7c18fd8ee065d1c2a1789"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-product-result.png",
+      "sha256": "3b16774f485d042ac2d12c1e65d06d40b05c6cb630e2c8be89f456ed32212fe5"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-profile.png",
+      "sha256": "f4971934d444ff9ba66f42693f87e63ced966fd81308b78948264abcda1e07d4"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-scanner-explainer.png",
+      "sha256": "838ce6e04fd52f6856567c43c0ca5011df8eb12941cca47ac2334d57b6aa20f8"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-testimonials.png",
+      "sha256": "7a0f2d55c77cdb87aafeed13018a8eabb96152de93124f6bd057ff547ecab18c"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-timeline-prices.png",
+      "sha256": "d98aebfe7350c728599c8d24dfb375ddb1a511156e7363ff0bc5bb1913503e4b"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/320-video-playing.png",
+      "sha256": "78300c3aeb0cd9a58862aa8281af9df91ee1184126bb354bf863faec5870e3e4"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-benefits.png",
+      "sha256": "8db450415594ea72b89e6e521e6d01620f9575cccc6f143aeb1676265566fa55"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-faq-footer.png",
+      "sha256": "f2793cbf8d722538dcf93ed8d7c59af9000d245ecccf926ec0c4d56a3b701807"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-outcome-video.png",
+      "sha256": "ae8af015458558278ccbfe19341a98dcadcc4780d5dcd9fe0de94247a1e6456e"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-pricing.png",
+      "sha256": "0c8c19a62de0b71988838fab8e792f71fda1bab5c773db07073459f80e7a205f"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-product-result.png",
+      "sha256": "0f3056109785ce7070450c9e4c952425dd079d8cf38ca1e61a79fb4b0438bdf2"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-profile.png",
+      "sha256": "760db7f1b62666f9b23132a6c1077df9562987d367b6b067aa11c2e9f4c3703d"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/390-testimonials.png",
+      "sha256": "7b16f3f81e2bbe47905ad8df2a5c6a5f07fea7ebe1adb1f471a648f0006ea6ea"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-evidence/full-standalone.png",
+      "sha256": "2a4f52848cc80bb8084c2f926459a5e40f1513e191238138a0095870e2e011f0"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/reviews/ux-review-baseline.json",
+      "sha256": "548be401b12fc84c81d8d4262e1a138542db14e6b4f017fa0147049e41322a1e"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/verification/scanner-refinement-320-pricing.png",
+      "sha256": "fc938375e07510599706f7bfa6bc19804f030244b03615f38542a1f185255e51"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/verification/scanner-refinement-390-outcome.png",
+      "sha256": "431a5f161f3ddcdbbe004252a6b58c95691e670b95cbba030d552133a8f04de1"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/verification/scanner-refinement-390-pricing.png",
+      "sha256": "f774cdefbc05430bdc010f0c15f260a196d100d68373bff3d1f22a3cb06ebea3"
+    },
+    {
+      "path": "plans/scanner-funnel-consolidation/verification/scanner-refinement-390-top.png",
+      "sha256": "d5f6cff9c94704c8738241ffe4542a4458af01744b285b24a9ee07d0a3ff0630"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "760eaa3551d419a14c8600b05966d444372e0c4b890fc0b2c002a3f16106e3b4"
+    },
+    {
+      "path": "public/images/funnels/scan-refinement/ogx-production-scan-390x844.jpg",
+      "sha256": "aa7221d1c44e03fa0ddb4b70f3947fae66f907a47dffd97a921b48fa29724566"
+    },
+    {
+      "path": "public/images/funnels/scan-refinement/photo-scanner-shelf.webp",
+      "sha256": "cb7ca890b4732ffc47fcadcef2b993e01916f783860fe220428eef02692eb963"
+    },
+    {
+      "path": "public/images/funnels/scan-refinement/steffi-scanner-poster.jpg",
+      "sha256": "ac6f3a75b0f5c55b40b2ff892314aaac76d36ad98c40cdb5d36462e90b846329"
+    },
+    {
+      "path": "public/videos/funnels/scan-refinement/steffi-de.vtt",
+      "sha256": "49661884d99500c2da13cf91e453d7ec63c69f6e340833b3740ec91dc117a738"
+    },
+    {
+      "path": "public/videos/funnels/scan-refinement/steffi-scanner.mp4",
+      "sha256": "8b85862287771d8b9485608427668cc0523b0f65ff4ea68f8ab7b6109836df26"
+    },
+    {
+      "path": "src/app/labs/scanner-refinement/page.tsx",
+      "sha256": "4a9433a92eb315f56513a82b41a24af960b9252027b0160fbe4c1d1506dade22"
+    },
+    {
+      "path": "src/app/labs/scanner-refinement/scanner-refinement-lab-client.tsx",
+      "sha256": "ccdcdc322cdb14806f411e3f6b1e7d644cc406a721139b35f4e06cd924acf6d8"
+    },
+    {
+      "path": "src/app/lp/[slug]/page.tsx",
+      "sha256": "ac9b444a224ef65cfd7fb81401f0c7892b2d88e93782ae6c8330cc44161e8c3e"
+    },
+    {
+      "path": "src/app/lp/[slug]/route-helpers.ts",
+      "sha256": "8edae1c3d8986a49ecf93018d754c6d5d9d3928c6f973f56c4f0e18ddc2bb063"
+    },
+    {
+      "path": "src/app/quiz/layout.tsx",
+      "sha256": "40a1fc09f82f8d6832a57b76449af4b159fb4e2877989eb9e79bbbab99fe4e4d"
+    },
+    {
+      "path": "src/app/result/[leadId]/page.tsx",
+      "sha256": "53655c6e0f4d5b716797b29b3f08c42f92ff0bb1adfcf4a29a7433171ec86c07"
+    },
+    {
+      "path": "src/app/result/[leadId]/result-client.tsx",
+      "sha256": "7146457670c970a601859da3756e40fb7b9e57d90426063b08cf2952f03594cb"
+    },
+    {
+      "path": "src/components/billing/scanner-trial-offer.tsx",
+      "sha256": "7c02429dca835ba07a4b598a07e0faf6b35a9fe81095a3f8cc9488bcc6c632c2"
+    },
+    {
+      "path": "src/components/billing/trial-offer.tsx",
+      "sha256": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a"
+    },
+    {
+      "path": "src/components/organic-plan-offer/organic-plan-offer.tsx",
+      "sha256": "d6519b3d4f2dfbe914e36ed0fea6d8d01e05e27284278f0670a144ff37149900"
+    },
+    {
+      "path": "src/components/quiz/offer-tracking-provider.tsx",
+      "sha256": "5300ac98e018b3a990476486b29ee46d66f682c4bf7eb95ce7415ec69d438d36"
+    },
+    {
+      "path": "src/components/quiz/quiz-funnel-package-provider.tsx",
+      "sha256": "e36f019b2dc25a67d7ce7169508b949ad136c1177b7d83e189c31bfe241e7b80"
+    },
+    {
+      "path": "src/components/quiz/quiz-info-strip.tsx",
+      "sha256": "eca934a9f801d4ebd5edeef535d8906ec0b2f0a5a76435bd1f77ab7d529386dd"
+    },
+    {
+      "path": "src/components/quiz/quiz-question.tsx",
+      "sha256": "059ab73a428770f24225f3bfaffaba6a8e9560ca4b468067cfaf835b3c077493"
+    },
+    {
+      "path": "src/components/quiz/result-offer-pricing.tsx",
+      "sha256": "b6d7696cfc5b3a02b952083ab61117f90ed94fd4be0d775274d1fd4cfa8f53fe"
+    },
+    {
+      "path": "src/components/scan-regal-offer/scan-regal-offer.tsx",
+      "sha256": "31cf95716dcfbe04f7f6ff760c079d98c43c06a09b931481fb16352f68dde21a"
+    },
+    {
+      "path": "src/components/scan-regal-offer/scanner-refined-offer.tsx",
+      "sha256": "378a513ffa25ce11cd26b846b398938fec1dd8489fbdfb93e9618c3a1b05f4e9"
+    },
+    {
+      "path": "src/components/scan-regal-offer/scanner-refined-styles.ts",
+      "sha256": "115d273e214dd62876231d87c73fe01f83c248731e36b292a1176657cc8e6ac1"
+    },
+    {
+      "path": "src/funnels/types.ts",
+      "sha256": "96a841d51ed5d660df572a300d3a5ae88e48f75a71113769cc13a78b672ccfa0"
+    },
+    {
+      "path": "src/lib/analytics/events.ts",
+      "sha256": "b826e94c0fd2cfbdeeec17868f56eba3e45a2f35e59f1a6d7059315976e829d5"
+    },
+    {
+      "path": "src/lib/analytics/offer-section-order.ts",
+      "sha256": "2920651c44f0fa35529b9411950f9cd8ab664dae2dba039b217f062a0c10d1c4"
+    },
+    {
+      "path": "src/lib/funnel/scanner-refinement.ts",
+      "sha256": "5c1405ba7d813b97003c9795b9bc314e3d6364273031bff63f0f4f939a97fb52"
+    },
+    {
+      "path": "tests/offer-section-order.test.ts",
+      "sha256": "34f6dea8b36a9f61cb04f300a1ed6ccf6867994351d92a9b076dccea1cb7270f"
+    },
+    {
+      "path": "tests/quiz-funnel-package-context.test.tsx",
+      "sha256": "a5d39a381bda5c5d6c012443f3cbb817754327d6363156a5ad87b8b6504bbb65"
+    },
+    {
+      "path": "tests/retired-funnel-routes.test.ts",
+      "sha256": "6f6704305759511c8ac6ae1eca9db9a03695cfe79f4dc6e462e77dc1e2fa0ca7"
+    },
+    {
+      "path": "tests/scanner-refined-offer.test.tsx",
+      "sha256": "a479546428da176d268b22a4c129845aeb6dbddd4642d8987b7787e82aef52cc"
+    },
+    {
+      "path": "tests/scanner-refinement-config.test.ts",
+      "sha256": "9267e6b008b9dfbb6354b3f51a678fab3df39694b0a26c80d8212995503a9803"
+    },
+    {
+      "path": "tests/scanner-refinement-entry.spec.ts",
+      "sha256": "c59982271d76ecb3c9c830dc31b85045d63fbf0a8d07c13360c86ac9879f4a29"
+    },
+    {
+      "path": "tests/scanner-refinement-entry.test.tsx",
+      "sha256": "ca268914fa54124532a66ffb457f34236591df29b32fd4be91f19973dc5dd8ea"
+    },
+    {
+      "path": "tests/scanner-refinement-offer.spec.ts",
+      "sha256": "29507055ac690255428c9a4999c6dded7ac59d2f8e77941cd08369573af5b1cb"
+    },
+    {
+      "path": "tests/scanner-refinement-routing.test.tsx",
+      "sha256": "f4a501ebbeb092a4545232f346c0bade31e8bb61f5529b4de65818c93701adbc"
+    },
+    {
+      "path": "tests/scanner-trial-offer.test.tsx",
+      "sha256": "628d585b4d40bf354ff73cb626be906b3cbea7643b0303a12ab9d416b62445a3"
+    }
+  ]
+}

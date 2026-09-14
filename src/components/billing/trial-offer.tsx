@@ -4,6 +4,8 @@ import Image from "next/image"
 
 import type { TrialOfferPricing as TrialOfferPricingContract } from "@/lib/billing/trial-offer"
 
+import { ScannerTrialOffer } from "./scanner-trial-offer"
+
 export type { TrialOfferPricing } from "@/lib/billing/trial-offer"
 
 export type TrialOfferInterval = "month" | "year"
@@ -50,6 +52,7 @@ export function TrialOffer({
   onContinue,
   onSelect,
   pending = false,
+  presentation = "default",
   pricing,
   selectedInterval,
 }: {
@@ -57,11 +60,25 @@ export function TrialOffer({
   onContinue: () => void
   onSelect: (interval: TrialOfferInterval) => void
   pending?: boolean
+  presentation?: "default" | "scanner"
   pricing: TrialOfferPricingContract
   selectedInterval: TrialOfferInterval
 }) {
+  if (presentation === "scanner") {
+    return (
+      <ScannerTrialOffer
+        disabled={disabled}
+        onContinue={onContinue}
+        onSelect={onSelect}
+        pending={pending}
+        pricing={pricing}
+        selectedInterval={selectedInterval}
+      />
+    )
+  }
+
   const isDisabled = disabled || pending
-  const presentation = getTrialOfferPresentation(pricing)
+  const terms = getTrialOfferPresentation(pricing)
   const annualSelected = selectedInterval === "year"
 
   return (
@@ -117,16 +134,16 @@ export function TrialOffer({
               </span>
               <span>
                 <span className="block text-sm font-semibold">
-                  Jährlich · spare {presentation.annualSavingsPercent} %*
+                  Jährlich · spare {terms.annualSavingsPercent} %*
                 </span>
                 <span className="mt-0.5 block text-xs text-[#77717c]">
-                  {presentation.hasIntroductoryAnnualPrice
-                    ? `${presentation.annualFirst} im ersten Jahr`
-                    : `${presentation.annualFirst} pro Jahr`}
+                  {terms.hasIntroductoryAnnualPrice
+                    ? `${terms.annualFirst} im ersten Jahr`
+                    : `${terms.annualFirst} pro Jahr`}
                 </span>
               </span>
               <span className="ml-auto whitespace-nowrap text-right text-xs text-[#77717c]">
-                {presentation.annualMonthlyEquivalent} / Monat*
+                {terms.annualMonthlyEquivalent} / Monat*
               </span>
             </span>
           </button>
@@ -155,7 +172,7 @@ export function TrialOffer({
             </span>
             <span className="text-sm font-normal text-[#77717c]">Monatlich</span>
             <span className="ml-auto whitespace-nowrap text-right text-xs text-[#77717c]">
-              {presentation.monthly} / Monat
+              {terms.monthly} / Monat
             </span>
           </button>
         </div>
@@ -176,16 +193,16 @@ export function TrialOffer({
         <div className="mt-4 space-y-3 text-center text-[11px] leading-[1.5] text-[#827b89]">
           <p>
             {pricing.trialDays} Tage kostenlos, dann{" "}
-            {annualSelected ? presentation.annualFirst : presentation.monthly}
+            {annualSelected ? terms.annualFirst : terms.monthly}
             {annualSelected
-              ? presentation.hasIntroductoryAnnualPrice
+              ? terms.hasIntroductoryAnnualPrice
                 ? " fürs erste Jahr."
                 : " pro Jahr."
               : " pro Monat."}
             <br />
             {annualSelected
-              ? presentation.hasIntroductoryAnnualPrice
-                ? `Danach ${presentation.annualRenewal} jährlich. Automatische Verlängerung.`
+              ? terms.hasIntroductoryAnnualPrice
+                ? `Danach ${terms.annualRenewal} jährlich. Automatische Verlängerung.`
                 : "Automatische Verlängerung."
               : "Automatische Verlängerung."}
             <br />
@@ -193,7 +210,7 @@ export function TrialOffer({
           </p>
           {annualSelected ? (
             <p>
-              {presentation.hasIntroductoryAnnualPrice
+              {terms.hasIntroductoryAnnualPrice
                 ? "*Monatsvergleich und Ersparnis gelten fürs erste Jahr."
                 : "*Monatsvergleich bei jährlicher Zahlung."}
             </p>

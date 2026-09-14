@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scanner-Angebot: Gegenüberstellung</title>
+    <link rel="stylesheet" href="compare.css" />
+  </head>
+  <body>
+    <main class="workbench">
+      <header class="masthead">
+        <p class="eyebrow">Entscheidungsansicht · 13. September 2026</p>
+        <h1>Scanner-Angebot im Vergleich</h1>
+        <p class="intro">Zwei Ansätze für denselben Schritt nach dem Quiz. Links steht der bereits zusammengeführte Scanner-Funnel aus <strong>#534 und #536</strong>; rechts Jonas’ <strong>#535</strong> als Designreferenz. Jede Spalte lässt sich unabhängig scrollen.</p>
+      </header>
+
+      <section class="controls" aria-label="Vergleichsbereich auswählen">
+        <p class="control-label">Bereich</p>
+        <div class="tabs" aria-label="Bereiche des Scanner-Angebots">
+          <button type="button" data-area="opening" aria-current="true">Einstieg</button>
+          <button type="button" data-area="profile">Profil</button>
+          <button type="button" data-area="proof">Beweis</button>
+          <button type="button" data-area="pricing">Preise</button>
+          <button type="button" data-area="unknown">Unbekanntes Produkt</button>
+          <button type="button" data-area="footer">Footer</button>
+          <button type="button" data-area="mobile">Mobile CTAs</button>
+          <button type="button" data-area="quiz">Quiz</button>
+          <button type="button" data-area="handover">Trial-Handover</button>
+          <button type="button" data-area="measurement">Integration & Events</button>
+          <button type="button" data-area="full">Ganze Seiten</button>
+        </div>
+        <p id="area-description" class="area-description" aria-live="polite"></p>
+      </section>
+
+      <section class="comparison" aria-label="Seitenvergleich">
+        <div class="comparison-note">
+          <span id="comparison-context">Einstieg nach dem Quiz</span>
+          <span>Beide Darstellungen sind statische Vorschauen: keine Zahlung, kein Tracking, kein WhatsApp.</span>
+        </div>
+        <div class="comparison-scroll">
+          <div class="comparison-canvas">
+            <article class="frame-column">
+              <div class="frame-heading">
+                <div>
+                  <p class="frame-kicker">Zusammengeführt · technische Grundlage</p>
+                  <h2>Nick · #534 <span>(+ #536 Assets)</span></h2>
+                </div>
+                <a id="nick-full-link" href="nick.html?area=full" target="_blank" rel="noopener">Ganze Seite</a>
+              </div>
+              <iframe id="nick-frame" title="Nick: Scanner-Funnel aus PR 534 und 536" src="nick.html?area=opening" loading="eager"></iframe>
+            </article>
+
+            <article class="frame-column reference">
+              <div class="frame-heading">
+                <div>
+                  <p class="frame-kicker">Nicht zum Merge vorgesehen · Designreferenz</p>
+                  <h2>Jonas · #535</h2>
+                </div>
+                <a id="jonas-full-link" href="jonas.html?area=full" target="_blank" rel="noopener">Ganze Seite</a>
+              </div>
+              <iframe id="jonas-frame" title="Jonas: Designreferenz aus PR 535" src="jonas.html?area=opening" loading="eager"></iframe>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <footer class="source-note">
+        <p><strong>Lesart:</strong> #535 ist keine konkurrierende Produktroute. Der reale Checkout, Attribution, Trial-Berechtigung und Ereignisse bleiben außerhalb dieser Vorschau und werden hier nur dort erklärt, wo die Entwürfe voneinander abweichen.</p>
+      </footer>
+    </main>
+    <script src="compare.js"></script>
+  </body>
+</html>

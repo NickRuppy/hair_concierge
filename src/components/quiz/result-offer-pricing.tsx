@@ -430,6 +430,7 @@ export function ResultOfferPricing(props: {
   offerVariant?: string
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
+  presentation?: "default" | "scanner"
   referencePrices?: QuizResultReferencePrices
   trialOfferPricing?: TrialOfferPricing | null
 }) {
@@ -453,7 +454,10 @@ export function ResultOfferPricing(props: {
     )
   }
   return (
-    <MembershipResultOfferPricing key={props.trialOfferPricing ? "trial" : "paid"} {...props} />
+    <MembershipResultOfferPricing
+      key={props.trialOfferPricing ? `trial-${props.presentation ?? "default"}` : "paid"}
+      {...props}
+    />
   )
 }
 
@@ -775,6 +779,7 @@ function MembershipResultOfferPricing({
   offerTracking,
   openCheckoutRequestId,
   pricingCatalog = "standard",
+  presentation = "default",
   referencePrices,
   trialOfferPricing = null,
 }: {
@@ -787,6 +792,7 @@ function MembershipResultOfferPricing({
   offerVariant?: string
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
+  presentation?: "default" | "scanner"
   referencePrices?: QuizResultReferencePrices
   trialOfferPricing?: TrialOfferPricing | null
 }) {
@@ -1521,6 +1527,7 @@ function MembershipResultOfferPricing({
             endCheckout({ endReason: "plan_changed" })
           }}
           pricing={trialOfferPricing}
+          presentation={presentation}
           selectedInterval={selectedInterval as "month" | "year"}
         />
       ) : (

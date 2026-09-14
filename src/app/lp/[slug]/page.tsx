@@ -9,7 +9,8 @@ import {
   isPersonalPlanResultReturnEnabled,
   isScanFunnelEnabled,
 } from "@/lib/funnel/flags"
-import { getFunnelPackageBySlug, type FunnelPackage } from "@/lib/funnel/packages"
+import { isScannerFunnelRefinementEnabled } from "@/lib/funnel/scanner-refinement"
+import { getFunnelPackageBySlug } from "@/lib/funnel/packages"
 import {
   PERSONAL_PLAN_QUIZ_DRAFT_COOKIE,
   PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY,
@@ -31,6 +32,11 @@ import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
 import { resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { createClient } from "@/lib/supabase/server"
 import { PersonalPlanFieldTestEnded } from "@/components/personal-plan-field-test/personal-plan-field-test-ended"
+import {
+  buildRetiredRoutineRedirect,
+  buildScannerQuizRedirect,
+  shouldBlockPlaceholderScanRoute,
+} from "./route-helpers"
 
 export const dynamic = "force-dynamic"
 
@@ -57,6 +63,12 @@ export default async function CampaignLandingPage({
   }
   if (shouldBlockPlaceholderScanRoute(funnelPackage, isScanFunnelEnabled())) {
     notFound()
+  }
+  // `/lp/scan` remains the campaign-attribution boundary in the proxy. Once
+  // that request has minted or retained its signed scanner session, the
+  // refinement sends the visitor straight to the existing quiz surface.
+  if (funnelPackage.key === "scan_v1" && isScannerFunnelRefinementEnabled()) {
+    redirect(buildScannerQuizRedirect(resolvedSearchParams))
   }
 
   const resumeToken = getSingleSearchParam(
@@ -170,42 +182,6 @@ function PersonalPlanFieldTestExistingSessionNotice() {
   )
 }
 
-const SAFE_RETIRED_ROUTINE_QUERY_KEYS = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
-  "fbclid",
-] as const
-
-export function buildRetiredRoutineRedirect(
-  searchParams: Record<string, string | string[] | undefined>,
-) {
-  const params = new URLSearchParams()
-  for (const key of SAFE_RETIRED_ROUTINE_QUERY_KEYS) {
-    const value = getSingleSearchParam(searchParams[key])
-    if (value) params.set(key, value)
-  }
-  const query = params.toString()
-  return query ? `/?${query}` : "/"
-}
-
 function getSingleSearchParam(value: string | string[] | undefined) {
   return typeof value === "string" && value.length > 0 ? value : null
-}
-
-/**
- * `scan_v1` route gate, mirroring `isAttributableFunnelPackage`'s scan branch in
- * `src/proxy.ts`: once the package status is `active`, the route renders
- * regardless of `SCAN_FUNNEL_ENABLED`. While it stays `placeholder`, the flag
- * is still required (today's behaviour, same pattern as `meta_personal_plan_v1`).
- */
-export function shouldBlockPlaceholderScanRoute(
-  funnelPackage: Pick<FunnelPackage, "key" | "status">,
-  scanFunnelEnabled: boolean,
-) {
-  return (
-    funnelPackage.key === "scan_v1" && funnelPackage.status === "placeholder" && !scanFunnelEnabled
-  )
 }

@@ -12,6 +12,7 @@ import { notFound, redirect } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 
 import { ResultPageClient } from "./result-client"
+import { isScannerFunnelRefinementEnabled } from "@/lib/funnel/scanner-refinement"
 import { parsePersonalPlanOfferModel } from "@/components/personal-plan-offer/model"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
@@ -526,6 +527,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
         offerVariant={offerVariant}
         pricingCatalog={pricingCatalog}
         trialOfferPricing={trialOfferPricing}
+        scannerRefinementEnabled={isScannerFunnelRefinementEnabled()}
         showQuizRestart={
           lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()
         }

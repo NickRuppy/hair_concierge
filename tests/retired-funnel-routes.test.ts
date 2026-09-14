@@ -5,7 +5,7 @@ import test from "node:test"
 import {
   buildRetiredRoutineRedirect,
   shouldBlockPlaceholderScanRoute,
-} from "../src/app/lp/[slug]/page"
+} from "../src/app/lp/[slug]/route-helpers"
 import {
   isAttributableFunnelPackage,
   resolveAttributablePackageForPath,

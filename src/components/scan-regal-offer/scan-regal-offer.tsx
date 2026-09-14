@@ -1,5 +1,7 @@
 "use client"
 
+import { ScannerRefinedOffer } from "./scanner-refined-offer"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
@@ -212,25 +214,24 @@ function FaqItem({ answer, faqId, question }: { answer: string; faqId: string; q
  * growing a second set of non-commercial branches here.
  */
 export function ScanRegalOffer(props: FunnelOfferVariantProps) {
+  if (props.regularFieldTest || props.partnerAccess)
+    return <OrganicPlanOffer {...props} offerVariant="organic-plan-v1" />
+  if (props.scannerRefinementEnabled && props.trialOfferPricing) {
+    return <ScannerRefinedOffer {...props} />
+  }
+  return <LegacyScanRegalOffer {...props} />
+}
+
+function LegacyScanRegalOffer(props: FunnelOfferVariantProps) {
   const {
     entryContext,
     isInternalTest = false,
     leadId,
     offerTracking,
     offerVariant,
-    partnerAccess = null,
     pricingSlot,
     quizAnswers,
-    regularFieldTest = null,
   } = props
-
-  const isRegularFieldTest = Boolean(regularFieldTest)
-  const isPartnerAccess = Boolean(partnerAccess)
-  const isNonCommercialOffer = isRegularFieldTest || isPartnerAccess
-  // The organic offer's own section order (`ORGANIC_PLAN_SECTION_ORDER`) is keyed off
-  // `offerVariant`, so the scanner's `scan-regal-v1` must not leak into it here — it
-  // would otherwise resolve engagement tracking against the scanner's section order.
-  if (isNonCommercialOffer) return <OrganicPlanOffer {...props} offerVariant="organic-plan-v1" />
 
   const criteria = getScanCriteria(quizAnswers)
 
