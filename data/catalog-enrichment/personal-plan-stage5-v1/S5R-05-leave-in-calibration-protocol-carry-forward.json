@@ -1,0 +1,132 @@
+{
+  "schema_version": "personal-plan-stage5-leave-in-protocol-carry-forward-v1",
+  "batch_id": "S5-14-leave-in-calibration",
+  "snapshot_date": "2026-09-14",
+  "review": {
+    "state": "approved_by_nick",
+    "reviewed_by": "nick"
+  },
+  "items": [
+    {
+      "expected_product": {
+        "id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+        "name": "Redken Extreme Anti-Snap",
+        "category_key": "leave_in"
+      },
+      "sources": [
+        {
+          "label": "Redken Produktseite (DE)",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+          "text": "Nach dem Extreme Shampoo und Conditioner anwenden. Ins handtuchtrockenen Haar geben. Nicht ausspuelen. Wie gewohnt stylen.",
+          "source_type": "manufacturer",
+          "checked_at": "2026-09-13"
+        }
+      ],
+      "protocol": {
+        "role": "pre_heat_protection",
+        "application_family": "pre_heat_damp",
+        "guidance_payload": {
+          "schemaVersion": 1,
+          "guidanceKey": "product-leave-in-2b7db7e3-2058-4178-8a03-7d05f4a1d447-pre-heat",
+          "protocolVersion": 1,
+          "locale": "de",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+          },
+          "role": "heat_protection",
+          "applicationFamily": "pre_heat_damp",
+          "compatibleDayTypes": [
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true,
+          "sequence": {
+            "anchor": "damp_leave_on",
+            "before": [
+              "heat_tool"
+            ],
+            "after": [],
+            "conflictsWith": []
+          },
+          "requirements": {
+            "requiredCatalogFacts": [],
+            "requiredProtocolFacts": [],
+            "requiredProfileFacts": []
+          },
+          "protocolFacts": {
+            "applicationArea": "lengths_ends",
+            "rinse": "leave_in",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable",
+            "reapplication": "each_separate_heat_event",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Gleichmäßig sprühen."
+            },
+            "cautions": []
+          },
+          "steps": [
+            {
+              "stepKey": "apply-pre-heat",
+              "action": "apply_product",
+              "copyTemplateDe": "Vor dem Hitzestyling gleichmäßig ins handtuchtrockene Haar sprühen, in Längen und Spitzen verteilen und durchkämmen – nur Strähnen mit Produkt sind geschützt."
+            },
+            {
+              "stepKey": "tool-pre-heat",
+              "action": "tool",
+              "copyTemplateDe": "Danach wie gewohnt mit Wärme stylen. Glätteisen oder Lockenstab nur auf komplett trockenem Haar verwenden. Vor jedem weiteren Hitzestyling erneut auftragen."
+            }
+          ],
+          "evidence": [
+            {
+              "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+              "sourceType": "manufacturer",
+              "checkedAt": "2026-09-13"
+            }
+          ]
+        },
+        "guidance_payload_v2": {
+          "schemaVersion": 2,
+          "contractKind": "product_pointer",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447"
+          },
+          "sourceRole": "pre_heat_protection",
+          "role": "heat_protection",
+          "applicationFamily": "pre_heat_damp",
+          "facts": {
+            "applicationState": "damp_hair",
+            "applicationArea": "hair_lengths_ends",
+            "rinse": "leave_in",
+            "contactTime": null,
+            "amount": null,
+            "heat": {
+              "supportedStates": [
+                "damp_hair"
+              ],
+              "activationRequired": false,
+              "maximumClaimedTemperatureC": null,
+              "reapplication": "each_separate_heat_event"
+            },
+            "conditionerPolicy": "not_applicable"
+          },
+          "workflowId": null,
+          "requiredCompanionProductId": null,
+          "runtimeBlockerCode": null,
+          "exactSteps": [],
+          "cautionCodes": [],
+          "evidence": [
+            {
+              "sourceUrl": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+              "sourceType": "manufacturer",
+              "checkedAt": "2026-09-13"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

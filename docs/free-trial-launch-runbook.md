@@ -1,6 +1,6 @@
 # Free-trial launch runbook
 
-Status: implementation reviewed and verified; additive schema and historical eligibility import applied. **Application deployment and public activation pending.** See the [verification record](../plans/free-trial-launch/release-verification.md); the production receipt records the actual commit and deployment after execution.
+Status: additive schema, live provider configuration and historical eligibility import are applied. The first direct branch deployment was replaced by a later automatic deployment from `main`; integrate and merge the trial release before restoring public activation. See the [verification record](../plans/free-trial-launch/release-verification.md); the production receipt records the actual commit and deployment after execution.
 
 ## Authority and contract
 
@@ -62,3 +62,7 @@ Local tests and provider catalog reads do not prove real approval or future coll
 Historical credentials exposure was already flagged to Nick. Never reproduce the value; keep credential maintenance scoped to the existing app and secret configuration.
 
 Rollback disables **new enrollment only** with `TRIAL_ENROLLMENT_MODE=disabled` and a deployment. Retain runtime/provider settings, HMAC versions and signing material for accepted contracts, webhooks, cancellation, receipts and recovery. Do not shorten existing trials or rewrite their accepted prices. Do not roll back additive schema or delete claim/history records.
+
+## Durable production publication
+
+Production automatically deploys `main`. A direct task-branch deployment is temporary and will be replaced by the next `main` deployment. For this release, merge the verified trial branch into current `main`, then verify that the production alias points to the resulting merge commit and that trial-specific routes are present. A READY deployment or live-provider flags alone do not prove the trial code is active. The final external release receipt records the deployed commit, alias and route checks.

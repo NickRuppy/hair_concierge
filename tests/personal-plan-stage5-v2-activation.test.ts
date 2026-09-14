@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 
@@ -23,11 +24,60 @@ test("Stage 5 V2 activation fingerprints the exact artifact bytes", () => {
   )
   assert.equal(
     stage5V2ArtifactFingerprint(artifactText),
-    "ee31d98778632bf005d21cf884dd2dbc53922177d1c0dfb79894717fc234a640",
+    "7afa162b8575e07afc3f1c5b801ac66ffdcbebbecba1fa505ffb13bf3aad03a8",
   )
   assert.notEqual(
     stage5V2ArtifactFingerprint(`${artifactText}\n`),
     stage5V2ArtifactFingerprint(artifactText),
+  )
+})
+
+test("post-baseline carry-forwards leave the frozen baseline and its pins byte-untouched", () => {
+  // The 2026-08-12 baseline is a frozen review anchor: post-baseline rows are
+  // layered on top of it (use-case delta, amendments, live carry-forwards), never
+  // folded into it. Re-baselining is not a supported operation — it is not
+  // byte-reproducible (shared templates have drifted since) and it silently
+  // invalidates every manifest below, which would then have to be hand-edited.
+  const baselineText = readFileSync(
+    "data/catalog-enrichment/personal-plan-stage5-v2/application-pointer-baseline-2026-08-12.json",
+    "utf8",
+  )
+  const baselineSha256 = createHash("sha256").update(baselineText).digest("hex")
+  assert.equal(baselineSha256, "db2e7bbef4d5e64afa9adbbfe05acbb1c43fc5624f5baeecfe1ee85ec2fb3886")
+
+  for (const path of [
+    "data/catalog-enrichment/personal-plan-stage5-v2/leave-in-use-cases-2026-08-14.json",
+    "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-22-balea-urea-everyday-protocol.json",
+    "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-23-nivea-volumen-kraft-conditioner-protocol.json",
+  ]) {
+    assert.equal(
+      JSON.parse(readFileSync(path, "utf8")).baseline.sha256,
+      baselineSha256,
+      `${path} no longer pins the frozen baseline`,
+    )
+  }
+
+  // The Redken pre_heat_protection row arrives as a live carry-forward, so its
+  // source_fingerprint must equal the authored S5-14 payload the protocol batch
+  // writes — otherwise the V2 preflight fails with source_protocol_diverged.
+  const redken = artifact.items.find(
+    (item: { key: string }) =>
+      item.key === "2b7db7e3-2058-4178-8a03-7d05f4a1d447:pre_heat_protection:pre_heat_damp",
+  )
+  assert.ok(redken, "Redken pre_heat_protection carry-forward entry is missing")
+  assert.equal(
+    redken.source_fingerprint,
+    "8e1b1bbc51ce497047f75891d18bc5b87125dbe6a0b20b01a95f7b5f8fa7b8cb",
+  )
+  assert.equal(redken.guidance_payload_v2.runtimeBlockerCode, null)
+  assert.equal(
+    JSON.parse(
+      readFileSync(
+        "data/catalog-enrichment/personal-plan-stage5-v1/S5R-05-leave-in-calibration-protocol-carry-forward.json",
+        "utf8",
+      ),
+    ).items.length,
+    1,
   )
 })
 
@@ -115,5 +165,5 @@ test("Stage 5 V2 post-apply verification requires every exact family and product
 
   assert.equal(result.ok, true)
   assert.deepEqual(result.blockers, [])
-  assert.deepEqual(result.observed, { familyRows: 28, productRows: 309 })
+  assert.deepEqual(result.observed, { familyRows: 28, productRows: 310 })
 })

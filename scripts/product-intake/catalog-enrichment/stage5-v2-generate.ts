@@ -13,6 +13,7 @@ import { buildReviewedLeaveInUseCases } from "../../../src/lib/product-intake/ca
 import { buildLeaveInUseCasePointerDelta } from "../../../src/lib/product-intake/catalog-enrichment/leave-in-use-case-delta"
 import { buildStage5ProtocolAmendmentManifest } from "../../../src/lib/product-intake/catalog-enrichment/stage5-protocol-amendments"
 import {
+  applicationFamilySchema,
   applicationGuidanceProtocolSchema,
   type ApplicationGuidanceProtocolV1,
 } from "../../../src/lib/routines/personal-plan/application/contracts"
@@ -41,6 +42,10 @@ const protocolAmendmentRoot = join(
   "data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments",
 )
 const k18ReadinessPath = join(sourceRoot, "S5R-02-k18-molecular-repair-hair-mist-readiness.json")
+const leaveInCarryForwardPath = join(
+  sourceRoot,
+  "S5R-05-leave-in-calibration-protocol-carry-forward.json",
+)
 const oilAuthorityPath = join(
   root,
   "data/catalog-enrichment/oil-authority-enrichment-v1/manifest.json",
@@ -67,6 +72,38 @@ const k18ReadinessProtocolSchema = z.object({
       }),
     }),
   }),
+})
+
+// Post-baseline carry-forward for authored leave-in protocol rows that are not
+// yet in production. Same shape of guarantee as the k18 readiness carry-forward:
+// the authored guidance_payload travels verbatim, so the artifact entry's
+// source_fingerprint matches the row the Stage-5 protocol batch writes, and the
+// frozen baseline (plus every manifest pinning its sha256) stays untouched.
+const leaveInProtocolCarryForwardSchema = z.object({
+  schema_version: z.literal("personal-plan-stage5-leave-in-protocol-carry-forward-v1"),
+  batch_id: z.string().regex(/^S5-[0-9]{2}-[a-z0-9-]+$/),
+  snapshot_date: z.string().date(),
+  review: z.object({
+    state: z.literal("approved_by_nick"),
+    reviewed_by: z.literal("nick"),
+  }),
+  items: z
+    .array(
+      z.object({
+        expected_product: z.object({
+          id: z.string().uuid(),
+          name: z.string().min(1),
+          category_key: z.literal("leave_in"),
+        }),
+        protocol: z.object({
+          role: z.enum(["post_wash_leave_in", "pre_heat_protection"]),
+          application_family: applicationFamilySchema,
+          guidance_payload: applicationGuidanceProtocolSchema,
+          guidance_payload_v2: productApplicationPointerV2Schema,
+        }),
+      }),
+    )
+    .min(1),
 })
 
 type SourceRow = {
@@ -174,6 +211,41 @@ function k18LiveProtocolSource(input: unknown) {
   }
 }
 
+function leaveInProtocolCarryForwardSources(input: unknown) {
+  const manifest = leaveInProtocolCarryForwardSchema.parse(input)
+  return manifest.items.map((item) => {
+    const product = item.expected_product
+    const protocol = item.protocol
+    const expectedPointer = buildProductApplicationPointerV2({
+      sourceRole: protocol.role,
+      guidancePayload: protocol.guidance_payload,
+    })
+    if (JSON.stringify(expectedPointer) !== JSON.stringify(protocol.guidance_payload_v2)) {
+      throw new Error(`leave_in_carry_forward_v2_pointer_mismatch:${product.id}:${protocol.role}`)
+    }
+    if (
+      protocol.guidance_payload.scope.kind !== "product" ||
+      protocol.guidance_payload.scope.productId !== product.id ||
+      protocol.guidance_payload.scope.category !== product.category_key ||
+      protocol.guidance_payload_v2.scope.productId !== product.id ||
+      protocol.guidance_payload_v2.scope.category !== product.category_key ||
+      protocol.guidance_payload_v2.sourceRole !== protocol.role ||
+      protocol.guidance_payload_v2.applicationFamily !== protocol.application_family
+    ) {
+      throw new Error(`leave_in_carry_forward_scope_mismatch:${product.id}:${protocol.role}`)
+    }
+    return {
+      row: {
+        product_id: product.id,
+        product_name: product.name,
+        role: protocol.role,
+        guidance_payload: protocol.guidance_payload,
+      },
+      pointer: protocol.guidance_payload_v2,
+    }
+  })
+}
+
 function oilAuthorityProtocolSources(input: unknown) {
   const manifest = parseOilAuthorityRepairManifest(input)
   if (
@@ -257,6 +329,9 @@ function generate() {
     buildStage5ProtocolAmendmentManifest(JSON.parse(readFileSync(file, "utf8")), baselineText),
   )
   const k18 = k18LiveProtocolSource(JSON.parse(readFileSync(k18ReadinessPath, "utf8")))
+  const leaveInCarryForwards = leaveInProtocolCarryForwardSources(
+    JSON.parse(readFileSync(leaveInCarryForwardPath, "utf8")),
+  )
   const oilAuthorityRows = oilAuthorityProtocolSources(
     JSON.parse(readFileSync(oilAuthorityPath, "utf8")),
   )
@@ -292,6 +367,7 @@ function generate() {
       ),
     ),
     artifactItem(k18.row, k18.pointer),
+    ...leaveInCarryForwards.map(({ row, pointer }) => artifactItem(row, pointer)),
   ]
   const oilAuthorityItems = oilAuthorityRows.map((row) => artifactItem(row))
   const oilAuthorityKeys = new Set(oilAuthorityItems.map(({ key }) => key))
@@ -309,14 +385,21 @@ function generate() {
       inserts: delta.inserts.length,
       corrections: delta.deletes.length,
       amendments: amendments.reduce((count, amendment) => count + amendment.v2Inserts.length, 0),
-      liveCarryForwards: 1,
+      liveCarryForwards: 1 + leaveInCarryForwards.length,
       authorityRepairInserts: oilAuthorityItems.length - replacedOilRows,
       authorityRepairReplacements: replacedOilRows,
     },
     final: stableJson(
       documentFor(
         items,
-        [...files, leaveInManifestPath, k18ReadinessPath, oilAuthorityPath, ...amendmentFiles],
+        [
+          ...files,
+          leaveInManifestPath,
+          k18ReadinessPath,
+          leaveInCarryForwardPath,
+          oilAuthorityPath,
+          ...amendmentFiles,
+        ],
         "2026-09-01",
         "reviewed_stage5_v1_use_case_and_amendment_artifacts",
       ),
