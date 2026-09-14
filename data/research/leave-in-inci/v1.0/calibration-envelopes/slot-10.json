@@ -1,0 +1,353 @@
+{
+  "version": "leave-in-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "leave-in-classification-v1.0",
+    "modelVersion": "leave-in-inci-v1.0",
+    "policySha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "identity": {
+    "researchId": "leave-in-gold-set-slot-10",
+    "market": "DE/EU",
+    "exactProductName": "N°.6 Bond Smoother",
+    "brand": "Olaplex",
+    "gtin": null,
+    "productForm": "cream",
+    "applicationStage": [
+      "towel_dry"
+    ],
+    "identityStatus": "verified_with_minor_source_difference",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "moderate",
+    "sourceIds": [
+      "T2:douglas.de",
+      "T3:incidecoder.com",
+      "T2/T1:barcodespider.com / mathissibiza.com / olaplex.com",
+      "T3:ebay.com (multiple listings)",
+      "T2/C5:douglas.de + olaplex.com"
+    ]
+  },
+  "formula": {
+    "status": "verified_with_minor_difference",
+    "rawInci": "Water, Cetearyl Alcohol, Dimethicone, Isohexadecane, Coco-Caprylate, Neopentyl Glycol Diheptanoate, Behentrimonium Chloride, Isododecane, Phenyl Trimethicone, Propanediol, Bis-Aminopropyl Diglycol Dimaleate, Parfum, Cetrimonium Chloride, Phenoxyethanol, Glyceryl Stearate, Isopropyl Alcohol, Hydroxyethylcellulose, Hydroxypropyl Guar, Sodium Stearoyl Lactylate, Hydroxypropyl Cyclodextrin, Hexyl Cinnamal, Limonene, Citral, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Disodium EDTA, Linalool, Citronellol, Iodopropynyl Butylcarbamate, Hydroxycitronellal, Etidronic Acid, Tocopherol, Geraniol, Potassium Sorbate, Helianthus Annuus Seed Oil, Phytantriol, Sodium Benzoate, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Tocopheryl Acetate, Vitis Vinifera Seed Oil, Aloe Barbadensis Leaf Juice, Panthenol, Citric Acid, Gigartina Stellata Extract, Chondrus Crispus Extract, Ascorbic Acid, Cocos Nucifera Oil",
+    "normalizedIngredients": [
+      "WATER",
+      "CETEARYL ALCOHOL",
+      "DIMETHICONE",
+      "ISOHEXADECANE",
+      "COCO-CAPRYLATE",
+      "NEOPENTYL GLYCOL DIHEPTANOATE",
+      "BEHENTRIMONIUM CHLORIDE",
+      "ISODODECANE",
+      "PHENYL TRIMETHICONE",
+      "PROPANEDIOL",
+      "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+      "PARFUM",
+      "CETRIMONIUM CHLORIDE",
+      "PHENOXYETHANOL",
+      "GLYCERYL STEARATE",
+      "ISOPROPYL ALCOHOL",
+      "HYDROXYETHYLCELLULOSE",
+      "HYDROXYPROPYL GUAR",
+      "SODIUM STEAROYL LACTYLATE",
+      "HYDROXYPROPYL CYCLODEXTRIN",
+      "HEXYL CINNAMAL",
+      "LIMONENE",
+      "CITRAL",
+      "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+      "DISODIUM EDTA",
+      "LINALOOL",
+      "CITRONELLOL",
+      "IODOPROPYNYL BUTYLCARBAMATE",
+      "HYDROXYCITRONELLAL",
+      "ETIDRONIC ACID",
+      "TOCOPHEROL",
+      "GERANIOL",
+      "POTASSIUM SORBATE",
+      "HELIANTHUS ANNUUS SEED OIL",
+      "PHYTANTRIOL",
+      "SODIUM BENZOATE",
+      "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+      "TOCOPHERYL ACETATE",
+      "VITIS VINIFERA SEED OIL",
+      "ALOE BARBADENSIS LEAF JUICE",
+      "PANTHENOL",
+      "CITRIC ACID",
+      "GIGARTINA STELLATA EXTRACT",
+      "CHONDRUS CRISPUS EXTRACT",
+      "ASCORBIC ACID",
+      "COCOS NUCIFERA OIL"
+    ],
+    "formulaFingerprintSha256": "297ac0d9541987b0d988781f61fbb05fc01e6e966fd150cca4c1bba96fb12aa3",
+    "rawInciSha256": "3eb793e5789da28d80295f59c6625793f3260c45f1af255221a9f0faf22bad86",
+    "sourceIds": [
+      "T2:douglas.de",
+      "T3:incidecoder.com",
+      "T2/T1:barcodespider.com / mathissibiza.com / olaplex.com",
+      "T3:ebay.com (multiple listings)",
+      "T2/C5:douglas.de + olaplex.com"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "§7.2 COND resolved to `high` on formula evidence at E2 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "absorbed slip observation: two_or_more M1 contributor(s)"
+      ],
+      "derivation": "§10.1: `conditioning_level` <- COND (low->low, moderate->moderate, high->high, unknown->unknown).",
+      "thresholdReasoning": [
+        "COND anchor recorded `high` with confidence `moderately_high`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "Evidence level E2 on formula scope: formula potential, not measured finished-product performance."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "§7.5 WT resolved to `high` on the `lgn_pair` anchor row at E2 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: lgn_pair",
+        "condition 2 - no C1/C2 intended-finish statement exists; the only frozen claim is C3"
+      ],
+      "derivation": "§10.1: `weight_potential` <- WT; the multi-family `moderate` row projects as plain `moderate` and its mandatory counter-signal stays in the trace (§10.1.1).",
+      "thresholdReasoning": [
+        "WT anchor recorded `high` with confidence `moderately_high`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "§7.5 records a judgment-call limitation on every fine-hair value derived from this dimension."
+      ]
+    },
+    "persistence": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "§7.6 PERS recorded mechanism class `neutral_non_volatile` at E2 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "Hydroxypropyl Guar r18 is the non-ionic guar, NOT Guar Hydroxypropyltrimonium Chloride; no polymeric or silicone-functional quat is present"
+      ],
+      "derivation": "§10.1: `persistence` <- the PERS mechanism class projected ordinally (volatile_or_water_soluble->low; neutral_non_volatile->moderate; ph_dependent_cationic->moderate; permanent_cationic->high).",
+      "thresholdReasoning": [
+        "The recorded mechanism class `neutral_non_volatile` maps to the ordinal `moderate`.",
+        "G11: this is a mechanism ordering, not a duration claim."
+      ],
+      "limitations": [
+        "The ordinal states removal mechanism only; it never asserts how long the product stays on hair."
+      ]
+    },
+    "holdSupport": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "§7.7 HOLD recorded `none` at E1 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E1",
+        "evidence_scope: formula",
+        "Hydroxyethylcellulose r17 and Hydroxypropyl Guar r18 are explicit L5 rheology exclusions",
+        "manufacturer_hold_level: null (no C1/C2 hold level in the frozen claims)"
+      ],
+      "derivation": "§10.1: `hold_support` <- the HOLD 3-state, unchanged and with no `unknown` member (§7.7).",
+      "thresholdReasoning": [
+        "HOLD is a coarse presence read and recorded `none`.",
+        "§10: `hold_support` gains no `unknown`, because §7.7's ontology cannot produce one."
+      ],
+      "limitations": [
+        "A coarse presence read; it never grades hold strength."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "§9 care_direction resolved to `moisture` at E2 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2"
+      ],
+      "derivation": "§10.1: `care_direction` <- §9.",
+      "thresholdReasoning": [
+        "§9 recorded `moisture` with confidence `moderate`.",
+        "§9 constraint 3: positioning corroborates a direction but never creates one."
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "R2 = `none_visible` (E1), conditioning_level = `high`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 4: a qualifying route sits at or below the tail marker (Hydrolyzed Vegetable Protein PG-Propyl Silanetriol (silane derivative) at rank 24; marker Phenoxyethanol at rank 14), so R2 holds its rank-supported `none_visible` value and the level is `low`; the record routes to human review on the below-marker note. §10.3.2 clause 1: an R3 bond chemistry candidate is invisible to this rule (R14, G8, FS-26). A bond-claim-only product is `low`.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E1",
+        "evidence_scope: formula",
+        "repair_surface_film: none_visible",
+        "candidate_below_tail: true"
+      ],
+      "derivation": "§10.3.2: `repair_support_level` <- the fixed ordered rule over [repair_surface_film, conditioning_level, product_evidence].",
+      "thresholdReasoning": [
+        "R2 recorded `none_visible` and conditioning_level `high`, which selects `low`.",
+        "§10.3.2 clause 1: a bond claim is not repair support; R3 is invisible to this rule."
+      ],
+      "limitations": [
+        "§10.3.2 ceiling: a formula-only value cannot exceed `medium`; `high` requires exact-product E3+ repair evidence."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "smoothing",
+        "secondary": []
+      },
+      "confidence": "moderate",
+      "rationale": "T13 re-derivation (2026-09-10, permissive reading, §10.2.1): smoothing_route is silicone_film on a two-observation SFR-high read (film: Dimethicone r3, Phenyl Trimethicone r9; lubrication: Coco-Caprylate r5, Neopentyl Glycol Diheptanoate r6), clearing §7.4.1's two-observation test — consistent with the product's own 'Bond Smoother' identity (§10.2.1's stated rationale for adopting the permissive reading names this record explicitly). COND high was over-satisfied (the LGN pair r2/r7 alone would have carried it, with the silicone system and the dry-feel esters both available as further independent routes), so under the conservative reading the silicone film read as baseline conditioning; under the now-adopted permissive reading, the LGN pair alone leaves it beyond baseline. `repair` remains unavailable: R2 is `none_visible` (the qualifying silane sits below the tail marker), no C1/C2 marketing position exists at all for this product, and the R3 `chemistry_candidate` bond flag alone may never set `repair` as primary (R14) — as a secondary focus it would additionally need an independent moderate+ observation, and the only candidate (the below-marker silane) does not clear the rank prong, so it is not taken; this reasoning is unaffected by T13, which only removed the now-moot marketing-position route. Every other route fails its own gate (curl_definition: HOLD none; heat_styling: `application_stage` lacks `pre_heat` — T14 (2026-09-10) moved HEAT to `claim_only`/`true`, but the `heat_styling` route independently requires `application_stage` to include `pre_heat` (§10.2), and this record's frozen directions support only `towel_dry`, so the route still fails; detangling: no C1/C2 positioning; volume_lightness: WT high; shine: would restate the film). This record's pre-T13 `focus` uncertain_fields entry — recorded because the §10.2.1 reading, not the evidence, decided it — is removed: the reading is now a settled rule.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "smoothing_route: silicone_film",
+        "repair_surface_film: none_visible",
+        "hold_route_state: none",
+        "weight_residue_potential: high"
+      ],
+      "derivation": "§10.2: qualifying routes are collected beyond baseline conditioning (§10.2.1, permissive reading T13b), then the rank order repair > smoothing > curl_definition > heat_styling > detangling > volume_lightness > shine binds.",
+      "thresholdReasoning": [
+        "Selected primary `smoothing` with secondary [].",
+        "§10.2 principle 4: official positioning may corroborate a route but never creates one."
+      ],
+      "limitations": [
+        "A focus is a statement of distinctive purpose, not an efficacy claim or a measured endpoint."
+      ]
+    },
+    "specialistFunctions": {
+      "value": {
+        "providesHeatProtection": true
+      },
+      "confidence": "high",
+      "rationale": "§13.3 heat binary derived from HEAT trace state `claim_only` at E0 (reference-key-2026-09-05-r4, slot 10).",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E0",
+        "evidence_scope: product",
+        "claim_tier: C2_cross_market_verified",
+        "no L9 member present",
+        "claim looks formula-unsupported (§13.3 rule 2)",
+        "T14 (2026-09-10, §2.4.1 rule 7): the 232 °C / 450°F statement is byte-identical on olaplex.com and es.olaplex.com (both non-German-market) and is now admitted as claim-creating because product identity is verified (46-ingredient INCI matches the frozen douglas.de capture set-for-set; EAN 850018802796 confirmed at German retailer xhair.eu) and douglas.de (C3) corroborates it. Dimethicone and Phenyl Trimethicone are generic silicones, not L9 members, so formula_plausible is not reached. Resolves the prior R12/claim_authority_gap reading (was: not_claimed, false) — see the guarding counter-example for Cantu, whose documented US/German formula split fails T14's identity prong."
+      ],
+      "derivation": "§13.3: claim-led with an L9 formula sanity-check; the production model carries one binary and the four-state evidence detail stays in the trace.",
+      "thresholdReasoning": [
+        "HEAT trace state `claim_only` yields provides_heat_protection = true.",
+        "§13.3: a formula never manufactures a claim, and efficacy is never graded."
+      ],
+      "limitations": [
+        "The binary reports what the product is sold as under EU claim law; it is not an efficacy statement (§3.3)."
+      ]
+    },
+    "smoothingRoute": {
+      "value": "silicone_film",
+      "confidence": "moderate",
+      "rationale": "SFR high rested on two observations, and the film half is the persistent silicone system Dimethicone r3, Phenyl Trimethicone r9.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "smoothing_route: silicone_film",
+        "derived_from_sfr: high"
+      ],
+      "derivation": "§7.4 (T2): the route is typed from the recorded SFR observation plus §6 mechanism evidence; it is never graded and never itself projected as a production column.",
+      "thresholdReasoning": [
+        "Typed as `silicone_film` from the recorded mechanism evidence.",
+        "§7.4.1's two-observation test gates whether a smoothing route exists at all."
+      ],
+      "limitations": [
+        "A route type, not a smoothing score; it carries no humidity or frizz claim (§7.9)."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": {
+        "fine": "caution",
+        "medium": "conditional",
+        "coarse": "recommended"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 hair_thickness_fit is weight-led; the `high` row yields fine=caution, medium=conditional, coarse=recommended.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: lgn_pair"
+      ],
+      "derivation": "§10.3: `hair_thickness_fit` <- weight_potential, and nothing else (G3).",
+      "thresholdReasoning": [
+        "weight_potential `high` selects the corresponding §10.3 row.",
+        "§10.3: no second weight-derived field may additionally modify this table."
+      ],
+      "limitations": [
+        "Broad product priors, not universal exclusions or efficacy claims; every fine-hair value carries the §7.5 judgment-call limitation."
+      ]
+    },
+    "damageFit": {
+      "value": {
+        "healthy": "recommended",
+        "moderately_damaged": "recommended",
+        "highly_damaged": "conditional"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 damage_fit read from conditioning_level `high` and repair_surface_film `none_visible`.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "conditioning_level: high",
+        "repair_surface_film: none_visible"
+      ],
+      "derivation": "§10.3: `damage_fit` <- [conditioning_level, repair_surface_film, bond_flag, product_evidence], with two independent paths to the highly-damaged tier (R14).",
+      "thresholdReasoning": [
+        "The recorded inputs select the §10.3 row yielding healthy=recommended, moderately_damaged=recommended, highly_damaged=conditional.",
+        "§10.3 (R14): an R3 bond flag alone never qualifies a product for the highly-damaged tier."
+      ],
+      "limitations": [
+        "A broad prior for a damage tier, never an efficacy or repair claim."
+      ]
+    },
+    "textureFit": {
+      "value": {
+        "straight": "conditional",
+        "wavy": "recommended",
+        "curly": "recommended",
+        "coily": "recommended"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 texture_fit is weight-led with the absorbed slip observation as the high-weight modifier; the `high` row yields straight=conditional, wavy=recommended, curly=recommended, coily=recommended.",
+      "evidenceSignals": [
+        "reference key slot 10",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: lgn_pair",
+        "absorbed slip observation: two_or_more M1 contributor(s)",
+        "hold_route_state: none"
+      ],
+      "derivation": "§10.3: `texture_fit` <- [weight_potential, conditioning_potential.absorbed_slip_observation, hold_route_state]; the table is exhaustive with an explicit `unknown` fallback row.",
+      "thresholdReasoning": [
+        "weight_potential `high` selects the §10.3 texture row.",
+        "§10.3: HOLD = meaningful_hold_route does not by itself raise curly/coily."
+      ],
+      "limitations": [
+        "A broad prior per texture family, not a per-user prediction."
+      ]
+    },
+    "uncertainFields": [],
+    "assumptionNotes": [
+      "Derived mechanically from reference-key-2026-09-05-r4 and the frozen calibration packet; no re-classification, no web research, no re-judged evidence.",
+      "GTIN remains genuinely unresolved: 896364002602 (current/legacy US-prefix packaging, 2-source corroborated) vs 896364002619 (\"new packaging\" per multiple eBay listings). douglas.de itself exposes neither. Both are US company-prefix (896364) codes; no DE-specific EAN found. Not merged or guessed. This ambiguity is a separate, still-open residual (see remaining_gap) and is NOT what the 2026-09-14 identity_status resolution below rests on — that resolution uses the INCI-set match plus the independently-confirmed EAN 850018802796 (see notes), a third identifier distinct from either gtin_candidate here.",
+      "RESOLVED 2026-09-14 (was: ingredient-count doubt — gold-set-candidates.md's lane report describes 47 ingredients; this pass's full capture, T3 incidecoder cross-checked against the T2 douglas.de-sourced opening segment, totals 46). Per the frozen standard's T14 ruling (leave-in-classification-standard.md §21.3, ledger row 14): the manufacturer's own published 46-ingredient INCI (olaplex.com / es.olaplex.com) was diffed set-for-set against this record's frozen douglas.de capture and found identical in composition, order noise aside; EAN 850018802796 is independently confirmed for this exact product at the German retailer xhair.eu and corroborated at upcitemdb. The 46-vs-47 discrepancy is tail-count declaration-length variance between sources, not a species-set conflict.",
+      "identity.identityStatus resolved from provisional_identity_conflict to verified_with_minor_source_difference (2026-09-14 write-back pass, packet notes/known_conflicts): leave-in-classification-standard.md section 21.3 ledger row 14 (T14) records that the manufacturer's published 46-ingredient INCI matches the frozen douglas.de capture set-for-set and that EAN 850018802796 is confirmed at the German retailer xhair.eu, resolving the 46-vs-47 ingredient-count doubt as tail-count declaration variance, not a species-set conflict; the separate GTIN doubt (896364002602 vs 896364002619) remains open and unresolved."
+    ]
+  }
+}

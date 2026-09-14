@@ -1,0 +1,568 @@
+{
+  "key_version": "leave-in-gold-set-reference-key-v0.1",
+  "category_standard_version": "leave-in-inci-v0.1",
+  "engine_run": "reference-key-2026-09-03",
+  "produced_at": "2026-09-03",
+  "packet_source": "plans/leave-in-inci/research/gold-set/calibration-packet.json (leave-in-gold-set-calibration-v0.1)",
+  "status": "PROPOSED reference key — pre-adjudication. Formula-only classification; nothing here is a catalog value, a production write, or an efficacy statement.",
+  "confidence_vocabulary": ["low", "moderate", "moderately_high", "high"],
+  "lane_decisions_not_in_the_standard": [
+    {
+      "id": "LD-1",
+      "rule": "A monomeric long-chain quat alone (Behentrimonium/Cetrimonium Chloride, Behentrimonium Methosulfate) does NOT reach PERS `permanent_cationic`; it is recorded as `neutral_non_volatile` with the charge-substantivity mechanism noted. Polymeric permanent quats (polyquaterniums, Guar HPTC) and silicone quats DO reach it.",
+      "reason": "The §7.6 class anchors enumerate silicone quats, high-charge-density polyquaterniums, cationised proteins, amodimethicone and amidoamines. They give no class for a monomeric permanent quat.",
+      "affects_slots": [2, 3, 5, 10, 11]
+    },
+    {
+      "id": "LD-2",
+      "rule": "A generic cationic polymer whose charge density is unreadable from INCI does not set R2 `candidate`.",
+      "reason": "§7.10's `candidate` anchor lists 'high-charge cationic polymer', but 'high-charge' is exactly the property G4 forbids reading off a consumer list; and §10.2/§10.3 explicitly bar a generic cationic polymer from setting a repair focus or a damage upgrade.",
+      "affects_slots": [3, 6, 8]
+    },
+    {
+      "id": "LD-3",
+      "rule": "WT `high` requires one of the anchor's three literal limbs (LGN pair above the tail; two-plus persistent non-volatile families WITH a rich/low-spreading band member; two-phase/microemulsion carrying a substantial oil/silicone phase). Several LIGHT/MEDIUM persistent non-volatile families without a rich-band member fall to `moderate`.",
+      "reason": "The anchor's grammar makes the rich-band member a qualifier on the family-count limb; §10.1 additionally instructs against encoding unresolved uncertainty as a restrictive `high`.",
+      "affects_slots": [5, 8, 9]
+    },
+    {
+      "id": "LD-4",
+      "rule": "scalp_application_fit derivation used where §10.3 gives only 'derived from directions plus EXPO, default unknown when silent': directions explicitly restricting placement to lengths/ends -> `avoid`; directions extending toward the root area without a scalp statement -> `conditional`; directions silent on placement -> `unknown`.",
+      "reason": "Implementation default, needed for consistency across the set. Never derived from an ingredient read; G6 applies throughout.",
+      "affects_slots": [1, 3, 4]
+    }
+  ],
+  "records": [
+    {
+      "slot": 1,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Leave-In Sprühkur Express 7in1",
+      "gtin": "4066447919387",
+      "rawInciSha256": "5714663322e54cd914b5215027c999831b987c5e09251d4dbdc47182979ac9c3",
+      "formulaFingerprintSha256": "cb08a99de094b760398f2fa7bcc5de19d6a0e2a47316e5ec94dcaa16be06f212",
+      "identity_status": "verified",
+      "g0": { "value": "in_category", "confidence": "moderately_high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "two_phase", "confidence": "moderate", "evidence_level": "E2" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "SLIP": { "value": "moderate", "bias": "unknown", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "high", "projected": "moderate", "projection_rule": "10.1", "confidence": "moderate", "evidence_level": "E2" },
+        "PERS": { "value": "neutral_non_volatile", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "not_claimed", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HUM": { "value": "not_claimed", "confidence": "moderate", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderate", "evidence_level": "E2" },
+        "DOSE": { "value": "high", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1", "notes": ["alcohol_denat_material"] },
+        "ROLE": { "value": ["post_wash", "refresh"], "confidence": "moderate", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "absent",
+        "curl_definition_focus": null,
+        "R3": "unknown",
+        "layer_caution": false,
+        "buildup_caution": true,
+        "transfer_caution": true
+      },
+      "care_direction": { "value": "moisture", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "two_phase",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "focus": { "primary": "general", "secondary": [] },
+        "usage_role": ["post_wash", "refresh"],
+        "specialist_functions": { "provides_heat_protection": false, "humidity_resistance": "not_claimed" },
+        "hair_thickness_fit": { "fine": "conditional", "medium": "recommended", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "recommended", "coily": "conditional" },
+        "scalp_application_fit": "avoid",
+        "uncertain_fields": ["product_form", "weight_potential", "texture_fit"]
+      },
+      "review_routed": true,
+      "review_reasons": ["FORM two_phase vs solubilised hydroalcoholic unresolved", "§14 two-phase product", "§10.1 weight projection conflict"]
+    },
+    {
+      "slot": 2,
+      "brand": "Balea PROFESSIONAL",
+      "product": "Magical Water Aqua Hyaluron",
+      "gtin": "4067796166644",
+      "rawInciSha256": "0e1c3d1ca1c67a16dfc121a4155bf28536b06cac844773207e42e035b2adb873",
+      "formulaFingerprintSha256": "f8d4f7b2f10e2d0ebae7acb8043df81654f12d016c2072d9f226b46c20f4729f",
+      "identity_status": "verified",
+      "g0": { "value": "excluded_other_form", "confidence": "high", "evidence_level": "E1", "basis": "directions: 'Nach 9 Sekunden gründlich ausspülen' — the contact ends in a rinse" },
+      "classification": "out_of_category — not classified (§2.3)",
+      "dimensions": null,
+      "profile": null,
+      "shadow_read_non_normative": {
+        "FORM": "aqueous_or_hydroalcoholic_solution", "COND": "moderate", "SLIP": "moderate", "SLIP_bias": "unknown",
+        "SFR": "moderate", "WT": "moderate", "PERS": "neutral_non_volatile", "HOLD": "none", "HEAT": "not_claimed",
+        "HUM": "not_claimed", "R2": "none_visible", "DOSE": "moderate", "EXPO": "fragrance_declared",
+        "ROLE": "unknown", "care_direction": "moisture"
+      },
+      "review_routed": true,
+      "review_reasons": ["G0 exclusion of a frozen gold-set slot — the 'mainstream milk/lotion' archetype is filled by a rinse-out product", "G8 exposure-regime firewall applies to any evidence on this product"]
+    },
+    {
+      "slot": 3,
+      "brand": "Cantu",
+      "product": "Leave-In Haarkur Repair Creme",
+      "gtin": "810006945430",
+      "rawInciSha256": "e49df19e2b99c5773b6b812b2c54d694e214901f58f8601ca6a383a9ca66ee12",
+      "formulaFingerprintSha256": "acb2659ab5068218f40c60aa550f49950dd25477f314dc6b4ca61600cc9ba21e",
+      "identity_status": "provisional_formula_conflict",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "high", "evidence_level": "E2" },
+        "COND": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "SLIP": { "value": "high", "bias": "dry_biased", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "PERS": { "value": "neutral_non_volatile", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0" },
+        "HUM": { "value": "not_claimed", "confidence": "moderate", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderately_high", "evidence_level": "E2" },
+        "DOSE": { "value": "high", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "absent", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": true, "buildup_caution": true, "transfer_caution": true
+      },
+      "care_direction": { "value": "moisture", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "high", "weight_potential": "high", "persistence": "moderate",
+        "hold_support": "none", "care_direction": "moisture",
+        "focus": { "primary": "general", "secondary": [] },
+        "usage_role": ["post_wash"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "not_claimed" },
+        "hair_thickness_fit": { "fine": "caution", "medium": "conditional", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "conditional", "wavy": "recommended", "curly": "recommended", "coily": "recommended" },
+        "scalp_application_fit": "conditional",
+        "uncertain_fields": ["specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["formula-source conflict (DE vs US formula under a different GTIN)", "§13.3 heat-protection claim with no L9 member"]
+    },
+    {
+      "slot": 4,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan",
+      "gtin": "4066447105032",
+      "rawInciSha256": "fb69f16595227a4ac0224e65b0425f30db71ea4454d97546a96dcd23f95aa33e",
+      "formulaFingerprintSha256": "146560146b739a07dd6bb7a265b5e5f0e3541b4fad193be5050320cc62ba7840",
+      "identity_status": "provisional_identity_conflict",
+      "g0": { "value": "in_category", "confidence": "moderately_high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "two_phase", "confidence": "moderately_high", "evidence_level": "E1" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "SLIP": { "value": "moderate", "bias": "unknown", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "high", "confidence": "moderate", "evidence_level": "E2" },
+        "PERS": { "value": "neutral_non_volatile", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "not_claimed", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HUM": { "value": "not_claimed", "confidence": "moderate", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderately_high", "evidence_level": "E2" },
+        "DOSE": { "value": "high", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1", "notes": ["alcohol_material"] },
+        "ROLE": { "value": ["post_wash", "refresh"], "confidence": "moderate", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "absent", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": false, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "moisture", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "two_phase", "conditioning_level": "moderate", "weight_potential": "high", "persistence": "moderate",
+        "hold_support": "none", "care_direction": "moisture",
+        "focus": { "primary": "general", "secondary": [] },
+        "usage_role": ["post_wash", "refresh"],
+        "specialist_functions": { "provides_heat_protection": false, "humidity_resistance": "not_claimed" },
+        "hair_thickness_fit": { "fine": "caution", "medium": "conditional", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "conditional", "wavy": "conditional", "curly": "conditional", "coily": "conditional" },
+        "scalp_application_fit": "avoid",
+        "uncertain_fields": ["texture_fit", "product_form"]
+      },
+      "review_routed": true,
+      "review_reasons": ["§14 two-phase product (least dose-predictable form)", "SKU delisted at dm.de; INCI rests on T3 aggregators", "§10.3 texture_fit table has no row for high weight without high slip"]
+    },
+    {
+      "slot": 5,
+      "brand": "EVO",
+      "product": "Head Mistress Cuticle Sealer",
+      "gtin": "9349769013144",
+      "rawInciSha256": "7f9d56ec8c3a5ca383746faf8284cc524e79f7b1eda4b610b2797b51cf0153bb",
+      "formulaFingerprintSha256": "d7cccb0d955a0544407fec4d5a864b9b3a3a6ee504ea13bb8721e146c0a2c4ea",
+      "identity_status": "verified",
+      "g0": { "value": "in_category", "confidence": "moderately_high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "moderate", "evidence_level": "E2", "note": "non-LGN polymeric-emulsifier silicone emulsion — §7.1 anchor gap" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "capped by the LGN-necessity clause in the `high` anchor" },
+        "SLIP": { "value": "high", "bias": "dry_biased", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "high", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "LD-3; alternative `high` preserved" },
+        "PERS": { "value": "neutral_non_volatile", "confidence": "low", "evidence_level": "E2", "supporting_class": "permanent_cationic (Quaternium-80, tail)" },
+        "HOLD": { "value": "none", "confidence": "moderate", "evidence_level": "E2" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0" },
+        "HUM": { "value": "formula_plausible", "confidence": "low", "evidence_level": "E2" },
+        "R2": { "value": "candidate", "confidence": "low", "evidence_level": "E2" },
+        "DOSE": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash", "heat_styling", "refresh"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "present", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": false, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "unknown", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "moderate", "weight_potential": "moderate", "persistence": "moderate",
+        "hold_support": "none", "care_direction": "unknown",
+        "focus": { "primary": "smoothing", "secondary": ["heat_styling"] },
+        "usage_role": ["post_wash", "heat_styling", "refresh"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "formula_plausible" },
+        "hair_thickness_fit": { "fine": "conditional", "medium": "recommended", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "recommended", "coily": "conditional" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["product_form", "weight_potential", "care_direction", "specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["§13.3 heat-protection claim with no L9 member", "§7.1 FORM anchor gap (non-LGN silicone emulsion)", "COND ceiling forced by the LGN-necessity clause"]
+    },
+    {
+      "slot": 6,
+      "brand": "Curlsmith",
+      "product": "Hydrate & Plump Leave-In",
+      "gtin": null,
+      "rawInciSha256": "ff00c63494a7ff41c090a65fe8d29f87745577158ada42ccababa814434e367f",
+      "formulaFingerprintSha256": "ff00c63494a7ff41c090a65fe8d29f87745577158ada42ccababa814434e367f",
+      "identity_status": "verified",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "high", "evidence_level": "E2" },
+        "COND": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "SLIP": { "value": "high", "bias": "dry_biased", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "PERS": { "value": "permanent_cationic", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "incidental_film", "confidence": "moderate", "evidence_level": "E2" },
+        "HEAT": { "value": "not_claimed", "confidence": "moderate", "evidence_level": "E1" },
+        "HUM": { "value": "not_claimed", "confidence": "moderate", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderate", "evidence_level": "E2", "note": "LD-2" },
+        "DOSE": { "value": "high", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1", "note": "no PARFUM entry, but two declared allergens" },
+        "ROLE": { "value": ["post_wash", "curl_styling"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "absent", "curl_definition_focus": "set (low confidence)", "R3": "unknown",
+        "layer_caution": true, "buildup_caution": true, "transfer_caution": true
+      },
+      "care_direction": { "value": "moisture", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "high", "weight_potential": "high", "persistence": "high",
+        "hold_support": "incidental", "care_direction": "moisture",
+        "focus": { "primary": "curl_definition", "secondary": [] },
+        "usage_role": ["post_wash", "curl_styling"],
+        "specialist_functions": { "provides_heat_protection": false, "humidity_resistance": "not_claimed" },
+        "hair_thickness_fit": { "fine": "caution", "medium": "conditional", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "conditional", "wavy": "recommended", "curly": "recommended", "coily": "recommended" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": []
+      },
+      "review_routed": true,
+      "review_reasons": ["§14 absent exact-market identifier (no GTIN found)"]
+    },
+    {
+      "slot": 7,
+      "brand": "Maria Nila",
+      "product": "Curlicue Cream",
+      "gtin": null,
+      "rawInciSha256": "a7c9ce328a33307500fafcdcf6f8d29371633627cfb4072f444516e45aac3f27",
+      "formulaFingerprintSha256": "f7c3be7bc73e173951cf965513602bba22b5271e4141fc156df44a363658db3a",
+      "identity_status": "verified",
+      "g0": { "value": "excluded_styling_first", "confidence": "moderate", "evidence_level": "E1", "basis": "PVP at #4 with thin conditioning architecture (cetyl alcohol without a quat partner; a tail-level Quaternium-95) and manufacturer positioning as a 'Curl Defining Styling Cream' with a stated Hold 3/5" },
+      "classification": "out_of_category — not classified (§2.3)",
+      "dimensions_recorded_with_the_exclusion": {
+        "HOLD": { "value": "meaningful_hold_route", "confidence": "moderate", "evidence_level": "E2" },
+        "HUM": { "value": "claim_only", "confidence": "moderate", "evidence_level": "E1" }
+      },
+      "profile": null,
+      "shadow_read_non_normative": {
+        "FORM": "aqueous_or_hydroalcoholic_solution", "COND": "low", "SLIP": "low", "SLIP_bias": "unknown",
+        "SFR": "low", "WT": "moderate", "PERS": "neutral_non_volatile", "HEAT": "not_claimed",
+        "R2": "none_visible", "DOSE": "moderate", "EXPO": "fragrance_declared",
+        "ROLE": ["post_wash", "curl_styling"], "care_direction": "unknown", "focus_primary": "curl_definition"
+      },
+      "review_routed": true,
+      "review_reasons": ["G0 styling-boundary exclusion", "§14 HOLD = meaningful_hold_route", "§14 absent exact-market identifier"]
+    },
+    {
+      "slot": 8,
+      "brand": "Schwarzkopf GLISS",
+      "product": "Sprüh-Conditioner Express-Repair Ultimate Repair",
+      "gtin": "4015100813494",
+      "rawInciSha256": "010d7b04d4b62f22900ec0b42880167776b19297c6a155c53ccea4eadc7ff256",
+      "formulaFingerprintSha256": "9adbf8cb1ae853784ca9a859537f7da4d0e1618f3ea5bee2e4d5090b2de7e7dd",
+      "identity_status": "verified",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1", "basis": "manufacturer directions say 'Nicht ausspülen!' despite the name 'Sprüh-Conditioner'" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "moderate", "evidence_level": "E2", "alternative": "microemulsion (unresolved: visual clarity not observed)" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "capped by the LGN-necessity clause" },
+        "SLIP": { "value": "high", "bias": "both", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "high", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "LD-3" },
+        "PERS": { "value": "permanent_cationic", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0", "claim": "Hitzeschutz bis zu 230 °C" },
+        "HUM": { "value": "formula_plausible", "confidence": "low", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderate", "evidence_level": "E2", "note": "hydrolyzed keratin/pearl are plain hydrolysates" },
+        "DOSE": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash", "refresh"], "confidence": "moderately_high", "evidence_level": "E1", "note": "heat_styling deliberately NOT set — no heat tool in the directions" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "present", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": true, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "unknown", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "moderate", "weight_potential": "moderate", "persistence": "high",
+        "hold_support": "none", "care_direction": "unknown",
+        "focus": { "primary": "smoothing", "secondary": [] },
+        "usage_role": ["post_wash", "refresh"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "formula_plausible" },
+        "hair_thickness_fit": { "fine": "conditional", "medium": "recommended", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "recommended", "coily": "conditional" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["product_form", "weight_potential", "care_direction", "specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["§13.3 heat-protection claim (230 °C) with no L9 member — the flagship case", "FORM emulsion vs microemulsion unresolved", "COND ceiling forced by the LGN-necessity clause"]
+    },
+    {
+      "slot": 9,
+      "brand": "Redken",
+      "product": "Extreme Anti-Snap Leave-In Treatment",
+      "gtin": null,
+      "gtin_candidates": ["884486453402", "884486210777"],
+      "rawInciSha256": "2f2fb1d8c62ea11ed91781923a056d3ceac38a210cb2484d0fdd857ec5768dfe",
+      "formulaFingerprintSha256": "239f65c85fea4997b2df1be0570c42f4b50858e465d6cfb0d4304468e5e50f00",
+      "identity_status": "provisional_identity_conflict",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "moderate", "evidence_level": "E2", "note": "polymeric emulsifier system; the LGN pair present at #15-#17 is tail-level" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "capped — LGN pair not above the tail" },
+        "SLIP": { "value": "high", "bias": "dry_biased", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "high", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "LD-3" },
+        "PERS": { "value": "ph_dependent_cationic", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0" },
+        "HUM": { "value": "formula_plausible", "confidence": "low", "evidence_level": "E2", "note": "no humectant in the formula at all — the cleanest qualifying case" },
+        "R2": { "value": "candidate", "confidence": "low", "evidence_level": "E2", "route": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol (silane)" },
+        "DOSE": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "present", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": false, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "unknown", "confidence": "moderate", "evidence_level": "E2", "note": "fails `protein` on the materiality clause only — the silane sits at #14" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "moderate", "weight_potential": "moderate", "persistence": "moderate",
+        "hold_support": "none", "care_direction": "unknown",
+        "focus": { "primary": "smoothing", "secondary": ["repair"] },
+        "usage_role": ["post_wash"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "formula_plausible" },
+        "hair_thickness_fit": { "fine": "conditional", "medium": "recommended", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "recommended", "coily": "conditional" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["product_form", "weight_potential", "care_direction", "focus.primary", "specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["identity/GTIN conflict", "§13.3 heat-protection claim with no L9 member", "§14 routine-level efficacy evidence offered for a single leave-in ('73% less breakage' is a 3-product system result)", "damage_fit row-3 upgrade blocked by the LGN-necessity clause on the one product with a genuine substantive film route"]
+    },
+    {
+      "slot": 10,
+      "brand": "Olaplex",
+      "product": "N°.6 Bond Smoother",
+      "gtin": null,
+      "gtin_candidates": ["896364002602", "896364002619"],
+      "rawInciSha256": "3eb793e5789da28d80295f59c6625793f3260c45f1af255221a9f0faf22bad86",
+      "formulaFingerprintSha256": "297ac0d9541987b0d988781f61fbb05fc01e6e966fd150cca4c1bba96fb12aa3",
+      "identity_status": "provisional_identity_conflict",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "emulsion", "confidence": "high", "evidence_level": "E2" },
+        "COND": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "SLIP": { "value": "high", "bias": "both", "confidence": "moderate", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "high", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "high", "confidence": "moderately_high", "evidence_level": "E2" },
+        "PERS": { "value": "neutral_non_volatile", "confidence": "low", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0", "claim": "450ºF/232ºC heat protection" },
+        "HUM": { "value": "formula_plausible", "confidence": "low", "evidence_level": "E2" },
+        "R2": { "value": "candidate", "confidence": "low", "evidence_level": "E2" },
+        "DOSE": { "value": "high", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "aromatic_or_allergen_exposure", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash", "refresh", "heat_styling"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "present", "curl_definition_focus": null,
+        "R3": "chemistry_candidate — review flag OPEN (Bis-Aminopropyl Diglycol Dimaleate #11)",
+        "layer_caution": false, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "moisture", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "emulsion", "conditioning_level": "high", "weight_potential": "high", "persistence": "moderate",
+        "hold_support": "none", "care_direction": "moisture",
+        "focus": { "primary": "smoothing", "secondary": ["repair", "heat_styling"] },
+        "usage_role": ["post_wash", "refresh", "heat_styling"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "formula_plausible" },
+        "hair_thickness_fit": { "fine": "caution", "medium": "conditional", "coarse": "recommended" },
+        "damage_fit": { "healthy": "conditional", "moderately_damaged": "recommended", "highly_damaged": "recommended" },
+        "texture_fit": { "straight": "conditional", "wavy": "recommended", "curly": "recommended", "coily": "recommended" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["focus.primary", "specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["identity/GTIN conflict; positions 14-46 are T3-only", "§14 proprietary bond/repair chemistry (R3 chemistry_candidate)", "§13.3 heat-protection claim with no L9 member"]
+    },
+    {
+      "slot": 11,
+      "brand": "Balea",
+      "product": "Leichtkämmspray Pure Styling",
+      "gtin": "4067796148855",
+      "rawInciSha256": "9de11a3f4c3972170c2f06aa27e93e9c5c7345b1f3a75342d8388d6c99b43c2e",
+      "formulaFingerprintSha256": "eb6380538aa46481031c813e124efd0fed156b6c3fc5e5c0f4a372c958c685f8",
+      "identity_status": "verified",
+      "g0": { "value": "in_category", "confidence": "high", "evidence_level": "E1" },
+      "dimensions": {
+        "FORM": { "value": "aqueous_or_hydroalcoholic_solution", "confidence": "high", "evidence_level": "E2" },
+        "COND": { "value": "low", "confidence": "moderately_high", "evidence_level": "E2" },
+        "SLIP": { "value": "moderate", "bias": "wet_biased", "confidence": "moderate", "bias_confidence": "moderate", "evidence_level": "E2" },
+        "SFR": { "value": "low", "confidence": "moderate", "evidence_level": "E2" },
+        "WT": { "value": "low", "confidence": "moderate", "evidence_level": "E2" },
+        "PERS": { "value": "volatile_or_water_soluble", "confidence": "moderate", "evidence_level": "E2" },
+        "HOLD": { "value": "none", "confidence": "high", "evidence_level": "E1" },
+        "HEAT": { "value": "not_claimed", "confidence": "moderately_high", "evidence_level": "E1" },
+        "HUM": { "value": "not_claimed", "confidence": "moderately_high", "evidence_level": "E2" },
+        "R2": { "value": "none_visible", "confidence": "moderately_high", "evidence_level": "E2" },
+        "DOSE": { "value": "low", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "no_listed_fragrance_signal", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "absent", "curl_definition_focus": null, "R3": "unknown",
+        "layer_caution": false, "buildup_caution": false, "transfer_caution": false
+      },
+      "care_direction": { "value": "moisture", "confidence": "low", "evidence_level": "E2", "note": "L3 emollient limb of the §9 anchor is entirely absent" },
+      "profile": {
+        "product_form": "aqueous_solution", "conditioning_level": "low", "weight_potential": "low", "persistence": "low",
+        "hold_support": "none", "care_direction": "moisture",
+        "focus": { "primary": "volume_lightness", "secondary": [] },
+        "usage_role": ["post_wash"],
+        "specialist_functions": { "provides_heat_protection": false, "humidity_resistance": "not_claimed" },
+        "hair_thickness_fit": { "fine": "recommended", "medium": "recommended", "coarse": "conditional" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "conditional", "highly_damaged": "caution" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "conditional", "coily": "caution" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["focus.primary", "care_direction"]
+      },
+      "review_routed": true,
+      "review_reasons": ["§14 root/scalp application — a 'Kopfhautpflege' claim against directions silent on placement", "§14 fragrance-free implication ('Ohne Parfüm' badge)", "the `detangling` focus anchor appears structurally unreachable for a detangling spray"]
+    },
+    {
+      "slot": 12,
+      "brand": "Kevin Murphy",
+      "product": "Young.Again Oil",
+      "gtin": null,
+      "gtin_candidates": ["9339341020356", "9339341001744"],
+      "rawInciSha256": "76af4a98c3f67aa751bed0599aaa83b3cd0707252e97a9622a4ec78505fc02d3",
+      "formulaFingerprintSha256": "a88d2f48fc6ad274159cc192e0386a260da0b15a1db37b74096d5eed130446c8",
+      "identity_status": "provisional_formula_conflict",
+      "g0": { "value": "excluded_anhydrous", "confidence": "high", "evidence_level": "E1", "basis": "Cyclopentasiloxane #1, Dimethicone #2, Dimethiconol #3; Water at position 23 of 36 — Aqua absent from the top of the list" },
+      "classification": "out_of_category — not classified (§2.3); routed to the oil/serum category",
+      "dimensions": null,
+      "profile": null,
+      "recorded_with_the_exclusion": {
+        "HEAT_claim": "heat protection up to 200°F / 93°C — no L9 member; FS-14 in its sharpest form (the same claim format spans 93 °C here and 232 °C on slot 10)",
+        "EXPO_conflict": "the captured international list contains HICC; both German retailer lists in the original lane omit it — DE-market-safe verbatim INCI not reproduced"
+      },
+      "shadow_read_non_normative": {
+        "FORM": "anhydrous_serum_or_oil", "COND": "moderate", "SLIP": "high", "SLIP_bias": "dry_biased",
+        "SFR": "high", "WT": "high", "PERS": "ph_dependent_cationic", "HOLD": "none", "HEAT": "claim_only",
+        "HUM": "formula_plausible", "R2": "candidate", "DOSE": "high", "EXPO": "aromatic_or_allergen_exposure",
+        "ROLE": ["post_wash", "refresh"], "care_direction": "unknown"
+      },
+      "review_routed": true,
+      "review_reasons": ["G0 category exit (architecture out, exposure regime in — the reciprocal routing question is for Nick)", "GTIN conflict", "captured INCI is the international/US listing (contains HICC); DE-safe string not reproduced", "unresolved token spelling Vanillyl vs Vinyl Butyl Ether", "G12: the G0 verdict itself is regulatory-sensitive — a D5/D6 reformulation could move the water position (re-review 2027-06-06)"]
+    },
+    {
+      "slot": 13,
+      "brand": "Neqi",
+      "product": "Diamond Glass Ultimate Styling Spray",
+      "gtin": "4063528094575",
+      "rawInciSha256": "6f1438b205be65c3dba30c91dea0e2875aeed6965d0c8449f02fa79eec782f63",
+      "formulaFingerprintSha256": "0fc43a9c7ee30eef3b6d48ed3c15c069b6777f48b7f0b4aa7a865510591ad2ce",
+      "identity_status": "verified_with_minor_source_difference",
+      "g0": { "value": "in_category", "confidence": "moderate", "evidence_level": "E1", "basis": "blow-dry primer with meaningful conditioning (Silicone Quaternium-18 + Polysilicone-29); no hold claim in either source; the retailer 'Leave-In' and manufacturer 'Styling Spray' names were both disregarded per G0" },
+      "dimensions": {
+        "FORM": { "value": "aqueous_or_hydroalcoholic_solution", "confidence": "moderate", "evidence_level": "E2", "alternative": "microemulsion" },
+        "COND": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "capped by the LGN-necessity clause" },
+        "SLIP": { "value": "high", "bias": "dry_biased", "confidence": "low", "bias_confidence": "low", "evidence_level": "E2" },
+        "SFR": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "note": "G3 — the film route and the lubrication route are the same two silicones" },
+        "WT": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2" },
+        "PERS": { "value": "permanent_cationic", "confidence": "moderate", "evidence_level": "E2", "note": "cleanest anchor match in the set — a named silicone quat at architecture level" },
+        "HOLD": { "value": "incidental_film", "confidence": "moderate", "evidence_level": "E2", "alternative": "meaningful_hold_route" },
+        "HEAT": { "value": "claim_only", "confidence": "low", "evidence_level": "E0", "claim": "Hitzeschutz bis 230°" },
+        "HUM": { "value": "claim_only", "confidence": "moderate", "evidence_level": "E1" },
+        "R2": { "value": "candidate", "confidence": "moderate", "evidence_level": "E2" },
+        "DOSE": { "value": "moderate", "confidence": "moderate", "evidence_level": "E2", "derived_from": ["WT", "FORM", "L3_spreading_class"] },
+        "EXPO": { "value": "no_listed_fragrance_signal", "confidence": "moderate", "evidence_level": "E1" },
+        "ROLE": { "value": ["post_wash", "heat_styling"], "confidence": "moderately_high", "evidence_level": "E1" }
+      },
+      "demoted_flags": {
+        "smoothing_shine_qualifier": "present",
+        "curl_definition_focus": "mechanically triggerable but REFUSED (no curl positioning; directions describe sectioned blow-drying under tension)",
+        "R3": "unknown", "layer_caution": true, "buildup_caution": true, "transfer_caution": false
+      },
+      "care_direction": { "value": "unknown", "confidence": "moderate", "evidence_level": "E2" },
+      "profile": {
+        "product_form": "aqueous_solution", "conditioning_level": "moderate", "weight_potential": "moderate", "persistence": "high",
+        "hold_support": "incidental", "care_direction": "unknown",
+        "focus": { "primary": "heat_styling", "secondary": [] },
+        "usage_role": ["post_wash", "heat_styling"],
+        "specialist_functions": { "provides_heat_protection": true, "humidity_resistance": "claim_only" },
+        "hair_thickness_fit": { "fine": "conditional", "medium": "recommended", "coarse": "recommended" },
+        "damage_fit": { "healthy": "recommended", "moderately_damaged": "recommended", "highly_damaged": "conditional" },
+        "texture_fit": { "straight": "recommended", "wavy": "recommended", "curly": "recommended", "coily": "conditional" },
+        "scalp_application_fit": "unknown",
+        "uncertain_fields": ["product_form", "hold_support", "care_direction", "specialist_functions.provides_heat_protection"]
+      },
+      "review_routed": true,
+      "review_reasons": ["§14 G0 product-form ambiguity (the styling boundary is genuinely close)", "§13.3 heat-protection claim with no L9 member — the sharpest test of the closed list", "unverified near-duplicate-GTIN sibling 4063528078469", "FORM aqueous solution vs microemulsion unresolved"]
+    }
+  ],
+  "counts": {
+    "entries": 13,
+    "in_category": 10,
+    "out_of_category": 3,
+    "review_routed": 13,
+    "heat_claim_without_L9_member": 6,
+    "care_direction_unknown_in_category": 4
+  }
+}

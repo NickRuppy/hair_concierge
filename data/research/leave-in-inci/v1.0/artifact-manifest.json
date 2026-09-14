@@ -1,0 +1,112 @@
+{
+  "schema_version": "leave-in-stage-a-artifact-manifest.v1.0",
+  "created_at": "2026-09-13",
+  "updated_at": "2026-09-13",
+  "normative_source": {
+    "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+    "bytes": 421855,
+    "sha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "verification": "Standard v1.0, promoted unchanged from the v0.4 draft at the 2026-09-13 freeze; differs from the reviewed rc1 snapshot only in the Version preamble, the header block and the §10 version stamps"
+  },
+  "review_source_snapshot": {
+    "version": "1.0-rc1",
+    "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.v1.0-rc1.md",
+    "bytes": 418728,
+    "sha256": "f17d482f28f62d1c0083f6b7efcaff3e9fdf1f2f78a1c212e790240a2163c8d5",
+    "verification": "exact release-candidate source both round-4 sealed lanes classified against (lane-r4a and lane-r4b seal confirmations name this file); byte-identical to leave-in-classification-standard.v0.4.md"
+  },
+  "runbook": {
+    "path": "docs/research/leave-in-inci/v1.0/runbook.md",
+    "bytes": 16953,
+    "sha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+    "verification": "procedure as practised across rounds 1-4 and the unseen-product test: packet capture and amendment log, sealed-lane protocol, agreement diff, Lab review flow, T-ledger discipline, §1.1 invariant, guidance synchronization"
+  },
+  "rule_change_ledger": {
+    "path": "docs/research/leave-in-inci/v1.0/rule-changes.md",
+    "bytes": 149113,
+    "sha256": "169be9cf77a0a774d8f3f34066c2a8c81bfa06d58aa79741e1935dd5920c0a88"
+  },
+  "category_charter": {
+    "path": "docs/research/leave-in-inci/v1.0/00_category_charter.md",
+    "bytes": 9955,
+    "sha256": "52dcf2d1dfdacc0d3cff6a3213439d84185573ce84ef5671dd75b2e96ab2a180"
+  },
+  "readme": {
+    "path": "docs/research/leave-in-inci/README.md",
+    "bytes": 11163,
+    "sha256": "4d048c869edb72492f8fc615cc979e2a9a157f558c5ec3467a256eb434fbaf84"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json",
+    "bytes": 8141,
+    "sha256": "7510ccf29be21bd8fc9ee640ecc39de53bed90b6bf93bd730b11cf2c7b4dac52",
+    "verification": "records the locked v1.0 scope, the seven dimensions and lean-profile fields, three reviewed anchor patterns, the round-4 validation basis, retained limits, and the separate product, adapter, catalog, database and publication gates"
+  },
+  "lab_fixture": {
+    "path": "data/research/leave-in-inci/v1.0/lab-fixture.json",
+    "bytes": 1234555,
+    "sha256": "a9c7f5be4c56704359de096a31c840b5b3ba3d32ffc2d0b33dbcdbc62726df75",
+    "verification": "19 products (13 gold-set + 6 unseen-test), 397 reviewable properties; regenerated after the corpus relocation with zero changes outside rationaleSource path-provenance strings — all 19 productFingerprints and all 397 propertyFingerprints unchanged, so stored Lab approvals survive. Its standardVersion stamp stays leave-in-inci-v0.4 because that is the text the reviewed records were derived under and v1.0 promotes it unchanged"
+  },
+  "corpus": {
+    "root": "data/research/leave-in-inci/v1.0/corpus",
+    "relocated_from": "plans/leave-in-inci/research",
+    "relocated_at": "2026-09-13",
+    "gold_set": {
+      "root": "data/research/leave-in-inci/v1.0/corpus/gold-set",
+      "key_artifacts": [
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/gold-set/calibration-packet.json",
+          "bytes": 111897,
+          "sha256": "2d1055085c748853184c7c10b03b7383548665e4759d90140186f7b6b1cda3f4"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/gold-set/blind-packet.json",
+          "bytes": 69626,
+          "sha256": "8bb3023347b7a4610c52014869b8846837bc62772f583ebd4c0f042730589632"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/gold-set/reference-key-v4/reference-key.json",
+          "bytes": 170988,
+          "sha256": "42bf27058e854402c6335fce5b0dd1cd6adb9aca478b126d63cf4b2433ca1f04"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/gold-set/round-4/lane-r4a/records.json",
+          "bytes": 221061,
+          "sha256": "484e94cfd484e38454baed3426e4ede25fcec93310e6e2f1fd7b4a54493840b4"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/gold-set/round-4/lane-r4b/records.json",
+          "bytes": 207063,
+          "sha256": "b42da8dbc6f3d9830ee11f9baa1fd55831c4caf3c7732250a77b1cad5a4a56d0"
+        }
+      ]
+    },
+    "unseen_test": {
+      "root": "data/research/leave-in-inci/v1.0/corpus/unseen-test",
+      "key_artifacts": [
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet.json",
+          "bytes": 87943,
+          "sha256": "9eeaae3d25ef9aff99d7d0d4f0c0c306a63881626bea9c861b7ce61504671b8b"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-packet-lane.json",
+          "bytes": 82050,
+          "sha256": "1336d1dcce299336b93cd759813159ef6339462f71332d5f456ae58f71d968c4"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/unseen-test/lane-a/records.json",
+          "bytes": 139221,
+          "sha256": "fbb16dc22eab1670b669a4a137a7a45adef79e542e97725b43f9acb14d12a7c7"
+        },
+        {
+          "path": "data/research/leave-in-inci/v1.0/corpus/unseen-test/lane-b/records.json",
+          "bytes": 150645,
+          "sha256": "ffa29082e1c2cf17c47b4ee63ae81dc71672f2b39ce90154f84730dbeb01bfc5"
+        }
+      ]
+    }
+  },
+  "production_writes": false
+}

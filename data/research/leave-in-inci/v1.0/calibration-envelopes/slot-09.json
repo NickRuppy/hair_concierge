@@ -1,0 +1,341 @@
+{
+  "version": "leave-in-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "leave-in-classification-v1.0",
+    "modelVersion": "leave-in-inci-v1.0",
+    "policySha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "identity": {
+    "researchId": "leave-in-gold-set-slot-09",
+    "market": "DE/EU",
+    "exactProductName": "Extreme Anti-Snap Leave-In Treatment",
+    "brand": "Redken",
+    "gtin": "884486453402",
+    "productForm": "spray",
+    "applicationStage": [
+      "towel_dry"
+    ],
+    "identityStatus": "verified_with_minor_source_difference",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "moderate",
+    "sourceIds": [
+      "T2:douglas.de",
+      "T2:hautschutzengel.de",
+      "T2/T3:lorealpartnershop.com (UK/ES)",
+      "C2:redken.eu (de-de)"
+    ]
+  },
+  "formula": {
+    "status": "verified_with_minor_difference",
+    "rawInci": "Aqua, Polyacrylamide, Phenoxyethanol, Amodimethicone, Arginine, Citric Acid, C13-14 Isoparaffin, Isopropyl Myristate, Parfum, Laureth-7, Xylose, Hydrolyzed Soy Protein, Trideceth-6, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Cetyl Alcohol, Cetrimonium Chloride, Behentrimonium Methosulfate, Benzyl Benzoate, Quaternium-33, Limonene, Benzyl Alcohol, Linalool, Potassium Sorbate, 2-Oleamido-1,3-Octadecanediol",
+    "normalizedIngredients": [
+      "AQUA",
+      "POLYACRYLAMIDE",
+      "PHENOXYETHANOL",
+      "AMODIMETHICONE",
+      "ARGININE",
+      "CITRIC ACID",
+      "C13-14 ISOPARAFFIN",
+      "ISOPROPYL MYRISTATE",
+      "PARFUM",
+      "LAURETH-7",
+      "XYLOSE",
+      "HYDROLYZED SOY PROTEIN",
+      "TRIDECETH-6",
+      "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+      "CETYL ALCOHOL",
+      "CETRIMONIUM CHLORIDE",
+      "BEHENTRIMONIUM METHOSULFATE",
+      "BENZYL BENZOATE",
+      "QUATERNIUM-33",
+      "LIMONENE",
+      "BENZYL ALCOHOL",
+      "LINALOOL",
+      "POTASSIUM SORBATE",
+      "2-OLEAMIDO-1,3-OCTADECANEDIOL"
+    ],
+    "formulaFingerprintSha256": "ff9c329e18e2b241d246a71a4fd42d7882a03ae4b327574890318d341c8dc628",
+    "rawInciSha256": "2f2fb1d8c62ea11ed91781923a056d3ceac38a210cb2484d0fdd857ec5768dfe",
+    "sourceIds": [
+      "T2:douglas.de",
+      "T2:hautschutzengel.de",
+      "T2/T3:lorealpartnershop.com (UK/ES)",
+      "C2:redken.eu (de-de)"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "low",
+      "rationale": "§7.2 COND resolved to `moderate` on formula evidence at E2 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "absorbed slip observation: one M1 contributor(s)"
+      ],
+      "derivation": "§10.1: `conditioning_level` <- COND (low->low, moderate->moderate, high->high, unknown->unknown).",
+      "thresholdReasoning": [
+        "COND anchor recorded `moderate` with confidence `low`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "Evidence level E2 on formula scope: formula potential, not measured finished-product performance."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "low",
+      "rationale": "§7.5 WT resolved to `moderate` on the `multi_family` anchor row at E2 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: multi_family",
+        "Families: persistent silicone (Amodimethicone r4), dry-feel ester (Isopropyl Myristate r8), LGN/cationic deposit (Cetyl Alcohol r15, Cetrimonium Chloride r16, Behentrimonium Methosulfate r17). The absent rich/low-spreading band member holds it below high - no rich-band species appears at any rank and IPM is high-spreading. All families sit below the rank-3 marker.",
+        "condition 1 - WT is not high"
+      ],
+      "derivation": "§10.1: `weight_potential` <- WT; the multi-family `moderate` row projects as plain `moderate` and its mandatory counter-signal stays in the trace (§10.1.1).",
+      "thresholdReasoning": [
+        "WT anchor recorded `moderate` with confidence `low`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "§7.5 records a judgment-call limitation on every fine-hair value derived from this dimension."
+      ]
+    },
+    "persistence": {
+      "value": "moderate",
+      "confidence": "low",
+      "rationale": "§7.6 PERS recorded mechanism class `ph_dependent_cationic` at E2 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "Quaternium-33 r19 is opaque and is NOT promoted (§7.6). Amodimethicone r4 sits below the marker; the alternative monomeric-quat reading also projects moderate, so the projected field is robust.",
+        "quat structure: unresolved"
+      ],
+      "derivation": "§10.1: `persistence` <- the PERS mechanism class projected ordinally (volatile_or_water_soluble->low; neutral_non_volatile->moderate; ph_dependent_cationic->moderate; permanent_cationic->high).",
+      "thresholdReasoning": [
+        "The recorded mechanism class `ph_dependent_cationic` maps to the ordinal `moderate`.",
+        "G11: this is a mechanism ordering, not a duration claim."
+      ],
+      "limitations": [
+        "The ordinal states removal mechanism only; it never asserts how long the product stays on hair."
+      ]
+    },
+    "holdSupport": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "§7.7 HOLD recorded `none` at E2 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "Polyacrylamide unenumerated in L5 (§17.19); here plainly the pre-neutralised emulsifier system",
+        "manufacturer_hold_level: null (no C1/C2 hold level in the frozen claims)"
+      ],
+      "derivation": "§10.1: `hold_support` <- the HOLD 3-state, unchanged and with no `unknown` member (§7.7).",
+      "thresholdReasoning": [
+        "HOLD is a coarse presence read and recorded `none`.",
+        "§10: `hold_support` gains no `unknown`, because §7.7's ontology cannot produce one."
+      ],
+      "limitations": [
+        "A coarse presence read; it never grades hold strength."
+      ]
+    },
+    "careDirection": {
+      "value": "protein",
+      "confidence": "low",
+      "rationale": "§9 care_direction resolved to `protein` at E2 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "T16 re-derivation: R2 is now `candidate` (the silane no longer sits below a reliable marker), so §9's `protein` anchor is met directly. `moisture`'s conditioning+humectant+emollient branch requires no protein-film route, which is no longer true, so it stops applying. `balanced` is not reached: it additionally requires a material moisture leg above the tail, and this pass does not extend the T16 relief to the moisture-side ingredients (IPM r8, the LGN/cationic deposit r15-17) - only R2's own route was re-derived per the ruling's stated consequence. Positioning ('Es stärkt und glättet die Schuppenschicht', 'bis zu 96% stärker') corroborates but is recorded as a counter-signal, never the route (§9 constraint 3)."
+      ],
+      "derivation": "§10.1: `care_direction` <- §9.",
+      "thresholdReasoning": [
+        "§9 recorded `protein` with confidence `low`.",
+        "§9 constraint 3: positioning corroborates a direction but never creates one."
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "rationale": "T16 re-derivation (2026-09-11). R2 is now `candidate` (E1) — the silane, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol at r14, is no longer disqualified: the tail marker (Phenoxyethanol r3) sits before this product's own core conditioning architecture (Amodimethicone r4; LGN/cationic deposit r15-17), so it is `tail_marker_implausible` and T16 forbids using it to disqualify any route. conditioning_level = `moderate` (>= moderate). §10.3.2's `medium` row (R2 ∈ {candidate, tested} with conditioning_level >= moderate) is reached directly — this is the first gold-set record to exercise it; the `high` row still needs exact-product E3+ evidence, which does not exist here. §10.3.2 clause 2 (marketing never moves the level) is unaffected: the level moves on the formula route, not on the C2 copy.",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E1",
+        "evidence_scope: formula",
+        "repair_surface_film: candidate",
+        "Hydrolyzed Soy Protein r12"
+      ],
+      "derivation": "§10.3.2: `repair_support_level` <- the fixed ordered rule over [repair_surface_film, conditioning_level, product_evidence].",
+      "thresholdReasoning": [
+        "R2 recorded `candidate` and conditioning_level `moderate`, which selects `medium`.",
+        "§10.3.2 clause 1: a bond claim is not repair support; R3 is invisible to this rule."
+      ],
+      "limitations": [
+        "§10.3.2 ceiling: a formula-only value cannot exceed `medium`; `high` requires exact-product E3+ repair evidence."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "repair",
+        "secondary": []
+      },
+      "confidence": "low",
+      "rationale": "T16 re-derivation (2026-09-11), value CHANGED from `general`. A dedicated repair route now exists — R2 = `candidate` (§7.10, via the T16 tail-marker-implausible relief) — so §10.2's `repair` row (R2 ∈ {candidate, tested}, and nothing else, T13a) qualifies for the first time on this record. `smoothing` is re-checked and still does not qualify: this pass's T16 relief is scoped to R2 alone (per the ruling's stated consequence), so SFR/`smoothing_route` is left exactly as it was — `moderate`, one observation only, because §7.4.1 clause 3's below-marker treatment of the candidate second (lubrication) route is not re-opened here — and §7.4.1's two-observation test still fails outright. `repair` is therefore the sole qualifying route in the rank order (repair > smoothing > curl_definition > heat_styling > detangling > volume_lightness > shine); it becomes `primary` without needing a tie-break. The C2 marketing position is repair-led ('Anti-Snap', 'reduziert Haarbruch und Spliss', 'bis zu 96% stärker') and corroborates the now-qualifying formula route, but it does not create it (principle 4, §10.2 step 5) — the route already clears on R2 alone. Every other route still fails its own gate exactly as before: curl_definition (HOLD none), heat_styling (application_stage [towel_dry], no pre_heat), detangling (no C1/C2 positioning), volume_lightness (WT moderate), shine (would restate the film). No secondary focus: nothing else clears its own independent-support bar. Result: repair, still uncertain — this record's values remain broadly uncertain from the rank-3 marker, now formally `tail_marker_implausible` (§3.1.1, T16) rather than the retired `candidate_below_tail` reading.",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "smoothing_route: silicone_film",
+        "repair_surface_film: candidate",
+        "hold_route_state: none",
+        "weight_residue_potential: moderate"
+      ],
+      "derivation": "§10.2: qualifying routes are collected beyond baseline conditioning (§10.2.1, permissive reading T13b), then the rank order repair > smoothing > curl_definition > heat_styling > detangling > volume_lightness > shine binds.",
+      "thresholdReasoning": [
+        "Selected primary `repair` with secondary [].",
+        "§10.2 principle 4: official positioning may corroborate a route but never creates one."
+      ],
+      "limitations": [
+        "A focus is a statement of distinctive purpose, not an efficacy claim or a measured endpoint."
+      ]
+    },
+    "specialistFunctions": {
+      "value": {
+        "providesHeatProtection": true
+      },
+      "confidence": "high",
+      "rationale": "§13.3 heat binary derived from HEAT trace state `claim_only` at E0 (reference-key-2026-09-05-r4, slot 9).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E0",
+        "evidence_scope: product",
+        "claim_tier: C2",
+        "redken.eu/de-de (German-market page - C2 under rule 3)",
+        "no L9 member present",
+        "claim looks formula-unsupported (§13.3 rule 2)",
+        "the silanetriol is not hydrolyzed wheat protein; Quaternium-33 is not Quaternium-70. No °C figure exists on the C2 page and none is used."
+      ],
+      "derivation": "§13.3: claim-led with an L9 formula sanity-check; the production model carries one binary and the four-state evidence detail stays in the trace.",
+      "thresholdReasoning": [
+        "HEAT trace state `claim_only` yields provides_heat_protection = true.",
+        "§13.3: a formula never manufactures a claim, and efficacy is never graded."
+      ],
+      "limitations": [
+        "The binary reports what the product is sold as under EU claim law; it is not an efficacy statement (§3.3)."
+      ]
+    },
+    "smoothingRoute": {
+      "value": "silicone_film",
+      "confidence": "low",
+      "rationale": "SFR moderate. The alignment route read is the persistent amino silicone Amodimethicone r4; §7.4.1 clause 3 governs, because every candidate route sits below the rank-3 marker.",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "smoothing_route: silicone_film",
+        "derived_from_sfr: moderate"
+      ],
+      "derivation": "§7.4 (T2): the route is typed from the recorded SFR observation plus §6 mechanism evidence; it is never graded and never itself projected as a production column.",
+      "thresholdReasoning": [
+        "Typed as `silicone_film` from the recorded mechanism evidence.",
+        "§7.4.1's two-observation test gates whether a smoothing route exists at all."
+      ],
+      "limitations": [
+        "A route type, not a smoothing score; it carries no humidity or frizz claim (§7.9)."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": {
+        "fine": "conditional",
+        "medium": "recommended",
+        "coarse": "recommended"
+      },
+      "confidence": "low",
+      "rationale": "§10.3 hair_thickness_fit is weight-led; the `moderate` row yields fine=conditional, medium=recommended, coarse=recommended.",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: multi_family",
+        "Families: persistent silicone (Amodimethicone r4), dry-feel ester (Isopropyl Myristate r8), LGN/cationic deposit (Cetyl Alcohol r15, Cetrimonium Chloride r16, Behentrimonium Methosulfate r17). The absent rich/low-spreading band member holds it below high - no rich-band species appears at any rank and IPM is high-spreading. All families sit below the rank-3 marker."
+      ],
+      "derivation": "§10.3: `hair_thickness_fit` <- weight_potential, and nothing else (G3).",
+      "thresholdReasoning": [
+        "weight_potential `moderate` selects the corresponding §10.3 row.",
+        "§10.3: no second weight-derived field may additionally modify this table."
+      ],
+      "limitations": [
+        "Broad product priors, not universal exclusions or efficacy claims; every fine-hair value carries the §7.5 judgment-call limitation."
+      ]
+    },
+    "damageFit": {
+      "value": {
+        "healthy": "conditional",
+        "moderately_damaged": "recommended",
+        "highly_damaged": "recommended"
+      },
+      "confidence": "low",
+      "rationale": "T16 re-derivation (2026-09-11). R2 = `candidate` and conditioning_level = `moderate` (>= moderate) now open §10.3's repair-film path (row 3b), which supersedes row 2 (no qualifying repair route no longer applies). Row 3b: healthy `conditional`, moderately_damaged `recommended`, highly_damaged `recommended` — the tier written for exactly this archetype (R14) is reached for the first time in this gold set. `healthy` moves recommended -> conditional and `highly_damaged` moves conditional -> recommended; `moderately_damaged` stays recommended (row 2 and row 3b agree on that cell).",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "conditioning_level: moderate",
+        "repair_surface_film: candidate"
+      ],
+      "derivation": "§10.3: `damage_fit` <- [conditioning_level, repair_surface_film, bond_flag, product_evidence], with two independent paths to the highly-damaged tier (R14).",
+      "thresholdReasoning": [
+        "The recorded inputs select the §10.3 row yielding healthy=conditional, moderately_damaged=recommended, highly_damaged=recommended.",
+        "§10.3 (R14): an R3 bond flag alone never qualifies a product for the highly-damaged tier."
+      ],
+      "limitations": [
+        "A broad prior for a damage tier, never an efficacy or repair claim."
+      ]
+    },
+    "textureFit": {
+      "value": {
+        "straight": "recommended",
+        "wavy": "recommended",
+        "curly": "recommended",
+        "coily": "conditional"
+      },
+      "confidence": "low",
+      "rationale": "§10.3 texture_fit is weight-led with the absorbed slip observation as the high-weight modifier; the `moderate` row yields straight=recommended, wavy=recommended, curly=recommended, coily=conditional.",
+      "evidenceSignals": [
+        "reference key slot 9",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "anchor row: multi_family",
+        "absorbed slip observation: one M1 contributor(s)",
+        "hold_route_state: none"
+      ],
+      "derivation": "§10.3: `texture_fit` <- [weight_potential, conditioning_potential.absorbed_slip_observation, hold_route_state]; the table is exhaustive with an explicit `unknown` fallback row.",
+      "thresholdReasoning": [
+        "weight_potential `moderate` selects the §10.3 texture row.",
+        "§10.3: HOLD = meaningful_hold_route does not by itself raise curly/coily."
+      ],
+      "limitations": [
+        "A broad prior per texture family, not a per-user prediction."
+      ]
+    },
+    "uncertainFields": [
+      "conditioning_level",
+      "weight_potential",
+      "persistence",
+      "care_direction",
+      "focus",
+      "repair_support_level",
+      "damage_fit"
+    ],
+    "assumptionNotes": [
+      "Derived mechanically from reference-key-2026-09-05-r4 and the frozen calibration packet; no re-classification, no web research, no re-judged evidence.",
+      "RESOLVED 2026-09-14 (was: GTIN unresolved — two independently-corroborated codes circulated: 884486453402, from the L'Oréal partner-shop trade site plus multiple EU retailer listings, and 884486210777, from hautschutzengel.de; neither source was douglas.de itself, which exposes no GTIN). The round-4 evidence-gap-closure pass (2026-09-13, data/research/leave-in-inci/v1.0/corpus/gold-set/round-4/evidence-gap-closure.md, Gap 2) fetched the manufacturer's own German-market page (redken.eu/de-de, tier C2) and found its product photography filenames embed GTIN 884486453402 — an exact match to one of this record's two gtin_candidates, on a manufacturer source, confirming SKU identity. 884486453402 is promoted to this entry's gtin; 884486210777 (hautschutzengel.de) is retained in gtin_candidates as a non-German/legacy-packaging variant, not merged or discarded.",
+      "identity.identityStatus resolved from provisional_identity_conflict to verified_with_minor_source_difference (2026-09-14 write-back pass, packet notes/known_conflicts): the round-4 evidence-gap-closure pass (data/research/leave-in-inci/v1.0/corpus/gold-set/round-4/evidence-gap-closure.md, Gap 2) found GTIN 884486453402 embedded in the redken.eu/de-de manufacturer packshot's image filenames, matching one of this record's two gtin_candidates exactly on a C2 manufacturer source; 884486453402 is promoted to gtin, and 884486210777 is retained as a non-German/legacy-packaging variant, not merged."
+    ]
+  }
+}

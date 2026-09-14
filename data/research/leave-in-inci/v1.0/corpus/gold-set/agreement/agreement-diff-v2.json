@@ -1,0 +1,765 @@
+{
+  "stats": {
+    "compared_fields": 398,
+    "agreements": 370,
+    "disagreements": 28,
+    "agreement_rate": "93.0%",
+    "by_slot": {
+      "2": 6,
+      "5": 2,
+      "6": 1,
+      "7": 1,
+      "9": 9,
+      "10": 4,
+      "13": 5
+    },
+    "by_field": {
+      "profile.weight_potential": 1,
+      "focus.primary": 4,
+      "hair_thickness_fit.*": 2,
+      "texture_fit.*": 2,
+      "dim.SFR": 2,
+      "g0": 2,
+      "dim.HUM": 1,
+      "dim.R2": 1,
+      "care_direction": 1,
+      "focus.secondary": 1,
+      "humidity": 1,
+      "damage_fit.*": 2,
+      "dim.HEAT": 1,
+      "dim.ROLE": 1,
+      "profile.usage_role": 1,
+      "heat.binary": 1,
+      "dim.FORM": 1,
+      "dim.HOLD": 1,
+      "profile.product_form": 1,
+      "profile.hold_support": 1
+    }
+  },
+  "disagreements": [
+    {
+      "slot": 2,
+      "field": "profile.weight_potential",
+      "ref": "high",
+      "blind": "moderate",
+      "agree": false
+    },
+    {
+      "slot": 2,
+      "field": "focus.primary",
+      "ref": "general",
+      "blind": "smoothing",
+      "agree": false
+    },
+    {
+      "slot": 2,
+      "field": "hair_thickness_fit.fine",
+      "ref": "caution",
+      "blind": "conditional",
+      "agree": false
+    },
+    {
+      "slot": 2,
+      "field": "hair_thickness_fit.medium",
+      "ref": "conditional",
+      "blind": "recommended",
+      "agree": false
+    },
+    {
+      "slot": 2,
+      "field": "texture_fit.straight",
+      "ref": "conditional",
+      "blind": "recommended",
+      "agree": false
+    },
+    {
+      "slot": 2,
+      "field": "texture_fit.coily",
+      "ref": "recommended",
+      "blind": "conditional",
+      "agree": false
+    },
+    {
+      "slot": 5,
+      "field": "dim.SFR",
+      "ref": "high",
+      "blind": "moderate",
+      "agree": false
+    },
+    {
+      "slot": 5,
+      "field": "focus.primary",
+      "ref": "smoothing",
+      "blind": "general",
+      "agree": false
+    },
+    {
+      "slot": 6,
+      "field": "focus.primary",
+      "ref": "general",
+      "blind": "smoothing",
+      "agree": false
+    },
+    {
+      "slot": 7,
+      "field": "g0",
+      "ref": "provisional_boundary",
+      "blind": "excluded_styling_first",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "dim.SFR",
+      "ref": "high",
+      "blind": "moderate",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "dim.HUM",
+      "ref": "formula_plausible",
+      "blind": "not_claimed",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "dim.R2",
+      "ref": "candidate",
+      "blind": "unknown",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "care_direction",
+      "ref": "protein",
+      "blind": "unknown",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "focus.primary",
+      "ref": "smoothing",
+      "blind": "general",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "focus.secondary",
+      "ref": [
+        "repair"
+      ],
+      "blind": [],
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "humidity",
+      "ref": "formula_plausible",
+      "blind": "not_claimed",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "damage_fit.healthy",
+      "ref": "conditional",
+      "blind": "recommended",
+      "agree": false
+    },
+    {
+      "slot": 9,
+      "field": "damage_fit.highly_damaged",
+      "ref": "recommended",
+      "blind": "conditional",
+      "agree": false
+    },
+    {
+      "slot": 10,
+      "field": "dim.HEAT",
+      "ref": "claim_only",
+      "blind": "not_claimed",
+      "agree": false
+    },
+    {
+      "slot": 10,
+      "field": "dim.ROLE",
+      "ref": [
+        "post_wash"
+      ],
+      "blind": [],
+      "agree": false
+    },
+    {
+      "slot": 10,
+      "field": "profile.usage_role",
+      "ref": [
+        "post_wash"
+      ],
+      "blind": [],
+      "agree": false
+    },
+    {
+      "slot": 10,
+      "field": "heat.binary",
+      "ref": true,
+      "blind": false,
+      "agree": false
+    },
+    {
+      "slot": 13,
+      "field": "g0",
+      "ref": "provisional_boundary",
+      "blind": "in_category",
+      "agree": false
+    },
+    {
+      "slot": 13,
+      "field": "dim.FORM",
+      "ref": "unknown",
+      "blind": "microemulsion",
+      "agree": false
+    },
+    {
+      "slot": 13,
+      "field": "dim.HOLD",
+      "ref": "meaningful_hold_route",
+      "blind": "incidental_film",
+      "agree": false
+    },
+    {
+      "slot": 13,
+      "field": "profile.product_form",
+      "ref": "unknown",
+      "blind": "microemulsion",
+      "agree": false
+    },
+    {
+      "slot": 13,
+      "field": "profile.hold_support",
+      "ref": "meaningful",
+      "blind": "incidental",
+      "agree": false
+    }
+  ],
+  "conf_deltas": [
+    {
+      "slot": 1,
+      "field": "conf.SLIP",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 1,
+      "field": "conf.SFR",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 1,
+      "field": "conf.HEAT",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 1,
+      "field": "conf.HUM",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 1,
+      "field": "conf.DOSE",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 1,
+      "field": "conf.ROLE",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.FORM",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.WT",
+      "ref": "moderately_high",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.HOLD",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.DOSE",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 2,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 3,
+      "field": "conf.FORM",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 3,
+      "field": "conf.HOLD",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 3,
+      "field": "conf.HEAT",
+      "ref": "low_moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 3,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 3,
+      "field": "conf.ROLE",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.SLIP",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.SFR",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.HOLD",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.R2",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.DOSE",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 4,
+      "field": "conf.ROLE",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.COND",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.SFR",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.WT",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.HOLD",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.DOSE",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 5,
+      "field": "conf.ROLE",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 6,
+      "field": "conf.FORM",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 6,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 6,
+      "field": "conf.HUM",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 6,
+      "field": "conf.ROLE",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 8,
+      "field": "conf.FORM",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 8,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 8,
+      "field": "conf.HEAT",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 8,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.WT",
+      "ref": "low_moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.PERS",
+      "ref": "low_moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.HEAT",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.DOSE",
+      "ref": "low_moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 9,
+      "field": "conf.ROLE",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.FORM",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.WT",
+      "ref": "moderately_high",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.HEAT",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 10,
+      "field": "conf.ROLE",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.FORM",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.COND",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.WT",
+      "ref": "moderately_high",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.PERS",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.HOLD",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 11,
+      "field": "conf.R2",
+      "ref": "high",
+      "blind": "moderately_high",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.FORM",
+      "ref": "low",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.COND",
+      "ref": "low",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.SLIP",
+      "ref": "low",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.SFR",
+      "ref": "low",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.HEAT",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.HUM",
+      "ref": "moderate",
+      "blind": "low",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.DOSE",
+      "ref": "low_moderate",
+      "blind": "moderate",
+      "agree": false,
+      "confOnly": true
+    },
+    {
+      "slot": 13,
+      "field": "conf.EXPO",
+      "ref": "moderate",
+      "blind": "low_moderate",
+      "agree": false,
+      "confOnly": true
+    }
+  ]
+}

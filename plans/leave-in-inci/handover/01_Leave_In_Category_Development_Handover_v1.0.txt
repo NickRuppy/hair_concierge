@@ -1,0 +1,517 @@
+LEAVE-IN HAIRCARE
+Category Development Handover
+A self-contained brief for building the leave-in conditioner / cream / spray research and matching standard in a dedicated new work session
+Version
+1.0 — 2 September 2026
+Market scope
+Germany / EU
+Current state
+Shampoo and rinse-out conditioner guidance are substantially in place
+Status
+Category-development handover; not yet a validated leave-in standard
+RECOMMENDATION
+Use a new dedicated work session. Reuse the cross-category process and the latest conditioner materials as the nearest reference, but rebuild the leave-in ontology around no-rinse exposure, dose, dry-down, persistence, styling polymers, humidity response, layering and all-day contact.
+
+The handover is deliberately self-contained so the next session can begin without reconstructing this conversation.
+
+1. Executive decision
+START A NEW LEAVE-IN SESSION
+Use the conditioner instructions as a reference package, not as instructions to rename and reuse. The category developer may be the same model, but the session should be clean and leave-in-specific. A second clean session should perform blind calibration.
+
+Category-developer session: builds the scientific map, direct product properties, fit logic, proposed reference key and calibration set.
+Blind-reviewer session: classifies the exact same products without seeing the proposed key and records disagreements.
+Refinement pass: converts repeatable disagreement into explicit gates, caps, uncertainty fields and stress tests.
+2. Source package for the new session
+Priority
+File
+Role
+Required
+Cross-Category Ingredient Research & Matching Playbook
+Permanent method and development sequence.
+Required
+Latest rinse-out Conditioner Standard
+Nearest chemistry and conditioning reference.
+Required
+Latest Conditioner Calibration Workbook
+Worked category-calibration example.
+Required
+Generic Product Research Schema
+Shared identity, evidence and property-decision structure.
+Required
+This Leave-In Handover
+Leave-in mission, boundary, ontology candidates and kickoff prompt.
+Recommended
+Latest Shampoo Standard and calibration
+Secondary example for identity, evidence scope and gates.
+Optional
+Current leave-in product list or catalog extract
+Useful for German-market calibration selection.
+HIERARCHY OF AUTHORITY
+New leave-in research and this handover take precedence over conditioner-specific assumptions. Conditioner supplies reusable conditioning science and the development pattern; it is not the final leave-in standard.
+
+3. Category mission
+Build an evidence-backed ingredient-research and matching standard for conventional leave-on hair-conditioning products sold in Germany/EU. The standard must classify what an exact formula is likely to do, how it creates the effect, what trade-offs it introduces and which user contexts it is likely to suit—while keeping formula plausibility, finished-product evidence and user fit separate.
+Required deliverables
+Leave-In Research & Classification Standard v1.0 in DOCX and agent-context Markdown.
+Calibration workbook with 10–12 exact German-market products, GTINs, formulas and blind reviewer sheets.
+Proposed reference key, agreement dashboard, disagreement log and change log.
+Three to five adversarial stress-test products and tightened rules.
+Lean application-facing matching profile with property-specific evidence records.
+Runtime research prompt for a newly uploaded leave-in product.
+Version and re-review rules for formula, GTIN and category-boundary changes.
+4. Proposed category charter
+4.1 Working definition
+A leave-in is a cosmetic hair product intentionally left on the fiber after application, whose primary or co-primary function is conditioning, detangling, smoothing, frizz control, curl support, heat-styling support or related fiber management. It may be used on damp or dry hair and may be a spray, mist, milk, lotion, cream or two-phase system.
+Decision
+Boundary
+Include initially
+Water-based or emulsion-based leave-in sprays, milks, lotions and creams.
+Include initially
+Single-phase and two-phase products when conditioning/detangling is primary.
+Include initially
+Multi-benefit '10-in-1' products that are fundamentally leave-in conditioners or primers.
+Include initially
+Curl creams when conditioning/definition is central and hold remains secondary.
+Include initially
+Blow-dry primers and heat-protective leave-ins when conditioning is meaningful.
+Exclude initially
+Pure oils and anhydrous silicone serums; route to the oil/serum category.
+Exclude initially
+Styling-first gels, mousses, hairsprays, waxes, clays and strong-hold creams.
+Exclude initially
+Rinse-out conditioners, masks, co-washes and cleansing conditioners.
+Exclude initially
+Scalp serums, growth tonics, medicated and anti-dandruff treatments.
+Exclude initially
+Color-depositing leave-ins and salon chemical-processing treatments.
+4.2 Product-form boundary rule
+CLASSIFY BY FUNCTION + DIRECTIONS + ARCHITECTURE
+Do not classify from the name alone. If conditioning/detangling is primary and the product remains on the hair, include it. If durable hold/texture is primary, route it to styling. If it is anhydrous oil/silicone, route it to oil/serum. If genuinely ambiguous, mark provisional and use it as a boundary stress case.
+
+5. Why conditioner instructions cannot simply be copied
+Dimension
+Rinse-out conditioner
+Leave-in
+Rinse behavior
+Most material is rinsed after short contact.
+The applied dose remains until later washing or transfer.
+Dose sensitivity
+Rinsing moderates application error.
+Small dose changes can cause underperformance, greasiness, stiffness or buildup.
+Architecture
+Usually a cationic/fatty-alcohol lamellar emulsion.
+May be solution, spray, milk, emulsion, cream, microemulsion or two-phase.
+Persistence
+Relevant but limited by rinsing.
+Central: volatility, film formation, substantivity and accumulation.
+Styling polymers
+Often secondary.
+May drive frizz, definition, hold, humidity response and heat styling.
+Layering
+Usually followed by leave-ins/stylers.
+Must coexist with oils, gels, foams, creams, sprays and tools.
+Climate
+Usually not central to core classification.
+Can change tack, frizz, definition, stiffness and film behavior.
+Exposure
+Lengths/ends, followed by rinse.
+Potential all-day fiber, skin, neck and sometimes scalp contact.
+Evidence transfer
+Rinse-out tests address rinse-out use.
+Rinse-out evidence cannot be transferred automatically to leave-on dose.
+6. User jobs, trade-offs and recommendation failures
+User job
+Core trade-off
+Typical failure
+Post-wash detangling
+Slip versus residue/weight
+A rich cream is recommended to undamaged fine hair needing only light detangling.
+Smooth and reduce frizz
+Smoothing versus volume and movement
+Anti-frizz is treated as universally curl-friendly.
+Support curl/wave definition
+Definition/hold versus softness and buildup
+A hold polymer is mistaken for conditioning or repair.
+Heat styling
+Thermal support versus stiffness/weight
+Any silicone or protein is treated as proven heat protection.
+Damaged ends
+Lubrication/film versus false repair certainty
+Protein or bond branding becomes permanent structural repair.
+Shine
+Gloss versus greasy finish
+Oil presence is assumed to suit every dull-hair profile.
+Between-wash refresh
+Reactivation versus cumulative layering
+Repeated dry use is recommended without considering wash frequency.
+Lightness
+Enough conditioning versus under-treatment
+Spray format is assumed lightweight regardless of formula and dose.
+User variables required for matching
+Strand thickness and density.
+Texture and styling pattern: straight, wavy, curly or coily.
+Damage/porosity proxies: bleaching, permanent color, chemical straightening, heat exposure, roughness, tangling and breakage.
+Desired finish: soft, sleek, voluminous, defined, glossy, low-frizz or lightly held.
+Heat-tool use and claimed temperature context.
+Climate and humidity exposure where relevant.
+Existing layered products and risk of pilling, flaking or residue.
+Wash frequency and cleanser/reset capacity.
+Application location: ends only, all lengths, roots or scalp-adjacent.
+7. Core scientific research questions
+Which formula architectures distinguish sprays, milks, creams, emulsions and two-phase leave-ins?
+How should applied dose and expected grams per use affect INCI interpretation and weight potential?
+Which cationic surfactants and polymers remain substantive in leave-on use, and how do they interact with anionic styling polymers?
+How should volatile versus non-volatile silicones, amino silicones and silicone emulsions influence dry-down, shine, smoothing and persistence?
+Which oils, esters, hydrocarbons, butters and solvents materially affect spread, slip, greasiness and transfer?
+Which film-forming polymers support flexible hold, definition, humidity resistance or stiffness?
+When do humectants support softness, and when is climate/humidity evidence required before making frizz claims?
+Which proteins or polymers plausibly support lubrication, surface film, heat protection or breakage reduction—and which are weak hero ingredients?
+What formula evidence can support heat protection, and which claims require product-specific thermal testing?
+What predicts wash-out ease, cumulative buildup and need for clarification?
+Which tests support wet combing, dry combing, friction, breakage, gloss, frizz, humidity response, curl retention and thermal protection?
+Which conclusions can be made from formula alone, and which should default to unknown?
+8. Formula and ingredient architecture to map
+Research block
+Questions to answer
+Carrier and form
+Water, alcohols/glycols, emulsions, microemulsions, two-phase systems, sprayability and viscosity.
+Cationic conditioning
+Quats, amidoamines, cationic guar/cellulose, polyquaterniums, charge density and compatibility.
+Silicone system
+Volatile/persistent silicones, amino silicones, silicone quats, emulsions and deposition aids.
+Lipids/emollients
+Oils, esters, hydrocarbons, butters, fatty alcohols and dry-feel emollients.
+Humectants/osmolytes
+Glycerin, propanediol, glycols, panthenol, betaine and climate-sensitive interpretation.
+Styling film
+Anionic, cationic, amphoteric and nonionic film formers; hold, flexibility and humidity.
+Protein/repair
+Hydrolyzed proteins, cationic derivatives, silane derivatives, peptides and bond technologies.
+Heat/UV
+Thermal-protection polymers, silicones, proteins, UV absorbers and evidence thresholds.
+Exposure
+Fragrance, essential oils, alcohol, preservatives, allergens and application location.
+Washout/reset
+Persistence, water dispersibility, film cohesion and compatibility with cleansing routine.
+False inferences the new standard must prevent
+Water is first, therefore the product is lightweight.
+Spray means lightweight; cream means heavy.
+Silicone-free means no buildup or low weight.
+A volatile silicone means the complete formula leaves no residue.
+Botanical oil or butter means deep repair.
+Glycerin automatically improves frizz in every climate.
+Any silicone, protein or panthenol proves heat protection.
+Anti-frizz and curl definition are the same property.
+Hold polymer equals conditioning or repair.
+A rinse-out ingredient study proves leave-on performance.
+A 10-in-1 label represents ten independent mechanisms.
+9. Performance-route dictionary to develop
+Outcome
+Possible routes
+False signal
+Detangling / wet slip
+Cationic conditioning; lubricating deposition; low-friction emollients; flexible films.
+Bottle thickening or perfume.
+Dry combability / softness
+Persistent lubricating film; flexible emollients; controlled cationic/silicone deposition.
+Humectant name alone.
+Smoothing / anti-frizz
+Alignment; film formation; lubrication; humidity-resistant polymer; controlled occlusion.
+'Moisture' language without a route.
+Curl/wave definition
+Flexible film/hold; clumping support; lubrication; humidity response.
+Conditioning alone or heavy oil alone.
+Shine
+Smooth optical surface; gloss film; aligned fibers; controlled oil/silicone deposition.
+Shiny product appearance.
+Heat protection
+Validated thermal barrier/film; product-specific test evidence.
+Any silicone/protein by itself.
+Repair support
+Friction reduction; surface film; breakage prevention; mapped bond technology.
+Permanent reconstruction from generic ingredients.
+Volume/lightness
+Low net deposition; volatile/light dry-down; anti-static without heavy coating.
+Spray format alone.
+Persistence / refresh
+Substantive or reactivatable film; durable emollient; controlled reapplication.
+One-time softness result.
+Wash-out / buildup
+Dispersibility; film cohesion; persistence; compatibility with cleanser strength.
+Silicone-free label alone.
+10. Candidate detailed research ontology
+CANDIDATE, NOT FROZEN
+The next session must test these dimensions against primary literature and exact German-market formulas before freezing a scorebook. Some low-confidence dimensions may become evidence flags rather than 0–4 formula scores.
+
+Code
+Dimension
+Meaning
+Formula-only ceiling
+FORM
+Product form / architecture
+spray, milk, lotion, cream, two-phase; carrier and emulsion system
+High
+COND
+Conditioning/deposition
+overall leave-on lubrication and substantive conditioning
+Moderately high
+WET
+Wet detangling/slip
+expected reduction of wet combing force
+Moderate
+DRY
+Dry combability/softness
+expected dry slip and soft feel
+Moderate
+SFR
+Smoothing/frizz control
+surface alignment, film and humidity-related control
+Moderate
+SHN
+Shine/gloss
+optical smoothing or deposited gloss route
+Moderate
+WT
+Weight/residue
+net tendency to flatten, grease, stiffen or coat
+Moderate
+PERS
+Persistence
+how long material is likely to remain or reactivate
+Moderate
+WASH
+Wash-out/accumulation
+ease of removal and cumulative buildup potential
+Low–moderate
+HOLD
+Hold/styling support
+film-based control beyond conditioning
+Moderate
+CURL
+Curl/wave definition
+definition route and movement/softness trade-off
+Moderate
+HEAT
+Heat-protection potential
+formula plausibility plus mandatory test scope
+Low formula-only
+HUM
+Humidity response
+resistance or sensitivity under humid/dry conditions
+Low formula-only
+R1
+Repair lubrication
+friction reduction and grooming-breakage prevention
+Moderate
+R2
+Repair surface film
+substantive protein/polymer/silane film
+Moderate
+R3
+Bond-specific support
+mapped technology, separate from product evidence
+Low–moderate
+DOSE
+Dose sensitivity
+risk that small dose changes alter finish materially
+Moderate
+LAYER
+Layering risk
+pilling, flaking, incompatibility or cumulative layering
+Low formula-only
+EXPO
+Scalp/skin exposure
+fragrance, alcohol, preservatives, essential oils and placement
+Moderate for flags
+ROLE
+Usage role
+post-wash, refresh, heat styling, curl styling, ends-only
+Moderately high
+11. Candidate lean application-facing profile
+Keep the detailed ontology in the research trace. The first production model should expose only the fields needed for recommendation and explanation:
+{   "product_form": "spray | milk | lotion | cream | two_phase",   "conditioning_level": "low | moderate | high",   "weight_potential": "low | moderate | high",   "persistence": "low | moderate | high",   "hold_support": "none | low | moderate | high",   "focus": {     "primary": "detangling | smoothing_frizz | curl_definition | heat_styling | repair | shine | volume_lightness | general",     "secondary": [       "max_two"     ]   },   "usage_role": [     "post_wash | refresh | heat_styling | curl_styling | ends_only"   ],   "specialist_functions": {     "heat_protection": "not_claimed | claim_only | formula_plausible | product_tested",     "humidity_resistance": "not_claimed | claim_only | formula_plausible | product_tested"   },   "hair_thickness_fit": {     "fine": "recommended | conditional | neutral | caution | unknown",     "medium": "recommended | conditional | neutral | caution | unknown",     "coarse": "recommended | conditional | neutral | caution | unknown"   },   "damage_fit": {     "healthy": "recommended | conditional | caution | unknown",     "moderately_damaged": "recommended | conditional | caution | unknown",     "highly_damaged": "recommended | conditional | caution | unknown"   },   "texture_fit": {     "straight": "recommended | conditional | caution | unknown",     "wavy": "recommended | conditional | caution | unknown",     "curly": "recommended | conditional | caution | unknown",     "coily": "recommended | conditional | caution | unknown"   },   "scalp_application_fit": "avoid | conditional | suitable_if_evidenced | unknown" }
+Recommended simplification
+Do not initially store climate fit or layering compatibility as confident binary labels; keep them as evidence-backed specialist flags or unknown.
+Do not create a separate fit label for every marketing claim. Store one primary focus, up to two secondary focuses and specialist evidence states.
+Reuse the same property-evidence object already used for shampoo and conditioner.
+12. Evidence and explanation requirements
+REQUIRED REASONING CHAIN
+Formula observation → direct leave-in product behavior → user-fit decision. No ingredient may jump directly to 'suitable for fine hair,' 'heat protecting' or 'curl friendly.'
+
+Step
+Example
+1. Formula observation
+Amodimethicone, a cationic polymer and a persistent film former are present in a leave-on cream.
+2. Product inference
+Conditioning is high, weight/persistence are moderate-to-high and hold is low-to-moderate.
+3. User-fit decision
+Conditional for fine hair; recommended for damaged medium/coarse hair when smoothing is prioritized.
+Every property decision must contain
+value and direct-product-property versus derived-user-fit type;
+property-specific confidence;
+E0–E5 evidence level and formula/product/routine evidence scope;
+one- or two-sentence rationale;
+exact observations and the product-property inference they support;
+counter-signals, trade-offs and missing information;
+derived_from fields for user-fit decisions;
+source IDs and shared mechanism IDs;
+review status: draft, approved, provisional or specialist review required.
+Conclusion
+Normal confidence ceiling
+Product form and architecture
+High
+Conditioning and broad weight potential
+Moderate to moderately high
+Primary focus
+Moderately high
+Thickness, damage and texture fit
+Moderate
+Heat protection from formula only
+Low; raise with finished-product evidence
+Humidity resistance from formula only
+Low
+Layering/pilling compatibility from formula only
+Low
+Sensitive-scalp tolerance from INCI only
+Low
+13. Calibration and stress-test plan
+#
+Calibration role
+1
+Ultra-light fine-hair detangling spray
+2
+Mainstream general leave-in milk or lotion
+3
+Rich leave-in cream for dry/damaged hair
+4
+Two-phase spray conditioner
+5
+Silicone-rich smoothing/anti-frizz leave-in
+6
+Silicone-free but strongly cationic/polymeric leave-in
+7
+Curl-definition cream with meaningful hold polymer
+8
+Heat-protective blow-dry primer or spray
+9
+Protein/surface-repair focused leave-in
+10
+Bond-repair claim leave-in
+11
+Fragrance-free or sensitive-positioned leave-in
+12
+Product-form or exact-source boundary case
+Adversarial stress products
+'Lightweight' branding despite persistent silicones, oils or film formers.
+Heat-protection claim supported only by generic silicone/protein language.
+Curl cream where definition comes mainly from hold rather than conditioning.
+10-in-1 product whose claims rely on one or two shared mechanisms.
+Boundary product between leave-in, styling cream and serum—or a GTIN/formula conflict.
+14. Runtime and system-boundary handover
+Layer
+Responsibility
+Category guidance
+Semantic reasoning, mechanism routes, explanation patterns, direct product-property logic and fit derivation.
+Product catalog / tools
+Exact current product truth: IDs, GTIN, market, pack size, current INCI, claims, lifecycle, availability, price and stock.
+Validators
+Grounding, category-version consistency, evidence-scope correctness, schema completeness and unsupported-claim prevention.
+Evaluation set
+Regression tests for request interpretation, comparison balance, recommendation grounding and explanation quality.
+Preserve these request distinctions
+Request mode
+Expected behavior
+category_education
+Explain leave-in science or how a property works; no product recommendation required.
+category_assessment
+Assess a formula or claim against the category standard.
+category_comparison
+Compare products on explicit dimensions, including trade-offs and uncertainty.
+product_recommendation
+Match researched product behavior to a user profile using current catalog/tool truth.
+product_detail
+Return current product-specific facts and the stored research explanation.
+DO NOT EMBED VOLATILE PRODUCT TRUTH IN CATEGORY PROSE
+The category standard should teach how to reason. Exact product claims, IDs, availability, lifecycle, price and stock should be fetched from the catalog or tools and validated at runtime.
+
+15. Product-upload and recommendation workflow
+Step
+Operation
+Output
+1
+User uploads or identifies product
+Photo, barcode, name, market and pack size.
+2
+Resolve identity and category
+Confirm leave-in boundary; route oil/styling/scalp products elsewhere.
+3
+Capture exact formula
+Official formula, GTIN, market, date and fingerprint.
+4
+Apply leave-in standard
+Architecture, mechanisms, scores, gates, caps and evidence scope.
+5
+Infer direct product properties
+Conditioning, weight, persistence, focus, hold, role and specialist functions.
+6
+Create property evidence records
+Observation, inference, counter-signal, confidence and source.
+7
+Derive broad fit priors
+Thickness, damage, texture and scalp-application fit.
+8
+Match to current user
+Goals, routine, climate, layering, damage and dose context.
+9
+Explain recommendation
+Why it fits, trade-offs, evidence and uncertainty.
+10
+Monitor version
+Re-research after formula, GTIN or standard changes.
+16. Definition of done
+Category boundary is explicit and repeatable across spray, cream, styling and serum edge cases.
+Dominant leave-in architectures and persistence behavior are documented from authoritative sources.
+Claims are split into distinct mechanisms, including hold versus conditioning and heat evidence.
+Direct product properties are operationally defined and separate from user-fit outputs.
+Every score has gates, anchors, false-signal guidance and confidence limitations.
+The lean matching profile is small enough for the current application model.
+Every stored label has its own evidence record and counter-signals.
+Ten to twelve exact German-market products have been classified and independently reviewed.
+Three to five adversarial products have tested the weak points.
+Unresolved source, category or proprietary-technology cases produce provisional records.
+A runtime prompt produces both research_trace and matching_profile outputs for a newly uploaded product.
+WHAT NOT TO OPTIMIZE FOR
+Do not aim for a giant ontology on the first pass. Aim for reliable direct product behavior, a compact explainable matching profile and explicit unknowns for heat, humidity, layering and tolerance when formula-only reasoning is insufficient.
+
+Appendix A. Ready-to-paste new-session prompt
+You are developing an evidence-backed ingredient-research and product-matching standard for a new Charlie hair-care category.  CATEGORY Conventional leave-in conditioner / cream / milk / spray for the current German/EU market.  CURRENT STATE Shampoo and rinse-out conditioner standards are substantially in place. Treat them as worked references. Reuse their exact-identity control, source hierarchy, evidence model, property-evidence object, calibration protocol and explainable matching pattern. Do not copy rinse-out conditioner dimensions or score rules without re-researching them for leave-on exposure.  CONTEXT FILES 1. Cross-Category Ingredient Research & Matching Playbook — latest version 2. Shampoo Research & Classification Standard and calibration — latest version 3. Rinse-Out Conditioner Research & Classification Standard and calibration — latest version 4. Generic Product Research Schema — latest version 5. Leave-In Category Development Handover v1.0  MISSION Create a repeatable, auditable standard that allows a human or AI researcher to classify an exact leave-in formula, estimate its direct product behavior, derive explainable user fit and store evidence behind every property.  WORKING CATEGORY BOUNDARY Include water-based or emulsion-based leave-in sprays, mists, milks, lotions, creams and two-phase products when conditioning, detangling, smoothing, curl support or heat-styling support is primary or co-primary.  Initially exclude pure oils and anhydrous silicone serums; styling-first gels, mousses, hairsprays, waxes and strong-hold products; rinse-out conditioners and masks; scalp serums and growth tonics; medicated products; color-depositing leave-ins; and salon chemical treatments.  Use function + directions + formula architecture rather than product name. Ambiguous products must be marked provisional or used as boundary stress cases.  CATEGORY-SPECIFIC DIFFERENCES TO MODEL - No rinse: the full applied dose remains on the hair. - Dose, distribution, dry-down, persistence and transfer are central. - Product forms range from spray solutions to creams and two-phase systems. - Styling polymers, hold, curl definition and humidity response may be central. - Layering with oils, gels, foams, creams and heat tools can change performance. - All-day skin/scalp exposure and fragrance/preservative flags matter. - Rinse-out conditioner evidence does not automatically apply.  REQUIRED PROCESS 1. Lock the category boundary and subtypes. 2. Research leave-in formula architecture, deposition/persistence and relevant finished-product test methods using primary or authoritative sources. 3. Map distinct routes for wet detangling, dry combability, softness, smoothing/frizz control, shine, curl definition, hold, heat protection, repair, persistence and wash-out/buildup. 4. Define direct product properties separately from user-fit outputs. 5. Build ingredient-family guidance with delivery requirements, false signals, gates and caps. 6. Keep formula scores, product evidence and user-fit confidence separate. 7. Design a lean matching profile and reusable property-evidence object. 8. Select 10–12 diverse German-market calibration products with exact GTINs and formulas. 9. Create a proposed reference key and a blind reviewer workflow. 10. Analyze disagreements and tighten the standard. 11. Add 3–5 adversarial stress-test products. 12. Deliver a DOCX standard, agent-context Markdown, calibration workbook, change log and runtime product-research prompt.  CANDIDATE DETAILED PROPERTIES TO TEST, NOT BLINDLY ACCEPT - product form / architecture - conditioning/deposition - wet detangling/slip - dry combability/softness - smoothing/frizz control - shine - weight/residue potential - persistence - wash-out/accumulation - hold/styling support - curl/wave definition - heat-protection potential - humidity-response potential - repair lubrication - repair surface film - bond-specific support - dose sensitivity - layering risk - scalp/skin exposure risk - usage role  CANDIDATE LEAN MATCHING PROFILE - product_form - conditioning_level - weight_potential - persistence - hold_support - primary_focus and up to two secondary focuses - usage_role - heat_protection and humidity_resistance evidence states - hair_thickness_fit - damage_fit - texture_fit - scalp_application_fit  SYSTEM BOUNDARY - Category guidance owns semantic interpretation, mechanism reasoning, explanation patterns and fit logic. - Catalog/tools own exact product truth: IDs, GTIN, market, current INCI, claims, availability, lifecycle, price and stock. - Validators enforce identity grounding, category-standard version, evidence scope, source support and output-schema compliance. - Preserve distinct request modes: category education, category assessment, category comparison, product recommendation and product detail.  NON-NEGOTIABLES - Exact market + pack size + GTIN/EAN + capture date. - Formula analysis before marketing interpretation. - No exact concentration claims from INCI order. - No naked suitability labels. - Every property includes value, confidence, E-level, evidence scope, rationale, supporting observations, product inference, counter-signals, derived_from and sources. - Formula observation -> product-property inference -> user-fit decision. - Heat, humidity, layering and sensitive-scalp conclusions default to low confidence or unknown when formula-only inference is insufficient. - Routine-level test results must not be attributed to the leave-in alone. - Unknown or proprietary systems must be labeled with uncertainty rather than guessed. - Identity or formula conflicts produce a provisional record.  FIRST OUTPUT Before freezing a scorebook or selecting the full calibration set, produce: A. Category charter and exclusions B. Leave-in subtype/architecture map C. User jobs, trade-offs and recommendation failures D. Core scientific research questions and test methods E. Proposed performance-route dictionary F. Proposed direct product properties G. Proposed lean user-fit outputs H. Proposed calibration and stress-test archetypes I. Open questions, low-confidence fields and specialist boundaries  Then continue into full research, calibration and refinement unless the user explicitly asks to pause.
+Appendix B. Handover checklist
+Item
+Completion condition
+New category session
+Created as a clean, dedicated thread.
+Cross-category playbook
+Attached.
+Latest shampoo material
+Attached as secondary worked example.
+Latest conditioner material
+Attached as nearest reference.
+Generic schema
+Attached.
+Leave-in handover
+Attached.
+Boundary review
+Accepted or amended before product collection.
+Primary-source research
+Completed before score anchors are frozen.
+Calibration key
+Hidden from blind reviewer.
+Disagreement log
+Maintained and converted into rules where systematic.
+Runtime model
+Kept lean; detailed science remains in research trace.
+Catalog/tool boundary
+Exact product truth remains outside static category prose.
+FINAL HANDOFF
+Conditioner should accelerate leave-in development through the conditioning ontology and evidence infrastructure. The leave-in standard must still be independently researched and calibrated around leave-on dose, dry-down, persistence, film behavior, styling interaction and exposure.
+

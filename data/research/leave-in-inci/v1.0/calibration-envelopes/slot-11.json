@@ -1,0 +1,304 @@
+{
+  "version": "leave-in-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "leave-in-classification-v1.0",
+    "modelVersion": "leave-in-inci-v1.0",
+    "policySha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca"
+  },
+  "identity": {
+    "researchId": "leave-in-gold-set-slot-11",
+    "market": "DE/EU",
+    "exactProductName": "Leichtkämmspray Pure Styling",
+    "brand": "Balea",
+    "gtin": "4067796148855",
+    "productForm": "spray",
+    "applicationStage": [
+      "towel_dry"
+    ],
+    "identityStatus": "verified",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "sourceIds": [
+      "T2:dm.de"
+    ]
+  },
+  "formula": {
+    "status": "verified",
+    "rawInci": "Aqua, Betaine, Propylene Glycol, Cetrimonium Chloride, Inulin, Panthenol, Hydroxyacetophenone, 1,2-Hexanediol, Caprylyl Glycol, Citric Acid, Sodium Hydroxide",
+    "normalizedIngredients": [
+      "AQUA",
+      "BETAINE",
+      "PROPYLENE GLYCOL",
+      "CETRIMONIUM CHLORIDE",
+      "INULIN",
+      "PANTHENOL",
+      "HYDROXYACETOPHENONE",
+      "1,2-HEXANEDIOL",
+      "CAPRYLYL GLYCOL",
+      "CITRIC ACID",
+      "SODIUM HYDROXIDE"
+    ],
+    "formulaFingerprintSha256": "ef2af7781e942a7f0bff9398d89bd2ef8221745d74106516a162b6ab9e9b7328",
+    "rawInciSha256": "9de11a3f4c3972170c2f06aa27e93e9c5c7345b1f3a75342d8388d6c99b43c2e",
+    "sourceIds": [
+      "T2:dm.de"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "§7.2 COND resolved to `low` on formula evidence at E2 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "absorbed slip observation: one M1 contributor(s)"
+      ],
+      "derivation": "§10.1: `conditioning_level` <- COND (low->low, moderate->moderate, high->high, unknown->unknown).",
+      "thresholdReasoning": [
+        "COND anchor recorded `low` with confidence `moderate`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "Evidence level E2 on formula scope: formula potential, not measured finished-product performance."
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "§7.5 WT resolved to `low` at E2 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "condition 1 - WT is low, not high; and the C2 statement 'Kein Verkleben oder Beschweren' agrees with the formula read rather than contradicting it"
+      ],
+      "derivation": "§10.1: `weight_potential` <- WT; the multi-family `moderate` row projects as plain `moderate` and its mandatory counter-signal stays in the trace (§10.1.1).",
+      "thresholdReasoning": [
+        "WT anchor recorded `low` with confidence `moderately_high`.",
+        "§7 anchors are exclusive: the recorded value means the adjacent band's anchor row was not reached on this evidence."
+      ],
+      "limitations": [
+        "§7.5 records a judgment-call limitation on every fine-hair value derived from this dimension."
+      ]
+    },
+    "persistence": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "§7.6 PERS recorded mechanism class `neutral_non_volatile` at E2 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "§7.6 explicitly refuses volatile_or_water_soluble when a monomeric long-chain quat is the dominant persistent species"
+      ],
+      "derivation": "§10.1: `persistence` <- the PERS mechanism class projected ordinally (volatile_or_water_soluble->low; neutral_non_volatile->moderate; ph_dependent_cationic->moderate; permanent_cationic->high).",
+      "thresholdReasoning": [
+        "The recorded mechanism class `neutral_non_volatile` maps to the ordinal `moderate`.",
+        "G11: this is a mechanism ordering, not a duration claim."
+      ],
+      "limitations": [
+        "The ordinal states removal mechanism only; it never asserts how long the product stays on hair."
+      ]
+    },
+    "holdSupport": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "§7.7 HOLD recorded `none` at E1 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E1",
+        "evidence_scope: formula",
+        "manufacturer_hold_level: null (no C1/C2 hold level in the frozen claims)"
+      ],
+      "derivation": "§10.1: `hold_support` <- the HOLD 3-state, unchanged and with no `unknown` member (§7.7).",
+      "thresholdReasoning": [
+        "HOLD is a coarse presence read and recorded `none`.",
+        "§10: `hold_support` gains no `unknown`, because §7.7's ontology cannot produce one."
+      ],
+      "limitations": [
+        "A coarse presence read; it never grades hold strength."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "§9 care_direction resolved to `moisture` on the `humectant_led_minimum` row at E2 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "anchor row: humectant_led_minimum",
+        "thin architecture - no L3 leg at all and a single monomeric quat as the L1 leg"
+      ],
+      "derivation": "§10.1: `care_direction` <- §9.",
+      "thresholdReasoning": [
+        "§9 recorded `moisture` with confidence `low`.",
+        "§9 constraint 3: positioning corroborates a direction but never creates one."
+      ],
+      "limitations": [
+        "§9's ceiling caps a formula-only direction at moderate confidence."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "R2 = `none_visible` (E1), conditioning_level = `low`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E1",
+        "evidence_scope: formula",
+        "repair_surface_film: none_visible",
+        "Panthenol r6 is a fibre-mechanics signal, not an R2 route and not a heat route (FS-24)"
+      ],
+      "derivation": "§10.3.2: `repair_support_level` <- the fixed ordered rule over [repair_surface_film, conditioning_level, product_evidence].",
+      "thresholdReasoning": [
+        "R2 recorded `none_visible` and conditioning_level `low`, which selects `low`.",
+        "§10.3.2 clause 1: a bond claim is not repair support; R3 is invisible to this rule."
+      ],
+      "limitations": [
+        "§10.3.2 ceiling: a formula-only value cannot exceed `medium`; `high` requires exact-product E3+ repair evidence."
+      ]
+    },
+    "focus": {
+      "value": {
+        "primary": "detangling",
+        "secondary": [
+          "volume_lightness"
+        ]
+      },
+      "confidence": "moderate",
+      "rationale": "detangling qualifies on BOTH prongs - detangling-led C2 positioning ('Leichtkämmspray', 'erleichtert das Kämmen erheblich') with SLIP moderate, and a slip-dominant light architecture (SLIP moderate, COND low, WT low). volume_lightness qualifies (WT low, no persistent film route) and ranks below detangling; it clears the independent-support bar on a distinct weight observation.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "smoothing_route: none",
+        "repair_surface_film: none_visible",
+        "hold_route_state: none",
+        "weight_residue_potential: low"
+      ],
+      "derivation": "§10.2: qualifying routes are collected beyond baseline conditioning (§10.2.1, permissive reading T13b), then the rank order repair > smoothing > curl_definition > heat_styling > detangling > volume_lightness > shine binds.",
+      "thresholdReasoning": [
+        "Selected primary `detangling` with secondary [volume_lightness].",
+        "§10.2 principle 4: official positioning may corroborate a route but never creates one."
+      ],
+      "limitations": [
+        "A focus is a statement of distinctive purpose, not an efficacy claim or a measured endpoint."
+      ]
+    },
+    "specialistFunctions": {
+      "value": {
+        "providesHeatProtection": false
+      },
+      "confidence": "high",
+      "rationale": "§13.3 heat binary derived from HEAT trace state `not_claimed` at E0 (reference-key-2026-09-05-r4, slot 11).",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E0",
+        "evidence_scope: product",
+        "C2 house-brand page fetched live and actively checked - the claim genuinely does not exist; not a claim_authority_gap"
+      ],
+      "derivation": "§13.3: claim-led with an L9 formula sanity-check; the production model carries one binary and the four-state evidence detail stays in the trace.",
+      "thresholdReasoning": [
+        "HEAT trace state `not_claimed` yields provides_heat_protection = false.",
+        "§13.3: a formula never manufactures a claim, and efficacy is never graded."
+      ],
+      "limitations": [
+        "The binary reports what the product is sold as under EU claim law; it is not an efficacy statement (§3.3)."
+      ]
+    },
+    "smoothingRoute": {
+      "value": "none",
+      "confidence": "moderate",
+      "rationale": "SFR low: no persistent film at any rank. Water phase, Panthenol and a single monomeric long-chain quat only.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "smoothing_route: none",
+        "derived_from_sfr: low"
+      ],
+      "derivation": "§7.4 (T2): the route is typed from the recorded SFR observation plus §6 mechanism evidence; it is never graded and never itself projected as a production column.",
+      "thresholdReasoning": [
+        "Typed as `none` from the recorded mechanism evidence.",
+        "§7.4.1's two-observation test gates whether a smoothing route exists at all."
+      ],
+      "limitations": [
+        "A route type, not a smoothing score; it carries no humidity or frizz claim (§7.9)."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": {
+        "fine": "recommended",
+        "medium": "recommended",
+        "coarse": "conditional"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 hair_thickness_fit is weight-led; the `low` row yields fine=recommended, medium=recommended, coarse=conditional.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula"
+      ],
+      "derivation": "§10.3: `hair_thickness_fit` <- weight_potential, and nothing else (G3).",
+      "thresholdReasoning": [
+        "weight_potential `low` selects the corresponding §10.3 row.",
+        "§10.3: no second weight-derived field may additionally modify this table."
+      ],
+      "limitations": [
+        "Broad product priors, not universal exclusions or efficacy claims; every fine-hair value carries the §7.5 judgment-call limitation."
+      ]
+    },
+    "damageFit": {
+      "value": {
+        "healthy": "recommended",
+        "moderately_damaged": "conditional",
+        "highly_damaged": "caution"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 damage_fit read from conditioning_level `low` and repair_surface_film `none_visible`.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "conditioning_level: low",
+        "repair_surface_film: none_visible"
+      ],
+      "derivation": "§10.3: `damage_fit` <- [conditioning_level, repair_surface_film, bond_flag, product_evidence], with two independent paths to the highly-damaged tier (R14).",
+      "thresholdReasoning": [
+        "The recorded inputs select the §10.3 row yielding healthy=recommended, moderately_damaged=conditional, highly_damaged=caution.",
+        "§10.3 (R14): an R3 bond flag alone never qualifies a product for the highly-damaged tier."
+      ],
+      "limitations": [
+        "A broad prior for a damage tier, never an efficacy or repair claim."
+      ]
+    },
+    "textureFit": {
+      "value": {
+        "straight": "recommended",
+        "wavy": "recommended",
+        "curly": "conditional",
+        "coily": "caution"
+      },
+      "confidence": "moderate",
+      "rationale": "§10.3 texture_fit is weight-led with the absorbed slip observation as the high-weight modifier; the `low` row yields straight=recommended, wavy=recommended, curly=conditional, coily=caution.",
+      "evidenceSignals": [
+        "reference key slot 11",
+        "evidence_level: E2",
+        "evidence_scope: formula",
+        "absorbed slip observation: one M1 contributor(s)",
+        "hold_route_state: none"
+      ],
+      "derivation": "§10.3: `texture_fit` <- [weight_potential, conditioning_potential.absorbed_slip_observation, hold_route_state]; the table is exhaustive with an explicit `unknown` fallback row.",
+      "thresholdReasoning": [
+        "weight_potential `low` selects the §10.3 texture row.",
+        "§10.3: HOLD = meaningful_hold_route does not by itself raise curly/coily."
+      ],
+      "limitations": [
+        "A broad prior per texture family, not a per-user prediction."
+      ]
+    },
+    "uncertainFields": [],
+    "assumptionNotes": [
+      "Derived mechanically from reference-key-2026-09-05-r4 and the frozen calibration packet; no re-classification, no web research, no re-judged evidence."
+    ]
+  }
+}

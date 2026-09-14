@@ -1,0 +1,1027 @@
+{
+  "packet_version": "leave-in-unseen-test-v0.1",
+  "category_standard_version": "leave-in-inci-v0.4",
+  "based_on_gold_set_schema": "leave-in-gold-set-calibration-v0.1 (plans/leave-in-inci/research/gold-set/calibration-packet.json) -- field names and conventions mirrored for tooling compatibility. Two additions not present in that schema: (1) an `additional_inci_captures` / `additional_directions_captures` array on any entry where a genuine second independent source was fetched, used instead of overwriting or merging the primary raw_inci/directions_of_use, per this packet's instruction to capture multiple sources verbatim and note diffs rather than merge them; (2) an `availability` object per entry (retailer, price, in-stock state, fetch date), which the calibration packet does not track.",
+  "scope": "FROZEN EVIDENCE PACKET ONLY. This packet performs evidence capture exclusively: identity, verbatim INCI (raw + normalized + fingerprints), verbatim directions of use, verbatim marketing claims with source and claim-authority-tier CANDIDATE metadata, and availability. It contains NO classification, NO dimension scoring, and NO category judgment. Where a claim's authority tier depends on an adjudication this packet is not permitted to make (in particular the standard's §2.4.1 rule 7 / T14 cross-market exception on slot u6), the `creates_claim` field is recorded as null with an explanatory note rather than asserted either way. Downstream lanes consume this packet without further web access.",
+  "frozen_at": "2026-09-12",
+  "last_amended_at": "2026-09-12",
+  "entry_count": 6,
+  "fingerprint_method": {
+    "rawInciSha256": "unsalted SHA-256 (hex) of the exact raw_inci string as captured, UTF-8 encoded, no normalization. Where a source page displayed its ingredient list with a bullet character ('•') as the visible delimiter rather than a comma (L'Oréal Paris pages/retail syndication: Müller.de and loreal-paris.de captures on slots u1/u2), the raw_inci string preserves that bullet delimiter exactly, with bullet spacing harmonized to a single ' • ' where the source page's own text-flow rendering had collapsed inter-token whitespace around a line-wrap (an extraction artifact of reading rendered page text, not a content change -- no ingredient name, order, or punctuation within a token was altered). Trailing non-ingredient annotations (fragrance formula codes, footnote/asterisk-meaning explanations, 'CLINICAL RESULTS: N/A' boilerplate) were excluded from raw_inci and are instead quoted verbatim in packet-notes.md, except where the annotation was short and clearly ingredient-adjacent (loreal-paris.de's trailing '(F.I.L. C212631/2)' fragrance code on slot u1, kept in that entry's additional_inci_captures raw_inci text but excluded from its own normalized_ingredients tokenization).",
+    "formulaFingerprintSha256": "unsalted SHA-256 (hex) of the normalized formula string: split raw_inci on its visible delimiter (comma, or '•' where that is what the source used -- see rawInciSha256 note above), trim each token, strip all '*'/'†' footnote markers anywhere in the token, uppercase, re-join with ', '. No internal-comma INCI names (e.g. '1,2-Hexanediol') occurred in any of this packet's six raw_inci captures, so no special-casing beyond the gold-set's documented method was required."
+  },
+  "amendment_log": [
+    {
+      "date": "2026-09-12",
+      "change": "Targeted gap-fill on slot u4 (Briogeo Superfoods Avocado + Kiwi Mega Moisture 3-in-1 Leave-In Spray) only -- post-freeze gap-fill because briogeohair.com (the manufacturer's only site) was transiently unreachable at freeze time (2026-09-12 original capture pass: every guessed live product URL 404'd, on-site search UI did not surface a result). This pass located the correct manufacturer product URL via web search and confirmed it also 404s live today -- the product has been delisted from the manufacturer's current catalog (absent from the live /collections/briogeo-superfoods listing, 13/13 products checked, no leave-in-spray variant for any Superfoods flavor) -- but recovered the page via a Wayback Machine archived snapshot (2025-10-16, https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray), the manufacturer's own historical page content, still treated as a C5 (non-German-market manufacturer) source per the standard. Added to u4 only: (1) directions_of_use + directions_source, captured verbatim from the archived manufacturer page ('Apply to damp hair, focusing on mid-lengths to ends. Comb through to ensure even application. Do not rinse. Style as normal.'), directions_status changed from not_found to captured; also re-checked douglas.de's ANWENDUNG accordion live and confirmed (unlike the original ambiguous non-finding) that it genuinely contains no separate usage text for this SKU, only the already-frozen marketing description -- resolving that ambiguity honestly rather than leaving it open; (2) three new claims[] entries from the archived manufacturer page (headline 3-in-1 claim, key-benefits paragraph, and the 'sunflower sprout extract... UV rays' ingredient-level claim), all C5, creates_claim left null/deferred per this packet's u6 (amika) convention -- claims_status updated from present_c4_only to present and claims_search_note rewritten to record the resolution; (3) one additional_inci_captures entry from the same archived manufacturer page -- byte-identical (902/902 characters, confirmed by direct string comparison and by independently recomputed rawInciSha256/formulaFingerprintSha256 matching the frozen douglas.de hashes exactly) to the already-frozen douglas.de raw_inci, so no diff to reconcile; (4) added one source_urls entry for the archived manufacturer page (the pre-existing douglas.de source_urls entry's now-stale 'ONLY source captured' note was left verbatim, per amendment discipline, rather than edited); (5) updated u4's remaining_gap to reflect what is now resolved (directions, second INCI source, manufacturer UV-claim text) versus what remains genuinely unresolved (GTIN/EAN still not found by any source). No other field on u4, and no other entry in this packet, was touched by this pass -- this is a u4-only evidence append, not a re-research or re-freeze of the packet."
+    },
+    {
+      "date": "2026-09-12",
+      "slot": "u1",
+      "change": "Primary INCI re-anchored from the mueller.de 38-ingredient capture to the 31-ingredient list (formerly additional capture, codecheck.info), after 3-source live convergence (rossmann.de, parfumdreams.de, codecheck.info) identified it as the current German-shelf formula. Müller capture demoted to additional capture with outlier note; identity_status provisional_formula_conflict -> verified_with_minor_source_difference; fingerprints recomputed. Evidence: plans/leave-in-inci/research/unseen-test/u1-formula-recency.md. Directive: Nick, 2026-09-12 ('we need to find the most up-to-date product')."
+    },
+    {
+      "date": "2026-09-12",
+      "slot": "u1",
+      "change": "Correction to the same-day re-anchoring amendment: the loreal-paris.de additional capture (35 ingredients) was accidentally dropped by the amendment script's filter and has been restored from the sanitized lane copy (ingredient list and source intact; original capture-time note partially lost, superseding characterization recorded in the restored note)."
+    },
+    {
+      "date": "2026-09-12",
+      "slot": "u5",
+      "change": "Presentation-form evidence added: packshot inspection + independent database corroboration establish the dispenser as a pump-spray head (verdict: spray, high confidence; u5-format-evidence.md). Resolves the identity-capture gap that had left product_form unknown — the directions verb 'verteilen' describes post-dispense application, not the dispenser. Directive: Nick, 2026-09-12 ('I don't want unknowns in our research')."
+    }
+  ],
+  "entries": [
+    {
+      "slot": "u1",
+      "archetype_role": "Long-ingredient-list \"repair\" leave-in (stress-test late-preservative over-crediting)",
+      "brand": "L'Oréal Paris Elvital",
+      "exact_product_name": "Elvital Dream Length No Spliss Milk (retailer listing name: \"Elvital Leave-in Dream Length\")",
+      "pack_size": "200 ml",
+      "gtin": "3600523587841",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "T1/C3",
+          "domain": "mueller.de",
+          "url": "https://mueller.de/p/elvital-leave-in-dream-length-2241369/",
+          "note": "Müller.de product detail page, Artikelnr. 2241369. Full 'Inhaltsstoffe' field (labelled with an 'INGREDIENTS:' prefix on the page, stripped here) captured live via rendered browser fetch -- the tab title showed a bot-challenge shell ('Client Challenge') but the full page content rendered correctly through the browser tool. GTIN 3600523587841 recovered from the page's embedded schema.org product JSON (not visible in the rendered on-page text itself)."
+        },
+        {
+          "tier": "T3",
+          "domain": "codecheck.info",
+          "url": "https://www.codecheck.info/p/kosmetik/haarpflege/leave-in-pflege/l-oreal-paris-elvital-leave-in-kur-dream-length.html",
+          "note": "Independent aggregator. Captured via an AI-mediated fetch-and-summarize tool (HTML converted to markdown and read by a small model) rather than a raw DOM/page-text read like every other capture in this packet -- flagged here for a slightly lower extraction-fidelity confidence than the other sources, even though the returned ingredient list looks clean and orderly."
+        },
+        {
+          "tier": "C2",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/dream-length/no-spliss-milk",
+          "note": "Manufacturer's own German-market product page. 'Inhaltsstoffe' accordion expanded and captured live via rendered browser fetch."
+        },
+        {
+          "tier": "C3",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-no-spliss-milk/p/3600523587841",
+          "note": "GTIN-keyed URL; live 2026-09-12; identical 31-ingredient list, same order; formula prefix 1184630 C, F.I.L. C240136/2."
+        },
+        {
+          "tier": "C3",
+          "domain": "parfumdreams.de",
+          "url": "https://www.parfumdreams.de/LOreal-Paris/Haarpflege-Collection/Elvital-Dream-Length/No-Spliss-Milk/index_99404.aspx",
+          "note": "Live 2026-09-12; identical 31-ingredient list, same order; F.I.L. C240136/1; marketing prose independently corroborates Niacinamide/Panthenol."
+        }
+      ],
+      "raw_inci": "AQUA / WATER • ISOPROPYL MYRISTATE • DIMETHICONE • AMODIMETHICONE • TRIETHANOLAMINE • NIACINAMIDE • RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL • HYDROXYPROPYL GUAR • HYDROXYCITRONELLAL • HYDROLYZED WHEAT PROTEIN • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • PHENOXYETHANOL • BEHENTRIMONIUM CHLORIDE • TRIDECETH-6 • POLYQUATERNIUM-4 • LIMONENE • BENZYL SALICYLATE • LINALOOL • BENZYL ALCOHOL • PANTHENOL • ISOPROPYL ALCOHOL • ALPHA-ISOMETHYL IONONE • CARBOMER • GERANIOL • POTATO STARCH MODIFIED • CETRIMONIUM CHLORIDE • CITRONELLOL • COUMARIN • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+      "normalized_ingredients": [
+        "AQUA / WATER",
+        "ISOPROPYL MYRISTATE",
+        "DIMETHICONE",
+        "AMODIMETHICONE",
+        "TRIETHANOLAMINE",
+        "NIACINAMIDE",
+        "RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL",
+        "HYDROXYPROPYL GUAR",
+        "HYDROXYCITRONELLAL",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROLYZED CORN PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "PHENOXYETHANOL",
+        "BEHENTRIMONIUM CHLORIDE",
+        "TRIDECETH-6",
+        "POLYQUATERNIUM-4",
+        "LIMONENE",
+        "BENZYL SALICYLATE",
+        "LINALOOL",
+        "BENZYL ALCOHOL",
+        "PANTHENOL",
+        "ISOPROPYL ALCOHOL",
+        "ALPHA-ISOMETHYL IONONE",
+        "CARBOMER",
+        "GERANIOL",
+        "POTATO STARCH MODIFIED",
+        "CETRIMONIUM CHLORIDE",
+        "CITRONELLOL",
+        "COUMARIN",
+        "HEXYL CINNAMAL",
+        "PARFUM / FRAGRANCE"
+      ],
+      "rawInciSha256": "eb18a1ea53c3ff58bb01bfbf190b8bd7822648e81cc8ac28b33f12fe67737c6d",
+      "formulaFingerprintSha256": "5fa1282a0d2bee06a80c2cbbf3966c63f746c3613936e3cabfbc148d328a461a",
+      "additional_inci_captures": [
+        {
+          "source": "mueller.de (former primary, demoted 2026-09-12)",
+          "source_url": "https://mueller.de/p/elvital-leave-in-dream-length-2241369/",
+          "raw_inci": "AQUA / WATER • ISOPROPYL MYRISTATE • DIMETHICONE • AMODIMETHICONE • TRIETHANOLAMINE • RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL • HYDROXYPROPYL GUAR • HYDROXYCITRONELLAL • HYDROLYZED WHEAT PROTEIN • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • PHENOXYETHANOL • BEHENTRIMONIUM CHLORIDE • TRIDECETH-6 • TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL • POLYQUATERNIUM-4 • LIMONENE • DIMETHYL PHENETHYL ACETATE • LINALYL ACETATE • BENZYL SALICYLATE • LINALOOL • BENZYL ALCOHOL • BENZALDEHYDE • PINENE • ISOPROPYL ALCOHOL • ALPHA-ISOMETHYL IONONE • CARBOMER • CARVONE • GERANIOL • ROSE KETONES • POTATO STARCH MODIFIED • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CETRIMONIUM CHLORIDE • CITRONELLOL • CITRUS AURANTIUM PEEL OIL • COUMARIN • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+          "normalized_ingredients": [
+            "AQUA / WATER",
+            "ISOPROPYL MYRISTATE",
+            "DIMETHICONE",
+            "AMODIMETHICONE",
+            "TRIETHANOLAMINE",
+            "RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL",
+            "HYDROXYPROPYL GUAR",
+            "HYDROXYCITRONELLAL",
+            "HYDROLYZED WHEAT PROTEIN",
+            "HYDROLYZED CORN PROTEIN",
+            "HYDROLYZED SOY PROTEIN",
+            "PHENOXYETHANOL",
+            "BEHENTRIMONIUM CHLORIDE",
+            "TRIDECETH-6",
+            "TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL",
+            "POLYQUATERNIUM-4",
+            "LIMONENE",
+            "DIMETHYL PHENETHYL ACETATE",
+            "LINALYL ACETATE",
+            "BENZYL SALICYLATE",
+            "LINALOOL",
+            "BENZYL ALCOHOL",
+            "BENZALDEHYDE",
+            "PINENE",
+            "ISOPROPYL ALCOHOL",
+            "ALPHA-ISOMETHYL IONONE",
+            "CARBOMER",
+            "CARVONE",
+            "GERANIOL",
+            "ROSE KETONES",
+            "POTATO STARCH MODIFIED",
+            "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+            "CETRIMONIUM CHLORIDE",
+            "CITRONELLOL",
+            "CITRUS AURANTIUM PEEL OIL",
+            "COUMARIN",
+            "HEXYL CINNAMAL",
+            "PARFUM / FRAGRANCE"
+          ],
+          "note": "Former primary capture (38 ingredients, no Niacinamide/Panthenol, expanded allergen tail, no F.I.L. code). Re-verified live 2026-09-12 (reproduces exactly, not stale) but contradicted by three converging live sources for the same GTIN; outlier."
+        },
+        {
+          "source_tier": "C2",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/dream-length/no-spliss-milk",
+          "raw_inci": "AQUA / WATER • CYCLOPENTASILOXANE • PROPYLENE GLYCOL • TRIETHANOLAMINE • NIACINAMIDE • RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL • HYDROXYPROPYL GUAR • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • HYDROLYZED WHEAT PROTEIN • HYDROXYCITRONELLAL • HYDROXYPROPYLTRIMONIUM HYDROLYZED WHEAT PROTEIN • PHENOXYETHANOL • PEG/PPG-17/18 DIMETHICONE • BEHENTRIMONIUM CHLORIDE • TRIDECETH-6 • POLYQUATERNIUM-4 • DIMETHICONOL • LIMONENE • PANTHENOL • BENZYL SALICYLATE • LINALOOL • BENZYL ALCOHOL • AMODIMETHICONE • ISOPROPYL ALCOHOL • CAPRYLYL GLYCOL • ALPHA-ISOMETHYL IONONE • CARBOMER • GERANIOL • POTATO STARCH MODIFIED • CITRONELLOL • CETRIMONIUM CHLORIDE • COUMARIN • HEXYL CINNAMAL • PARFUM / FRAGRANCE. (F.I.L. C212631/2).",
+          "normalized_ingredients": [
+            "AQUA / WATER",
+            "CYCLOPENTASILOXANE",
+            "PROPYLENE GLYCOL",
+            "TRIETHANOLAMINE",
+            "NIACINAMIDE",
+            "RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL",
+            "HYDROXYPROPYL GUAR",
+            "HYDROLYZED CORN PROTEIN",
+            "HYDROLYZED SOY PROTEIN",
+            "HYDROLYZED WHEAT PROTEIN",
+            "HYDROXYCITRONELLAL",
+            "HYDROXYPROPYLTRIMONIUM HYDROLYZED WHEAT PROTEIN",
+            "PHENOXYETHANOL",
+            "PEG/PPG-17/18 DIMETHICONE",
+            "BEHENTRIMONIUM CHLORIDE",
+            "TRIDECETH-6",
+            "POLYQUATERNIUM-4",
+            "DIMETHICONOL",
+            "LIMONENE",
+            "PANTHENOL",
+            "BENZYL SALICYLATE",
+            "LINALOOL",
+            "BENZYL ALCOHOL",
+            "AMODIMETHICONE",
+            "ISOPROPYL ALCOHOL",
+            "CAPRYLYL GLYCOL",
+            "ALPHA-ISOMETHYL IONONE",
+            "CARBOMER",
+            "GERANIOL",
+            "POTATO STARCH MODIFIED",
+            "CITRONELLOL",
+            "CETRIMONIUM CHLORIDE",
+            "COUMARIN",
+            "HEXYL CINNAMAL",
+            "PARFUM / FRAGRANCE"
+          ],
+          "rawInciSha256": "3ef7590729441f025ad8735bd3041ab5fc87cd92f58ff4563852ab61fd7d0af2",
+          "formulaFingerprintSha256": "1abea42e9210eb7e19b36447a8627b3c7db4bee44f5614708695f7d0d942e8a1",
+          "diff_note": "35 ingredients from the manufacturer's own German-market page (raw_inci and hashes include the trailing '(F.I.L. C212631/2)' fragrance-formula code exactly as printed on the page; normalized_ingredients excludes it as a non-ingredient annotation). Differs from BOTH other sources: opens with CYCLOPENTASILOXANE and PROPYLENE GLYCOL (present on neither Müller.de nor codecheck.info); uses PEG/PPG-17/18 DIMETHICONE and DIMETHICONOL where Müller.de has plain DIMETHICONE; includes NIACINAMIDE and PANTHENOL (matching codecheck.info, not Müller.de); does NOT include Müller.de's long tail of extra fragrance/aroma-chemical ingredients (TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL, DIMETHYL PHENETHYL ACETATE, LINALYL ACETATE, BENZALDEHYDE, PINENE, CARVONE, ROSE KETONES, CITRUS AURANTIUM PEEL OIL); and names HYDROXYPROPYLTRIMONIUM HYDROLYZED WHEAT PROTEIN, a distinct quaternized-protein ingredient not present on either other source. A genuine three-way conflict across three independently fetched sources for the same nominal SKU; not resolved by this packet.",
+          "note": " [Restored 2026-09-12 from the lane copy after an amendment-script filter mistakenly dropped this capture; original capture-time prose partially lost in that restore — see u1-formula-recency.md for its full characterization: Cyclopentasiloxane/Dimethiconol backbone, Hydroxypropyltrimonium Hydrolyzed Wheat Protein, F.I.L. C212631/2, structurally the outlier vs all retailer sources; most likely stale or market-mismatched manufacturer content.]"
+        }
+      ],
+      "directions_of_use": "Auf trockenem oder nassem Haar auftragen - Ohne Ausspülen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C3",
+        "claim_tier_basis": "Exact-GTIN German retailer page (Müller.de); GTIN 3600523587841 recovered from the page's embedded product JSON.",
+        "domain": "mueller.de",
+        "url": "https://mueller.de/p/elvital-leave-in-dream-length-2241369/",
+        "date": "2026-09-12",
+        "note": "Field labelled 'Anwendungshinweis' in the page's Artikeldetails table. Rinse check: PASS -- explicitly states 'Ohne Ausspülen'. The manufacturer's own loreal-paris.de page also carries a separate 'Anwendung' accordion tab; it was not successfully expanded/captured in this pass (an accordion-interaction click landed on the wrong element and the panel did not reopen before time constraints), so it is recorded as not independently verified rather than assumed identical to the retailer text."
+      },
+      "claims": [
+        {
+          "claim_text": "Die innovative Super Aufbau Formel der Elvital Dream Length No Spliss Milk repariert Haarschäden effektiv, garantiert einen Anti-Spliss-Effekt und wirkt intensiv feuchtigkeitsspendend. Die Dream Length No Spliss Milk ist eine mit pflanzlichen Proteinen, Vitaminen und Rizinusöl angereicherte Haarkur, die als Leave-in-Produkt geschädigtes Haar effektiv vor Spliss und Haarbruch schützt. Die Längen und die Spitzen werden regeneriert, das Haar bekommt eine Extraportion an Glanz und lässt sich mühelos stylen.",
+          "claim_type": "repair_bond (verbatim; not one of the five tracked heat/UV/repair/hold/anti-frizz categories except repair)",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Manufacturer's own German-market product page.",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/dream-length/no-spliss-milk",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": true,
+          "note": "Main 'Produktdetails' paragraph. No heat-protection, UV-protection, hold, or anti-frizz claim found anywhere on this page."
+        },
+        {
+          "claim_text": "Formel mit pflanzlichen Proteinen, Vitaminen und Rizinus-Öl / Praktische Leave-in-Anwendung ohne Ausspülen / Für die Anwendung in nassem oder trockenem Haar geeignet / Unterstützt die Kämmbarkeit und das Styling der Haare",
+          "claim_type": "general (uncategorized)",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "Exact-GTIN German retailer page (Müller.de); corroborates but does not itself create a claim.",
+          "domain": "mueller.de",
+          "url": "https://mueller.de/p/elvital-leave-in-dream-length-2241369/",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": false,
+          "note": "Retailer bullet list, paraphrasing the manufacturer's repair/moisture positioning. No heat, UV, hold, or anti-frizz claim on this retailer page either."
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": "Actively checked both the C2 manufacturer page (loreal-paris.de) and the C3 retailer page (mueller.de) for heat-protection, UV-protection, hold, and anti-frizz claims -- none found on either. This is a deliberate stress-test product per candidate-products.md (long ingredient list ending in a late preservative/fragrance-allergen tail) and carries no heat/UV/hold/frizz marketing claim at all.",
+      "identity_status": "verified_with_minor_source_difference",
+      "known_conflicts": [
+        "RESOLVED 2026-09-12 (see u1-formula-recency.md): three-way source conflict adjudicated by 3-source same-day convergence (rossmann.de + parfumdreams.de + codecheck.info: identical 31-ingredient list, same order, shared formula prefix 1184630 C and F.I.L. C240136 family). The 31-ingredient list is the current German-shelf formula; primary re-anchored accordingly.",
+        "Residual: mueller.de live-serves a contradicted 38-ingredient outlier list (demoted to additional capture); loreal-paris.de shows a structurally different formula (Cyclopentasiloxane/Dimethiconol backbone, cationized wheat protein, different F.I.L. family C212631) — most likely a stale or market-mismatched manufacturer page, not re-verified live on 2026-09-12.",
+        "Remaining gap: no legible back-of-pack photo obtained; a C1 pack capture remains the definitive close-out."
+      ],
+      "remaining_gap": "C1 back-of-pack photo to physically confirm the 31-ingredient formula on shelf units; live re-check of loreal-paris.de.",
+      "notes": null,
+      "availability": {
+        "retailer": "mueller.de",
+        "price": "4,55 € / 200 ml",
+        "price_per_liter": "22,75 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "\"Online verfügbar\", \"In die Filiale lieferbar\"; 4,6/5 (587 Bewertungen)."
+      }
+    },
+    {
+      "slot": "u2",
+      "archetype_role": "Dual-use directions (pre-wash rinse-out AND post-wash leave-in, both on the manufacturer's own page for the same product)",
+      "brand": "L'Oréal Paris Elvital",
+      "exact_product_name": "Elvital ÖL Magique Veredelndes Haaröl (retailer listing name: \"Elvital Öl Magique Haaröl\")",
+      "pack_size": "100 ml",
+      "gtin": null,
+      "gtin_candidates": [
+        "3600523733088 (Müller.de schema.org markup for the retailer SKU 'Elvital Öl Magique Haaröl', Artikelnr. 2649 -- identity of this exact SKU against the manufacturer's full product name 'Veredelndes Haaröl' is inferred, not confirmed; see known_conflicts)"
+      ],
+      "market": "DE",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "C2",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+          "note": "Manufacturer's own German-market product page. Full marketing description, bullet claims, and the complete 10-block 'Anwendung' usage guide captured live via rendered browser fetch. This page does NOT publish a raw verbatim INCI list -- its 'Inhaltsstoffe' accordion contains only marketing prose about the two headline oils (Marula, Kamelien), never a raw ingredient list."
+        },
+        {
+          "tier": "T1/C3",
+          "domain": "mueller.de",
+          "url": "https://mueller.de/p/elvital-oel-magique-haaroel-2649/",
+          "note": "Müller.de product detail page for 'Elvital Öl Magique Haaröl', Artikelnr. 2649, 100 ml, 6,79 €. This is the only source in this packet carrying a raw INCI list for this product line; its exact identity match to the manufacturer's full-name 'Veredelndes Haaröl' is inferred (matching pack size; matching Marula/Camellia-oil composition visible in the INCI as SCLEROCARYA BIRREA SEED OIL / CAMELLIA JAPONICA SEED OIL) but not confirmed via a shared GTIN or identical product name -- see known_conflicts."
+        }
+      ],
+      "raw_inci": "ISODODECANE • DIMETHICONE • DIMETHICONOL • COCOS NUCIFERA OIL / COCONUT OIL • TOCOPHEROL • POGOSTEMON CABLIN OIL • ANISE ALCOHOL • SCLEROCARYA BIRREA SEED OIL • CAMELLIA JAPONICA SEED OIL • LIMONENE • LINALOOL • CAPRYLIC/CAPRIC TRIGLYCERIDE • CARVONE • GARDENIA TAITENSIS FLOWER • ROSE KETONES • ROSA CANINA FLOWER EXTRACT • CITRUS AURANTIUM PEEL OIL • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • COUMARIN • HEXYL CINNAMAL • PARFUM / FRAGRANCE",
+      "normalized_ingredients": [
+        "ISODODECANE",
+        "DIMETHICONE",
+        "DIMETHICONOL",
+        "COCOS NUCIFERA OIL / COCONUT OIL",
+        "TOCOPHEROL",
+        "POGOSTEMON CABLIN OIL",
+        "ANISE ALCOHOL",
+        "SCLEROCARYA BIRREA SEED OIL",
+        "CAMELLIA JAPONICA SEED OIL",
+        "LIMONENE",
+        "LINALOOL",
+        "CAPRYLIC/CAPRIC TRIGLYCERIDE",
+        "CARVONE",
+        "GARDENIA TAITENSIS FLOWER",
+        "ROSE KETONES",
+        "ROSA CANINA FLOWER EXTRACT",
+        "CITRUS AURANTIUM PEEL OIL",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "COUMARIN",
+        "HEXYL CINNAMAL",
+        "PARFUM / FRAGRANCE"
+      ],
+      "rawInciSha256": "ec3e3680d63eb81fa826dabd2d818df66425bc7687e503b7dbc251c808101913",
+      "formulaFingerprintSha256": "2e922c7b9fa3e27a8161a36c1a08d1906a0d2f618e6896dd768515494e42e796",
+      "additional_inci_captures": [],
+      "directions_of_use": "1. Als Kur für das sofortige Wellnesserlebnis: ÖL Magique Veredelndes Haaröl in die feuchten Haarlängen (ab dem Ohr) einmassieren – für perfekt gepflegte Haare nach der Haarwäsche. 2. Als intensive Spitzenpflege: Spröde, belastete oder von Spliss befallene Spitzen regelmäßig mit dem ÖL Magique Veredelnden Haaröl pflegen – ein paar Tropfen genügen für gepflegte Spitzen. 3. Als Glanz-Auffrischer für zwischendurch: Bei tagsüber erschlafftem, glanzlosem Haar einfach ein paar Tropfen ÖL Magique Veredelndes Haaröl in die Längen einarbeiten und sich an dem erfrischten Look erfreuen. 4. Als Intensivpflege vor der Haarwäsche: Ein paar Tropfen ÖL Magique Veredelndes Haaröl 10 Minuten vor der Haarwäsche verwenden – die Schuppenschicht ist geglättet, Faserrisse des Haares aufgefüllt. 5. Als Anti-Frizz Soforthilfe: Gekräuseltes Haar durch zu feuchtes oder heißes Wetter, Styling und Föhnen? Die leichte Textur des ÖL Magique Veredelnden Haaröls verwandelt Frizz in seidigen Glanz. 6. Als Schutz vor dem Styling: ÖL Magique Veredelndes Haaröl gleichmäßig in den feuchten Haarlängen verteilen, spendet Feuchtigkeit und schützt das Haar vor Hitze. 7. Als brillantes Styling Finish: Die leichte, nicht fettende Textur des ÖL Magique Veredelnden Haaröls verschmilzt auf der Haarfaser und verleiht dem Haar eine atemberaubende Geschmeidigkeit und Glanz. 8. Als Shampoo-Veredelung: Ein paar Tropfen des ÖL Magique Veredelnden Haaröls mit dem Shampoo vermischen – für das Extra in Deinem täglichen Pflegeerlebnis. 9. Als Sonnenschutz für heiße Tage: Das Öl vor dem Sonnenbaden vorsichtig ins Haar kneten. Ein leicht geflochtener Zopf bei längerem Haar schützt optimal. 10. Als Tiefenerholung über Nacht: Für eine intensive Erholung und Pflege der Haare, ÖL Magique Veredelndes Haaröl in die Haarlängen einmassieren und über Nacht einwirken lassen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C2",
+        "claim_tier_basis": "Manufacturer's own German-market product page.",
+        "domain": "loreal-paris.de",
+        "url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+        "date": "2026-09-12",
+        "note": "Full 'Anwendung' accordion captured live, all 10 numbered blocks verbatim. Contains BOTH a pre-wash/rinse-out block (block 4, 'Als Intensivpflege vor der Haarwäsche', explicit 'vor der Haarwäsche verwenden') AND multiple leave-in blocks (1, 2, 3, 5, 6, 7, 10, all explicitly no-rinse), plus a shampoo-additive block (8) and a sun-protection block (9), all on the same page for the same single product -- exactly the dual-use-directions pattern this slot exists to test. Rinse check: mixed by design -- block 4 explicitly instructs pre-wash rinse-out use; every other block describes leave-in / no-rinse use."
+      },
+      "additional_directions_captures": [
+        {
+          "domain": "mueller.de",
+          "url": "https://mueller.de/p/elvital-oel-magique-haaroel-2649/",
+          "date": "2026-09-12",
+          "text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish.",
+          "note": "Retailer 'Anwendungshinweis' field for the SKU used as this entry's INCI source. Corroborates the dual pre-wash/leave-in usage pattern in briefer form ('Während dem Duschen' = during the wash; 'vor dem Föhnen' = before heat styling)."
+        }
+      ],
+      "claims": [
+        {
+          "claim_text": "Die leichte Textur verleiht Deinem Haar bis zu 72 Stunden mehr Geschmeidigkeit sowie einen natürlich aussehenden Glow, während es gleichzeitig dank des integrierten Hitzeschutzes bis zu 230° vor den Auswirkungen eines Hitzestylings geschützt wird. Damit Dein Haar seinen makellosen Look auch bei äußeren Einflüssen behält, wirkt seine Pflege-Formel intensiv gegen Frizz.",
+          "claim_type": "heat_protection / humidity_frizz",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Manufacturer's own German-market product page.",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": true,
+          "note": "Explicit temperature-based heat-protection claim ('Hitzeschutz bis zu 230°') and explicit anti-frizz claim, both on the manufacturer's own German page."
+        },
+        {
+          "claim_text": "Leave-In für geschmeidiges und glänzendes Haar / Wirkt gegen Frizz / Umhüllt das Haar mit einer Extraportion Pflege / Integrierter Hitzeschutz bis 230° / Nährt das Haar intensiv mit einem 14 % Pflege-Komplex aus Marula- und Kamelien-Öl / Verleiht bis zu 72 Stunden mehr Geschmeidigkeit / Einfach anzuwenden – ohne Ausspülen, ohne zu beschweren, ohne zu fetten / Leichte, schnell einziehende Textur / Geeignet für alle Haartypen und -bedürfnisse",
+          "claim_type": "heat_protection / humidity_frizz (bullet list)",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Same manufacturer page, 'Was macht ... so besonders?' bullet list.",
+          "domain": "loreal-paris.de",
+          "url": "https://www.loreal-paris.de/elvital/oel-magique/veredelndes-haaroel-100-ml",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": true,
+          "note": null
+        },
+        {
+          "claim_text": "vor der Haarwäsche, vor dem Föhnen als Hitzeschutz oder als abschließendes Finish im trockenen Haar für zusätzliche Brillanz",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "Exact-SKU German retailer page (Müller.de); corroborates the manufacturer's heat-protection claim above (no explicit temperature given on this retailer page).",
+          "domain": "mueller.de",
+          "url": "https://mueller.de/p/elvital-oel-magique-haaroel-2649/",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": false,
+          "note": null
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": null,
+      "identity_status": "provisional_identity_conflict",
+      "known_conflicts": [
+        "The INCI-bearing retailer SKU ('Elvital Öl Magique Haaröl', Müller.de Artikelnr. 2649) carries a shorter product name than the manufacturer's full name ('Elvital ÖL Magique Veredelndes Haaröl') used in candidate-products.md and on loreal-paris.de. Müller.de's own L'Oréal Paris catalogue page lists several similarly-named Öl Magique variants at the same 100 ml pack size ('Elvital Öl Magique Jojoba Haaröl', 'Elvital Öl Magique Haaröl', 'Elvital Haaröl Öl Magique', 'Elvital Öl Magique Midnight Serum'); 'Elvital Öl Magique Haaröl' was selected as the closest match to the base/non-Jojoba/non-Midnight manufacturer product on the basis of matching pack size (100 ml) and matching key-oil composition (Marula = Sclerocarya Birrea Seed Oil, Camellia = Camellia Japonica Seed Oil, both named in the manufacturer's own marketing copy for 'Veredelndes Haaröl'), but this identity match is inferred, not confirmed by a shared GTIN or an exact product-name string match."
+      ],
+      "remaining_gap": "No raw INCI list was found anywhere on the manufacturer's own loreal-paris.de page for this product (only marketing prose naming two key oils). The only INCI capture in this packet for this product is the Müller.de retailer SKU, whose exact identity to the manufacturer's 'Veredelndes Haaröl' naming is inferred rather than confirmed (see known_conflicts). GTIN not confirmed for the manufacturer-named product; only a candidate GTIN exists, for the possibly-matching retailer SKU.",
+      "notes": null,
+      "availability": {
+        "retailer": "mueller.de",
+        "price": "6,79 € / 100 ml",
+        "price_per_liter": "67,90 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "\"Online verfügbar\", \"In die Filiale lieferbar\"; 4,8/5 (280 Bewertungen). Several related Öl Magique listings also confirmed in stock the same day at Müller.de (see known_conflicts)."
+      }
+    },
+    {
+      "slot": "u3",
+      "archetype_role": "Föhnlotion / styling-adjacent leave-in on a film-forming polymer (Polyquaternium-11 present as architecture)",
+      "brand": "Alcina (Professional)",
+      "exact_product_name": "Föhn Lotion",
+      "pack_size": "125 ml",
+      "gtin": "4008666114396",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "C2",
+          "domain": "alcina.com",
+          "url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+          "note": "Manufacturer's own German-market online shop and product page (Alcina Professional) -- simultaneously the manufacturer page and the point of retail sale. Full description, directions, INCI, and Flex/Hold styling-factor rating captured live via rendered browser fetch. GTIN 4008666114396 recovered from the page's embedded schema.org product JSON."
+        }
+      ],
+      "raw_inci": "AQUA, ALCOHOL DENAT., VP/VA COPOLYMER, POLYQUATERNIUM-11, PEG-40 HYDROGENATED CASTOR OIL, TRIDECETH-9, BENZOPHENONE-4, PROPYLENE GLYCOL, TETRAHYDROXYPROPYL ETHYLENEDIAMINE, PARFUM, LINALOOL, CITRAL, ANETHOLE, JUNIPERUS VIRGINIANA OIL, CI 42090",
+      "normalized_ingredients": [
+        "AQUA",
+        "ALCOHOL DENAT.",
+        "VP/VA COPOLYMER",
+        "POLYQUATERNIUM-11",
+        "PEG-40 HYDROGENATED CASTOR OIL",
+        "TRIDECETH-9",
+        "BENZOPHENONE-4",
+        "PROPYLENE GLYCOL",
+        "TETRAHYDROXYPROPYL ETHYLENEDIAMINE",
+        "PARFUM",
+        "LINALOOL",
+        "CITRAL",
+        "ANETHOLE",
+        "JUNIPERUS VIRGINIANA OIL",
+        "CI 42090"
+      ],
+      "rawInciSha256": "f6d570c9d2501eeea8c96ae80f46ea9bb92f8ad05794054bcc690b4c07314b6a",
+      "formulaFingerprintSha256": "f6d570c9d2501eeea8c96ae80f46ea9bb92f8ad05794054bcc690b4c07314b6a",
+      "additional_inci_captures": [],
+      "directions_of_use": "Ins feuchte Haar sprühen. Haare wie gewohnt föhnen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C2",
+        "claim_tier_basis": "Manufacturer's own German-market page (Alcina is also the retailer for this listing).",
+        "domain": "alcina.com",
+        "url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+        "date": "2026-09-12",
+        "note": "Field labelled 'Anwendung'. Rinse check: PASS -- no rinse instruction; sprayed into damp hair, then blow-dried as usual."
+      },
+      "claims": [
+        {
+          "claim_text": "Die Föhn Lotion für alle klassischen Föhnfrisuren verleiht Volumen und Elastizität. Gleichzeitig wird das Haar wirksam vor Föhnhitze geschützt.",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Manufacturer's own German-market page.",
+          "domain": "alcina.com",
+          "url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "'Beschreibung' block. No explicit temperature is given for this heat-protection claim (unlike the L'Oréal and amika products in this packet)."
+        },
+        {
+          "claim_text": "Sorgt für mehr Schwung & Elastizität im Haar / Für alle Föhnfrisuren geeignet / Schützt wirksam vor Föhnhitze",
+          "claim_type": "heat_protection (bullet list)",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Same manufacturer page, headline bullet list.",
+          "domain": "alcina.com",
+          "url": "https://www.alcina.com/de-de/haar/haarstyling-finish/fohnprodukte/fohn-lotion-f10826/",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": null
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": null,
+      "identity_status": "verified",
+      "known_conflicts": [
+        "Page carries the notice \"Dieser Artikel ist ein Nachfolge-Produkt\" (this item is a successor/follow-on product), recorded here verbatim; its meaning was not further investigated (e.g. whether it replaces a discontinued prior Föhn Lotion formula or pack) and is not resolved by this packet."
+      ],
+      "remaining_gap": "Single-sourced (the manufacturer page and the retail page are the same page); no independent second source (e.g. basler-beauty.de, parfumdreams.de, named as alternate stockists in candidate-products.md) was independently fetched this pass to cross-check the INCI.",
+      "notes": null,
+      "availability": {
+        "retailer": "alcina.com",
+        "price": "10,90 € / 125 ml",
+        "price_per_liter": "87,20 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "Live add-to-cart available; \"Lieferzeit: 2 bis 5 Werktage\"."
+      }
+    },
+    {
+      "slot": "u4",
+      "archetype_role": "Global brand with no German-language manufacturer page",
+      "brand": "Briogeo",
+      "exact_product_name": "Superfoods™ Avocado + Kiwi Mega Moisture 3-in-1 Leave-In Spray",
+      "pack_size": "170 ml",
+      "gtin": null,
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "C3/C4",
+          "domain": "douglas.de",
+          "url": "https://www.douglas.de/de/p/5011101007?variant=1141818",
+          "note": "Douglas.de German retailer product page, Art-Nr. (Douglas SKU) 1141818. Full German product description, INCI list (bilingual EN with a French asterisk footnote), and price captured live via rendered browser fetch. This is the ONLY source captured in this packet for this product -- see remaining_gap for why (briogeohair.com could not be reached for this exact product)."
+        },
+        {
+          "tier": "C5 (non-German manufacturer page, archived)",
+          "domain": "briogeohair.com (via web.archive.org)",
+          "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+          "note": "Manufacturer's own product page (US, English-only), recovered via a Wayback Machine archived snapshot dated 2025-10-16. The live briogeohair.com page for this exact product returns HTTP 404 as of this pass (2026-09-12): the correct live URL was located via web search (the original capture pass's guessed URL slugs were all wrong -- the correct slug is 'briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray', not 'superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray'), but it still 404s live. The live /collections/briogeo-superfoods listing (checked 2026-09-12, 13/13 products) carries no leave-in-spray variant for any Superfoods flavor (only masks/shampoos/conditioners), and the archived page itself displays an 'Email Me When Available' out-of-stock notice -- consistent with this product having been delisted from the manufacturer's current catalog since the archive was taken. Full marketing copy ('key benefits', headline tagline, 'Key Ingredients' panel), 'how to use' directions, and full INCI captured verbatim via rendered browser fetch of the archived snapshot."
+        }
+      ],
+      "raw_inci": "Water/Aqua/Eau, Polyglyceryl-6 Stearate*, Cetearyl Alcohol*, Glycerin*, Cetrimonium Chloride*, Glyceryl Stearate*, Isopropyl Palmitate*, Persea Gratissima (Avocado) Oil*, Actinidia Chinensis (Kiwi) Fruit Extract*, Aloe Barbadensis Leaf Juice*, Maltodextrin*, Panthenol, Sodium PCA*, Spinacia Oleracea (Spinach) Leaf Extract*, Tocopheryl Acetate, Hippophae Rhamnoides Fruit Oil*, Chlorophyllin-Copper Complex*, Theobroma Cacao (Cocoa) Seed Butter*, Salvia Hispanica Seed Oil*, Brassicyl Isoleucinate Esylate*, Biotin, Helianthus Annuus (Sunflower) Seed Oil*, Rosmarinus Officinalis (Rosemary) Leaf Extract*, Polyglyceryl-6 Behenate*, Brassica Alcohol*, Citric Acid*, Propanediol*, Caesalpinia Spinosa Fruit Extract*, Helianthus Annuus (Sunflower) Sprout Extract*, Spirulina Maxima Extract*, Potassium Sorbate, Sodium Benzoate, Sodium Hydroxide, Fragrance (Parfum), Caprylhydroxamic Acid*, Benzyl Alcohol",
+      "normalized_ingredients": [
+        "WATER/AQUA/EAU",
+        "POLYGLYCERYL-6 STEARATE",
+        "CETEARYL ALCOHOL",
+        "GLYCERIN",
+        "CETRIMONIUM CHLORIDE",
+        "GLYCERYL STEARATE",
+        "ISOPROPYL PALMITATE",
+        "PERSEA GRATISSIMA (AVOCADO) OIL",
+        "ACTINIDIA CHINENSIS (KIWI) FRUIT EXTRACT",
+        "ALOE BARBADENSIS LEAF JUICE",
+        "MALTODEXTRIN",
+        "PANTHENOL",
+        "SODIUM PCA",
+        "SPINACIA OLERACEA (SPINACH) LEAF EXTRACT",
+        "TOCOPHERYL ACETATE",
+        "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+        "CHLOROPHYLLIN-COPPER COMPLEX",
+        "THEOBROMA CACAO (COCOA) SEED BUTTER",
+        "SALVIA HISPANICA SEED OIL",
+        "BRASSICYL ISOLEUCINATE ESYLATE",
+        "BIOTIN",
+        "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+        "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+        "POLYGLYCERYL-6 BEHENATE",
+        "BRASSICA ALCOHOL",
+        "CITRIC ACID",
+        "PROPANEDIOL",
+        "CAESALPINIA SPINOSA FRUIT EXTRACT",
+        "HELIANTHUS ANNUUS (SUNFLOWER) SPROUT EXTRACT",
+        "SPIRULINA MAXIMA EXTRACT",
+        "POTASSIUM SORBATE",
+        "SODIUM BENZOATE",
+        "SODIUM HYDROXIDE",
+        "FRAGRANCE (PARFUM)",
+        "CAPRYLHYDROXAMIC ACID",
+        "BENZYL ALCOHOL"
+      ],
+      "rawInciSha256": "f44edb729922eb0df2ec920f448ab75b74adf65bb137ba347537432995e2b903",
+      "formulaFingerprintSha256": "9239e9acd7e97120812d37a60076ce050b762db5a650c701af78429f8c89e6c5",
+      "additional_inci_captures": [
+        {
+          "source_tier": "C5",
+          "domain": "briogeohair.com (via web.archive.org)",
+          "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+          "raw_inci": "Water/Aqua/Eau, Polyglyceryl-6 Stearate*, Cetearyl Alcohol*, Glycerin*, Cetrimonium Chloride*, Glyceryl Stearate*, Isopropyl Palmitate*, Persea Gratissima (Avocado) Oil*, Actinidia Chinensis (Kiwi) Fruit Extract*, Aloe Barbadensis Leaf Juice*, Maltodextrin*, Panthenol, Sodium PCA*, Spinacia Oleracea (Spinach) Leaf Extract*, Tocopheryl Acetate, Hippophae Rhamnoides Fruit Oil*, Chlorophyllin-Copper Complex*, Theobroma Cacao (Cocoa) Seed Butter*, Salvia Hispanica Seed Oil*, Brassicyl Isoleucinate Esylate*, Biotin, Helianthus Annuus (Sunflower) Seed Oil*, Rosmarinus Officinalis (Rosemary) Leaf Extract*, Polyglyceryl-6 Behenate*, Brassica Alcohol*, Citric Acid*, Propanediol*, Caesalpinia Spinosa Fruit Extract*, Helianthus Annuus (Sunflower) Sprout Extract*, Spirulina Maxima Extract*, Potassium Sorbate, Sodium Benzoate, Sodium Hydroxide, Fragrance (Parfum), Caprylhydroxamic Acid*, Benzyl Alcohol",
+          "normalized_ingredients": [
+            "WATER/AQUA/EAU",
+            "POLYGLYCERYL-6 STEARATE",
+            "CETEARYL ALCOHOL",
+            "GLYCERIN",
+            "CETRIMONIUM CHLORIDE",
+            "GLYCERYL STEARATE",
+            "ISOPROPYL PALMITATE",
+            "PERSEA GRATISSIMA (AVOCADO) OIL",
+            "ACTINIDIA CHINENSIS (KIWI) FRUIT EXTRACT",
+            "ALOE BARBADENSIS LEAF JUICE",
+            "MALTODEXTRIN",
+            "PANTHENOL",
+            "SODIUM PCA",
+            "SPINACIA OLERACEA (SPINACH) LEAF EXTRACT",
+            "TOCOPHERYL ACETATE",
+            "HIPPOPHAE RHAMNOIDES FRUIT OIL",
+            "CHLOROPHYLLIN-COPPER COMPLEX",
+            "THEOBROMA CACAO (COCOA) SEED BUTTER",
+            "SALVIA HISPANICA SEED OIL",
+            "BRASSICYL ISOLEUCINATE ESYLATE",
+            "BIOTIN",
+            "HELIANTHUS ANNUUS (SUNFLOWER) SEED OIL",
+            "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+            "POLYGLYCERYL-6 BEHENATE",
+            "BRASSICA ALCOHOL",
+            "CITRIC ACID",
+            "PROPANEDIOL",
+            "CAESALPINIA SPINOSA FRUIT EXTRACT",
+            "HELIANTHUS ANNUUS (SUNFLOWER) SPROUT EXTRACT",
+            "SPIRULINA MAXIMA EXTRACT",
+            "POTASSIUM SORBATE",
+            "SODIUM BENZOATE",
+            "SODIUM HYDROXIDE",
+            "FRAGRANCE (PARFUM)",
+            "CAPRYLHYDROXAMIC ACID",
+            "BENZYL ALCOHOL"
+          ],
+          "rawInciSha256": "f44edb729922eb0df2ec920f448ab75b74adf65bb137ba347537432995e2b903",
+          "formulaFingerprintSha256": "9239e9acd7e97120812d37a60076ce050b762db5a650c701af78429f8c89e6c5",
+          "diff_note": "Byte-identical to the frozen douglas.de raw_inci above (902/902 characters match exactly, including asterisk markers and ingredient order) -- confirmed both by direct string comparison and by this independently recomputed rawInciSha256 / formulaFingerprintSha256 matching the frozen douglas.de hashes exactly. Zero-ingredient diff, unlike u6 (amika)'s 3-ingredient cross-source conflict -- this is a clean manufacturer/retailer INCI match. (Both raw_inci strings across the two sources omit the page's own trailing '* Coconut, vegetable, or plant derived / Dérivé de la noix de coco, de légumes ou de végétaux. CLINICAL RESULTS: N/A' footnote, quoted verbatim in packet-notes.md instead -- the archived manufacturer page's own ingredient panel carried no equivalent trailing footnote text of its own.)"
+        }
+      ],
+      "directions_of_use": "Apply to damp hair, focusing on mid-lengths to ends. Comb through to ensure even application. Do not rinse. Style as normal.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C5 (non-German manufacturer page, archived)",
+        "claim_tier_basis": "Manufacturer's own page, non-German-market (English, US) -- per standard §2.4.1 rule 3 this is C5 for claim-authority purposes even though it is the product's own manufacturer directions text. Captured via a Wayback Machine archived snapshot because the live page 404s at capture time -- see this entry's source_urls note for why.",
+        "domain": "briogeohair.com (via web.archive.org)",
+        "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+        "date": "2026-09-12",
+        "note": "Field labelled 'how to use'. Rinse check: PASS -- applied to damp hair, no rinse step ('Do not rinse. Style as normal.'). Re-checked douglas.de's ANWENDUNG accordion live on 2026-09-12 as part of this same pass: this time the panel opened successfully (the original capture pass's click sequence had failed to expand it) and revealed only the same marketing description text already captured in this entry's claims[] array, not separate usage instructions -- this resolves the original capture's open ambiguity ('unclear whether this reflects a genuine absence of separate usage text ... or a UI-interaction failure') in favor of genuine absence: douglas.de carries no distinct directions text for this SKU."
+      },
+      "claims": [
+        {
+          "claim_text": "Ein 3-in-1 Leave-In Spray, das das Haar entwirrt, pflegt und UV-Schutz mit nährenden Phytonährstoffen für gesünder aussehendes Haar bietet.",
+          "claim_type": "uv_protection",
+          "source_authority_tier": "C4",
+          "claim_tier_basis": "douglas.de is a German retailer, not the manufacturer's own page (briogeohair.com carries no reachable German-market page for this product -- see remaining_gap); per the claim-authority rule this retailer text can corroborate but not itself create a claim absent a C1/C2 manufacturer source.",
+          "domain": "douglas.de",
+          "url": "https://www.douglas.de/de/p/5011101007?variant=1141818",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "No C1/C2 (manufacturer German-market page or current German pack) source for this product could be reached this pass -- every guessed briogeohair.com product URL returned HTTP 404, and its on-site search redirected to the homepage without a product result. This claim is recorded honestly as C4-only / non-creating per the claim-authority rule, even though it is the only UV-protection claim evidence available for this product in this packet."
+        },
+        {
+          "claim_text": "Dieses Pflegespray mit Phytonährstoffen ist mit Spinat, Chiasamen und Kakaobutter angereichert und spendet Feuchtigkeit für glänzenderes Haar, das sich leichter stylen lässt. Mit pflanzlichem UV-Schutz, damit das Haar lebendig und gesund aussieht. Besteht zu 97 % aus natürlichen Inhaltsstoffen.",
+          "claim_type": "uv_protection / finish_weight",
+          "source_authority_tier": "C4",
+          "claim_tier_basis": "Same douglas.de page; same non-creating status.",
+          "domain": "douglas.de",
+          "url": "https://www.douglas.de/de/p/5011101007?variant=1141818",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": null
+        },
+        {
+          "claim_text": "A 3-in-1 leave-in spray that conditions, detangles and provides UV protection for healthier-looking hair. Award winner!",
+          "claim_type": "uv_protection / detangling / conditioning",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Manufacturer's own page, non-German-market (English, US), archived via Wayback Machine because the live page 404s at capture time (see source_urls note) -- per standard §2.4.1 rule 3 this is C5 for claim-authority purposes.",
+          "domain": "briogeohair.com (via web.archive.org)",
+          "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch of Wayback Machine archived snapshot (archive snapshot dated 2025-10-16)",
+          "creates_claim": null,
+          "note": "Headline product tagline, directly below the product title on the archived manufacturer page. This is the manufacturer's primary claim and the direct counterpart to the two C4 douglas.de claims already frozen in this entry. creates_claim intentionally left null, matching this packet's u6 (amika) convention: whether the standard's rule 7 cross-market identity-verification-plus-corroboration exception applies is an adjudication this packet does not perform -- it only supplies the raw evidence. Identity-match evidence for that adjudication: this manufacturer capture's raw_inci is byte-identical (902/902 characters, confirmed by direct string comparison and by independently recomputed rawInciSha256/formulaFingerprintSha256 matching the frozen douglas.de hashes exactly) to the douglas.de INCI already frozen in this entry -- see additional_inci_captures -- and douglas.de's own claims (already frozen) independently corroborate the UV-protection claim text."
+        },
+        {
+          "claim_text": "This multitasking leave-in spray leaves hair conditioned, detangled, and nourished. Fortified with green-smoothie-inspired phytonutrients to deeply nourish hair, our formula also provides UV protection from the drying and damaging rays of the sun. 97% naturally-derived, vegan + Leaping Bunny certified cruelty-free.",
+          "claim_type": "uv_protection / moisture / detangling",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Same manufacturer archived page; 'key benefits' accordion panel.",
+          "domain": "briogeohair.com (via web.archive.org)",
+          "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch of Wayback Machine archived snapshot (archive snapshot dated 2025-10-16)",
+          "creates_claim": null,
+          "note": "Same creates_claim=null rationale as the headline claim above."
+        },
+        {
+          "claim_text": "sunflower sprout extract: Protects hair from the drying and damaging effects of the sun's UV rays.",
+          "claim_type": "uv_protection",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Same manufacturer archived page; 'Key Ingredients' panel, attributed to a named ingredient (Helianthus Annuus (Sunflower) Sprout Extract, present in this entry's frozen INCI list).",
+          "domain": "briogeohair.com (via web.archive.org)",
+          "url": "https://web.archive.org/web/20251016064623/https://www.briogeohair.com/products/briogeo-superfoods-avocado-kiwi-mega-moisture-3-in-1-leave-in-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch of Wayback Machine archived snapshot (archive snapshot dated 2025-10-16)",
+          "creates_claim": null,
+          "note": "This is the current wording of the manufacturer's UV-protection ingredient-level claim named in the gap-fill task brief ('protects hair from the drying and damaging effects of the sun's UV rays'), now independently captured live (via archive) rather than secondhand from a search snippet as it was at original candidate-selection time (per this entry's original claims_search_note). Same creates_claim=null rationale as above."
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": "ORIGINAL FINDING (2026-09-12 freeze pass, now superseded -- see amendment_log): candidate-products.md recorded an English-language manufacturer claim attributed to briogeohair.com ('protects hair from the drying and damaging effects of the sun's UV rays', sourced via a search snippet at candidate-selection time, not a live fetch even then). That pass attempted to re-fetch briogeohair.com directly (every guessed product URL 404'd; the site's on-site search UI redirected to the homepage with no result) and could not confirm it live, so no C5 manufacturer claims were included in that freeze -- only the two C4 douglas.de entries.\nGAP-FILL RESOLUTION (2026-09-12, later same day -- see amendment_log): a subsequent pass located the correct manufacturer product URL via web search (the original guessed slug was missing a 'briogeo-' prefix) and confirmed it still 404s live -- the product appears delisted from the manufacturer's current catalog (absent from the live /collections/briogeo-superfoods listing; the archived page itself shows an 'Email Me When Available' out-of-stock notice) -- but recovered the manufacturer's own historical page content via a Wayback Machine snapshot (2025-10-16), still a C5 manufacturer source per the standard. Three claims[] entries were added from that archived page, including the exact ingredient-level UV-protection claim originally flagged only secondhand. creates_claim is left null/deferred on all three, matching this packet's u6 (amika) convention -- the rule-7 cross-market adjudication is not performed by this packet.",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "GTIN/EAN was not found on douglas.de, on the archived briogeohair.com manufacturer page, or anywhere else searched -- this remains genuinely unresolved (out of scope for the 2026-09-12 gap-fill pass, which targeted directions, manufacturer claims, and a manufacturer INCI cross-check only; see amendment_log). RESOLVED by that gap-fill pass, no longer open: (1) directions_of_use is now captured verbatim from the manufacturer's own archived page, and douglas.de's ANWENDUNG accordion was re-checked live and confirmed to genuinely carry no separate usage text for this SKU (not a prior UI-interaction failure); (2) a second, independent INCI source now exists (the manufacturer's own archived page) and is byte-identical to the douglas.de capture -- no conflict to reconcile; (3) the manufacturer's own UV-protection claim text is now independently captured live (via a Wayback Machine archive, since the live manufacturer page 404s -- the product appears delisted from briogeohair.com's current catalog) rather than relying on a secondhand search-snippet quote. Whether these C5 manufacturer claims, corroborated by the already-frozen C4 douglas.de claims and a byte-identical INCI match, satisfy the standard's rule-7 cross-market exception is an adjudication this packet does not perform (creates_claim left null on all three new claims entries, matching the u6/amika convention).",
+      "notes": "Douglas.de states the manufacturer contact as \"Biorius, Avenue Leonard De Vinci 14, 141300 Wavre, België\" rather than a Briogeo (US) address -- recorded verbatim as an identity data point, not further investigated.",
+      "availability": {
+        "retailer": "douglas.de",
+        "price": "33,99 € / 170 ml",
+        "price_per_liter": "199,94 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "\"Online: auf Lager\"; Lieferzeitraum Di., 15.09.2026 bis Do., 17.09.2026."
+      }
+    },
+    {
+      "slot": "u5",
+      "archetype_role": "Boring control: ordinary German drugstore leave-in spray",
+      "brand": "ISANA PROFESSIONAL (Rossmann house brand)",
+      "exact_product_name": "Argan Leave-in Conditioner",
+      "pack_size": "100 ml",
+      "gtin": null,
+      "gtin_candidates": [
+        "4068134081742 (inferred from the Rossmann.de product URL path; this packet's convention, matching the gold-set ISANA Hyaluron & Panthenol entry's precedent for Rossmann.de URL-embedded 13-digit codes, treats this as a likely EAN/GTIN, but no separate confirming gtin/ean field was found in this pass's page script markup -- see remaining_gap)"
+      ],
+      "market": "DE",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "C2 (house-brand, per standard §2.4.1 rule 6)",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-argan-leave-in-conditioner/p/4068134081742",
+          "note": "Rossmann.de German retailer product page, Artikelnummer 179760. ISANA PROFESSIONAL is Rossmann's own house brand (per standard §2.4.1 rule 6, and this packet's calibration precedent for the same brand -- Rossmann ↔ Isana is one of the standard's own named house-brand examples). Full description, badges, directions, and INCI captured live via rendered browser fetch."
+        },
+        {
+          "tier": "C3",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-argan-leave-in-conditioner/p/4068134081742",
+          "note": "Packshot inspection 2026-09-12 (hover-zoom ~3x): 100-ml bottle carries a black finger-pump SPRAY actuator with horizontal nozzle — not a flip-cap, lotion pump or tube. Corroborated by incidecoder ('Leave-in hair conditioner spray with argan oil'). Presentation form: spray. Evidence: plans/leave-in-inci/research/unseen-test/u5-format-evidence.md"
+        }
+      ],
+      "raw_inci": "Aqua, Glycerin, Ricinus Communis Seed Oil, Panthenol, Niacinamide, Argania Spinosa Kernel Oil, Cetearyl Alcohol, Parfum, Behentrimonium Chloride, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Coumarin, Linalool, Alpha-Isomethyl Ionone, Citric Acid",
+      "normalized_ingredients": [
+        "AQUA",
+        "GLYCERIN",
+        "RICINUS COMMUNIS SEED OIL",
+        "PANTHENOL",
+        "NIACINAMIDE",
+        "ARGANIA SPINOSA KERNEL OIL",
+        "CETEARYL ALCOHOL",
+        "PARFUM",
+        "BEHENTRIMONIUM CHLORIDE",
+        "ISOPROPYL ALCOHOL",
+        "SODIUM BENZOATE",
+        "POTASSIUM SORBATE",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "HEXYL CINNAMAL",
+        "COUMARIN",
+        "LINALOOL",
+        "ALPHA-ISOMETHYL IONONE",
+        "CITRIC ACID"
+      ],
+      "rawInciSha256": "3339592f3c80b3850e8501c842f05c96c8819e4c70e94e371e1c6d840b1073c5",
+      "formulaFingerprintSha256": "2fcd8bf3dbeaba9f0f9c8fd29cb03ed9f3112b5ca10968892e0970534d0442f5",
+      "additional_inci_captures": [],
+      "directions_of_use": "Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen. Anschließend die Haare wie gewohnt stylen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C2 (house-brand)",
+        "claim_tier_basis": "Rossmann's own house-brand product page for its own private label, per standard §2.4.1 rule 6.",
+        "domain": "rossmann.de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-argan-leave-in-conditioner/p/4068134081742",
+        "date": "2026-09-12",
+        "note": "Field labelled 'Anwendung und Gebrauch'. Rinse check: PASS -- applied to towel-dried hair, no rinse step, followed by styling."
+      },
+      "claims": [
+        {
+          "claim_text": "Der ISANA Professional Leave-in Conditioner Argan repariert und nährt das Haar und beugt Haarbruch vor. Die Haaroberfläche wird geglättet - für ein perfektes Glanzfinish mit Anti-Frizz-Effekt. Widerspenstiges Haar wird in natürlich seidiges und glänzendes Haar verwandelt. Es fühlt sich gepflegt und mit Feuchtigkeit versorgt an und die Kämmbarkeit wird spürbar verbessert.",
+          "claim_type": "repair_bond / humidity_frizz",
+          "source_authority_tier": "C2 (house-brand)",
+          "claim_tier_basis": "Rossmann's own house-brand page, per standard §2.4.1 rule 6.",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-argan-leave-in-conditioner/p/4068134081742",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "No heat-protection or UV-protection claim anywhere on the page -- consistent with this slot's role as a 'boring control' with no headline-actives claim."
+        },
+        {
+          "claim_text": "Hautverträglichkeit: Dermatologisch bestätigt / diese Rezeptur ist zu 100% ohne Mikroplastik / für strapaziertes & widerspenstiges Haar / ohne Silikone",
+          "claim_type": "general (uncategorized)",
+          "source_authority_tier": "C2 (house-brand)",
+          "claim_tier_basis": "Same page.",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-argan-leave-in-conditioner/p/4068134081742",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": null
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": "Actively checked for heat/UV/hold claims beyond the anti-frizz claim already captured above -- none found. Consistent with candidate-products.md's characterisation of this SKU as a plain, headline-claim-free control.",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "Single-sourced this pass (rossmann.de only) -- candidate-products.md notes an incidecoder/inkeedecoder mirror with an identical INCI list, but both incidecoder.com and inkeedecoder.com returned redirects/404s when independently re-fetched this pass, so that second-source corroboration could not be independently re-verified live. No explicit gtin/ean field was found in the page's script markup this pass; the 13-digit number in the product URL is carried forward as a GTIN candidate only (see gtin_candidates).",
+      "notes": null,
+      "availability": {
+        "retailer": "rossmann.de",
+        "price": "2,49 € / 100 ml",
+        "price_per_liter": "24,90 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "\"In den Warenkorb\" active; Lieferung zwischen Dienstag, 15.09.26 und Mittwoch, 16.09.26; 4,6/5 (132 Bewertungen)."
+      }
+    },
+    {
+      "slot": "u6",
+      "archetype_role": "Cross-market heat claim (positive T14 test)",
+      "brand": "amika",
+      "exact_product_name": "The Shield Anti-Humidity Spray (German retailer listing name: \"The Shield - Anti-Feuchtigkeits-Spray\")",
+      "pack_size": "221 ml (also sold in a 103 ml size)",
+      "gtin": null,
+      "gtin_candidates": [
+        "840117813281 (UPC; unconfirmed -- appears only in a third-party US retailer's (beautybrands.com) URL slug per candidate-products.md; not independently found or cross-verified against amika's own site or Sephora.de's page markup this pass)"
+      ],
+      "market": "US (manufacturer, loveamika.com) / DE (retailer, sephora.de)",
+      "formula_capture_date": "2026-09-12",
+      "source_urls": [
+        {
+          "tier": "C5 (non-German manufacturer page)",
+          "domain": "loveamika.com",
+          "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+          "note": "Manufacturer's own product page (US, English-only; no /de/ path or country/language selector found). Full marketing copy, 'how to use' directions, full INCI, and product attribute badges (including 'HEAT PROTECTS TO 450 °F' and 'UV PROTECTION') captured live via rendered browser fetch."
+        },
+        {
+          "tier": "C3/C4 (German retailer)",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "note": "Sephora.de German retailer product page. German-language description, attribute tags, 'Zusammensetzung' composition blurb, brief 'Anwendung' tip text, and full 'Inhaltsstoffe' ingredient list all captured live -- the accordion panels' text does not render into the page's plain accessible-text extraction on this site, so the ingredient list, composition blurb, and tips were each read directly from the page's embedded Next.js JSON data payload via JavaScript rather than from visible on-screen text."
+        }
+      ],
+      "raw_inci": "Butane, Disiloxane, Water/Eau/Aqua, Propane, Hippophae Rhamnoides (Sea Buckthorn/Argousier) Fruit/Seed Oil, Cetearyl Alcohol, Hydrolyzed Vegetable Protein, Hydrolyzed Wheat Protein, Behentrimonium Chloride*, Cetrimonium Chloride*, Cetyl PEG/PPG-10/1 Dimethicone, Phenyl Trimethicone, Cinnamidopropyltrimonium Chloride, Oleth-10, Glycerin, Ethylhexylglycerin, Ceresin, Polyquaternium-11, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Potassium Sorbate, Sodium Benzoate, Phenoxyethanol, Fragrance/Parfum, Benzyl Benzoate, Hydroxycitronellal, Limonene, Citronellol, Coumarin, Hexamethylindanopyran, Tetramethyl Acetyloctahydronaphthalenes, Vanillin",
+      "normalized_ingredients": [
+        "BUTANE",
+        "DISILOXANE",
+        "WATER/EAU/AQUA",
+        "PROPANE",
+        "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN/ARGOUSIER) FRUIT/SEED OIL",
+        "CETEARYL ALCOHOL",
+        "HYDROLYZED VEGETABLE PROTEIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "BEHENTRIMONIUM CHLORIDE",
+        "CETRIMONIUM CHLORIDE",
+        "CETYL PEG/PPG-10/1 DIMETHICONE",
+        "PHENYL TRIMETHICONE",
+        "CINNAMIDOPROPYLTRIMONIUM CHLORIDE",
+        "OLETH-10",
+        "GLYCERIN",
+        "ETHYLHEXYLGLYCERIN",
+        "CERESIN",
+        "POLYQUATERNIUM-11",
+        "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "CITRIC ACID",
+        "POTASSIUM SORBATE",
+        "SODIUM BENZOATE",
+        "PHENOXYETHANOL",
+        "FRAGRANCE/PARFUM",
+        "BENZYL BENZOATE",
+        "HYDROXYCITRONELLAL",
+        "LIMONENE",
+        "CITRONELLOL",
+        "COUMARIN",
+        "HEXAMETHYLINDANOPYRAN",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "VANILLIN"
+      ],
+      "rawInciSha256": "3af902b41df59b235a9449ec920ec37b26fc024317088bc11a6b2d55712e9887",
+      "formulaFingerprintSha256": "c7d1dac8f319fcca0077b325316cf097077cba9d2e7276a7ca20c0533062f0cb",
+      "additional_inci_captures": [
+        {
+          "source_tier": "C5",
+          "domain": "loveamika.com",
+          "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+          "raw_inci": "Butane, Disiloxane, Water/Eau/Aqua, Propane, Hippophae Rhamnoides (Sea Buckthorn/Argousier) Fruit/Seed Oil, Cetearyl Alcohol, Hydrolyzed Vegetable Protein, Hydrolyzed Wheat Protein, Behentrimonium Chloride*, Cetrimonium Chloride*, Cetyl PEG/PPG-10/1 Dimethicone, Phenyl Trimethicone, Cinnamidopropyltrimonium Chloride, Oleth-10, Glycerin, Ethylhexylglycerin, Ceresin, Polyquaternium-11, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Potassium Sorbate, Sodium Benzoate, Phenoxyethanol, Fragrance/Parfum, Benzyl Benzoate, Hydroxycitronellal, Limonene, Citronellol, Coumarin",
+          "normalized_ingredients": [
+            "BUTANE",
+            "DISILOXANE",
+            "WATER/EAU/AQUA",
+            "PROPANE",
+            "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN/ARGOUSIER) FRUIT/SEED OIL",
+            "CETEARYL ALCOHOL",
+            "HYDROLYZED VEGETABLE PROTEIN",
+            "HYDROLYZED WHEAT PROTEIN",
+            "BEHENTRIMONIUM CHLORIDE",
+            "CETRIMONIUM CHLORIDE",
+            "CETYL PEG/PPG-10/1 DIMETHICONE",
+            "PHENYL TRIMETHICONE",
+            "CINNAMIDOPROPYLTRIMONIUM CHLORIDE",
+            "OLETH-10",
+            "GLYCERIN",
+            "ETHYLHEXYLGLYCERIN",
+            "CERESIN",
+            "POLYQUATERNIUM-11",
+            "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+            "CITRIC ACID",
+            "POTASSIUM SORBATE",
+            "SODIUM BENZOATE",
+            "PHENOXYETHANOL",
+            "FRAGRANCE/PARFUM",
+            "BENZYL BENZOATE",
+            "HYDROXYCITRONELLAL",
+            "LIMONENE",
+            "CITRONELLOL",
+            "COUMARIN"
+          ],
+          "rawInciSha256": "17626b80298eeefc029ce519e18403ef484fa41174876aba2df486b924d4d838",
+          "formulaFingerprintSha256": "25f65b27175b39309fc2cdcf5fb1f27a3cc27f99288ee0a316da9ac889a4c3dd",
+          "diff_note": "29 ingredients vs Sephora.de's 32. Sephora.de's own Inhaltsstoffe list includes three ingredients absent from the manufacturer's loveamika.com list: HEXAMETHYLINDANOPYRAN, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, and VANILLIN (all fragrance/aroma-chemical ingredients, appended at the very end of the list). Every other ingredient and its order matches exactly between the two sources. Not resolved by this packet -- recorded as a genuine cross-source conflict, not merged. (Both raw_inci strings above omit the page's own trailing '*antistatic agent/agent antistatique' footnote explaining the asterisk marker, quoted verbatim in packet-notes.md instead.)"
+        }
+      ],
+      "directions_of_use": "shield your strands: shake well. spray on damp or dry hair before heat styling. pro tip: use on previously styled hair to extend longevity.",
+      "directions_status": "captured",
+      "directions_source": {
+        "source_authority_tier": "C5 (non-German manufacturer page)",
+        "claim_tier_basis": "Manufacturer's own page, but non-German-market (English, US) -- per standard §2.4.1 rule 3 this is C5 for claim-authority purposes even though it is the product's own manufacturer directions text.",
+        "domain": "loveamika.com",
+        "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+        "date": "2026-09-12",
+        "note": "Field labelled 'how to use?'. Rinse check: PASS -- sprayed on damp or dry hair before heat styling, no rinse step. Sephora.de separately carries its own brief German 'Anwendung' tip text (see additional_directions_captures) corroborating the same before-heat-styling usage."
+      },
+      "additional_directions_captures": [
+        {
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "text": "- Gut schütteln. - Vor dem Warmstyling leicht auf das feuchte oder trockene Haar sprühen.",
+          "note": "Extracted from the page's embedded Next.js data payload ('tips' tab content) via JavaScript, since the accordion's text does not appear in the plain accessible-text page render on this site. Matches loveamika.com's directions closely (shake well; spray on damp/dry hair before heat styling), omitting only the 'pro tip: use on previously styled hair' line."
+        }
+      ],
+      "claims": [
+        {
+          "claim_text": "muggy weather, we're ready for you. this spray shields hair from frizz, humidity + 450° F heat.",
+          "claim_type": "heat_protection / humidity_frizz",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Manufacturer's own page, non-German-market (English, US) -- ordinarily C5 and non-creating per standard §2.4.1 rule 3, UNLESS the cross-market exception (rule 7 / T14) applies. This packet captures the raw identity and corroboration evidence relevant to that exception (see additional_inci_captures and the German retailer claims below) but does NOT perform the adjudication itself.",
+          "domain": "loveamika.com",
+          "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": null,
+          "note": "Headline product tagline, directly below the product title. This is the manufacturer's primary heat-protection claim and the one candidate-products.md flags as this slot's T14 cross-market test case. creates_claim intentionally left null: whether rule 7's identity-verification-plus-corroboration exception is satisfied is an adjudication this packet does not perform."
+        },
+        {
+          "claim_text": "HEAT PROTECTS TO 450 °F",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Same manufacturer page; standing product attribute badge.",
+          "domain": "loveamika.com",
+          "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": null,
+          "note": "Displayed as a discrete badge/tag alongside other attribute badges (ANTI-FRIZZ / SMOOTH COLLECTION, STYLING, HEAT PROTECTION, COLOR SAFE, CRUELTY FREE, VEGAN, KERATIN SAFE, NO MINERAL OIL, PARABEN FREE, SULFATE FREE, UV PROTECTION) on the same page. Same creates_claim=null rationale as above."
+        },
+        {
+          "claim_text": "UV PROTECTION",
+          "claim_type": "uv_protection",
+          "source_authority_tier": "C5",
+          "claim_tier_basis": "Same manufacturer page; standing product attribute badge.",
+          "domain": "loveamika.com",
+          "url": "https://loveamika.com/products/the-shield-anti-humidity-spray",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": null,
+          "note": "NOT previously flagged in candidate-products.md's slot-6 writeup, which focused only on the 450°F heat claim -- recorded here as an additional finding from this pass's live fetch. No accompanying explanatory copy or SPF-style rating was found alongside this badge on the page."
+        },
+        {
+          "claim_text": "Schütze dein Haar vor Hitze und Feuchtigkeit, damit dein Haar den ganzen Tag lang glatt und seidig aussieht. Das Anti-Feuchtigkeits-Spray schützt das Haar 24 Stunden lang vor Hitze bis zu 230 °C und Feuchtigkeit.",
+          "claim_type": "heat_protection / humidity_frizz",
+          "source_authority_tier": "C3/C4",
+          "claim_tier_basis": "German retailer page (Sephora.de), not the brand's own German-market page (none exists) -- corroborates the manufacturer's heat claim under the standard's rule 3 ordinary reading, and is also the corroborating retailer evidence this packet captures as raw material for a possible rule-7 cross-market exception (identity verification is not performed by this packet -- see notes).",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch, full page text",
+          "creates_claim": false,
+          "note": "DISCREPANCY, recorded verbatim and NOT resolved: the manufacturer's own claim states '450° F' (loveamika.com tagline) / 'HEAT PROTECTS TO 450 °F' (loveamika.com badge), a literal conversion of which is 232.2 °C, while this German retailer's own translated claim states 'bis zu 230 °C'. The ~2 °C gap between a literal 450 °F conversion and the German copy's stated 230 °C is recorded here verbatim per the task brief; this packet does not resolve or round it."
+        },
+        {
+          "claim_text": "Wärmeschutzwirkung bis 230 °C / Schutz vor Frizz und Feuchtigkeit / langer Halt",
+          "claim_type": "heat_protection / humidity_frizz",
+          "source_authority_tier": "C3/C4",
+          "claim_tier_basis": "Same Sephora.de page, bullet list.",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": null
+        },
+        {
+          "claim_text": "Anliegen: Frizz / Wärmeschutzwirkung / UV-Schutz",
+          "claim_type": "heat_protection / humidity_frizz / uv_protection",
+          "source_authority_tier": "C3/C4",
+          "claim_tier_basis": "Same Sephora.de page, product attribute tags ('Anliegen' = concerns addressed).",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "The German-market 'UV-Schutz' attribute tag independently corroborates the manufacturer's 'UV PROTECTION' badge above."
+        },
+        {
+          "claim_text": "Was das ist? Klinisch erwiesen. Das luftige Hitzeschutzspray bekämpft Frizz und schützt das Haar 24 Stunden lang vor Feuchtigkeit. [...] Bekämpft Frizz und schützt das Haar 24 Stunden lang* vor Feuchtigkeit. Klinisch erwiesen. *Klinisch erwiesene wärmeschützende und feuchtigkeitsregulierende Wirkung.",
+          "claim_type": "heat_protection / humidity_frizz / clinical_claim",
+          "source_authority_tier": "C3/C4",
+          "claim_tier_basis": "Same Sephora.de page.",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "'Klinisch erwiesen' (clinically proven) claim language, recorded verbatim; no study, sample size, or methodology reference is shown anywhere on the page. Recorded as raw evidence only, per the standard's evidence scale (§3.1, E0 = marketing claim) -- not evaluated further by this packet."
+        },
+        {
+          "claim_text": "Wichtigste Inhaltsstoffe: - Sanddorn: eine Superfrucht, die voller Vitamin C und A, essenzieller Fettsäuren und Omega 7 steckt. - Polyquaternum-59: Ein kationisches Polymer, das die Kutikula glättet und vor UV-Strahlen schützt.",
+          "claim_type": "uv_protection",
+          "source_authority_tier": "C3/C4",
+          "claim_tier_basis": "Same Sephora.de page, 'Zusammensetzung' (composition) tab, extracted from the page's embedded Next.js data payload via JavaScript.",
+          "domain": "sephora.de",
+          "url": "https://www.sephora.de/p/the-shield---anti-feuchtigkeits-spray-P1000205473.html",
+          "date": "2026-09-12",
+          "capture_method": "javascript DOM/data extraction (accordion text not present in the plain accessible page-text render)",
+          "creates_claim": false,
+          "note": "IDENTITY DISCREPANCY, recorded verbatim and NOT resolved: this composition blurb names 'Polyquaternum-59' [sic -- almost certainly a typo for Polyquaternium-59] as a UV-protective key ingredient, but no ingredient named Polyquaternium-59 (or any near variant) appears in EITHER INCI list captured for this product -- both the Sephora.de Inhaltsstoffe list and the loveamika.com full-ingredients list name Polyquaternium-11, not -59. Recorded exactly as displayed; not reconciled by this packet."
+        }
+      ],
+      "claims_status": "present",
+      "claims_search_note": null,
+      "identity_status": "verified_with_minor_source_difference",
+      "known_conflicts": [
+        "Two independently fetched INCI sources for the same nominal product (loveamika.com manufacturer, Sephora.de German retailer) differ: Sephora.de's list carries three additional fragrance/aroma-chemical ingredients (Hexamethylindanopyran, Tetramethyl Acetyloctahydronaphthalenes, Vanillin) not present on loveamika.com's list. See additional_inci_captures.",
+        "450°F (loveamika.com manufacturer claim, = 232.2°C) vs 230°C (Sephora.de German retailer claim) heat-protection temperature discrepancy -- recorded verbatim in claims[], not resolved.",
+        "Sephora.de's own 'Zusammensetzung' tab names 'Polyquaternum-59' as a key UV-protective ingredient, but this ingredient name does not appear in either INCI list captured for this product (both list Polyquaternium-11 instead) -- recorded verbatim in claims[], not resolved.",
+        "GTIN/EAN not confirmed: no gtin/ean field was found in either loveamika.com's or Sephora.de's page markup this pass. candidate-products.md separately records an unconfirmed UPC (840117813281) traced only to a third-party US retailer's (beautybrands.com) URL slug -- carried forward here as gtin_candidates, not independently re-verified this pass."
+      ],
+      "remaining_gap": "GTIN/EAN not confirmed by any source fetched this pass (see known_conflicts). The Sephora.de composition-tab Polyquaternium-59 claim could not be cross-checked against a barcode/product-identity database this pass.",
+      "notes": "This slot exists specifically to exercise the standard's §2.4.1 rule 7 cross-market claim-authority exception (T14): a non-German manufacturer page's heat-protection claim can be admitted as claim-creating only if (a) product identity is verified via a matching INCI set or a confirmed shared GTIN, AND (b) at least one German-market retailer independently corroborates the claim. This packet captures the raw evidence relevant to both prongs -- the INCI-match evidence is in additional_inci_captures (close but not set-for-set identical between the two sources: three fragrance ingredients differ); the corroboration evidence is the Sephora.de claims recorded above -- but deliberately does NOT perform the identity-verification-plus-corroboration adjudication itself (every affected claim's creates_claim is left null). That adjudication, including whether the near-but-not-exact INCI match across sources is close enough to satisfy rule 7(a), is left entirely to the downstream lanes, per this packet's evidence-only scope.",
+      "availability": {
+        "retailer": "sephora.de",
+        "price": "30,45 € / 221 ml (niedrigster Preis: 22,45 €; ursprünglicher Preis: 31,95 €)",
+        "price_per_liter": "137,78 € / 1 l",
+        "in_stock": true,
+        "fetch_date": "2026-09-12",
+        "note": "221 ml size confirmed purchasable; standard shipping available from 16 September 2026; 4,2/5 (190 Bewertungen)."
+      }
+    }
+  ]
+}
