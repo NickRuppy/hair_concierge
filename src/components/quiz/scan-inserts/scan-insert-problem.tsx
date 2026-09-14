@@ -2,6 +2,7 @@
 
 import { ScanInsertFrame, type ScanInsertViewProps } from "./scan-insert-frame"
 import {
+  getScanInsertDensityLabel,
   getScanInsertExample,
   getScanInsertTextureAdjective,
   getScanInsertThicknessLabel,
@@ -30,10 +31,14 @@ export function ScanInsertProblemView({ answers, funnelPackageKey }: ScanInsertV
         </span>
         suchen Klarheit, welche Produkte wirklich zu ihnen passen. Raten kostet Geld, Zeit und ein
         Regal voller halbleerer Flaschen.
+        {/* Same source line the offer page prints under the same survey. */}
+        <span className="mt-2 block text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">
+          Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich
+        </span>
       </span>
       <span>
         <strong className="font-semibold text-foreground">Dein Anfang der Lösung:</strong>{" "}
-        {`${getScanInsertTextureAdjective(answers)} Haar, ${getScanInsertThicknessLabel(answers)}. Drei Antworten, die der Scanner ab jetzt kennt.`}
+        {`${getScanInsertTextureAdjective(answers)} Haar, ${getScanInsertThicknessLabel(answers)}, ${getScanInsertDensityLabel(answers)}. Drei Antworten, die der Scanner ab jetzt kennt.`}
       </span>
     </ScanInsertFrame>
   )

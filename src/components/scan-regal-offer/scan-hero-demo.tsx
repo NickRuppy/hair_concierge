@@ -49,7 +49,7 @@ export function ScanHeroDemoView({
         fill
       />
       {/* Top-right: the centred barcode pill and the frame's own hint keep the middle. */}
-      <span className="absolute right-3 top-3 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur-[4px]">
+      <span className="absolute right-4 top-4 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-white backdrop-blur-[4px]">
         Demo
       </span>
       <Image

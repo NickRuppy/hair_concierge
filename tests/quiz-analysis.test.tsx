@@ -13,6 +13,7 @@ import {
   scheduleQuizTransitionReveal,
   startQuizAnalysisReveal,
 } from "../src/components/quiz/quiz-analysis"
+import { getQuizFunnelCopy } from "../src/lib/quiz/funnel-copy"
 
 test("phase resolution: commit until tapped, loading until elapsed AND ready, then ready", () => {
   assert.equal(
@@ -132,6 +133,25 @@ test("loading view shows the quiet beat copy with a status region and shimmer ba
   assert.match(html, /quiz-shimmer-bar/)
   assert.doesNotMatch(html, /%/)
   assert.doesNotMatch(html, /<button/)
+})
+
+// The screen after it is the paywall, not the scanner: this beat may explain
+// what the answers are for, never promise a scanner that is already being set up.
+test("loading view carries the scan package's own line, not the post-purchase one", () => {
+  const html = renderToStaticMarkup(
+    <QuizAnalysisView
+      commitPending
+      copy={getQuizFunnelCopy("scan_v1")}
+      name="Lena"
+      onCommit={() => {}}
+      phase="loading"
+    />,
+  )
+
+  assert.match(html, /Einen Moment, Lena\./)
+  assert.match(html, /Wir legen dein Haarprofil an\./)
+  assert.match(html, /an deinem Haar – nicht am Durchschnitt\./)
+  assert.doesNotMatch(html, /richten deinen Scanner ein/)
 })
 
 test("ready view is only the beat headline", () => {

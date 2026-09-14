@@ -44,7 +44,11 @@ const QUIZ_FUNNEL_COPY: Record<string, QuizFunnelCopy> = {
     leadCaptureHeadline: "Dein Haarprofil ist fertig.",
     commitHeading: scanV1CommitHeading,
     commitButton: "Ja, zeig mir meinen Scanner",
-    analysisLoadingHeadline: "Wir richten deinen Scanner ein.",
+    // The post-purchase arrival page owns "Wir richten deinen Scanner ein."
+    // (`plan-ready-arrival.tsx`). Here nothing is bought yet, so the line says
+    // what the ten answers were for instead of promising a set-up scanner.
+    analysisLoadingHeadline:
+      "Wir legen dein Haarprofil an. Damit misst der Scanner jedes Produkt an deinem Haar – nicht am Durchschnitt.",
   },
 }
 

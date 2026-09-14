@@ -113,7 +113,9 @@ test("the scanner offer carries the criteria, the tour, coverage and the proof b
   assert.match(html, /Haardicke: mittel/)
   assert.match(html, /Hitzeschutz/)
   assert.match(html, /Repair-Pflege/)
-  assert.match(html, /Jede Zeile im Ergebnis lässt sich antippen und erklärt sich\./)
+  // The chips are plain spans, so the caption must not promise a tap here.
+  assert.match(html, /Im Scanner lässt sich jede Zeile antippen und erklärt sich\./)
+  assert.doesNotMatch(html, /Jede Zeile im Ergebnis lässt sich antippen/)
 
   assert.match(html, /Scanner, Plan und Chat – in einer App\./)
   assert.match(html, /Alles im Chaarlie-Abo\./)
@@ -152,6 +154,26 @@ test("both offer CTAs carry the tracking attributes the provider listens for", (
     /data-offer-cta="final"[^>]*data-offer-destination="pricing"[^>]*data-offer-source-section="final_cta"/,
   )
   assert.equal((html.match(/data-offer-faq="scan-regal-\d"/g) ?? []).length, 5)
+})
+
+// § 5 DDG plus the consumer information: the page the purchase starts on must
+// carry the same unified legal footer the landing does (PR #519).
+test("the scanner offer carries the unified legal footer", () => {
+  const html = renderScanOffer()
+
+  assert.equal((html.match(/<footer/g) ?? []).length, 1)
+  for (const label of ["Impressum", "Datenschutz", "AGB", "Widerruf", "Kontakt"]) {
+    assert.match(html, new RegExp(`>${label}</a>`), label)
+  }
+})
+
+test("the sticky header CTA keeps the 44 px touch target", () => {
+  const html = renderScanOffer()
+  const stickyCta = html.match(/<a[^>]*data-offer-cta="sticky_header"[^>]*>/)
+
+  assert.ok(stickyCta, "the sticky header CTA is rendered")
+  assert.match(stickyCta[0], /min-h-11/)
+  assert.doesNotMatch(stickyCta[0], /\bpy-2\b/)
 })
 
 test("non-commercial activation contexts fall back to the organic offer", () => {

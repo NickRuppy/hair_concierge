@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  getScanInsertDensityLabel,
   getScanInsertExample,
   getScanInsertScalpTarget,
   getScanInsertTextureAdjective,
@@ -156,19 +157,64 @@ test("insert 17 asks for a clarifying wash when the scalp runs oily", () => {
   )
 })
 
-test("insert 17 passes when the scalp matches and nothing else deviates", () => {
+// Insert 17 sits right behind the scalp question and judges a scalp shampoo:
+// its positive verdict must say "Kopfhaut" like its negative one already does,
+// and the line below it must name the criterion that was met.
+test("insert 17 passes on the scalp and says so, naming the matched criterion", () => {
   const card = getScanInsertExample(
     17,
     answers({ scalp_type: "trocken", has_scalp_issue: false, thickness: "normal" }),
   )
 
   assert.equal(card.verdict, "ok")
-  assert.equal(card.headline, "Passt zu deinem Haar")
-  assert.equal(card.deviation, "Alles im Ziel.")
+  assert.equal(card.headline, "Passt zu deiner Kopfhaut")
+  assert.equal(card.deviation, "Kopfhaut trocken – genau dein Profil.")
   assert.equal(
     card.rows.every((row) => row.status === "ok"),
     true,
   )
+})
+
+// The shampoo covers "trocken, gereizt" — printing that product value told a
+// user who answered only one of the two that they had both. The line quotes the
+// answer instead, so each scalp answer reads its own word back.
+test("insert 17's matched line quotes the scalp answer, not the product's range", () => {
+  const dry = getScanInsertExample(
+    17,
+    answers({ scalp_type: "trocken", has_scalp_issue: false, thickness: "normal" }),
+  )
+  const irritated = getScanInsertExample(
+    17,
+    answers({
+      scalp_type: "ausgeglichen",
+      has_scalp_issue: true,
+      scalp_condition: "gereizt",
+      thickness: "normal",
+    }),
+  )
+
+  assert.equal(dry.deviation, "Kopfhaut trocken – genau dein Profil.")
+  assert.equal(irritated.verdict, "ok")
+  assert.equal(irritated.deviation, "Kopfhaut gereizt – genau dein Profil.")
+  for (const card of [dry, irritated]) {
+    assert.equal(
+      card.rows.find((row) => row.label === "Kopfhaut")?.productValue,
+      "trocken, gereizt",
+    )
+    assert.ok(!card.deviation.includes("trocken, gereizt"), "the card never reads back both words")
+  }
+})
+
+test("inserts 16 and 18 carry no scalp row, so they keep the hair verdict", () => {
+  const problem = getScanInsertExample(16, answers({ thickness: "coarse" }))
+  assert.equal(problem.verdict, "ok")
+  assert.equal(problem.headline, "Passt zu deinem Haar")
+  assert.equal(problem.deviation, "Alles im Ziel.")
+
+  const home = getScanInsertExample(18, answers({ thickness: "normal" }))
+  assert.equal(home.verdict, "ok")
+  assert.equal(home.headline, "Passt zu deinem Haar")
+  assert.equal(home.deviation, "Alles im Ziel.")
 })
 
 test("insert 17 keeps the restriction verdict when only the wash deviates", () => {
@@ -301,6 +347,17 @@ test("the copy helpers name the hair the quiz already knows", () => {
 
   assert.equal(getScanInsertThicknessLabel({ thickness: "coarse" }), "dick")
   assert.equal(getScanInsertThicknessLabel({}), "fein")
+
+  const densities: [string, string][] = [
+    ["low", "geringe Dichte"],
+    ["medium", "mittlere Dichte"],
+    ["high", "hohe Dichte"],
+  ]
+  for (const [density, label] of densities) {
+    assert.equal(getScanInsertDensityLabel({ density }), label, density)
+  }
+  assert.equal(getScanInsertDensityLabel({}), "mittlere Dichte")
+  assert.equal(getScanInsertDensityLabel({ density: "unbekannt" }), "mittlere Dichte")
 
   assert.equal(getScanInsertScalpTarget({ scalp_type: "fettig", has_scalp_issue: false }), "fettig")
   assert.equal(

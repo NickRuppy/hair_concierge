@@ -12,6 +12,11 @@ import { getQuizScreenOrder, isQuizInsertStep } from "../src/lib/quiz/screen-ord
 import type { QuizAnswers, QuizStep } from "../src/lib/quiz/types"
 
 const quizPageSource = readFileSync(new URL("../src/app/quiz/page.tsx", import.meta.url), "utf8")
+const scanOfferSource = readFileSync(
+  new URL("../src/components/scan-regal-offer/scan-regal-offer.tsx", import.meta.url),
+  "utf8",
+)
+const SURVEY_SOURCE_LINE = "Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich"
 const globalsSource = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8")
 
 function renderInsert(step: QuizStep, answers: QuizAnswers) {
@@ -40,10 +45,20 @@ test("the problem insert names the shelf moment and the answers already given", 
     /suchen Klarheit, welche Produkte wirklich zu ihnen passen\. Raten kostet Geld, Zeit und ein Regal voller halbleerer Flaschen\./,
   )
   assert.match(html, /Dein Anfang der Lösung:/)
-  assert.match(html, /lockiges Haar, dick\./)
+  assert.match(html, /lockiges Haar, dick, hohe Dichte\./)
   assert.match(html, /Drei Antworten, die der Scanner ab jetzt kennt\./)
   assert.match(html, imageUrl("frau-regal-aha.webp"))
   assert.match(html, /Weiter/)
+})
+
+// The landing and the offer both carry the survey's source; the insert used to
+// print the number bare. The string is the offer page's, verbatim, so the two
+// places cannot drift into two different sample sizes.
+test("the 63 % statistic names the same source the offer page prints", () => {
+  const html = renderInsert(16, { structure: "wavy", thickness: "fine", density: "medium" })
+
+  assert.ok(html.includes(SURVEY_SOURCE_LINE), "the insert prints the source line")
+  assert.ok(scanOfferSource.includes(SURVEY_SOURCE_LINE), "the offer page prints the same line")
 })
 
 test("the solution insert quotes the scalp answer the user just gave", () => {
@@ -61,6 +76,20 @@ test("the solution insert quotes the scalp answer the user just gave", () => {
   )
   assert.match(html, imageUrl("regal-scan-flasche.webp"))
   assert.match(html, /Passt nicht zu deiner Kopfhaut/)
+})
+
+test("the solution insert's positive card judges the scalp and names the match", () => {
+  const html = renderInsert(17, {
+    scalp_type: "trocken",
+    has_scalp_issue: false,
+    thickness: "normal",
+  })
+
+  assert.match(html, /Passt zu deiner Kopfhaut/)
+  assert.doesNotMatch(html, /Passt zu deinem Haar/)
+  assert.match(html, /Kopfhaut trocken – genau dein Profil\./)
+  assert.doesNotMatch(html, /Kopfhaut trocken, gereizt – genau dein Profil\./)
+  assert.doesNotMatch(html, /Alles im Ziel\./)
 })
 
 test("the home insert turns the user's own bathroom into the first shelf", () => {

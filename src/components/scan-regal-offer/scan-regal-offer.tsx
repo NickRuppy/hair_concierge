@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 
+import { SiteFooter } from "@/components/landing/site-footer"
 import { OrganicPlanOffer } from "@/components/organic-plan-offer/organic-plan-offer"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { ScanHeroDemo } from "@/components/scan-regal-offer/scan-hero-demo"
@@ -258,8 +259,12 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
             <Link href="/" className="font-serif text-2xl font-semibold tracking-tight">
               chaarlie
             </Link>
+            {/*
+              The only permanently visible CTA on a very long page, so it holds
+              the 44 px touch target — through padding, not a bigger label.
+            */}
             <a
-              className="rounded-full bg-[var(--brand-plum)] px-4 py-2 text-sm font-bold text-white"
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-plum)] px-5 text-sm font-bold text-white"
               data-offer-cta="sticky_header"
               data-offer-destination="pricing"
               data-offer-source-section="hero"
@@ -354,8 +359,9 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
               </span>
             ))}
           </div>
+          {/* The chips here are plain text; only the scan result is tappable. */}
           <SectionCaption>
-            Jede Zeile im Ergebnis lässt sich antippen und erklärt sich.
+            Im Scanner lässt sich jede Zeile antippen und erklärt sich.
           </SectionCaption>
         </section>
 
@@ -583,6 +589,11 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           </div>
         </section>
       </main>
+      {/*
+        The purchase starts on this page, so it carries the same legal footer
+        the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
+      */}
+      <SiteFooter />
     </OfferTrackingProvider>
   )
 }
