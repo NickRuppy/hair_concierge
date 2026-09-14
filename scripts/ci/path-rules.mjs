@@ -78,6 +78,11 @@ const PERSONAL_PLAN_JOURNEY_PREFIXES = [
 ]
 
 const PERSONAL_PLAN_JOURNEY_EXACT = [
+  "src/app/admin/users/page.tsx",
+  "src/app/admin/layout.tsx",
+  "src/app/api/admin/users/route.ts",
+  "src/app/labs/admin-users/page.tsx",
+  "tests/admin-users-page.spec.ts",
   "playwright.config.ts",
   "src/app/chat/layout.tsx",
   "src/app/profile/layout.tsx",
