@@ -23,6 +23,8 @@ export interface ScanExampleProduct {
   name: string
   category: string
   price: string
+  /** Packshot under `public/images/funnels/scan/` — the card shows the real bottle. */
+  imageSrc: string
 }
 
 export interface ScanExampleCard {
@@ -36,29 +38,46 @@ export interface ScanExampleCard {
 /** The three `scan_v1` screens that carry an example card. */
 export type ScanInsertStep = Extract<QuizStep, 16 | 17 | 18>
 
-const SHAMPOO: ScanExampleProduct = {
-  name: "Alverde Balance Shampoo Melisse",
-  category: "Shampoo",
-  price: "ca. 1,95 €",
-}
-
+/**
+ * Catalog `f41badc9-16e3-41c1-ab6c-23541fffade0` ("OGX Renewing Argan Oil of
+ * Morocco Renewing Argan Oil of Morocco Shampoo") — the card prints the short
+ * shelf name a visitor would read off the bottle.
+ */
 const PROBLEM_SHAMPOO: ScanExampleProduct = {
   name: "OGX Argan Oil of Morocco Shampoo",
   category: "Shampoo",
   price: "ca. 6,95 €",
+  imageSrc: "/images/funnels/scan/example-ogx-argan-oil.webp",
 }
 
+/**
+ * Catalog `eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d` (dm) — a mild shampoo for a
+ * sensitive, dry, itchy scalp, which is what insert 17 is asking about.
+ */
+const SCALP_SHAMPOO: ScanExampleProduct = {
+  name: "Balea Kopfhaut Sensitive Shampoo",
+  category: "Shampoo",
+  price: "ca. 1,25 €",
+  imageSrc: "/images/funnels/scan/example-balea-kopfhaut-sensitive.webp",
+}
+
+/**
+ * Catalog `1568b623-f411-4ed6-a89f-e797bb1b48f5` ("Alterra Intensiv Repair
+ * Haarmaske Feuchtigkeit", Rossmann) — a rich moisture mask for dry and
+ * stressed hair; the card prints the short shelf name.
+ */
 const MASK: ScanExampleProduct = {
-  name: "Balea Professional Repair Kur",
+  name: "Alterra Feuchtigkeits-Haarmaske",
   category: "Haarmaske",
-  price: "ca. 1,95 €",
+  price: "ca. 2,79 €",
+  imageSrc: "/images/funnels/scan/example-alterra-feuchtigkeits-maske.webp",
 }
 
 /** The row label the scalp criterion carries, on the card and in the copy. */
 const SCALP_ROW_LABEL = "Kopfhaut"
 
-/** The shampoo is formulated for a dry or irritated scalp, not for one target. */
-const SHAMPOO_SCALP_VALUE = "trocken, gereizt"
+/** The shampoo is formulated for a sensitive, dry scalp, not for one target. */
+const SHAMPOO_SCALP_VALUE = "sensibel, trocken"
 const SHAMPOO_SCALP_COVERAGE = new Set(["trocken", "gereizt"])
 
 const THICKNESS_LABELS: Record<string, string> = {
@@ -108,6 +127,15 @@ const CARE_WEIGHT_BY_THICKNESS: Record<string, string> = {
   normal: "mittel",
   coarse: "reichhaltig",
 }
+
+/**
+ * What the mask itself is: a rich moisture treatment, not a protein-led repair
+ * cure. `reichhaltig` is two steps from `leicht`, so fine hair reads as a real
+ * mismatch — which is the point of the demo.
+ */
+const MASK_CARE_WEIGHT = "reichhaltig"
+const MASK_CARE_DIRECTION = "Feuchtigkeit"
+const MASK_REPAIR = "mittel"
 
 /** Treatments and concerns that ask for more repair than a basic mask gives. */
 const REPAIR_TREATMENTS = new Set(["blondiert"])
@@ -213,8 +241,8 @@ function buildDeviation(rows: ScanExampleRow[]): string {
   // of the criteria, it is the answer the screen just collected — naming it is
   // the only proof on the card that the answer changed anything. It is the
   // user's own target that gets printed, never the product's: the shampoo
-  // covers "trocken, gereizt", and someone who answered only "trocken" must not
-  // read back that their scalp is irritated.
+  // covers "sensibel, trocken", and someone who answered only "trocken" must
+  // not read back that their scalp is sensitive on top.
   const scalpRow = rows.find((row) => row.label === SCALP_ROW_LABEL)
   if (scalpRow) return `${scalpRow.label} ${scalpRow.targetValue} – genau dein Profil.`
   return "Alles im Ziel."
@@ -255,7 +283,7 @@ function buildProblemExample(answers: QuizAnswers): ScanExampleCard {
 
 function buildSolutionExample(answers: QuizAnswers): ScanExampleCard {
   const rows = [cleansingRow(answers), scalpRow(answers), thicknessRow(answers)]
-  return { product: SHAMPOO, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }
+  return { product: SCALP_SHAMPOO, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }
 }
 
 function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
@@ -264,21 +292,25 @@ function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
   const rows: ScanExampleRow[] = [
     {
       label: "Pflegegewicht",
-      productValue: "mittel",
+      productValue: MASK_CARE_WEIGHT,
       targetValue: careWeightTarget,
-      status: scaleStatus(CARE_WEIGHT_SCALE, "mittel", careWeightTarget),
+      status: scaleStatus(CARE_WEIGHT_SCALE, MASK_CARE_WEIGHT, careWeightTarget),
     },
     {
+      // The quiz asks no direction question, so every profile still aims at
+      // `ausgeglichen`. A moisture mask sits inside a balanced plan, so — like
+      // the scalp row — the product value covers the target instead of
+      // equalling it, and this row never deviates.
       label: "Pflegerichtung",
-      productValue: CARE_DIRECTION_TARGET,
+      productValue: MASK_CARE_DIRECTION,
       targetValue: CARE_DIRECTION_TARGET,
       status: "ok",
     },
     {
       label: "Repair-Pflege",
-      productValue: "mittel",
+      productValue: MASK_REPAIR,
       targetValue: repairTarget,
-      status: scaleStatus(REPAIR_SCALE, "mittel", repairTarget),
+      status: scaleStatus(REPAIR_SCALE, MASK_REPAIR, repairTarget),
     },
   ]
   return { product: MASK, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }

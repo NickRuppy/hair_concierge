@@ -1,19 +1,6 @@
-import type { ScanExampleCard as ScanExampleCardModel } from "@/lib/quiz/scan-insert-examples"
+import Image from "next/image"
 
-/** Generic bottle silhouette — the example product carries no packshot. */
-function BottleGlyph() {
-  return (
-    <svg aria-hidden="true" className="h-[22px] w-[22px]" fill="none" viewBox="0 0 24 24">
-      <path
-        d="M10 2.75h4v2.5l1.6 2.1a3 3 0 0 1 .65 1.85v9.05a3 3 0 0 1-3 3h-4.5a3 3 0 0 1-3-3V9.2a3 3 0 0 1 .65-1.85L10 5.25v-2.5Z"
-        stroke="var(--brand-plum)"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-      />
-      <path d="M6.75 13.5h10.5" stroke="var(--brand-plum)" strokeWidth="1.5" />
-    </svg>
-  )
-}
+import type { ScanExampleCard as ScanExampleCardModel } from "@/lib/quiz/scan-insert-examples"
 
 /**
  * The scanner verdict floating over the photo of a scan insert. It is marked as
@@ -27,8 +14,15 @@ export function ScanExampleCard({ card }: { card: ScanExampleCardModel }) {
         Beispiel
       </span>
       <div className="flex items-center gap-2.5">
-        <div className="grid h-10 w-10 flex-none place-items-center rounded-[10px] bg-[var(--brand-plum-ice)]">
-          <BottleGlyph />
+        {/* The real packshot, on the same white tile every product card uses. */}
+        <div className="relative h-10 w-10 flex-none overflow-hidden rounded-[10px] bg-white shadow-[inset_0_0_0_1px_rgba(42,24,69,0.12)]">
+          <Image
+            alt=""
+            className="object-contain p-[3px]"
+            fill
+            sizes="40px"
+            src={card.product.imageSrc}
+          />
         </div>
         <div className="min-w-0">
           <p className="text-[12.5px] font-bold leading-[1.25] text-[var(--brand-plum-darkest)]">
