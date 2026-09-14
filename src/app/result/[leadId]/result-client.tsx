@@ -25,6 +25,7 @@ import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
+import type { TrialOfferPricing } from "@/components/billing/trial-offer"
 import type { FunnelAnalyticsEnvelope, OfferEntryContext } from "@/lib/analytics/events"
 import type { FunnelOfferFieldTest, FunnelOfferPartnerAccess } from "@/funnels/types"
 
@@ -52,6 +53,7 @@ export function ResultPageClient({
   offerTracking = null,
   offerVariant = "default",
   pricingCatalog,
+  trialOfferPricing = null,
 }: {
   showQuizRestart?: boolean
   leadId: string
@@ -76,6 +78,7 @@ export function ResultPageClient({
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   pricingCatalog?: SubscriptionPricingCatalog
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
   const resolvedPricingCatalog = pricingCatalog ?? "standard"
@@ -113,6 +116,7 @@ export function ResultPageClient({
         offerTracking={offerTracking}
         offerVariant={offerVariant}
         pricingCatalog={pricingCatalog}
+        trialOfferPricing={trialOfferPricing}
       />
     )
   }
@@ -142,6 +146,7 @@ export function ResultPageClient({
       offerVariant={offerVariant}
       pricingCatalog={resolvedPricingCatalog}
       pricingCatalogWasProvided={pricingCatalogWasProvided}
+      trialOfferPricing={trialOfferPricing}
       quizAnswers={quizAnswers}
       regularFieldTest={regularFieldTest}
       partnerAccess={partnerAccess}
@@ -162,6 +167,7 @@ function LegacyResultPageClient({
   offerVariant,
   pricingCatalog,
   pricingCatalogWasProvided,
+  trialOfferPricing,
   quizAnswers,
   regularFieldTest,
   partnerAccess,
@@ -178,6 +184,7 @@ function LegacyResultPageClient({
   offerVariant: string
   pricingCatalog: SubscriptionPricingCatalog
   pricingCatalogWasProvided: boolean
+  trialOfferPricing: TrialOfferPricing | null
   quizAnswers: QuizAnswers
   regularFieldTest?: FunnelOfferFieldTest | null
   partnerAccess?: FunnelOfferPartnerAccess | null
@@ -240,6 +247,7 @@ function LegacyResultPageClient({
             ? (getSubscriptionPlanReferencePrices(pricingCatalog) ?? QUIZ_RESULT_REFERENCE_PRICES)
             : QUIZ_RESULT_REFERENCE_PRICES
         }
+        trialOfferPricing={trialOfferPricing}
       />
     ),
     regularFieldTest,

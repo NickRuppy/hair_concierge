@@ -9,12 +9,23 @@ import { SiteFooter } from "../src/components/landing/site-footer"
 
 let MethodikContent: (typeof import("../src/app/methodik/page"))["MethodikContent"]
 let NotFound: (typeof import("../src/app/not-found"))["default"]
+let AgbPage: (typeof import("../src/app/agb/page"))["default"]
+let WiderrufPage: (typeof import("../src/app/widerruf/page"))["default"]
+let DatenschutzPage: (typeof import("../src/app/datenschutz/page"))["default"]
 
 test.before(async () => {
   const methodikModule = await import("../src/app/methodik/page")
   const notFoundModule = await import("../src/app/not-found")
   MethodikContent = methodikModule.MethodikContent
   NotFound = notFoundModule.default
+  const [agb, widerruf, datenschutz] = await Promise.all([
+    import("../src/app/agb/page"),
+    import("../src/app/widerruf/page"),
+    import("../src/app/datenschutz/page"),
+  ])
+  AgbPage = agb.default
+  WiderrufPage = widerruf.default
+  DatenschutzPage = datenschutz.default
 })
 
 test("Methodik shows the required trust, commercial, ownership, and medical boundaries", () => {
@@ -137,30 +148,70 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.doesNotMatch(termsSource, /Diagnosen, Routinen, Produktempfehlungen/)
 })
 
-test("legal pages distinguish the one-time personal plan from memberships", () => {
-  const termsSource = readFileSync("src/app/agb/page.tsx", "utf8")
-  const withdrawalSource = readFileSync("src/app/widerruf/page.tsx", "utf8")
-  const privacySource = readFileSync("src/app/datenschutz/page.tsx", "utf8")
+function renderedText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
 
-  assert.match(termsSource, /Einmalkauf persönlicher Haarplan/)
-  assert.match(termsSource, /kein Abonnement und keine automatische Verlängerung/)
-  assert.match(termsSource, /14-Tage-Geld-zurück-Garantie/)
-  assert.match(termsSource, /Beim Einmalkauf des\s+persönlichen Haarplans/)
-  assert.match(withdrawalSource, /14-Tage-Geld-zurück-Garantie/)
-  assert.match(privacySource, /Mitgliedschaft oder eines Einmalkaufs/)
-  assert.match(privacySource, /Mitgliedschaften und Einmalkäufe/)
+test("legal pages preserve existing one-time purchases without offering new ones in the trial launch", () => {
+  const terms = renderedText(renderToStaticMarkup(<AgbPage />))
+  const withdrawal = renderedText(renderToStaticMarkup(<WiderrufPage />))
+  const privacy = renderedText(renderToStaticMarkup(<DatenschutzPage />))
+
+  assert.match(
+    terms,
+    /Bereits gekaufte persönliche Haarpläne bleiben Einmalkäufe ohne automatische Verlängerung/,
+  )
+  assert.match(terms, /Diese Bestimmungen bieten keinen neuen Quartalsplan oder Einmalkauf an/)
+  assert.match(
+    terms,
+    /Für bereits abgeschlossene Einmalkäufe des persönlichen Haarplans gilt zusätzlich die bei Abschluss zugesagte 14-Tage-Geld-zurück-Garantie/,
+  )
+  assert.match(
+    terms,
+    /vollständige Rückerstattung\. Gesetzliche Rechte werden dadurch nicht eingeschränkt/,
+  )
+  assert.match(
+    terms,
+    /Beim Einmalkauf des persönlichen Haarplans richtet sich der Zugang nach dem im Checkout beschriebenen Leistungsumfang/,
+  )
+  assert.match(withdrawal, /14-Tage-Geld-zurück-Garantie/)
+  assert.match(privacy, /Mitgliedschaft oder eines Einmalkaufs/)
+  assert.match(privacy, /Mitgliedschaften und Einmalkäufe/)
 })
 
-test("membership terms stay amount-neutral and describe persistent launch pricing truthfully", () => {
-  const termsSource = readFileSync("src/app/agb/page.tsx", "utf8")
+test("rendered membership terms disclose approved trial prices and preserve legacy price promises", () => {
+  const termsHtml = renderToStaticMarkup(<AgbPage />)
+  const terms = renderedText(termsHtml)
 
-  assert.match(termsSource, /Monatsplan:[\s\S]*monatliche Abrechnung/)
-  assert.match(termsSource, /Quartalsplan:[\s\S]*Abrechnung alle drei\s+Monate/)
-  assert.match(termsSource, /Jahresplan:[\s\S]*jährliche Abrechnung/)
-  assert.match(termsSource, /Gesamtpreis je Abrechnungsperiode/)
-  assert.match(termsSource, /bis zur Kündigung gültig/)
-  assert.match(termsSource, /folgenden Verlängerungen derselben Mitgliedschaft/)
-  assert.doesNotMatch(termsSource, /(?:14|34|99|9|19|69),99\s*€/)
-  assert.doesNotMatch(termsSource, /(?:11,66|8,33)\s*€/)
-  assert.doesNotMatch(termsSource, /ersten Abrechnungsbetrag/)
+  // Approved trial contract supersedes the old amount-neutral/current-quarter
+  // offering assertion; grandfathered contracts retain their actual promises.
+  assert.match(terms, /Test: 7 Tage kostenlos ab erfolgreicher Autorisierung des Zahlungsmittels/)
+  assert.match(terms, /Monatsplan: danach 9,99 € pro Monat/)
+  assert.match(terms, /Jahresplan: 69,99 € für das erste bezahlte Jahr, danach 99,99 € jährlich/)
+  assert.match(terms, /Der Einführungspreis gilt nur für das erste bezahlte Jahr/)
+  assert.match(terms, /Die erste volle bezahlte Laufzeit beginnt erst mit erfolgreicher Zahlung/)
+  assert.match(
+    terms,
+    /Für bereits bestehende Verträge bleiben die bei ihrem Abschluss vereinbarten Preise und Konditionen maßgeblich, einschließlich ausdrücklich bis zur Kündigung zugesagter Einführungspreise/,
+  )
+  assert.match(terms, /stellen bestehende Verträge nicht automatisch auf den kostenlosen Test um/)
+  assert.doesNotMatch(termsHtml, /<strong[^>]*>Quartalsplan:/)
+
+  assert.match(
+    terms,
+    /Danach läuft der Vertrag auf unbestimmte Zeit weiter; es entsteht keine neue feste Jahresbindung/,
+  )
+  assert.match(
+    terms,
+    /Nach dem ersten Jahr kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen/,
+  )
+  assert.match(
+    terms,
+    /nach dem wirksamen Vertragsende erstatten wir ungenutztes, im Voraus gezahltes Entgelt zeitanteilig/,
+  )
+  assert.match(terms, /Widerrufsrecht von 14 Tagen ab Vertragsschluss/)
+  assert.match(terms, /Die Nutzung des Tests bedeutet keinen Verzicht auf das Widerrufsrecht/)
 })

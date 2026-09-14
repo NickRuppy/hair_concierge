@@ -6,6 +6,7 @@ import type {
   SupabaseBillingClient,
 } from "./types"
 import { findCurrentOneTimePurchaseForUser, resolveOneTimeAccessStateForUser } from "./purchases"
+import { resolveBillingTrialAccess } from "./trial-access-projection"
 
 type LegacyProfileSubscription = {
   id: string
@@ -23,6 +24,12 @@ export interface ManualAccessGrantRow {
 
 const OPEN_ENTITLEMENTS = new Set<BillingEntitlementStatus>(["active", "past_due"])
 const ACCESS_ALREADY_EXISTS_ERROR = "User already has access through an existing subscription"
+export class CheckoutAccessAlreadyExistsError extends Error {
+  constructor() {
+    super(ACCESS_ALREADY_EXISTS_ERROR)
+    this.name = "CheckoutAccessAlreadyExistsError"
+  }
+}
 
 /**
  * Grace window after `current_period_end` during which a row with an OPEN
@@ -47,9 +54,19 @@ export async function upsertBillingSubscription(
   const {
     provider_subscriber_email,
     cancel_scheduled_at,
+    trial_enrollment_id,
     metadata: inputMetadata,
     ...subscriptionInput
   } = input
+  if (
+    existing?.trial_enrollment_id != null &&
+    trial_enrollment_id !== undefined &&
+    trial_enrollment_id !== existing.trial_enrollment_id
+  ) {
+    throw new Error("Billing trial enrollment link cannot be reassigned or cleared")
+  }
+  const preservedTrialEnrollmentId =
+    trial_enrollment_id !== undefined ? trial_enrollment_id : existing?.trial_enrollment_id
   const row = {
     provider_customer_id: existing?.provider_customer_id ?? null,
     provider_subscriber_email:
@@ -64,6 +81,9 @@ export async function upsertBillingSubscription(
         ? cancel_scheduled_at
         : (existing?.cancel_scheduled_at ?? null),
     cancelled_at: existing?.cancelled_at ?? null,
+    ...(preservedTrialEnrollmentId != null
+      ? { trial_enrollment_id: preservedTrialEnrollmentId }
+      : {}),
     metadata: {
       ...(existing?.metadata ?? {}),
       ...(inputMetadata ?? {}),
@@ -111,14 +131,7 @@ export async function findCurrentBillingSubscriptionsForUser(
   userId: string,
   now: Date = new Date(),
 ): Promise<BillingSubscriptionRow[]> {
-  const { data, error } = await supabase
-    .from("billing_subscriptions")
-    .select("*")
-    .eq("user_id", userId)
-
-  if (error) throw error
-
-  const rows = ((data as BillingSubscriptionRow[] | null) ?? []).filter((row) =>
+  const rows = (await findBillingSubscriptionsForUser(supabase, userId)).filter((row) =>
     hasCurrentBillingAccess(row, now),
   )
   rows.sort((left, right) => {
@@ -138,16 +151,16 @@ export async function findVisibleBillingSubscriptionForUser(
 ): Promise<BillingSubscriptionRow | null> {
   const { data, error } = await supabase
     .from("billing_subscriptions")
-    .select(
-      "id, user_id, provider, provider_customer_id, provider_subscriber_email, provider_subscription_id, provider_status, entitlement_status, interval, current_period_end, cancel_at_period_end, cancel_scheduled_at, cancelled_at, metadata, created_at, updated_at",
-    )
+    // Keep the server-derived trial projection intact; `*` also lets code
+    // deployed before the migration continue to read legacy rows safely.
+    .select("*")
     .eq("user_id", userId)
     .in("entitlement_status", ["active", "past_due", "canceled"])
     .order("current_period_end", { ascending: false })
 
   if (error) throw error
-  const rows = ((data as BillingSubscriptionRow[] | null) ?? []).filter((row) =>
-    hasCurrentBillingAccess(row, now),
+  const rows = ((data as BillingSubscriptionRow[] | null) ?? []).filter(
+    (row) => !row.metadata?.trial_management_superseded_by && hasCurrentBillingAccess(row, now),
   )
   return rows[0] ?? null
 }
@@ -157,20 +170,24 @@ export async function assertCanStartCheckout(
   userId: string,
   now: Date = new Date(),
 ): Promise<void> {
-  const current = await findCurrentBillingSubscriptionForUser(supabase, userId, now)
-  if (current) {
-    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+  const rows = await findBillingSubscriptionsForUser(supabase, userId)
+  if (rows.some((row) => hasCurrentBillingAccess(row, now))) {
+    throw new CheckoutAccessAlreadyExistsError()
   }
 
   const oneTimeAccessState = await resolveOneTimeAccessStateForUser(supabase, userId)
   if (oneTimeAccessState === "active" || oneTimeAccessState === "paid_pending") {
-    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+    throw new CheckoutAccessAlreadyExistsError()
   }
 
   const manualGrant = await findCurrentManualAccessGrant(supabase, { userId }, now)
   if (manualGrant) {
-    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+    throw new CheckoutAccessAlreadyExistsError()
   }
+
+  // An expired or malformed trial cohort must not recover access from the
+  // legacy profile mirror. It may still start an explicitly paid checkout.
+  if (hasTrialAccessMarker(rows, now)) return
 
   const { data, error } = await supabase
     .from("profiles")
@@ -182,7 +199,7 @@ export async function assertCanStartCheckout(
   const profile = data as LegacyProfileSubscription | null
 
   if (profile && hasCurrentLegacyProfileAccess(profile, now)) {
-    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+    throw new CheckoutAccessAlreadyExistsError()
   }
 }
 
@@ -193,7 +210,7 @@ export async function assertCanStartCheckoutForEmail(
 ): Promise<void> {
   const manualGrant = await findCurrentManualAccessGrant(supabase, { email }, now)
   if (manualGrant) {
-    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+    throw new CheckoutAccessAlreadyExistsError()
   }
 
   const { data, error } = await supabase
@@ -214,14 +231,16 @@ export async function hasCurrentAppAccess(
   lookup: { userId: string; email?: string | null },
   now: Date = new Date(),
 ): Promise<boolean> {
-  const current = await findCurrentBillingSubscriptionForUser(supabase, lookup.userId, now)
-  if (current) return true
+  const rows = await findBillingSubscriptionsForUser(supabase, lookup.userId)
+  if (rows.some((row) => hasCurrentBillingAccess(row, now))) return true
 
   const purchase = await findCurrentOneTimePurchaseForUser(supabase, lookup.userId)
   if (purchase) return true
 
   const manualGrant = await findCurrentManualAccessGrant(supabase, lookup, now)
   if (manualGrant) return true
+
+  if (hasTrialAccessMarker(rows, now)) return false
 
   const { data, error } = await supabase
     .from("profiles")
@@ -235,19 +254,22 @@ export async function hasCurrentAppAccess(
 }
 
 /**
- * Provider, one-time, and legacy-profile access only. This deliberately
- * excludes every manual grant so a revoked field-test grant cannot be
- * mistaken for an independent paid entitlement.
+ * Product access from provider billing, one-time purchases, and legacy
+ * profiles only; it is not a revenue classification. Active verified trials
+ * are included so partner/fresh-start resets keep independently saved work.
+ * Manual grants are deliberately excluded so a revoked field-test grant
+ * cannot be mistaken for an independent entitlement.
  */
 export async function hasCurrentPaidAppAccess(
   supabase: SupabaseBillingClient,
   lookup: { userId: string },
   now: Date = new Date(),
 ): Promise<boolean> {
-  const current = await findCurrentBillingSubscriptionForUser(supabase, lookup.userId, now)
-  if (current) return true
+  const rows = await findBillingSubscriptionsForUser(supabase, lookup.userId)
+  if (rows.some((row) => hasCurrentBillingAccess(row, now))) return true
   const purchase = await findCurrentOneTimePurchaseForUser(supabase, lookup.userId)
   if (purchase) return true
+  if (hasTrialAccessMarker(rows, now)) return false
   const { data, error } = await supabase
     .from("profiles")
     .select("subscription_status, current_period_end")
@@ -350,6 +372,9 @@ export function hasCurrentBillingAccess(
   row: BillingSubscriptionRow,
   now: Date = new Date(),
 ): boolean {
+  const trialAccess = resolveBillingTrialAccess(row, now)
+  if (trialAccess !== null) return trialAccess.hasAccess
+
   if (OPEN_ENTITLEMENTS.has(row.entitlement_status)) {
     // Null current_period_end is legacy/incomplete billing_subscriptions
     // data (e.g. rows backfilled from profiles before a first webhook ever
@@ -363,6 +388,35 @@ export function hasCurrentBillingAccess(
     row.cancel_at_period_end &&
     isFutureIso(row.current_period_end, now)
   )
+}
+
+async function findBillingSubscriptionsForUser(
+  supabase: SupabaseBillingClient,
+  userId: string,
+): Promise<BillingSubscriptionRow[]> {
+  const { data, error } = await supabase
+    .from("billing_subscriptions")
+    .select("*")
+    .eq("user_id", userId)
+  if (error) throw error
+  return (data as BillingSubscriptionRow[] | null) ?? []
+}
+
+/**
+ * True when any billing row belongs to the trial cohort, including an expired
+ * or malformed projection. Callers that did not already load billing rows can
+ * use this to avoid restoring legacy profile-derived access for that cohort.
+ */
+export async function hasTrialBillingHistory(
+  supabase: SupabaseBillingClient,
+  userId: string,
+  now: Date = new Date(),
+): Promise<boolean> {
+  return hasTrialAccessMarker(await findBillingSubscriptionsForUser(supabase, userId), now)
+}
+
+function hasTrialAccessMarker(rows: BillingSubscriptionRow[], now: Date): boolean {
+  return rows.some((row) => resolveBillingTrialAccess(row, now) !== null)
 }
 
 export function hasCurrentLegacyProfileAccess(

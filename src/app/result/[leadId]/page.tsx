@@ -56,6 +56,8 @@ import {
 } from "@/lib/personal-plan-field-test"
 import { PERSONAL_PLAN_PRICING_EXPERIMENT } from "@/lib/funnel/personal-plan-pricing-experiment"
 import { resolvePartnerOfferAuthorization } from "@/lib/partner-access/offer"
+import { readTrialRuntime, resolveTrialOfferPricingForResult } from "@/lib/billing/trial-runtime"
+import { hasConsumedTrialHistory } from "@/lib/billing/trial-returning-customer"
 
 export const dynamic = "force-dynamic"
 
@@ -171,6 +173,7 @@ function parseQuizAnswers(raw: unknown): QuizAnswers | null {
 }
 
 async function getAuthenticatedResultAccess(): Promise<{
+  confirmedEmail: string | null
   hasAccess: boolean
   userId: string | null
 }> {
@@ -190,7 +193,7 @@ async function getAuthenticatedResultAccess(): Promise<{
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) return { hasAccess: false, userId: null }
+  if (!user) return { confirmedEmail: null, hasAccess: false, userId: null }
 
   const hasAccess = await hasCurrentAppAccess(supabase, {
     userId: user.id,
@@ -199,7 +202,11 @@ async function getAuthenticatedResultAccess(): Promise<{
     console.warn("[result-page] failed to resolve authenticated access", error)
     return false
   })
-  return { hasAccess, userId: user.id }
+  return {
+    confirmedEmail: user.email_confirmed_at && user.email ? user.email : null,
+    hasAccess,
+    userId: user.id,
+  }
 }
 
 async function hasTrustedPersonalPlanResultReturn(input: {
@@ -353,6 +360,24 @@ export default async function ResultPage({ params, searchParams }: Props) {
   }
 
   const hasAccess = authenticatedAccess.hasAccess
+  const trialRuntime = readTrialRuntime()
+  const hasConsumedHistory =
+    !hasAccess && trialRuntime && authenticatedAccess.userId
+      ? await hasConsumedTrialHistory(createAdminClient(), {
+          userId: authenticatedAccess.userId,
+          verifiedEmail: authenticatedAccess.confirmedEmail,
+          runtime: trialRuntime,
+        })
+      : false
+  // Existing trial customers explicitly choose paid recovery with their frozen
+  // terms; do not drop them into the legacy launch-price checkout.
+  if (hasConsumedHistory) redirect("/reactivate")
+  const trialOfferPricing = resolveTrialOfferPricingForResult({
+    confirmedEmail: authenticatedAccess.confirmedEmail,
+    hasAccess,
+    runtime: trialRuntime,
+    hasConsumedHistory,
+  })
   const partnerIntent = Boolean(lead.partner_access_invitation_id)
 
   const funnelContext =
@@ -500,6 +525,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
         offerTracking={offerTracking}
         offerVariant={offerVariant}
         pricingCatalog={pricingCatalog}
+        trialOfferPricing={trialOfferPricing}
         showQuizRestart={
           lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()
         }

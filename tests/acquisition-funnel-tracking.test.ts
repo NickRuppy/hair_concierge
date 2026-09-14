@@ -179,7 +179,11 @@ test("checkout return emits browser Subscribe only for subscription Stripe retur
 
   assert.match(
     source,
-    /if \(shouldTrackCheckoutReturnSubscriptionStarted\(\{ purchaseKind, sessionId \}\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
+    /if \(shouldTrackCheckoutReturnSubscriptionStarted\(\{[\s\S]*purchaseKind,[\s\S]*sessionId,[\s\S]*isTrialCheckout,[\s\S]*trialEnrollmentId,[\s\S]*\}\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
+  )
+  assert.match(
+    source,
+    /if \(purchase && !isTrialCheckout && !trialEnrollmentId\) \{[\s\S]*trackAppEvent\("purchase_completed"/,
   )
   assert.equal(
     shouldTrackCheckoutReturnSubscriptionStarted({ purchaseKind: "one_time", sessionId: "cs_123" }),
@@ -187,4 +191,15 @@ test("checkout return emits browser Subscribe only for subscription Stripe retur
   )
   assert.equal(shouldTrackCheckoutReturnSubscriptionStarted({ sessionId: "cs_123" }), true)
   assert.equal(shouldTrackCheckoutReturnSubscriptionStarted({ sessionId: "paypal:token" }), false)
+  assert.equal(
+    shouldTrackCheckoutReturnSubscriptionStarted({ sessionId: "cs_trial", isTrialCheckout: true }),
+    false,
+  )
+  assert.equal(
+    shouldTrackCheckoutReturnSubscriptionStarted({
+      sessionId: "cs_trial",
+      trialEnrollmentId: "trial-enrollment-1",
+    }),
+    false,
+  )
 })

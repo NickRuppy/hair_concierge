@@ -13,6 +13,28 @@ import type {
   SupabaseBillingAnalyticsClient,
 } from "../src/lib/billing/types"
 
+test("trial authorization can only queue the internal PostHog event, even with paid destinations requested", async () => {
+  for (const destinations of [undefined, ["customerio", "meta", "posthog", "funnel"] as const]) {
+    const { supabase, deliveries } = createSupabaseStub()
+    await createBillingAnalyticsEvent(
+      supabase,
+      {
+        eventKey: "stripe:trial_started:enrollment",
+        eventName: "trial_started",
+        userId: "user-123",
+        provider: "stripe",
+        occurredAt: "2026-09-14T12:00:00.000Z",
+        payload: { value: 0 },
+      },
+      { dispatch: false, ...(destinations ? { destinations: [...destinations] } : {}) },
+    )
+    assert.deepEqual(
+      deliveries.map((row) => row.destination),
+      ["posthog"],
+    )
+  }
+})
+
 function createSupabaseStub(options: { profileLookupErrors?: number } = {}) {
   const outbox: BillingAnalyticsOutboxRow[] = []
   const deliveries: BillingAnalyticsDeliveryRow[] = []

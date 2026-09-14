@@ -64,6 +64,12 @@ import {
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { createHash, timingSafeEqual } from "node:crypto"
 import type Stripe from "stripe"
+import { readTrialRuntime, isTrialEnrollmentAllowed } from "@/lib/billing/trial-runtime"
+import {
+  createTrialIdentityClaims,
+  type TrialIdentityInput,
+} from "@/lib/billing/trial-identity-claims"
+import { createDurableStripeTrialCheckout } from "@/lib/stripe/trial-checkout"
 
 const PREPARED_CHECKOUT_MINIMUM_TTL_SECONDS = 30 * 60
 const PREPARED_CHECKOUT_EXPIRY_MARGIN_SECONDS = 60
@@ -88,6 +94,7 @@ export type CheckoutRequestSource = "pricing_page" | "quiz_result_offer" | "prem
 
 export const StripeCheckoutSessionRequestSchema = z
   .object({
+    trial: z.literal(true).optional(),
     interval: z.enum(["month", "quarter", "year"]).optional(),
     purchaseKind: z.literal(PERSONAL_PLAN_ONCE_KIND).optional(),
     funnelSessionId: z.string().uuid().optional(),
@@ -117,6 +124,7 @@ export const StripeCheckoutSessionRequestSchema = z
   .superRefine(
     (
       {
+        trial,
         action,
         checkoutAttemptId,
         checkoutSessionAttemptId,
@@ -137,6 +145,25 @@ export const StripeCheckoutSessionRequestSchema = z
       },
       context,
     ) => {
+      // Trial creation is an explicit protocol; an unavailable trial must never
+      // fall through to an immediate paid purchase. Reactivation is integrated
+      // separately with its existing reservation and continuation contract.
+      if (
+        trial &&
+        (source !== "quiz_result_offer" ||
+          action !== "create" ||
+          (interval !== "month" && interval !== "year") ||
+          !leadId ||
+          !checkoutAttemptId ||
+          !checkoutSessionAttemptId ||
+          purchaseKind ||
+          checkoutContext)
+      )
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "invalid trial checkout contract",
+          path: ["trial"],
+        })
       if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
         context.addIssue({
           code: z.ZodIssueCode.custom,
@@ -493,6 +520,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
   const {
+    trial,
     interval,
     purchaseKind,
     funnelSessionId,
@@ -512,6 +540,9 @@ export async function POST(req: NextRequest) {
     presentation,
   } = parsed.data
   const isOneTimePurchase = purchaseKind === PERSONAL_PLAN_ONCE_KIND
+  if (isOneTimePurchase) {
+    return NextResponse.json({ error: "one_time_purchase_retired" }, { status: 410 })
+  }
   const isPremiumSheetCheckout = source === "premium_sheet"
   if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
@@ -880,6 +911,124 @@ export async function POST(req: NextRequest) {
     const leadFunnelContext = resolvedLeadId
       ? await resolveFunnelContextForLead(resolvedLeadId, exactOfferFunnelSessionId)
       : null
+    if (trial) {
+      const trialRuntime = readTrialRuntime()
+      const verifiedEmail =
+        user?.email_confirmed_at && user.email ? user.email.trim().toLowerCase() : ""
+      if (!trialRuntime || !isTrialEnrollmentAllowed(trialRuntime, verifiedEmail)) {
+        return NextResponse.json({ error: "trial_unavailable" }, { status: 404 })
+      }
+      if (!resolvedLeadId || !customerEmail) {
+        return NextResponse.json({ error: "trial_identity_required" }, { status: 400 })
+      }
+      if (
+        authenticatedUserId &&
+        user?.email?.trim().toLowerCase() !== customerEmail.trim().toLowerCase()
+      ) {
+        return NextResponse.json({ error: "trial_identity_mismatch" }, { status: 409 })
+      }
+      const trialFunnelContext = resolveCheckoutFunnelContext({
+        shouldRecord: true,
+        exactOfferFunnelSessionId,
+        leadFunnelContext,
+        cookieFunnelContext: await resolveFunnelCookieContext(
+          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+        ),
+      })
+      reportMissingExactOfferFunnelContext({
+        shouldRecord: true,
+        exactOfferFunnelSessionId,
+        funnelContext: trialFunnelContext,
+        interval: subscriptionInterval,
+      })
+      if (
+        trialFunnelContext &&
+        "isInternalTest" in trialFunnelContext &&
+        typeof trialFunnelContext.isInternalTest === "boolean"
+      )
+        checkoutIsInternalTest = trialFunnelContext.isInternalTest
+      const identities: TrialIdentityInput[] = authenticatedUserId
+        ? [{ kind: "account", namespace: "chaarlie", normalizedIdentity: authenticatedUserId }]
+        : []
+      if (verifiedEmail)
+        identities.push({
+          kind: "verified_email",
+          namespace: "chaarlie",
+          normalizedIdentity: verifiedEmail,
+        })
+      const result = await createDurableStripeTrialCheckout(
+        {
+          scope: authenticatedUserId
+            ? { kind: "user", id: authenticatedUserId }
+            : { kind: "lead", id: resolvedLeadId },
+          clientAttemptId: checkoutSessionAttemptId!,
+          interval: interval as "month" | "year",
+          serverVerifiedEmail: verifiedEmail,
+          claims: identities.length
+            ? createTrialIdentityClaims(identities, trialRuntime.identityKeys)
+            : [],
+          checkout: {
+            origin,
+            customerEmail,
+            leadId: resolvedLeadId,
+            funnelSessionId: trialFunnelContext?.sessionId,
+            funnelPackageKey: trialFunnelContext?.packageKey,
+            presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
+            metadata: {
+              checkout_attempt_id: checkoutAttemptId!,
+              ...(checkoutIsInternalTest !== undefined
+                ? { is_internal_test: String(checkoutIsInternalTest) }
+                : {}),
+            },
+          },
+        },
+        { supabase: getAdminSupabase(), stripe, runtime: trialRuntime },
+      )
+      if (result.session.status === "complete")
+        return NextResponse.json({
+          statusUrl: `/welcome?session_id=${encodeURIComponent(result.session.id)}`,
+        })
+      if (result.session.status === "expired")
+        return NextResponse.json(
+          {
+            error: "trial_checkout_expired",
+          },
+          { status: 409 },
+        )
+      const trialResponse = NextResponse.json({ client_secret: result.session.client_secret })
+      if (trialFunnelContext) {
+        const touch = await resolvePendingFunnelTouchValue(
+          cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
+          trialFunnelContext,
+        )
+        const recorded = await recordFunnelEvent({
+          context: trialFunnelContext,
+          eventId: funnelEventId ?? crypto.randomUUID(),
+          milestone: "checkout_started",
+          leadId: resolvedLeadId,
+          userId: user?.id,
+          checkoutProvider: "stripe",
+          checkoutReference: result.session.id,
+          touch,
+          properties: {
+            source,
+            interval: subscriptionInterval,
+            checkout_attempt_id: checkoutAttemptId,
+            currency: "EUR",
+            plan_id: `trial_v1:${interval}`,
+            value: 0,
+          },
+        })
+          .then(() => true)
+          .catch((error) => {
+            console.warn("[funnel] Stripe trial checkout tracking failed", error)
+            return false
+          })
+        if (recorded && touch)
+          trialResponse.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
+      }
+      return trialResponse
+    }
     const pricingCatalog = resolveCheckoutPricingCatalog({
       source,
       launchPricingEnabled: isPersonalPlanLaunchPricingEnabled(),
@@ -1251,6 +1400,7 @@ export async function POST(req: NextRequest) {
       leadId,
       source,
     })
+    if (trial) return NextResponse.json({ error: "trial_checkout_unavailable" }, { status: 503 })
     if (checkoutContext === "membership_reactivation") {
       if (reactivationReservation) {
         reactivationReservation =

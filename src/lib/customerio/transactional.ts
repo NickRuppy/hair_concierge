@@ -12,6 +12,15 @@ export interface CustomerIoTransactionalEmailPayload {
   to: string
   transactionalMessageId: string | number
   messageData: CustomerIoMessageData
+  /** Optional complete API-owned content. Existing template-only callers are unchanged. */
+  inlineContent?: {
+    from: string
+    subject: string
+    htmlBody: string
+    textBody: string
+    autoCreate?: boolean
+    tracked?: boolean
+  }
 }
 
 export interface CustomerIoTransactionalEmailRequest {
@@ -23,6 +32,12 @@ export interface CustomerIoTransactionalEmailRequest {
     message_data: CustomerIoMessageData
     send_to_unsubscribed: true
     disable_message_retention: true
+    from?: string
+    subject?: string
+    body?: string
+    body_plain?: string
+    auto_create?: boolean
+    tracked?: boolean
   }
 }
 
@@ -70,6 +85,20 @@ export function buildCustomerIoTransactionalEmailRequest(
       message_data: payload.messageData,
       send_to_unsubscribed: true,
       disable_message_retention: true,
+      ...(payload.inlineContent
+        ? {
+            from: payload.inlineContent.from,
+            subject: payload.inlineContent.subject,
+            body: payload.inlineContent.htmlBody,
+            body_plain: payload.inlineContent.textBody,
+            ...(payload.inlineContent.autoCreate !== undefined
+              ? { auto_create: payload.inlineContent.autoCreate }
+              : {}),
+            ...(payload.inlineContent.tracked !== undefined
+              ? { tracked: payload.inlineContent.tracked }
+              : {}),
+          }
+        : {}),
     },
   }
 }

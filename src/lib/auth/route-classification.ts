@@ -16,6 +16,7 @@ const PUBLIC_EXACT_ROUTES = [
   "/icon",
   "/impressum",
   "/kontakt",
+  "/kuendigen",
   "/methodik",
   "/opengraph-image",
   "/pricing",
@@ -32,6 +33,7 @@ const PUBLIC_EXACT_ROUTES = [
   "/warteliste/umfrage",
   "/warteliste/danke",
   "/widerruf",
+  "/widerruf/erklaeren",
 ]
 
 const PUBLIC_ROUTE_PREFIXES = [
@@ -50,6 +52,7 @@ const PUBLIC_ROUTE_PREFIXES = [
 ]
 
 const PUBLIC_API_EXACT_ROUTES = [
+  "/api/billing/contract-declarations",
   "/api/analytics/meta-offer-view",
   "/api/analytics/offer-engaged",
   "/api/auth/callback",

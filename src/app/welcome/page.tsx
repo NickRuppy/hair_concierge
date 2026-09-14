@@ -111,25 +111,31 @@ async function renderStripeWelcome(session_id: string) {
   const email = session.customer_details?.email
   if (!email) redirect("/")
   const isOneTimePurchase = session.metadata?.product_kind === "personal_plan_once"
+  // Suppression only: a provider marker never grants trial access. Admission is
+  // independently verified by ensureCheckoutAccount during account completion.
+  const isTrialCheckout = Object.keys(session.metadata ?? {}).some((key) =>
+    key.startsWith("trial_"),
+  )
   const admin = createAdminClient()
   const firstTimeDestination = await resolveCheckoutFirstTimeDestination(
     admin,
     session.metadata?.lead_id,
     session.metadata?.checkout_context,
   )
-  const purchaseAnalytics = isOneTimePurchase
-    ? null
-    : await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
-        console.error("[welcome] purchase analytics unavailable:", err)
-        captureCheckoutException(err, {
-          provider: "stripe",
-          stage: "checkout_return",
-          source: "welcome",
-          stripeSessionId: session_id,
-          reason: "purchase_analytics_unavailable",
+  const purchaseAnalytics =
+    isOneTimePurchase || isTrialCheckout
+      ? null
+      : await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
+          console.error("[welcome] purchase analytics unavailable:", err)
+          captureCheckoutException(err, {
+            provider: "stripe",
+            stage: "checkout_return",
+            source: "welcome",
+            stripeSessionId: session_id,
+            reason: "purchase_analytics_unavailable",
+          })
+          return null
         })
-        return null
-      })
 
   const supabase = await createClient()
   const {
@@ -255,6 +261,7 @@ async function renderStripeWelcome(session_id: string) {
         }}
         email={email}
         purchase={purchaseAnalytics}
+        isTrialCheckout={isTrialCheckout}
         redirectTo={redirectTo}
         activationRedirectTo={firstTimeDestination}
         sessionId={session_id}
@@ -271,6 +278,7 @@ async function renderStripeWelcome(session_id: string) {
       }}
       email={email}
       purchase={purchaseAnalytics}
+      isTrialCheckout={isTrialCheckout}
       activationRedirectTo={firstTimeDestination}
       sessionId={session_id}
     />

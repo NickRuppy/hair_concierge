@@ -3,9 +3,19 @@ import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import {
+  assertCanStartCheckout,
+  assertCanStartCheckoutForEmail,
+  CheckoutAccessAlreadyExistsError,
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
 } from "@/lib/billing/subscriptions"
+import {
+  hasStripeTrialMarker,
+  prepareStripeTrialAccountAdmission,
+  admitStripeTrialAccount,
+  rejectStripeTrialForExistingAccess,
+  type StripeTrialRuntime,
+} from "./trial-account-admission"
 import { assertStripeCreatedAfterModeratorResetCutoff } from "@/lib/billing/moderator-reset-cutoff"
 import {
   activateVerifiedOneTimePayment,
@@ -38,6 +48,8 @@ export interface CheckoutActivationDeps {
   profileLinkMode?: "await" | "defer" | "skip"
   defer?: (work: () => void | Promise<void>) => void
   now?: () => Date
+  /** Kept unavailable until controlled deployment provisions the trial runtime. */
+  trialRuntime?: StripeTrialRuntime
   sendOneTimeConfirmation?: typeof sendPersonalPlanOneTimeConfirmation
 }
 
@@ -83,6 +95,9 @@ export interface CheckoutAccountResult {
   stripeSubscriptionId?: string
   subscriptionStatus?: string
   legacyQuizFuturePurchaseEligible?: boolean
+  trialEnrollmentId?: string
+  trialEndAt?: string
+  authorizationSucceededAt?: string
 }
 
 interface OneTimeCheckoutPaymentResult {
@@ -137,7 +152,7 @@ export interface RetrievedSub {
         id?: string
         interval?: string
         interval_count?: number
-        recurring?: { interval: string; interval_count: number }
+        recurring?: { interval: string; interval_count: number } | null
       }
     }>
   }
@@ -240,12 +255,25 @@ export async function ensureCheckoutAccount(
   deps: CheckoutActivationDeps,
 ): Promise<CheckoutAccountResult> {
   const startedAt = Date.now()
+  const now = deps.now?.() ?? new Date()
+  const trial = hasStripeTrialMarker(session)
+    ? await prepareStripeTrialAccountAdmission(
+        session.id,
+        session.metadata?.trial_enrollment_id,
+        deps,
+        now,
+      )
+    : null
+  // Trial identity and subscription must come from the same retrieved proof,
+  // never from browser parameters or a stale callback payload.
+  if (trial) session = trial.session
   const valid = assertCheckoutSessionShape(session)
   const sessionHash = checkoutSessionHash(valid.id).slice(0, 12)
   assertCheckoutPaymentAuthorized(session)
   assertCheckoutPreparationClaimed(session)
-  const sub = await retrieveCheckoutSubscription(deps.stripe, valid.subscriptionId)
-  assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
+  const sub: RetrievedSub =
+    trial?.subscription ?? (await retrieveCheckoutSubscription(deps.stripe, valid.subscriptionId))
+  if (!trial) assertCurrentCheckoutSubscription(sub, now)
 
   const retainedAccount = await resolveRetainedReactivationAccount(session, valid, sub, deps)
   if (retainedAccount) valid.email = retainedAccount.email
@@ -254,6 +282,23 @@ export async function ensureCheckoutAccount(
     (await measureCheckoutStep("profiles.findExisting", () =>
       findExistingProfile(deps, valid.email, valid.customerId, sub.id),
     ))
+
+  if (trial?.enrollment.user_id && existingProfile?.id !== trial.enrollment.user_id) {
+    throw new Error("Stripe trial owner is unavailable or changed")
+  }
+
+  if (trial && trial.enrollment.admission_status === "reserved") {
+    // Existing subscription, pending one-time purchase, manual access and the
+    // legacy mirror retain their current admission protections.
+    try {
+      if (existingProfile) await assertCanStartCheckout(deps.supabase, existingProfile.id, now)
+      await assertCanStartCheckoutForEmail(deps.supabase, valid.email, now)
+    } catch (error) {
+      if (error instanceof CheckoutAccessAlreadyExistsError)
+        await rejectStripeTrialForExistingAccess(trial, deps)
+      throw error
+    }
+  }
 
   let userId: string
   let canSetInitialPassword = false
@@ -279,6 +324,8 @@ export async function ensureCheckoutAccount(
     }
   }
 
+  if (trial) await admitStripeTrialAccount(trial, userId, deps)
+
   const price = sub.items.data[0].price
   const interval = intervalFromPrice({
     interval: price.recurring?.interval ?? price.interval ?? "",
@@ -296,7 +343,7 @@ export async function ensureCheckoutAccount(
           stripe_subscription_id: sub.id,
           subscription_status: "active",
           subscription_interval: interval,
-          current_period_end: subPeriodEndIso(sub),
+          current_period_end: trial?.authorization.trialEndAt ?? subPeriodEndIso(sub),
           subscription_tier_id: deps.premiumTierId,
         },
         retainedAccount?.profile,
@@ -305,10 +352,10 @@ export async function ensureCheckoutAccount(
 
   // Legacy checkout keeps its existing write order. For retained accounts, establish
   // billing ownership first so a late conflicting owner cannot grant profile access.
-  if (!retainedAccount) await writeProfile()
+  if (!retainedAccount && !trial) await writeProfile()
 
   await measureCheckoutStep("billing.upsertSubscription", () =>
-    (retainedAccount ? upsertRetainedBillingSubscription : upsertBillingSubscription)(
+    (retainedAccount || trial ? upsertRetainedBillingSubscription : upsertBillingSubscription)(
       deps.supabase,
       {
         user_id: userId,
@@ -318,23 +365,27 @@ export async function ensureCheckoutAccount(
         provider_status: sub.status ?? "active",
         entitlement_status: stripeEntitlementStatus(sub.status),
         interval,
-        current_period_end: subPeriodEndIso(sub),
-        cancel_at_period_end: false,
+        current_period_end: trial?.authorization.trialEndAt ?? subPeriodEndIso(sub),
+        cancel_at_period_end: trial?.subscription.cancel_at_period_end ?? false,
+        ...(trial ? { trial_enrollment_id: trial.enrollment.id } : {}),
         metadata: {
           checkout_session_id: valid.id,
           payment_status: session.payment_status ?? "unknown",
           ...stripePricingMetadata(price.id),
+          ...(trial
+            ? { trial_cohort: "trial_v1", trial_offer_version: trial.offer.offerVersion }
+            : {}),
         },
       },
     ),
   )
 
-  if (retainedAccount) await writeProfile()
+  if (retainedAccount || trial) await writeProfile()
 
   await linkCheckoutQuizProfile(session, deps, userId, valid.email)
   const subscriptionPaidAtSeconds = typeof sub.created === "number" ? sub.created : null
   const legacyQuizFuturePurchaseEligible =
-    typeof subscriptionPaidAtSeconds === "number"
+    !trial && typeof subscriptionPaidAtSeconds === "number"
       ? await resolveLegacyQuizFuturePurchaseEligibility(deps.supabase, {
           userId,
           leadId: session.metadata?.lead_id,
@@ -375,6 +426,13 @@ export async function ensureCheckoutAccount(
     stripeSubscriptionId: sub.id,
     subscriptionStatus: sub.status ?? "active",
     legacyQuizFuturePurchaseEligible,
+    ...(trial
+      ? {
+          trialEnrollmentId: trial.enrollment.id,
+          trialEndAt: trial.authorization.trialEndAt,
+          authorizationSucceededAt: trial.authorization.authorizationSucceededAt,
+        }
+      : {}),
   }
 }
 

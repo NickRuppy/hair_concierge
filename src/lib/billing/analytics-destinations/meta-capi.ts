@@ -89,6 +89,9 @@ function metaTraceId(responseBody: unknown) {
 export async function deliverBillingAnalyticsToMeta(
   input: BillingAnalyticsDeliveryInput,
 ): Promise<BillingAnalyticsDeliveryResult> {
+  if (input.event.event_name === "trial_started") {
+    return { ok: false, permanent: true, error: "trial_started is restricted to PostHog" }
+  }
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN
   const pixelId = process.env.META_PIXEL_ID ?? process.env.NEXT_PUBLIC_META_PIXEL_ID
   if (!accessToken) return { ok: false, skipped: true, error: "META_CAPI_ACCESS_TOKEN is not set" }

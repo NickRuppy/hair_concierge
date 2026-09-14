@@ -1,6 +1,12 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
+import { createRequire } from "node:module"
+import path from "node:path"
+import vm from "node:vm"
 import test from "node:test"
+import ts from "typescript"
+
+const require = createRequire(import.meta.url)
 
 const adminUsersRouteSource = readFileSync(
   new URL("../src/app/api/admin/users/route.ts", import.meta.url),
@@ -11,12 +17,99 @@ const adminUsersPageSource = readFileSync(
   "utf8",
 )
 
-test("admin users API merges visible billing subscription data with provider subscriber email", () => {
-  assert.match(adminUsersRouteSource, /createAdminClient/)
-  assert.match(adminUsersRouteSource, /loadVisibleBillingByUserId/)
-  assert.match(adminUsersRouteSource, /provider_subscriber_email/)
-  assert.match(adminUsersRouteSource, /hasCurrentBillingAccess/)
-  assert.match(adminUsersRouteSource, /current_billing_subscription/)
+test("admin users API merges visible billing subscription data with provider subscriber email", async () => {
+  const users = [{ id: "user-visible", email: "chaarlie@example.test" }, { id: "user-expired" }]
+  const visible = {
+    user_id: users[0].id,
+    provider: "paypal",
+    provider_subscriber_email: "paypal@example.test",
+    entitlement_status: "active",
+    current_period_end: null,
+    metadata: {},
+  }
+  const expired = {
+    ...visible,
+    user_id: users[1].id,
+    current_period_end: "2020-01-01T00:00:00Z",
+  }
+  let selected = ""
+  const filters: unknown[] = []
+  const profileQuery = {
+    select: () => profileQuery,
+    eq: () => profileQuery,
+    single: async () => ({ data: { is_admin: true } }),
+    order: () => profileQuery,
+    range: async () => ({ data: users, count: users.length, error: null }),
+  }
+  const billingQuery = {
+    select: (columns: string) => {
+      selected = columns
+      return billingQuery
+    },
+    in: (key: string, values: string[]) => {
+      filters.push([key, values])
+      return billingQuery
+    },
+    order: async () => ({
+      data: [visible, expired].map((row) =>
+        selected === "*"
+          ? row
+          : Object.fromEntries(
+              Object.entries(row).filter(([key]) =>
+                selected
+                  .split(",")
+                  .map((column) => column.trim())
+                  .includes(key),
+              ),
+            ),
+      ),
+      error: null,
+    }),
+  }
+  const mocks: Record<string, unknown> = {
+    "@/lib/supabase/server": {
+      createClient: async () => ({
+        auth: { getUser: async () => ({ data: { user: { id: "admin" } } }) },
+        from: (table: string) => {
+          assert.equal(table, "profiles")
+          return profileQuery
+        },
+      }),
+    },
+    "@/lib/supabase/admin": {
+      createAdminClient: () => ({
+        from: (table: string) => {
+          assert.equal(table, "billing_subscriptions")
+          return billingQuery
+        },
+      }),
+    },
+  }
+  const filename = path.resolve("src/app/api/admin/users/route.ts")
+  const code = ts.transpileModule(adminUsersRouteSource, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true },
+  }).outputText
+  const module = { exports: {} as { GET: (request: Request) => Promise<Response> } }
+  vm.runInThisContext(`(function(require,module,exports){${code}\n})`, { filename })(
+    (specifier: string) =>
+      mocks[specifier] ??
+      require(specifier.startsWith("@/") ? path.resolve("src", specifier.slice(2)) : specifier),
+    module,
+    module.exports,
+  )
+  const response = await module.exports.GET(new Request("https://example.test/api/admin/users"))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    users: [
+      { ...users[0], current_billing_subscription: visible },
+      { ...users[1], current_billing_subscription: null },
+    ],
+    total: 2,
+  })
+  assert.deepEqual(filters, [
+    ["user_id", users.map((user) => user.id)],
+    ["entitlement_status", ["active", "past_due", "canceled"]],
+  ])
 })
 
 test("admin users API returns a controlled response if billing lookup fails", () => {

@@ -139,3 +139,27 @@ test("treats network failures and malformed success receipts as ambiguous", asyn
     CustomerIoAmbiguousDeliveryError,
   )
 })
+
+test("inline required receipts preserve safe flags and provide complete per-send content without altering old callers", () => {
+  const request = buildCustomerIoTransactionalEmailRequest({
+    to: "lea@example.com",
+    transactionalMessageId: "required_contract_notice_v1",
+    messageData: { subject: "Bestätigung", receipt_text: "Text" },
+    inlineContent: {
+      from: '"Chaarlie" <info@chaarlie.de>',
+      subject: "Bestätigung",
+      htmlBody: "<p>Text</p>",
+      textBody: "Text",
+      autoCreate: true,
+      tracked: false,
+    },
+  })
+  assert.equal(request.body.from, '"Chaarlie" <info@chaarlie.de>')
+  assert.equal(request.body.subject, "Bestätigung")
+  assert.equal(request.body.body, "<p>Text</p>")
+  assert.equal(request.body.body_plain, "Text")
+  assert.equal(request.body.auto_create, true)
+  assert.equal(request.body.tracked, false)
+  assert.equal(request.body.send_to_unsubscribed, true)
+  assert.equal(request.body.disable_message_retention, true)
+})

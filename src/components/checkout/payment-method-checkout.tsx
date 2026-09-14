@@ -134,6 +134,8 @@ export function PaymentMethodCheckout({
   returnDestination,
   source,
   stripe,
+  trial = false,
+  trialTerms,
   visible = true,
   expressElementsEnabled = false,
 }: {
@@ -174,6 +176,8 @@ export function PaymentMethodCheckout({
   returnDestination?: string
   source: "pricing_page" | "quiz_result_offer"
   stripe: Promise<Stripe | null>
+  trial?: boolean
+  trialTerms?: string
   visible?: boolean
   expressElementsEnabled?: boolean
 }) {
@@ -233,6 +237,7 @@ export function PaymentMethodCheckout({
           checkoutContext={checkoutContext}
           interval={interval}
           leadId={leadId}
+          trial={trial}
           onCheckoutFailed={(failure) => {
             setPayPalReadyForCheckoutKey((readyCheckoutKey) =>
               readyCheckoutKey === checkoutKey ? null : readyCheckoutKey,
@@ -300,6 +305,10 @@ export function PaymentMethodCheckout({
         <p className="mb-3 rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-[12px] font-semibold leading-relaxed text-[var(--brand-plum-darkest)]">
           {providerLockCopy}
         </p>
+      ) : null}
+
+      {trialTerms ? (
+        <p className="mb-3 text-[12px] leading-relaxed text-[var(--text-caption)]">{trialTerms}</p>
       ) : null}
 
       {useOfferElementsCheckout ? (

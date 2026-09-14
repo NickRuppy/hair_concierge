@@ -2,15 +2,8 @@ import assert from "node:assert/strict"
 import { existsSync, readFileSync } from "node:fs"
 import test from "node:test"
 
-import { EMAIL_DELIVERABILITY_REJECTION_MESSAGE } from "../src/lib/email-deliverability-shared"
-import {
-  createWaitlistPostHandler,
-  WAITLIST_SIGNUP_RATE_LIMIT,
-} from "../src/app/api/waitlist/route"
-import {
-  createWaitlistSurveyPostHandler,
-  WAITLIST_SURVEY_RATE_LIMIT,
-} from "../src/app/api/waitlist/survey/route"
+import { createWaitlistPostHandler } from "../src/app/api/waitlist/route"
+import { createWaitlistSurveyPostHandler } from "../src/app/api/waitlist/survey/route"
 import {
   createWaitlistSurveyAccessGetHandler,
   WAITLIST_SURVEY_ACCESS_RATE_LIMIT,
@@ -24,114 +17,12 @@ const request = (body: unknown, headers?: HeadersInit) =>
     body: JSON.stringify(body),
   })
 
-const signupBody = { firstName: "Ada", email: "ada@example.com", marketingConsent: true }
-const deliverable = { ok: true as const, normalized: "ada@example.com", outcome: "mx" as const }
-
-function signupHandler(overrides: Record<string, unknown> = {}) {
-  const scheduled: Array<() => unknown> = []
-  return {
-    scheduled,
-    handler: createWaitlistPostHandler({
-      checkRateLimit: async () => ({ allowed: true }),
-      checkEmailDeliverability: async () => deliverable,
-      createAdminClient: () => ({}) as never,
-      saveWaitlistSignup: async () => ({
-        signupId: "signup-1",
-        surveyToken: "x".repeat(43),
-        duplicate: false,
-        surveyAlreadyCompleted: false,
-      }),
-      dispatchWaitlistCustomerIoForSignup: async () => undefined,
-      schedule: (callback: () => unknown) => {
-        scheduled.push(callback)
-      },
-      ...overrides,
-    } as never),
-  }
-}
-
-test("waitlist signup rejects malformed data", async () => {
-  let checks = 0
-  const { handler } = signupHandler({
-    checkEmailDeliverability: async () => {
-      checks += 1
-      return deliverable
-    },
-  })
-
-  const response = await handler(
-    request({ firstName: "", email: "not-an-email", marketingConsent: true }),
-  )
-  assert.equal(response.status, 400)
-  assert.equal(checks, 0)
-})
-
-test("waitlist signup requires explicit email consent", async () => {
-  const { handler } = signupHandler()
-  const response = await handler(request({ firstName: "Ada", email: "ada@example.com" }))
-  assert.equal(response.status, 400)
-})
-
-test("waitlist signup accepts only bounded canonical attribution fields", async () => {
-  let saved: Record<string, unknown> | undefined
-  const { handler } = signupHandler({
-    saveWaitlistSignup: async (_supabase: unknown, input: Record<string, unknown>) => {
-      saved = input
-      return {
-        signupId: "signup-1",
-        surveyToken: "x".repeat(43),
-        duplicate: false,
-        surveyAlreadyCompleted: false,
-      }
-    },
-  })
-  const accepted = await handler(
-    request({ ...signupBody, attribution: { utmSource: " instagram ", utmCampaign: "launch" } }),
-  )
-  assert.equal(accepted.status, 200)
-  assert.deepEqual(saved?.attribution, { utmSource: "instagram", utmCampaign: "launch" })
-
-  const rejected = await handler(
-    request({ ...signupBody, attribution: { email: "ada@example.com" } }),
-  )
-  assert.equal(rejected.status, 400)
-})
-
-test("waitlist signup returns a correction response before persistence", async () => {
-  let saves = 0
-  const { handler } = signupHandler({
-    checkEmailDeliverability: async () => ({
-      ok: false,
-      reason: "no_mx",
-      suggestion: "ada@gmail.com",
-    }),
-    saveWaitlistSignup: async () => {
-      saves += 1
-      throw new Error("must not save")
-    },
-  })
-
-  const response = await handler(request(signupBody))
-  assert.equal(response.status, 422)
+test("waitlist signup is a dependency-free retired endpoint", async () => {
+  const response = await createWaitlistPostHandler()(request({ unexpected: "ignored" }))
+  assert.equal(response.status, 410)
   assert.deepEqual(await response.json(), {
-    error: EMAIL_DELIVERABILITY_REJECTION_MESSAGE,
-    reason: "no_mx",
-    suggestion: "ada@gmail.com",
+    error: "Die Anmeldung zur Warteliste ist geschlossen.",
   })
-  assert.equal(saves, 0)
-})
-
-test("waitlist signup distinguishes exhausted and unavailable rate limiting", async () => {
-  assert.notEqual(WAITLIST_SIGNUP_RATE_LIMIT.prefix, WAITLIST_SURVEY_RATE_LIMIT.prefix)
-  assert.notEqual(WAITLIST_SURVEY_ACCESS_RATE_LIMIT.prefix, WAITLIST_SURVEY_RATE_LIMIT.prefix)
-  for (const [rateLimit, expected] of [
-    [{ allowed: false }, 429],
-    [{ allowed: false, error: "service_unavailable" }, 503],
-  ] as const) {
-    const { handler } = signupHandler({ checkRateLimit: async () => rateLimit })
-    const response = await handler(request(signupBody))
-    assert.equal(response.status, expected)
-  }
 })
 
 test("survey email access exchanges a valid capability for a narrow cookie and clean redirect", async () => {
@@ -192,105 +83,6 @@ test("survey email access rejects malformed capabilities and rate-limit failures
   )
   assert.equal(unavailableResponse.status, 503)
   assert.equal(unavailableResponse.headers.get("set-cookie"), null)
-})
-
-test("waitlist signup fails closed when its rate-limit service throws", async () => {
-  const { handler } = signupHandler({
-    checkRateLimit: async () => {
-      throw new Error("unavailable")
-    },
-  })
-  const response = await handler(request(signupBody))
-  assert.equal(response.status, 503)
-})
-
-test("waitlist signup succeeds only after persistence and defers Customer.io", async () => {
-  const calls: string[] = []
-  const { handler, scheduled } = signupHandler({
-    saveWaitlistSignup: async (_supabase: unknown, input: Record<string, unknown>) => {
-      calls.push(`save:${input.email}`)
-      return {
-        signupId: "signup-1",
-        surveyToken: "x".repeat(43),
-        duplicate: false,
-        surveyAlreadyCompleted: false,
-      }
-    },
-    dispatchWaitlistCustomerIoForSignup: async () => {
-      calls.push("dispatch")
-      throw new Error("temporary Customer.io failure")
-    },
-  })
-
-  const response = await handler(request(signupBody, { "x-forwarded-for": "198.51.100.8" }))
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), {
-    ok: true,
-    surveyToken: "x".repeat(43),
-    duplicate: false,
-    surveyAlreadyCompleted: false,
-  })
-  assert.deepEqual(calls, ["save:ada@example.com"])
-  assert.equal(scheduled.length, 1)
-  await scheduled[0]()
-  assert.deepEqual(calls, ["save:ada@example.com", "dispatch"])
-})
-
-test("waitlist signup treats duplicate retry as a durable success", async () => {
-  const { handler } = signupHandler({
-    saveWaitlistSignup: async () => ({
-      signupId: "signup-1",
-      duplicate: true,
-      surveyAlreadyCompleted: false,
-    }),
-  })
-  const response = await handler(request(signupBody))
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), {
-    ok: true,
-    duplicate: true,
-    surveyAlreadyCompleted: false,
-  })
-})
-
-test("completed duplicate signup returns no dead survey token", async () => {
-  const { handler } = signupHandler({
-    saveWaitlistSignup: async () => ({
-      signupId: "signup-1",
-      duplicate: true,
-      surveyAlreadyCompleted: true,
-    }),
-  })
-  const response = await handler(request(signupBody))
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), {
-    ok: true,
-    duplicate: true,
-    surveyAlreadyCompleted: true,
-  })
-})
-
-test("waitlist signup reports persistence failures without PII", async () => {
-  const originalConsoleError = console.error
-  const logs: string[] = []
-  console.error = (...values: unknown[]) => logs.push(values.join(" "))
-  const { handler } = signupHandler({
-    saveWaitlistSignup: async () => {
-      throw { message: "Ada <ada@example.com> database failure" }
-    },
-  })
-  try {
-    const response = await handler(request(signupBody))
-    assert.equal(response.status, 500)
-    assert.deepEqual(await response.json(), {
-      error: "Dein Platz konnte nicht gespeichert werden.",
-    })
-  } finally {
-    console.error = originalConsoleError
-  }
-  assert.equal(logs.length, 1)
-  assert.match(logs[0], /database failure/)
-  assert.doesNotMatch(logs[0], /Ada|ada@example\.com/)
 })
 
 test("survey accepts only opaque token association and schedules delivery idempotently", async () => {

@@ -23,6 +23,7 @@ import {
 } from "@/lib/personal-plan-quiz"
 import type { PersonalPlanOfferFocusTarget } from "@/lib/personal-plan-quiz/offer-focus"
 import type { SubscriptionPricingCatalog } from "@/lib/stripe/pricing-plans"
+import type { TrialOfferPricing } from "@/components/billing/trial-offer"
 import { PersonalPlanFieldTestBanner } from "@/components/personal-plan-quiz/personal-plan-quiz"
 import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
@@ -543,6 +544,7 @@ export function PersonalPlanOffer({
   offerTracking,
   offerVariant = "personal-plan-v1",
   pricingCatalog,
+  trialOfferPricing = null,
 }: {
   showQuizRestart?: boolean
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
@@ -556,17 +558,22 @@ export function PersonalPlanOffer({
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   pricingCatalog?: SubscriptionPricingCatalog
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const [checkoutOpenRequest, setCheckoutOpenRequest] = useState(0)
   const [clientReady, setClientReady] = useState(false)
-  const isOneTimeOffer = offerVariant === "personal-plan-one-time-v1"
+  const isOneTimeOffer = !trialOfferPricing && offerVariant === "personal-plan-one-time-v1"
   const resolvedPricingCatalog = pricingCatalog ?? "standard"
   const pricingCatalogWasProvided = pricingCatalog !== undefined
   const [pricingReached, setPricingReached] = useState(false)
   const [checkoutSummary, setCheckoutSummary] = useState<ResultOfferPricingCheckoutSummary>(() =>
     isOneTimeOffer
       ? getPersonalPlanOneTimeCheckoutSummary()
-      : getMembershipCheckoutSummary("quarter", resolvedPricingCatalog),
+      : getMembershipCheckoutSummary(
+          trialOfferPricing ? "year" : "quarter",
+          resolvedPricingCatalog,
+          trialOfferPricing,
+        ),
   )
   const openCheckout = () => setCheckoutOpenRequest((value) => value + 1)
   useEffect(() => {
@@ -697,7 +704,9 @@ export function PersonalPlanOffer({
                   ) : (
                     <span className="text-[11px] leading-none">{checkoutSummary.stickyLine}</span>
                   )}
-                  <span className="text-[13px] leading-none">Zur Zahlung</span>
+                  <span className="text-[13px] leading-none">
+                    {trialOfferPricing ? "Kostenlos testen" : "Zur Zahlung"}
+                  </span>
                 </span>
               ) : (
                 "Angebot ansehen"
@@ -794,6 +803,7 @@ export function PersonalPlanOffer({
                 onPricingReached={handlePricingReached}
                 openCheckoutRequestId={checkoutOpenRequest}
                 pricingCatalog={resolvedPricingCatalog}
+                trialOfferPricing={trialOfferPricing}
                 referencePrices={
                   pricingCatalogWasProvided
                     ? (getSubscriptionPlanReferencePrices(resolvedPricingCatalog) ??

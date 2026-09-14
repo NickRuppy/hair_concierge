@@ -22,6 +22,11 @@ import { usePlanSelection } from "@/components/checkout/use-plan-selection"
 import type { QuizResultReferencePrices } from "@/components/checkout/plan-reference-prices"
 import { SubscriptionPlanSelector } from "@/components/checkout/subscription-plan-selector"
 import {
+  getTrialOfferPresentation,
+  TrialOffer,
+  type TrialOfferPricing,
+} from "@/components/billing/trial-offer"
+import {
   OFFER_PRICING_REVISION,
   useOfferTrackingContext,
 } from "@/components/quiz/offer-tracking-provider"
@@ -53,10 +58,6 @@ import { getOfferStripePromise } from "@/lib/stripe/offer-client-loader"
 import { resolvePersonalPlanPricingMode } from "@/lib/funnel/personal-plan-pricing-experiment"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 
-export function isUnexpectedCheckoutNavigationPath(expectedPathname: string, nextPathname: string) {
-  if (nextPathname === expectedPathname) return false
-  return !/^\/(?:welcome|datenschutz|impressum|agb|widerruf|kontakt)(?:\/|$)/.test(nextPathname)
-}
 import {
   DEFAULT_PRICING_INTERVAL,
   getStripePricingPlan,
@@ -65,6 +66,34 @@ import {
 } from "@/lib/stripe/pricing-plans"
 import { PERSONAL_PLAN_ONCE_PRODUCT } from "@/lib/billing/offer-products"
 import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observability/payment-client"
+
+export function isUnexpectedCheckoutNavigationPath(expectedPathname: string, nextPathname: string) {
+  if (nextPathname === expectedPathname) return false
+  return !/^\/(?:welcome|datenschutz|impressum|agb|widerruf|kontakt)(?:\/|$)/.test(nextPathname)
+}
+
+export function buildResultCheckoutSessionRequest(input: {
+  checkoutAttemptId: string
+  checkoutSessionAttemptId: string
+  funnelEventId: string
+  funnelSessionId?: string
+  interval: BillingInterval
+  leadId: string | null
+  presentation?: "offer_overlay_elements"
+  trial: boolean
+}) {
+  return {
+    checkoutAttemptId: input.checkoutAttemptId,
+    checkoutSessionAttemptId: input.checkoutSessionAttemptId,
+    funnelEventId: input.funnelEventId,
+    funnelSessionId: input.funnelSessionId,
+    interval: input.interval,
+    leadId: input.leadId,
+    source: "quiz_result_offer" as const,
+    ...(input.presentation ? { presentation: input.presentation } : {}),
+    ...(input.trial ? { trial: true as const } : {}),
+  }
+}
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()
 const unloadedStripePromise = Promise.resolve(null)
@@ -341,7 +370,18 @@ export type ResultOfferPricingCheckoutSummary =
 export function getMembershipCheckoutSummary(
   interval: BillingInterval,
   pricingCatalog: SubscriptionPricingCatalog = "standard",
+  trialPricing?: TrialOfferPricing | null,
 ): ResultOfferPricingCheckoutSummary {
+  if (trialPricing) {
+    if (interval !== "month" && interval !== "year") throw new Error("Unsupported trial interval")
+    return {
+      commerceKind: "membership",
+      interval,
+      planName: "7 Tage kostenlos testen",
+      priceLabel: "Heute 0,00 €",
+      stickyLine: "7 Tage kostenlos · heute 0,00 €",
+    }
+  }
   const plan = getStripePricingPlan(interval, pricingCatalog)
   return {
     commerceKind: "membership",
@@ -391,10 +431,11 @@ export function ResultOfferPricing(props: {
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
   referencePrices?: QuizResultReferencePrices
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const offerContext = useOfferTrackingContext()
   const offerVariant = props.offerVariant ?? offerContext?.offerVariant ?? "personal-plan-v1"
-  if (resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
+  if (!props.trialOfferPricing && resolvePersonalPlanPricingMode(offerVariant) === "one_time") {
     const expressElementsEnabled = props.checkoutPresentationFixture
       ? props.checkoutPresentationFixture.overlay &&
         props.checkoutPresentationFixture.expressElements
@@ -411,7 +452,9 @@ export function ResultOfferPricing(props: {
       />
     )
   }
-  return <MembershipResultOfferPricing {...props} />
+  return (
+    <MembershipResultOfferPricing key={props.trialOfferPricing ? "trial" : "paid"} {...props} />
+  )
 }
 
 function PersonalPlanOneTimePricing({
@@ -733,6 +776,7 @@ function MembershipResultOfferPricing({
   openCheckoutRequestId,
   pricingCatalog = "standard",
   referencePrices,
+  trialOfferPricing = null,
 }: {
   checkoutPresentationFixture?: { expressElements: boolean; overlay: boolean }
   leadId: string | null
@@ -744,6 +788,7 @@ function MembershipResultOfferPricing({
   openCheckoutRequestId?: number
   pricingCatalog?: SubscriptionPricingCatalog
   referencePrices?: QuizResultReferencePrices
+  trialOfferPricing?: TrialOfferPricing | null
 }) {
   const { stripeLive } = usePaymentRuntime()
   const pricingRef = useRef<HTMLDivElement | null>(null)
@@ -765,7 +810,7 @@ function MembershipResultOfferPricing({
   const attempts = attemptsRef.current
   const offerContext = useOfferTrackingContext()
   const { selectedInterval, selectPlan } = usePlanSelection({
-    defaultInterval: DEFAULT_PRICING_INTERVAL,
+    defaultInterval: trialOfferPricing ? "year" : DEFAULT_PRICING_INTERVAL,
   })
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutVisible, setCheckoutVisible] = useState(false)
@@ -794,8 +839,11 @@ function MembershipResultOfferPricing({
   })
 
   useEffect(
-    () => onCheckoutSummaryChange?.(getMembershipCheckoutSummary(selectedInterval, pricingCatalog)),
-    [onCheckoutSummaryChange, pricingCatalog, selectedInterval],
+    () =>
+      onCheckoutSummaryChange?.(
+        getMembershipCheckoutSummary(selectedInterval, pricingCatalog, trialOfferPricing),
+      ),
+    [onCheckoutSummaryChange, pricingCatalog, selectedInterval, trialOfferPricing],
   )
   useEffect(() => {
     if (!pricingRef.current || trackedRef.current) return
@@ -805,7 +853,9 @@ function MembershipResultOfferPricing({
       const fallback = offerTracking ?? getCurrentFunnelContext()
       trackAppEvent("pricing_viewed", {
         ...(offerContext ?? {}),
-        availableIntervals: getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
+        availableIntervals: trialOfferPricing
+          ? ["month", "year"]
+          : getStripePricingPlans(pricingCatalog).map((plan) => plan.interval),
         leadId: leadId ?? undefined,
         pricingCatalog,
         pricingRevision: OFFER_PRICING_REVISION,
@@ -817,7 +867,15 @@ function MembershipResultOfferPricing({
       })
       onPricingReached?.()
     })
-  }, [leadId, offerContext, offerTracking, onPricingReached, pricingCatalog, selectedInterval])
+  }, [
+    leadId,
+    offerContext,
+    offerTracking,
+    onPricingReached,
+    pricingCatalog,
+    selectedInterval,
+    trialOfferPricing,
+  ])
 
   const resetLock = useCallback(() => {
     lockRef.current = null
@@ -1042,7 +1100,7 @@ function MembershipResultOfferPricing({
         openIndex,
         planId: plan.analyticsId,
         pricingCatalog,
-        value: plan.amount,
+        value: trialOfferPricing ? 0 : plan.amount,
       })
     trackCheckoutLifecycle(id, {
       lastState: "none",
@@ -1092,6 +1150,7 @@ function MembershipResultOfferPricing({
     reportFailure,
     selectedInterval,
     trackCheckoutLifecycle,
+    trialOfferPricing,
   ])
   useEffect(() => {
     if (!claimCheckoutOpenRequest(handledRequestsRef.current, openCheckoutRequestId)) return
@@ -1140,16 +1199,18 @@ function MembershipResultOfferPricing({
       response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          interval: checkoutInterval,
-          leadId,
-          source: "quiz_result_offer",
-          funnelEventId,
-          checkoutAttemptId: attemptId,
-          checkoutSessionAttemptId,
-          funnelSessionId: offerContext?.funnelSessionId,
-          ...(express ? { presentation: "offer_overlay_elements" } : {}),
-        }),
+        body: JSON.stringify(
+          buildResultCheckoutSessionRequest({
+            checkoutAttemptId: attemptId,
+            checkoutSessionAttemptId,
+            funnelEventId,
+            funnelSessionId: offerContext?.funnelSessionId ?? undefined,
+            interval: checkoutInterval,
+            leadId,
+            presentation: express ? "offer_overlay_elements" : undefined,
+            trial: Boolean(trialOfferPricing),
+          }),
+        ),
       })
     } catch (cause) {
       // The server may have received a request whose response was lost. Reuse the
@@ -1223,7 +1284,7 @@ function MembershipResultOfferPricing({
       currency: plan.currency,
       planId: plan.analyticsId,
       pricingCatalog,
-      value: plan.amount,
+      value: trialOfferPricing ? 0 : plan.amount,
     })
     trackCheckoutLifecycle(attemptId, {
       provider: "stripe",
@@ -1241,9 +1302,17 @@ function MembershipResultOfferPricing({
     pricingCatalog,
     reportFailure,
     trackCheckoutLifecycle,
+    trialOfferPricing,
   ])
 
   const activePlan = getStripePricingPlan(checkoutInterval ?? selectedInterval, pricingCatalog)
+  const trialPresentation = trialOfferPricing ? getTrialOfferPresentation(trialOfferPricing) : null
+  const trialCheckoutTerms =
+    trialPresentation && checkoutInterval
+      ? checkoutInterval === "year"
+        ? `Heute 0,00 €. Nach 7 Tagen ${trialPresentation.annualFirst} fürs erste Jahr, danach ${trialPresentation.annualRenewal} jährlich.`
+        : `Heute 0,00 €. Nach 7 Tagen ${trialPresentation.monthly} pro Monat.`
+      : undefined
   const checkout = checkoutInterval ? (
     duplicateOpen && isPaymentFeedbackV2Enabled() && duplicateFeedback ? (
       <PaymentFeedbackCard
@@ -1263,11 +1332,13 @@ function MembershipResultOfferPricing({
       <PaymentMethodCheckout
         checkoutAttemptId={attemptId ?? undefined}
         checkoutError={error}
-        checkoutKey={`${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
+        checkoutKey={`${trialOfferPricing ? "trial" : "paid"}:${checkoutInterval}:${checkoutSessionAttemptId ?? "pending"}`}
         expressElementsEnabled={express}
         fetchClientSecret={fetchClientSecret}
         interval={checkoutInterval}
         leadId={leadId}
+        trial={Boolean(trialOfferPricing)}
+        trialTerms={trialCheckoutTerms}
         lockedProvider={express ? lockedProvider : null}
         onClientMounted={(provider, option) => {
           if (!attemptId) return
@@ -1327,7 +1398,7 @@ function MembershipResultOfferPricing({
             funnelEventId,
             planId: plan.analyticsId,
             pricingCatalog,
-            value: plan.amount,
+            value: trialOfferPricing ? 0 : plan.amount,
           })
         }}
         onProviderReady={(provider, option) => {
@@ -1359,7 +1430,12 @@ function MembershipResultOfferPricing({
             planId: plan.analyticsId,
             pricingCatalog,
             provider,
-            value: plan.amount,
+            value:
+              trialOfferPricing && checkoutInterval === "year"
+                ? trialOfferPricing.annualFirstAmountMinor / 100
+                : trialOfferPricing
+                  ? trialOfferPricing.monthlyAmountMinor / 100
+                  : plan.amount,
           })
         }}
         onPaymentMethodSelected={(provider, paymentMethodType) => {
@@ -1378,7 +1454,12 @@ function MembershipResultOfferPricing({
             pricingCatalog,
             provider,
             selectionIndex: selectionIndexRef.current,
-            value: plan.amount,
+            value:
+              trialOfferPricing && checkoutInterval === "year"
+                ? trialOfferPricing.annualFirstAmountMinor / 100
+                : trialOfferPricing
+                  ? trialOfferPricing.monthlyAmountMinor / 100
+                  : plan.amount,
           })
         }}
         onProviderLockClaim={express ? claimLock : undefined}
@@ -1413,34 +1494,65 @@ function MembershipResultOfferPricing({
           open={duplicateOpen}
         />
       ) : null}
-      <SubscriptionPlanSelector
-        busy={false}
-        offerTracking
-        onContinue={openCheckout}
-        onSelect={(interval) => {
-          if (lockRef.current) return
-          const change = selectPlan(interval)
-          if (offerContext) {
-            const plan = getStripePricingPlan(interval, pricingCatalog)
-            trackAppEvent("offer_plan_selected", {
-              ...offerContext,
-              currency: plan.currency,
-              funnelEventId: createFunnelEventId(),
-              interval,
-              isDefault: change.isDefault,
-              planId: plan.analyticsId,
-              pricingCatalog,
-              previousInterval: change.previousInterval,
-              selectionIndex: change.selectionIndex,
-              value: plan.amount,
-            })
-          }
-          endCheckout({ endReason: "plan_changed" })
-        }}
-        pricingCatalog={pricingCatalog}
-        referencePrices={referencePrices}
-        selectedInterval={selectedInterval}
-      />
+      {trialOfferPricing ? (
+        <TrialOffer
+          onContinue={openCheckout}
+          onSelect={(interval) => {
+            if (lockRef.current) return
+            const change = selectPlan(interval)
+            if (offerContext) {
+              const plan = getStripePricingPlan(interval, pricingCatalog)
+              trackAppEvent("offer_plan_selected", {
+                ...offerContext,
+                currency: plan.currency,
+                funnelEventId: createFunnelEventId(),
+                interval,
+                isDefault: change.isDefault,
+                planId: plan.analyticsId,
+                pricingCatalog,
+                previousInterval: change.previousInterval,
+                selectionIndex: change.selectionIndex,
+                value:
+                  interval === "year"
+                    ? trialOfferPricing.annualFirstAmountMinor / 100
+                    : trialOfferPricing.monthlyAmountMinor / 100,
+              })
+            }
+            endCheckout({ endReason: "plan_changed" })
+          }}
+          pricing={trialOfferPricing}
+          selectedInterval={selectedInterval as "month" | "year"}
+        />
+      ) : (
+        <SubscriptionPlanSelector
+          busy={false}
+          offerTracking
+          onContinue={openCheckout}
+          onSelect={(interval) => {
+            if (lockRef.current) return
+            const change = selectPlan(interval)
+            if (offerContext) {
+              const plan = getStripePricingPlan(interval, pricingCatalog)
+              trackAppEvent("offer_plan_selected", {
+                ...offerContext,
+                currency: plan.currency,
+                funnelEventId: createFunnelEventId(),
+                interval,
+                isDefault: change.isDefault,
+                planId: plan.analyticsId,
+                pricingCatalog,
+                previousInterval: change.previousInterval,
+                selectionIndex: change.selectionIndex,
+                value: plan.amount,
+              })
+            }
+            endCheckout({ endReason: "plan_changed" })
+          }}
+          pricingCatalog={pricingCatalog}
+          referencePrices={referencePrices}
+          selectedInterval={selectedInterval}
+        />
+      )}
       {overlay ? (
         <OfferPaymentOverlay
           checkoutEngaged={engaged || !express}
@@ -1459,8 +1571,10 @@ function MembershipResultOfferPricing({
           onPresentationStateChange={onOverlayPresentationStateChange}
           keepMounted={Boolean(checkoutInterval)}
           open={checkoutVisible}
-          planName={activePlan.name}
-          priceLabel={`${activePlan.price.replace(/^€/, "")} €`}
+          planName={trialOfferPricing ? "7 Tage kostenlos testen" : activePlan.name}
+          priceLabel={
+            trialOfferPricing ? "Heute 0,00 €" : `${activePlan.price.replace(/^€/, "")} €`
+          }
           restoreFocusRef={returnFocusRef}
         >
           {checkout}

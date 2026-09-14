@@ -38,6 +38,7 @@ export async function cancelPayPalSubscription(
     `/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}/cancel`,
     {
       method: "POST",
+      signal: AbortSignal.timeout(15_000),
       body: JSON.stringify({ reason }),
     },
   )

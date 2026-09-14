@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mein Profil · Mitgliedschaft in der Testphase</title>
+  <link rel="stylesheet" href="profile-assets/production.css">
+  <link rel="stylesheet" href="profile-assets/fonts.css">
+  <style>
+    /* Static settings excerpt. The page above Einstellungen is outside this crop. */
+    body{margin:0;background:hsl(var(--background));-webkit-font-smoothing:antialiased}
+    .brand-bars{display:flex;gap:3px;align-items:center}.brand-bars i{height:14px;width:3px;border-radius:2px;background:hsl(var(--primary))}.brand-bars i:nth-child(2){opacity:.6}.brand-bars i:nth-child(3){opacity:.3}
+    .nav-icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .mobile-nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-height:72px;border-top:1px solid hsl(var(--border));background:hsl(var(--background)/.95);box-shadow:0 -12px 30px -26px rgba(var(--brand-plum-rgb),.55);backdrop-filter:blur(8px);z-index:50}
+    .mobile-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;color:hsl(var(--muted-foreground));font-size:11px;font-weight:600}.mobile-nav a[aria-current]{color:hsl(var(--primary))}
+    .settings-content{padding-bottom:72px}.settings-stack>*+*{margin-top:24px}
+    .outline-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 24px;border:1.5px solid hsl(var(--primary));border-radius:12px;color:hsl(var(--primary));font-size:13px;font-weight:600;background:transparent}
+    .quiet-button{display:block;min-height:44px;margin-top:8px;background:none;color:hsl(var(--muted-foreground));text-decoration:underline;text-underline-offset:3px;font-size:13px}
+    .status-badge{display:inline-flex;align-items:center;padding:4px 12px;border:1px solid hsl(var(--primary)/.15);border-radius:999px;background:hsl(var(--primary)/.05);font-family:var(--font-mono);font-size:12px;font-weight:500;line-height:16px;color:hsl(var(--primary))}
+    .toggle{display:inline-flex;width:36px;height:20px;border-radius:999px;background:hsl(var(--primary));padding:2px;justify-content:flex-end;box-shadow:0 1px 2px #0001}.toggle span{width:16px;height:16px;border-radius:50%;background:white}
+    .feedback{position:fixed;right:0;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;background:var(--brand-coral);color:white;border-radius:18px 0 0 18px;padding:18px 10px;font-size:12px;font-weight:600;letter-spacing:.04em;box-shadow:0 4px 14px #d4616a33;z-index:30}
+    .legal{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:8px;padding-bottom:8px;font-size:12px;color:hsl(var(--muted-foreground))}.legal a,.legal button{display:inline-flex;min-height:44px;align-items:center;padding:0 4px;font:inherit;background:transparent}
+    @media(min-width:768px){.mobile-nav{display:none}.settings-content{padding-bottom:0}}
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+    <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+      <a href="#" class="flex items-center gap-2" aria-label="Chaarlie Chat"><span class="brand-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="font-header text-2xl tracking-wide text-[var(--text-heading)]">chaarlie</span></a>
+      <nav aria-label="Personal-Plan-Navigation" class="hidden items-center gap-1 md:flex">
+        <a href="#" class="rounded-[10px] px-3 py-2 text-sm font-semibold text-muted-foreground">Chat</a><a href="#" class="rounded-[10px] px-3 py-2 text-sm font-semibold text-muted-foreground">Routine</a><a href="#" class="rounded-[10px] px-3 py-2 text-sm font-semibold text-muted-foreground">Scan</a><a href="#" class="rounded-[10px] px-3 py-2 text-sm font-semibold text-muted-foreground">Anwendung</a><a href="#" aria-current="page" class="rounded-[10px] px-3 py-2 text-sm font-semibold bg-[var(--brand-plum-ice)] text-primary">Profil</a>
+      </nav>
+    </div>
+  </header>
+  <div class="settings-content">
+    <main class="mx-auto max-w-5xl px-4 py-8">
+      <div class="settings-stack">
+        <h2 class="font-[family-name:var(--font-display)] text-3xl font-medium leading-none text-[var(--text-heading)]">Einstellungen</h2>
+        <section class="rounded-xl border border-border/60 bg-card/60 text-card-foreground shadow overflow-hidden">
+          <div class="p-6 pb-4">
+            <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+              <div class="min-w-0"><div class="flex flex-wrap items-center gap-3"><h2 class="font-[family-name:var(--font-display)] text-xl font-medium leading-tight text-[var(--text-heading)]">Erinnerungen</h2><span class="status-badge">Aktiv</span></div><p class="mt-2 max-w-2xl text-sm text-muted-foreground">Hinweise aus dem Chat, langfristig gespeichert.</p></div>
+              <div class="flex flex-wrap items-center gap-2"><button class="toggle" role="switch" aria-checked="true" aria-label="Erinnerungen aktivieren"><span></span></button><button class="inline-flex items-center justify-center gap-2 min-h-[44px] px-3 text-xs font-semibold text-primary" aria-expanded="true">Weniger <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 15 6-6 6 6"/></svg></button></div>
+            </div>
+          </div>
+          <div class="p-6 pt-0"><div class="rounded-xl border border-dashed border-border bg-muted/40 p-4"><p class="text-sm font-semibold text-[var(--text-heading)]">Noch keine gespeicherten Erinnerungen</p><p class="mt-1 text-sm text-muted-foreground">Wenn du im Chat konkrete Haarpflege-Infos gibst, können sie hier als langfristiger Kontext auftauchen.</p></div></div>
+        </section>
+        <section id="mitgliedschaft" class="scroll-mt-24 rounded-2xl border border-border/60 bg-card/60 p-6">
+          <h2 class="mb-3 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">Mitgliedschaft</h2>
+          <p class="mb-1 text-sm text-muted-foreground">Status: <strong class="text-foreground">Testphase aktiv</strong></p>
+          <p class="mb-1 text-sm text-muted-foreground">Anbieter: <strong class="text-foreground">PayPal</strong></p>
+          <p class="mb-1 text-sm text-muted-foreground">Aktueller Plan: <strong class="text-foreground">Jährlich</strong></p>
+          <p class="mb-1 text-sm text-muted-foreground">Testzugang bis: <strong class="text-foreground">20.09.2026</strong></p>
+          <p class="mb-1 text-sm text-muted-foreground">Erste Zahlung: <strong class="text-foreground">69,99 € am 20.09.2026</strong></p>
+          <p class="mt-2 text-xs text-muted-foreground">Für das erste Jahr. Danach 99,99 € jährlich.</p>
+          <div class="mt-4 border-t border-border/60 pt-4"><button class="outline-button">Plan ändern</button><button class="quiet-button">Testabo kündigen</button></div>
+        </section>
+        <section class="rounded-xl border border-border/60 bg-card/60 text-card-foreground shadow">
+          <div class="p-6 pb-3"><h2 class="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">Account</h2></div>
+          <div class="p-6 pt-0"><div class="flex items-center gap-4"><span class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-sm" aria-label="Beispiel-Avatar">MA</span><div><p class="text-sm font-semibold text-[var(--text-heading)]">Marie Beispiel</p><p class="text-sm text-muted-foreground">marie@example.com</p></div></div><div class="mt-4 border-t border-border/60 pt-4"><button class="outline-button w-full" style="border-color:hsl(var(--border));color:hsl(var(--foreground))">Abmelden</button></div></div>
+        </section>
+        <nav class="legal" aria-label="Rechtliches"><a href="#">Impressum</a><a href="#">Datenschutz</a><a href="#">AGB</a><a href="#">Widerruf</a><a href="#">Kontakt</a><button>Cookie-Einstellungen</button></nav>
+      </div>
+    </main>
+  </div>
+  <button class="feedback">Feedback</button>
+  <nav class="mobile-nav" aria-label="Personal-Plan-Navigation (mobil)">
+    <a href="#"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Chat</a>
+    <a href="#"><svg class="nav-icon" viewBox="0 0 24 24"><path d="m3 6 2 2 4-4m-6 12 2 2 4-4M13 6h8M13 12h8M13 18h8"/></svg>Routine</a>
+    <a href="#"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 7V4h4m8 0h4v3M4 17v3h4m8 0h4v-3M7 12h10"/></svg>Scan</a>
+    <a href="#"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg>Anwendung</a>
+    <a href="#" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>Profil</a>
+  </nav>
+</body>
+</html>

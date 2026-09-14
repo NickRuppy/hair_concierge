@@ -15,6 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { HaarCheckEditControl } from "@/components/profile/haar-check-edit-control"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
+import { TrialMembership } from "@/components/profile/trial-membership"
+import type { ProfileMembershipState } from "@/lib/billing/trial-membership"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
 import { MemoryToggleControl } from "@/components/profile/memory-toggle-control"
 import { useProfilePageTier } from "@/components/profile/profile-page-tier"
@@ -585,7 +587,7 @@ export default function ProfilePage() {
   const [memorySaving, setMemorySaving] = useState(false)
   const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null)
   const [memoryDraft, setMemoryDraft] = useState("")
-  const [membershipState, setMembershipState] = useState<MembershipManagementState | null>(null)
+  const [membershipState, setMembershipState] = useState<ProfileMembershipState | null>(null)
   const [membershipLoading, setMembershipLoading] = useState(true)
   const [membershipError, setMembershipError] = useState(false)
   const [membershipReloadKey, setMembershipReloadKey] = useState(0)
@@ -753,7 +755,7 @@ export default function ProfilePage() {
       try {
         const response = await fetch("/api/billing/membership", { cache: "no-store" })
         if (!response.ok) throw new Error(`membership state request failed: ${response.status}`)
-        const body = (await response.json()) as { state?: MembershipManagementState }
+        const body = (await response.json()) as { state?: ProfileMembershipState }
         if (!body.state || typeof body.state.kind !== "string") {
           throw new Error("membership access response invalid")
         }
@@ -2226,9 +2228,11 @@ export default function ProfilePage() {
             id="mitgliedschaft"
             className="mt-4 scroll-mt-24 rounded-2xl border border-border/60 bg-card/60 p-6"
           >
-            <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
-              Mitgliedschaft
-            </h2>
+            {membershipLoading || membershipState?.kind !== "trial_membership" ? (
+              <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
+                Mitgliedschaft
+              </h2>
+            ) : null}
 
             {membershipReactivated ? (
               <div className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900">
@@ -2249,7 +2253,14 @@ export default function ProfilePage() {
               </div>
             ) : null}
 
-            {!membershipLoading && membershipState && membershipState.kind !== "uncertain" ? (
+            {!membershipLoading && membershipState?.kind === "trial_membership" ? (
+              <TrialMembership key={membershipState.enrollmentId} state={membershipState} />
+            ) : null}
+
+            {!membershipLoading &&
+            membershipState &&
+            membershipState.kind !== "uncertain" &&
+            membershipState.kind !== "trial_membership" ? (
               <>
                 <p className="mb-1 text-sm text-muted-foreground">
                   Status:{" "}

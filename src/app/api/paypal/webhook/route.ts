@@ -1,4 +1,5 @@
 import { after, NextResponse } from "next/server"
+import { deferRequiredTrialNotices } from "@/lib/billing/trial-notice-dispatch"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { handlePayPalWebhookEvent } from "@/lib/paypal/webhook-handlers"
 import { getBillingTierIds } from "@/lib/billing/tier-ids"
@@ -112,7 +113,9 @@ export async function handlePayPalWebhookPost(
 }
 
 export async function POST(request: Request) {
-  return handlePayPalWebhookPost(request)
+  const response = await handlePayPalWebhookPost(request)
+  if (response.ok) deferRequiredTrialNotices(after)
+  return response
 }
 
 function paypalWebhookCommerceKind(eventType: string | undefined) {

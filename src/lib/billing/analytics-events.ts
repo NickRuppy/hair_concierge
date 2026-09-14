@@ -5,6 +5,7 @@ import type {
   BillingProvider,
   BillingSubscriptionRow,
 } from "@/lib/billing/types"
+import { resolveBillingTrialAccess } from "./trial-access-projection"
 
 export function billingAnalyticsEventKey(input: {
   provider: BillingProvider
@@ -39,16 +40,20 @@ export function billingSubscriptionPayload(
     | "interval"
     | "current_period_end"
     | "cancel_at_period_end"
-  >,
+  > &
+    Partial<
+      Pick<BillingSubscriptionRow, "trial_enrollment_id" | "trial_access_facts" | "metadata">
+    >,
   extra: Record<string, unknown> = {},
+  now: Date = new Date(),
 ) {
   const paidThrough = row.current_period_end
-    ? Date.parse(row.current_period_end) > Date.now()
+    ? Date.parse(row.current_period_end) > now.getTime()
     : false
   const hasPaidAccess =
     hasPaidAccessStatus(row.entitlement_status) || (row.cancel_at_period_end && paidThrough)
 
-  return {
+  const payload = {
     subscription_status: row.entitlement_status,
     provider_status: row.provider_status,
     has_paid_access: hasPaidAccess,
@@ -56,6 +61,18 @@ export function billingSubscriptionPayload(
     current_period_end: row.current_period_end,
     cancel_at_period_end: row.cancel_at_period_end,
     ...extra,
+  }
+
+  const trialAccess = resolveBillingTrialAccess(row, now)
+  if (trialAccess === null) return payload
+
+  return {
+    ...payload,
+    has_paid_access:
+      trialAccess.hasAccess &&
+      (trialAccess.phase === "paid" || trialAccess.phase === "renewal_grace"),
+    has_app_access: trialAccess.hasAccess,
+    trial_access_status: trialAccess.phase,
   }
 }
 
