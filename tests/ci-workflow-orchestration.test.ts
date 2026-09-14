@@ -289,7 +289,7 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
 
   assert.equal(
     aggregateCommand,
-    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build && npm run test:playwright:personal-plan-stage3:lab && npm run test:playwright:personal-plan-stage3:journey",
+    "CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build && npm run test:playwright:personal-plan-stage3:lab && npm run test:playwright:personal-plan-stage3:journey && npm run test:playwright:scanner-refinement",
   )
 
   assert.match(labCommand, /^WAIT_ON_TIMEOUT=60000 /)
@@ -350,6 +350,10 @@ test("the Stage 3 CI browser suite isolates the production lab from development 
   assert.match(
     qualityPersonalPlanJourney,
     /- name: Install Playwright browsers\n        run: npx playwright install --with-deps chromium webkit/,
+  )
+  assert.match(
+    qualityPersonalPlanJourney,
+    /- name: Run scanner refinement journeys\n        run: npm run test:playwright:scanner-refinement/,
   )
   assert.match(qualityPersonalPlan, /^    timeout-minutes: 10$/m)
   // M1: raised from 10 so a run cannot be SIGKILLed mid-afterAll while the live

@@ -14,6 +14,10 @@ import { INFO_TIPS } from "@/lib/help/info-tips"
 import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
 import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
 import { useQuizBrowserBack } from "./quiz-browser-history"
+import {
+  useQuizFunnelPackageKey,
+  useScannerFunnelRefinementEnabled,
+} from "./quiz-funnel-package-provider"
 
 const AUTO_ADVANCE_MS = 260
 
@@ -34,6 +38,8 @@ interface QuizQuestionProps {
 export function QuizQuestion({ question }: QuizQuestionProps) {
   const { answers, setAnswer, goNext } = useQuizStore()
   const requestBack = useQuizBrowserBack()
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const scannerFunnelRefinementEnabled = useScannerFunnelRefinementEnabled()
   const answerKey = ANSWER_KEY_MAP[question.step]
   const currentValue = answers[answerKey]
 
@@ -91,18 +97,24 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   const multiHasSelection = Array.isArray(localSelection) && localSelection.length > 0
   const infoTip = question.infoTipId ? INFO_TIPS[question.infoTipId] : null
   const visualLayout = getLegacyQuizOptionLayout(question.step)
+  const hideFirstQuestionBack =
+    scannerFunnelRefinementEnabled &&
+    funnelPackageKey === "scan_v1" &&
+    question.questionNumber === 1
 
   return (
     <div className="flex flex-col" key={question.step}>
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={requestBack}
-          aria-label="Zurück"
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
+        {!hideFirstQuestionBack ? (
+          <button
+            onClick={requestBack}
+            aria-label="Zurück"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        ) : null}
         <div className="flex-1">
           <QuizProgressBar current={question.questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
         </div>

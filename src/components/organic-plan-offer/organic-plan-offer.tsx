@@ -160,7 +160,7 @@ function Segments({ count, tone }: { count: 1 | 2 | 3; tone: "today" | "goal" })
   )
 }
 
-function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
+export function DiagnosticRow({ row }: { row: PersonalPlanDiagnosticDimension }) {
   return (
     <article
       className="rounded-[1.25rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-white p-4 shadow-[0_16px_44px_-36px_rgba(var(--brand-plum-rgb),0.55)] sm:rounded-[1.5rem] sm:p-5"

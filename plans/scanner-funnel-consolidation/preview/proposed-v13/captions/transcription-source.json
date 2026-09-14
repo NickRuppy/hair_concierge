@@ -1,0 +1,456 @@
+[
+  {
+    "start": 0.0,
+    "end": 5.62,
+    "text": " Hallo! Jetzt möchte ich mal die Scanner Funktion von Charlie testen und mal",
+    "avg_logprob": -0.2842846027776307,
+    "words": [
+      {
+        "start": 0.0,
+        "end": 0.46,
+        "word": " Hallo!",
+        "probability": 0.9351110458374023
+      },
+      {
+        "start": 0.88,
+        "end": 1.06,
+        "word": " Jetzt",
+        "probability": 0.9700855016708374
+      },
+      {
+        "start": 1.06,
+        "end": 1.26,
+        "word": " möchte",
+        "probability": 0.9910152554512024
+      },
+      {
+        "start": 1.26,
+        "end": 1.44,
+        "word": " ich",
+        "probability": 0.9991014003753662
+      },
+      {
+        "start": 1.44,
+        "end": 1.58,
+        "word": " mal",
+        "probability": 0.860076904296875
+      },
+      {
+        "start": 1.58,
+        "end": 2.0,
+        "word": " die",
+        "probability": 0.9912967681884766
+      },
+      {
+        "start": 2.0,
+        "end": 2.54,
+        "word": " Scanner",
+        "probability": 0.9485805034637451
+      },
+      {
+        "start": 2.54,
+        "end": 3.08,
+        "word": " Funktion",
+        "probability": 0.6988914310932159
+      },
+      {
+        "start": 3.08,
+        "end": 3.46,
+        "word": " von",
+        "probability": 0.8973647356033325
+      },
+      {
+        "start": 3.46,
+        "end": 3.84,
+        "word": " Charlie",
+        "probability": 0.7776117324829102
+      },
+      {
+        "start": 3.84,
+        "end": 4.58,
+        "word": " testen",
+        "probability": 0.9948680996894836
+      },
+      {
+        "start": 4.58,
+        "end": 5.42,
+        "word": " und",
+        "probability": 0.7171992063522339
+      },
+      {
+        "start": 5.42,
+        "end": 5.62,
+        "word": " mal",
+        "probability": 0.8493732213973999
+      }
+    ]
+  },
+  {
+    "start": 5.62,
+    "end": 9.1,
+    "text": " schauen, meine Produkte durchschauen, die ich zu Hause habe. Also das ist",
+    "avg_logprob": -0.2842846027776307,
+    "words": [
+      {
+        "start": 5.62,
+        "end": 5.84,
+        "word": " schauen,",
+        "probability": 0.9071283936500549
+      },
+      {
+        "start": 6.2,
+        "end": 6.68,
+        "word": " meine",
+        "probability": 0.8134630918502808
+      },
+      {
+        "start": 6.68,
+        "end": 7.22,
+        "word": " Produkte",
+        "probability": 0.9929996132850647
+      },
+      {
+        "start": 7.22,
+        "end": 7.74,
+        "word": " durchschauen,",
+        "probability": 0.8791297872861227
+      },
+      {
+        "start": 7.8,
+        "end": 7.88,
+        "word": " die",
+        "probability": 0.9950489401817322
+      },
+      {
+        "start": 7.88,
+        "end": 7.96,
+        "word": " ich",
+        "probability": 0.9977241158485413
+      },
+      {
+        "start": 7.96,
+        "end": 8.12,
+        "word": " zu",
+        "probability": 0.9497255682945251
+      },
+      {
+        "start": 8.12,
+        "end": 8.36,
+        "word": " Hause",
+        "probability": 0.8348798155784607
+      },
+      {
+        "start": 8.36,
+        "end": 8.66,
+        "word": " habe.",
+        "probability": 0.6327141523361206
+      },
+      {
+        "start": 8.82,
+        "end": 8.84,
+        "word": " Also",
+        "probability": 0.7994384765625
+      },
+      {
+        "start": 8.84,
+        "end": 9.0,
+        "word": " das",
+        "probability": 0.8749141097068787
+      },
+      {
+        "start": 9.0,
+        "end": 9.1,
+        "word": " ist",
+        "probability": 0.9854384660720825
+      }
+    ]
+  },
+  {
+    "start": 9.1,
+    "end": 20.66,
+    "text": " erst mal das Produkt und dann kann ich das so einhalten und dann sehe ich,",
+    "avg_logprob": -0.2842846027776307,
+    "words": [
+      {
+        "start": 9.1,
+        "end": 9.4,
+        "word": " erst",
+        "probability": 0.22935424745082855
+      },
+      {
+        "start": 9.4,
+        "end": 9.62,
+        "word": " mal",
+        "probability": 0.8268176913261414
+      },
+      {
+        "start": 9.62,
+        "end": 9.8,
+        "word": " das",
+        "probability": 0.9895036220550537
+      },
+      {
+        "start": 9.8,
+        "end": 10.38,
+        "word": " Produkt",
+        "probability": 0.9968134760856628
+      },
+      {
+        "start": 10.38,
+        "end": 12.28,
+        "word": " und",
+        "probability": 0.6025386452674866
+      },
+      {
+        "start": 12.28,
+        "end": 12.82,
+        "word": " dann",
+        "probability": 0.9837338924407959
+      },
+      {
+        "start": 12.82,
+        "end": 13.04,
+        "word": " kann",
+        "probability": 0.9968644976615906
+      },
+      {
+        "start": 13.04,
+        "end": 13.24,
+        "word": " ich",
+        "probability": 0.9977672100067139
+      },
+      {
+        "start": 13.24,
+        "end": 13.5,
+        "word": " das",
+        "probability": 0.9738455414772034
+      },
+      {
+        "start": 13.5,
+        "end": 13.88,
+        "word": " so",
+        "probability": 0.9371824860572815
+      },
+      {
+        "start": 13.88,
+        "end": 15.82,
+        "word": " einhalten",
+        "probability": 0.8488854169845581
+      },
+      {
+        "start": 17.16,
+        "end": 18.36,
+        "word": " und",
+        "probability": 0.3850887715816498
+      },
+      {
+        "start": 18.36,
+        "end": 18.6,
+        "word": " dann",
+        "probability": 0.9862896203994751
+      },
+      {
+        "start": 18.6,
+        "end": 20.14,
+        "word": " sehe",
+        "probability": 0.9541053771972656
+      },
+      {
+        "start": 20.14,
+        "end": 20.66,
+        "word": " ich,",
+        "probability": 0.9979280233383179
+      }
+    ]
+  },
+  {
+    "start": 20.98,
+    "end": 24.58,
+    "text": " ahah, passt zu deinem Haar. Also das ist jetzt schon mal das Shampoo, was für",
+    "avg_logprob": -0.2842846027776307,
+    "words": [
+      {
+        "start": 20.98,
+        "end": 21.4,
+        "word": " ahah,",
+        "probability": 0.4125231206417084
+      },
+      {
+        "start": 21.54,
+        "end": 21.76,
+        "word": " passt",
+        "probability": 0.9692790508270264
+      },
+      {
+        "start": 21.76,
+        "end": 22.0,
+        "word": " zu",
+        "probability": 0.9910361766815186
+      },
+      {
+        "start": 22.0,
+        "end": 22.36,
+        "word": " deinem",
+        "probability": 0.9906731247901917
+      },
+      {
+        "start": 22.36,
+        "end": 22.7,
+        "word": " Haar.",
+        "probability": 0.9714368879795074
+      },
+      {
+        "start": 22.84,
+        "end": 22.92,
+        "word": " Also",
+        "probability": 0.8825637698173523
+      },
+      {
+        "start": 22.92,
+        "end": 23.06,
+        "word": " das",
+        "probability": 0.9632988572120667
+      },
+      {
+        "start": 23.06,
+        "end": 23.18,
+        "word": " ist",
+        "probability": 0.9956217408180237
+      },
+      {
+        "start": 23.18,
+        "end": 23.32,
+        "word": " jetzt",
+        "probability": 0.8796013593673706
+      },
+      {
+        "start": 23.32,
+        "end": 23.46,
+        "word": " schon",
+        "probability": 0.9336740970611572
+      },
+      {
+        "start": 23.46,
+        "end": 23.56,
+        "word": " mal",
+        "probability": 0.9317091703414917
+      },
+      {
+        "start": 23.56,
+        "end": 23.68,
+        "word": " das",
+        "probability": 0.9838495254516602
+      },
+      {
+        "start": 23.68,
+        "end": 24.06,
+        "word": " Shampoo,",
+        "probability": 0.8998977243900299
+      },
+      {
+        "start": 24.2,
+        "end": 24.34,
+        "word": " was",
+        "probability": 0.7475500106811523
+      },
+      {
+        "start": 24.34,
+        "end": 24.58,
+        "word": " für",
+        "probability": 0.9926156997680664
+      }
+    ]
+  },
+  {
+    "start": 24.58,
+    "end": 29.26,
+    "text": " mich gut passt. Das hatte ich jetzt schon zu Hause, das ist ja super.",
+    "avg_logprob": -0.2842846027776307,
+    "words": [
+      {
+        "start": 24.58,
+        "end": 24.86,
+        "word": " mich",
+        "probability": 0.9986147880554199
+      },
+      {
+        "start": 24.86,
+        "end": 25.8,
+        "word": " gut",
+        "probability": 0.967882513999939
+      },
+      {
+        "start": 25.8,
+        "end": 26.72,
+        "word": " passt.",
+        "probability": 0.995884358882904
+      },
+      {
+        "start": 27.22,
+        "end": 27.44,
+        "word": " Das",
+        "probability": 0.9364902973175049
+      },
+      {
+        "start": 27.44,
+        "end": 27.6,
+        "word": " hatte",
+        "probability": 0.9268119931221008
+      },
+      {
+        "start": 27.6,
+        "end": 27.74,
+        "word": " ich",
+        "probability": 0.9989153146743774
+      },
+      {
+        "start": 27.74,
+        "end": 27.84,
+        "word": " jetzt",
+        "probability": 0.9786970615386963
+      },
+      {
+        "start": 27.84,
+        "end": 28.0,
+        "word": " schon",
+        "probability": 0.9832358956336975
+      },
+      {
+        "start": 28.0,
+        "end": 28.18,
+        "word": " zu",
+        "probability": 0.9897191524505615
+      },
+      {
+        "start": 28.18,
+        "end": 28.44,
+        "word": " Hause,",
+        "probability": 0.9294329285621643
+      },
+      {
+        "start": 28.58,
+        "end": 28.68,
+        "word": " das",
+        "probability": 0.9870073199272156
+      },
+      {
+        "start": 28.68,
+        "end": 28.82,
+        "word": " ist",
+        "probability": 0.9965680837631226
+      },
+      {
+        "start": 28.82,
+        "end": 28.96,
+        "word": " ja",
+        "probability": 0.9713155031204224
+      },
+      {
+        "start": 28.96,
+        "end": 29.26,
+        "word": " super.",
+        "probability": 0.992882251739502
+      }
+    ]
+  }
+]

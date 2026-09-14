@@ -245,6 +245,8 @@ jobs:
         run: npx playwright install --with-deps chromium webkit
       - name: Run Personal Plan development journeys
         run: npm run test:playwright:personal-plan-stage3:journey
+      - name: Run scanner refinement journeys
+        run: npm run test:playwright:scanner-refinement
 
   quality-core:
     runs-on: ubuntu-latest

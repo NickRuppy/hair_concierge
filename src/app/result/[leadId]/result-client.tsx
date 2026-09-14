@@ -54,6 +54,7 @@ export function ResultPageClient({
   offerVariant = "default",
   pricingCatalog,
   trialOfferPricing = null,
+  scannerRefinementEnabled = false,
 }: {
   showQuizRestart?: boolean
   leadId: string
@@ -78,6 +79,7 @@ export function ResultPageClient({
   offerTracking?: FunnelAnalyticsEnvelope | null
   offerVariant?: string
   pricingCatalog?: SubscriptionPricingCatalog
+  scannerRefinementEnabled?: boolean
   trialOfferPricing?: TrialOfferPricing | null
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
@@ -146,6 +148,7 @@ export function ResultPageClient({
       offerVariant={offerVariant}
       pricingCatalog={resolvedPricingCatalog}
       pricingCatalogWasProvided={pricingCatalogWasProvided}
+      scannerRefinementEnabled={scannerRefinementEnabled}
       trialOfferPricing={trialOfferPricing}
       quizAnswers={quizAnswers}
       regularFieldTest={regularFieldTest}
@@ -167,6 +170,7 @@ function LegacyResultPageClient({
   offerVariant,
   pricingCatalog,
   pricingCatalogWasProvided,
+  scannerRefinementEnabled,
   trialOfferPricing,
   quizAnswers,
   regularFieldTest,
@@ -184,6 +188,7 @@ function LegacyResultPageClient({
   offerVariant: string
   pricingCatalog: SubscriptionPricingCatalog
   pricingCatalogWasProvided: boolean
+  scannerRefinementEnabled: boolean
   trialOfferPricing: TrialOfferPricing | null
   quizAnswers: QuizAnswers
   regularFieldTest?: FunnelOfferFieldTest | null
@@ -226,6 +231,13 @@ function LegacyResultPageClient({
     )
   }
 
+  const showScannerRefinement =
+    scannerRefinementEnabled &&
+    offerVariant === "scan-regal-v1" &&
+    trialOfferPricing !== null &&
+    !regularFieldTest &&
+    !partnerAccess
+
   const offer = renderOfferVariant(offerVariant, {
     entryContext,
     leadId,
@@ -237,8 +249,11 @@ function LegacyResultPageClient({
     quizAnswers,
     focusRoutine,
     focusTarget,
+    scannerRefinementEnabled: showScannerRefinement,
+    trialOfferPricing,
     pricingSlot: (
       <ResultOfferPricing
+        presentation={showScannerRefinement ? "scanner" : "default"}
         leadId={leadId}
         offerTracking={offerTracking}
         pricingCatalog={pricingCatalog}

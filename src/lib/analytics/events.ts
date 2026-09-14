@@ -76,6 +76,7 @@ export type OfferSectionId =
 
 export type OfferCtaId =
   | "sticky_header"
+  | "sticky_bottom"
   | "analysis_continue"
   | "routine_continue"
   | "support_continue"
