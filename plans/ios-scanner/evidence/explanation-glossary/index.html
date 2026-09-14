@@ -1,0 +1,105 @@
+<meta charset="utf-8">
+<title>Erklärkarte Neu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --canvas:#f5f2ee;--ink:#3b3532;--muted:#68605b;--line:#e2dbd3;--soft:#f6f3f0;
+  --plum:#6b50a0;--plum-mid:#a996cc;--plum-ice:#e7dff5;
+  --dim:#a9a29c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font:14px/1.5 "Plus Jakarta Sans",system-ui,sans-serif}
+.wrap{max-width:1360px;margin:0 auto;padding:36px 28px 60px}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--plum);font-weight:600}
+h1{font:400 34px/1.15 "Playfair Display",Georgia,serif;margin:8px 0 6px;text-wrap:balance}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+h2{font:400 21px/1.2 "Playfair Display",Georgia,serif;margin:0 0 14px}
+
+.hero{display:grid;grid-template-columns:402px 1fr;gap:40px;align-items:center;margin:32px 0 0;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hero p{color:var(--muted);margin:0 0 10px;max-width:52ch}
+.hero .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:14px}
+.hero .toggle input{accent-color:var(--plum)}
+.crop{width:402px;height:560px;overflow:hidden;border-radius:26px;background:#111}
+.full .crop{height:auto;overflow:visible}
+.screen{position:relative;width:100%;aspect-ratio:402/874;background:url("../explanation-compact/result-background.png") center/100% 100% no-repeat;margin-top:-150px;isolation:isolate}
+.full .screen{margin-top:0}
+.shade{position:absolute;inset:0;background:rgba(0,0,0,.32)}
+.safe{position:absolute;inset:10.2% 16px 6.65%;display:flex;align-items:center}
+
+.all{margin-top:36px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:24px;padding:28px;border-radius:26px;background:var(--dim)}
+.grid .card{max-width:370px;margin:0 auto}
+
+/* card */
+.card{width:100%;max-height:100%;position:relative;background:#fff;border-radius:22px;padding:20px;box-shadow:0 14px 36px rgba(20,12,8,.24);overflow:auto;font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+.card .close{position:absolute;top:14px;right:14px;width:30px;height:30px;border:0;border-radius:50%;background:#efebe6;color:var(--ink);display:grid;place-items:center;padding:0}
+.card .close svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.card .title{font:400 22px/1.2 "Playfair Display",Georgia,serif;margin:0 40px 8px 0;color:var(--ink)}
+.card .def{font-size:15px;line-height:1.45;margin:0 0 18px;color:var(--ink)}
+.list{display:grid;grid-auto-rows:1fr;position:relative;--n:3}
+.list .item{display:grid;grid-template-columns:14px 92px 1fr;gap:0 10px;align-items:center;min-height:48px;padding:6px 0}
+.list .item+.item{border-top:1px solid var(--soft)}
+.list .lvl{font-size:15px;font-weight:600;line-height:1.35}
+.list .meaning{font-size:13px;line-height:1.45;color:var(--muted)}
+.list .pip{width:12px;height:12px;border-radius:50%;justify-self:center;position:relative;z-index:1;background:var(--plum-ice);border:1.5px solid var(--plum-mid)}
+.list::before{content:"";position:absolute;left:6px;top:calc(50% / var(--n));bottom:calc(50% / var(--n));width:2px;transform:translateX(-1px);background:var(--plum-ice)}
+.list.ordered::before{background:linear-gradient(var(--plum-ice),var(--plum))}
+.list.ordered .pip{border:0}
+.list.ordered .item:nth-child(1) .pip{background:var(--plum-ice)}
+.list.ordered .item:nth-child(2) .pip{background:var(--plum-mid)}
+.list.ordered .item:nth-child(3) .pip{background:var(--plum)}
+.list.two .item{grid-template-columns:14px 64px 1fr}
+.list.wide .item{grid-template-columns:14px 118px 1fr}
+
+.foot{margin-top:28px;font-size:12px;color:var(--muted)}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.crop{width:100%;max-width:402px}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Chaarlie · Produkt-Scan · Erklärkarte</div>
+  <h1>Die Erklärkarte: Begriff, Definition, Stufen.</h1>
+  <p class="lead">Gewählte Form. Keine Produkt- oder Zielwerte in der Karte; die stehen in der Zeile, von der man kommt.</p>
+
+  <section class="hero" aria-label="Im Kontext">
+    <div class="crop"><div class="screen"><div class="shade"></div><div class="safe" id="hero"></div></div></div>
+    <div>
+      <h2>Im Ergebnis</h2>
+      <p>Tipp auf eine Zeile, die Karte liegt mittig über dem abgedunkelten Ergebnis. Titel, Definition, dann jede mögliche Stufe mit einem Satz.</p>
+      <p>Jede Stufe hat dieselbe Zeilenhöhe, mittig gesetzt. Links läuft immer dieselbe Leiste: mit Verlauf von hell nach Plum, wo die Stufen eine Reihenfolge haben (mehr davon, keine Bewertung), einfarbig hell mit gleichen Punkten, wo es keine gibt (Haardicke, Kopfhaut, Ja/Nein).</p>
+      <label class="toggle"><input type="checkbox" id="full"> Ganzer Bildschirm</label>
+    </div>
+  </section>
+
+  <section class="all" aria-label="Alle Eigenschaften">
+    <h2>Alle sieben Eigenschaften</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+  <p class="foot">Definitionen wie freigegeben (design-spec §3). Stufentexte: Entwurf nach Fachreview vom 12.09.2026. Position, Abdunklung und Übergang der Karte bleiben wie freigegeben.</p>
+</div>
+
+<script>
+const PROPS=[
+  {id:"repair",title:"Repair-Pflege",kind:"ordered",def:"Wie stark eine Formel auf strapazierte Längen ausgelegt ist.",
+   levels:[["niedrig","Kaum Repair-Stoffe. Nicht auf strapazierte Längen ausgelegt."],["mittel","Etwas Repair-Anteil. Auf leicht strapazierte Längen ausgelegt."],["hoch","Deutlich auf strapazierte Längen ausgelegt, etwa nach Färben, Blondieren oder viel Hitze."]]},
+  {id:"weight",title:"Pflegegewicht",kind:"ordered",def:"Wie reichhaltig eine Formel ist. Leicht legt wenig auf, reichhaltig legt mehr auf und kann feines Haar beschweren.",
+   levels:[["leicht","Legt wenig auf. Für feines Haar oder schnell beschwerte Längen."],["mittel","Legt mittelstark auf. Für die meisten Haartypen ausgelegt."],["reichhaltig","Legt viel auf. Für dickes, trockenes oder stark strapaziertes Haar."]]},
+  {id:"direction",title:"Pflegerichtung",kind:"ordered",def:"Ob eine Formel eher auf feuchtigkeitsbindende Stoffe oder auf Protein setzt. Ausgeglichen enthält beides.",
+   levels:[["Feuchtigkeit","Setzt auf feuchtigkeitsbindende Stoffe wie Glycerin oder Panthenol."],["ausgeglichen","Enthält beides, ohne klaren Schwerpunkt."],["Protein","Setzt auf hydrolysierte Proteine, etwa Keratin oder Weizenprotein."]]},
+  {id:"cleansing",title:"Reinigung",kind:"ordered",def:"Wie gründlich ein Shampoo reinigt. Sanft wäscht weniger stark ab, klärend entfernt mehr Rückstände.",
+   levels:[["sanft","Wäscht weniger stark ab. Für trockene Kopfhaut oder häufiges Waschen."],["regulär","Alltagsreinigung. Stärker als sanft, milder als klärend."],["klärend","Entfernt mehr Rückstände und Talg. Für fettige Kopfhaut oder Ablagerungen."]]},
+  {id:"thickness",title:"Haardicke",kind:"set",def:"Für welche Haardicke die Formel ausgelegt ist: fein, mittel oder dick.",
+   levels:[["fein","Dünne einzelne Haare. Werden von reichhaltigen Formeln eher beschwert."],["mittel","Weder auffällig dünn noch dick."],["dick","Kräftige einzelne Haare. Werden von reichhaltigen Formeln seltener beschwert."]]},
+  {id:"scalp",title:"Kopfhaut",kind:"set",wide:true,def:"Für welche Kopfhaut die Formel ausgewiesen ist.",
+   levels:[["fettig","Fettet schnell nach, oft schon am nächsten Tag."],["ausgeglichen","Weder fettig noch trocken."],["trocken","Fühlt sich trocken an oder spannt, ohne Schuppen."],["Schuppen","Sichtbare, eher fettige Schuppen."],["trockene Schuppen","Feine, trockene Schüppchen ohne fettigen Glanz."],["gereizt","Rötungen, Jucken oder Empfindlichkeit."]]},
+  {id:"heat",title:"Hitzeschutz",kind:"binary",def:"Ob die Formel als Hitzeschutz für Föhn und Glätteisen ausgelegt ist.",
+   levels:[["ja","Vom Hersteller als Hitzeschutz ausgewiesen."],["nein","Kein ausgewiesener Hitzeschutz."]]}
+];
+const closeBtn=`<span class="close" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1L1 11"/></svg></span>`;
+function card(p){
+  const cls=[p.kind==="ordered"?"ordered":"",p.levels.length===2?"two":"",p.wide?"wide":""].join(" ");
+  return `<article class="card" aria-label="${p.title}">${closeBtn}<h3 class="title">${p.title}</h3><p class="def">${p.def}</p><div class="list ${cls}" style="--n:${p.levels.length}">${p.levels.map(([l,m])=>`<div class="item"><span class="pip"></span><span class="lvl">${l}</span><span class="meaning">${m}</span></div>`).join("")}</div></article>`;
+}
+document.getElementById("hero").innerHTML=card(PROPS[0]);
+document.getElementById("grid").innerHTML=PROPS.map(card).join("");
+document.getElementById("full").addEventListener("change",e=>document.body.classList.toggle("full",e.target.checked));
+</script>

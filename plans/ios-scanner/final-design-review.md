@@ -1,0 +1,42 @@
+# Final native design review
+
+2026-09-12. Final bounded review on `codex/ios-connected-scanner`, base `469d41f5e81f44702c94829c0ed312e732b01172`.
+
+Decision coverage: **confirmed** by Nick's simulator review and request to check alignment, wrapping and padding across the implemented B1–B4 journey. Confirmed: preserve current glossary design and all approved copy/semantics; correct bounded alignment, wrapping, spacing, clipping and touch targets. Inherited: existing native/result/glossary specs, fixed88% sheet and stationary centered fade. Implementation defaults: native screenshots using synthetic rendering fixtures, standard and compact simulators operated sequentially, focused checks and one appropriate counterpart lane. Open consequential assumptions: none. Undiscussed consequential assumptions affecting this handoff: none.
+
+Scope: login/code/error/loading; scan/manual search/results; assessment/alternatives/shop omission; glossary ordered/unordered/binary/long; Profile/logout/recovery. Standard, compact and accessibility text. Inspect real native renders, fix implementation mismatches, verify affected state. No new feature, copy choice, backend audit, publication or production operation. Main owns final visual judgment and integration; the bounded helper owns only the in-memory DEBUG fixture renderer. Review uses Lea's readability/usability lens from simulated-user-review; it is not a new domain or recommendation audit.
+
+## Rendered findings and disposition
+
+| Finding | Final correction and evidence |
+|---|---|
+| P2: At accessibility XXXL the scanner title, help/error text and actions ellipsized or fell outside the compact viewport. | Scanner content now scrolls when needed; button labels retain natural multiline height. [Compact before](implementation-evidence/final-design-review/scanner-compact-before.png), [title after](implementation-evidence/final-design-review/scanner-compact-after.png), [reachable actions after](implementation-evidence/final-design-review/scanner-actions-compact-after.png). The manual-search action is tested above the tab bar and opens search. |
+| P2: Accessibility search cards squeezed long names between image and chevron. | Accessibility sizes stack image/chevron above full-width, leading-aligned product text; normal sizes retain the row. German discretionary breaks preserve the original accessibility label. [Before](implementation-evidence/final-design-review/search-large-before.png), [large after](implementation-evidence/final-design-review/search-large-after.png), [compact normal after](implementation-evidence/final-design-review/search-compact-after.png). Decorative chevrons are hidden from accessibility. |
+| P3: Glossary “ausgeglichen” and the largest-text “Pflegegewicht” title split off a final letter. | German discretionary breaks in glossary labels/title and accessibility comparison headings. Fixed title/close, equal rows, original copy/AX labels, rail semantics and fade remain intact. [Label before](implementation-evidence/final-design-review/glossary-label-before.png), [label after](implementation-evidence/final-design-review/glossary-label-after.png), [title before](implementation-evidence/final-design-review/glossary-title-compact-before.png), [title after](implementation-evidence/final-design-review/glossary-title-compact-after.png). |
+| P3: Auth fields and secondary text actions had small intrinsic targets; disabled main buttons looked active. | Fields and secondary actions have at least44pt height; main buttons visibly dim while disabled. [Before](implementation-evidence/final-design-review/code-before.png), [after](implementation-evidence/final-design-review/code-after.png), [compact keyboard](implementation-evidence/final-design-review/code-keyboard-compact.png). |
+
+No additional alignment/padding defect was verified in the observed main/alternative result tables, shop footer, Profile or recovery actions. [Long main result](implementation-evidence/final-design-review/long-main-standard.png) and [long alternative](implementation-evidence/final-design-review/long-alternative-standard.png) retain their baseline layout; these captures precede the final typography-only delta.
+
+## Actual coverage
+
+All captures are native SwiftUI on iOS26.5. iPhone17Pro:402×874pt; iPhoneSE3:375×667pt. Only one simulator was booted at a time. Normal default text and accessibility XXXL were exercised; every intermediate Dynamic Type category was not exhaustively sampled.
+
+| Surface | Observed coverage |
+|---|---|
+| Login/code | Standard login, long-address code, invalid-code/error, loading; standard and compact code keyboard. Compact/accessibility code-error content scrolls. Target-height assertions cover code and both secondary actions. |
+| Scanner/search | Standard error/loading, manual search/results/error/loading and a real local empty search; compact normal and accessibility scanner/search. Simulator camera-unavailable fallback, not physical camera capture or denial. |
+| Assessment | Standard and compact long product/alternative names and purchase footer; accessibility stacked rows and missing-link footer omission. Existing baseline verifies opening the fixture shop in Safari; no purchase is performed. |
+| Glossary | Ordered cleansing, unordered scalp route, binary heat protection and long Repair-Pflege on standard and compact; categorical care direction; maximal-text long content and equal rows, fixed title/close, stationary underlying result. |
+| Profile/recovery | Standard Profile/loading/error and logout→login; compact long answers and accessibility scroll to logout above the tab bar. Standard missing-profile/unavailable recovery, compact unavailable and accessibility recovery. |
+
+The finite DEBUG renderer uses the real RootView and views with an isolated in-memory transport/persistence. It cannot read Keychain or open HTTP and does not authorize real accounts. Screenshot probes alone are not assertions of layout correctness: main inspected the selected renders; geometry and action checks provide separate automated evidence. A final normal launch returned to the real isolated local backend and retained synthetic account. Main observed Profile→Scan→manual search→empty result→corrected query→Leichter Conditioner→Repair-Pflege glossary. The final connected glossary is foreground; Next on3218 and the isolated stack remain running. The temporary compact simulator was shut down and removed; the original simulator remains booted.
+
+## Verification and review
+
+Final run results and integrated fingerprint are recorded in [verification-receipt.md](verification-receipt.md). One scoped read-only Claude Opus4.8/high review found no blocking defect. Main accepted its decorative-chevron accessibility note, reviewed subsequent title/row soft-break and capture-test edits locally, and reran the affected native paths. The custom TextFieldStyle uses SwiftUI's underscored protocol method; this is a maintenance consideration, not a verified current failure. No extra backend audit or public-release review was conducted.
+
+## System appearance and limits
+
+The review also found dark system status text over the dark scanner. RootView now owns native appearance by active surface: dark for the ready scanner, light for login/Profile/recovery. The existing search/result presentation explicitly remains light. App colors, typography and sheet/fade behavior stay unchanged. [Scanner](implementation-evidence/final-design-review/connected-scanner-final.png), [Profile](implementation-evidence/final-design-review/connected-profile-final.png), [result](implementation-evidence/final-design-review/connected-result-final.png) and [glossary overlay](implementation-evidence/final-design-review/connected-glossary-final.png) were observed on the final connected build; earlier before/after layout captures above precede this final system-appearance correction.
+
+Physical camera/permission recovery, iOS18 runtime, real-device networking, full VoiceOver traversal and public-release readiness remain unverified. Long editable email/search fields are intentionally single-line and may horizontally truncate at rest. Scrolled content can pass under native sheet/tab-bar fades; the checks establish action reachability rather than requiring every element to fit simultaneously. All account/product data in retained evidence is synthetic. No commit, push, PR, deployment or production write.

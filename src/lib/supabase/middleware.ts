@@ -393,6 +393,7 @@ export function createUpdateSession(
     }
 
     if (
+      pathMatchesRoutePrefix(pathname, "/api/mobile/v1") ||
       SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
       UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
       ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))

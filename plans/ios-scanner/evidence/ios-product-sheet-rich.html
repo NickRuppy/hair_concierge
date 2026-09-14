@@ -1,0 +1,207 @@
+<div id="cs-result-rich" aria-label="Chaarlie iOS – Scan und Profil">
+<style>
+#cs-result-rich{--cs-bg:light-dark(#fbf9f7,#221e28);--cs-paper:light-dark(#fff,#2b2532);--cs-text:light-dark(#2f2835,#f6f1fb);--cs-sub:light-dark(#736a7a,#c2b7cd);--cs-line:light-dark(#e9e2ee,#483d53);--cs-purple:light-dark(#6b50a0,#c0a4ec);--cs-tint:light-dark(#f0eaf7,#3b2d4c);--cs-green:light-dark(#2d654a,#a5d9b9);--cs-green-bg:light-dark(#e9f3ed,#203d30);--cs-amber:light-dark(#845c1c,#e7c080);--cs-amber-bg:light-dark(#faf0dc,#433623);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--cs-text);padding:8px 0 12px}
+#cs-result-rich *{box-sizing:border-box}
+#cs-result-rich button,#cs-result-rich input{font:inherit}
+#cs-result-rich button{cursor:pointer;color:inherit}
+#cs-result-rich .ms-caption{text-align:center;font-size:12px;color:var(--cs-sub);margin:0 0 12px}
+#cs-result-rich .ms-phone{width:min(100%,390px);margin:auto;border:1px solid var(--cs-line);border-radius:32px;background:var(--cs-bg);overflow:hidden;box-shadow:0 12px 36px #0000000d}
+#cs-result-rich .ms-status{display:flex;align-items:center;justify-content:space-between;padding:16px 24px 9px;font-size:13px;font-weight:500}
+#cs-result-rich .ms-status span:last-child{display:flex;gap:5px}
+#cs-result-rich .ms-status svg{width:14px;height:14px}
+#cs-result-rich .ms-header{padding:17px 21px 18px}
+#cs-result-rich .ms-wordmark{font-size:23px;letter-spacing:-1px;color:var(--cs-purple);font-weight:500}
+#cs-result-rich h2{font-size:27px;line-height:1.2;letter-spacing:-.6px;font-weight:500;margin:19px 0 6px}
+#cs-result-rich h3{font-size:17px;line-height:1.35;font-weight:500;margin:0}
+#cs-result-rich p{font-size:14px;line-height:1.5;margin:0}
+#cs-result-rich .ms-sub{color:var(--cs-sub)}
+#cs-result-rich .ms-content{min-height:420px;padding:0 19px 20px}
+#cs-result-rich .ms-product{border:1px solid var(--cs-line);background:var(--cs-paper);border-radius:18px;padding:15px;margin-bottom:12px}
+#cs-result-rich .ms-product-top{display:flex;align-items:center;gap:13px}
+#cs-result-rich .ms-open{display:flex;gap:13px;align-items:center;flex:1;min-width:0;padding:0;border:0;background:transparent;text-align:left}
+#cs-result-rich .ms-brand{font-size:11px;letter-spacing:1px;color:var(--cs-sub);margin-bottom:4px}
+#cs-result-rich .ms-name{font-size:16px;line-height:1.3;font-weight:500}
+#cs-result-rich .ms-meta{font-size:12px;color:var(--cs-sub);margin-top:5px}
+#cs-result-rich .ms-thumb{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:58px;height:77px;border-radius:12px;background:light-dark(#f4f0eb,#3a323f)}
+#cs-result-rich .ms-bottle{position:relative;width:27px;height:48px;background:#dcd4b5;border-radius:5px 5px 7px 7px;box-shadow:2px 3px 3px #0001;display:flex;align-items:center;justify-content:center}
+#cs-result-rich .ms-bottle::before{content:"";position:absolute;top:-7px;left:6px;width:15px;height:8px;background:#4e4b46;border-radius:2px 2px 0 0}
+#cs-result-rich .ms-bottle::after{content:"M";width:21px;height:24px;background:#f8f6ef;color:#675e50;text-align:center;padding-top:5px;font:500 11px Georgia,serif}
+#cs-result-rich .ms-bottle.rose{background:#d7b9bc}
+#cs-result-rich .ms-bottle.blue{background:#c3d2d6}
+#cs-result-rich .ms-mark{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:12px;font-weight:500;color:var(--cs-green)}
+#cs-result-rich .ms-mark svg{width:14px;height:14px}
+#cs-result-rich .ms-mark.warn{color:var(--cs-amber)}
+#cs-result-rich .ms-row-actions{display:flex;gap:8px;margin-top:13px;padding-top:12px;border-top:1px solid var(--cs-line)}
+#cs-result-rich .ms-shop{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;border:0;border-radius:10px;background:var(--cs-tint);color:var(--cs-purple);padding:11px 8px;font-size:13px;font-weight:500;min-height:43px}
+#cs-result-rich .ms-shop svg{width:14px;height:14px}
+#cs-result-rich .ms-icon-btn{border:1px solid var(--cs-line);border-radius:10px;width:44px;min-height:43px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--cs-sub)}
+#cs-result-rich .ms-icon-btn svg{width:17px;height:17px}
+#cs-result-rich .ms-section-label{font-size:12px;font-weight:500;color:var(--cs-sub);margin:21px 0 10px}
+#cs-result-rich .ms-pending{display:flex;width:100%;gap:11px;text-align:left;align-items:center;padding:15px;border:1px dashed var(--cs-line);border-radius:16px;background:transparent}
+#cs-result-rich .ms-pending>svg{width:21px;height:21px;color:var(--cs-amber);flex-shrink:0}
+#cs-result-rich .ms-pending strong{font-size:14px;font-weight:500;display:block;margin-bottom:3px}
+#cs-result-rich .ms-pending small{font-size:12px;color:var(--cs-sub)}
+#cs-result-rich .ms-tabs{display:flex;border-top:1px solid var(--cs-line);padding:9px 8px 6px;background:var(--cs-paper)}
+#cs-result-rich .ms-tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:transparent;border:0;padding:7px 3px;color:var(--cs-sub);font-size:11px;min-height:47px}
+#cs-result-rich .ms-tabs button[aria-current="page"]{color:var(--cs-purple);font-weight:500}
+#cs-result-rich .ms-tabs svg{width:22px;height:22px}
+#cs-result-rich .ms-home-wrap{background:var(--cs-paper);padding:6px 0 9px}
+#cs-result-rich .ms-home{width:112px;height:4px;background:var(--cs-text);border-radius:4px;margin:auto}
+#cs-result-rich .ms-viewfinder{position:relative;min-height:350px;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,#716d68,#484944);display:flex;align-items:center;justify-content:center;color:#fff}
+#cs-result-rich .ms-viewfinder .ms-bottle{width:120px;height:194px;transform:rotate(-6deg);border-radius:17px 17px 24px 24px}
+#cs-result-rich .ms-viewfinder .ms-bottle::before{width:59px;height:25px;left:31px;top:-21px}
+#cs-result-rich .ms-viewfinder .ms-bottle::after{content:"";width:93px;height:103px;background:repeating-linear-gradient(90deg,#34332e 0,#34332e 2px,#fbf7ea 2px,#fbf7ea 4px,#34332e 4px,#34332e 5px,#fbf7ea 5px,#fbf7ea 9px);border:14px solid #fbf7ea}
+#cs-result-rich .ms-corners{position:absolute;inset:22px;border:2px solid #ffffffb0;border-radius:15px;clip-path:polygon(0 0,27px 0,27px 3px,3px 3px,3px 27px,0 27px,0 0,100% 0,100% 27px,calc(100% - 3px) 27px,calc(100% - 3px) 3px,calc(100% - 27px) 3px,calc(100% - 27px) 0,100% 0,100% 100%,calc(100% - 27px) 100%,calc(100% - 27px) calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) calc(100% - 27px),100% calc(100% - 27px),100% 100%,0 100%,0 calc(100% - 27px),3px calc(100% - 27px),3px calc(100% - 3px),27px calc(100% - 3px),27px 100%,0 100%)}
+#cs-result-rich .ms-camera-label{position:absolute;top:16px;font-size:11px;text-shadow:0 1px 3px #000}
+#cs-result-rich .ms-camera-hint{position:absolute;bottom:27px;background:#211b27dd;border-radius:30px;padding:10px 13px;font-size:13px}
+#cs-result-rich .ms-outline,#cs-result-rich .ms-primary{display:flex;width:100%;align-items:center;justify-content:center;gap:9px;border-radius:13px;min-height:49px;padding:12px;font-size:15px;font-weight:500}
+#cs-result-rich .ms-outline{border:1px solid var(--cs-line);background:transparent;color:var(--cs-purple);margin-top:13px}
+#cs-result-rich .ms-primary{background:#7252a7;color:white;border:0}
+#cs-result-rich .ms-outline svg,#cs-result-rich .ms-primary svg{width:18px;height:18px}
+#cs-result-rich .ms-back{display:inline-flex;align-items:center;gap:5px;padding:0;min-height:34px;border:0;background:transparent;color:var(--cs-purple);font-size:14px}
+#cs-result-rich .ms-back svg{width:17px;height:17px}
+#cs-result-rich .ms-banner{padding:16px;border-radius:15px;background:var(--cs-green-bg);color:var(--cs-green);margin:19px 0 17px}
+#cs-result-rich .ms-banner.warn{background:var(--cs-amber-bg);color:var(--cs-amber)}
+#cs-result-rich .ms-banner p{font-size:13px;margin-top:5px}
+#cs-result-rich .ms-criteria{border:1px solid var(--cs-line);border-radius:14px;padding:0 14px;margin-bottom:20px;background:var(--cs-paper)}
+#cs-result-rich .ms-criterion{display:flex;justify-content:space-between;gap:10px;padding:12px 0;font-size:13px;border-bottom:1px solid var(--cs-line)}
+#cs-result-rich .ms-criterion:last-child{border:0}
+#cs-result-rich .ms-criterion span:last-child{color:var(--cs-green)}
+#cs-result-rich .ms-why{font-size:14px;line-height:1.55;color:var(--cs-sub);margin-top:7px;margin-bottom:21px}
+#cs-result-rich .ms-settings{border:1px solid var(--cs-line);border-radius:15px;background:var(--cs-paper);padding:0 14px}
+#cs-result-rich .ms-setting{display:flex;width:100%;justify-content:space-between;gap:12px;padding:15px 0;border:0;border-bottom:1px solid var(--cs-line);background:transparent;font-size:14px;text-align:left}
+#cs-result-rich .ms-setting:last-child{border-bottom:0}
+#cs-result-rich .ms-setting span:last-child{color:var(--cs-sub)}
+#cs-result-rich .ms-setting svg{width:17px;height:17px;color:var(--cs-sub)}
+#cs-result-rich .ms-empty{padding:66px 14px;text-align:center;color:var(--cs-sub)}
+#cs-result-rich .ms-empty h3{color:var(--cs-text);margin-bottom:10px}
+#cs-result-rich .ms-empty>svg{width:30px;height:30px;margin-bottom:20px;color:var(--cs-purple)}
+#cs-result-rich .ms-demo-controls{max-width:390px;margin:12px auto 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#cs-result-rich .ms-demo-controls button{border:0;background:transparent;color:var(--cs-sub);text-decoration:underline;text-underline-offset:3px;font-size:12px;padding:9px 7px}
+#cs-result-rich .ms-toast{font-size:12px;color:var(--cs-purple);text-align:center;min-height:18px;margin:12px auto 0;max-width:390px}
+#cs-result-rich .ms-notice{padding:16px;background:var(--cs-tint);border-radius:14px;margin:15px 0;color:var(--cs-sub);font-size:14px;line-height:1.5}
+#cs-result-rich .ms-input{width:100%;padding:14px;border:1px solid var(--cs-line);border-radius:13px;background:var(--cs-paper);color:var(--cs-text);font-size:16px;margin-bottom:17px}
+#cs-result-rich[data-density="compact"] .ms-product{padding:11px;margin-bottom:9px;border-radius:13px}
+#cs-result-rich[data-density="compact"] .ms-thumb{height:63px;width:47px}
+#cs-result-rich[data-density="compact"] .ms-row-actions{margin-top:9px;padding-top:9px}
+#cs-result-rich .rs-axes{border:1px solid var(--cs-line);border-radius:16px;padding:0 14px;background:var(--cs-paper);margin:14px 0 18px}
+#cs-result-rich .rs-axis{padding:14px 0;border-bottom:1px solid var(--cs-line)}
+#cs-result-rich .rs-axis:last-child{border-bottom:0}
+#cs-result-rich .rs-axis-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:500;margin-bottom:10px}
+#cs-result-rich .rs-axis-title span{font-size:12px;color:var(--cs-green)}
+#cs-result-rich .rs-axis-title .rs-outside{color:var(--cs-amber)}
+#cs-result-rich .rs-track{display:flex;gap:5px}
+#cs-result-rich .rs-segment{flex:1;position:relative;height:11px;border-radius:8px;background:var(--cs-line)}
+#cs-result-rich .rs-segment.rs-target{background:var(--cs-green-bg);box-shadow:inset 0 0 0 1px var(--cs-green)}
+#cs-result-rich .rs-dot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:9px;height:9px;background:var(--cs-green);border-radius:50%;outline:2px solid var(--cs-paper)}
+#cs-result-rich .rs-dot.rs-outside{background:var(--cs-amber)}
+#cs-result-rich .rs-stops{display:flex;gap:5px;margin-top:7px;color:var(--cs-sub);font-size:11px;line-height:1.2}
+#cs-result-rich .rs-stops span{flex:1;text-align:center}
+#cs-result-rich .rs-legend{display:flex;gap:13px;font-size:11px;color:var(--cs-sub);margin:11px 0 4px;align-items:center}
+#cs-result-rich .rs-legend span{display:flex;gap:5px;align-items:center}
+#cs-result-rich .rs-key-target{display:inline-block;width:17px;height:9px;border-radius:4px;background:var(--cs-green-bg);border:1px solid var(--cs-green)}
+#cs-result-rich .rs-key-product{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cs-purple)}
+#cs-result-rich .rs-why{font-size:14px;line-height:1.55;margin:8px 0;color:var(--cs-text)}
+#cs-result-rich .rs-secondary{font-size:13px;color:var(--cs-sub);line-height:1.5;margin:9px 0 20px}
+#cs-result-rich .rs-alts{margin:23px 0 21px;border-top:1px solid var(--cs-line);padding-top:20px}
+#cs-result-rich .rs-alt{display:flex;align-items:center;gap:12px;padding:13px 0;border:0;border-bottom:1px solid var(--cs-line);background:transparent;width:100%;text-align:left}
+#cs-result-rich .rs-alt:last-child{border-bottom:0}
+#cs-result-rich .rs-alt .ms-thumb{width:43px;height:58px}
+#cs-result-rich .rs-alt .ms-bottle{transform:scale(.8)}
+#cs-result-rich .rs-alt svg{margin-left:auto;width:17px;flex-shrink:0}
+#cs-result-rich .rs-alt-name{font-size:14px;font-weight:500;margin-bottom:4px}
+#cs-result-rich .rs-alt-meta{font-size:12px;color:var(--cs-sub)}
+</style>
+<p class="ms-caption">iOS-Entwurf · Beispieldaten</p>
+<div class="ms-phone">
+  <div class="ms-status"><span>9:41</span><span aria-hidden="true"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span></div>
+  <div class="ms-header"></div>
+  <div class="ms-content"></div>
+  <nav class="ms-tabs" aria-label="App-Bereiche">
+    <button type="button" data-nav="scan"><i data-lucide="scan-line" aria-hidden="true"></i>Scan</button>
+    <button type="button" data-nav="profile"><i data-lucide="user-round" aria-hidden="true"></i>Profil</button>
+  </nav>
+  <div class="ms-home-wrap"><div class="ms-home" aria-hidden="true"></div></div>
+</div>
+<div class="ms-demo-controls"><button type="button" data-demo="known">Beispielscan ansehen</button><button type="button" data-demo="unknown">Unbekanntes Produkt</button></div>
+<div class="ms-toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  const root = document.getElementById('cs-result-rich');
+  const header = root.querySelector('.ms-header');
+  const content = root.querySelector('.ms-content');
+  const toast = root.querySelector('.ms-toast');
+  const state = { page:'result', selected:2, origin:'scan', category:'Shampoo', search:'' };
+  const design = { alternatives:true };
+  const products = [
+    { brand:'MIRA', name:'Light Haarmaske', category:'Maske', size:'200 ml', price:'8,95 €', tone:'', good:true, why:'Die milde Reinigung passt zu deiner Kopfhaut. Die leichte Pflege ist auf dein feines Haar abgestimmt.', rows:[['Reinigung','Mild'],['Pflegewirkung','Leicht'],['Haardicke','Fein']] },
+    { brand:'MIRA', name:'Balance Haarmaske', category:'Maske', size:'200 ml', price:'9,95 €', tone:'rose', good:true, why:'Die leichte Pflege passt zu deinem feinen Haar. Sie unterstützt die Kämmbarkeit deiner behandelten Längen.', rows:[['Pflegewirkung','Leicht'],['Haardicke','Fein'],['Längen','Behandelt']] },
+    { brand:'MIRA', name:'Rich Haarmaske', category:'Maske', size:'200 ml', price:'12,95 €', tone:'blue', good:false, why:'Die intensive Pflege kann für deine trockenen Längen hilfreich sein. Für dein feines Haar könnte sie jedoch zu reichhaltig sein.', rows:[['Pflegewirkung','Reichhaltig'],['Haardicke','Einschränkung'],['Längen','Trocken']] }
+  ];
+  const icon = name => `<i data-lucide="${name}" aria-hidden="true"></i>`;
+  const thumb = p => `<div class="ms-thumb" aria-hidden="true"><span class="ms-bottle ${p.tone}"></span></div>`;
+  const back = () => `<button class="ms-back" data-action="back" type="button">${icon('chevron-left')}Zurück</button>`;
+  function richResult(p) {
+    const axes = p.good ? [
+      {label:'Pflegewirkung',stops:['Leicht','Mittel','Reichhaltig'],target:0,product:0},
+      {label:'Geeignete Haardicke',stops:['Fein','Normal','Dick'],target:0,product:0}
+    ] : [
+      {label:'Pflegewirkung',stops:['Leicht','Mittel','Reichhaltig'],target:0,product:2},
+      {label:'Geeignete Haardicke',stops:['Fein','Normal','Dick'],target:0,product:1}
+    ];
+    const axisMarkup = axes.map(a => `<div class="rs-axis"><div class="rs-axis-title">${a.label}<span class="${a.target===a.product?'':'rs-outside'}">${a.target===a.product?'✓ Im Zielbereich':'Außerhalb deines Ziels'}</span></div><div class="rs-track" aria-hidden="true">${a.stops.map((s,i)=>`<span class="rs-segment ${i===a.target?'rs-target':''}">${i===a.product?`<span class="rs-dot ${a.target===a.product?'':'rs-outside'}"></span>`:''}</span>`).join('')}</div><div class="rs-stops">${a.stops.map(s=>`<span>${s}</span>`).join('')}</div></div>`).join('');
+    return `<div class="ms-product-top">${thumb(p)}<div><div class="ms-brand">${p.brand}</div><h3>${p.name}</h3><div class="ms-meta">${p.category} · ${p.size}</div></div></div>
+      <div class="ms-banner ${p.good?'':'warn'}"><h3>${p.good?'Passt zu deinem Haar':'Passt mit Einschränkung'}</h3><p>${p.good?'Leichte Pflege für dein feines Haar.':'Für deine Längen interessant, für dein feines Haar möglicherweise zu schwer.'}</p></div>
+      <h3>Produkt und Haar im Vergleich</h3><div class="rs-legend"><span><b class="rs-key-target"></b>Dein Zielbereich</span><span><b class="rs-key-product"></b>Dieses Produkt</span></div><div class="rs-axes">${axisMarkup}</div>
+      <h3>Was das für dich bedeutet</h3><p class="rs-why">${p.good?'Deine gefärbten Längen brauchen Pflege, dein feines Haar eher leichte Formulierungen. Diese Maske passt zu dieser Kombination.':'Deine gefärbten Längen können von Pflege profitieren. Dein feines Haar braucht dabei jedoch wenig Gewicht. Diese Maske liegt über deinem Zielbereich.'}</p><p class="rs-secondary">${p.good?'Die Einschätzung verbindet deine Quiz-Antworten mit den hinterlegten Produkteigenschaften.':'Der entscheidende Punkt ist die reichhaltige Pflegewirkung. Eine leichtere Maske wäre für deine Angaben die passendere Wahl.'}</p>
+      ${design.alternatives?`<section class="rs-alts"><h3>${p.good?'Auch passend zu deinem Haar':'Diese passen besser zu dir'}</h3>${products.slice(0,2).map((a,id)=>({a,id})).filter(entry=>entry.id!==state.selected).map(({a,id})=>`<button type="button" class="rs-alt" data-open="${id}" aria-label="Bewertung für ${a.name} ansehen">${thumb(a)}<div><div class="rs-alt-name">${a.name}</div><div class="rs-alt-meta">${a.price} · ${a.size}</div><div class="ms-mark">${icon('circle-check')}Passt zu deinem Haar</div></div>${icon('chevron-right')}</button>`).join('')}</section>`:''}
+      <button type="button" class="ms-outline" data-shop="${state.selected}">Im Shop kaufen · ${p.price} ${icon('arrow-up-right')}</button><button type="button" class="ms-primary" data-action="scan" style="margin-top:10px">Weiter scannen</button>`;
+  }
+  function render() {
+    const page = state.page;
+    const nav = ['result','merchant'].includes(page) ? state.origin : ['unknown','pending','search'].includes(page) ? 'scan' : page==='answers' ? 'profile' : page;
+    root.querySelectorAll('[data-nav]').forEach(b => { if (b.dataset.nav===nav) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+    const titles = {scan:['Produkt scannen',''],profile:['Profil','Deine Angaben und dein Konto.'],unknown:['Neu für uns','Der Barcode wurde gelesen. Das Produkt fehlt noch in unserer Datenbank.'],pending:['Produkt eingereicht',''],search:['Produkt suchen',''],answers:['Deine Haarangaben','Deine Antworten aus dem Haar-Check.']};
+    if (page==='result' || page==='merchant') header.innerHTML=back();
+    else header.innerHTML=`${['scan','profile'].includes(page)?'<div class="ms-wordmark">chaarlie</div>':back()}<h2>${titles[page][0]}</h2>${titles[page][1]?`<p class="ms-sub">${titles[page][1]}</p>`:''}`;
+    if (page==='scan') {
+      content.innerHTML=`<div class="ms-viewfinder" role="img" aria-label="Schematische Kameravorschau mit Barcode"><span class="ms-camera-label">Kameravorschau · Mockup</span><div class="ms-bottle" aria-hidden="true"></div><div class="ms-corners" aria-hidden="true"></div><span class="ms-camera-hint">Barcode in den Rahmen halten</span></div><button type="button" class="ms-outline" data-action="search">${icon('search')}Produkt manuell suchen</button>`;
+    } else if (page==='result') {
+      content.innerHTML=richResult(products[state.selected]);
+    } else if (page==='unknown') {
+      content.innerHTML=`<h3 style="margin-bottom:14px">Was für ein Produkt ist es?</h3><div class="ms-settings">${['Shampoo','Conditioner','Leave-in','Maske','Öl'].map(c=>`<button class="ms-setting" data-category="${c}" type="button">${c}${icon('chevron-right')}</button>`).join('')}</div><p class="ms-sub" style="margin-top:17px">Wähle die Produktart, um es zur Prüfung einzureichen.</p>`;
+    } else if (page==='pending') {
+      content.innerHTML=`<div class="ms-banner warn"><h3>${state.category} · Prüfung läuft</h3><p>Wir ergänzen die Produktdaten.</p></div><p class="ms-sub">Wir schicken dir eine E-Mail, sobald deine Bewertung bereit ist.</p><button type="button" class="ms-primary" data-action="scan" style="margin-top:23px">Weiter scannen</button>`;
+    } else if (page==='profile') {
+      content.innerHTML=`<div class="ms-settings"><button type="button" class="ms-setting" data-action="answers"><span>Meine Haarangaben</span>${icon('chevron-right')}</button><div class="ms-setting"><span>E-Mail</span><span>lea@example.com</span></div></div><div class="ms-section-label">Konto & Hilfe</div><div class="ms-settings">${['Hilfe & Kontakt','Datenschutz','Abmelden','Konto löschen'].map(t=>`<div class="ms-setting"><span>${t}</span>${icon('chevron-right')}</div>`).join('')}</div>`;
+    } else if (page==='answers') {
+      content.innerHTML=`<div class="ms-settings">${[['Haarstruktur','Wellig'],['Haardicke','Fein'],['Haardichte','Mittel'],['Haarlänge','Schulterlang'],['Behandlung','Gefärbt'],['Kopfhaut','Normal']].map(r=>`<div class="ms-setting"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div><p class="ms-sub" style="margin-top:18px">Beispielhafte Auswahl der gespeicherten Antworten.</p>`;
+    } else if (page==='merchant') {
+      const p=products[state.selected];
+      content.innerHTML=`<h2 style="margin-top:8px">Weiter zum Shop</h2><div class="ms-product-top" style="margin-top:22px">${thumb(p)}<div><div class="ms-brand">${p.brand}</div><h3>${p.name}</h3><div class="ms-meta">${p.price}</div></div></div><div class="ms-notice">Im fertigen Ablauf öffnet sich hier direkt der verlinkte Händler. Diese Vorschau führt keinen Kauf aus.</div><button type="button" class="ms-outline" data-action="back">Zurück zur Vorschau</button>`;
+    } else if (page==='search') {
+      content.innerHTML=`<label for="ms-search" class="ms-sub" style="display:block;font-size:13px;margin-bottom:7px">Produktname oder Marke</label><input class="ms-input" id="ms-search" placeholder="Zum Beispiel Shampoo" autocomplete="off"><div class="ms-search-results">${products.map((p,id)=>`<button type="button" class="ms-setting" data-open="${id}"><span>${p.brand} · ${p.name}</span>${icon('chevron-right')}</button>`).join('')}</div>`;
+      content.querySelector('input').addEventListener('input', e=>{
+        const q=e.target.value.toLowerCase();
+        content.querySelectorAll('[data-open]').forEach(b=>{b.hidden=!b.textContent.toLowerCase().includes(q); b.style.display=b.hidden?'none':'flex';});
+      });
+    }
+    if (globalThis.lucide) lucide.createIcons({attrs:{width:18,height:18}});
+  }
+  function go(page){state.page=page;toast.textContent='';render();}
+  root.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b || !root.contains(b))return;
+    if(b.dataset.nav){go(b.dataset.nav);return;}
+    if(b.dataset.open!==undefined){state.selected=Number(b.dataset.open);state.origin='scan';go('result');return;}
+    if(b.dataset.shop!==undefined){state.selected=Number(b.dataset.shop);state.origin='scan';go('merchant');return;}
+    if(b.dataset.category){state.category=b.dataset.category;go('pending');return;}
+    if(b.dataset.demo){state.origin='scan';state.selected=2;go(b.dataset.demo==='known'?'result':'unknown');return;}
+    const a=b.dataset.action;
+    if(a==='back'){go(state.page==='answers'?'profile':state.page==='result'||state.page==='merchant'?state.origin:'scan');return;}
+    if(a)go(a);
+  });
+  render();
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addToggle(design,'alternatives',{label:'Passende Alternativen anzeigen'});}
+})();
+</script>
+</div>

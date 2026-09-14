@@ -1,0 +1,118 @@
+{
+  "rows": [
+    {
+      "dimensionId": "conditioner.repair_support",
+      "label": "Repair-Pflege",
+      "axisKind": "ordered",
+      "definition": "Wie stark eine Formel auf strapazierte Längen ausgelegt ist.",
+      "categoryFit": null,
+      "targetValue": "mittel",
+      "productValue": "hoch",
+      "targetStopIds": ["medium"],
+      "productStopIds": ["high"],
+      "state": "outside_target",
+      "displayStatus": "amber",
+      "stops": [
+        {
+          "id": "low",
+          "label": "niedrig",
+          "meaning": "Kaum Repair-Stoffe. Nicht auf strapazierte Längen ausgelegt."
+        },
+        {
+          "id": "medium",
+          "label": "mittel",
+          "meaning": "Etwas Repair-Anteil. Auf leicht strapazierte Längen ausgelegt."
+        },
+        {
+          "id": "high",
+          "label": "hoch",
+          "meaning": "Deutlich auf strapazierte Längen ausgelegt, etwa nach Färben, Blondieren oder viel Hitze."
+        }
+      ]
+    },
+    {
+      "dimensionId": "shampoo.scalp_route",
+      "label": "Kopfhaut",
+      "axisKind": "set",
+      "definition": "Für welche Kopfhaut die Formel ausgewiesen ist: fettig, ausgeglichen, trocken, mit Schuppen, mit trockenen Schuppen oder gereizt.",
+      "categoryFit": null,
+      "targetValue": "trocken",
+      "productValue": "trocken",
+      "targetStopIds": ["dry"],
+      "productStopIds": ["dry"],
+      "state": "in_target",
+      "displayStatus": "green",
+      "stops": [
+        {
+          "id": "oily",
+          "label": "fettig",
+          "meaning": "Fettet schnell nach, oft schon am nächsten Tag."
+        },
+        { "id": "balanced", "label": "ausgeglichen", "meaning": "Weder fettig noch trocken." },
+        {
+          "id": "dry",
+          "label": "trocken",
+          "meaning": "Fühlt sich trocken an oder spannt, ohne Schuppen."
+        },
+        { "id": "dandruff", "label": "Schuppen", "meaning": "Sichtbare, eher fettige Schuppen." },
+        {
+          "id": "dry_flakes",
+          "label": "trockene Schuppen",
+          "meaning": "Feine, trockene Schüppchen ohne fettigen Glanz."
+        },
+        {
+          "id": "irritated",
+          "label": "gereizt",
+          "meaning": "Rötungen, Jucken oder Empfindlichkeit."
+        }
+      ]
+    },
+    {
+      "dimensionId": "leave_in.heat_protection",
+      "label": "Hitzeschutz",
+      "axisKind": "binary",
+      "definition": "Ob die Formel als Hitzeschutz für Föhn und Glätteisen ausgelegt ist.",
+      "categoryFit": null,
+      "targetValue": "ja",
+      "productValue": "ja",
+      "targetStopIds": ["true"],
+      "productStopIds": ["true"],
+      "state": "in_target",
+      "displayStatus": "green",
+      "stops": [
+        { "id": "true", "label": "ja", "meaning": "Vom Hersteller als Hitzeschutz ausgewiesen." },
+        { "id": "false", "label": "nein", "meaning": "Kein ausgewiesener Hitzeschutz." }
+      ]
+    },
+    {
+      "dimensionId": "shampoo.cleansing_intensity",
+      "label": "Reinigung",
+      "axisKind": "ordered",
+      "definition": "Wie gründlich ein Shampoo reinigt. Sanft wäscht weniger stark ab, klärend entfernt mehr Rückstände.",
+      "categoryFit": null,
+      "targetValue": "regulär",
+      "productValue": "regulär",
+      "targetStopIds": ["regular"],
+      "productStopIds": ["regular"],
+      "state": "in_target",
+      "displayStatus": "green",
+      "stops": [
+        {
+          "id": "gentle",
+          "label": "sanft",
+          "meaning": "Wäscht weniger stark ab. Für trockene Kopfhaut oder häufiges Waschen."
+        },
+        {
+          "id": "regular",
+          "label": "regulär",
+          "meaning": "Alltagsreinigung. Stärker als sanft, milder als klärend."
+        },
+        {
+          "id": "clarifying",
+          "label": "klärend",
+          "meaning": "Entfernt mehr Rückstände und Talg. Für fettige Kopfhaut oder Ablagerungen."
+        }
+      ]
+    }
+  ]
+}
