@@ -824,7 +824,7 @@ function DetailPanel({
           <p className="mt-2 text-sm leading-6 text-stone-700">
             Für dieses Produkt liegt noch kein Reference-Key-Record unter{" "}
             <code className="rounded bg-stone-100 px-1 text-xs">
-              reference-key-v0/{detail.productId}.json
+              reference-key-v1/{detail.productId}.json
             </code>{" "}
             vor. Identität, INCI und Anwendung sind bereits aus der eingefrorenen Kohorte verfügbar;
             das Property-Audit erscheint, sobald der Klassifizierungslauf abgeschlossen ist.
@@ -1211,7 +1211,7 @@ export function MaskResearchLabClient({ data }: { data: MaskLabData }) {
             <p className="rounded-md border border-stone-200 bg-white p-3 text-xs leading-5 text-stone-600">
               {summary.pending} Produkt(e) warten noch auf den Klassifizierungslauf (kein
               Reference-Key-Record unter{" "}
-              <code className="rounded bg-stone-100 px-1">reference-key-v0/</code>).
+              <code className="rounded bg-stone-100 px-1">reference-key-v1/</code>).
             </p>
           ) : null}
         </header>

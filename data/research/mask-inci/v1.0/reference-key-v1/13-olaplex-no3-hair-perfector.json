@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.2",
+  "productId": "13-olaplex-no3-hair-perfector",
+  "identity": {
+    "brand": "Olaplex",
+    "productName": "No. 3 Hair Perfector",
+    "packSize": "multiple formats in market (100 ml most common at Douglas/Flaconi); exact SKU deliberately not pinned, this being a refuse-test capture",
+    "gtinEan": null,
+    "market": "DE (Douglas, Flaconi, salons — not dm/Rossmann/Müller)",
+    "formulaSource": "hautschutzengel.de produkt/389484, accessed 2026-09-04",
+    "rawInciSha256": "e44800d358fafdbc1ab451602a0793b73493d22c5267eb087a3c4c36a84e9a9d",
+    "identityState": "excluded_product_form",
+    "identityStateReason": "§2.3's identity gates are not all satisfied (no confirmed GTIN, no pinned pack size), but that is not why this record has no profile. G0 refuses the product on its directions and its catalog category before formula analysis begins, and §2.3's gates were therefore never reached."
+  },
+  "g0": {
+    "value": "excluded_product_form",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "EXCLUDED ON TWO INDEPENDENT CHARTER GROUNDS. Ground 1 — pre-shampoo-only treatment. The frozen directions place the product on UNWASHED hair and sequence the shampoo AFTER the rinse: 'Olaplex Hair Perfector N°3 großzügig im ungewaschenen, handtuchtrockenen Haar auftragen und durchkämmen. Mindestens 10 Minuten einwirken lassen (für einen intensiveren Effekt: über Nacht). Anschließend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen.' §2.1's eligibility definition requires application AFTER cleansing; this product is applied BEFORE it, and the charter's Excluded list names 'pre-shampoo-only treatments' explicitly. Ground 2 — bondbuilder catalog category with a specialist protocol. The charter's Excluded list names 'products in the bondbuilder catalog category with specialist protocols (Olaplex-style)'; this is the product that phrase was written about. Either ground alone is sufficient; both hold. §2.2's multi-use test was also run for completeness: the only alternative stated mode is 'für einen intensiveren Effekt: über Nacht', which is an overnight extension of the same pre-shampoo application and is itself a charter-excluded leave-on form. Under §2.2 step 4, no mode qualifies → `excluded_product_form`, with the reason recorded. The product's own directions place the ordinary mask slot AFTER it ('danach wie gewohnt shampoonieren und Conditioner/Kur auftragen') — the product is explicitly not the Kur in its own routine.",
+    "evidenceSignals": [
+      "directions verbatim: 'im ungewaschenen, handtuchtrockenen Haar auftragen' — applied BEFORE cleansing, failing §2.1's after-cleansing conjunct",
+      "directions verbatim: 'Anschließend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen' — the shampoo and the Kur both come after, confirming a pre-shampoo position in the routine",
+      "directions verbatim: 'Mindestens 10 Minuten einwirken lassen (für einen intensiveren Effekt: über Nacht)' — the alternative mode is overnight leave-on, itself a charter-excluded form",
+      "directions: 'durchkämmen' with no placement restriction — whole-head application, incompatible with P5's Längen und Spitzen, Ansatz aussparen",
+      "charter Excluded list: 'pre-shampoo-only treatments'",
+      "charter Excluded list: 'products in the bondbuilder catalog category with specialist protocols (Olaplex-style)'",
+      "market: Douglas/Flaconi/salons, outside the dm/Rossmann/Müller drugstore scope the coverage target is defined over"
+    ],
+    "boundaryEvidence": {
+      "purpose": "Per §2.1 and G0, an excluded row stays visible as boundary evidence and a stress case, and is never forced through the mask ontology. The observations below are E1 formula facts recorded for traceability. They are NOT a classification, they are NOT a partial profile, and no comparison value is derived from them.",
+      "tailMarkerIfComputed": {
+        "ingredient": "Phenoxyethanol",
+        "rank": 7,
+        "note": "Computed for the record only. No §3.1 anomaly would apply (rank 7 > 3, with Cetearyl Alcohol @4 and Behentrimonium Methosulfate @5 preceding)."
+      },
+      "aboveTailSegmentIfComputed": [
+        "1 Water",
+        "2 Bis-Aminopropyl Diglycol Dimaleate",
+        "3 Propylene Glycol",
+        "4 Cetearyl Alcohol",
+        "5 Behentrimonium Methosulfate",
+        "6 Cetyl Alcohol"
+      ],
+      "namedBondChemistry": {
+        "token": "Bis-Aminopropyl Diglycol Dimaleate",
+        "rank": 2,
+        "route": "maleate",
+        "note": "The token is present at rank 2, above the computed marker at 7, and is the exact species lexicon family 6 names as the canonical maleate route. Had this product been eligible, bond_route would have been `maleate` and repair_support_level would have been the cohort's only `high` besides #04. It is NOT eligible, so no such value is emitted. R7's standing caveat would have applied in full: the maleate mechanism has peer-reviewed structural investigation behind it (Michael-acceptor addition to free thiols, IR/Raman/SEM on bleached hair keratin), but the circulating '+38% intact disulfide bonds' figure traces to a supplier blog citing an un-locatable study and is unusable."
+      },
+      "archetypeGapConfirmation": "This capture confirms rather than contradicts Nick's accepted archetype-4b gap ruling. The calibration proposal noted that no drugstore-available MASK carries maleate bond chemistry; Olaplex No.3 shows the chemistry exists in the German market but exclusively in an excluded product form sold outside dm/Rossmann/Müller. Archetype 4b therefore remains genuinely unfilled by any eligible product, and the cohort's only qualifying named bond route is #04's gluconamide.",
+      "claimsRecordedNotAssessed": [
+        "'Patented Bond Building Technology' — E0",
+        "'professionelle Stärke für die Anwendung zuhause' — E0",
+        "'repariert gebrochene Disulfidbrücken im Haar' — E0. Recorded verbatim as claim text. This record makes no efficacy statement about it in either direction; assessing it would require the exact-product endpoint evidence §8 describes, which is outside this standard's E2 ceiling."
+      ],
+      "whyNoProfile": "§9.9: only G0 boundary exclusions omit the profile entirely. Every other conflict completes the profile and lists the affected field in uncertain_fields. This is a G0 boundary exclusion, so `profile` and `projectedOutputs` are omitted, per the standard and per this lane's brief. No fabricated profile was produced."
+    }
+  },
+  "tailMarker": {
+    "ingredient": "Phenoxyethanol",
+    "rank": 7,
+    "index": 7,
+    "plausible": true,
+    "anomalyNote": "Recorded as boundary evidence only. This product is excluded at G0 and no classification rests on this marker.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2) - recorded for completeness only; the product is excluded at G0 and no classification rests on it. PLAUSIBLE on the credited reading: CETEARYL ALCOHOL @4, BEHENTRIMONIUM METHOSULFATE @5 and CETYL ALCOHOL @6 outrank PHENOXYETHANOL @7, and the product is a conventional O/W emulsion with Water @1. Recorded counter-reading: four further cationic species (STEARAMIDOPROPYL DIMETHYLAMINE @10, QUATERNIUM-91 @11, CETRIMONIUM METHOSULFATE @13, CETRIMONIUM CHLORIDE @14) sit below the marker, and a reviewer who counted those as architecture-establishing would set `unresolved`. Because this record produces no profile, the two readings have no consequence and the prong is recorded rather than adjudicated."
+  },
+  "bondRoute": {
+    "value": "maleate",
+    "token": "Bis-Aminopropyl Diglycol Dimaleate",
+    "rank": 2,
+    "boundaryEvidenceOnly": true,
+    "note": "Recorded as BOUNDARY EVIDENCE, not as a classification. The product is excluded at G0, receives no profile, and this value gates nothing. It is retained because the cohort was frozen partly to test whether maleate chemistry exists in the German market at all, and because a reader comparing this record with #02 and #07 should be able to see all three bond outcomes — a qualifying token in an INELIGIBLE product (here), a qualifying token BELOW the tail in an eligible product (#02), and bond POSITIONING with no token at all (#07)."
+  },
+  "focusCareVerdict": {
+    "value": "not_applicable",
+    "claimRole": "not_applicable",
+    "note": "No focus was assessed. The product is excluded at G0, so §9.5's hierarchy was never entered."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "g0",
+      "blindValue": "excluded_product_form",
+      "finalValue": "excluded_product_form",
+      "reason": "No change. §11 step 1 places the directions facts needed for G0 inside the blind packet, so the exclusion was determined blind on the directions alone — before the brand, the name, or the bond claims were known. Unblinding added only the second, independent charter ground (bondbuilder catalog category with a specialist protocol), which is an identity-level ground and could not have been available blind. The outcome did not depend on it."
+    }
+  ],
+  "adjudicationPoints": [],
+  "uncertainFields": [],
+  "assumptionNotes": [
+    "Re-derived under v0.2 (R8 `hinweise` record, always emitted; R2 plausibility prong, recorded for completeness), not patched. The G0 exclusion and every recorded value are unchanged: the product sits in the `bondbuilder` catalog category with a specialist protocol, which the charter excludes outright, and it produces no profile.",
+    "The `hinweise` record is emitted with an EMPTY `fired` array — the normal case §13.1 rule 1 describes, written out rather than omitted so that 'no Hinweise' and 'Hinweise not researched' stay distinguishable. This is the run's only empty record and is the sole data point it offers on §18 open question 12 (hinweise volume).",
+    "R1 does not reach this record: the exclusion here is a catalog-category and protocol exclusion, not a multi-use mode question. Neither does R4, R5, R6 or R7 — there is no profile for them to touch.",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "No profile and no projectedOutputs are emitted, per §9.9 (only G0 boundary exclusions omit the profile entirely) and per this lane's brief. No profile was fabricated and no partial classification was inferred from the boundary evidence.",
+    "Review triggers fired: product-form ambiguity is NOT fired — the form is unambiguous, it is simply excluded. Proprietary bond/repair claim IS noted (inherited Conditioner §12) for the 'repariert gebrochene Disulfidbrücken' claim, but no assessment of that claim is made at this standard's E2 ceiling.",
+    "Identity gaps (no confirmed GTIN, no pinned pack size) were left unresolved deliberately, per the cohort capture note: identity precision matters less for a refuse test than for a classification candidate, and G0 refuses the product before §2.3's identity gates are reached.",
+    "Protocol metadata recorded for traceability only and carrying zero credit: stated contact time minimum 10 minutes, up to overnight; whole-head application with combing through. None of it is a mask protocol under TPL-MASK/P5.",
+    "G6 observed: the disulfide-bond repair claim is recorded as claim text and is neither endorsed nor rebutted here."
+  ],
+  "derivedFrom": "reference-key-v0/13-olaplex-no3-hair-perfector.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "hinweise": {
+    "fired": []
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-13-REFUSETEST": "CONFIRMED under v0.2. The exclusion is unchanged: the product is in the `bondbuilder` catalog category with a specialist protocol, which the charter excludes outright.",
+    "AP-13-MALEATEVISIBLE": "STILL LIVE — carried forward as boundary evidence.",
+    "AP-13-OVERNIGHTMODE": "STILL LIVE — carried forward from reference-key-v0."
+  }
+}

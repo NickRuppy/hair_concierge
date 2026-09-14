@@ -1,0 +1,453 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.2",
+  "productId": "05-isana-mandelmilch-3in1",
+  "identity": {
+    "brand": "Isana (Rossmann own brand)",
+    "productName": "Haarmaske 3in1 Mandelmilch (Milchprotein & Mandel)",
+    "packSize": "250 ml",
+    "gtinEan": "4305615609775",
+    "market": "DE (Rossmann own brand)",
+    "formulaSource": "codecheck.info ean_4305615609775 (codecheck tier), accessed 2026-09-04",
+    "rawInciSha256": "12053a7e706c4c1092fb14cea15a9f5415a6d87614a70ca1053084c3259ecc3a",
+    "identityState": "provisional_identity_conflict",
+    "identityStateReason": "The source page marks the product 'Älteres Produkt, ggf. nicht mehr erhältlich'. The research unit is the exact market product, pack/formula version; a possibly-withdrawn SKU is a material identity gap under §2.3, so confidence is capped even though the formula list itself is complete."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "multiUse": {
+      "multi_use": true,
+      "multi_use_covered_mode": "post_shampoo_rinse_out_mask",
+      "multi_use_uncovered_modes": [
+        "leave_in (für leichtes Kämmen, handtuchtrockenes Haar, nicht ausspülen)",
+        "leave_in (zum Bändigen, trockenes Haar, nicht ausspülen)"
+      ],
+      "multi_use_directions_source_id": "aggregated Rossmann retailer copy, 2026-09-04, confidence moderate",
+      "scope_declaration": "This profile describes ONLY the rinse-out mask mode. Scope declaration, not a quality signal, not an input to any comparison field."
+    },
+    "rationale": "§2.2 five-step test. Step 1: authoritative directions located (aggregated retailer copy, moderate confidence — recorded as a limitation). Step 2: mode (1) 'Intensivpflege — ins nasse Haar einmassieren, 3-5 Minuten einwirken lassen, mit warmem Wasser ausspülen' has a stated contact time and a rinse and is framed as the post-wash intensive mode; modes (2) and (3) are explicitly 'nicht ausspülen' and fail the rinse conjunct outright. Step 3: exactly one mode qualifies → mode-scoped classification with a multi_use envelope. Charter F1 names Isana 3in1 as a live boundary case that is eligible mode-scoped.",
+    "evidenceSignals": [
+      "directions mode 1: '3-5 Minuten einwirken lassen, mit warmem Wasser ausspülen'",
+      "directions modes 2 and 3: 'nicht ausspülen' — leave-on, disqualifying",
+      "charter F1 boundary-case list names Isana 3in1 explicitly"
+    ],
+    "placementConjunctNote": "Neither placement nor the words 'nach der Haarwäsche' are stated verbatim; mode 1's post-wash framing is inferred from the mode label 'Intensivpflege' plus 'ins nasse Haar' and its contrast with modes 2 and 3, which are on towel-dry and dry hair. Recorded as a directions gap (AP-05-AFTERCLEANSING), not as a refusal ground."
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 16,
+    "index": 16,
+    "plausible": true,
+    "anomalyNote": "No §3.1 anomaly. This is the cohort's longest above-tail segment (15 entries), which makes the product an unusually evidence-rich case: nothing material is demoted to the tail except Tocopherol @23.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. Fifteen above-tail entries carrying the whole architecture (CETEARYL ALCOHOL @2, BEHENTRIMONIUM CHLORIDE @5, the lipid block @7/@8/@9/@12, STEARAMIDOPROPYL DIMETHYLAMINE @13) all outrank PARFUM @16; conventional O/W emulsion. Neither limb fires. CITRIC ACID @15 is the tail_index - 1 species and carries no signal in any field (it is the amidoamine neutraliser, lexicon C3), so R3's tail-edge exclusion changes nothing here."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 CETEARYL ALCOHOL",
+    "3 DICAPRYLYL ETHER",
+    "4 COCOCAPRYLATE",
+    "5 BEHENTRIMONIUM CHLORIDE",
+    "6 HYDROLYZED MILK PROTEIN",
+    "7 COCOS NUCIFERA OIL",
+    "8 PRUNUS AMYGDALUS DULCIS OIL",
+    "9 HELIANTHUS ANNUUS SEED OIL",
+    "10 LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN",
+    "11 PANTHENOL",
+    "12 THEOBROMA CACAO SEED BUTTER",
+    "13 STEARAMIDOPROPYL DIMETHYLAMINE",
+    "14 ISOPROPYL ALCOHOL",
+    "15 CITRIC ACID"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": {
+      "value": "higher",
+      "note": "Six credited lipids, two cationics and a cetearyl head inside a fifteen-entry above-tail segment; Isopropyl Alcohol @14 is a carrier and earns nothing."
+    },
+    "conditioning_deposition_potential": {
+      "value": "higher",
+      "note": "Behentrimonium Chloride @5 plus Stearamidopropyl Dimethylamine @13, with Citric Acid @15 as the amidoamine neutraliser (C3), not an active."
+    },
+    "wet_slip_detangling_potential": {
+      "value": "higher",
+      "note": "Two cationic species with a cationised protein at @10 adding substantivity; wet evidence is not dry evidence."
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "note": "No silicone at any rank; no dry endpoint."
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "higher",
+      "note": "Two light esters plus three plant oils plus a cocoa butter, all above the tail."
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "moderate",
+      "note": "Silicone-free with no substantive polymer; the route is lipid softening rather than surface control."
+    },
+    "shine_potential": {
+      "value": "moderate",
+      "note": "Only the optical consequence of the M1 film; no alignment-oriented architecture."
+    },
+    "humectant_support_potential": {
+      "value": "lower",
+      "note": "Panthenol @11 is the only above-tail humectant — there is no glycerin in this formula at all."
+    },
+    "weight_deposition_potential": {
+      "value": "higher",
+      "note": "Theobroma Cacao Seed Butter @12 and Cocos Nucifera Oil @7 above the tail on a two-cationic cetearyl base."
+    },
+    "body_lightness_potential": {
+      "value": "likely_depositing",
+      "note": "Rich R1+R4b architecture; positioning is 'für trockenes, strapaziertes Haar' with no lightness claim."
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "note": "Manageability route only."
+    },
+    "repair_surface_film": {
+      "value": "candidate",
+      "note": "Hydrolyzed Milk Protein @6 and Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein @10 — two distinct qualifying R5 species above the tail, the second a cationised derivative with higher substantivity. MW unknown from INCI."
+    },
+    "bond_specific_support": {
+      "value": "unknown",
+      "note": "No named bond token at any rank and no bond positioning."
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "note": "Citric Acid @15 is the amidoamine neutraliser; no colour endpoint."
+    },
+    "fragrance_scalp_exposure": {
+      "value": "aromatic_or_allergen_exposure",
+      "note": "Parfum @16, Linalool @17, Benzyl Salicylate @18."
+    }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 12053a7e…), above-tail ranks 1–15; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "All three §9.1 structural signals are satisfied by wide margins inside the cohort's longest above-tail segment. Confidence is held at moderate by the identity gap, not by any weakness in the structural evidence. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "BEHENTRIMONIUM CHLORIDE (rank 5) and STEARAMIDOPROPYL DIMETHYLAMINE (rank 13) — two distinct cationic species above the tail",
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three",
+        "DICAPRYLYL ETHER (3), COCOCAPRYLATE (4), COCOS NUCIFERA OIL (7), PRUNUS AMYGDALUS DULCIS OIL (8), HELIANTHUS ANNUUS SEED OIL (9), THEOBROMA CACAO SEED BUTTER (12) — six distinct non-fatty-alcohol lipids above the tail",
+        "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN (rank 10) — a cationised PROTEIN, deliberately NOT counted toward S1 (lexicon family 5a, not family 1)"
+      ],
+      "derivation": "S1 satisfied (2 distinct cationic surfactants above the tail; the cationised protein at @10 is excluded from the count by family). S2 satisfied (Cetearyl Alcohol @2). S3 satisfied (six distinct non-fatty-alcohol lipids, against a required 2). Count = 3 of 3.",
+      "thresholdReasoning": [
+        "Clears `high`: ≥2 of {S1,S2,S3} with no material counter-signal; all three are met from independent families.",
+        "`moderate` does not apply to the VALUE: three signals are satisfied. (Confidence is a separate axis and is held at moderate for identity reasons.)",
+        "`low` does not apply: it requires none of the three.",
+        "Re-derived under v0.2 (R3): the value `high` STANDS. S1 is satisfied and survives the tail-edge exclusion — BEHENTRIMONIUM CHLORIDE @5 and STEARAMIDOPROPYL DIMETHYLAMINE @13, two distinct species both ranked above tail_index − 1 (CITRIC ACID @15). S2 is satisfied by CETEARYL ALCOHOL @2 and S3 by six distinct non-fatty-alcohol lipids above the tail. S1 plus both alternatives, with no material counter-signal: the strongest `high` in the cohort under the new rule."
+      ],
+      "counterSignals": [
+        "Identity gap: the source page marks the SKU as possibly discontinued. Under G5 this lowers the smallest affected scope — it caps confidence across the profile rather than blocking it.",
+        "Isopropyl Alcohol @14 is a carrier with no care meaning (lexicon family 2 note) and earns nothing."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support.",
+        "codecheck-tier source; no dm/Rossmann verbatim page was reachable."
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–15; an ingredient-informed matching prior, not a prediction of visible flattening.",
+      "rationale": "Required base met, and supporting alternative (a) met twice — a cocoa butter and a heavy lauric triglyceride, both well above the marker. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "BEHENTRIMONIUM CHLORIDE (5) + STEARAMIDOPROPYL DIMETHYLAMINE (13) — two distinct cationics above the tail",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three",
+        "THEOBROMA CACAO SEED BUTTER (rank 12) — R4b plant butter above the tail",
+        "COCOS NUCIFERA OIL (rank 7) — R4b heavy lauric triglyceride above the tail",
+        "claims: 'mit Kakaobutter', 'für trockenes, strapaziertes Haar' — consistent, and here the pack story matches the ranks"
+      ],
+      "derivation": "§9.2 required base met; alternative (a) an R4b heavy lipid above the tail met by both the cocoa butter and the coconut oil. Alternative (b) is irrelevant (silicone-free formula).",
+      "thresholdReasoning": [
+        "Clears `high`: base plus alternative (a), with no material unresolved counter-signal from positioning.",
+        "`moderate` does not apply: the high anchor does not fail.",
+        "`low` does not apply: all three of its conjuncts fail.",
+        "§9.2 conflict fallback not engaged: no lightness positioning anywhere in the claims. 'silikonfrei' is present and proves nothing about lightness (explicit §9.2 counter-signal).",
+        "Re-derived under v0.2 (R4): the value `high` STANDS. Required core = COCOS NUCIFERA OIL @7 and THEOBROMA CACAO SEED BUTTER @12, two R4b heavy lipids above the marker (PARFUM @16), both clear of tail_index − 1 (@15). Completer (a) = CETEARYL ALCOHOL @2 within the top three ranks. Completer (b) is unavailable — 'silikonfrei' is confirmed by the list — and unused. `low` fails on conjuncts 1 and 2. No lightness positioning, so `weight_high_conflict` does not fire."
+      ],
+      "counterSignals": [
+        "'silikonfrei' claim recorded as inert: silicone-free does not prove lightness, and silicone presence is not the weight driver in either direction."
+      ],
+      "limitations": [
+        "A soft preference with a stated reason, never an exclusion."
+      ]
+    },
+    "careDirection": {
+      "value": "protein",
+      "balancedReading": null,
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–15; comparative care emphasis, never an assertion about a user's protein state (G6).",
+      "rationale": "CHANGED under v0.2 (R6). The lipid-leg path into `balanced` is deleted, and this is the product v0.1 itself named as the clearest case where `protein` was the more faithful description: two hydrolyzed proteins, one of them cationised and one at above-tail rank 6, against a single panthenol. The protein leg leads and no humectant cluster stands beside it. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "HYDROLYZED MILK PROTEIN (rank 6) — qualifying R5 species above the tail (PARFUM @16) and within the first eight above-tail ranks",
+        "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN (rank 10) — second distinct qualifying R5 species; lexicon family 5a explicitly includes cationised protein derivatives, which deposit more substantively than neutral hydrolysates",
+        "PANTHENOL (rank 11) — the sole above-tail humectant; the formula contains no glycerin at all, so the §9.5.3 criterion-1 cluster fails at one member",
+        "COCOS NUCIFERA OIL (7), PRUNUS AMYGDALUS DULCIS OIL (8), HELIANTHUS ANNUUS SEED OIL (9), THEOBROMA CACAO SEED BUTTER (12), DICAPRYLYL ETHER (3), COCOCAPRYLATE (4) — six distinct non-fatty-alcohol lipids: the S3 leg that carried v0.1's `balanced` and that R6 deletes as a path",
+        "CITRIC ACID (rank 15) — the STEARAMIDOPROPYL DIMETHYLAMINE @13 neutraliser (lexicon C3), never an active"
+      ],
+      "derivation": "§9.3 (R6). Material R5 test satisfied on leg (a) (two distinct species above the tail) and independently on leg (b) (a single qualifying species at above-tail rank 6, inside the first eight). `balanced` reading (a) requires a qualifying humectant cluster: fails at one member. `balanced` reading (b) requires no protein anchor: fails at clause 1. → `protein`.",
+      "thresholdReasoning": [
+        "Clears `protein`: a material R5 route on both of its legs, with no qualifying humectant cluster beside it.",
+        "`balanced` (a) does not apply: one above-tail humectant against a required three, two of them non-glycerin — and there is no glycerin in the formula at all.",
+        "`balanced` (b) does not apply: clause 1 fails on the protein anchor; clause 3 would fail too, on a six-species lipid stack.",
+        "`moisture` does not apply: a two-species R5 route above the tail is a protein-film route, which the `moisture` definition excludes.",
+        "v0.1 recorded that on the substance `protein` was arguably the more faithful description and that only the S3 lipid leg pushed the value to `balanced`. R6 removes that leg; the value moves for the reason the v0 record predicted."
+      ],
+      "counterSignals": [
+        "D4 heavy-protein-payload counter-signal FIRES (two distinct R5 species above the tail, one within the top five ranks of the full list): confidence bound to `moderate`, carried in `hinweise` as `protein_payload`, routed under `protein_payload_review`.",
+        "The formula is also genuinely lipid-rich (`weight_potential: high`). `care_direction` is a protein-versus-moisture comparison and says nothing about richness; the richness is said once, in `weight_potential` (§6 rule 1).",
+        "Neither R5 species sits near the boundary band, so unlike #04 this value has no tail-edge hinge."
+      ],
+      "limitations": [
+        "INCI discloses no molecular weight; the route supports 'a protein film route is present' and nothing more.",
+        "Banned vocabulary observed: no 'protein overload' language anywhere in this record."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "A distinct temporary protein film route is present above the tail — two species, one cationised for higher substantivity, one at rank 6 — which is exactly §9.4's `medium` requirement. No named bond chemistry exists, so `high` is closed. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "HYDROLYZED MILK PROTEIN (rank 6) — qualifying R5 species above the tail",
+        "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN (rank 10) — second qualifying R5 species, cationised",
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank"
+      ],
+      "derivation": "§9.4: `high` requires bond_route ≠ none — bond_route is `none`. `medium` requires the §9.3 material R5 route — satisfied on both legs. → `medium`.",
+      "thresholdReasoning": [
+        "Clears `medium`: a distinct temporary protein/peptide/keratin fibre-film route, using the same qualifying test as §9.3.",
+        "`high` does not apply: nothing but a named bond token above the tail reaches `high`, and none exists. The cationised protein is emphatically NOT bond evidence (family 6 explicit non-qualifier: any hydrolysed or cationised protein alone).",
+        "`low` does not apply: the R5 route is genuine and above the tail, unlike in #01, #02, #03 and #10 where every protein species is demoted.",
+        "Mask delta applied: the rich R1/R4 base contributed nothing here; conditioning_level `high` alone would have been `low`."
+      ],
+      "counterSignals": [
+        "'Milchprotein' front-of-pack matches the formula for once — recorded, but the value was determined blind and the claim added nothing."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–15.",
+      "rationale": "`repair` is tested first among the special-purpose routes and clears on a distinct R5 protein film route with two species above the tail, one of them at rank 6. No claim was needed. E2 ceiling: a comparative architectural direction, not a repair promise.",
+      "evidenceSignals": [
+        "HYDROLYZED MILK PROTEIN (6) + LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN (10) — distinct R5 film route above the tail",
+        "no silicone, no cationic polymer, no bond token anywhere",
+        "PANTHENOL (11) — single humectant; no glycerin in the formula"
+      ],
+      "derivation": "Step 1 baseline exclusion applied (the six-lipid base is one M1 observation and creates no focus). Step 2: M1 base, M2 protein route — two separable groups. Step 3: `repair` requires a distinct R5 protein/peptide film route — satisfied. `curl_support`, `color_care`, `lightness` are not reached for the primary slot. The hierarchy stops at step 3.",
+      "thresholdReasoning": [
+        "Clears `repair`: §9.5.2 step 3's protein-film disjunct is met by two species above the tail, which is more than the 'not merely one protein token' bar the focus_care_verdict requires.",
+        "`moisture` does not apply: tested at step 4, after repair, and would fail its own guard anyway with one above-tail humectant against a required three.",
+        "`smoothing` does not apply: tested at step 6, after a step-3 route cleared. Had it been reached, the six-lipid stack would have met the 'substantial lipid/emollient route beyond baseline' conjunct but not the 'dry surface control is the clearest practical differentiator' conjunct — there is no silicone or polymer anywhere in this formula.",
+        "`general` does not apply: a differentiator cleared.",
+        "Re-checked under v0.2 (R5, R7). The `repair` headline rests on the two-species R5 film route above the tail and is unaffected. R5's disqualifier is not reached (the moisture route fails criterion 1 at one humectant, PANTHENOL @11, with no glycerin in the formula). R7 is not reached: the verdict is `repair_supported`, not `dual_supported`."
+      ],
+      "counterSignals": [
+        "The product is positioned as nourishing almond milk care ('Für trockenes, strapaziertes Haar', 'mit Kakaobutter') rather than as a repair product, so the key's headline is more clinical than the pack's. The formula, not the pack, decided."
+      ],
+      "limitations": [
+        "Confidence `moderate`: the identity gap (possibly discontinued SKU) and the codecheck-tier source apply to every field."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "`moisture` cannot take the §9.5.3 criterion-3 secondary slot because its cluster test fails at one member, and `smoothing` would spend a slot on the same M1 lipid base that step 1 excluded from creating a focus.",
+      "evidenceSignals": [
+        "one above-tail humectant (PANTHENOL @11) against a required three",
+        "the six-lipid stack is a single M1 observation"
+      ],
+      "derivation": "§9.5.3 criterion 1 fails for `moisture`. §6 rule 1 blocks `smoothing`/`detangling` as a second bite at the M1 base.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: no candidate independently meets its threshold and adds distinct matching information."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": [
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `high` maps deterministically to normal + coarse.",
+      "evidenceSignals": [
+        "derived from weight_potential = high"
+      ],
+      "derivation": "§9.6 table row 3.",
+      "thresholdReasoning": [
+        "Clears {normal, coarse}: the high row.",
+        "{fine, normal, coarse} does not apply: it requires weight_potential `moderate`.",
+        "{fine, normal} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-level prior; no production projection is authorized.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "moderately_damaged",
+        "highly_damaged"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `high` with a qualifying specialist route (repair_support_level ≥ medium) selects the specialist row, which replaces the general-high set.",
+      "evidenceSignals": [
+        "conditioning_level = high",
+        "repair_support_level = medium (specialist qualifier a: a distinct protein/peptide/keratin fibre-film route)",
+        "bond_route = none (qualifier b not used)"
+      ],
+      "derivation": "§9.7 row 4.",
+      "thresholdReasoning": [
+        "Clears {moderately_damaged, highly_damaged}: specialist qualifier (a) is met by a two-species R5 route above the tail.",
+        "{healthy, moderately_damaged} does not apply: that row is for high conditioning WITHOUT a specialist route.",
+        "All three values are never emitted (§9.7).",
+        "Verified against the §9.7 mask-delta warning: only 2 of 12 cohort products reach the specialist bucket, so the test is not visibly leaking."
+      ],
+      "counterSignals": [
+        "This is the one place where the standard hands a Rossmann own-brand almond-milk mask the same damage prior as a named bond mask. Both got there legitimately, by different specialist qualifiers."
+      ],
+      "limitations": [
+        "A broad product prior, not a repair-efficacy claim. Watch-list item 1 applies.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "wavy",
+        "curly",
+        "coily"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential plus the slip-route qualifier (§9.8); research-only.",
+      "rationale": "weight_potential `high` with a coherent high-slip R1 route selects the high-deposition row.",
+      "evidenceSignals": [
+        "weight_potential = high",
+        "BEHENTRIMONIUM CHLORIDE (5) + STEARAMIDOPROPYL DIMETHYLAMINE (13) + CETEARYL ALCOHOL (2), with a cationised protein at 10 adding substantivity"
+      ],
+      "derivation": "§9.8 row 3.",
+      "thresholdReasoning": [
+        "Clears {wavy, curly, coily}: both conjuncts hold.",
+        "{straight, wavy, curly} does not apply: it requires weight_potential `moderate`.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [
+        "No curl branding is present; the row is reached purely from architecture."
+      ],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "focusCareVerdict": {
+    "value": "repair_supported",
+    "claimRole": "corroborating",
+    "note": "A coherent substantive film route supports repair — two distinct hydrolyzed protein species above the tail, one cationised for higher substantivity, one at rank 6 — not merely one protein token. The moisture direction is not supported: a single above-tail humectant and no glycerin. 'Milchprotein' positioning corroborates a route earned blind; it neither created nor broke a tie."
+  },
+  "overloadCounterSignal": {
+    "fired": true,
+    "trigger": "§13 D4 — multiple distinct R5 species above the tail",
+    "species": [
+      {
+        "ingredient": "HYDROLYZED MILK PROTEIN",
+        "rank": 6
+      },
+      {
+        "ingredient": "LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN",
+        "rank": 10
+      }
+    ],
+    "effects": [
+      "trace-level counter-signal record (this object)",
+      "confidence cap on care_direction at moderate — applied",
+      "human review trigger `protein_payload_review` — fired"
+    ],
+    "note": "Never a comparison field, never a user-facing verdict, never a value modifier, never a diagnosis or suitability exclusion. Banned vocabulary observed."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "all nine profile fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "Unblinding changed nothing. The shine threshold was never reached (silicone-free, no polymer), no dual_supported tie existed (the moisture leg fails at cluster size), no bond claim was made, no lightness positioning existed, and no colour positioning existed. The 'silikonfrei' claim was recorded as inert."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "high",
+    "weight": "rich",
+    "balance_direction": "protein",
+    "repair_support_level": "medium",
+    "functional_benefits": [],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "adjudicationPoints": [],
+  "uncertainFields": [
+    "careDirection",
+    "conditioningLevel"
+  ],
+  "assumptionNotes": [
+    "Re-derived under v0.2 (R6 two-readings rule; R3/R4 re-checked; R5 and R7 checked and not reached; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
+    "Fields whose value moved: careDirection (balanced → protein, R6). conditioningLevel `high` survives R3 (cationics at ranks 5 and 13; the tail_index − 1 species is CITRIC ACID @15, which carries no signal). weightPotential `high` survives R4 on a heavy-lipid core (coconut @7, cacao butter @12) plus a dense fatty base (cetearyl @2), now without any cationic condition.",
+    "Review triggers under v0.2 — FIRED: `protein_payload_review` (D4, unchanged), `specialist_damage_fit` (unchanged). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `tail_marker_unresolved`, `weight_high_conflict`.",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `protein_payload_review` (D4); `specialist_damage_fit`; and an identity/formula-source trigger for the possibly-discontinued SKU (inherited Conditioner §12: 'absent exact-market formula or identifier'). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `low_confidence_field`.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 3–5 minutes (mask mode), source aggregated retailer copy, confidence moderate. Placement not stated; P5 owns it.",
+    "multi_use envelope recorded per §2.2; charter F1 names this product as a live boundary case eligible mode-scoped.",
+    "Family discipline observed: Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein was counted as an R5 protein (family 5a cationised derivative) and explicitly NOT as a cationic surfactant for S1 (family 1), which would otherwise have inflated the cationic count to three."
+  ],
+  "derivedFrom": "reference-key-v0/05-isana-mandelmilch-3in1.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "true — covered mode: post_shampoo_rinse_out_mask; uncovered: leave_in (für leichtes Kämmen, handtuchtrockenes Haar, nicht ausspülen); leave_in (zum Bändigen, trockenes Haar, nicht ausspülen)",
+        "note": "Scope declaration only (§2.2): this profile describes the rinse-out mask mode and nothing else. It is never a quality signal, never a penalty, and never an input to any comparison field. No MODE is profiled twice (R1)."
+      },
+      {
+        "flag": "protein_payload",
+        "value": "HYDROLYZED MILK PROTEIN @6, LAURDIMONIUM HYDROXYPROPYL HYDROLYZED WHEAT PROTEIN @10 — two distinct R5 species above the tail (tail_index 16), one within the top five ranks of the full list",
+        "note": "D4 heavy protein payload: trace record, care_direction confidence capped at moderate, `protein_payload_review` fired. Nothing else follows from it (§13). Banned vocabulary observed throughout."
+      }
+    ]
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-05-AFTERCLEANSING": "STILL LIVE — carried forward from reference-key-v0.",
+    "AP-05-NOGLYCERIN": "STILL LIVE — carried forward; the near-miss it predicted is unchanged in substance on #12."
+  }
+}

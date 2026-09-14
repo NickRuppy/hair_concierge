@@ -1,0 +1,423 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.2",
+  "productId": "09-balea-professional-aqua-hyaluron",
+  "identity": {
+    "brand": "Balea Professional (dm own brand)",
+    "productName": "Haarmaske 3in1 Aqua Hyaluron",
+    "packSize": "150 ml",
+    "gtinEan": "4066447668315",
+    "market": "DE (dm own brand)",
+    "formulaSource": "hautschutzengel.de produkt/312508 (fallback tier; dm.de JS-blocked on both known URL patterns), accessed 2026-09-04, with fresh-store two-source corroboration per the cohort verification note",
+    "rawInciSha256": "533a24fbb1c2f90826f3fe5cb4963022f329095b071f91f8d93f9346c8ccd429",
+    "identityState": "verified_with_minor_source_difference",
+    "identityStateReason": "Identity dm-confirmed; the INCI rests on a fallback-tier source with two-source corroboration because dm.de is JS-rendered."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "multiUse": {
+      "multi_use": true,
+      "multi_use_covered_mode": "post_shampoo_rinse_out_mask",
+      "multi_use_uncovered_modes": [
+        "leave_in (Leave-in-Pflege, nicht ausspülen)",
+        "leave_on (Over-Night-Pflege)"
+      ],
+      "multi_use_directions_source_id": "aggregated retailer/dm-marketing copy, 2026-09-04, confidence moderate",
+      "scope_declaration": "This profile describes ONLY the rinse-out mask mode. Scope declaration, not a quality signal, not an input to any comparison field."
+    },
+    "rationale": "§2.2 five-step test. Step 1: authoritative directions located (aggregated, moderate confidence). Step 2: the directions label the modes themselves — 'Als Haarmaske: auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen' has a stated contact time and a rinse and qualifies; 'Als Leave-in-Pflege … nicht ausspülen' fails the rinse conjunct; 'Auch als Over-Night-Pflege verwendbar' is leave-on and falls under the charter's overnight exclusion for that mode. Step 3: exactly one mode qualifies → mode-scoped classification. Charter F1 names Balea Aqua Hyaluron 3 in 1 as a live boundary case that is eligible mode-scoped.",
+    "evidenceSignals": [
+      "directions: 'Als Haarmaske: … 3 Minuten einwirken lassen und gründlich ausspülen'",
+      "directions: 'Als Leave-in-Pflege … nicht ausspülen' — disqualifying for that mode",
+      "directions: 'Auch als Over-Night-Pflege verwendbar' — leave-on, excluded form for that mode",
+      "charter F1 boundary-case list names this product explicitly",
+      "the modes are self-labelled, so §2.2 step 5 (ambiguity) is not reached"
+    ],
+    "placementConjunctNote": "Placement not stated verbatim; not used as a boundary test (AP-G0-PLACEMENT)."
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 9,
+    "index": 9,
+    "plausible": true,
+    "anomalyNote": "No §3.1 anomaly. The marker at 9 in a 15-entry list demotes Isoamyl Laurate @10, Behentrimonium Chloride @11 and Cetrimonium Chloride @12 — so this formula's second and third cationic species are both non-contributing, and the credited segment is humectant-led rather than cationic-led. That is the structural fact that makes it the D5 anchor product.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. CETEARYL ALCOHOL @2 and DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4, with the humectant cluster @3/@5/@6/@7, all outrank PARFUM @9; conventional O/W emulsion with AQUA @1. The second and third cationics (BEHENTRIMONIUM CHLORIDE @11, CETRIMONIUM CHLORIDE @12) sit below the marker - an ordinary tail demotion, recorded as a counter-signal. HELIANTHUS ANNUUS HYBRID OIL @8 is the tail_index - 1 species and is excluded from carrying a structural signal (R3); it is the only lipid, so S3 fails either way."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 CETEARYL ALCOHOL",
+    "3 GLYCERIN",
+    "4 DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE",
+    "5 PANTHENOL",
+    "6 ALOE BARBADENSIS LEAF JUICE POWDER",
+    "7 SODIUM HYALURONATE",
+    "8 HELIANTHUS ANNUUS HYBRID OIL"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": {
+      "value": "moderate",
+      "note": "One cationic species and one lipid above the tail behind a cetearyl head; the credited payload is humectant, which this field does not measure."
+    },
+    "conditioning_deposition_potential": {
+      "value": "moderate",
+      "note": "A single esterquat at rank 4; the second and third cationics are both below the marker."
+    },
+    "wet_slip_detangling_potential": {
+      "value": "moderate",
+      "note": "One esterquat with cetearyl alcohol; 'verbessert die Kämmbarkeit' is claim context only."
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "note": "No silicone at any rank; no dry endpoint."
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "note": "One sunflower hybrid oil at rank 8; Isoamyl Laurate @10 is a light ester in the tail."
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "lower",
+      "note": "No silicone, no substantive polymer; the claim 'ohne … wasserlösliche rein synthetische Polymere' is consistent."
+    },
+    "shine_potential": {
+      "value": "lower",
+      "note": "No alignment-oriented route at any rank, despite 'geschmeidiges und glänzendes Haar' positioning."
+    },
+    "humectant_support_potential": {
+      "value": "higher",
+      "note": "Four distinct qualifying humectants at ranks 3, 5, 6 and 7 — a contiguous humectant block occupying half the credited segment, with only one lipid competing."
+    },
+    "weight_deposition_potential": {
+      "value": "lower",
+      "note": "One mid plant oil, one cationic, no butter, no occlusive, no silicone."
+    },
+    "body_lightness_potential": {
+      "value": "likely_preserving",
+      "note": "Lean architecture; no lightness positioning to corroborate, so this stays a formula reading."
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "note": "Manageability route only."
+    },
+    "repair_surface_film": {
+      "value": "none_visible",
+      "note": "No protein or peptide species at any rank."
+    },
+    "bond_specific_support": {
+      "value": "unknown",
+      "note": "No named bond token and no bond positioning."
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "note": "Citric Acid @15 is tail-position pH context; no colour endpoint."
+    },
+    "fragrance_scalp_exposure": {
+      "value": "fragrance_declared",
+      "note": "Parfum @9 with no separately declared allergens in this list."
+    }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 533a24fb…), above-tail ranks 1–8; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Exactly one §9.1 structural signal is satisfied. The credited segment is dominated by a humectant block, which this field deliberately does not measure. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three, the one satisfied signal",
+        "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE (rank 4) — the only cationic species above the tail",
+        "BEHENTRIMONIUM CHLORIDE (11) and CETRIMONIUM CHLORIDE (12) — two further cationics, both BELOW tail_index 9",
+        "HELIANTHUS ANNUUS HYBRID OIL (rank 8) — the only non-fatty-alcohol lipid above the tail; S3 needs two",
+        "ISOAMYL LAURATE (rank 10) — a light ester, below the marker"
+      ],
+      "derivation": "S1 = NOT satisfied (one cationic above the tail; the other two are demoted). S2 = satisfied (Cetearyl Alcohol @2). S3 = NOT satisfied (one lipid above the tail). Count = 1 of 3.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.1's 'everything else, including exactly one satisfied signal'.",
+        "`high` does not apply: only S2 holds. Had the marker fallen two ranks later, S1 would have been satisfied by the Behentrimonium/Cetrimonium pair and the value would have moved to `high` — recorded as a sensitivity, not as a reason to move it.",
+        "`low` does not apply: Cetearyl Alcohol @2 defeats its second conjunct, and there is a lipid above the tail.",
+        "Confidence `moderate` by §9.1's rule: high confidence requires ≥2 signals pointing the same way.",
+        "Re-derived under v0.2 (R3): the value `moderate` STANDS. S1 fails — DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @4 is the only cationic above the tail, with BEHENTRIMONIUM CHLORIDE @11 and CETRIMONIUM CHLORIDE @12 both tail-side. S2 is satisfied by CETEARYL ALCOHOL @2. S3 fails twice over: HELIANTHUS ANNUUS HYBRID OIL @8 is the only above-tail lipid AND is the tail_index − 1 species, so the exclusion removes it. One signal; S1 absent. No material counter-signal fires."
+      ],
+      "counterSignals": [
+        "Two of the formula's three cationic species are in the tail. Under the lexicon §0.2 boundary-band caution, Isoamyl Laurate @10 and Behentrimonium Chloride @11 sit within two ranks of the marker; per this lane's policy that caps confidence and does not move the value.",
+        "Fallback-tier source with dm.de unreachable."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–8; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "The `high` anchor fails on cationic count and heavy-lipid absence; the `low` anchor fails on the cetearyl-class conjunct alone. `moderate` is the residual. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE (rank 4) — a single cationic species above the tail (low-anchor conjunct 1: SATISFIED)",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
+        "no butter, heavy triglyceride, hydrogenated oil or occlusive hydrocarbon at any rank (low-anchor conjunct 3: SATISFIED)",
+        "no silicone at any rank, so the occlusive-stack alternative is unavailable"
+      ],
+      "derivation": "§9.2 `high` required base leg 1 fails (one cationic above the tail). §9.2 `low` conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual bucket, which §9.2 calls the expected majority.",
+        "`high` does not apply: one cationic, one mid lipid, no silicone.",
+        "`low` does not apply on the cetearyl conjunct alone — the third cohort instance of AP-07-LOWUNREACHABLE.",
+        "§9.2 conflict fallback not engaged: no `high` reached and no lightness positioning.",
+        "Re-derived under v0.2 (R4): the value `moderate` STANDS. `high` fails on its required core — HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil, not R4b, and is the tail_index − 1 species. `low` fails on the thin-fatty-base conjunct: CETEARYL ALCOHOL @2 is within the top three ranks, which R4's test excludes whatever else the formula lacks. Residual = `moderate` — and this is the third cohort product whose lean architecture is refused `low` on the rank cut alone."
+      ],
+      "counterSignals": [
+        "The graded `weight_deposition_potential` reads `lower` against a profile value of `moderate` — the anchor's structure, not the evidence."
+      ],
+      "limitations": [
+        "A soft preference with a stated reason, never an exclusion."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–8; comparative care emphasis, never an assertion about a user's moisture state (G6).",
+      "rationale": "No protein or peptide species exists at any rank, so the protein leg is closed at the list level and route separation is unambiguous. The credited architecture is a humectant-plus-emollient conditioning base. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no hydrolyzed protein, peptide, keratin, or cationised protein at ANY rank",
+        "GLYCERIN (3), PANTHENOL (5), ALOE BARBADENSIS LEAF JUICE POWDER (6), SODIUM HYALURONATE (7) — the material humectant direction",
+        "CETEARYL ALCOHOL (2), DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE (4), HELIANTHUS ANNUUS HYBRID OIL (8) — the conditioning/emollient base"
+      ],
+      "derivation": "§9.3 material-R5 test fails absolutely (no candidate species at any rank), closing `protein` and `balanced`. Residual = `moisture` on D6's definition.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route.",
+        "`protein` does not apply: no protein exists anywhere in the list — a clean negative that does not depend on the tail rule.",
+        "`balanced` does not apply: its first conjunct is the material R5 route.",
+        "Confidence `high`: §9.3's rule requires a resolved tail marker and an unambiguous route separation. Both hold, and unusually the separation would survive any tail-marker reading, since the formula contains no protein at all.",
+        "Note §9.3.1 in the affirmative direction: this is one of only two products where `care_direction: moisture` and `primary_focus: moisture` coincide, and they coincide for different reasons at different bars — the field on the absence of a protein route, the focus on a four-member cluster clearing the D5 guard.",
+        "Re-checked under v0.2 (R6). Reading (a) is unavailable (no R5 species above the tail). Reading (b) fails at clause 2 (no silicone, no cationic polymer, no acid-gloss architecture above the tail) and independently at clause 3 (a four-member humectant cluster above the tail is a leading moisture leg, not an absent one). `moisture` is unchanged and is here the strongest instance of it in the cohort."
+      ],
+      "counterSignals": [
+        "D4 protein-payload counter-signal does not fire — nothing to fire on, so this field's confidence is not capped."
+      ],
+      "limitations": [
+        "Fallback-tier source; the value is nonetheless robust to transcription variation because it rests on an absence."
+      ],
+      "balancedReading": null
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "No named bond chemistry and no protein species at any rank. Panthenol is an explicit non-upgrader. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "PANTHENOL (rank 5) — explicit §9.4 non-upgrader",
+        "no repair positioning in the claims — the product does not ask for this value"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; no material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists.",
+        "`high` does not apply: no named bond token exists.",
+        "Confidence `high`: deterministic on an absence, with a resolved tail marker."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."
+      ]
+    },
+    "primaryFocus": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–8; D5 guard per §9.5.3.",
+      "rationale": "This is the D5 guard's own ruled anchor case and it clears all four criteria cleanly: four distinct humectants above the tail across four families, three of them non-glycerin, in a formula with no protein, no bond, no silicone and one lipid — so there is no richer special-purpose route to win and no rich R1/R4 base for the cluster to be confused with. E2 wording observed absolutely: humectant-forward comparative direction, never proven hydration.",
+      "evidenceSignals": [
+        "GLYCERIN (rank 3) — cluster member, within the first five ranks of the full list",
+        "PANTHENOL (rank 5) — non-glycerin cluster member",
+        "ALOE BARBADENSIS LEAF JUICE POWDER (rank 6) — non-glycerin cluster member, counted once and never as a strong member",
+        "SODIUM HYALURONATE (rank 7) — non-glycerin cluster member",
+        "the four humectants occupy ranks 3, 5, 6 and 7 — half the credited segment, contiguous apart from the single cationic",
+        "HELIANTHUS ANNUUS HYBRID OIL (rank 8) — the only lipid, confirming the cluster is not riding on an emollient base",
+        "no protein, no bond token, no silicone, no cationic polymer at any rank"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation, one M5 cluster observation — disjoint per §6 rule 3. Step 3: `repair` blocked (no R5, no bond); `curl_support` blocked (single cationic, no polymer, no high-slip breadth); `color_care` blocked (no candidate, no positioning); `lightness` blocked (weight `moderate`, not `low`). Step 4: the D5 guard is applied and clears on all four criteria.",
+      "thresholdReasoning": [
+        "Clears `moisture`: D5 guard criterion 1 (≥3 distinct humectants above the tail with ≥2 non-glycerin) is met with four and three; criterion 2 (not the baseline) is met unusually cleanly, because there is no rich R1/R4 architecture here at all — one esterquat and one plant oil — so the cluster cannot be an M1 product in M5 clothing; criterion 3 (no richer special-purpose route wins) is met because every step-3 route was blocked; criterion 4 (hydrolyzed proteins not counted) is vacuous, there are none.",
+        "`general` does not apply: a candidate cleared its threshold at step 4.",
+        "`smoothing` does not apply: reached only at step 6, and there is no silicone, no substantive polymer and one lipid — the architecture does not extend beyond the ordinary mask base.",
+        "`shine` does not apply: §9.5.4 criterion 1 fails outright (no alignment-oriented R2/R3 route above the tail), so the 'glänzendes Haar' claim never reaches criterion 3.",
+        "Confidence `high` is earned under §9.5.3's own confidence rule: ≥3 distinct qualifying humectants above the tail with at least one within the first five ranks (Glycerin @3, Panthenol @5), a resolved tail marker, and no competing route. This is the only `high`-confidence focus in the cohort.",
+        "Discrimination check against the ruled anchor set: D5 was tested on four real formulas, and this product is one of the two the ruling says should CLEAR. It clears, on the same evidence the ruling cited (four humectants above the tail, no protein/bond/silicone routes).",
+        "Re-checked under v0.2 (R5). The `moisture` headline SURVIVES the new lipid-led disqualifier, as the ruling ledger anticipated for true Feuchtigkeitsmasken. Limb (i) does not fire: there is no R4b heavy lipid above the marker at all — HELIANTHUS ANNUUS HYBRID OIL @8 is a mid/light plant oil and is additionally the tail_index − 1 species. Limb (ii) cannot fire without an R4b lipid to rank the cluster against. Criterion 2's baseline sentence is also satisfied: the credited segment is humectant-led, not a rich R1/R4 base."
+      ],
+      "counterSignals": [
+        "Aloe is reconstituted powder ('Leaf Juice Powder' in the source list) at unquantifiable level; counted once, never strong. Excluding it entirely still leaves three members with two non-glycerin, so the guard clears either way.",
+        "No glycol appears in the cluster, so lexicon family 7's solvent-role discount is not engaged at all — unusual, and it makes this the cleanest cluster in the cohort."
+      ],
+      "limitations": [
+        "Wording rule observed absolutely (D5, binding): never 'hydrates', 'proven hydration', 'moisturizes', or 'restores moisture balance'. The humectant evidence base is weak at the hair-fibre outcome level (lexicon W1) and this value is a comparative architecture signal only.",
+        "'Hygral fatigue' is an unestablished construct and appears nowhere in this record."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "No second route exists to add distinct matching information: no protein, no bond, no silicone, no polymer, one lipid.",
+      "evidenceSignals": [
+        "the only non-humectant content above the tail is the cetearyl/esterquat base plus one plant oil"
+      ],
+      "derivation": "Every candidate is either blocked at its own threshold or would restate the M1 base (§6 rule 1).",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: `detangling` would be the baseline slip route, `smoothing` and `shine` have no architecture, and `repair` has no route."
+      ],
+      "counterSignals": [
+        "'geschmeidiges und glänzendes Haar' positioning was consulted and refused corroborating force, having no architecture to corroborate."
+      ],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": [
+        "derived from weight_potential = moderate"
+      ],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the moderate row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, refused on the cetearyl conjunct.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-level prior; no production projection is authorized.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged.",
+      "evidenceSignals": [
+        "conditioning_level = moderate",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row.",
+        "{moderately_damaged, highly_damaged} does not apply: the specialist branch requires conditioning_level `high` and a qualifying route; neither is present.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Watch-list item 1: fully computable from fields 1 and 4.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": [
+        "weight_potential = moderate"
+      ],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{wavy, curly, coily} does not apply: weight_potential is not `high` and there is no high-slip R1/R3 breadth above the tail.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "focusCareVerdict": {
+    "value": "moisture_supported",
+    "claimRole": "corroborating",
+    "note": "A coherent humectant cluster (R9/M5) of four distinct members across four families, plus conditioning and emollient support, meets the D5 guard with no competing route. The 'feuchtigkeitsspendende Pflegeformel' positioning corroborates a route earned entirely blind; it neither created it nor broke a tie. Wording per D5: humectant-forward comparative direction, never proven hydration."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "all nine profile fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "Unblinding changed nothing. The moisture focus was determined blind from the cluster; the hydration positioning only corroborated it, and §11 step 4 does not list the moisture guard as a channel claims may influence in any case. The 'glänzendes Haar' claim was refused because §9.5.4 criterion 1 failed before criterion 3 was reachable. No dual tie, no bond claim, no lightness positioning, no colour positioning."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": [],
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "adjudicationPoints": [],
+  "uncertainFields": [
+    "conditioningLevel"
+  ],
+  "assumptionNotes": [
+    "Re-derived under v0.2 (R5 disqualifier checked and NOT fired; R6 readings checked; R3/R4 re-checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched. No value moves on this record.",
+    "This is the D5 anchor product and it behaves under v0.2 exactly as the ruling ledger predicted for a true Feuchtigkeitsmaske: the `moisture` headline survives R5's lipid-led disqualifier because there is no R4b heavy lipid above the marker at all. conditioningLevel `moderate` survives R3 (a single above-tail cationic; S1 fails), and weightPotential `moderate` survives R4 (no heavy-lipid core for `high`; cetearyl @2 in the top three defeats the thin-base conjunct for `low`).",
+    "Review triggers under v0.2 — FIRED: none. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `bond_claim_review`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`.",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: none. NOT fired: `bond_claim_review`, `protein_payload_review`, `tail_marker_anomaly`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`. This is the cohort's cleanest record.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 3 minutes (mask mode), source aggregated retailer/dm copy, confidence moderate. Placement not stated; P5 owns it.",
+    "multi_use envelope recorded per §2.2; charter F1 names this product as a live boundary case eligible mode-scoped.",
+    "The claim 'ohne Mikroplastik und wasserlösliche rein synthetische Polymere' is consistent with the absence of any cationic polymer in the list, but was treated as claim context and created no property."
+  ],
+  "derivedFrom": "reference-key-v0/09-balea-professional-aqua-hyaluron.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "true — covered mode: post_shampoo_rinse_out_mask; uncovered: leave_in (Leave-in-Pflege, nicht ausspülen); leave_on (Over-Night-Pflege)",
+        "note": "Scope declaration only (§2.2): this profile describes the rinse-out mask mode and nothing else. It is never a quality signal, never a penalty, and never an input to any comparison field. No MODE is profiled twice (R1)."
+      }
+    ]
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-09-ANCHORHOLDS": "CONFIRMED under v0.2. The D5 anchor product survives R5's lipid-led disqualifier cleanly — no R4b heavy lipid above the marker at all.",
+    "AP-09-MODEASYMMETRY": "STILL LIVE — carried forward from reference-key-v0."
+  }
+}

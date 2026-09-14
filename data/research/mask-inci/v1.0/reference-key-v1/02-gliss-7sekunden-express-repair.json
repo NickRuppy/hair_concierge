@@ -1,0 +1,451 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.2",
+  "productId": "02-gliss-7sekunden-express-repair",
+  "identity": {
+    "brand": "Schwarzkopf Gliss Kur",
+    "productName": "7 Sekunden Express-Repair Kur, Ultimate Repair",
+    "packSize": "200 ml",
+    "gtinEan": "4015100813319",
+    "market": "DE",
+    "formulaSource": "dm.de rendered page /p/d/1581143 (dm tier, direct extraction), accessed 2026-09-04",
+    "rawInciSha256": "5575f0ae3fb2120388b88a18dbd4a0bd6081c16987e1a5f77c081a9c0ba57155",
+    "identityState": "verified_with_minor_source_difference",
+    "identityStateReason": "Two EANs resolve to this product name; the dm-verified current GTIN and its dm-verbatim INCI are the formula of record. The superseded Hydrolyzed-Pearl version (GTIN 4015100433456, no bond pair) is provenance only and was never merged."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "Directions place the product after cleansing ('Nach dem Shampoonieren'), state a contact time (7 seconds), and require a rinse. Charter F2 is explicit and binding: express Kuren are in scope at EVERY stated dwell duration, marketed form and the intensive_conditioning_mask role decide, and dwell is protocol metadata under P5 that is never a boundary test. The 7-second dwell therefore has no bearing on eligibility.",
+    "evidenceSignals": [
+      "directions: 'Nach dem Shampoonieren auf das handtuchtrockene/feuchte Haar auftragen' — after cleansing",
+      "directions: '7 Sekunden einwirken lassen' — product-stated contact time",
+      "directions: 'gründlich ausspülen' — rinse-out",
+      "charter F2 / §2.1 table: express Kuren at every stated dwell duration are included",
+      "single stated mode in the frozen directions"
+    ],
+    "placementConjunctNote": "Placement not stated verbatim; not used as a boundary test (see AP-G0-PLACEMENT in record 01)."
+  },
+  "tailMarker": {
+    "ingredient": "Parfum (Fragrance)",
+    "rank": 8,
+    "index": 8,
+    "plausible": false,
+    "state": "unresolved",
+    "anomalyNote": "Resolved by the letter of §3.1 but structurally contested. Rank 8 > 3, and a conditioning ingredient does precede the marker (Myristyl Alcohol @3, a long-chain fatty alcohol named in R1's list), so neither §3.1 anomaly condition is met. However, no cationic surfactant of any kind precedes the marker, and this is a low-water solvent architecture (Propylene Glycol @1, Alcohol denat. @2, Aqua only @5) in which a fragrance level above 1% is entirely plausible. A reviewer who read 'conditioning ingredient' as 'cationic conditioning agent' would set tail_marker: unresolved. See AP-02-BONDTAIL for both readings and their consequences.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): IMPLAUSIBLE - tail_marker is UNRESOLVED. Both limbs of the test fire. Limb 1 (architecture comparison): the marker PARFUM @8 outranks every cationic species in the formula - CETRIMONIUM CHLORIDE @9 is the only cationic surfactant and sits below the marker, as do CETYL ALCOHOL @15 and LAURYL ALCOHOL @14 - so the marker sits before the architecture it is supposed to bound. Limb 2 (low-water / non-emulsion architecture): PROPYLENE GLYCOL @1, ALCOHOL DENAT. @2 and AQUA only @5 is a solvent-continuous, low-water system in which the ~1 % band the marker proxies does not sit where an O/W emulsion's does. Consequences, binding in both directions (§3.1.1 clauses 1-5): the marker may neither disqualify nor qualify; confidence on every affected field is capped at moderate; every affected call routes to human review under `tail_marker_unresolved`; and `unresolved` never auto-decides toward a value. v0.1's AP-02-BONDTAIL recorded exactly this reading as the contested alternative; R2 makes it the rule."
+  },
+  "aboveTailSegment": [
+    "1 Propylene Glycol",
+    "2 Alcohol denat.",
+    "3 Myristyl Alcohol",
+    "4 Dicaprylyl Carbonate",
+    "5 Aqua",
+    "6 Glycerin",
+    "7 Caprylic/Capric Triglyceride"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": {
+      "value": "moderate",
+      "note": "Two light lipids and a C14 fatty alcohol above the tail, but zero cationic species — the lamellar-gel-network backbone that D1's structural semantics rest on is absent from the credited segment."
+    },
+    "conditioning_deposition_potential": {
+      "value": "lower",
+      "note": "Cetrimonium Chloride @9 and Cetyl Alcohol @15 are both in the tail; no R1 architecture is credited."
+    },
+    "wet_slip_detangling_potential": {
+      "value": "lower",
+      "note": "No cationic above the tail; the solvent/ester phase is not a slip route."
+    },
+    "dry_combability_potential": {
+      "value": "unknown",
+      "note": "No dry endpoint and no coherent film/lubrication route above the tail."
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "note": "Dicaprylyl Carbonate @4 and Caprylic/Capric Triglyceride @7 are genuine light emollients."
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "lower",
+      "note": "No silicone (silicone-free confirmed by the list), no polymer, no film former anywhere."
+    },
+    "shine_potential": {
+      "value": "lower",
+      "note": "No alignment-oriented route at any rank."
+    },
+    "humectant_support_potential": {
+      "value": "moderate",
+      "note": "Propylene Glycol @1 and Glycerin @6 above the tail; two members is not a cluster (D5 guard)."
+    },
+    "weight_deposition_potential": {
+      "value": "lower",
+      "note": "No R4b heavy lipid, no silicone, no cetearyl-class fatty alcohol above the tail; the credited lipids are a carbonate ester and a light triglyceride."
+    },
+    "body_lightness_potential": {
+      "value": "likely_preserving",
+      "note": "Solvent-led express serum with no cationic, no heavy lipid, no silicone above the tail; corroborated by the express format and the confirmed silicone-free list."
+    },
+    "repair_lubrication_protection": {
+      "value": "none_visible",
+      "note": "No lubrication architecture above the tail to support even a manageability route."
+    },
+    "repair_surface_film": {
+      "value": "none_visible",
+      "note": "Hydrolyzed Keratin @13 is in the tail; a tail-position protein is an explicit non-upgrader."
+    },
+    "bond_specific_support": {
+      "value": "claim_only",
+      "note": "The canonical gluconamide pair IS present (@11/@12) but below tail_index 8. R7's explicit non-qualifier list includes 'a bonding ingredient found only in the tail'. See AP-02-BONDTAIL."
+    },
+    "color_chemical_damage_protection": {
+      "value": "unknown",
+      "note": "Citric Acid @19 is tail-position pH context; no colour endpoint."
+    },
+    "fragrance_scalp_exposure": {
+      "value": "aromatic_or_allergen_exposure",
+      "note": "Parfum @8, Citrus Aurantium Peel Oil @17, Limonene @18, Geranyl Acetate @20."
+    }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, ordinal read of ranks 1–7 with the marker UNRESOLVED (§3.1.1); category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Re-derived under v0.2 (R2, R3). Value unchanged, evidence base changed: the marker is now formally `unresolved`, which is a material counter-signal capping this field at `moderate` in its own right, and the S2+S3-without-S1 path is `moderate` explicitly under R3. Both paths agree, so the value is robust to the marker question. E2 ceiling: comparative structural intensity potential.",
+      "evidenceSignals": [
+        "MYRISTYL ALCOHOL (rank 3) — long-chain fatty alcohol named in R1's list, at rank 3 of the full list: S2 satisfied on the ordinal read and independent of the marker",
+        "DICAPRYLYL CARBONATE (4) + CAPRYLIC/CAPRIC TRIGLYCERIDE (7) — two distinct non-fatty-alcohol lipids, both light-band: S3 satisfied on the ordinal read",
+        "CETRIMONIUM CHLORIDE (rank 9) — the formula's only cationic surfactant. Under §3.1.1 clause 1 it is read on its own merits rather than disqualified by an unreliable marker; one distinct species either way, so S1 fails under every reading",
+        "PARFUM (rank 8) — marker UNRESOLVED: it outranks every cationic and fatty-alcohol species in the formula, on a low-water solvent-continuous architecture (PROPYLENE GLYCOL @1, ALCOHOL DENAT. @2, AQUA @5)"
+      ],
+      "derivation": "§9.1 under an unresolved marker. S1 = NOT satisfied under either reading (one cationic species exists in the entire formula). S2 = satisfied. S3 = satisfied. R3: S2 + S3 without S1 is `moderate`. Independently, the material-counter-signal conjunct (a) fires — `tail_marker` is `unresolved` — which caps the field at `moderate` regardless.",
+      "thresholdReasoning": [
+        "Clears `moderate`: two convergent routes to the same value (the S1-mandatory rule, and the material-counter-signal cap).",
+        "`high` does not apply: S1 fails, and the marker is unresolved — either condition alone forecloses it under R3.",
+        "`low` does not apply: S2 and S3 both hold on the ordinal read.",
+        "§3.1.1 clause 5 observed: `unresolved` decided nothing here in either direction; it capped confidence and routed the record to review."
+      ],
+      "counterSignals": [
+        "`tail_marker: unresolved` (§3.1.1) — MATERIAL counter-signal (a): the above-tail segment the signals were counted on is not reliable. Field listed in `uncertain_fields` and routed under `tail_marker_unresolved`.",
+        "Both S3 lipids are light-band esters/triglycerides; this is thin lipid breadth by mask standards, recorded even though S3 is a breadth test rather than a weight test.",
+        "Claims '100% stärkeres Haar' and '7x weniger Haarbruch' have no architecture behind them in the credited segment — recorded in `hinweise`, moving nothing (§11 step 4)."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable.",
+        "A 7-second stated dwell sits outside every tested contact time; `dwell_efficacy: unknown`, never extrapolated in either direction (evidence §3, `express_dwell_unknown`)."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, ordinal read of ranks 1–7 with the marker UNRESOLVED; an ingredient-informed matching prior.",
+      "rationale": "CHANGED under v0.2 (R2 + R4). `low` is no longer available: R4 makes `low` a POSITIVE leanness test, and §9.2 states that where the segment is not readable — tail marker `absent` or `unresolved` — `low` is unavailable and the field takes `moderate` with the field in `uncertain_fields`. An absence-based `low` on an unreadable segment would hand this product a lean fit prior, and therefore a fine-hair recommendation, on evidence we have just declared unreliable (§1.1, §9.2). E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "PARFUM (rank 8) — marker UNRESOLVED (§3.1.1): the above-tail segment is not readable, which is the condition §9.2 names as removing `low` from the menu",
+        "no R4b heavy lipid at any rank — DICAPRYLYL CARBONATE @4 and CAPRYLIC/CAPRIC TRIGLYCERIDE @7 are light-band, and there is no butter, hydrogenated fat or occlusive hydrocarbon in the formula",
+        "MYRISTYL ALCOHOL (3), LAURYL ALCOHOL (14), CETYL ALCOHOL (15) — three long-chain fatty-alcohol species in the list; on the ordinal read the fatty base is not thin, so even a readable segment would not clearly deliver the leanness test",
+        "no silicone at any rank ('silikonfrei' confirmed by the list), so the occlusive-stack completer is unavailable"
+      ],
+      "derivation": "§9.2 (R4). `high` fails on its required core (no R4b heavy lipid above the marker under any reading). `low` is UNAVAILABLE: §9.2's readability precondition fails on an `unresolved` marker. Residual = `moderate`, with the field in `uncertain_fields`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual, and the value §9.2 mandates on an unreadable segment.",
+        "`low` does not apply — and this is the substantive change from v0.1, which recorded `low`. Two independent reasons: (i) the readability precondition fails; (ii) on the ordinal read the thin-base conjunct is doubtful in its own right, since three long-chain fatty alcohols are declared and one of them sits at rank 3.",
+        "`high` does not apply: no R4b heavy lipid anywhere in the formula, so the required core is absent under every marker reading.",
+        "This is the conservative-failure invariant doing exactly what §1.1 says it is for: the uncertainty is resolved toward the less favourable, less recommending value and toward review, not toward a lean fit prior."
+      ],
+      "counterSignals": [
+        "The product is, on any substantive reading, a light serum-style express Kur; `moderate` almost certainly overstates its weight. That is the accepted cost of refusing an absence-based `low` (§9.2, §1.1) and is recorded rather than argued away.",
+        "The graded `weight_deposition_potential` direct property reads `lower` against a profile value of `moderate` — the gap is the readability rule, not a disagreement about the lipids."
+      ],
+      "limitations": [
+        "Weight drives a soft preference with a stated reason, never an exclusion; fine-hair flattening is a fit mismatch, not a hair-type law (§9.2 wording rule).",
+        "An ingredient-informed matching prior at E2, never a prediction that the product will visibly flatten hair."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–7; comparative care emphasis, never an assertion about a user's protein state (G6).",
+      "rationale": "No qualifying protein/peptide species is above the tail, so the protein leg is closed and `balanced` is unreachable. The credited architecture is a humectant-plus-light-emollient base, which is D6's coherent non-protein direction. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "Hydrolyzed Keratin (rank 13) — the only R5-class species, in the tail",
+        "Propylene Glycol (1), Glycerin (6) — humectant members above the tail",
+        "Dicaprylyl Carbonate (4), Caprylic/Capric Triglyceride (7) — emollient members above the tail",
+        "claims 'flüssiges Keratin', '100% stärkeres Haar', '7x weniger Haarbruch' — E0 positioning"
+      ],
+      "derivation": "§9.3 material-R5 test requires a qualifying R5 species above the tail before either leg (a) or (b) is considered. Hydrolyzed Keratin sits at rank 13, five ranks below the marker, so the test fails at its first conjunct. `balanced` requires the same material R5 route as its first conjunct and is therefore also unreachable. Residual = `moisture`.",
+      "thresholdReasoning": [
+        "Clears `moisture`: a coherent humectant/emollient architecture above the tail with no protein-film route — D6's stated category default.",
+        "`protein` does not apply: zero qualifying R5 species above the tail. Front-of-pack 'flüssiges Keratin' is E0 and, per §9.3's counter-signal rule, protein naming with the protein only in the tail resolves to `moisture` with the claim recorded.",
+        "`balanced` does not apply: D6 reserves it for a substantive mixed architecture and forbids it as a 'neither' bucket; the protein leg is absent."
+      ],
+      "counterSignals": [
+        "The strongest claim/formula divergence in the cohort alongside record 01: a product whose whole identity is keratin repair carries its keratin in the tail.",
+        "Under the alternative tail reading in AP-02-BONDTAIL, Hydrolyzed Keratin @13 would still fall below a preservative-block marker at @21, so this field is stable across both readings — unlike repair_support_level."
+      ],
+      "limitations": [
+        "D4 protein-payload counter-signal does not fire (no R5 species above the tail, none in the top five ranks)."
+      ],
+      "balancedReading": null
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "The canonical gluconamide bonding pair is present in this formula but declared below the tail marker, and R7's explicit non-qualifier list names 'a bonding ingredient found only in the tail'. With bond_route = none and no qualifying protein route above the tail, the value floors at `low`. E2 ceiling: comparative formula potential, never efficacy — and per R7's standing caveat, no bond route at drugstore concentration carries strong independent product-level substantiation in any case.",
+      "evidenceSignals": [
+        "Hydroxypropylgluconamide (rank 11) — canonical gluconamide token, BELOW tail_index 8",
+        "Hydroxypropylammonium Gluconate (rank 12) — its required pair partner, BELOW tail_index 8",
+        "Hydrolyzed Keratin (rank 13) — in the tail; hydrolyzed protein alone is never bond evidence",
+        "no cationic, silicone, polymer, or film former above the tail to support even a lubrication-protection route"
+      ],
+      "derivation": "§9.4: `high` requires bond_route ≠ none. bond_route is `none` because both gluconamide tokens are in the tail (R7 non-qualifier). `medium` requires the §9.3 material R5 route above the tail — absent. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning only, and here even that is thin above the tail.",
+        "`medium` does not apply: no qualifying R5 species above the tail.",
+        "`high` does not apply under the applied reading: the named chemistry exists but not above the tail. This is the single most consequential threshold call in the cohort — under the alternative tail reading it becomes `high`, a two-step swing that also flips damage_fit to the specialist set and opens `repair` as a primary focus (AP-02-BONDTAIL).",
+        "Mask delta applied: dwell is not repair. The '7 seconds as effective as a 5-minute Kur' claim carries zero classification credit (§7.2, evidence §3)."
+      ],
+      "counterSignals": [
+        "'100% stärkeres Haar' and '7x weniger Haarbruch' are E0 finished-product positioning with no corresponding above-tail formula route.",
+        "The superseded formula version carried Hydrolyzed Pearl and no bond pair at all — evidence that the bond pair is a recent, marketing-led addition, which does not change its rank."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds bonds', or 'restores structure' language.",
+        "R7 standing caveat carried: gluconamide bonding's own peer-reviewed literature states the hair mechanism is unknown; even a qualifying route would gate comparative formula potential only."
+      ]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over the ordinal read of ranks 1–7, marker UNRESOLVED.",
+      "rationale": "CHANGED under v0.2 (R2 → R4 → step 3). v0.1 selected `lightness`, which requires `weight_potential: low` plus likely-preserving body. `low` is no longer available on an unreadable segment, so the `lightness` route closes at its first conjunct and every other special-purpose route fails on its own terms. Step 8 is the honest answer. E2 ceiling: an honest fallback, not a quality judgment.",
+      "evidenceSignals": [
+        "weight_potential = `moderate` (not `low`) — `lightness`'s first conjunct fails",
+        "HYDROXYPROPYLGLUCONAMIDE (11) + HYDROXYPROPYLAMMONIUM GLUCONATE (12) — the canonical gluconamide pair, ordinally below the unresolved marker; conservatively NOT credited (see bond_route and repairSupportLevel), so `repair` has no bond leg",
+        "HYDROLYZED KERATIN (rank 13) — a single R5 species, ordinally below the marker and not within the first eight ranks under any reading, so no material R5 route and no `repair` protein leg",
+        "GLYCERIN (6) and PROPYLENE GLYCOL (1) — at most two humectant-class species; the D5 guard requires three distinct above the tail with two non-glycerin",
+        "no silicone, no cationic polymer and no film former at any rank ('silikonfrei' confirmed)",
+        "claims: '100% stärkeres Haar', '7x weniger Haarbruch', 'silikonfrei', 'flüssiges Keratin & Perlenextrakt (HaptIQ System)', 'wirkt wie eine 5-Minuten-Kur in nur 7 Sekunden'"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 observation. Step 3 in order: `repair` blocked (no credited bond route, no material R5 route); `curl_support` blocked (one cationic, no polymer, no curl positioning); `color_care` blocked (no candidate, no positioning); `lightness` blocked (weight_potential `moderate`). Step 4 `moisture` blocked at cluster size. Step 5 `shine` blocked (no alignment-oriented silicone or polymer at any rank). Step 6 `smoothing` rejected (two light esters are not an architecture materially beyond baseline, and there is no silicone or substantive polymer). Step 7 `detangling` rejected (one cationic; slip is category baseline). Step 8 → `general`.",
+      "thresholdReasoning": [
+        "Clears `general`: §9.5.2 step 8 — no differentiator clears its threshold and the formula evidence is nonspecific.",
+        "`lightness` does not apply — the substantive change from v0.1. It is refused because its stated conjunct (`weight_potential: low`) is not met, not because the product is not light. §18 open question 4 asked whether `lightness` is ever selected in this category; under v0.2 the cohort's one selection is withdrawn, and the field's reachability now depends entirely on whether the R4 leanness test can fire on a readable segment.",
+        "`repair` does not apply: §9.5.1's hard rule — claims may break a genuinely dual_supported tie but can never create a route. '100% stärkeres Haar' and '7x weniger Haarbruch' are E0 and create nothing, and the bond pair is conservatively uncredited pending review.",
+        "`moisture` does not apply: the D5 guard fails at criterion 1 on cluster size.",
+        "Routed to human review under `tail_marker_unresolved`: a reviewer who resolves the marker in favour of the ordinal architecture reading would credit the bond pair, which would make `repair` a live step-3 candidate and change this headline. That is the point of the trigger."
+      ],
+      "counterSignals": [
+        "This focus call is marker-dependent in a way none of the others in the cohort is: both plausible resolutions of the marker give different headlines (`general` conservatively, `repair` if the gluconamide pair is credited). Recorded, capped, and routed.",
+        "'silikonfrei' is confirmed by the list and creates nothing."
+      ],
+      "limitations": [
+        "`general` is a statement about the evidence, not about product quality.",
+        "Wording: comparative formula potential only; no efficacy statement anywhere in this record."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "No further route clears a threshold, and the D5 guard explicitly fails on cluster size, so `moisture` cannot take the secondary slot §9.5.3 criterion 3 would otherwise permit.",
+      "evidenceSignals": [
+        "humectants above the tail: Propylene Glycol (1), Glycerin (6) — two members",
+        "no silicone, polymer, protein, or bond route above the tail"
+      ],
+      "derivation": "§9.5.3 criterion 3 permits `moisture` as a secondary when a richer route wins, but only if it independently meets criteria 1–2. Criterion 1 needs ≥3 distinct humectants above the tail with ≥2 non-glycerin; only two are present, and one of them (Propylene Glycol @1) is the formula's principal solvent, which lexicon family 7 says to discount when its solvent role is the more likely one.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: no candidate reaches its own threshold, so no slot can be spent without inventing a route.",
+        "`moisture` as secondary is refused at cluster size (2 < 3) before its solvent counter-signal is even weighed."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "Echo field (R9): re-derived because its driver moved. weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": [
+        "derived from weight_potential = moderate (re-derived under R2 + R4)"
+      ],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the `moderate` row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, which is unavailable on an unreadable above-tail segment.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Echo field under R9: approving weight_potential approves this projection."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged, independent of the specialist-route test.",
+      "evidenceSignals": [
+        "conditioning_level = moderate",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2: conditioning_level `moderate` → exactly healthy + moderately_damaged.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row.",
+        "{moderately_damaged, highly_damaged} does not apply: the specialist branch exists only under conditioning_level `high`, and no specialist route qualifies in any case.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Under the alternative tail reading (AP-02-BONDTAIL) bond_route would become gluconamide and repair_support_level `high` — but conditioning_level would still have to reach `high` for the specialist row to be available, so this field is more stable than repair_support_level."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Watch-list item 1: fully computable from fields 1 and 4.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "Echo field (R9): re-derived because its driver moved. weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": [
+        "weight_potential = moderate (re-derived under R2 + R4)"
+      ],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`.",
+        "{wavy, curly, coily} does not apply: weight is not `high` and there is no coherent high-slip R1/R3 route on the record."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": "Hydroxypropylgluconamide + Hydroxypropylammonium Gluconate (present, ranks 11 and 12, BELOW tail_index 8 — non-qualifying per R7's explicit non-qualifier 'a bonding ingredient found only in the tail')",
+    "rank": null
+  },
+  "focusCareVerdict": {
+    "value": "nonspecific",
+    "claimRole": "not_applicable",
+    "note": "Above the tail the formula is generic light conditioning that distinguishes neither a repair nor a moisture direction; the entire repair story (gluconamide pair, hydrolyzed keratin) sits below the marker. §9.5.1's hard rule was applied without exception: claims cannot convert nonspecific formula evidence into a specialist focus, so 'Ultimate Repair' produced no repair route. Note that §9.5.1's stated resolution for `nonspecific` (to `general`, or to `smoothing`) did not apply, because a step-3 special-purpose route (`lightness`) cleared before the verdict's resolution path was reached — see AP-02-VERDICTORDER."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "all nine profile fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "Unblinding changed nothing. Of the five channels §11 step 4 permits, four were inapplicable (no shine threshold reached, no dual_supported tie, no colour positioning, no formula-only `high` weight to conflict with positioning). The fifth — the bond claim — was consulted only to test whether the `bond_claim_review` trigger should fire, which is an explicitly permitted claim use and does not touch a value."
+    },
+    {
+      "field": "repairSupportLevel",
+      "blindValue": "low",
+      "finalValue": "low",
+      "reason": "Explicitly recorded as an unchanged field because the temptation to change it is large: the unblinded pack carries '100% stärkeres Haar' and '7x weniger Haarbruch'. §11 step 4 forbids claims from influencing repair_support_level, and they did not."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": [],
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-02-BONDREADINGS",
+      "title": "The two readings of the unresolved marker, recorded side by side — the conservative one is applied",
+      "body": "R2 makes the marker `unresolved`; it may neither qualify nor disqualify, and it never auto-decides. Two coherent readings of this formula remain, and a human must choose. READING A (conservative, APPLIED): the gluconamide pair HYDROXYPROPYLGLUCONAMIDE @11 + HYDROXYPROPYLAMMONIUM GLUCONATE @12 sits ordinally below PARFUM @8 and is not credited. bond_route `none`, repair_support_level `low`, primary_focus `general`, care_direction `moisture`, all at moderate confidence and all routed to review. READING B (architecture-first): in a low-water solvent system the ~1 % band does not sit where the Parfum does; the pair is the product's named bonding technology, declared as a pair exactly as the Ashland FiberHance system is supplied, and it sits above the keratin and the two secondary fatty alcohols. On reading B, bond_route becomes `gluconamide`, repair_support_level becomes `high`, damage_fit becomes {moderately_damaged, highly_damaged}, and `repair` becomes a live step-3 focus candidate. The spread between the two readings is the widest in the cohort — it moves four fields including both extremes of repair_support_level. §1.1 requires the conservative value while the input is untrustworthy, so reading A is applied; §14's `tail_marker_unresolved` trigger exists precisely because the remedy is a human reading the architecture, not a fuller capture. Note the asymmetry with #04, which carries the identical pair at ranks 8 and 9 against a plausible marker at 13 and is credited without argument.",
+      "source": "§3.1.1 (R2); §1.1; §5 R7 mask delta; §14 `tail_marker_unresolved`"
+    },
+    {
+      "id": "AP-02-LIGHTNESSWITHDRAWN",
+      "title": "The cohort's only `lightness` selection is withdrawn, on the readability rule rather than on the architecture",
+      "body": "v0.1 selected `lightness` as this product's primary focus — the one selection of that value anywhere in the cohort, and the answer §18 open question 4 was watching for. Under v0.2 it is withdrawn, because `lightness` requires `weight_potential: low` and R4 makes `low` a positive leanness test that §9.2 declares unavailable on an unreadable above-tail segment. The product is still, on any substantive reading, the lightest thing in the cohort: a solvent-continuous express serum with no butter, no heavy triglyceride, no occlusive and no silicone. So the answer to 'is lightness ever selected in this category' is now: not on this cohort, and not because the architecture failed the test but because the marker did. That is the conservative-failure invariant working as designed (§1.1: an absence-based `low` would hand a fine-hair prior to a formula we cannot read), but it means the field's reachability is entirely untested by this run and must be carried into the freeze gate.",
+      "source": "§9.2 (R4) readability precondition; §9.5.2 step 3 `lightness`; §18 open questions 2 and 4"
+    }
+  ],
+  "uncertainFields": [
+    "conditioningLevel",
+    "weightPotential",
+    "careDirection",
+    "repairSupportLevel",
+    "primaryFocus"
+  ],
+  "assumptionNotes": [
+    "Re-derived under v0.2 (R2 plausibility conditional; R3 material counter-signals; R4 weight anchors; R8 `hinweise`; R9 echo markers), not patched.",
+    "Fields whose value moved: weightPotential (low → moderate, R2 + R4 readability precondition), primaryFocus (lightness → general, consequent), hairThicknessFit and textureFit (echoes of the moved weight driver, R9). Fields whose evidence text was re-derived: conditioningLevel (R2/R3), tailMarker (R2). bond_route, repairSupportLevel and careDirection keep their v0.1 values as the conservative reading, with confidence capped and review routed.",
+    "Review triggers under v0.2 — FIRED: `tail_marker_unresolved` (new under R2), listing conditioningLevel, weightPotential, careDirection, repairSupportLevel and primaryFocus as the fields whose read touched the marker boundary; `express_dwell_unknown` (7-second segment, carried from v0.1). NOT fired: `tail_marker_anomaly` (narrowed by R2 to the marker-ABSENT case only), `protein_payload_review`, `bond_claim_review` (no Bond/Plex positioning on this pack), `weight_high_conflict`.",
+    "§1.1 conformance note: every uncertainty on this record was resolved toward review and toward the less favourable value — the bond route conservatively uncredited, `low` weight refused, the `lightness` headline withdrawn. None of them was resolved toward a value that reads more favourably to a user than the evidence supports.",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `express_dwell_unknown` (the 7-second segment is outside all tested contact times; dwell_efficacy is recorded as unknown and is NOT extrapolated in either direction); `bond_claim_review` fired by reviewer judgment (the literal trigger text requires Bond/Plex positioning with no nameable token, whereas here a nameable token exists but is in the tail — see AP-02-BONDTAIL; a `bond_token_in_tail` trigger is proposed in the summary).",
+    "Protocol metadata for traceability only, zero classification credit: contact time 7 seconds; dwell_efficacy: unknown. The '7 seconds as effective as a 5-minute Kur' claim is E0 and carries no credit in either direction (§7.2, evidence §3).",
+    "The superseded 2026-pre formula (Hydrolyzed Pearl, no bond pair, GTIN 4015100433456) was not merged into any observation (§2.4: never merge lists across versions)."
+  ],
+  "derivedFrom": "reference-key-v0/02-gliss-7sekunden-express-repair.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved (PARFUM @8; §3.1.1 limbs 1 and 2 both fire)",
+        "note": "The marker outranks every cationic and fatty-alcohol species in the formula, on a low-water solvent-continuous architecture. Confidence is capped at moderate on every affected field and the affected calls route to `tail_marker_unresolved`. `unresolved` is a review state, never a shortcut to a value in either direction."
+      },
+      {
+        "flag": "protein_tail_only",
+        "value": "HYDROLYZED KERATIN @13 (ordinally at/after the unresolved marker)",
+        "note": "A single protein species, ordinally below an unresolved marker. It earns no classification credit on the conservative reading and is not a D4 payload. Its position is itself part of the open marker question, which is why the record routes to review rather than settling it."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'100% stärkeres Haar', '7x weniger Haarbruch', 'flüssiges Keratin & Perlenextrakt (HaptIQ System)' vs repair_support_level `low` and bond_route `none`",
+        "note": "Strength and breakage claims with no credited architecture behind them. The gluconamide pair @11/@12 is the contested evidence and is conservatively uncredited pending review; the claims moved nothing either way (§11 step 4). 'silikonfrei' is NOT a mismatch — it is confirmed by the list."
+      }
+    ]
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-02-BONDTAIL": "PARTLY CLOSED by R2, and ESCALATED. R2 rules the marker `unresolved`, which is the reading AP-02-BONDTAIL identified as the alternative. The bond pair is therefore neither disqualified nor credited by the marker; the conservative value stands and the call routes to `tail_marker_unresolved`. What a human must still decide is which reading is correct for this formula — see AP-02-BONDREADINGS below.",
+    "AP-02-COUNTERSIGNAL": "CLOSED by R3. The 'no material counter-signal' conjunct is now operative with a closed list, and limb (a) — an unresolved marker — fires on this product.",
+    "AP-02-MYRISTYL": "STILL LIVE — carried forward from reference-key-v0.",
+    "AP-02-VERDICTORDER": "PARTLY CLOSED by R7, which fixes the tie-break's scope. Not reached on this product: the verdict is `nonspecific`, not `dual_supported`, and R7 explicitly forbids upgrading `nonspecific`."
+  }
+}

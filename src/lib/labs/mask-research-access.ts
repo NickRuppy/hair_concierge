@@ -27,7 +27,7 @@ type Environment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV">>
 
 const ARTIFACT_DIRECTORY = join(process.cwd(), "data/research/mask-inci/v1.0")
 const COHORT_FILE = "cohort.json"
-const REFERENCE_KEY_DIR = "reference-key-v0"
+const REFERENCE_KEY_DIR = "reference-key-v1"
 const AGREEMENT_FILE = join("agreement", "agreement.json")
 
 /* -------------------------------------------------------------------------
