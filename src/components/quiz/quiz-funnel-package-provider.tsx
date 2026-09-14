@@ -8,6 +8,7 @@ import { useQuizStore } from "@/lib/quiz/store"
 // `null` (organic) is the correct default for a component rendered outside the
 // provider, e.g. in isolation in a test.
 const QuizFunnelPackageKeyContext = createContext<string | null>(null)
+const ScannerFunnelRefinementEnabledContext = createContext(false)
 
 /**
  * The funnel package key for copy that must render identically on the server
@@ -22,6 +23,15 @@ const QuizFunnelPackageKeyContext = createContext<string | null>(null)
  */
 export function useQuizFunnelPackageKey(): string | null {
   return useContext(QuizFunnelPackageKeyContext)
+}
+
+/**
+ * The server-owned scanner-entry presentation switch. It is kept separate
+ * from package identity so a signed scanner session remains scanner-attributed
+ * while the legacy presentation stays available by default.
+ */
+export function useScannerFunnelRefinementEnabled(): boolean {
+  return useContext(ScannerFunnelRefinementEnabledContext)
 }
 
 /**
@@ -42,9 +52,11 @@ export function useQuizFunnelPackageKey(): string | null {
  */
 export function QuizFunnelPackageProvider({
   funnelPackageKey,
+  scannerFunnelRefinementEnabled = false,
   children,
 }: {
   funnelPackageKey: string | null
+  scannerFunnelRefinementEnabled?: boolean
   children: React.ReactNode
 }) {
   const appliedRef = useRef(false)
@@ -87,8 +99,10 @@ export function QuizFunnelPackageProvider({
   }, [funnelPackageKey])
 
   return (
-    <QuizFunnelPackageKeyContext.Provider value={effectiveFunnelPackageKey}>
-      {children}
-    </QuizFunnelPackageKeyContext.Provider>
+    <ScannerFunnelRefinementEnabledContext.Provider value={scannerFunnelRefinementEnabled}>
+      <QuizFunnelPackageKeyContext.Provider value={effectiveFunnelPackageKey}>
+        {children}
+      </QuizFunnelPackageKeyContext.Provider>
+    </ScannerFunnelRefinementEnabledContext.Provider>
   )
 }

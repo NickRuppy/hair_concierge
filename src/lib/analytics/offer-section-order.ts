@@ -47,11 +47,29 @@ const SCAN_REGAL_SECTION_ORDER = [
   "final_cta",
 ] as const satisfies readonly OfferSectionId[]
 
-export function resolveOfferSectionIndex(offerVariant: string, sectionId: OfferSectionId): number {
+const SCANNER_REFINEMENT_SECTION_ORDER = [
+  "hero",
+  "personal_plan_diagnosis",
+  "scan_criteria",
+  "highlights",
+  "method",
+  "pricing",
+  "product_tour",
+  "testimonials",
+  "faq",
+] as const satisfies readonly OfferSectionId[]
+
+export function resolveOfferSectionIndex(
+  offerVariant: string,
+  sectionId: OfferSectionId,
+  offerRevision?: string,
+): number {
   const presentationVariant = resolveOfferPresentationVariant(offerVariant)
   const order: readonly OfferSectionId[] =
     presentationVariant === "scan-regal-v1"
-      ? SCAN_REGAL_SECTION_ORDER
+      ? offerRevision === "scan_regal_refinement_v20"
+        ? SCANNER_REFINEMENT_SECTION_ORDER
+        : SCAN_REGAL_SECTION_ORDER
       : presentationVariant === "personal-plan-v1" ||
           isPersonalPlanPricingExperimentVariant(presentationVariant)
         ? PERSONAL_PLAN_SECTION_ORDER

@@ -80,3 +80,28 @@ test("personal-plan pricing treatment arms keep the same section order", () => {
 test("unknown section combinations sort after a variant's declared sections", () => {
   assert.equal(resolveOfferSectionIndex("organic-plan-v1", "product_story_chat_answer"), 11)
 })
+
+test("scanner refinement revision tracks its new order without changing the live baseline", () => {
+  const order = [
+    "hero",
+    "personal_plan_diagnosis",
+    "scan_criteria",
+    "highlights",
+    "method",
+    "pricing",
+    "product_tour",
+    "testimonials",
+    "faq",
+  ] as const
+  for (const [index, sectionId] of order.entries()) {
+    assert.equal(
+      resolveOfferSectionIndex("scan-regal-v1", sectionId, "scan_regal_refinement_v20"),
+      index,
+    )
+  }
+  assert.equal(resolveOfferSectionIndex("scan-regal-v1", "pricing"), 4)
+  assert.equal(
+    resolveOfferSectionIndex("organic-plan-v1", "pricing", "scan_regal_refinement_v20"),
+    3,
+  )
+})

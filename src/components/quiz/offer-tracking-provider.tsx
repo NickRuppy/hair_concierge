@@ -259,7 +259,7 @@ export function OfferTrackingProvider({
         ...context,
         funnelEventId: createFunnelEventId(),
         sectionId,
-        sectionIndex: resolveOfferSectionIndex(offerVariant, sectionId),
+        sectionIndex: resolveOfferSectionIndex(offerVariant, sectionId, offerRevision),
       })
       if (
         isOfferEngagementDepthSection(sectionId) &&
@@ -268,7 +268,7 @@ export function OfferTrackingProvider({
         trackOfferEngagement("section_depth", sectionId)
       }
     },
-    [context, offerVariant, trackOfferEngagement],
+    [context, offerVariant, offerRevision, trackOfferEngagement],
   )
 
   const observeOfferSection = useCallback(
