@@ -883,7 +883,7 @@ export function getMaskResearchLabData(): MaskResearchLabData {
   return {
     meta: {
       cohortId: cohort.cohortId,
-      standardVersion: "mask-inci-v0.2 (Kohorte eingefroren unter v0.1-draft)",
+      standardVersion: "mask-inci-v0.3 (Kohorte eingefroren unter v0.1-draft)",
       frozen: cohort.frozen,
       referenceKeyVersion: REFERENCE_KEY_DIR,
       charter: cohort.charter,
