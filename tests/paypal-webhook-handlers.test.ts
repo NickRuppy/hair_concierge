@@ -68,8 +68,12 @@ function createSupabaseStub(seed?: {
   profiles?: Record<string, Record<string, unknown>>
   paypalIntents?: Array<Record<string, unknown>>
   analyticsOutbox?: Array<Record<string, unknown>>
+  reactivationReservations?: Array<Record<string, unknown>>
 }) {
   const calls: Array<Record<string, unknown>> = []
+  const reactivationReservations = seed?.reactivationReservations ?? []
+  let completionFailures = 0
+  let quarantineBeforeActivationMark = false
   const webhookEvents = new Set<string>()
   const profiles = seed?.profiles ?? {}
   const paypalIntents = seed?.paypalIntents ?? [
@@ -115,6 +119,7 @@ function createSupabaseStub(seed?: {
   }))
 
   function tableRows(table: string) {
+    if (table === "membership_reactivation_checkout_reservations") return reactivationReservations
     if (table === "billing_subscriptions") return billing
     if (table === "profiles") return Object.values(profiles)
     if (table === "paypal_checkout_intents") return paypalIntents
@@ -149,6 +154,18 @@ function createSupabaseStub(seed?: {
 
     async function resolveRows() {
       if (state.op === "update" && state.patch) {
+        if (
+          table === "paypal_checkout_intents" &&
+          state.patch.status === "activated" &&
+          quarantineBeforeActivationMark
+        ) {
+          quarantineBeforeActivationMark = false
+          paypalIntents[0].status = "duplicate"
+        }
+        if (table === "membership_reactivation_checkout_reservations" && completionFailures > 0) {
+          completionFailures -= 1
+          return { data: [], error: { message: "simulated reservation completion failure" } }
+        }
         const matched = applyFilters(tableRows(table) as Record<string, unknown>[])
         for (const row of matched) Object.assign(row, state.patch)
         calls.push({ table, op: "update", patch: state.patch, filters: state.filters })
@@ -184,12 +201,12 @@ function createSupabaseStub(seed?: {
         return builder
       },
       maybeSingle: async () => {
-        const { data: rows } = await resolveRows()
-        return { data: rows[0] ?? null, error: null }
+        const { data: rows, error } = await resolveRows()
+        return { data: rows[0] ?? null, error }
       },
       single: async () => {
-        const { data: rows } = await resolveRows()
-        return { data: rows[0] ?? null, error: null }
+        const { data: rows, error } = await resolveRows()
+        return { data: rows[0] ?? null, error }
       },
       upsert(
         row: Record<string, unknown> | Array<Record<string, unknown>>,
@@ -331,6 +348,14 @@ function createSupabaseStub(seed?: {
   }
 
   return {
+    reactivationReservations,
+    webhookEvents,
+    quarantineOnNextActivationMark() {
+      quarantineBeforeActivationMark = true
+    },
+    failNextCompletion() {
+      completionFailures += 1
+    },
     calls,
     analyticsOutbox,
     analyticsDeliveries,
@@ -1520,4 +1545,172 @@ function subscription(status: string, nextBillingTime: string | null): PayPalSub
     subscriber: { payer_id: "payer-1", email_address: "paypal@example.com" },
     billing_info: nextBillingTime ? { next_billing_time: nextBillingTime } : {},
   }
+}
+
+function reactivationWebhookFixture() {
+  const reservation = {
+    id: "reactivation-1",
+    user_id: "user-returning",
+    provider: "paypal",
+    provider_reference: "intent-returning",
+    status: "provider_created",
+  }
+  const intent = {
+    id: "intent-returning",
+    token: "token-active",
+    interval: "month",
+    source: "pricing_page",
+    status: "approved",
+    provider_subscription_id: null,
+    lead_id: null,
+    email: "login@example.com",
+    user_id: "user-returning",
+    expires_at: futureIso(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    reactivation_reservation_id: reservation.id as string | null,
+    metadata: {
+      checkout_context: "membership_reactivation",
+      reactivation_reservation_id: reservation.id,
+    },
+  }
+  const state = createSupabaseStub({
+    paypalIntents: [intent],
+    profiles: { "user-returning": { id: "user-returning", email: "login@example.com" } },
+    reactivationReservations: [reservation],
+  })
+  const deps = {
+    supabase: state.supabase,
+    premiumTierId: "premium",
+    freeTierId: "free",
+    retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+  }
+  return { ...state, reservation, intent, deps }
+}
+
+test("verified PayPal activation closes its exact reactivation reservation without a browser return", async () => {
+  const f = reactivationWebhookFixture()
+  await handlePayPalWebhookEvent(event("WH-reactivation", "BILLING.SUBSCRIPTION.ACTIVATED"), f.deps)
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.reservation.provider_reference, "intent-returning")
+  assert.equal(f.billing[0].user_id, "user-returning")
+  assert.equal(f.profiles["user-returning"].email, "login@example.com")
+  await handlePayPalWebhookEvent(
+    event("WH-reactivation-again", "BILLING.SUBSCRIPTION.ACTIVATED"),
+    f.deps,
+  )
+  assert.equal(f.reservation.status, "completed")
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      event("WH-reactivation-again", "BILLING.SUBSCRIPTION.ACTIVATED"),
+      f.deps,
+    ),
+    { handled: true, skipped: true },
+  )
+})
+
+test("PayPal completion failure releases event claim and retry completes the same local intent", async () => {
+  const f = reactivationWebhookFixture()
+  f.failNextCompletion()
+  const incoming = event("WH-reactivation-retry", "BILLING.SUBSCRIPTION.ACTIVATED")
+  await assert.rejects(handlePayPalWebhookEvent(incoming, f.deps), {
+    message: "simulated reservation completion failure",
+  })
+  assert.equal(f.webhookEvents.has("paypal:WH-reactivation-retry"), false)
+  assert.equal(f.reservation.status, "provider_created")
+  await handlePayPalWebhookEvent(incoming, f.deps)
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.billing.length, 1)
+})
+
+test("sale-first verified PayPal success completes reactivation through the shared activation boundary", async () => {
+  const f = reactivationWebhookFixture()
+  await handlePayPalWebhookEvent(
+    paymentEvent("WH-reactivation-sale", "PAYMENT.SALE.COMPLETED"),
+    f.deps,
+  )
+  assert.equal(f.reservation.status, "completed")
+})
+
+test("pending PayPal provider status leaves the reservation selected", async () => {
+  const f = reactivationWebhookFixture()
+  f.deps.retrievePayPalSubscription = async () => subscription("APPROVED", futureIso())
+  await handlePayPalWebhookEvent(
+    event("WH-reactivation-pending", "BILLING.SUBSCRIPTION.ACTIVATED"),
+    f.deps,
+  )
+  assert.equal(f.reservation.status, "provider_created")
+})
+
+for (const mismatch of [
+  "intent user",
+  "reservation user",
+  "local reference",
+  "provider",
+] as const) {
+  test(`PayPal reactivation ${mismatch} mismatch never closes reservation`, async () => {
+    const f = reactivationWebhookFixture()
+    if (mismatch === "intent user") f.intent.user_id = "other-user"
+    if (mismatch === "reservation user") f.reservation.user_id = "other-user"
+    if (mismatch === "local reference") f.reservation.provider_reference = "other-intent"
+    if (mismatch === "provider") f.reservation.provider = "stripe"
+    await assert.rejects(
+      handlePayPalWebhookEvent(
+        event(`WH-reactivation-${mismatch}`, "BILLING.SUBSCRIPTION.ACTIVATED"),
+        f.deps,
+      ),
+    )
+    assert.equal(f.reservation.status, "provider_created")
+  })
+}
+
+test("duplicate and inactive PayPal attempts never release the reactivation reservation", async () => {
+  const duplicate = reactivationWebhookFixture()
+  duplicate.intent.status = "duplicate"
+  await handlePayPalWebhookEvent(
+    event("WH-reactivation-duplicate", "BILLING.SUBSCRIPTION.ACTIVATED"),
+    { ...duplicate.deps, cancelPayPalSubscription: async () => {} },
+  )
+  assert.equal(duplicate.reservation.status, "provider_created")
+  const inactive = reactivationWebhookFixture()
+  inactive.deps.retrievePayPalSubscription = async () => subscription("SUSPENDED", futureIso())
+  await assert.rejects(
+    handlePayPalWebhookEvent(
+      event("WH-reactivation-inactive", "BILLING.SUBSCRIPTION.ACTIVATED"),
+      inactive.deps,
+    ),
+  )
+  assert.equal(inactive.reservation.status, "provider_created")
+})
+
+test("PayPal quarantine racing activation is never overwritten to release reservation", async () => {
+  const f = reactivationWebhookFixture()
+  f.quarantineOnNextActivationMark()
+  await assert.rejects(
+    handlePayPalWebhookEvent(
+      event("WH-reactivation-quarantine-race", "BILLING.SUBSCRIPTION.ACTIVATED"),
+      f.deps,
+    ),
+  )
+  assert.equal(f.intent.status, "duplicate")
+  assert.equal(f.reservation.status, "provider_created")
+  assert.equal(f.webhookEvents.has("paypal:WH-reactivation-quarantine-race"), false)
+})
+
+for (const binding of ["missing metadata", "wrong metadata", "wrong column"] as const) {
+  test(`PayPal column-bound reactivation with ${binding} fails retryably`, async () => {
+    const f = reactivationWebhookFixture()
+    if (binding === "missing metadata") f.intent.metadata.reactivation_reservation_id = ""
+    if (binding === "wrong metadata")
+      f.intent.metadata.reactivation_reservation_id = "other-reservation"
+    if (binding === "wrong column") f.intent.reactivation_reservation_id = "other-reservation"
+    await assert.rejects(
+      handlePayPalWebhookEvent(
+        event(`WH-column-${binding}`, "BILLING.SUBSCRIPTION.ACTIVATED"),
+        f.deps,
+      ),
+    )
+    assert.equal(f.reservation.status, "provider_created")
+    assert.equal(f.webhookEvents.has(`paypal:WH-column-${binding}`), false)
+  })
 }

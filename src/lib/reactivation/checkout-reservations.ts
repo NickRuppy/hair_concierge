@@ -207,13 +207,17 @@ export async function markMembershipReactivationCheckoutCompleted(
   supabase: ReservationClient,
   reservationId: string,
   userId: string,
+  binding: { provider: MembershipReactivationProvider; providerReference: string },
 ): Promise<void> {
   const { data, error } = await supabase
     .from("membership_reactivation_checkout_reservations")
     .update({ status: "completed", updated_at: new Date().toISOString() })
     .eq("id", reservationId)
     .eq("user_id", userId)
-    .in("status", ["provider_created", "reconciliation_required"])
+    .eq("provider", binding.provider)
+    .eq("provider_reference", binding.providerReference)
+    // Webhooks and browser returns can both confirm the same verified payment.
+    .in("status", ["provider_created", "reconciliation_required", "completed"])
     .select("id")
     .maybeSingle()
   if (error) throw error

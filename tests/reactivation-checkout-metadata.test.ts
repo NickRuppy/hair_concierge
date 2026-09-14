@@ -289,6 +289,7 @@ test("provider binding and completion reject zero-row state transitions", async 
       completeClient as never,
       recoveringStripeReservation.id,
       recoveringStripeReservation.user_id,
+      { provider: "stripe", providerReference: "cs_existing" },
     ),
     MembershipReactivationCheckoutConflictError,
   )
