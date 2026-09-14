@@ -98,7 +98,7 @@ test("the solution insert's positive card judges the scalp and names the match",
   assert.match(html, /Passt zu deiner Kopfhaut/)
   assert.doesNotMatch(html, /Passt zu deinem Haar/)
   assert.match(html, /Kopfhaut trocken – genau dein Profil\./)
-  assert.doesNotMatch(html, /Kopfhaut trocken, gereizt – genau dein Profil\./)
+  assert.doesNotMatch(html, /Kopfhaut sensibel, trocken – genau dein Profil\./)
   assert.doesNotMatch(html, /Alles im Ziel\./)
 })
 

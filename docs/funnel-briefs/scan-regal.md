@@ -53,7 +53,7 @@ a real catalog product and shows its packshot, like every other product tile in 
 | ---------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ |
 | 1 — "Das Problem"      | After density (question 3)          | Photo of a woman with a bottle; OGX Argan Oil of Morocco Shampoo, example row keyed off the visitor's `thickness` answer      |
 | 2 — "Die Lösung"       | After scalp (question 8)            | Photo of a shelf scan; Balea Kopfhaut Sensitive Shampoo, example row keyed off the visitor's scalp type/condition answers      |
-| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; Alterra Feuchtigkeits-Haarmaske, example rows keyed off the visitor's thickness and goal answers      |
+| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; Alterra Feuchtigkeits-Haarmaske, example rows keyed off the visitor's thickness, treatment and concern answers      |
 
 Each insert fires `quiz_insert_viewed { insertId, funnelPackageKey }` (PostHog only) and does
 not fire `quiz_step_viewed` — see `docs/funnel-attribution.md` for why that split matters for
