@@ -12,6 +12,15 @@ const CHANNELS = new Set(["organic", "meta", "internal"])
 const STATUSES = new Set(["active", "placeholder", "archived"])
 const ARGUMENT_NAMES = new Set(["key", "slug", "landing", "quiz", "offer", "channel", "status"])
 
+// Generated wrappers delegate to these existing variants. The offer side keeps no
+// "default" file: that presentation ID is retired and remapped to organic-plan-v1
+// in src/lib/funnel/offer-presentation.ts, so the template targets the organic
+// plan offer directly (as personal-plan-v1 does).
+export const TEMPLATE_BASE_VARIANTS = Object.freeze({
+  landing: "default",
+  offer: "organic-plan-v1",
+})
+
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url))
 const defaultRoot = path.resolve(scriptDirectory, "../..")
 
@@ -104,11 +113,20 @@ function buildOfferRegistry(ids) {
 }
 
 function landingTemplate(id) {
-  return `import DefaultLandingVariant from "./default"\n\nexport default function Funnel${toComponentName(id)}LandingVariant() {\n  return <DefaultLandingVariant />\n}\n`
+  return `import DefaultLandingVariant from "./${TEMPLATE_BASE_VARIANTS.landing}"\n\nexport default function Funnel${toComponentName(id)}LandingVariant() {\n  return <DefaultLandingVariant />\n}\n`
 }
 
 function offerTemplate(id) {
-  return `"use client"\n\nimport DefaultOfferVariant from "./default"\nimport type { FunnelOfferVariantProps } from "@/funnels/types"\n\nexport default function Funnel${toComponentName(id)}OfferVariant(props: FunnelOfferVariantProps) {\n  return <DefaultOfferVariant {...props} />\n}\n`
+  return `"use client"\n\nimport BaseOfferVariant from "./${TEMPLATE_BASE_VARIANTS.offer}"\nimport type { FunnelOfferVariantProps } from "@/funnels/types"\n\nexport default function Funnel${toComponentName(id)}OfferVariant(props: FunnelOfferVariantProps) {\n  return <BaseOfferVariant {...props} />\n}\n`
+}
+
+function assertTemplateBaseExists(rootDir, directory, baseId, kind) {
+  const basePath = path.join(directory, `${baseId}.tsx`)
+  if (!existsSync(basePath)) {
+    throw new Error(
+      `Cannot scaffold a ${kind} variant: template base ${path.relative(rootDir, basePath)} is missing`,
+    )
+  }
 }
 
 function funnelPaths(rootDir) {
@@ -261,10 +279,12 @@ export function createFunnelPackage(input, rootDir = defaultRoot) {
   const created = []
 
   if (!existsSync(landingPath)) {
+    assertTemplateBaseExists(rootDir, paths.landingDirectory, TEMPLATE_BASE_VARIANTS.landing, "landing")
     writeFileSync(landingPath, landingTemplate(input.landingVariant))
     created.push(path.relative(rootDir, landingPath))
   }
   if (!existsSync(offerPath)) {
+    assertTemplateBaseExists(rootDir, paths.offerDirectory, TEMPLATE_BASE_VARIANTS.offer, "offer")
     writeFileSync(offerPath, offerTemplate(input.offerVariant))
     created.push(path.relative(rootDir, offerPath))
   }
