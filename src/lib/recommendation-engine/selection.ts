@@ -1572,7 +1572,7 @@ async function loadLeaveInSpecDrivenCandidates(params: {
 
   const { data, error } = await params.supabase
     .from("product_leave_in_specs")
-    .select("*, products:product_id(*)")
+    .select("*, products(*)")
 
   if (error) {
     console.error("Failed to load leave-in spec candidates:", error)
