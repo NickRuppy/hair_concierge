@@ -83,7 +83,12 @@ export async function proxy(request: NextRequest) {
     requested: requestedRegularFieldTestRewrite,
     status: response.status,
   })
-  if (!isFunnelAttributionEnabled()) {
+  if (!isFunnelAttributionEnabled() || isPrefetchRequest(request.headers)) {
+    // A prefetch is not a visit. Next's <Link> prefetches `/` from every page
+    // that carries the wordmark (landing header, footer) as soon as the link is
+    // in view; `/` explicitly selects the organic package, so letting such a
+    // request through here restarted a scanner/meta session as organic one
+    // second after the landing view (observed in production 2026-09-14).
     return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
   }
 
@@ -253,6 +258,19 @@ const SAFE_RETIRED_ROUTINE_QUERY_KEYS = new Set([
   "utm_term",
   "fbclid",
 ])
+
+/**
+ * Prefetch/speculative requests never mutate funnel attribution: Next's router
+ * prefetch (`Next-Router-Prefetch: 1`) and browser speculation
+ * (`Purpose`/`Sec-Purpose: prefetch`, `X-Purpose: preview`) are not user visits.
+ */
+export function isPrefetchRequest(headers: Headers) {
+  if (headers.get("next-router-prefetch") === "1") return true
+  if (headers.get("x-middleware-prefetch") === "1") return true
+  const purpose =
+    `${headers.get("purpose") ?? ""} ${headers.get("sec-purpose") ?? ""} ${headers.get("x-purpose") ?? ""}`.toLowerCase()
+  return /prefetch|prerender|preview/.test(purpose)
+}
 
 export function isAttributableFunnelPackage(
   funnelPackage: FunnelPackage,

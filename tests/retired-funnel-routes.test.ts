@@ -10,6 +10,7 @@ import {
   isAttributableFunnelPackage,
   resolveAttributablePackageForPath,
   shouldStartNewFunnelSession,
+  isPrefetchRequest,
 } from "../src/proxy"
 import { getFunnelPackageBySlug, type FunnelPackage } from "../src/lib/funnel/packages"
 
@@ -138,4 +139,22 @@ test("existing organic and meta attribution branches are unaffected by the scan 
     "meta_personal_plan_v1",
   )
   assert.equal(resolveAttributablePackageForPath("/lp/haarplan", false, true), null)
+})
+
+test("prefetch requests never touch funnel attribution", () => {
+  assert.equal(isPrefetchRequest(new Headers({ "next-router-prefetch": "1" })), true)
+  assert.equal(isPrefetchRequest(new Headers({ purpose: "prefetch" })), true)
+  assert.equal(isPrefetchRequest(new Headers({ "sec-purpose": "prefetch;prerender" })), true)
+  assert.equal(isPrefetchRequest(new Headers({ "x-middleware-prefetch": "1" })), true)
+  assert.equal(isPrefetchRequest(new Headers({ accept: "text/html" })), false)
+  assert.equal(isPrefetchRequest(new Headers()), false)
+
+  // The proxy bails out of attribution for prefetches before any cookie is
+  // issued or replaced (the `/` prefetch from a landing's wordmark link must
+  // not restart a scan_v1 session as default_organic).
+  const proxySource = readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8")
+  assert.match(
+    proxySource,
+    /!isFunnelAttributionEnabled\(\) \|\| isPrefetchRequest\(request\.headers\)/,
+  )
 })

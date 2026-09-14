@@ -47,7 +47,7 @@ export default function FunnelScanRegalLandingVariant() {
       <main className="min-h-screen bg-background text-[var(--brand-plum-darkest)]">
         <header className="sticky top-0 z-50 border-b border-[rgba(var(--brand-plum-rgb),0.12)] bg-[rgba(253,251,249,0.95)] backdrop-blur-[12px]">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
-            <Link href="/" aria-label="chaarlie Startseite" className="shrink-0">
+            <Link href="/" prefetch={false} aria-label="chaarlie Startseite" className="shrink-0">
               <Wordmark />
             </Link>
             <nav className="flex shrink-0 items-center gap-1 sm:gap-4" aria-label="Zugang">
