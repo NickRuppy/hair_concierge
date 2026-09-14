@@ -63,6 +63,7 @@ function fixture() {
     provider: "stripe",
     accepted_offer: offer,
     admission_status: "reserved",
+    first_payment_succeeded_at: null,
     provider_agreement_id: null,
     access_revoked: false,
   }
@@ -309,6 +310,23 @@ test("activation retry after profile outage reuses account, admission and origin
   assert.equal(result.trialEndAt, "2026-09-21T12:00:00.000Z")
   assert.equal(f.effects.filter((e) => e[0] === "create_user").length, 1)
   assert.equal(f.tables.billing_subscriptions.length, 1)
+})
+
+test("a paid zero-total checkout activates trial access without marking the first payment successful", async () => {
+  const f = fixture()
+  f.session.payment_status = "paid"
+  const result = await ensureCheckoutAccount(f.session, f.deps)
+  assert.equal(result.userId, userId)
+  assert.equal(result.trialEnrollmentId, enrollmentId)
+  assert.equal(result.subscriptionStatus, "trialing")
+  assert.equal(result.trialEndAt, "2026-09-21T12:00:00.000Z")
+  const billing = f.tables.billing_subscriptions[0]
+  assert.equal(billing.trial_enrollment_id, enrollmentId)
+  assert.equal(billing.metadata.trial_cohort, "trial_v1")
+  assert.equal(f.enrollment.first_payment_succeeded_at, null)
+  assert.equal(billing.provider_status, "trialing")
+  assert.equal(f.effects.filter((effect) => effect[0] === "create_user").length, 1)
+  assert.ok(f.effects.some((effect) => effect[0] === "link_quiz"))
 })
 
 test("a used card receives no profile/billing access and its trial agreement is canceled without invoicing", async () => {

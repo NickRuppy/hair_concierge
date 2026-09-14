@@ -203,7 +203,10 @@ test("requires Stripe's exact seven-day provider interval and the current time t
 
 test("rejects untrusted completion, binding, identity, price, or saved-card mismatches", () => {
   for (const invalid of [
-    { session: { payment_status: "paid" } },
+    { session: { payment_status: "unpaid" } },
+    { session: { payment_status: "paid", amount_total: 1 } },
+    { session: { payment_status: "paid", status: "open" } },
+    { session: { payment_status: "paid" }, subscription: { status: "active" } },
     { session: { metadata: { trial_cohort: "trial_v1", trial_enrollment_id: "other" } } },
     { subscription: { customer: "cus_other" } },
     { subscription: { metadata: { trial_cohort: "trial_v1", trial_enrollment_id: "other" } } },
@@ -214,6 +217,24 @@ test("rejects untrusted completion, binding, identity, price, or saved-card mism
   ]) {
     assert.equal(verify(invalid), null)
   }
+})
+
+test("accepts Stripe's paid status for a completed zero-total checkout with a verified trial", async () => {
+  const values = fixtures({ session: { payment_status: "paid" } })
+  const { client } = retrievalClient(values)
+  const proof = await retrieveVerifiedStripeTrialAuthorization(
+    client,
+    values.session.id,
+    { enrollmentId: ENROLLMENT_ID, offer: OFFER },
+    NOW,
+    false,
+  )
+  assert.equal(proof?.enrollmentId, ENROLLMENT_ID)
+  assert.equal(proof?.trialEndAt, "2026-09-20T12:00:00.000Z")
+  assert.deepEqual(proof?.unverifiedFutureInvoiceObligations, [
+    "verify_first_paid_invoice_amount",
+    "verify_renewal_invoice_amount",
+  ])
 })
 
 test("accepts no pending setup intent with a saved card, but requires any present intent to succeed and bind", () => {
