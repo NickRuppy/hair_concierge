@@ -29,6 +29,41 @@ export type CheckoutFailure = {
   retryable: boolean
 }
 
+export type ReactivationCheckoutRecovery = {
+  provider: "stripe" | "paypal" | null
+  state: "resume" | "pending" | "not_started"
+  interval?: BillingInterval
+}
+
+export function readReactivationCheckoutRecovery(
+  body: unknown,
+): ReactivationCheckoutRecovery | null {
+  if (!body || typeof body !== "object" || !("recovery" in body)) return null
+  const recovery = body.recovery
+  if (
+    !recovery ||
+    typeof recovery !== "object" ||
+    !("state" in recovery) ||
+    !("provider" in recovery)
+  )
+    return null
+  if (recovery.state === "not_started" && recovery.provider === null)
+    return { state: "not_started", provider: null }
+  if (
+    (recovery.state !== "resume" && recovery.state !== "pending") ||
+    (recovery.provider !== "stripe" && recovery.provider !== "paypal")
+  )
+    return null
+  const interval =
+    "interval" in recovery &&
+    (recovery.interval === "month" ||
+      recovery.interval === "quarter" ||
+      recovery.interval === "year")
+      ? recovery.interval
+      : undefined
+  return { state: recovery.state, provider: recovery.provider, ...(interval ? { interval } : {}) }
+}
+
 const DynamicPayPalSubscriptionButton = dynamic(
   () => import("./paypal-subscription-button").then((module) => module.PayPalSubscriptionButton),
   {
@@ -81,6 +116,8 @@ export function PaymentMethodCheckout({
   onClientMounted,
   onChangePlan,
   onPayPalCheckoutFailed,
+  onReactivationAuthenticationRequired,
+  onReactivationRecovery,
   onPayPalCheckoutStarted,
   onCheckoutLifecycle,
   onFirstPaymentEngagement,
@@ -114,6 +151,8 @@ export function PaymentMethodCheckout({
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
   onChangePlan: () => void
   onPayPalCheckoutFailed?: (failure: CheckoutFailure) => void
+  onReactivationAuthenticationRequired?: () => void
+  onReactivationRecovery?: (recovery: ReactivationCheckoutRecovery) => void
   onPayPalCheckoutStarted: (funnelEventId: string) => void
   onCheckoutLifecycle?: (
     claim: Omit<CheckoutLifecycleClaim, "checkoutAttemptId" | "lastState" | "openIndex">,
@@ -204,6 +243,8 @@ export function PaymentMethodCheckout({
           onCheckoutCancelled={() => {
             onProviderLockRelease?.("paypal")
           }}
+          onReactivationAuthenticationRequired={onReactivationAuthenticationRequired}
+          onReactivationRecovery={onReactivationRecovery}
           onCheckoutStarted={onPayPalCheckoutStarted}
           onCheckoutLifecycle={onCheckoutLifecycle}
           onClientMounted={() => onClientMounted?.("paypal", "paypal")}

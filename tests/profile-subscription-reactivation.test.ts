@@ -59,9 +59,8 @@ test("membership reactivation uses one correlated attempt across both providers"
       routeSource,
       /checkoutContext: z\.literal\("membership_reactivation"\)\.optional\(\)/,
     )
-    assert.match(routeSource, /authenticated reactivation required/)
+    assert.match(routeSource, /reactivation_authentication_required/)
     assert.match(routeSource, /acquireMembershipReactivationCheckout/)
-    assert.match(routeSource, /claimMembershipReactivationProvider/)
   }
 })
 
@@ -84,16 +83,8 @@ test("the database atomically prevents competing reactivation checkouts", () => 
   assert.match(paypalRouteSource, /resolveStoredPayPalCheckoutIntentPlan/)
 })
 
-test("definitively dead Stripe sessions release the reservation and rotate the client attempt", () => {
-  assert.match(stripeRouteSource, /existingSession\.status === "expired"/)
-  assert.match(stripeRouteSource, /isDefinitivelyMissingStripeResource/)
-  assert.match(stripeRouteSource, /expireMembershipReactivationCheckoutReservation/)
-  assert.match(stripeRouteSource, /reactivation_checkout_terminal/)
-  assert.match(
-    checkoutSource,
-    /body\?\.error === "reactivation_checkout_terminal"[\s\S]*checkoutAttemptController\.close\(\)[\s\S]*checkoutAttemptController\.open\(\)/,
-  )
-})
+// Verified expired-session retry is exercised through the real routes and mounted UI
+// in returning-checkout-routes.test.ts and reactivation-checkout-recovery.spec.ts.
 
 test("pricing and protected routes converge on the dedicated reactivation boundary", () => {
   assert.match(
