@@ -27,6 +27,7 @@ test("insert 16 stays partial: cleansing and thickness, no scalp row", () => {
   assert.equal(card.product.name, "OGX Argan Oil of Morocco Shampoo")
   assert.equal(card.product.category, "Shampoo")
   assert.equal(card.product.price, "ca. 6,95 €")
+  assert.equal(card.product.imageSrc, "/images/funnels/scan/example-ogx-argan-oil.webp")
   assert.deepEqual(
     card.rows.map((row) => row.label),
     ["Reinigung", "Haardicke"],
@@ -94,7 +95,7 @@ test("insert 17 reads the scalp type when the user reported no complaint", () =>
     )
     const scalpRow = card.rows.find((row) => row.label === "Kopfhaut")
     assert.ok(scalpRow, scalpType)
-    assert.equal(scalpRow.productValue, "trocken, gereizt")
+    assert.equal(scalpRow.productValue, "sensibel, trocken")
     assert.equal(scalpRow.targetValue, target, scalpType)
     assert.equal(scalpRow.status, status, scalpType)
   }
@@ -133,6 +134,18 @@ test("insert 17 ignores a complaint the user took back", () => {
   assert.equal(card.rows.find((row) => row.label === "Kopfhaut")?.targetValue, "fettig")
 })
 
+test("insert 17 carries the mild scalp shampoo the screen is about", () => {
+  const card = getScanInsertExample(
+    17,
+    answers({ scalp_type: "trocken", has_scalp_issue: false, thickness: "normal" }),
+  )
+
+  assert.equal(card.product.name, "Balea Kopfhaut Sensitive Shampoo")
+  assert.equal(card.product.category, "Shampoo")
+  assert.equal(card.product.price, "ca. 1,25 €")
+  assert.equal(card.product.imageSrc, "/images/funnels/scan/example-balea-kopfhaut-sensitive.webp")
+})
+
 test("insert 17 asks for a clarifying wash when the scalp runs oily", () => {
   const card = getScanInsertExample(
     17,
@@ -153,7 +166,7 @@ test("insert 17 asks for a clarifying wash when the scalp runs oily", () => {
   assert.equal(card.headline, "Passt nicht zu deiner Kopfhaut")
   assert.equal(
     card.deviation,
-    "Reinigung: regulär statt klärend · Kopfhaut: trocken, gereizt statt fettig",
+    "Reinigung: regulär statt klärend · Kopfhaut: sensibel, trocken statt fettig",
   )
 })
 
@@ -175,7 +188,7 @@ test("insert 17 passes on the scalp and says so, naming the matched criterion", 
   )
 })
 
-// The shampoo covers "trocken, gereizt" — printing that product value told a
+// The shampoo covers "sensibel, trocken" — printing that product value told a
 // user who answered only one of the two that they had both. The line quotes the
 // answer instead, so each scalp answer reads its own word back.
 test("insert 17's matched line quotes the scalp answer, not the product's range", () => {
@@ -199,9 +212,9 @@ test("insert 17's matched line quotes the scalp answer, not the product's range"
   for (const card of [dry, irritated]) {
     assert.equal(
       card.rows.find((row) => row.label === "Kopfhaut")?.productValue,
-      "trocken, gereizt",
+      "sensibel, trocken",
     )
-    assert.ok(!card.deviation.includes("trocken, gereizt"), "the card never reads back both words")
+    assert.ok(!card.deviation.includes("sensibel, trocken"), "the card never reads back both words")
   }
 })
 
@@ -211,7 +224,7 @@ test("inserts 16 and 18 carry no scalp row, so they keep the hair verdict", () =
   assert.equal(problem.headline, "Passt zu deinem Haar")
   assert.equal(problem.deviation, "Alles im Ziel.")
 
-  const home = getScanInsertExample(18, answers({ thickness: "normal" }))
+  const home = getScanInsertExample(18, answers({ thickness: "coarse" }))
   assert.equal(home.verdict, "ok")
   assert.equal(home.headline, "Passt zu deinem Haar")
   assert.equal(home.deviation, "Alles im Ziel.")
@@ -239,20 +252,29 @@ test("insert 17 falls back to a balanced scalp before the question is answered",
 })
 
 test("insert 18 weighs the mask against thickness, direction and repair need", () => {
-  const card = getScanInsertExample(18, answers({ thickness: "normal" }))
+  const card = getScanInsertExample(18, answers({ thickness: "coarse" }))
 
-  assert.equal(card.product.name, "Balea Professional Repair Kur")
+  assert.equal(card.product.name, "Alterra Feuchtigkeits-Haarmaske")
   assert.equal(card.product.category, "Haarmaske")
-  assert.equal(card.product.price, "ca. 1,95 €")
+  assert.equal(card.product.price, "ca. 2,79 €")
+  assert.equal(
+    card.product.imageSrc,
+    "/images/funnels/scan/example-alterra-feuchtigkeits-maske.webp",
+  )
   assert.deepEqual(
     card.rows.map((row) => row.label),
     ["Pflegegewicht", "Pflegerichtung", "Repair-Pflege"],
   )
   assert.deepEqual(card.rows, [
-    { label: "Pflegegewicht", productValue: "mittel", targetValue: "mittel", status: "ok" },
+    {
+      label: "Pflegegewicht",
+      productValue: "reichhaltig",
+      targetValue: "reichhaltig",
+      status: "ok",
+    },
     {
       label: "Pflegerichtung",
-      productValue: "ausgeglichen",
+      productValue: "Feuchtigkeit",
       targetValue: "ausgeglichen",
       status: "ok",
     },
@@ -263,29 +285,36 @@ test("insert 18 weighs the mask against thickness, direction and repair need", (
   assert.equal(card.deviation, "Alles im Ziel.")
 })
 
-test("insert 18 warns one step off the care weight in both directions", () => {
-  const expected: [string, string][] = [
-    ["fine", "leicht"],
-    ["coarse", "reichhaltig"],
+// The mask is `reichhaltig`: coarse hair is its target, medium is one step off,
+// and fine hair is two steps away — a real miss, not a restriction.
+test("insert 18 walks the rich mask down the care-weight ladder", () => {
+  const expected: [string, string, "ok" | "warn" | "bad", string][] = [
+    ["fine", "leicht", "bad", "Passt nicht zu deinem Haar"],
+    ["normal", "mittel", "warn", "Passt mit Einschränkung"],
+    ["coarse", "reichhaltig", "ok", "Passt zu deinem Haar"],
   ]
-  for (const [thickness, target] of expected) {
+  for (const [thickness, target, status, headline] of expected) {
     const card = getScanInsertExample(18, answers({ thickness }))
     assert.deepEqual(card.rows[0], {
       label: "Pflegegewicht",
-      productValue: "mittel",
+      productValue: "reichhaltig",
       targetValue: target,
-      status: "warn",
+      status,
     })
-    assert.equal(card.verdict, "warn", thickness)
-    assert.equal(card.headline, "Passt mit Einschränkung", thickness)
-    assert.equal(card.deviation, `Pflegegewicht: mittel statt ${target}`, thickness)
+    assert.equal(card.verdict, status, thickness)
+    assert.equal(card.headline, headline, thickness)
+    assert.equal(
+      card.deviation,
+      status === "ok" ? "Alles im Ziel." : `Pflegegewicht: reichhaltig statt ${target}`,
+      thickness,
+    )
   }
 })
 
 test("insert 18 raises the repair target for bleached hair", () => {
   const card = getScanInsertExample(
     18,
-    answers({ thickness: "normal", treatment: ["gefaerbt", "blondiert"] }),
+    answers({ thickness: "coarse", treatment: ["gefaerbt", "blondiert"] }),
   )
 
   assert.deepEqual(card.rows[2], {
@@ -313,11 +342,11 @@ test("insert 18 raises the repair target for damage concerns", () => {
 })
 
 test("insert 18 joins every deviation into one line", () => {
-  const card = getScanInsertExample(18, answers({ thickness: "coarse", treatment: ["blondiert"] }))
+  const card = getScanInsertExample(18, answers({ thickness: "fine", treatment: ["blondiert"] }))
 
   assert.equal(
     card.deviation,
-    "Pflegegewicht: mittel statt reichhaltig · Repair-Pflege: mittel statt hoch",
+    "Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch",
   )
 })
 
@@ -329,7 +358,7 @@ test("insert 18 stays valid before any question is answered", () => {
     card.rows.map((row) => row.targetValue),
     ["leicht", "ausgeglichen", "mittel"],
   )
-  assert.equal(card.verdict, "warn")
+  assert.equal(card.verdict, "bad")
 })
 
 test("the copy helpers name the hair the quiz already knows", () => {
@@ -371,6 +400,19 @@ test("the copy helpers name the hair the quiz already knows", () => {
   assert.equal(getScanInsertScalpTarget({}), "ausgeglichen")
 })
 
+// Every example card is a demo of a real scan, so every product it names has to
+// be one the catalog can actually show a packshot for.
+test("every insert's example product carries a packshot", () => {
+  const expected: [16 | 17 | 18, string][] = [
+    [16, "/images/funnels/scan/example-ogx-argan-oil.webp"],
+    [17, "/images/funnels/scan/example-balea-kopfhaut-sensitive.webp"],
+    [18, "/images/funnels/scan/example-alterra-feuchtigkeits-maske.webp"],
+  ]
+  for (const [step, imageSrc] of expected) {
+    assert.equal(getScanInsertExample(step, answers()).product.imageSrc, imageSrc, `insert ${step}`)
+  }
+})
+
 test("every row value stays a single word except the scalp range the product covers", () => {
   const cards = [
     getScanInsertExample(16, answers({ thickness: "coarse" })),
@@ -380,7 +422,7 @@ test("every row value stays a single word except the scalp range the product cov
   for (const card of cards) {
     for (const row of card.rows) {
       if (row.label === "Kopfhaut") {
-        assert.equal(row.productValue, "trocken, gereizt")
+        assert.equal(row.productValue, "sensibel, trocken")
         continue
       }
       assert.doesNotMatch(row.productValue, /\s/, `${row.label} product value`)

@@ -46,13 +46,14 @@ straight parallel funnel and is read against `default_organic` after launch.
 The legacy quiz's ten questions and their order are unchanged. Three non-question inserts are
 spliced between question groups; they do not count toward the "x/10" progress the visitor sees,
 and they do not call the recommendation engine — each shows a small, answer-derived example
-table (`src/lib/quiz/scan-insert-examples.ts`) that is always labeled `Beispiel`.
+table (`src/lib/quiz/scan-insert-examples.ts`) that is always labeled `Beispiel`. Each card names
+a real catalog product and shows its packshot, like every other product tile in the app.
 
 | Insert                | Placement                          | Shows                                                                                     |
 | ---------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ |
-| 1 — "Das Problem"      | After density (question 3)          | Photo of a woman with a bottle; example row keyed off the visitor's `thickness` answer      |
-| 2 — "Die Lösung"       | After scalp (question 8)            | Photo of a shelf scan; example row keyed off the visitor's scalp type/condition answers      |
-| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; example rows (Balea Repair Kur) keyed off the visitor's thickness and goal answers      |
+| 1 — "Das Problem"      | After density (question 3)          | Photo of a woman with a bottle; OGX Argan Oil of Morocco Shampoo, example row keyed off the visitor's `thickness` answer      |
+| 2 — "Die Lösung"       | After scalp (question 8)            | Photo of a shelf scan; Balea Kopfhaut Sensitive Shampoo, example row keyed off the visitor's scalp type/condition answers      |
+| 3 — "Und zu Hause"     | After goals (question 10)           | Photo of a bathroom shelf; Alterra Feuchtigkeits-Haarmaske, example rows keyed off the visitor's thickness, treatment and concern answers      |
 
 Each insert fires `quiz_insert_viewed { insertId, funnelPackageKey }` (PostHog only) and does
 not fire `quiz_step_viewed` — see `docs/funnel-attribution.md` for why that split matters for
@@ -69,6 +70,9 @@ that actually ship live under `public/images/funnels/scan/`:
 - `frau-regal-aha.webp`, `regal-hand-phone.webp`, `regal-scan-flasche.webp`, `bad-ablage.webp` —
   landing and insert photography.
 - `hero-camera.png`, `packshot-ogx.png` — offer hero scan-demo assets.
+- `example-ogx-argan-oil.webp`, `example-balea-kopfhaut-sensitive.webp`,
+  `example-alterra-feuchtigkeits-maske.webp` — the packshots of the three catalog products the
+  insert example cards name. These are product photography, not generated imagery.
 - `tour-scanner.png`, `tour-plan.png`, `tour-anwendung.png`, `tour-chat.png` — the product-tour
   section's four screenshots. These four are currently prototype/dev-seed captures and must be
   replaced before launch — see Activation checklist, item 1.
