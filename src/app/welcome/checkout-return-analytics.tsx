@@ -6,6 +6,7 @@ import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { trackMetaPageView } from "@/lib/meta-pixel"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
+import { clearWelcomeReturn, rememberWelcomeReturn } from "./return-recovery"
 
 export function shouldTrackCheckoutReturnSubscriptionStarted({
   purchaseKind,
@@ -33,6 +34,7 @@ export function CheckoutReturnAnalytics({
   sessionId,
   isTrialCheckout,
   trialEnrollmentId,
+  returnRecoveryExpiresAt,
 }: {
   purchase: CheckoutPurchaseAnalytics | null
   purchaseKind?: "one_time"
@@ -42,6 +44,7 @@ export function CheckoutReturnAnalytics({
   isTrialCheckout?: boolean
   /** Passed only from the server's canonical verified trial activation result. */
   trialEnrollmentId?: string
+  returnRecoveryExpiresAt?: number
 }) {
   const router = useRouter()
   const trackedRef = useRef(false)
@@ -51,6 +54,10 @@ export function CheckoutReturnAnalytics({
     trackedRef.current = true
 
     try {
+      // Persist the return proof before removing it from the address bar. Otherwise
+      // a document reload loses the unfinished activation and sends the buyer away.
+      if (redirectTo) clearWelcomeReturn(window)
+      else if (!rememberWelcomeReturn(window, Date.now(), returnRecoveryExpiresAt)) return
       window.history.replaceState(window.history.state, "", "/welcome")
       trackMetaPageView()
       addCheckoutBreadcrumb({
@@ -107,7 +114,16 @@ export function CheckoutReturnAnalytics({
         router.replace(redirectTo)
       }
     }
-  }, [purchase, purchaseKind, redirectTo, router, sessionId, isTrialCheckout, trialEnrollmentId])
+  }, [
+    purchase,
+    purchaseKind,
+    redirectTo,
+    router,
+    sessionId,
+    isTrialCheckout,
+    trialEnrollmentId,
+    returnRecoveryExpiresAt,
+  ])
 
   return null
 }

@@ -44,6 +44,7 @@ export default defineConfig({
         "scan-funnel-journey.spec.ts",
         "public-contract-declarations.spec.ts",
         "profile-trial-membership.spec.ts",
+        "welcome-return-recovery.spec.ts",
       ],
       use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
