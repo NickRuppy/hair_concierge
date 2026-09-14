@@ -266,6 +266,9 @@ test-screenshots*/
 !/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/
 /data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/*
 !/data/catalog-enrichment/personal-plan-stage5-v2/protocol-amendments/S5-*.json
+!/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/
+/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/*
+!/data/catalog-enrichment/personal-plan-stage5-v2/pointer-deltas/S5V2D-*.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-02-mask-critical-protocols.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-03-targeted-dandruff-shampoo.json
 !/data/catalog-enrichment/personal-plan-stage5-v1/protocol-research/S5-04-bondbuilder-primary-protocols.json
