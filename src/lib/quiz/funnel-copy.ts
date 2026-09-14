@@ -30,7 +30,7 @@ function scanV1CommitHeading(name: string): string {
 
 const DEFAULT_QUIZ_FUNNEL_COPY: QuizFunnelCopy = {
   infoStripLead: "Lass uns deine Haare verstehen — Schritt für Schritt.",
-  infoStripBody: "10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.",
+  infoStripBody: "10 schnelle Fragen zur Basis, dann geht’s an deine Routine und Produkte.",
   leadCaptureHeadline: "Dein persönlicher Pflegeplan ist bereit!",
   commitHeading: defaultCommitHeading,
   commitButton: "Ja, zeig mir meine Analyse",

@@ -216,7 +216,7 @@ test("the same draft resumes organically on the question the insert sits behind"
 // --- the bootstrap fallback reaches context consumers, not only the store ----
 
 const DEFAULT_INFO_STRIP_BODY =
-  "10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte."
+  "10 schnelle Fragen zur Basis, dann geht’s an deine Routine und Produkte."
 const SCAN_INFO_STRIP_BODY = "10 schnelle Fragen zur Basis, dann prüft der Scanner deine Produkte."
 
 test("a server-rendered package reaches the consumer copy without any bootstrap", () => {
