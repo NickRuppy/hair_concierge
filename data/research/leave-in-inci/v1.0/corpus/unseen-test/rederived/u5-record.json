@@ -1,0 +1,289 @@
+{
+  "lane": "u5-format-resolution-post-amendment",
+  "category_standard_version": "leave-in-inci-v0.4",
+  "packet": "leave-in-unseen-test-v0.1 (amended 2026-09-12)",
+  "generated_at": "2026-09-12",
+  "records": [
+    {
+      "slot": "u5",
+      "brand": "ISANA PROFESSIONAL (Rossmann house brand)",
+      "product": "Argan Leave-in Conditioner",
+      "gtin": null,
+      "archetype_role": null,
+      "g0_state": "in_category",
+      "g0_rationale": "§2.3 `in_category`: Aqua leads at r1 in an LGN emulsion; the C2 house-brand directions state „Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen. Anschließend die Haare wie gewohnt stylen.\" — no rinse instruction anywhere, so the §2.4 rule 2 exclusion test passes; conditioning is the primary function. No fixative-class L5 polymer is present, so the §2.3.2 styling-first architecture half never fires. Classified by function + directions + architecture, not by the word „Conditioner\" in the name — the directions, not the name, are what establish that this one stays on the hair.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2 (house-brand, §2.4.1 rule 6)",
+          "basis": [
+            "Verbatim direction (rossmann.de, field „Anwendung und Gebrauch\", 2026-09-12): „Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen. Anschließend die Haare wie gewohnt stylen.\"",
+            "towel_dry — „handtuchtrockenen\" establishes application to towel-dried hair.",
+            "dry_hair NOT transcribed: no direction permits application to dry hair. post_style NOT transcribed: application precedes styling.",
+            "pre_heat NOT transcribed: „Anschließend die Haare wie gewohnt stylen\" positions the application before styling generally, but §7.13's `pre_heat` row requires a named heat tool or a direction positioning the application before HEAT styling specifically. Generic „stylen\" names no heat tool and asserts no heat stage; §1.1 forbids reading the more favourable interpretation into it, and the consequence is real — without `pre_heat` the `heat_styling` focus would be unavailable even if a heat claim existed.",
+            "„Längen und Spitzen\" is an ends-only placement instruction, which under T12 is application guidance for the app's undesigned application-guidance layer (§17 item 27), not identity data and not a scored field."
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "SODIUM BENZOATE",
+        "rank": 11,
+        "list_length": 18,
+        "marker_status": "plausible",
+        "plausibility_test": "§3.1.1 clause 5 (T16): every ingredient establishing COND/WT — RICINUS COMMUNIS SEED OIL r3, ARGANIA SPINOSA KERNEL OIL r6, CETEARYL ALCOHOL r7, BEHENTRIMONIUM CHLORIDE r9 — outranks the marker at r11. The marker sits after the architecture it bounds ⇒ plausible; clauses 1 and 3 govern normally and neither `tail_marker_implausible` nor its R2 consequence applies.",
+        "vacuity_test": "§3.1.1 clause 6 (T17 H1), by the clause's own deterministic instruction: CITRIC ACID at r18 sits at or below the marker and is neither a capped material from §3.1.1's list, nor a fragrance/allergen declaration, nor a colourant — so the marker is NOT vacuous and `tail_marker: vacuous` is not recorded. See notes.md for the tension between that literal test and the clause's intent-level formulation; the reading changes no value here, because the LGN pair and both oils are family-coherent at r3–r9 and are not credited on rank alone.",
+        "cross_capture_note": "Single-sourced formula (rossmann.de). Marker at r11 of 18 is an ordinary mid-list marker. The LGN-pair read depends on BEHENTRIMONIUM CHLORIDE (r9) sitting two ranks above it, so `tail_marker_dependence` fires and mandatory limit 1's marker record and limitation are carried. §17.14/§17.18 inherited."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "anchor": "§7.2 `high` — an LGN pair present above the tail PLUS at least one further independent lubrication route. LGN pair: CETEARYL ALCOHOL r7 (long-chain fatty alcohol) paired with BEHENTRIMONIUM CHLORIDE r9 (cationic surfactant), both above the r11 marker and family-coherent. Further independent routes: RICINUS COMMUNIS SEED OIL r3 (enumerated rich band) and ARGANIA SPINOSA KERNEL OIL r6 (unenumerated liquid vegetable oil, read in the medium band by §7.5's convention).",
+          "absorbed_slip_observation": {
+            "m1_contributors_present_as_architecture": [
+              "BEHENTRIMONIUM CHLORIDE (r9, L1 cationic)",
+              "CETEARYL ALCOHOL (r7, LGN partner)",
+              "RICINUS COMMUNIS SEED OIL (r3, rich band)",
+              "ARGANIA SPINOSA KERNEL OIL (r6, medium band)"
+            ],
+            "independent_contributor_count": "two or more",
+            "bias": "unknown",
+            "note": "§7.2/T1: an observation about combing force, never a value, and it may not move COND (G3). Consumed by `texture_fit` row 3 (§10.3). The C2 claim „die Kämmbarkeit wird spürbar verbessert\" is positioning, recorded as a supporting signal only — it corroborates and never creates (§10.2 principle 4). Bias `unknown` (§17.5, §17.16)."
+          },
+          "counter_signals": [
+            "The LGN read sits only two ranks above the marker (BEHENTRIMONIUM CHLORIDE r9 vs SODIUM BENZOATE r11), so the anchor leans on the marker heuristic; recorded per §3.1.1 mandatory limit 1."
+          ],
+          "threshold_reasoning": "Clears `high` because an LGN pair plus two further independent lubrication routes are present above the tail. `moderate` is not taken because its anchor is explicitly \"without a full LGN pair\". Confidence at the moderately-high ceiling, not above it: concentration is invisible (G4).",
+          "limitations": [
+            "Ceiling moderately high (§7.2).",
+            "Tail-marker heuristic (§3.1.1 mandatory limit 1, §17.14).",
+            "Single-sourced formula; no independent second capture."
+          ]
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "anchor": "§7.5 `high` — an LGN pair present as architecture (CETEARYL ALCOHOL r7 + BEHENTRIMONIUM CHLORIDE r9) AND, independently, two or more persistent non-volatile families with at least one enumerated rich/low-spreading band member: RICINUS COMMUNIS SEED OIL at r3 is enumerated castor oil in the L3 rich band, sitting third in an eighteen-ingredient list. Either limb reaches `high`.",
+          "families_present_as_architecture": [
+            "LGN pair (fatty alcohol + cationic surfactant, r7/r9)",
+            "rich/low-spreading lipid (castor oil r3)",
+            "medium-band vegetable oil (argan r6, unenumerated ⇒ medium band by §7.5 convention, §17.15)"
+          ],
+          "multi_family_row_used": false,
+          "weight_conflict_tag": {
+            "applied": false,
+            "condition_failed": "§10.1.2 condition 2 — no C1/C2 intended-finish or positioning statement materially contradicts the `high` read. The C2 claims assert repair, anti-breakage, smoothing, shine, anti-frizz, combability, dermatological tolerance, microplastic-free and silicone-free; none of them is about the finish this product leaves and none asserts a light finish („beschwert nicht\", „leicht\", „federleicht\" or equivalent). Condition 4 is therefore also unmet — silence is not a contradiction."
+          },
+          "counter_signals": [
+            "„ohne Silikone\" is a C2 composition claim, not a weight statement; FS-3 bars reading silicone-free as low weight or low buildup, and the castor/argan/LGN load is exactly why."
+          ],
+          "threshold_reasoning": "`moderate` is unavailable: its single-family row is exceeded, and its multi-family row explicitly requires that none of the families be a rich-band member — castor oil is one, at r3. `unknown` is unavailable: the non-volatile architecture is fully readable above the tail.",
+          "limitations": [
+            "G9: the presentation form contributes nothing to this read (FS-1, FS-2).",
+            "§17.11: the fine-hair `caution` cell is a product judgment call, labelled as one.",
+            "§17.1: dose is an unmeasured term."
+          ]
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "anchor": "§7.6 `neutral_non_volatile` — highest class present as architecture. `permanent_cationic` is not reached: no Polyquaternium-x, no Guar/Starch/Cellulose Hydroxypropyltrimonium Chloride, no Silicone Quaternium-x, no Quaternium-80, no cationised protein. `ph_dependent_cationic` is not reached: no Amodimethicone, no Bis-Aminopropyl Dimethicone, no amidoamine. Present as architecture: castor and argan oils, CETEARYL ALCOHOL, and the monomeric long-chain quat BEHENTRIMONIUM CHLORIDE r9.",
+          "monomeric_quat_note": "MANDATORY note (§7.6): persistence rests on a monomeric long-chain quat — permanently charged, so more substantive than a neutral deposit, but small-molecule and surfactant-removable, so below the polymeric/silicone-quat class. The ordinal class is a mechanism ordering, not a duration (G11). This is the rule that keeps the record out of `volatile_or_water_soluble`, which would under-state persistence and under-warn on buildup (FS-20).",
+          "below_marker_notes": [],
+          "quat_structure": "resolved — BEHENTRIMONIUM CHLORIDE is unambiguously monomeric from the INCI name; no `quat_structure: unresolved` routing.",
+          "counter_signals": [
+            "FS-13 double-check run: a `moderate` persistence projection is paired with the buildup caution firing on §8.5's WT limb, so persistence is not read high while buildup is presented low, nor the reverse."
+          ],
+          "threshold_reasoning": "`neutral_non_volatile` is the highest class whose enumerated structures are present. Volatiles contribute nothing to persistence and there are none here in any case.",
+          "limitations": [
+            "G11: no duration, wash count, applications-to-buildup or clarification schedule; the banned circulating removal percentages are not used.",
+            "§17.2: no finished-product accumulation study exists."
+          ]
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "anchor": "§7.7 `none` — no fixative-class L5 polymer anywhere in the eighteen-ingredient list, and not even an L5 rheology-exclusion material to consider.",
+          "manufacturer_hold_level": null,
+          "supporting_signals": [
+            "The packet's claims_search_note records that hold claims were actively checked for and none found, so §7.7/T7's capture clause has nothing to record at any tier and no §14 `manufacturer_hold_level` trigger fires."
+          ],
+          "threshold_reasoning": "`incidental_film` requires a fixative-class polymer to be present at all; none is.",
+          "limitations": [
+            "Hold level is never derived from formula, in either direction (§7.7 clause 5, FS-9)."
+          ]
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "moderate",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_authority": "§2.4.1 / G13: both frozen claims are C2 under rule 6's house-brand clause (Rossmann owns ISANA, one of the standard's own named German-market cases), and NEITHER carries a heat-protection statement. The packet's claims_search_note records that heat, UV and hold claims were actively checked for beyond the captured anti-frizz claim and none was found. Rule 1's no-claim value applies. No `claim_authority_gap` routing — there is no retailer-only heat claim to gap-check.",
+          "l9_members_present": [],
+          "formula_sanity_check": "§13.3 rule 2: no claim and no L9 closed-list member ⇒ `false` / `not_claimed`, no review route. T17's `l9_member_without_claim` trigger does not fire — none of the six L9 members is present, and in particular there is no hydrolyzed wheat protein and no evidenced heat-protection polymer of any kind.",
+          "threshold_reasoning": "`claim_only` requires a C1/C2 or C2_cross_market_verified heat claim; none exists.",
+          "limitations": [
+            "Ceiling: low from formula alone (§7.8).",
+            "PANTHENOL r4 and NIACINAMIDE r5 are generic; FS-7 and FS-24 bar either from supporting a heat reading."
+          ]
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "anchor": "§7.10 `none_visible` — no member of the closed `candidate` list is present at any rank. No cationised protein (no hydrolyzed protein of any kind in the list), no silane derivative, no silicone quat (no silicone at all — the product claims „ohne Silikone\").",
+          "route_observations": [
+            "PANTHENOL r4 is a fibre-mechanics signal (L6), explicitly NOT an R2 route and not a heat route (§7.10 Panthenol rule, FS-24). This matters here because panthenol sits high in the list on a product marketed as a repair product.",
+            "NIACINAMIDE r5 is neither a protein/silane film route nor a recognised bond chemistry.",
+            "No plain hydrolysate is present, so the §7.10 plain-hydrolysate trace note has nothing to record."
+          ],
+          "candidate_below_tail": false,
+          "tail_marker_implausible": false,
+          "threshold_reasoning": "`candidate` requires a member of the narrowed closed list present as architecture; none exists at any rank, so neither the rank prong nor the `candidate_below_tail` route is engaged. `unknown` is not used: the formula is complete and readable, so this is a researched negative. §9 constraint 3 is the governing discipline for the gap between this value and the product's positioning — a product sold on „repariert und nährt das Haar und beugt Haarbruch vor\" whose formula carries no qualifying route reads exactly as the formula reads.",
+          "limitations": [
+            "Ceiling low–moderate (§7.10); never converts into structural repair, penetration, strength or a diagnosed protein need.",
+            "FS-5: argan and castor oil are not deep repair."
+          ]
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "anchor": "§7.12 / L8 — PARFUM declared at r8 (unusually high, above the marker), together with four declared EU fragrance allergens (HEXYL CINNAMAL r14, COUMARIN r15, LINALOOL r16, ALPHA-ISOMETHYL IONONE r17) and the aroma chemical TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES r13.",
+          "notes": [
+            "ISOPROPYL ALCOHOL r10 is present but sits outside §7.12's `Alcohol Denat.` / `Alcohol` enumeration — open gap §17.21. No alcohol note is emitted and no §18 alcohol string fires; the observation is recorded, exactly as round 2 handled the same material.",
+            "The C2 claim „Hautverträglichkeit: Dermatologisch bestätigt\" is recorded as claim data. It is E0 (§2.4.1 rule 5) and is NOT read as a tolerance property: an exposure flag is not a tolerance prediction, and sensitive-scalp tolerance is not derivable from an INCI list (§7.12, SR §M.12). G6 binds.",
+            "Note the marker relation: PARFUM at r8 sits above the tail marker at r11, which is a materially-present fragrance load rather than a trace one."
+          ],
+          "threshold_reasoning": "Above `fragrance_declared` because the declaration includes the labelled allergen block and an aroma chemical, not only PARFUM.",
+          "limitations": [
+            "Flags are exposure statements; not fragrance-free, not allergy-safe, not hypoallergenic (§7.12, §17.12)."
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "emulsion_subtype": "lgn",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "rule": "§3.1.2 decision order. Not anhydrous (Aqua r1). Not two_phase (an LGN emulsifying pair is present, so the lipid load is emulsified). `emulsion` matched at sub-type (a), LGN: BEHENTRIMONIUM CHLORIDE r9 paired with CETEARYL ALCOHOL r7 is a cationic-surfactant + fatty-alcohol lamellar gel network carrying a castor/argan lipid phase. The decision order stops here; `microemulsion` is never reached (and its test (i) would fail anyway — no solubiliser package). Consumed inline in G0's rationale, WT's ceiling clause and COND's routes; it may never set WT (G9)."
+        }
+      },
+      "smoothing_route": {
+        "value": "emollient",
+        "basis": [
+          "§7.4 type table, `emollient` row: a medium-band emollient package with NO continuous film former — RICINUS COMMUNIS SEED OIL r3, ARGANIA SPINOSA KERNEL OIL r6 and CETEARYL ALCOHOL r7, with no persistent silicone (the product is explicitly silicone-free), no substantive cationic polymer and no fixative-class film.",
+          "`cationic_alignment` is unavailable: BEHENTRIMONIUM CHLORIDE is a monomeric long-chain quat, not the Polyquaternium-x / Guar Hydroxypropyltrimonium Chloride polymer family the row names. `silicone_film` and `fixative_film` are unavailable. `none` is wrong — an alignment route exists, it is an emollient one."
+        ],
+        "derived_from_sfr": {
+          "sfr_v03_value_retained_for_diffability": "moderate",
+          "two_observation_test": "fail",
+          "continuous_film_observation": "none — §7.4.1's anchor requires a persistent silicone or a substantive cationic-polymer film; neither is present",
+          "separate_lubrication_observation": "not reached; the test fails on its first conjunct",
+          "beyond_baseline_conditioning": "not reached. §7.4.1's two-observation test gates whether a smoothing route exists at all, before §10.2.1's permissive over-satisfaction reading (T13b) is even applicable."
+        },
+        "rule": "§7.4 (T2). Typed, never graded, never projected (G14). It makes no humidity or frizz statement — which is the load-bearing point on this record, because the C2 claim asserts an „Anti-Frizz-Effekt\": under T9 that claim is unconsumed upstream data with no field left to project into, and §7.9's prohibition forbids smuggling it into `smoothing_route`, `care_direction` or any other field as an indirect humidity signal."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "buildup",
+            "value": "present",
+            "note": "§8.5 as widened by T17 item H6, limb 2: `weight_potential` projects `high` AND at least one persistent non-volatile family is present as architecture (PERS `neutral_non_volatile`). Emitted on the WT limb and recorded as such; PERS's own ordinal class is untouched. Non-quantitative by G11 — no count, no duration, no clarification schedule. Exactly the inversion H6 closes: persistence here rests on a monomeric long-chain quat, which §7.6 deliberately reads below `permanent_cationic`, so the pre-T17 rule would have left the heavier product silent."
+          },
+          {
+            "flag": "transfer",
+            "value": "present",
+            "note": "§7.5 attached qualitative caution: RICINUS COMMUNIS SEED OIL at r3 is an enumerated L3 rich/low-spreading band member, non-volatile and non-film-forming, present as architecture near the top of an eighteen-ingredient list — transfer to skin, collar, pillow and phone. Qualitative only; no published instrumental transfer method for hair leave-ons surfaced (SR §D.3, §17.3). Never a scored dimension; §18 defines no string for it."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "CURL did not fire: no curl-definition focus was derived, and `curl_definition_focus` still has no value vocabulary anywhere in the standard (§17.20).",
+        "shn_qualifier": "absent",
+        "rule": "§8.6 (T5). SHN did not fire: §8.1 makes shine the optical consequence (M3) of the alignment/deposition FILM, and this record's `smoothing_route` is an emollient package with no continuous film former. The C2 claim „für ein perfektes Glanzfinish\" does not change that — SHN is not claim-led, an independent shine value needs either a distinct gloss route not already counted in M1/M2 or exact-product goniophotometry, and neither exists (FS-23). R3 is `none` and emits no string: the absence of a bond claim is not something a user needs told (§8.3, §18). LAYER did not fire (see review_routing.notes)."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "high",
+        "weight_potential": "high",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "§10.3.2 `low` = everything else. `high` requires exact-product repair evidence at E3+ (none). `medium` requires R2 ∈ {candidate, tested} with conditioning_level ≥ moderate — conditioning_level is `high`, but R2 is `none_visible`, so the gate fails. Clause 2 is decisive on this record: marketing never moves it. The C2 house-brand claim „repariert und nährt das Haar und beugt Haarbruch vor\" is the strongest repair positioning in this lane, and the formula behind it carries no cationised protein, no silane and no silicone quat — only panthenol (a fibre-mechanics signal, not a route) and two oils. `low` is the answer, not a gap. It emits no §18 string.",
+        "focus": {
+          "primary": "general",
+          "secondary": []
+        },
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "caution",
+          "medium": "conditional",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "conditional",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "recommended"
+        },
+        "uncertain_fields": [],
+        "assumption_notes": [
+          "product_form `unknown` (§10, §10.1 as amended by T10): from v0.4 `product_form` is the presentation form the user holds, captured directly at identity from pack, exact product name and directions — never derived from the architecture read. The packet records no pack photo and no dispenser information; the exact product name says „Leave-in Conditioner\", the directions say „verteilen\" (distribute), and neither settles spray vs milk vs lotion vs cream. Identity capture is exactly the failure §10's retained `unknown` exists for, so `unknown` is emitted rather than guessed, and it carries an `uncertain_fields` entry. The architecture read (`emulsion`, LGN) is deliberately NOT used to fill it — that would be the derivation T10 removed.",
+          "focus.primary `general` (§10.2): no route clears its threshold. `repair` unavailable (R2 `none_visible`; T13a deleted the marketing-position prong that would once have carried this exact product — a C2 page naming repair over a formula with no qualifying route is the shape that ruling was made against); `smoothing` fails §7.4.1's two-observation test (no continuous film route); `curl_definition` unavailable (HOLD `none`, and no curl/wave positioning); `heat_styling` unavailable (binary `false`, no `pre_heat` stage); `detangling` fails both prongs — „die Kämmbarkeit wird spürbar verbessert\" is one benefit in a repair/anti-frizz/shine paragraph, not detangling-led positioning, and the slip-dominant prong requires COND ≤ moderate with WT `low`; `volume_lightness` requires WT `low`; `shine` would restate the deposition (§8.1, G3) and „Glanzfinish\" positioning never creates a route (principle 4).",
+          "care_direction `moisture` (§9): no R2 route, so `protein` is unavailable; not a silicone-led architecture (there is no silicone at all), so the §9 silicone-led `unknown` rule does not apply; a coherent conditioning + humectant + emollient direction is the material direction — L1 BEHENTRIMONIUM CHLORIDE r9, L3 castor r3 / argan r6 / cetearyl alcohol r7, L4 GLYCERIN r2 and PANTHENOL r4 — all above the r11 tail. Not the humectant-led minimum row (which would cap confidence at `low`), because the emollient and cationic legs are substantial. Not `balanced`, which requires an R2 route. Constraint 3 recorded: the product's repair positioning is a counter-signal, never a route.",
+          "hair_thickness_fit read straight off the §10.3 weight-led table at `weight_potential: high`; the fine-hair `caution` cell is a product judgment call (§7.5, §17.11).",
+          "damage_fit row 2: conditioning_level ∈ {moderate, high} with no qualifying repair route. Row 3a needs a distinct L6 substantive film route alongside COND `high` — panthenol and oils explicitly do not qualify for either path — and row 3b needs R2 ∈ {candidate, tested}.",
+          "texture_fit row 3: `weight_potential = high` AND two or more independent M1 contributors present as architecture. Not row 4, so the §14 row-4/row-5 trigger does not fire.",
+          "G14 / §10.1.1: no counter-signal, confidence value, evidence level, tail-marker reading or emulsion subtype is projected into any field above.",
+          "product_form `spray` — resolved 2026-09-12 by identity evidence (T10: identity capture, feeds no other rule): the Rossmann packshot shows a finger-pump spray actuator, corroborated by incidecoder's 'leave-in hair conditioner spray' description; the directions verb 'verteilen' describes post-dispense application and does not contradict a spray dispenser. Evidence: u5-format-evidence.md; packet amendment_log 2026-09-12."
+        ]
+      },
+      "review_routing": {
+        "triggers": [
+          "claim_tier_basis_house_brand",
+          "tail_marker_dependence",
+          "absent_exact_market_identifier"
+        ],
+        "notes": "claim_tier_basis_house_brand (§14, v0.3 addition; §2.4.1 rule 6): every claim and the directions on this record are taken at C2 because Rossmann owns the ISANA PROFESSIONAL private label — one of the standard's own two named German-market house-brand cases (dm ↔ alverde/Balea; Rossmann ↔ Isana). The clause is deliberately narrow and the record routes to review so a human confirms the ownership relation. This lane confirms the packet's creates_claim = true on both claims: rule 6 makes the retailer's page for its own private label the manufacturer's page, so both are claim-creating. The consequence is limited — neither claim touches a claim-keyed field, because HEAT is the only claim-led field left (T9) and neither claim mentions heat. | tail_marker_dependence (§14, T17 housekeeping definitions): an ordinary mid-list marker (SODIUM BENZOATE r11/18) whose position decided the LGN-pair \"present as architecture\" read, with BEHENTRIMONIUM CHLORIDE only two ranks above it — that read carries COND `high` and WT `high` and therefore the whole fit profile. | absent_exact_market_identifier (§14 standing trigger): no gtin/ean field was found in the page markup; the 13-digit number in the Rossmann URL (4068134081742) is carried as a candidate only. | UNCONSUMED UPSTREAM DATA, recorded so it is not mistaken for an omission: the C2 claim asserts an „Anti-Frizz-Effekt\". Under T9 HUM is removed from the model completely — no dimension, no state ladder, no lean-profile field, no quoted-claim adoption — so this claim has no field to project into and is not re-homed anywhere. The anti-frizz user need is served, without a humidity claim, by the `smoothing` focus, which this product does not qualify for. A `humidity_frizz` claim in a frozen packet routes to no §14 trigger at all (§14, Removed in v0.4). | Single-sourced formula: no independent second INCI capture exists for this product."
+      },
+      "cautions_de": [
+        "Legt sich spürbar aufs Haar – bei feinem Haar sparsam dosieren.",
+        "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+        "Enthält deklarierte Duftstoffe.",
+        "Dazu haben wir keine belastbare Information."
+      ]
+    }
+  ]
+}

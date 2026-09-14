@@ -24,17 +24,7 @@ import {
   DEEP_CLEANSING_RESET_FOCUSES,
   DEEP_CLEANSING_RESET_INTENSITIES,
 } from "@/lib/deep-cleansing-shampoo/constants"
-import {
-  LEAVE_IN_APPLICATION_STAGES,
-  LEAVE_IN_CARE_BENEFITS,
-  LEAVE_IN_CONDITIONER_RELATIONSHIPS,
-  LEAVE_IN_FIT_CARE_BENEFITS,
-  LEAVE_IN_FORMATS,
-  LEAVE_IN_INGREDIENT_FLAGS,
-  LEAVE_IN_NEED_BUCKETS,
-  LEAVE_IN_ROLES,
-  LEAVE_IN_WEIGHTS,
-} from "@/lib/leave-in/constants"
+import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
 import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
 import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
 import {
@@ -75,6 +65,8 @@ import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } 
 import { finalizeProductImageAsset } from "./finalize-package-image"
 import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditioner-research-adapter"
 import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
+import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
+import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
 
 type WorkerResult = {
   worker_id: string
@@ -1075,38 +1067,12 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
   return {
     category_key: "leave_in",
     instruction:
-      "This is a leave-in product. Research and emit only the leave-in category specs listed here under researched_payload.final.category_specs; do not emit shampoo, conditioner, mask, oil, dry_shampoo, deep_cleansing_shampoo, or bondbuilder specs.",
-    required_category_specs: [
-      "product_leave_in_specs",
-      "product_leave_in_fit_specs",
-      "product_leave_in_eligibility",
-    ],
-    product_leave_in_specs: {
-      format: [...LEAVE_IN_FORMATS],
-      weight: [...LEAVE_IN_WEIGHTS],
-      roles: [...LEAVE_IN_ROLES],
-      provides_heat_protection: "boolean",
-      heat_protection_max_c: "positive integer Celsius value or null",
-      heat_activation_required: "boolean",
-      care_benefits: [...LEAVE_IN_CARE_BENEFITS],
-      ingredient_flags: [...LEAVE_IN_INGREDIENT_FLAGS],
-      application_stage: [...LEAVE_IN_APPLICATION_STAGES],
-    },
-    product_leave_in_fit_specs: {
-      weight: [...LEAVE_IN_WEIGHTS],
-      conditioner_relationship: [...LEAVE_IN_CONDITIONER_RELATIONSHIPS],
-      care_benefits: [...LEAVE_IN_FIT_CARE_BENEFITS],
-    },
-    product_leave_in_eligibility:
-      "array with one or more user-fit rows; each row has thickness, need_bucket, and styling_context",
-    allowed_product_leave_in_eligibility_values: {
-      thickness: [...HAIR_THICKNESSES],
-      need_bucket: [...LEAVE_IN_NEED_BUCKETS],
-      styling_context: ["air_dry", "non_heat_style", "heat_style"],
-    },
+      "Complete the full Leave-In Standard v1.0 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
+    leave_in_research: leaveInResearchPromptContract(),
+    required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
     aliases: {
       post_wash:
-        "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry.",
+        "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
     },
     product_application_protocols: applicationProtocolResearchContract(
       "leave_in",
@@ -1306,7 +1272,6 @@ function normalizeResearchOutputForCategory(
   enforceCanonicalBrandResolution(final, brandResolutionContext)
   applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
   const categorySpecs = normalizeRecord(final?.category_specs)
-  const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
 
   if (categoryKey === "conditioner" && final) {
     const adapterResult = applyConditionerResearchAdapter({
@@ -1316,6 +1281,26 @@ function normalizeResearchOutputForCategory(
     })
     blockers.push(...adapterResult.blockers)
   }
+
+  if (categoryKey === "leave_in" && final) {
+    const adapterResult = applyLeaveInResearchAdapter({
+      final,
+      artifacts: output.artifacts,
+      expectedResearchId,
+    })
+    blockers.push(...adapterResult.blockers)
+  }
+
+  // Read AFTER the adapter branches: applyLeaveInResearchAdapter reassigns
+  // `categorySpecs.product_leave_in_specs` to a brand-new projected object
+  // (structuredClone) rather than mutating the original in place, so a
+  // reference captured before it runs is stale — it still points at
+  // whatever `product_leave_in_specs` looked like pre-adapter (e.g. `{}` on
+  // an envelope submission), even though the adapter has since written a
+  // fully valid table. Re-reading here validates the object the adapter
+  // actually produced, for both the envelope path and the legacy/non-envelope
+  // path (where the adapter never ran and this is unchanged from before).
+  const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
 
   if (leaveInSpecs) {
     const normalizedStages = normalizeLeaveInApplicationStages(leaveInSpecs.application_stage)

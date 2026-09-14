@@ -1,0 +1,52 @@
+{
+  "model_version": "leave-in-matching-candidate-v1.0",
+  "status": "candidate_to_validate_during_category_research",
+  "product_form": {
+    "value": null,
+    "property_evidence": {}
+  },
+  "conditioning_level": {
+    "value": null,
+    "property_evidence": {}
+  },
+  "weight_potential": {
+    "value": null,
+    "property_evidence": {}
+  },
+  "persistence": {
+    "value": null,
+    "property_evidence": {}
+  },
+  "hold_support": {
+    "value": null,
+    "property_evidence": {}
+  },
+  "focus": {
+    "primary": {},
+    "secondary": []
+  },
+  "usage_role": [],
+  "specialist_functions": {
+    "heat_protection": {},
+    "humidity_resistance": {}
+  },
+  "hair_thickness_fit": {
+    "fine": {},
+    "medium": {},
+    "coarse": {}
+  },
+  "damage_fit": {
+    "healthy": {},
+    "moderately_damaged": {},
+    "highly_damaged": {}
+  },
+  "texture_fit": {
+    "straight": {},
+    "wavy": {},
+    "curly": {},
+    "coily": {}
+  },
+  "scalp_application_fit": {},
+  "research_record_id": null,
+  "category_standard_version": null
+}

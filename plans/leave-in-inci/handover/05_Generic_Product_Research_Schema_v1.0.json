@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://charlie.example/schemas/ingredient-product-research-v1.0.json",
+  "title": "Charlie ingredient-based product research record",
+  "type": "object",
+  "required": [
+    "product_identity",
+    "category_standard",
+    "research_trace",
+    "matching_profile"
+  ],
+  "properties": {
+    "product_identity": {
+      "type": "object",
+      "required": [
+        "product_id",
+        "category",
+        "brand",
+        "name",
+        "market",
+        "formula_capture_date",
+        "identity_status"
+      ],
+      "properties": {
+        "product_id": { "type": "string" },
+        "category": { "type": "string" },
+        "brand": { "type": "string" },
+        "name": { "type": "string" },
+        "market": { "type": "string" },
+        "size": { "type": ["string", "null"] },
+        "gtin": { "type": ["string", "null"] },
+        "formula_capture_date": { "type": "string", "format": "date" },
+        "formula_fingerprint": { "type": ["string", "null"] },
+        "identity_status": {
+          "enum": [
+            "verified",
+            "verified_with_minor_source_difference",
+            "provisional_formula_conflict",
+            "provisional_identity_conflict",
+            "insufficient_information"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "category_standard": {
+      "type": "object",
+      "required": ["category", "version"],
+      "properties": {
+        "category": { "type": "string" },
+        "version": { "type": "string" },
+        "boundary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "research_trace": {
+      "type": "object",
+      "required": [
+        "raw_inci",
+        "formula_architecture",
+        "mechanisms",
+        "evidence_records",
+        "review_status"
+      ],
+      "properties": {
+        "raw_inci": { "type": "string" },
+        "normalized_ingredients": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "formula_architecture": { "type": "object" },
+        "mechanisms": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mechanism" }
+        },
+        "route_scores": { "type": "object" },
+        "claim_audit": { "type": "array" },
+        "evidence_records": { "type": "array" },
+        "counter_signals": { "type": "array" },
+        "source_conflicts": { "type": "array" },
+        "review_status": {
+          "enum": [
+            "draft",
+            "approved",
+            "approved_with_cautions",
+            "provisional",
+            "specialist_review_required",
+            "rejected_insufficient_identity"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "matching_profile": {
+      "type": "object",
+      "required": ["primary_focus", "property_decisions"],
+      "properties": {
+        "primary_focus": { "$ref": "#/$defs/propertyDecision" },
+        "secondary_focus": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/propertyDecision" },
+          "maxItems": 2
+        },
+        "property_decisions": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/propertyDecision" }
+        },
+        "hair_fit": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/propertyDecision" }
+        },
+        "scalp_fit": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/propertyDecision" }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "mechanism": {
+      "type": "object",
+      "required": ["mechanism_id", "name", "supporting_observations"],
+      "properties": {
+        "mechanism_id": { "type": "string" },
+        "name": { "type": "string" },
+        "supporting_observations": { "type": "array" },
+        "counter_signals": { "type": "array" },
+        "confidence": { "enum": ["low", "moderate", "high"] }
+      },
+      "additionalProperties": true
+    },
+    "propertyDecision": {
+      "type": "object",
+      "required": [
+        "value",
+        "decision_type",
+        "confidence",
+        "evidence_level",
+        "evidence_scope",
+        "rationale",
+        "supporting_signals",
+        "counter_signals",
+        "source_ids"
+      ],
+      "properties": {
+        "value": {},
+        "decision_type": {
+          "enum": ["direct_product_property", "derived_user_fit"]
+        },
+        "confidence": { "enum": ["low", "moderate", "high"] },
+        "evidence_level": { "enum": ["E0", "E1", "E2", "E3", "E4", "E5"] },
+        "evidence_scope": {
+          "enum": [
+            "formula_only",
+            "product_only_test",
+            "multi_product_test",
+            "unclear"
+          ]
+        },
+        "rationale": { "type": "string" },
+        "supporting_signals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceSignal" }
+        },
+        "counter_signals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceSignal" }
+        },
+        "derived_from": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "shared_mechanism_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "source_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "review_status": {
+          "enum": ["draft", "needs_review", "approved", "provisional"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidenceSignal": {
+      "type": "object",
+      "required": ["observation", "product_inference", "source_id"],
+      "properties": {
+        "observation": { "type": "string" },
+        "product_inference": { "type": "string" },
+        "source_id": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

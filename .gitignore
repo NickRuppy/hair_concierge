@@ -212,6 +212,10 @@ test-screenshots*/
 !/data/research/conditioner-inci/**
 /data/research/conditioner-inci/**/lab-review-state.json
 /data/research/conditioner-inci/**/rework-queue.json
+!/data/research/leave-in-inci/
+!/data/research/leave-in-inci/**
+/data/research/leave-in-inci/**/lab-review-state.json
+/data/research/leave-in-inci/**/rework-queue.json
 !/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*

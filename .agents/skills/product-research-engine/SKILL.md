@@ -17,7 +17,8 @@ Determine the product's category first, then load the category's contract of rec
 | --- | --- | --- | --- |
 | Shampoo (regular, German market) | Shampoo v1.4 + Production Light v1 | `docs/research/shampoo-inci/README.md` → `v1.4/classification-standard.md` + `v1.4/new-product-research-runbook.md`, then `docs/product-intake-shampoo-production-light.md` | `npm run research:shampoo:production-light` |
 | Conditioner (conventional rinse-out, DE/EU) | Conditioner Standard v1.6 + Production Adapter v1 | `docs/research/conditioner-inci/README.md` → `v1.0/conditioner-classification-standard.md` + `v1.0/runbook.md`, then `docs/product-intake-conditioner-production-adapter.md` | `npm run research:conditioner:production-adapter` |
-| Any other category (mask, leave-in, oil, …) | **No engine yet** | `docs/research/category-classification-engine-template.md` | — |
+| Leave-in (leave-on care, DE market) | Leave-In Standard v1.0 + Production Adapter v1 | `docs/research/leave-in-inci/README.md` → `v1.0/leave-in-classification-standard.md` + `v1.0/runbook.md`, then `docs/product-intake-leave-in-production-adapter.md` | `npm run research:leave-in:production-adapter` |
+| Any other category (mask, oil, …) | **No engine yet** | `docs/research/category-classification-engine-template.md` | — |
 
 Routing rules:
 

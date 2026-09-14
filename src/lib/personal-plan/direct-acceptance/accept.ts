@@ -12,10 +12,7 @@ import type {
   Stage3AuthorityEvaluation,
   Stage3AuthoritySemanticIntent,
 } from "../products/authority/contracts"
-import type {
-  PersonalPlanCategory,
-  Stage3DecisionDeferralReason,
-} from "../products/contracts"
+import type { PersonalPlanCategory, Stage3DecisionDeferralReason } from "../products/contracts"
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
 import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
@@ -405,8 +402,7 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   }
 
   // Only computed once the guards above have let this accept through.
-  const { previewedRoleKeys, refinementRequiredCategories } =
-    stage1PreviewedRoleKeysForDraft(draft)
+  const { previewedRoleKeys, refinementRequiredCategories } = stage1PreviewedRoleKeysForDraft(draft)
 
   if (draft.status === "complete" && draft.refinedVersionId) {
     return {

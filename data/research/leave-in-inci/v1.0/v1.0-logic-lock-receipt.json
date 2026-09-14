@@ -1,0 +1,153 @@
+{
+  "schema_version": "leave-in-research-logic-lock.v1",
+  "locked_standard_version": "1.0",
+  "locked_at": "2026-09-13",
+  "decision": "approved_and_locked_for_reuse",
+  "normative_standard_path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+  "review_source_snapshot": {
+    "version": "1.0-rc1",
+    "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.v1.0-rc1.md",
+    "bytes": 418728,
+    "sha256": "f17d482f28f62d1c0083f6b7efcaff3e9fdf1f2f78a1c212e790240a2163c8d5"
+  },
+  "approved_scope": {
+    "category": "leave_in",
+    "category_description": "conventional leave-on hair-conditioning products (spray, mist, milk, lotion, cream, microemulsion, two-phase)",
+    "market": "Germany/EU",
+    "scored_dimensions": [
+      "conditioning_potential",
+      "weight_residue_potential",
+      "persistence_removal_class",
+      "hold_route_state",
+      "heat_protection_evidence_state",
+      "repair_surface_film",
+      "fragrance_scalp_exposure"
+    ],
+    "lean_profile_fields": [
+      "product_form",
+      "conditioning_level",
+      "weight_potential",
+      "persistence",
+      "hold_support",
+      "care_direction",
+      "repair_support_level",
+      "focus.primary",
+      "focus.secondary",
+      "specialist_functions.provides_heat_protection",
+      "hair_thickness_fit.fine",
+      "hair_thickness_fit.medium",
+      "hair_thickness_fit.coarse",
+      "damage_fit.healthy",
+      "damage_fit.moderately_damaged",
+      "damage_fit.highly_damaged",
+      "texture_fit.straight",
+      "texture_fit.wavy",
+      "texture_fit.curly",
+      "texture_fit.coily",
+      "cautions",
+      "uncertain_fields",
+      "assumption_notes"
+    ],
+    "identity_capture_fields": [
+      "product_form",
+      "application_stage"
+    ],
+    "care_direction_values": [
+      "protein",
+      "moisture",
+      "balanced",
+      "unknown"
+    ],
+    "repair_support_level_values": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "research_envelope_version": "leave-in-research-envelope-v1.0",
+    "matching_model_version": "leave-in-matching-v1.0"
+  },
+  "reviewed_anchor_patterns": [
+    {
+      "product_id": "slot-05-evo-head-mistress-cuticle-sealer",
+      "brand": "EVO",
+      "product": "Head Mistress Cuticle Sealer",
+      "care_direction": "balanced",
+      "repair_support_level": "low",
+      "purpose": "T19 reading (b): a film-led architecture with no leg above the tail marker is directional neutrality, not an abstention"
+    },
+    {
+      "product_id": "slot-09-redken-extreme-anti-snap-leave-in-treatment",
+      "brand": "Redken",
+      "product": "Extreme Anti-Snap Leave-In Treatment",
+      "care_direction": "protein",
+      "repair_support_level": "medium",
+      "purpose": "T16: an implausible tail marker may not disqualify a route; the gold set's only exercised `medium` row"
+    },
+    {
+      "product_id": "slot-13-neqi-diamond-glass-ultimate-styling-spray",
+      "brand": "Neqi",
+      "product": "Diamond Glass Ultimate Styling Spray",
+      "care_direction": "moisture",
+      "repair_support_level": "low",
+      "purpose": "T15: a conditioning film with a supporting fixative is in-category with `hold_support: incidental`; the §2.3.2/§7.7 worked example"
+    }
+  ],
+  "locked_interpretation": {
+    "care_direction": "Product formula direction only; never a diagnosis of a user's protein or moisture deficiency. `balanced` carries two explicitly co-equal readings: a substantive mixed protein-plus-moisture architecture, and directional neutrality on a film-led architecture (T19). `unknown` is reserved for genuine evidence failure.",
+    "repair_support_level": "Comparative temporary damage-support potential only. `low` is ordinary conditioning and explicitly includes bond-claim-only products; `medium` requires a qualifying R2 film route above the tail marker with conditioning_level >= moderate; `high` requires exact-product repair evidence at E3+. No value proves structural repair.",
+    "heat_protection": "Production carries a binary `provides_heat_protection`, claim-led with a formula sanity-check against the closed L9 evidenced-polymer list. Strength and temperature are never graded; `heat_protection_max_c` is not part of this model.",
+    "conservative_failure_invariant": "§1.1: every hard rule must fail toward human review or toward the anchor's own conservative value, never toward a recommendation or a more favourable reading than the evidence supports.",
+    "evidence_ceiling": "Formula-only conclusions remain E2 and cannot establish finished-product performance. Claims are E0 and never create efficacy.",
+    "research_uncertainty": "Counter-signals, confidence bands and reading conventions stay inside the research trace (G14) and never reach a projected field or a user-facing surface."
+  },
+  "validation_basis": {
+    "review_source_standard_version": "1.0-rc1",
+    "promotion_rule_change": false,
+    "promotion_note": "v1.0 promotes the v0.4 draft unchanged. No anchor, threshold, enumeration, gate, projection, evidence bar or string was edited by the promotion; only version identity, lock status and the research-envelope promotion-at-lock stamp.",
+    "final_calibration_round": 4,
+    "final_calibration_report": "data/research/leave-in-inci/v1.0/corpus/gold-set/round-4/round-4-report.md",
+    "lanes": 2,
+    "lane_design": "two independent sealed lanes, frozen packet only, no web, seal confirmation required",
+    "gold_set_products": 13,
+    "value_disagreements_between_lanes_and_key": 0,
+    "agreement_trajectory": [
+      "r1 86.2%",
+      "r2 93.0%",
+      "r3 97.5%",
+      "r4 zero value disagreements"
+    ],
+    "residue_classes_closed": [
+      "two packet evidence gaps (product_form slots 2/6/9/10; application_stage slot 9) closed by an evidence pass and an identical amendment to both packets",
+      "one text defect (§8.4's false LAYER aside) corrected in ledger row 20a",
+      "one clarifying sentence (§10.2.1 binds focus.secondary), one §18 emission-scope paragraph, four §14 canonical trigger ids"
+    ],
+    "unseen_product_test": {
+      "products": 6,
+      "report": "data/research/leave-in-inci/v1.0/corpus/unseen-test/unseen-test-report.md",
+      "note": "two sealed lanes agreed on every value on five of six products; the sixth was a three-way same-market formula-source conflict that became ruling T18"
+    }
+  },
+  "known_limits_retained": [
+    "The `repair_support_level` `medium` row is exercised by exactly one gold-set record (Redken, via T16) and the `high` row is E3+ and unobserved.",
+    "T19's film-led `balanced` row has been exercised on exactly one record (EVO); reading (a), the substantive mixed architecture, is taken by no record in the set.",
+    "T7's `manufacturer_hold_level`, T14's cross-market claim exception beyond its single record, T17's H3 and H8 triggers, and both tiers of T18 are implemented but not calibrated by two independent lanes.",
+    "The tail-marker rank convention is a reading convention, never a measurement; its variance across list lengths stays an open gap (§17.14, §17.18).",
+    "Every §17 open evidence gap stays open under v1.0; a gap is not closed by removing the field that exposed it.",
+    "Actual leave-on residue, transfer and accumulation remain unmeasured for every untested product; dose is a hidden variable the model does not score."
+  ],
+  "separate_gates": {
+    "individual_product_lab_approval": "required",
+    "production_adapter": "not_built",
+    "open_adapter_decisions": [
+      "roles[] derivation (no research counterpart since T12 removed usage_role[])",
+      "conditioner_relationship (replacement_capable | booster_only) has no dimension behind it",
+      "eligibility emission for excluded records, which emit no lean profile (§2.3.1)",
+      "heat_protection_max_c cutover: removed from the research model, still live in recommendation-engine selection and personal-plan catalog facts"
+    ],
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "production_writes": false
+}

@@ -1,0 +1,1340 @@
+{
+  "packet_version": "leave-in-gold-set-calibration-v0.1",
+  "category_standard_version": "leave-in-inci-v0.2",
+  "frozen_at": "2026-09-03",
+  "last_amended_at": "2026-09-13",
+  "entry_count": 13,
+  "fingerprint_method": {
+    "rawInciSha256": "unsalted SHA-256 (hex) of the exact raw_inci string as captured, UTF-8 encoded, no normalization.",
+    "formulaFingerprintSha256": "unsalted SHA-256 (hex) of the normalized formula string per §2.4/§16: split raw_inci on commas, trim each token, strip all '*'/'†' footnote markers anywhere in the token, uppercase, re-join with ', '. EXCEPTION (added 2026-09-04, see amendment_log): two INCI names in this gold set contain an internal comma that is part of the name itself, not an ingredient delimiter — '1,2-Hexanediol' (slot 11) and '2-Oleamido-1,3-Octadecanediol' (slot 9). A literal, naive comma-split breaks these into spurious fragments (e.g. '1' and '2-HEXANEDIOL'). The normalization script now protects this fixed, documented list of internal-comma INCI names before splitting, and restores them intact as single tokens. All 13 entries were re-verified against this corrected script; only slots 9 and 11 changed."
+  },
+  "amendment_log": [
+    {
+      "date": "2026-09-04",
+      "change": "Slot 2 swap (adjudication decision): Balea PROFESSIONAL Magical Water Aqua Hyaluron removed (rinse-out product, G0 excluded_other_form per reference-key/02-*.md) and replaced with ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol (GTIN 4305615946733). Added directions_of_use, directions_status, and directions_source (verbatim text + source + claim-authority tier, per standard v0.2 §2.4 ruling R11) to all 13 entries. No other product's raw_inci, normalized_ingredients, rawInciSha256, or formulaFingerprintSha256 was altered — re-verified by hash recomputation across all 13 entries. See formula-freeze-report.md, dated addendum \"2026-09-04 — Slot-2 swap and R11 directions-of-use pass\", for full detail."
+    },
+    {
+      "date": "2026-09-04",
+      "change": "Claim-capture pass (new rule: marketing claims are frozen at research time like INCI and directions, per the claim-authority hierarchy C1 current German pack / C2 manufacturer German-market page (house-brand retailer pages — dm for alverde/Balea, Rossmann for Isana — count as C1/C2) / C3 exact-GTIN German retailer (corroborate only) / C4 other retailer (corroborate only) / C5 non-German-market manufacturer page (record, cannot create a claim)). Added a `claims` array (E0, blind-safe) and `claims_status` to all 13 entries in both calibration-packet.json and blind-packet.json (identical content in both). Added `source_authority_tier` alongside each entry's existing `directions_source.claim_tier`. Fixed the pre-existing normalized_ingredients comma-split defect on slots 9 and 11 and recomputed formulaFingerprintSha256 for both (rawInciSha256 untouched) — see fingerprint_method above. Full detail, per-product claim summary and honest gaps in formula-freeze-report.md, dated addendum \"2026-09-04 — Claim-capture pass and fingerprint repair\"."
+    },
+    {
+      "date": "2026-09-10",
+      "change": "T14 pass (Nick's ruling of 2026-09-10, standard §2.4.1 rule 7, new tier `C2_cross_market_verified`): appended one new claims[] entry to slot 10 (Olaplex N°.6 Bond Smoother) only, in both calibration-packet.json and blind-packet.json (identical content in both). The manufacturer's non-German-market heat-protection claim (\"protects against breakage and heat up to 450°F/232°C\", byte-identical on olaplex.com and es.olaplex.com/en/products/olaplex-n-6-bond-smoother-eu) is now admitted as claim-creating because product identity is verified against this record's own frozen evidence (46-ingredient INCI set-for-set match against the douglas.de capture; EAN 850018802796 confirmed at the German retailer xhair.eu and corroborated at upcitemdb) and douglas.de (C3, already frozen in this record) independently corroborates the claim text. No other field on slot 10, and no other entry in either packet, was touched by this pass — this is a claims-array append, not a re-research or re-freeze. See leave-in-classification-standard.v0.4.md §21.3 (T14) and reference-key-v4/transform-notes.md §14 for the full ruling and its downstream consequence."
+    },
+    {
+      "date": "2026-09-13",
+      "change": "Round-4 evidence-gap-closure pass (authority: round-4-report.md items 1-2, Nick's freeze directive): appended one new source_urls entry each to slots 2 (ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol), 6 (Curlsmith Hydrate & Plump Leave-In), 9 (Redken Extreme Anti-Snap Leave-In Treatment), and 10 (Olaplex N°.6 Bond Smoother) in both calibration-packet.json and blind-packet.json (identical content in both), closing the presentation-form (dispenser/consistency) evidence gap on all four slots via pack-shot inspection, and closing the slot-9 application-stage evidence gap via a verbatim German manufacturer directions capture (redken.eu/de-de). Verdicts: slot 2 = spray, slot 6 = cream, slot 9 = spray (+ towel_dry stage confirmed on a C2 source), slot 10 = cream (matches round-3 reference key). Full evidence and per-item confidence in plans/leave-in-inci/research/gold-set/round-4/evidence-gap-closure.md. No raw_inci, normalized_ingredients, fingerprint, directions_of_use, or claims field was altered by this pass -- source_urls-only addition, re-verified by hash recomputation across all 13 entries (both rawInciSha256 and formulaFingerprintSha256 unchanged)."
+    }
+  ],
+  "entries": [
+    {
+      "slot": 1,
+      "archetype_role": "Ultra-light detangling spray",
+      "brand": "alverde NATURKOSMETIK",
+      "exact_product_name": "Leave-In Sprühkur Express 7in1",
+      "pack_size": "75 ml",
+      "gtin": "4066447919387",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "dm.de",
+          "url": null,
+          "note": "dm-Art. 3090444; exact URL not preserved in the source lane report. DOM/snippet capture (dm.de bot-blocks automated fetches, per gold-set-candidates.md)."
+        }
+      ],
+      "raw_inci": "Aqua, Helianthus Annuus Hybrid Oil*, Alcohol* denat., Glycerin, Dicaprylyl Ether, Pentylene Glycol, Inulin, Isoamyl Laurate, Levulinic Acid, Sodium Levulinate, Ricinus Communis Seed Oil*, Arginine, Hydrolyzed Corn Protein, Hydrolyzed Wheat Protein, Hydrolyzed Soy Protein, Lactic Acid, Tocopherol, Helianthus Annuus Seed Oil*, Lactobacillus Ferment, Glucose, Fructose, Sucrose, Parfum**, Geraniol**, Limonene**, Terpineol**, Geranyl Acetate**, Citrus Aurantium Bergamia Peel Oil**, Linalyl Acetate**, Vanillin**, Citrus Limon Peel Oil**, Juniperus Virginiana Oil**",
+      "normalized_ingredients": [
+        "AQUA",
+        "HELIANTHUS ANNUUS HYBRID OIL",
+        "ALCOHOL DENAT.",
+        "GLYCERIN",
+        "DICAPRYLYL ETHER",
+        "PENTYLENE GLYCOL",
+        "INULIN",
+        "ISOAMYL LAURATE",
+        "LEVULINIC ACID",
+        "SODIUM LEVULINATE",
+        "RICINUS COMMUNIS SEED OIL",
+        "ARGININE",
+        "HYDROLYZED CORN PROTEIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "LACTIC ACID",
+        "TOCOPHEROL",
+        "HELIANTHUS ANNUUS SEED OIL",
+        "LACTOBACILLUS FERMENT",
+        "GLUCOSE",
+        "FRUCTOSE",
+        "SUCROSE",
+        "PARFUM",
+        "GERANIOL",
+        "LIMONENE",
+        "TERPINEOL",
+        "GERANYL ACETATE",
+        "CITRUS AURANTIUM BERGAMIA PEEL OIL",
+        "LINALYL ACETATE",
+        "VANILLIN",
+        "CITRUS LIMON PEEL OIL",
+        "JUNIPERUS VIRGINIANA OIL"
+      ],
+      "rawInciSha256": "5714663322e54cd914b5215027c999831b987c5e09251d4dbdc47182979ac9c3",
+      "formulaFingerprintSha256": "cb08a99de094b760398f2fa7bcc5de19d6a0e2a47316e5ec94dcaa16be06f212",
+      "directions_of_use": "Je nach Bedarf aus ca. 30cm Entfernung in die Haarlängen und -spitzen sprühen. Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden. HINWEIS: Bitte vor Gebrauch schütteln. Kontakt mit den Augen vermeiden.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3",
+        "claim_tier_basis": "Exact-GTIN German retailer page (dm.de).",
+        "source_authority_tier": "C3",
+        "domain": "dm.de",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "dm-Art. 3090444, GTIN confirmed on page. Captured this pass via reference-key/01-alverde-leave-in-spruehkur-express-7in1.md (S1-dir), a DOM/snippet capture per this packet's established dm.de sourcing pattern. Rinse test: PASS — no rinse instruction anywhere in the directions."
+      },
+      "claims": [
+        {
+          "claim_text": "sorgt für ein geschmeidiges Haargefühl, ohne zu beschweren",
+          "claim_type": "finish_weight",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "alverde NATURKOSMETIK is dm's own private-label brand; dm.de is treated as the manufacturer/brand-owner's German-market product page per the claim-authority house-brand rule.",
+          "domain": "dm.de",
+          "url": "https://www.dm.de/p/d/3090444/alverde-naturkosmetik-leave-in-spruehkur-express-7in1",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (dm.de bot-blocks plain WebFetch)",
+          "creates_claim": true,
+          "note": "Full verbatim Produktbeschreibung captured live this pass: „Die alverde NATURKOSMETIK 7in1 Express Leave-In Sprühkur bietet eine umfassende Pflege für beanspruchtes Haar. Dank der Rezeptur mit Bio-Rizinus-Öl, pflanzlichem Keratin, Inulin und L-Arginin kann das Haar gekräftigt und vor Haarbruch geschützt werden. Die Sprühkur spendet Feuchtigkeit, kann Spliss entgegenwirken und verleiht dem Haar einen schönen Glanz. Zudem wird das Haar entwirrt und die Haaroberfläche geschützt. Die zertifizierte Naturkosmetik sorgt für ein geschmeidiges Haargefühl, ohne zu beschweren.“ No heat-protection claim, no humidity/frizz claim, no repair/bond claim, no curl claim, no fragrance-free claim anywhere on the page (badges shown: Vegan, Ohne Silikone, Naturkosmetik — not Ohne Parfüm). GTIN 4066447919387 confirmed on page, matches packet."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "None re-opened this pass. Directions-of-use text captured this pass (see directions_source); was previously the named gap.",
+      "notes": "No re-verification requested for this slot; carried forward unchanged from gold-set-candidates.md."
+    },
+    {
+      "slot": 2,
+      "archetype_role": "Mainstream milk/lotion",
+      "brand": "ISANA PROFESSIONAL",
+      "exact_product_name": "Leave-In Conditioner Hyaluron & Panthenol",
+      "pack_size": "100 ml",
+      "gtin": "4305615946733",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-04",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-panthenol-feuchtigkeitsspendend-silikonfrei-trockenes-haar/p/4305615946733",
+          "note": "rossmann.de Artikelnummer (dan) 124771, EAN 4305615946733 — both confirmed directly in the page's embedded product JSON payload (not just the URL slug). ISANA PROFESSIONAL is Rossmann's own house brand with no independent manufacturer domain (confirmed by web search: ISANA's actual contract manufacturer is undisclosed by Rossmann), so this retailer page is the closest available thing to a manufacturer source. Full INCI, directions, and storage text extracted from the page's client-rendered product-detail JSON (GRP_INHALTSSTOFFE / GRP_ANWENDUNGGEBRAUCH / GRP_GEBRAUCHAUFBEWAHRUNG blocks) after the accordion content loaded; a plain WebFetch of the URL returns only a bot-challenge shell (\"Client Challenge\"), consistent with this packet's established dm.de/rossmann.de bot-blocking pattern — required a rendered-browser fetch, not a direct WebFetch."
+        },
+        {
+          "tier": "T3",
+          "domain": "codecheck.info",
+          "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/isana-professional-leave-in-conditioner-hyaluron-care.html",
+          "note": "Independent aggregator; INCI list matches the rossmann.de capture exactly, character-for-character. Names the product \"Leave-In-Conditioner Hyaluron & Care\" (see known_conflicts) and confirms 100 ml / manufacturer Dirk Rossmann GmbH. No barcode shown on this page."
+        },
+        {
+          "tier": "C1/C2",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-panthenol-feuchtigkeitsspendend-silikonfrei-trockenes-haar/p/4305615946733",
+          "note": "Round-4 evidence-gap-closure pass (2026-09-13), presentation-form (dispenser/consistency) finding: fetched two full-resolution product-detail packshots directly from the page's media CDN (MAM_53599009 front angle, MAM_53599100 three-quarter angle). Both unambiguously show a black finger-pump/trigger fine-mist spray actuator (round push-button top, horizontal spray nozzle projecting from the cap) on the 100 ml bottle -- the same head style already adjudicated as 'spray' for the sibling ISANA PROFESSIONAL Argan Leave-in Conditioner (see plans/leave-in-inci/research/unseen-test/u5-format-evidence.md). The three-quarter-angle image also shows the on-pack EAN barcode 4305615946733, matching this record's frozen GTIN exactly, confirming the correct SKU was inspected. Verdict: presentation_form = spray, confidence high. See plans/leave-in-inci/research/gold-set/round-4/evidence-gap-closure.md item 1 for full detail."
+        }
+      ],
+      "raw_inci": "Aqua, Cetearyl Alcohol, Glycerin, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Betaine, Cetrimonium Chloride, Distearoylethyl Hydroxyethylmonium Methosulfate, Sodium Benzoate, Parfum, Panthenol, Sodium Hyaluronate, Lactic Acid, Potassium Sorbate, Hexyl Cinnamal, Citric Acid, Alpha-Isomethyl Ionone, Geraniol, Citronellol, Tocopherol, Phenoxyethanol",
+      "normalized_ingredients": [
+        "AQUA",
+        "CETEARYL ALCOHOL",
+        "GLYCERIN",
+        "DICAPRYLYL ETHER",
+        "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "BETAINE",
+        "CETRIMONIUM CHLORIDE",
+        "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE",
+        "SODIUM BENZOATE",
+        "PARFUM",
+        "PANTHENOL",
+        "SODIUM HYALURONATE",
+        "LACTIC ACID",
+        "POTASSIUM SORBATE",
+        "HEXYL CINNAMAL",
+        "CITRIC ACID",
+        "ALPHA-ISOMETHYL IONONE",
+        "GERANIOL",
+        "CITRONELLOL",
+        "TOCOPHEROL",
+        "PHENOXYETHANOL"
+      ],
+      "rawInciSha256": "c7071e3c34ca86157dd263fb88c5c0ff52c34f6565562f617070081d44e927fa",
+      "formulaFingerprintSha256": "ae0cdabd5102dbe40748f9098b6ccb1de70ee4097329bcc064cda0b569bcf3a8",
+      "directions_of_use": "Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen und einmassieren. Anschließend die Haare wie gewohnt stylen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2-equivalent (judgment)",
+        "claim_tier_basis": "Per standard v0.2 §2.4 ruling R11, rossmann.de is nominally a C3 exact-GTIN German retailer. ISANA PROFESSIONAL is Rossmann's own house brand, sold only through rossmann.de, with no independent manufacturer website found (confirmed by search: Rossmann does not disclose ISANA's contract manufacturer). This lane therefore treats the rossmann.de product page as carrying C2-equivalent (manufacturer German/EU page) claim authority for this specific product, since it is the brand owner's own first-party product data, not third-party retail copy. Flagged for adjudicator confirmation rather than asserted as a clean C2.",
+        "source_authority_tier": "C2-equivalent (judgment)",
+        "domain": "rossmann.de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-panthenol-feuchtigkeitsspendend-silikonfrei-trockenes-haar/p/4305615946733",
+        "date": "2026-09-04",
+        "verbatim_source_html": "<p>Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen und einmassieren. Anschließend die Haare wie gewohnt stylen.</p>",
+        "rinse_test": "PASS — verified against the rinse test per R11. No rinse instruction appears anywhere in the directions or the separate storage block. Application is to towel-dried (not rinsed) hair, and the product is left in while hair is styled. Separate storage text (not application directions): \"Vor direkter Sonneneinstrahlung schützen. Trocken lagern.\" This is the genuine-leave-in read that the excluded slot-2 predecessor (Balea PROFESSIONAL Magical Water) failed."
+      },
+      "claims": [],
+      "claims_status": "none_found_at_C1_C2",
+      "claims_search_note": "rossmann.de (C2, ISANA house-brand page, live-fetched 2026-09-04) full verbatim: „Der ISANA Professional Leave-In Conditioner Hyaluron & Care versorgt und pflegt strapaziertes und glanzloses Haar mit bewährten Feuchtigkeitswirkstoffen. Für Geschmeidigkeit und natürlichen Glanz.“ Bullets: „reichhaltige Pflege“; „Hyaluron & Panthenol“; „ohne Silikone“; „trockenes Haar“; „Hautverträglichkeit dermatologisch bestätigt“. None of these fall into the six tracked claim categories (no heat, no humidity/frizz, no repair/bond, no curl, no explicit fragrance-free statement — 'ohne Silikone' and dermatological-tolerance confirmation are adjacent but not fragrance-free — and no 'beschwert nicht'/'leichte Textur'-type weight positioning). claims=[] is a genuine finding, not a missed search.",
+      "identity_status": "verified_with_minor_source_difference",
+      "known_conflicts": [
+        "Naming inconsistency at the source retailer itself: rossmann.de's own product-description body copy (GRP_PRODUKTDETAILS block) calls this product \"ISANA Professional Leave-In Conditioner Hyaluron & Care\", while the same page's title/breadcrumb/name field, and every independent third-party aggregator found (codecheck.info, and via search: hautschutzengel.de, incibeauty.com, discounto.de, drogeria.nl), call it \"...Hyaluron & Panthenol\". Same GTIN (4305615946733) and same Artikelnummer (124771) throughout — this is an internal retailer copy inconsistency, not a product-identity conflict. \"Hyaluron & Panthenol\" (the page's title/name field, matching the task brief) is used as exact_product_name here."
+      ],
+      "remaining_gap": "Only one first-party source (rossmann.de) plus one independent T3 aggregator (codecheck.info, INCI-only match) captured this pass. No second independent retailer or GTIN-bearing listing was independently fetched and cross-checked in this pass, though several (hautschutzengel.de, incibeauty.com, discounto.de, drogeria.nl) were seen corroborating the same GTIN/name-variant in search results without being fetched. No manufacturer-distinct source exists or can exist (Rossmann house brand).",
+      "notes": "Replaces the prior slot-2 occupant, Balea PROFESSIONAL Magical Water Aqua Hyaluron, adjudicated OUT of the gold set on 2026-09-04: its own dm.de directions read, verbatim, \"Nach 9 Sekunden gründlich ausspülen\" — a rinse-out express conditioner, not a leave-in. See reference-key/02-balea-professional-magical-water-aqua-hyaluron.md for the full G0 verdict (excluded_other_form -> routed_out_of_scope) that drove this swap. This entry fills the 'Mainstream milk/lotion' archetype slot in its place; the archetype_role is unchanged from the original slot definition."
+    },
+    {
+      "slot": 3,
+      "archetype_role": "Rich cream dry/damaged",
+      "brand": "Cantu",
+      "exact_product_name": "Leave-In Haarkur Repair Creme",
+      "pack_size": "453 g",
+      "gtin": "810006945430",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "dm.de",
+          "url": null,
+          "note": "German pack, authoritative Version A. Exact URL not preserved in the source lane report."
+        }
+      ],
+      "raw_inci": "Aqua, Canola Oil, Cetearyl Alcohol, Glycerin, Behentrimonium Methosulfate, Butyrospermum Parkii (Shea) Butter†, Olea Europaea Fruit Oil, Riboflavin, Niacin, Pantothenic Acid, Pyridoxine, Folic Acid, Cyanocobalamin, Biotin, Leuconostoc/Radish Root Ferment Filtrate, Panthenol, Citrus Sinensis Fruit Extract, Salvia Officinalis Leaf Extract, Urtica Dioica Extract, Aloe Barbadensis Leaf Juice, Achillea Millefolium Extract, Actinidia Chinensis Fruit Extract, Rosmarinus Officinalis Leaf Extract, Sodium Hyaluronate, Hydrogenated Ethylhexyl Olivate, Hydrogenated Olive Oil Unsaponifiables, Parfum, Phenoxyethanol, Ethylhexylglycerin, Polyquaternium-10, Disodium EDTA, Pentaerythrityl Tetracaprylate/Tetracaprate, Sodium Benzoate, Citric Acid, Cetrimonium Chloride, Benzyl Alcohol, Benzyl Salicylate, Citral, Coumarin, Hexyl Cinnamal, Limonene, Linalool, Sodium Hydroxide, Helianthus Annuus Seed Oil, Lecithin, Ascorbyl Palmitate, Tocopherol, Propylene Glycol, Potassium Sorbate, Lactic Acid, Tetrasodium Glutamate Diacetate, Tetramethyl Acetyloctahydronaphthalenes",
+      "normalized_ingredients": [
+        "AQUA",
+        "CANOLA OIL",
+        "CETEARYL ALCOHOL",
+        "GLYCERIN",
+        "BEHENTRIMONIUM METHOSULFATE",
+        "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+        "OLEA EUROPAEA FRUIT OIL",
+        "RIBOFLAVIN",
+        "NIACIN",
+        "PANTOTHENIC ACID",
+        "PYRIDOXINE",
+        "FOLIC ACID",
+        "CYANOCOBALAMIN",
+        "BIOTIN",
+        "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE",
+        "PANTHENOL",
+        "CITRUS SINENSIS FRUIT EXTRACT",
+        "SALVIA OFFICINALIS LEAF EXTRACT",
+        "URTICA DIOICA EXTRACT",
+        "ALOE BARBADENSIS LEAF JUICE",
+        "ACHILLEA MILLEFOLIUM EXTRACT",
+        "ACTINIDIA CHINENSIS FRUIT EXTRACT",
+        "ROSMARINUS OFFICINALIS LEAF EXTRACT",
+        "SODIUM HYALURONATE",
+        "HYDROGENATED ETHYLHEXYL OLIVATE",
+        "HYDROGENATED OLIVE OIL UNSAPONIFIABLES",
+        "PARFUM",
+        "PHENOXYETHANOL",
+        "ETHYLHEXYLGLYCERIN",
+        "POLYQUATERNIUM-10",
+        "DISODIUM EDTA",
+        "PENTAERYTHRITYL TETRACAPRYLATE/TETRACAPRATE",
+        "SODIUM BENZOATE",
+        "CITRIC ACID",
+        "CETRIMONIUM CHLORIDE",
+        "BENZYL ALCOHOL",
+        "BENZYL SALICYLATE",
+        "CITRAL",
+        "COUMARIN",
+        "HEXYL CINNAMAL",
+        "LIMONENE",
+        "LINALOOL",
+        "SODIUM HYDROXIDE",
+        "HELIANTHUS ANNUUS SEED OIL",
+        "LECITHIN",
+        "ASCORBYL PALMITATE",
+        "TOCOPHEROL",
+        "PROPYLENE GLYCOL",
+        "POTASSIUM SORBATE",
+        "LACTIC ACID",
+        "TETRASODIUM GLUTAMATE DIACETATE",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      ],
+      "rawInciSha256": "e49df19e2b99c5773b6b812b2c54d694e214901f58f8601ca6a383a9ca66ee12",
+      "formulaFingerprintSha256": "acb2659ab5068218f40c60aa550f49950dd25477f314dc6b4ca61600cc9ba21e",
+      "directions_of_use": "Großzügig und gleichmäßig auf die feuchten Haarspitzen auftragen und in Richtung Ansatz einarbeiten und durchkämmen. Nicht ausspülen. Damit sich die Wirkung noch mehr entfalten kann, über Nacht unter einer Haube einziehen lassen. Für das anschließende Styling und maximale Definition, je nach Bedarf die Coconut Curling Cream oder die Moisturizing Curl Activator Cream verwenden.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3",
+        "claim_tier_basis": "Exact-GTIN German retailer page (dm.de).",
+        "source_authority_tier": "C3",
+        "domain": "dm.de",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "dm-Art. 1685686, GTIN 810006945430 confirmed on page. Captured this pass via reference-key/03-cantu-leave-in-haarkur-repair-creme.md (S3-dir). Rinse test: PASS — directions explicitly state \"Nicht ausspülen\"."
+      },
+      "claims": [
+        {
+          "claim_text": "Repariert geschädigtes Haar bis in die Haarspitzen",
+          "claim_type": "repair_bond",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "cantubeauty.de is Cantu's own German-market manufacturer site (confirmed live this pass: German product catalogue, German copy, Impressum).",
+          "domain": "cantubeauty.de",
+          "url": "https://www.cantubeauty.de/produkt-kategorie/for-natural-hair/leave-in-conditioning-repair-cream",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "Full verbatim description: „Die Leave-In Conditioning Repair Cream ist eine tiefenwirksame Pflegebehandlung für kräftigeres und gesunderes Haar. Die Formel aus Sheabutter und natürlichen Ölen pflegt, repariert und stärkt das Haar bis in die Wurzel. Die natürlichen Wirkstoffe spenden Feuchtigkeit und lassen jeden Haartyp dank Sheabutter wieder in neuem Glanz erstrahlen.“ Bullets: „Spendet intensive Feuchtigkeit dank Sheabutter“; „Repariert geschädigtes Haar bis in die Haarspitzen“; „Stärkt das Haar und verhindert Haarbruch“. IMPORTANT IDENTITY NOTE (not a claims field, recorded for audit): the INCI list shown on this cantubeauty.de page (DICETYLDIMONIUM CHLORIDE / DIHEPTYL SUCCINATE / SILK AMINO ACIDS architecture) matches this packet's own already-documented US-formula variant under known_conflicts (GTIN 810006943405), NOT the frozen DE-pack Version A (GTIN 810006945430, dm.de). raw_inci and normalized_ingredients were NOT touched — this is recorded purely as a corroborating observation for human review, consistent with the existing known_conflicts entry."
+        },
+        {
+          "claim_text": "Stärkt das Haar und verhindert Haarbruch",
+          "claim_type": "repair_bond",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "cantubeauty.de, same page as above.",
+          "domain": "cantubeauty.de",
+          "url": "https://www.cantubeauty.de/produkt-kategorie/for-natural-hair/leave-in-conditioning-repair-cream",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "See note on the sibling repair_bond claim above for full page context."
+        },
+        {
+          "claim_text": "Zudem bietet sie einen Schutz vor Hitzeschäden, die durch das Styling entstehen können.",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "Exact-GTIN German retailer page (dm.de, GTIN 810006945430 confirmed on page, dm-Art. 1685686). This heat-protection claim was actively checked for on cantubeauty.de (the C2 manufacturer German-market page, fetched live this pass) and is ABSENT there — the manufacturer's own German page makes no heat claim at all for this product. Per the claim-authority rule, a C3 retailer page can only corroborate, never create: since no C1/C2 source states this claim, it CANNOT be treated as an established manufacturer claim for classification purposes.",
+          "domain": "dm.de",
+          "url": null,
+          "date": "2026-09-03",
+          "capture_method": "reused verbatim from reference-key/03-cantu-leave-in-haarkur-repair-creme.md (S3-claim), a same-day 2026-09-03 engine-run capture; not independently re-fetched live this pass (dm.de exact product URL guess redirected to homepage on retry).",
+          "creates_claim": false,
+          "note": "FLAGGED PER TASK STEP 2: this is a claim that exists only at C3 with no C1/C2 corroboration found despite an active check of the manufacturer's own German site. Record with honest tiering; do not treat as an established manufacturer claim."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "provisional_formula_conflict",
+      "known_conflicts": [
+        "Cantu EU/US: a genuinely different US-market formula (Dicetyldimonium Chloride / Diheptyl Succinate / Silk Amino Acids etc.) circulates under a different GTIN 810006943405. The DE-pack Version A above (dm.de) is authoritative for this gold set; the US variant is recorded as a conflict, not merged."
+      ],
+      "remaining_gap": "US-variant full INCI not captured in the source lane report available to this pass (only the divergent-ingredient summary); not independently fetched in this pass (out of the two named gap categories).",
+      "notes": "No re-verification requested for this slot; carried forward unchanged from gold-set-candidates.md. identity_status escalated from the doc's prose \"provisional_conflict\" to the standard's formal enum value provisional_formula_conflict."
+    },
+    {
+      "slot": 4,
+      "archetype_role": "Two-phase spray",
+      "brand": "alverde NATURKOSMETIK",
+      "exact_product_name": "Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan",
+      "pack_size": "75 ml",
+      "gtin": "4066447105032",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T3",
+          "domain": "incibeauty.com",
+          "url": "https://incibeauty.com/en/produit/4058172449499",
+          "note": "EN aggregator page; matches DE aggregator page exactly."
+        },
+        {
+          "tier": "T3",
+          "domain": "incibeauty.com",
+          "url": "https://incibeauty.com/de/produit/4058172449901",
+          "note": "Independent DE aggregator page, same product; ingredient list matches the EN page exactly."
+        },
+        {
+          "tier": "T3",
+          "domain": "codecheck.info",
+          "url": "https://www.codecheck.info/p/kosmetik/haarpflege/kuren-masken/alverde-naturkosmetik-nutri-care-2-phasen-spruehkur-bio-mandel-bio-argan.html",
+          "note": "Third independent aggregator; ingredient list matches exactly."
+        },
+        {
+          "tier": "T2",
+          "domain": "dm.de",
+          "url": "https://www.dm.de/alverde-naturkosmetik-nutri-care-2-phasen-spruehkur-bio-mandel-bio-argan-p4066447105032.html",
+          "note": "GTIN 4066447105032 confirmed via this URL slug (surfaced in search-engine indexing and cited by review blogs). Direct fetch of this exact URL returned 404 in this pass (via a read-friendly proxy) and dm.de's own on-site search for \"alverde Nutri-Care 2-Phasen-Sprühkur\" no longer surfaces this SKU (returns Haarserum/Shampoo/Conditioner Nutri-Care instead) — see remaining_gap."
+        }
+      ],
+      "raw_inci": "Aqua, Glycine Soja Oil*, Alcohol*, Glycerin, Sodium Lactate, Betaine, Argania Spinosa Kernel Oil*, Prunus Amygdalus Dulcis Seed Extract*, Hippophae Rhamnoides Fruit Extract*, Caprylyl/Capryl Glucoside, Tocopheryl Acetate, Sodium Phytate, Parfum**, Linalool**, Limonene**, Coumarin**",
+      "normalized_ingredients": [
+        "AQUA",
+        "GLYCINE SOJA OIL",
+        "ALCOHOL",
+        "GLYCERIN",
+        "SODIUM LACTATE",
+        "BETAINE",
+        "ARGANIA SPINOSA KERNEL OIL",
+        "PRUNUS AMYGDALUS DULCIS SEED EXTRACT",
+        "HIPPOPHAE RHAMNOIDES FRUIT EXTRACT",
+        "CAPRYLYL/CAPRYL GLUCOSIDE",
+        "TOCOPHERYL ACETATE",
+        "SODIUM PHYTATE",
+        "PARFUM",
+        "LINALOOL",
+        "LIMONENE",
+        "COUMARIN"
+      ],
+      "rawInciSha256": "fb69f16595227a4ac0224e65b0425f30db71ea4454d97546a96dcd23f95aa33e",
+      "formulaFingerprintSha256": "146560146b739a07dd6bb7a265b5e5f0e3541b4fad193be5050320cc62ba7840",
+      "directions_of_use": "Je nach Bedarf aus ca. 30 cm Entfernung in die Haarlängen und -spitzen sprühen. Kontakt mit den Augen vermeiden. Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden. HINWEIS: Bitte vor Gebrauch schütteln!",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3",
+        "claim_tier_basis": "Exact-GTIN German retailer page (dm.de), archived.",
+        "source_authority_tier": "C3",
+        "domain": "dm.de",
+        "url": "https://www.dm.de/alverde-naturkosmetik-nutri-care-2-phasen-spruehkur-bio-mandel-bio-argan-p4066447105032.html",
+        "date": "2026-09-03",
+        "note": "T2 archived (Wayback capture) of the dm.de page for GTIN 4066447105032, dm-Art. 1545345. Expanded this pass from a shorter paraphrase (\"Vor Gebrauch gut schütteln.\") to the full verbatim text via reference-key/04-alverde-nutri-care-2-phasen-spruehkur.md (S4-dir). Rinse test: PASS — no rinse instruction anywhere in the directions. Carries the same live-availability caveat as the rest of this slot's record (see remaining_gap): the exact dm.de URL 404s on a fresh fetch and live dm.de site search no longer surfaces this SKU."
+      },
+      "claims": [],
+      "claims_status": "none_found_at_C1_C2",
+      "claims_search_note": "SKU confirmed delisted at dm.de again this pass (live fetch 2026-09-04 returns \"Entschuldigung... Leider konnten für Deine Anfrage keine Produkte gefunden werden.\"); the Wayback Machine (web.archive.org) was itself temporarily offline during this pass, so the archived dm.de capture already on file (reference-key S4-claim, 2026-09-03 T2-archived) could not be independently re-verified live. That captured text — „Für sofortige Haarpflege“; „Verbessert die Kämmbarkeit“; „Entwirrt und bändigt das Haar spürbar“; „umhüllt die Haaroberfläche mit einem samtweichen Gefühl“ — contains no claim in any of the six tracked categories (no heat, no humidity/frizz, no lightness/weight positioning, no repair/bond, no curl, no fragrance-free). No other C1/C2 alverde source exists (dm is the sole brand owner). claims=[] reflects genuinely nothing found in the tracked categories, not a sourcing failure — though the live-freshness of the underlying C2 capture could not be re-verified this pass due to the Wayback outage.",
+      "identity_status": "provisional_identity_conflict",
+      "known_conflicts": [],
+      "remaining_gap": "T3-only INCI could not be upgraded to T1/T2 in this pass: dm.de remains bot-blocked for direct automated fetch, and a fetch of the exact GTIN-bearing dm.de product URL returned HTTP 404 while dm.de's live on-site search omits this SKU entirely (surfacing only Haarserum/Shampoo/Conditioner Nutri-Care). This is a NEW finding from this pass, not present in gold-set-candidates.md: the product may have been discontinued/delisted at dm.de since the original capture, or the URL/GTIN pairing may have changed. INCI content itself is strongly corroborated (3 independent T3 aggregators, exact match) and unchanged from the original capture — only current-market availability under this exact GTIN is now in doubt. Flagged for human review per standard §14 (absent exact-market formula/identifier).",
+      "notes": null
+    },
+    {
+      "slot": 5,
+      "archetype_role": "Silicone-rich smoother",
+      "brand": "EVO",
+      "exact_product_name": "Head Mistress Cuticle Sealer",
+      "pack_size": "150 ml",
+      "gtin": "9349769013144",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "evohair.com",
+          "url": "https://www.evohair.com/us/hair-styling/styling-format/cream/evo-head-mistress-cuticle-sealer-150ml-39268/",
+          "note": "Manufacturer US-region page; SKU 39268. Original capture source."
+        },
+        {
+          "tier": "T3",
+          "domain": "skinsafeproducts.com",
+          "url": "https://www.skinsafeproducts.com/evo-head-mistress-cuticle-sealer-5-1-fl-oz",
+          "note": "Independent aggregator; same ingredient set (alphabetized, so list order differs from the manufacturer's declared order)."
+        },
+        {
+          "tier": "T2",
+          "domain": "haarspullen.nl",
+          "url": "https://www.haarspullen.nl/en/products/evo-cuticle-sealer",
+          "note": "Independent EU (Dutch) specialty retailer; explicitly shows EAN 9349769013144 and an ingredient list matching the manufacturer order exactly. Second GTIN source, closing the named gap."
+        },
+        {
+          "tier": "T2",
+          "domain": "amazon.de",
+          "url": "https://www.amazon.de/EVO-Finishing-coloriertes-erleichtert-Geschmeidigkeit/dp/B07CJVDBTR",
+          "note": "German-market listing confirms DE availability; ASIN-to-EAN mapping not independently confirmed in this pass."
+        }
+      ],
+      "raw_inci": "Aqua, Dimethicone, Cyclopentasiloxane, Polyacrylamide, Dimethiconol, Phenoxyethanol, Parfum, Panthenol, C13-14 Isoparaffin, Laureth-7, Benzophenone-4, Hydrolyzed Quinoa, Macadamia Ternifolia Seed Oil, Quaternium-80, Benzoic Acid, Dehydroacetic Acid, Sodium Hydroxide, Butylene Glycol, Ethylhexylglycerin, Potassium Sorbate, Limonene, Hexyl Cinnamal, Linalool, Geraniol, Citral",
+      "normalized_ingredients": [
+        "AQUA",
+        "DIMETHICONE",
+        "CYCLOPENTASILOXANE",
+        "POLYACRYLAMIDE",
+        "DIMETHICONOL",
+        "PHENOXYETHANOL",
+        "PARFUM",
+        "PANTHENOL",
+        "C13-14 ISOPARAFFIN",
+        "LAURETH-7",
+        "BENZOPHENONE-4",
+        "HYDROLYZED QUINOA",
+        "MACADAMIA TERNIFOLIA SEED OIL",
+        "QUATERNIUM-80",
+        "BENZOIC ACID",
+        "DEHYDROACETIC ACID",
+        "SODIUM HYDROXIDE",
+        "BUTYLENE GLYCOL",
+        "ETHYLHEXYLGLYCERIN",
+        "POTASSIUM SORBATE",
+        "LIMONENE",
+        "HEXYL CINNAMAL",
+        "LINALOOL",
+        "GERANIOL",
+        "CITRAL"
+      ],
+      "rawInciSha256": "7f9d56ec8c3a5ca383746faf8284cc524e79f7b1eda4b610b2797b51cf0153bb",
+      "formulaFingerprintSha256": "d7cccb0d955a0544407fec4d5a864b9b3a3a6ee504ea13bb8721e146c0a2c4ea",
+      "directions_of_use": "Apply to towel-dried hair and blow-dry for improved manageability and softness. Apply after styling to control frizz and fly-aways.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2-equivalent (judgment)",
+        "claim_tier_basis": "T1 manufacturer page, but evohair.com/us is a US-region storefront, not a DE/EU-specific page, so it does not cleanly satisfy R11's C2 definition (\"manufacturer German/EU page\"). No German-language directions text was found for this product. Recorded as reduced-authority manufacturer text rather than discarded, since it is the same source already used for this slot's frozen INCI and is corroborated by two independent EU sources for product identity (haarspullen.nl, amazon.de).",
+        "source_authority_tier": "C2-equivalent (judgment)",
+        "domain": "evohair.com",
+        "url": "https://www.evohair.com/us/hair-styling/styling-format/cream/evo-head-mistress-cuticle-sealer-150ml-39268/",
+        "date": "2026-09-03",
+        "note": "English-language, US-region manufacturer text. Captured this pass via reference-key/05-evo-head-mistress-cuticle-sealer.md (S5-dir). Rinse test: PASS — no rinse instruction; describes application to towel-dried hair before blow-drying, and post-styling touch-ups."
+      },
+      "claims": [],
+      "claims_status": "none_found_at_C1_C2",
+      "claims_search_note": "No C1/C2 German-market EVO source exists: evohair.com has no /de/ region (only /us and /en-us confirmed this pass); no evohair.de or evo.de domain resolves. Best available English T1 (evohair.com/us, C5, non-German — excluded from claim_text per the verbatim-German-only constraint) states: „heat protection“, „uv protection“, „reduces frizz“, „improves condition“, „improves styling“. A German-language retailer page WAS found and is worth recording even though it cannot create a claim: nicebeauty.com (C4, live-fetched 2026-09-04, ships to Germany) states in German: „Darüber hinaus wirkt die Multifunktionscreme auch als UV- und Hitzeschutz“ and „Reduziert Frizz“ — but per the claim-authority rule a C4 source cannot create a claim, and since no C1/C2 corroborates it, this pass records claims=[] (genuinely nothing found at C1/C2) rather than entering the C4-only text as a creatable claim. See the freeze report for the full C4 text as an honest gap.",
+      "identity_status": "verified",
+      "known_conflicts": [
+        "A stray fetch of a differently-formed evohair.com URL (no region prefix: evohair.com/products/evo-head-mistress-cuticle-sealer-150ml) returned an unrelated LGN-emulsion ingredient list (Cetearyl Alcohol / Behentrimonium Chloride / Amodimethicone architecture) attributed to the same product name. This is inconsistent with three independent, mutually-agreeing sources above and is treated as a scraping/page-mismatch artifact (likely a cross-sell block on that page misread as the primary product), not as a genuine formula conflict. It was discarded, not merged. Recorded here for audit trail only."
+      ],
+      "remaining_gap": "GTIN second-source now closed (haarspullen.nl). None remaining for this slot.",
+      "notes": null
+    },
+    {
+      "slot": 6,
+      "archetype_role": "Silicone-free cationic/polymeric",
+      "brand": "Curlsmith",
+      "exact_product_name": "Hydrate & Plump Leave-In",
+      "pack_size": "237 ml",
+      "gtin": null,
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T2",
+          "domain": "lockenbox.com",
+          "url": "https://www.lockenbox.com/en/products/curlsmith-hydrate-plump-leave-in-237ml",
+          "note": "Exact-pack German/EU curl specialty retailer; re-fetched directly in this pass. Full 40-ingredient list obtained (not truncated); matches the prior partial T2/T3 capture exactly for every ingredient previously captured."
+        },
+        {
+          "tier": "T2/C5",
+          "domain": "lockenbox.com + curlsmith.com",
+          "url": "https://curlsmith.com/products/hydrate-plump-leave-in",
+          "note": "Round-4 evidence-gap-closure pass (2026-09-13), presentation-form finding: lockenbox.com's own CDN packshots (exact-pack German/EU retailer, 237 ml match) show a dark glass bottle with a lotion/cream-style pump dispenser (wide collar, round push-top, no spray nozzle) and a texture-callout photo of a thick white cream dispensed onto a hand; the product label itself prints 'Conditioning Cream'. Corroborated by the manufacturer's own product page (curlsmith.com, non-German-market -- tier C5, record-only per this packet's claim-authority hierarchy, not claim-creating) whose 'Product Specifications' field states verbatim: 'Format: Light Cream'. Also confirms product identity: this is the 'Hydrate & Plump Leave-In' SKU (not the separate Curlsmith 'Weightless Air Dry Cream' product), matching this record's exact_product_name and 237 ml pack_size exactly. Verdict: presentation_form = cream, confidence high. See plans/leave-in-inci/research/gold-set/round-4/evidence-gap-closure.md item 2 for full detail."
+        }
+      ],
+      "raw_inci": "WATER (AQUA/EAU), DICAPRYLYL CARBONATE, CETEARYL ALCOHOL, COCO-CAPRYLATE/CAPRATE, RICINUS COMMUNIS (CASTOR) SEED OIL, BEHENTRIMONIUM CHLORIDE, GLYCERIN, PANTHENOL, BUTYROSPERMUM PARKII (SHEA) BUTTER, SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, POLYQUATERNIUM-10, OLEA EUROPAEA (OLIVE) LEAF EXTRACT, TILIA TOMENTOSA BUD EXTRACT, ARCTIUM MAJUS ROOT EXTRACT, ARNICA MONTANA FLOWER EXTRACT, CALENDULA OFFICINALIS FLOWER EXTRACT, CHAMOMILLA RECUTITA (MATRICARIA) FLOWER EXTRACT, CITRUS LIMON (LEMON) PEEL EXTRACT, HEDERA HELIX (IVY) LEAF EXTRACT, LAMIUM ALBUM EXTRACT, NASTURTIUM OFFICINALE EXTRACT, PINUS SYLVESTRIS BUD EXTRACT, ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT, SALVIA OFFICINALIS (SAGE) LEAF EXTRACT, TROPAEOLUM MAJUS FLOWER EXTRACT, ISOPROPYL ALCOHOL, PENTYLENE GLYCOL, TOCOPHEROL, MALTODEXTRIN, CYCLODEXTRIN, PVP, CYAMOPSIS TETRAGONOLOBA (GUAR) GUM, GLUCONATE, PHYTIC ACID, PHENOXYETHANOL, POTASSIUM SORBATE, SODIUM BENZOATE, HYDROXYCITRONELLAL, CITRONELLOL",
+      "normalized_ingredients": [
+        "WATER (AQUA/EAU)",
+        "DICAPRYLYL CARBONATE",
+        "CETEARYL ALCOHOL",
+        "COCO-CAPRYLATE/CAPRATE",
+        "RICINUS COMMUNIS (CASTOR) SEED OIL",
+        "BEHENTRIMONIUM CHLORIDE",
+        "GLYCERIN",
+        "PANTHENOL",
+        "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+        "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL",
+        "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "POLYQUATERNIUM-10",
+        "OLEA EUROPAEA (OLIVE) LEAF EXTRACT",
+        "TILIA TOMENTOSA BUD EXTRACT",
+        "ARCTIUM MAJUS ROOT EXTRACT",
+        "ARNICA MONTANA FLOWER EXTRACT",
+        "CALENDULA OFFICINALIS FLOWER EXTRACT",
+        "CHAMOMILLA RECUTITA (MATRICARIA) FLOWER EXTRACT",
+        "CITRUS LIMON (LEMON) PEEL EXTRACT",
+        "HEDERA HELIX (IVY) LEAF EXTRACT",
+        "LAMIUM ALBUM EXTRACT",
+        "NASTURTIUM OFFICINALE EXTRACT",
+        "PINUS SYLVESTRIS BUD EXTRACT",
+        "ROSMARINUS OFFICINALIS (ROSEMARY) LEAF EXTRACT",
+        "SALVIA OFFICINALIS (SAGE) LEAF EXTRACT",
+        "TROPAEOLUM MAJUS FLOWER EXTRACT",
+        "ISOPROPYL ALCOHOL",
+        "PENTYLENE GLYCOL",
+        "TOCOPHEROL",
+        "MALTODEXTRIN",
+        "CYCLODEXTRIN",
+        "PVP",
+        "CYAMOPSIS TETRAGONOLOBA (GUAR) GUM",
+        "GLUCONATE",
+        "PHYTIC ACID",
+        "PHENOXYETHANOL",
+        "POTASSIUM SORBATE",
+        "SODIUM BENZOATE",
+        "HYDROXYCITRONELLAL",
+        "CITRONELLOL"
+      ],
+      "rawInciSha256": "ff00c63494a7ff41c090a65fe8d29f87745577158ada42ccababa814434e367f",
+      "formulaFingerprintSha256": "ff00c63494a7ff41c090a65fe8d29f87745577158ada42ccababa814434e367f",
+      "directions_of_use": "Start with a hazelnut-sized amount of the leave-in conditioner and distribute it in your hands. Work the conditioner into your wet hair, adjusting the amount used according to the length of your hair if necessary. Style your curls as usual to shape them and increase bounce. Use a gel and/or mousse to finish your styling routine.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3-equivalent (judgment)",
+        "claim_tier_basis": "lockenbox.com is an exact-pack German/EU curl specialty retailer (T2 in this packet's general source tiering), the same source used for this slot's frozen INCI. No GTIN is established for this product, so the strict \"exact-GTIN German retailer\" wording of C3 cannot be fully confirmed, but it is an exact-pack DE/EU retailer page for this product.",
+        "source_authority_tier": "C3-equivalent (judgment)",
+        "domain": "lockenbox.com",
+        "url": "https://www.lockenbox.com/en/products/curlsmith-hydrate-plump-leave-in-237ml",
+        "date": "2026-09-03",
+        "note": "English-language retailer text. Already verbatim per reference-key/06-curlsmith-hydrate-and-plump-leave-in.md (S6-dir); unchanged this pass. Rinse test: PASS — describes application to wet hair with no rinse step, explicitly a leave-in conditioner."
+      },
+      "claims": [],
+      "claims_status": "none_found_at_C1_C2",
+      "claims_search_note": "No German-language claim in any of the six tracked categories was found at any tier. eu.curlsmith.com (the brand's own EU storefront) is English-language, not German — its claims (\"Lightweight moisture with no weigh-down\"; \"Long-lasting volume (up to 72h*)\"; \"Fuller, thicker, bouncier curls\"; praying-hands step 3 \"helps sealing cuticles and reducing frizz\") are C5-equivalent (EU region, not DE-specific) and excluded from claim_text per the verbatim-German-only constraint. flaconi.de (C4, German retailer, live-fetched 2026-09-04) shows only a generic „Wirkung: Volumen“ tag, which does not fall into any of the six tracked categories (heat/humidity-frizz/repair-bond/curl/fragrance-free/finish-weight). claims=[] reflects genuinely nothing found in German at any tier for the tracked categories.",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "T3-only INCI upgraded to T2 (lockenbox.com) — closed. GTIN remains not found (pre-existing gap from gold-set-candidates.md; not one of the four GTIN slots named for this pass, so not separately re-searched here).",
+      "notes": null
+    },
+    {
+      "slot": 7,
+      "archetype_role": "Curl cream with hold polymer",
+      "brand": "Maria Nila",
+      "exact_product_name": "Curlicue Cream",
+      "pack_size": "100 ml",
+      "gtin": null,
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "marianila.com",
+          "url": null,
+          "note": "Exact URL not preserved in the source lane report."
+        }
+      ],
+      "raw_inci": "Aqua, Propylene Glycol, Glycerin, PVP, Cetyl Alcohol, Helianthus Annuus Seed Extract, Chamomilla Recutita Flower Extract, Polysorbate 20, Butylene Glycol, Carbomer, Quaternium-95, Propanediol, Ethylhexylglycerin, Triethanolamine, Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate, Phenoxyethanol, Parfum",
+      "normalized_ingredients": [
+        "AQUA",
+        "PROPYLENE GLYCOL",
+        "GLYCERIN",
+        "PVP",
+        "CETYL ALCOHOL",
+        "HELIANTHUS ANNUUS SEED EXTRACT",
+        "CHAMOMILLA RECUTITA FLOWER EXTRACT",
+        "POLYSORBATE 20",
+        "BUTYLENE GLYCOL",
+        "CARBOMER",
+        "QUATERNIUM-95",
+        "PROPANEDIOL",
+        "ETHYLHEXYLGLYCERIN",
+        "TRIETHANOLAMINE",
+        "PENTAERYTHRITYL TETRA-DI-T-BUTYL HYDROXYHYDROCINNAMATE",
+        "PHENOXYETHANOL",
+        "PARFUM"
+      ],
+      "rawInciSha256": "a7c9ce328a33307500fafcdcf6f8d29371633627cfb4072f444516e45aac3f27",
+      "formulaFingerprintSha256": "f7c3be7bc73e173951cf965513602bba22b5271e4141fc156df44a363658db3a",
+      "directions_of_use": "Apply to damp hair just at the ends for a textured look or apply throughout the lengths for a more controlled look. To avoid flyaways and allow curls to find their natural wave, use the product from root to top.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2-equivalent (judgment)",
+        "claim_tier_basis": "T1 manufacturer page (marianila.com), but the page is not confirmed DE/EU-region-specific, so it does not cleanly satisfy R11's C2 definition. No German-language directions text could be captured (per reference-key: flaconi.de's accordion did not render); the manufacturer's own English text is treated as the best available.",
+        "source_authority_tier": "C2-equivalent (judgment)",
+        "domain": "marianila.com",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "English-language manufacturer text. Captured this pass via reference-key/07-maria-nila-curlicue-cream.md (S7-dir). Rinse test: PASS — application to damp hair, no rinse instruction; styling directions only."
+      },
+      "claims": [
+        {
+          "claim_text": "Anti-Frizz",
+          "claim_type": "humidity_frizz",
+          "source_authority_tier": "C4",
+          "claim_tier_basis": "flaconi.de is a general German retailer (not confirmed exact-GTIN-matched to this SKU's specific pack), so C4 (\"other retailer\") per the claim-authority rule. No C1/C2 German-market Maria Nila source was found: marianila.com has no /de/ region and no German-language content was located.",
+          "domain": "flaconi.de",
+          "url": "https://www.flaconi.de/haare/maria-nila/curlicue-cream/maria-nila-curlicue-cream-stylingcreme.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "German attribute tag captured verbatim: „Wirkung: Anti-Frizz“, under the page's \"Highlights\" block (alongside „Haartyp: Lockiges Haar“). This is the same T2 attribute tag already noted in reference-key/07-maria-nila-curlicue-cream.md, now independently re-confirmed live. FLAGGED PER TASK STEP 2: cannot create a claim on its own — English-language claims exist on the manufacturer's own marianila.com T1 page („Enhances and defines curls“; „Prevents frizz and split ends“; „Use in damp hair to protect your hair against humidity“; manufacturer's own „Hold 3/5“) but are excluded from claim_text here per the verbatim-German-only constraint; recorded as C5 (non-German-market manufacturer page) and not entered as a claims-array row."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "None re-opened this pass. GTIN not found (pre-existing gap, not in this pass's named GTIN list).",
+      "notes": "No re-verification requested for this slot; carried forward unchanged from gold-set-candidates.md."
+    },
+    {
+      "slot": 8,
+      "archetype_role": "Heat-protective primer",
+      "brand": "Schwarzkopf GLISS",
+      "exact_product_name": "Sprüh-Conditioner Express-Repair Ultimate Repair",
+      "pack_size": "200 ml",
+      "gtin": "4015100813494",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T2",
+          "domain": "dm.de",
+          "url": null,
+          "note": "dm-Art. 1430908; DOM capture (full page-DOM extraction, per gold-set-candidates.md). Exact URL not preserved."
+        }
+      ],
+      "raw_inci": "Aqua, Trisiloxane, Dimethicone, Prunus Armeniaca Kernel Oil, Phenyl Trimethicone, Hydrolyzed Keratin, Hydrolyzed Pearl, Dimethiconol, Polyquaternium-16, Cetyl PEG/PPG-10/1 Dimethicone, Cetrimonium Chloride, Parfum, Lactic Acid, Sodium Benzoate, Glycerin, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil, Limonene, Potassium Sorbate, Phenoxyethanol, Geranyl Acetate",
+      "normalized_ingredients": [
+        "AQUA",
+        "TRISILOXANE",
+        "DIMETHICONE",
+        "PRUNUS ARMENIACA KERNEL OIL",
+        "PHENYL TRIMETHICONE",
+        "HYDROLYZED KERATIN",
+        "HYDROLYZED PEARL",
+        "DIMETHICONOL",
+        "POLYQUATERNIUM-16",
+        "CETYL PEG/PPG-10/1 DIMETHICONE",
+        "CETRIMONIUM CHLORIDE",
+        "PARFUM",
+        "LACTIC ACID",
+        "SODIUM BENZOATE",
+        "GLYCERIN",
+        "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+        "CITRUS AURANTIUM PEEL OIL",
+        "LIMONENE",
+        "POTASSIUM SORBATE",
+        "PHENOXYETHANOL",
+        "GERANYL ACETATE"
+      ],
+      "rawInciSha256": "010d7b04d4b62f22900ec0b42880167776b19297c6a155c53ccea4eadc7ff256",
+      "formulaFingerprintSha256": "9adbf8cb1ae853784ca9a859537f7da4d0e1618f3ea5bee2e4d5090b2de7e7dd",
+      "directions_of_use": "Vor Gebrauch schütteln! Nach jeder Haarwäsche in das handtuchtrockene oder trockene Haar sprühen. Nicht ausspülen! Regelmäßig anwenden. Rückstände vom Boden entfernen. Nicht in die Augen sprühen!",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2",
+        "claim_tier_basis": "Manufacturer German page (schwarzkopf.de).",
+        "source_authority_tier": "C2",
+        "domain": "schwarzkopf.de",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "Captured this pass via reference-key/08-schwarzkopf-gliss-express-repair-spruehconditioner.md (S8-dir). Rinse test: PASS — directions explicitly state \"Nicht ausspülen!\", despite the brand's own \"Sprüh-Conditioner\"/\"Spülung\" naming."
+      },
+      "claims": [
+        {
+          "claim_text": "Hitzeschutz bis zu 230 °C",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Genuine German manufacturer page, schwarzkopf.de.",
+          "domain": "schwarzkopf.de",
+          "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/ultimate-repair/ultimate-repair-express-repair-spuelung.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "Verbatim, appears twice on the page: „Das Ultimate Repair Gliss Spray sorgt für leichte Kämmbarkeit, Hitzeschutz bis zu 230 °C und verleiht dem Haar mehr Widerstandskraft und gesunden Glanz“; „Die Keratin Haarpflege bietet Hitzeschutz bis zu 230 °C, Haarschäden werden zielgenau repariert und der Keratinbestand wieder aufgefüllt“. Corroborated at C3 by dm.de's „Hitzeschutz bis 230 Grad“ badge (reference-key S8-claim, GTIN 4015100813494 confirmed on page, not independently re-fetched this pass)."
+        },
+        {
+          "claim_text": "Rekonstruktion der Haarstruktur durch flüssiges Keratin",
+          "claim_type": "repair_bond",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "schwarzkopf.de, same page.",
+          "domain": "schwarzkopf.de",
+          "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/ultimate-repair/ultimate-repair-express-repair-spuelung.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "„Mit der Sprühspülung der Ultimate Repair Linie wird für eine Rekonstruktion der Haarstruktur durch flüssiges Keratin gesorgt.“ This names a mechanism (liquid keratin), not a chemistry with independent published repair evidence; recorded as a marketing claim only, consistent with reference-key's existing treatment (R2 stays none_visible/candidate, never adopted as a repair level from this claim alone)."
+        },
+        {
+          "claim_text": "Haarschäden werden zielgenau repariert und der Keratinbestand wieder aufgefüllt",
+          "claim_type": "repair_bond",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "schwarzkopf.de, same page.",
+          "domain": "schwarzkopf.de",
+          "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/produktlinien/ultimate-repair/ultimate-repair-express-repair-spuelung.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "See sibling repair_bond claim note."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "None re-opened this pass.",
+      "notes": "No re-verification requested for this slot; carried forward unchanged from gold-set-candidates.md. Claim \"Hitzeschutz bis 230 Grad\" is E0 marketing claim, not directions text; not included in raw_inci or directions_of_use."
+    },
+    {
+      "slot": 9,
+      "archetype_role": "Protein/surface-repair",
+      "brand": "Redken",
+      "exact_product_name": "Extreme Anti-Snap Leave-In Treatment",
+      "pack_size": "250 ml",
+      "gtin": null,
+      "gtin_candidates": [
+        "884486453402",
+        "884486210777"
+      ],
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T2",
+          "domain": "douglas.de",
+          "url": null,
+          "note": "Douglas Art. 117080; original capture source, exact URL not preserved."
+        },
+        {
+          "tier": "T2",
+          "domain": "hautschutzengel.de",
+          "url": "https://www.hautschutzengel.de/redken-extreme-anti-snap-leave-in-treatment-inhaltsstoffe/produkt/110207.html",
+          "note": "Independent German INCI database; ingredient set matches (minor list-order variance: Arginine/Citric Acid reordered; this page's list is missing Potassium Sorbate, present in the douglas.de-sourced capture — treated as a transcription gap on this aggregator, not a formula conflict). Shows GTIN 884486210777."
+        },
+        {
+          "tier": "T2/T3",
+          "domain": "lorealpartnershop.com (UK/ES)",
+          "url": "https://uk.lorealpartnershop.com/en/redken/extreme-anti-snap-leave-in-treatment/GB884486453402.html",
+          "note": "L'Oréal-adjacent professional trade shop; shows GTIN 884486453402, corroborated by multiple independent EU retailer listings (e.g. mathissibiza.com, cosmeticclick.com, dubalcosmetics.com) that all embed the same code."
+        },
+        {
+          "tier": "C2",
+          "domain": "redken.eu (de-de)",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+          "note": "Round-4 evidence-gap-closure pass (2026-09-13), closing two gaps at once. redken.de redirects to this exact URL (www.redken.eu/de-de/...), the brand's German-market site -- tier C2 manufacturer-German page per this packet's own claim-authority hierarchy. (1) Presentation form: full-resolution product photography (filenames embed GTIN 884486453402, matching one of this record's two gtin_candidates exactly) shows an unambiguous black spray-trigger pump head with a horizontal atomizing nozzle on the 250 ml bottle -- not a lotion pump, not a flip-cap. Verdict: presentation_form = spray, confidence high. (2) Application stage (Gap 2): the page's 'GEBRAUCHSANWEISUNG & SICHERHEITSINFORMATIONEN' tab gives this verbatim German text (fetched 2026-09-13): \"Nach dem Extreme Shampoo und Conditioner anwenden. Ins handtuchtrockenen Haar geben. Nicht ausspuelen. Wie gewohnt stylen.\" -- \"Ins handtuchtrockenen Haar geben\" names the towel-dry stage explicitly, confirming the reference key's application_stage = ['towel_dry'] on a C2 manufacturer source (upgrading it from the C3 douglas.de-sourced frozen directions_of_use, which is silent on stage). See plans/leave-in-inci/research/gold-set/round-4/evidence-gap-closure.md items 3-4 for full detail."
+        }
+      ],
+      "raw_inci": "Aqua, Polyacrylamide, Phenoxyethanol, Amodimethicone, Arginine, Citric Acid, C13-14 Isoparaffin, Isopropyl Myristate, Parfum, Laureth-7, Xylose, Hydrolyzed Soy Protein, Trideceth-6, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Cetyl Alcohol, Cetrimonium Chloride, Behentrimonium Methosulfate, Benzyl Benzoate, Quaternium-33, Limonene, Benzyl Alcohol, Linalool, Potassium Sorbate, 2-Oleamido-1,3-Octadecanediol",
+      "normalized_ingredients": [
+        "AQUA",
+        "POLYACRYLAMIDE",
+        "PHENOXYETHANOL",
+        "AMODIMETHICONE",
+        "ARGININE",
+        "CITRIC ACID",
+        "C13-14 ISOPARAFFIN",
+        "ISOPROPYL MYRISTATE",
+        "PARFUM",
+        "LAURETH-7",
+        "XYLOSE",
+        "HYDROLYZED SOY PROTEIN",
+        "TRIDECETH-6",
+        "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+        "CETYL ALCOHOL",
+        "CETRIMONIUM CHLORIDE",
+        "BEHENTRIMONIUM METHOSULFATE",
+        "BENZYL BENZOATE",
+        "QUATERNIUM-33",
+        "LIMONENE",
+        "BENZYL ALCOHOL",
+        "LINALOOL",
+        "POTASSIUM SORBATE",
+        "2-OLEAMIDO-1,3-OCTADECANEDIOL"
+      ],
+      "rawInciSha256": "2f2fb1d8c62ea11ed91781923a056d3ceac38a210cb2484d0fdd857ec5768dfe",
+      "formulaFingerprintSha256": "ff9c329e18e2b241d246a71a4fd42d7882a03ae4b327574890318d341c8dc628",
+      "directions_of_use": "Auf einzelne brüchige Haarstellen oder auf dem ganzen Haar verteilen und einmassieren. Ohne ausspülen, direkt die Haare wie gewohnt stylen. Einfache Kämmbarkeit und geschmeidige Haare genießen!",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3",
+        "claim_tier_basis": "Exact-product German retailer page (douglas.de, Art. 117080 confirmed on page), the same source already used for this slot's frozen INCI. GTIN itself is unresolved for this slot (see known_conflicts), but the Douglas Art.-Nr. match is exact.",
+        "source_authority_tier": "C3",
+        "domain": "douglas.de",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "Captured this pass via reference-key/09-redken-extreme-anti-snap-leave-in-treatment.md (S9-dir). Rinse test: PASS — directions explicitly state \"Ohne ausspülen\"."
+      },
+      "claims": [
+        {
+          "claim_text": "Es stärkt und glättet die Schuppenschicht. Außerdem reduziert es Haarbruch und Spliss und bietet gleichzeitig einen Hitzeschutz.",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "redken.eu/de-de is Redken's genuine German-market manufacturer page (page title confirms „Prescription Redken Germany“). Newly found this pass — not previously in the reference-key lane, which only had redken.com (US/global).",
+          "domain": "redken.eu",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "Full Artikelbeschreibung, verbatim: „REDKEN Extreme Anti-Snap ist ein kräftigendes Leave-in Treatment. Es stärkt und glättet die Schuppenschicht. Außerdem reduziert es Haarbruch und Spliss und bietet gleichzeitig einen Hitzeschutz. Das Haar sieht bis zu 96% stärker und gesunder aus.“ No °C figure is given anywhere on this C2 page — the heat claim is generic („Hitzeschutz“ only), unlike Schwarzkopf/Olaplex/Neqi/Kevin Murphy which all give a figure."
+        },
+        {
+          "claim_text": "Das Haar sieht bis zu 96% stärker und gesunder aus.",
+          "claim_type": "repair_bond",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "redken.eu/de-de, same page.",
+          "domain": "redken.eu",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/extreme/extreme-anti-snap",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": true,
+          "note": "This is a different, C2-sourced strength/repair figure than the manufacturer's US-site „Reduces breakage by 73%*“ claim (T1 redken.com, English, explicitly a 3-product-system result per the manufacturer's own asterisk — excluded from claim_text here as English and as a routine/system-level rather than single-product result); the two figures (96% vs 73%) appear to be different claim campaigns/markets and are recorded separately, not merged."
+        },
+        {
+          "claim_text": "verleiht deinem Haar einen effektiven Hitzeschutz und legt sich wie eine schützende Glanzschicht um die Haarfasern",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "Exact-product German retailer page (douglas.de, Art. 117080 confirmed on page). Corroboration only — a clean C2 heat claim (generic, no figure) was independently found this pass on redken.eu/de-de (see sibling claim), so this C3 text is corroborating rather than sole-source, unlike Cantu/Olaplex where the same C3-only situation applies without any C1/C2 corroboration.",
+          "domain": "douglas.de",
+          "url": null,
+          "date": "2026-09-03",
+          "capture_method": "reused verbatim from reference-key/09-redken-extreme-anti-snap-leave-in-treatment.md (S9-claim); not independently re-fetched this pass.",
+          "creates_claim": false,
+          "note": "douglas.de also carries the attribute tags „Anti-Frizz, Hitzeschutz“ (see the humidity_frizz claim below)."
+        },
+        {
+          "claim_text": "Anti-Frizz",
+          "claim_type": "humidity_frizz",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "Exact-product German retailer page (douglas.de, Art. 117080 confirmed on page). No C1/C2 German source states a frizz/humidity claim for this product (redken.eu/de-de's own description text, captured verbatim above, makes no anti-frizz statement).",
+          "domain": "douglas.de",
+          "url": null,
+          "date": "2026-09-03",
+          "capture_method": "reused verbatim from reference-key/09-redken-extreme-anti-snap-leave-in-treatment.md (S9-claim); not independently re-fetched this pass.",
+          "creates_claim": false,
+          "note": "FLAGGED PER TASK STEP 2: C3-only attribute tag; redken.eu/de-de (C2) does not state an anti-frizz/humidity claim, so this cannot create the claim on its own."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "provisional_identity_conflict",
+      "known_conflicts": [
+        "GTIN unresolved: two independently-corroborated codes circulate — 884486453402 (L'Oréal partner-shop trade site plus multiple EU retailer listings) and 884486210777 (hautschutzengel.de, German). Neither source is douglas.de itself, which exposes no GTIN. Both candidates recorded; not merged or guessed. Most likely explanation is a packaging/batch-code version change (common for Redken SKUs), but this is not confirmed."
+      ],
+      "remaining_gap": "GTIN conflict not resolved — needs a physical-pack check or a douglas.de-native barcode capture. INCI itself is now corroborated by a second independent German source (hautschutzengel.de) with only minor list-order/tail variance.",
+      "notes": null
+    },
+    {
+      "slot": 10,
+      "archetype_role": "Bond-repair claim",
+      "brand": "Olaplex",
+      "exact_product_name": "N°.6 Bond Smoother",
+      "pack_size": "100 ml",
+      "gtin": null,
+      "gtin_candidates": [
+        "896364002602",
+        "896364002619"
+      ],
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T2",
+          "domain": "douglas.de",
+          "url": null,
+          "note": "Douglas Art. 1111439; original capture source (first ~13 ingredients cross-checked, exact match). Exact URL not preserved; a fresh fetch in this pass returned HTTP 403 (bot-blocked)."
+        },
+        {
+          "tier": "T3",
+          "domain": "incidecoder.com",
+          "url": null,
+          "note": "Full 46-ingredient list obtained via search-engine cache only. A direct WebFetch of incidecoder.com redirected (HTTP 301) to a lookalike domain (\"inkeedecoder.com\") that was NOT followed as a safety precaution — treated as an untrusted/suspicious redirect, not the genuine incidecoder.com. The search-cached text is used as T3 corroboration instead."
+        },
+        {
+          "tier": "T2/T1",
+          "domain": "barcodespider.com / mathissibiza.com / olaplex.com",
+          "url": "https://mathissibiza.com/olaplex/15549-olaplex-n-6-bond-smoother-100ml-896364002602.html",
+          "note": "Corroborates GTIN 896364002602 (older/current US-prefix packaging code) across an independent Spanish EU retailer and a barcode database."
+        },
+        {
+          "tier": "T3",
+          "domain": "ebay.com (multiple listings)",
+          "url": null,
+          "note": "Multiple independent listings label GTIN 896364002619 as \"NEW PACKAGING\" for the same 3.3 oz / 100 ml product."
+        },
+        {
+          "tier": "T2/C5",
+          "domain": "douglas.de + olaplex.com",
+          "url": "https://www.douglas.de/de/p/1111439",
+          "note": "Round-4 evidence-gap-closure pass (2026-09-13), presentation-form finding: douglas.de's own packshot (Art. 1111439, exact Douglas article number already frozen in this record, 100 mL confirmed on-label) shows a squat opaque airless-pump bottle with a flat push-dome top -- no spray nozzle, no flip-cap, consistent with a cream/lotion pump dispenser. Corroborated by olaplex.com's own product copy (non-German-market -- tier C5, record-only, but this record's product identity is already cross-market-verified per the 2026-09-10 T14 amendment above: 46-ingredient INCI set-for-set match + EAN corroboration), which describes the product verbatim as 'An anti-frizz styling cream to smooth, hydrate, and reduce breakage' with directions 'Apply one pump to clean, damp hair.' Verdict: presentation_form = cream, confidence high -- matches the round-3 reference-key value already on file for this slot. See plans/leave-in-inci/research/gold-set/round-4/evidence-gap-closure.md item 5 for full detail."
+        }
+      ],
+      "raw_inci": "Water, Cetearyl Alcohol, Dimethicone, Isohexadecane, Coco-Caprylate, Neopentyl Glycol Diheptanoate, Behentrimonium Chloride, Isododecane, Phenyl Trimethicone, Propanediol, Bis-Aminopropyl Diglycol Dimaleate, Parfum, Cetrimonium Chloride, Phenoxyethanol, Glyceryl Stearate, Isopropyl Alcohol, Hydroxyethylcellulose, Hydroxypropyl Guar, Sodium Stearoyl Lactylate, Hydroxypropyl Cyclodextrin, Hexyl Cinnamal, Limonene, Citral, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol, Disodium EDTA, Linalool, Citronellol, Iodopropynyl Butylcarbamate, Hydroxycitronellal, Etidronic Acid, Tocopherol, Geraniol, Potassium Sorbate, Helianthus Annuus Seed Oil, Phytantriol, Sodium Benzoate, Pseudozyma Epicola/Camellia Sinensis Seed Oil Ferment Extract Filtrate, Tocopheryl Acetate, Vitis Vinifera Seed Oil, Aloe Barbadensis Leaf Juice, Panthenol, Citric Acid, Gigartina Stellata Extract, Chondrus Crispus Extract, Ascorbic Acid, Cocos Nucifera Oil",
+      "normalized_ingredients": [
+        "WATER",
+        "CETEARYL ALCOHOL",
+        "DIMETHICONE",
+        "ISOHEXADECANE",
+        "COCO-CAPRYLATE",
+        "NEOPENTYL GLYCOL DIHEPTANOATE",
+        "BEHENTRIMONIUM CHLORIDE",
+        "ISODODECANE",
+        "PHENYL TRIMETHICONE",
+        "PROPANEDIOL",
+        "BIS-AMINOPROPYL DIGLYCOL DIMALEATE",
+        "PARFUM",
+        "CETRIMONIUM CHLORIDE",
+        "PHENOXYETHANOL",
+        "GLYCERYL STEARATE",
+        "ISOPROPYL ALCOHOL",
+        "HYDROXYETHYLCELLULOSE",
+        "HYDROXYPROPYL GUAR",
+        "SODIUM STEAROYL LACTYLATE",
+        "HYDROXYPROPYL CYCLODEXTRIN",
+        "HEXYL CINNAMAL",
+        "LIMONENE",
+        "CITRAL",
+        "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL",
+        "DISODIUM EDTA",
+        "LINALOOL",
+        "CITRONELLOL",
+        "IODOPROPYNYL BUTYLCARBAMATE",
+        "HYDROXYCITRONELLAL",
+        "ETIDRONIC ACID",
+        "TOCOPHEROL",
+        "GERANIOL",
+        "POTASSIUM SORBATE",
+        "HELIANTHUS ANNUUS SEED OIL",
+        "PHYTANTRIOL",
+        "SODIUM BENZOATE",
+        "PSEUDOZYMA EPICOLA/CAMELLIA SINENSIS SEED OIL FERMENT EXTRACT FILTRATE",
+        "TOCOPHERYL ACETATE",
+        "VITIS VINIFERA SEED OIL",
+        "ALOE BARBADENSIS LEAF JUICE",
+        "PANTHENOL",
+        "CITRIC ACID",
+        "GIGARTINA STELLATA EXTRACT",
+        "CHONDRUS CRISPUS EXTRACT",
+        "ASCORBIC ACID",
+        "COCOS NUCIFERA OIL"
+      ],
+      "rawInciSha256": "3eb793e5789da28d80295f59c6625793f3260c45f1af255221a9f0faf22bad86",
+      "formulaFingerprintSha256": "297ac0d9541987b0d988781f61fbb05fc01e6e966fd150cca4c1bba96fb12aa3",
+      "directions_of_use": "Apply one pump to clean, damp hair. Comb through & style as desired.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2-equivalent (judgment)",
+        "claim_tier_basis": "T1 manufacturer page (olaplex.com), but region is not confirmed DE/EU-specific, so it does not cleanly satisfy R11's C2 definition. No German-language directions text found.",
+        "source_authority_tier": "C2-equivalent (judgment)",
+        "domain": "olaplex.com",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "English-language manufacturer text. Captured this pass via reference-key/10-olaplex-no6-bond-smoother.md (S10-dir), which also cites the manufacturer FAQ verbatim: \"Nº.6 Bond Smoother® is an out-of-shower leave-in treatment and styling product\"; \"You can use Nº.6 Bond Smoother® on either damp or dry hair\"; \"...great when used before air drying or blow drying. It can also be used on dry hair to refresh or touch up a style.\" Rinse test: PASS — no rinse instruction anywhere; explicitly named an out-of-shower leave-in by the manufacturer's own FAQ."
+      },
+      "claims": [
+        {
+          "claim_text": "bis zu einer Hitze von 232 °C vor Stylingschäden geschützt",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C3",
+          "claim_tier_basis": "German-language text attributed to the T2 German retailer capture (douglas.de, Art. 1111439 confirmed on page) per reference-key/10-olaplex-no6-bond-smoother.md. This pass explicitly searched for a C1/C2 Olaplex German-market source per the task's instruction (checking for olaplex.de) and found NONE: olaplex.com (T1) is a US/global English site with no German region; the only 'EU' Olaplex storefront located (es.olaplex.com/en/products/olaplex-n-6-bond-smoother-eu) is Spain-hosted, English-language, and not Germany-specific. No olaplex.de domain resolves to a genuine manufacturer site.",
+          "domain": "douglas.de",
+          "url": null,
+          "date": "2026-09-03",
+          "capture_method": "reused verbatim from reference-key/10-olaplex-no6-bond-smoother.md (S10-claim); not independently re-fetched live this pass (a fresh douglas.de fetch was already noted as bot-blocked/403 in the source freeze pass).",
+          "creates_claim": false,
+          "note": "FLAGGED PER TASK STEP 2 — this is the exact case named in the task brief. „450ºF/232ºC heat protection“ also appears on olaplex.com (T1, English, C5, non-German-market, excluded from claim_text) and is echoed identically in third-party retail copy (e.g. Douglas, Amazon.de). No C1/C2 German-market Olaplex source exists to CREATE this claim; it is recorded here as a C3-only claim that can only corroborate, never establish, per the claim-authority rule."
+        },
+        {
+          "claim_text": "protects against breakage and heat up to 450°F/232°C",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2_cross_market_verified",
+          "claim_tier_basis": "T14 (Nick's ruling, 2026-09-10, standard §2.4.1 rule 7): a non-German-market manufacturer page is admitted as claim-creating because BOTH of rule 7's prongs are verified for this exact product. (a) Identity verified: the manufacturer's own published 46-ingredient INCI list (olaplex.com and es.olaplex.com) was diffed set-for-set against this record's frozen douglas.de-sourced capture (above) — the two ingredient sets are identical; the only difference is list-serialization order, not composition. Separately, EAN 850018802796 is confirmed for this exact product at the German retailer xhair.eu (structured product data) and corroborated internationally at upcitemdb; douglas.de's own EAN could not be extracted this pass (bot-blocked on refetch, per source_urls above), and a second barcode, 896364002961, exists and is recorded only as a likely packaging-generation split — an unconfirmed inference, not adopted as a second confirmed GTIN. (b) Corroboration: douglas.de (C3), already frozen above as this record's own claim, independently carries the same 232 °C heat-protection statement. Both rule-7 prongs clear, so this page's claim is admitted at tier C2_cross_market_verified rather than staying C5. Contrast the guarding counter-example named in §2.4.1 rule 7 itself: Cantu's US and German-pack formulas are documented as genuinely different (gold-set slot 3 known_conflicts), so identity verification would fail clause (a) for Cantu — this exception does not generalise to every foreign manufacturer page, only to one whose identity is independently nailed down the way this product's is.",
+          "domain": "olaplex.com / es.olaplex.com",
+          "url": "https://olaplex.com/products/olaplex-n-6-bond-smoother; https://es.olaplex.com/en/products/olaplex-n-6-bond-smoother-eu",
+          "date": "2026-09-10",
+          "capture_method": "T14 adjudication pass (2026-09-10): both manufacturer pages fetched and confirmed byte-identical on the KEY BENEFITS/description heat-protection sentence (\"protects against breakage and heat up to 450°F/232°C\"); identity verification performed against this record's own already-frozen douglas.de INCI capture and GTIN evidence — no new formula or directions research, no re-freeze of any other field.",
+          "creates_claim": true,
+          "note": "T14 (2026-09-10) resolves this record's prior claim_authority_gap. Before this ruling, the only heat-protection text for this product sat at C3 (douglas.de, above) and C5 (olaplex.com, non-German-market) with no C1/C2 source, so §13.3 rule 4 set provides_heat_protection = false and the record routed to review under claim_authority_gap. With identity verified and C3/C4 corroboration confirmed per §2.4.1 rule 7, the manufacturer's own claim is now admitted (tier C2_cross_market_verified): the claim exists, dimensions.heat_protection_evidence_state moves not_claimed -> claim_only (this formula's silicones — Dimethicone, Phenyl Trimethicone — are generic, not L9 members, so formula_plausible is not reached), and profile.specialist_functions.provides_heat_protection moves false -> true. The claim_authority_gap review trigger is resolved (dated 2026-09-10); the record now routes under the standing heat_claim_without_l9_member trigger instead, the same trigger every other claim-only-without-L9 gold-set record already carries. focus.primary/focus.secondary are unaffected: the heat_styling focus route still requires application_stage to include pre_heat (§10.2), and this record's frozen directions_of_use supports only towel_dry, so that route still fails and focus stays smoothing (T13). See leave-in-classification-standard.v0.4.md §21.3 (T14) and reference-key-v4/transform-notes.md §14 for the full ruling."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "provisional_identity_conflict",
+      "known_conflicts": [
+        "GTIN unresolved: 896364002602 (current/legacy US-prefix packaging, 2-source corroborated) vs 896364002619 (\"new packaging\" per multiple eBay listings). douglas.de itself exposes neither. Both are US company-prefix (896364) codes; no DE-specific EAN found. Not merged or guessed.",
+        "Ingredient count: gold-set-candidates.md's lane report describes 47 ingredients; this pass's full capture (T3 incidecoder, cross-checked against the T2 douglas.de-sourced opening segment) totals 46. Treated as a minor tail-count variance, not a structural conflict — the first 13 ingredients (through Cetrimonium Chloride) match the original T2 capture exactly."
+      ],
+      "remaining_gap": "GTIN conflict not resolved. Full-list source for positions 14-46 is T3 only in this pass (T2 douglas.de re-fetch was blocked); the bond-claim active (Bis-Aminopropyl Diglycol Dimaleate) and full LGN-cream architecture are confirmed either way.",
+      "notes": null
+    },
+    {
+      "slot": 11,
+      "archetype_role": "Sensitive/fragrance-free fiber leave-in",
+      "brand": "Balea",
+      "exact_product_name": "Leichtkämmspray Pure Styling",
+      "pack_size": "200 ml",
+      "gtin": "4067796148855",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T2",
+          "domain": "dm.de",
+          "url": null,
+          "note": "dm-Art. 3042625; \"Ohne Parfüm\" badge captured on-page. Exact URL not preserved."
+        }
+      ],
+      "raw_inci": "Aqua, Betaine, Propylene Glycol, Cetrimonium Chloride, Inulin, Panthenol, Hydroxyacetophenone, 1,2-Hexanediol, Caprylyl Glycol, Citric Acid, Sodium Hydroxide",
+      "normalized_ingredients": [
+        "AQUA",
+        "BETAINE",
+        "PROPYLENE GLYCOL",
+        "CETRIMONIUM CHLORIDE",
+        "INULIN",
+        "PANTHENOL",
+        "HYDROXYACETOPHENONE",
+        "1,2-HEXANEDIOL",
+        "CAPRYLYL GLYCOL",
+        "CITRIC ACID",
+        "SODIUM HYDROXIDE"
+      ],
+      "rawInciSha256": "9de11a3f4c3972170c2f06aa27e93e9c5c7345b1f3a75342d8388d6c99b43c2e",
+      "formulaFingerprintSha256": "ef2af7781e942a7f0bff9398d89bd2ef8221745d74106516a162b6ab9e9b7328",
+      "directions_of_use": "Auf nasses Haar aufsprühen, kurz einwirken lassen, kämmen und wie gewohnt frisieren. Produkt muss nicht wieder ausgespült werden.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C3",
+        "claim_tier_basis": "Exact-GTIN German retailer page (dm.de).",
+        "source_authority_tier": "C3",
+        "domain": "dm.de",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "dm-Art. 3042625, GTIN 4067796148855 confirmed on page; \"Ohne Parfüm\" badge also captured on-page. Expanded this pass from a partial quote (second sentence only) to the full verbatim text via reference-key/11-balea-leichtkaemmspray-pure-styling.md (S11-dir). Rinse test: PASS — directions explicitly state \"Produkt muss nicht wieder ausgespült werden.\""
+      },
+      "claims": [
+        {
+          "claim_text": "Kein Verkleben oder Beschweren",
+          "claim_type": "finish_weight",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "Balea is dm's own private-label brand; dm.de is treated as the manufacturer/brand-owner's German-market product page per the claim-authority house-brand rule.",
+          "domain": "dm.de",
+          "url": "https://www.dm.de/balea-leichtkaemmspray-pure-styling-p4067796148855.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "Full verbatim Produktbeschreibung re-confirmed live: „Kopfhautpflege durch prebiotisches Inulin“ / „Natürlicher Glanz & verbesserte Kämmbarkeit“ / „Kein Verkleben oder Beschweren“ bullets, plus „Das Leichtkämmspray Pure Styling von Balea sorgt für geschmeidig gepflegtes Haar und erleichtert das Kämmen erheblich. Die Formel bietet eine verbesserte Kämmbarkeit, ohne das Haar zu verkleben oder zu beschweren. Prebiotisches Inulin unterstützt die Pflege der Kopfhaut kann zu einem angenehmen Haarbild beitragen. Zudem verleiht das Spray dem Haar einen natürlichen Glanz und eine angenehme Geschmeidigkeit.“ GTIN 4067796148855 confirmed on page, matches packet. No heat-protection claim (actively checked, absent), no humidity/frizz claim, no repair/bond claim, no curl claim."
+        },
+        {
+          "claim_text": "Ohne Parfüm",
+          "claim_type": "sensitive_fragrance_free",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "dm.de house-brand page, same as above; badge shown at the top of the product page alongside „Vegan“.",
+          "domain": "dm.de",
+          "url": "https://www.dm.de/balea-leichtkaemmspray-pure-styling-p4067796148855.html",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "Pack/page badge „Ohne Parfüm“, re-confirmed live. Per the standard's own hard prohibition already recorded elsewhere in this research lane: “no listed fragrance signal” / “Ohne Parfüm” is the manufacturer's claim, not proof of fragrance-free, allergy-safe, or hypoallergenic status — recorded as the claim only, not as a tolerance conclusion."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "verified",
+      "known_conflicts": [],
+      "remaining_gap": "None re-opened this pass.",
+      "notes": "No re-verification requested for this slot; carried forward unchanged from gold-set-candidates.md."
+    },
+    {
+      "slot": 12,
+      "archetype_role": "Boundary / source-conflict",
+      "brand": "Kevin Murphy",
+      "exact_product_name": "Young.Again Oil",
+      "pack_size": "100 ml",
+      "gtin": null,
+      "gtin_candidates": [
+        "9339341020356",
+        "9339341001744"
+      ],
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T3+T2x2",
+          "domain": "(original lane report, not independently reproduced)",
+          "url": null,
+          "note": "gold-set-candidates.md cites 3 INCI sources (T3 + 2x T2 German retailers) with the verbatim text held only in a separate lane-report file not available to this pass; only the architecture summary (\"Cyclopentasiloxane leads, Water mid-list ~pos. 15\") was available here."
+        },
+        {
+          "tier": "T3",
+          "domain": "incidecoder.com (via search cache)",
+          "url": null,
+          "note": "New capture this pass. Direct fetch avoided: incidecoder.com redirected to a suspicious lookalike domain (\"inkeedecoder.com\"), not followed. Search-cached text used instead. This capture is the international/US-market listing — it contains HICC (Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde), consistent with the EU/US divergence already flagged in gold-set-candidates.md, and places Water/Aqua at position 23, not ~15 as the original lane report describes."
+        },
+        {
+          "tier": "T3",
+          "domain": "upcitemdb.com",
+          "url": "https://www.upcitemdb.com/upc/9339341001744",
+          "note": "GTIN 9339341001744 corroborated here and via idealo.co.uk listings."
+        }
+      ],
+      "raw_inci": "Cyclopentasiloxane, Dimethicone, Dimethiconol, Bis-Cetearyl Amodimethicone, Helichrysum Stoechas Extract, Carthamus Tinctorius (Safflower) Seed Oil, Pyrus Malus (Apple) Fruit Extract, Saccharum Officinarum (Sugarcane) Extract, Citrus Limon (Lemon) Peel Oil, Camellia Sinensis Leaf Extract, Citrus Limon (Lemon) Fruit Extract, Vitis Vinifera (Grape) Seed Extract, Ginkgo Biloba Leaf Extract, Hydrolyzed Soy Protein, Hexapeptide-11, Cyclohexasiloxane, Glycerin, Cetearyl Alcohol, Betaine, Myristyl Myristate, Quaternium-91, Vanillyl Butyl Ether, Water (Aqua), Behentrimonium Chloride, Butylene Glycol, Hexylene Glycol, Ethylhexyl Methoxycinnamate, BHT, Phenoxyethanol, Potassium Sorbate, Fragrance (Parfum), Linalool, Limonene, Geraniol, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde, Violet 2 (CI 60725)",
+      "normalized_ingredients": [
+        "CYCLOPENTASILOXANE",
+        "DIMETHICONE",
+        "DIMETHICONOL",
+        "BIS-CETEARYL AMODIMETHICONE",
+        "HELICHRYSUM STOECHAS EXTRACT",
+        "CARTHAMUS TINCTORIUS (SAFFLOWER) SEED OIL",
+        "PYRUS MALUS (APPLE) FRUIT EXTRACT",
+        "SACCHARUM OFFICINARUM (SUGARCANE) EXTRACT",
+        "CITRUS LIMON (LEMON) PEEL OIL",
+        "CAMELLIA SINENSIS LEAF EXTRACT",
+        "CITRUS LIMON (LEMON) FRUIT EXTRACT",
+        "VITIS VINIFERA (GRAPE) SEED EXTRACT",
+        "GINKGO BILOBA LEAF EXTRACT",
+        "HYDROLYZED SOY PROTEIN",
+        "HEXAPEPTIDE-11",
+        "CYCLOHEXASILOXANE",
+        "GLYCERIN",
+        "CETEARYL ALCOHOL",
+        "BETAINE",
+        "MYRISTYL MYRISTATE",
+        "QUATERNIUM-91",
+        "VANILLYL BUTYL ETHER",
+        "WATER (AQUA)",
+        "BEHENTRIMONIUM CHLORIDE",
+        "BUTYLENE GLYCOL",
+        "HEXYLENE GLYCOL",
+        "ETHYLHEXYL METHOXYCINNAMATE",
+        "BHT",
+        "PHENOXYETHANOL",
+        "POTASSIUM SORBATE",
+        "FRAGRANCE (PARFUM)",
+        "LINALOOL",
+        "LIMONENE",
+        "GERANIOL",
+        "HYDROXYISOHEXYL 3-CYCLOHEXENE CARBOXALDEHYDE",
+        "VIOLET 2 (CI 60725)"
+      ],
+      "rawInciSha256": "76af4a98c3f67aa751bed0599aaa83b3cd0707252e97a9622a4ec78505fc02d3",
+      "formulaFingerprintSha256": "a88d2f48fc6ad274159cc192e0386a260da0b15a1db37b74096d5eed130446c8",
+      "directions_of_use": "APPLY. INFUSE. DRY. Apply YOUNG.AGAIN to freshly washed hair and before any styling products. Once dried, you can apply a small amount of YOUNG.AGAIN to dry hair to increase the smoothness of the hair and remove any flyaway strands.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2-equivalent (judgment)",
+        "claim_tier_basis": "T1 manufacturer page (kevinmurphy.com.au), but the domain is Australian-region, not DE/EU-specific, so it does not cleanly satisfy R11's C2 definition. No German-language directions text found.",
+        "source_authority_tier": "C2-equivalent (judgment)",
+        "domain": "kevinmurphy.com.au",
+        "url": null,
+        "date": "2026-09-03",
+        "note": "English-language manufacturer text (\"USE.ME\" section). Captured this pass via reference-key/12-kevin-murphy-young-again-oil.md (S12-dir). Rinse test: PASS — no rinse instruction; applied to freshly washed hair before styling, and reapplied to dry hair. This directions read is what makes this slot's boundary case genuine: the exposure regime is leave-on (per directions) while the frozen architecture is silicone-leading/anhydrous-serum-like (per formula) — see this slot's known_conflicts and reference-key notes; directions capture does not resolve or touch that tension, and no classification is made here."
+      },
+      "claims": [
+        {
+          "claim_text": "Verwende es täglich, um trockenem, geschädigtem und brüchigem Haar den Kampf anzusagen und deine Haarlängen vor Umwelteinflüssen und Hitzeschäden zu schützen.",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2-equivalent (judgment)",
+          "claim_tier_basis": "kevinmurphy.at is Kevin Murphy's own Austrian retail site: German-language, brand-owned, EU. NOT literally German-market (Austria, not Germany) so does not cleanly satisfy the C2 definition; treated as C2-equivalent per judgment, consistent with this packet's existing precedent for other near-market manufacturer pages (slots 5, 7, 10). This pass explicitly investigated whether kevinmurphy.de is a genuine German site per the task's instruction: it is NOT — kevinmurphy.de redirects to kevinmurphy.com.au (the Australian/global site), and the specific product URL there 404s. No genuine German-market Kevin Murphy page exists.",
+          "domain": "kevinmurphy.at",
+          "url": "https://kevinmurphy.at/products/kevin-murphy-youngagain-oil",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "FLAGGED PER TASK STEP 2 (Kevin Murphy has no .de site — honest tiering). Full verbatim description: „Die ultimative tägliche Pflege für geschädigte und lange Haare - YOUNG.AGAIN ist ein schwereloses Haaröl, das nicht fettet aus unserer REJUVENATE-Serie. Das intensiv pflegende Haaröl ist mit Immortelle angereichert, das der Oxidation und damit dem Alterungsprozess der Haare entgegenwirkt. Es bietet eine Tiefenpflege, die das Haar weich und geschmeidig macht und ihm neuen Glanz verleiht. Verwende es täglich, um trockenem, geschädigtem und brüchigem Haar den Kampf anzusagen und deine Haarlängen vor Umwelteinflüssen und Hitzeschäden zu schützen.“ This is a general heat-damage-protection statement with NO °C figure — unlike the English kevinmurphy.com.au T1 page („heat protection up to 200°F / 93°C“, C5, non-German, excluded from claim_text here per the verbatim-German-only constraint)."
+        },
+        {
+          "claim_text": "YOUNG.AGAIN ist ein schwereloses Haaröl, das nicht fettet",
+          "claim_type": "finish_weight",
+          "source_authority_tier": "C2-equivalent (judgment)",
+          "claim_tier_basis": "kevinmurphy.at, same page and same basis as above.",
+          "domain": "kevinmurphy.at",
+          "url": "https://kevinmurphy.at/products/kevin-murphy-youngagain-oil",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch",
+          "creates_claim": false,
+          "note": "Recorded at the same C2-equivalent(judgment)/Austria tier as the heat claim above; not a clean DE-market C1/C2 source, so flagged the same way per the task's honest-tiering instruction."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "provisional_formula_conflict",
+      "known_conflicts": [
+        "GTIN unresolved: 9339341020356 (gold-set-candidates.md, single source, origin not independently re-traced this pass) vs 9339341001744 (upcitemdb.com + idealo.co.uk, multiply corroborated this pass). Not merged or guessed.",
+        "Formula (EU/US, pre-existing per gold-set-candidates.md): the international listing captured this pass contains HICC (EU-restricted fragrance allergen); the original lane report states both German retailer lists it consulted omit HICC. This pass could NOT independently reproduce a clean DE-market verbatim string — the raw_inci above is the international/US capture, explicitly not claimed as DE-safe.",
+        "Token-level uncertainty: one ingredient was returned as \"Vinyl Butyl Ether\" in one search extraction and \"Vanillyl Butyl Ether\" in another (both citing incidecoder-derived text). \"Vanillyl Butyl Ether\" was selected as the far more chemically plausible cosmetic ingredient (a known cooling/fragrance agent), but the discrepancy was not resolved against a primary page in this pass.",
+        "Ingredient position: this capture places Water/Aqua at position 23; the original lane report describes it at \"~pos. 15\". Both agree the architecture is silicone-leading / anhydrous-serum-like despite leave-in usage (the G0 boundary point this slot exists to test) — position variance does not change that reading."
+      ],
+      "remaining_gap": "GTIN conflict unresolved. DE-market-specific (HICC-free) verbatim INCI not independently reproduced this pass — the standing DE-safe reference remains gold-set-candidates.md's own (unreproduced-here) lane-report capture. Token spelling of one ingredient (Vanillyl vs Vinyl Butyl Ether) unresolved. All four issues route this record to human review per standard §14.",
+      "notes": null
+    },
+    {
+      "slot": 13,
+      "archetype_role": "Boundary/identity-trap secondary (name-mismatch + near-duplicate-GTIN sibling)",
+      "brand": "Neqi",
+      "exact_product_name": "Diamond Glass Ultimate Styling Spray",
+      "pack_size": "180 ml",
+      "gtin": "4063528094575",
+      "gtin_candidates": null,
+      "market": "DE",
+      "formula_capture_date": "2026-09-03",
+      "source_urls": [
+        {
+          "tier": "T1",
+          "domain": "neqi-hair.com",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "note": "Manufacturer page; full INCI and directions captured this pass."
+        },
+        {
+          "tier": "T2",
+          "domain": "dm.de",
+          "url": "https://www.dm.de/neqi-leave-in-spray-diamond-glass-ultimate-p4063528094575.html",
+          "note": "Confirms GTIN; dm.de names the product \"Leave-In Spray Diamond Glass Ultimate\" — the naming divergence is the identity trap this entry exists to test."
+        },
+        {
+          "tier": "T2",
+          "domain": "rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-neqi-diamond-glass-ultimate-styling-spray/p/4063528094575",
+          "note": "Same GTIN, JS-rendered page could not be fetched in this pass (loader-only content returned) but the URL slug confirms the GTIN/name pairing."
+        },
+        {
+          "tier": "T2",
+          "domain": "galeria.de",
+          "url": "https://www.galeria.de/produkt/nnneqi-diamond-glass-ultimate-styling-spray-4063528094575",
+          "note": "Same GTIN, corroborating a third independent DE retailer; direct fetch returned HTTP 403 (bot-blocked) but the URL slug is a third independent confirmation of the GTIN/name pairing."
+        }
+      ],
+      "raw_inci": "Aqua [Water], Dipropylene Glycol, Gardenia Taitensis Flower Extract, Lycium Barbarum Fruit Extract, Malva Sylvestris (Mallow) Extract, Pentylene Glycol, Polysilicone-29, VP/Methacrylamide/Vinyl Imidazole Copolymer, Ethylhexylglycerin, Hydroxyacetophenone, Silicone Quaternium-18, Trideceth-6, Trideceth-12, Propylene Glycol, Glycerin",
+      "normalized_ingredients": [
+        "AQUA [WATER]",
+        "DIPROPYLENE GLYCOL",
+        "GARDENIA TAITENSIS FLOWER EXTRACT",
+        "LYCIUM BARBARUM FRUIT EXTRACT",
+        "MALVA SYLVESTRIS (MALLOW) EXTRACT",
+        "PENTYLENE GLYCOL",
+        "POLYSILICONE-29",
+        "VP/METHACRYLAMIDE/VINYL IMIDAZOLE COPOLYMER",
+        "ETHYLHEXYLGLYCERIN",
+        "HYDROXYACETOPHENONE",
+        "SILICONE QUATERNIUM-18",
+        "TRIDECETH-6",
+        "TRIDECETH-12",
+        "PROPYLENE GLYCOL",
+        "GLYCERIN"
+      ],
+      "rawInciSha256": "6f1438b205be65c3dba30c91dea0e2875aeed6965d0c8449f02fa79eec782f63",
+      "formulaFingerprintSha256": "0fc43a9c7ee30eef3b6d48ed3c15c069b6777f48b7f0b4aa7a865510591ad2ce",
+      "directions_of_use": "Das Haar in Abschnitte unterteilen. Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen. Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+      "directions_status": "captured",
+      "directions_source": {
+        "claim_tier": "C2",
+        "claim_tier_basis": "Manufacturer page with a German-language \"ANWENDUNG\" section (neqi-hair.com).",
+        "source_authority_tier": "C2",
+        "domain": "neqi-hair.com",
+        "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+        "date": "2026-09-03",
+        "note": "Already verbatim (numbered steps 1-3 combined into prose) per reference-key/13-neqi-diamond-glass-ultimate-styling-spray.md (S13-dir); unchanged this pass. Rinse test: PASS — no rinse instruction; applied to towel-dry hair, then blow-dried under tension."
+      },
+      "claims": [
+        {
+          "claim_text": "Es kombiniert Styling mit intensivem Hitzeschutz bis 230°",
+          "claim_type": "heat_protection",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "neqi-hair.com is Neqi's own manufacturer site with a full German-language product page (BESCHREIBUNG/ANWENDUNG/INHALTSSTOFFE), matching this packet's existing precedent (directions_source already treats this domain as C2).",
+          "domain": "neqi-hair.com",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "Full verbatim BESCHREIBUNG, re-confirmed live: „Das NEQI Diamond Glass Ultimate Styling Spray verleiht dem Haar maximalen Feuchtigkeitsschutz und ultimativen Glanz. Es kombiniert Styling mit intensivem Hitzeschutz bis 230°, reduziert Frizz spürbar und schützt das Haar langanhaltend vor Feuchtigkeit – ohne es zu beschweren.“ Vorteile bullet: „Styling + intensiver Hitzeschutz (bis 230°) in einem“. Unit not spelled out on page („230°“, no °C/°F marker) — captured exactly as written; presumed Celsius by German convention but not asserted. Corroborated at C3 by a „Hitzeschutz“ badge on dm.de (GTIN 4063528094575 confirmed on page, reference-key S13-claim, not independently re-fetched this pass)."
+        },
+        {
+          "claim_text": "Starker Anti-Frizz-Effekt",
+          "claim_type": "humidity_frizz",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "neqi-hair.com, same page.",
+          "domain": "neqi-hair.com",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "One of six „Vorteile“ bullets on the page; also: „Wasserabweisender Effekt“; „Feuchtigkeitsschutz“; and in the main description, „reduziert Frizz spürbar und schützt das Haar langanhaltend vor Feuchtigkeit“."
+        },
+        {
+          "claim_text": "Ultra-leichte Textur ohne Beschweren",
+          "claim_type": "finish_weight",
+          "source_authority_tier": "C2",
+          "claim_tier_basis": "neqi-hair.com, same page.",
+          "domain": "neqi-hair.com",
+          "url": "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray",
+          "date": "2026-09-04",
+          "capture_method": "rendered browser fetch (live re-confirmation this pass)",
+          "creates_claim": true,
+          "note": "Vorteile bullet; corroborated by the main description's closing clause „– ohne es zu beschweren“. No hold/„Halt” claim anywhere on the page, consistent with reference-key's existing negative finding."
+        }
+      ],
+      "claims_status": "present",
+      "identity_status": "verified_with_minor_source_difference",
+      "known_conflicts": [
+        "Name-based misclassification trap: dm.de lists this product as \"Leave-In Spray Diamond Glass Ultimate\"; the manufacturer (neqi-hair.com) and Galeria both call it \"Diamond Glass Ultimate Styling Spray\". Same GTIN across all three; name differs by retailer.",
+        "Near-duplicate-GTIN sibling: gold-set-candidates.md records a sibling SKU one ingredient away at GTIN 4063528078469. Not independently re-fetched or verified in this pass — carried forward as a flagged trap only, not confirmed."
+      ],
+      "remaining_gap": "Sibling SKU 4063528078469 not independently verified in this pass (out of the two named gap categories for this freeze pass). An earlier general web-search snippet showed a slightly different ingredient order/omission (missing the VP/Methacrylamide/Vinyl Imidazole Copolymer entry) versus this manufacturer-page capture; the manufacturer page is treated as authoritative and the snippet as a truncation artifact, not a conflict.",
+      "notes": null
+    }
+  ]
+}

@@ -1,0 +1,2650 @@
+{
+  "key_version": "reference-key-2026-09-05-r4",
+  "derived_from_run": "reference-key-2026-09-04-r3",
+  "category_standard_version": "leave-in-inci-v0.4",
+  "model_version": "leave-in-matching-v0.4",
+  "envelope_version": "leave-in-research-envelope-v0.4",
+  "lane": "category-developer reference key",
+  "round": 3,
+  "projection_only": true,
+  "generated_at": "2026-09-05",
+  "transform": {
+    "authority": "Nick's model-trim rulings T1-T10, 2026-09-05, and T11-T13, 2026-09-10 (docs/research/leave-in-inci/v1.0/leave-in-classification-standard.v0.4.md §21.3)",
+    "kind": "mechanical projection of the round-3 reference key onto the v0.4 model, amended same-day for T9, amended same-day again for T10, amended 2026-09-10 for T11, amended 2026-09-10 for T12, amended 2026-09-10 for T13 (the one amendment in this list that is a re-derivation on four records, not a mechanical carrier move)",
+    "re_classification_performed": false,
+    "web_research_performed": false,
+    "evidence_re_judged": false,
+    "rules": [
+      "T1 — SLIP dropped as a property; the observation is carried inside conditioning_potential.absorbed_slip_observation, restated as the M1-contributor reading the v0.3 anchors encoded. No dependent value changes: texture_fit rows 3-5 and the detangling focus row read the same observation at the same thresholds.",
+      "T2 — SFR dropped as a scored dimension; product-level smoothing_route carries a typed value derived from the recorded SFR + §6 mechanism evidence, with the v0.3 SFR object retained verbatim under derived_from_sfr.",
+      "T3 — dose_sensitivity removed entirely, together with its §18 caution string. The FORM two_phase shake caution and the §14 two-phase review trigger are untouched.",
+      "T4 — scalp_application_fit removed from every profile, together with both its §18 strings and its review triggers.",
+      "T5 — the six demoted flags collapse into one hinweise record listing only fired flags; r3_state and R3's review routing are carried even when the state is `none`.",
+      "T6 — profile.repair_support_level added, derived by §10.3.2's fixed rule from repair_surface_film + conditioning_level + product evidence. All 11 in-category records resolve to `low`.",
+      "T7 — hold_route_state.manufacturer_hold_level added. No product in the frozen claims[] carries a hold level at C1/C2, so the field is null on all 13; slot 7's C5 „Hold 3/5\" is recorded as a tier-stamped trace observation that cannot populate it.",
+      "T8 — a review-surface ruling with no record consequence: the lean-profile echo fields are unchanged in this key and are annotated rather than separately reviewed in the Lab.",
+      "T9 — humidity_resistance_evidence_state (HUM) and specialist_functions.humidity_resistance removed entirely from every record. Not re-homed as an observation anywhere (unlike T1/T2). No product in this gold set carried a value above `not_claimed`/`claim_only`, so no value is lost by the removal beyond the field itself; slot 13's frozen `claims[]` still carries its `humidity_frizz`-typed C2 anti-frizz claim, untouched, simply unconsumed.",
+      "T10 — profile.product_form is redefined from FORM's architecture class to the presentation form the user holds (spray | milk | lotion | cream | serum), captured directly from identity (exact_product_name, pack_size, directions_of_use in calibration-packet.json), never derived from FORM. FORM's architecture value (dimensions.product_form_architecture) is unchanged and untouched by this pass. All 11 in-category records are set from the packet's identity fields; the two excluded records (slots 7, 12) carry no profile and are unaffected.",
+      "T11 — product_form_architecture (FORM) stops being a scored dimension; removed from `dimensions` on every record. profile.product_form (the presentation form, T10) is untouched. On the 11 in-category records that still emit a profile (slots 1-6, 8-11, 13), the same value/confidence/evidence_level/evidence_scope (and emulsion_subtype or uncertain/note where present) is carried forward verbatim into a new reading_conventions.architecture field — a trace reading convention per §3.1.2, not a dimension. Slots 7 and 12 (the two fully excluded records, no profile) are unchanged beyond the dimensions.product_form_architecture removal: their g0_rationale already states, self-contained, the architecture evidence their own G0 decision needs, verified during this pass.",
+      "T12 — usage_role (ROLE) dropped as a scored dimension and a profile property; removed from `dimensions` and `profile` on every record. post_wash and curl_styling are dropped, carrying no information the record already stated elsewhere; heat_styling is dropped as a role and not re-homed (the heat_styling focus now reads provides_heat_protection + identity.application_stage including pre_heat directly, unaffected by ROLE's removal); ends_only becomes an application-guidance note, outside this key's scope. refresh's one informative bit — dry-hair usability — survives as a new identity-level field, identity.application_stage[] (towel_dry | dry_hair | pre_heat | post_style), transcribed per in-category record directly from the frozen directions_of_use text in calibration-packet.json, sourced from G1's general directions hierarchy rather than ROLE's C1/C2 claim-tier gate (the one deliberate divergence from the T9-T11 removal pattern). All 11 in-category records carry a non-empty application_stage; the two excluded records (slots 7, 12) carry neither a profile nor an identity.application_stage block, per §2.3.1. No ambiguous-directions identity conflict was found on this gold set; slot 9 required the most interpretive judgment (a minimal-certain single-stage reading, noted on the record) and slot 10's frozen directions_of_use text supports only its stated stage, with a richer FAQ-derived reading recorded as an open widening candidate rather than adopted.",
+      "T13 — (a) the repair focus row's marketing-position prong (protein/silane actives named in the product's C1/C2 marketing position) is deleted from §10.2; repair now requires R2 in {candidate, tested} only, as both primary and secondary focus. (b) §10.2.1's beyond-baseline-conditioning test resolves permissively where COND's anchor is over-satisfied: a route counts as beyond baseline once at least one admissible COND-establishing set leaves it unspent, not only when every admissible set does. Both rulings adjudicated together, 2026-09-10, while reviewing the Gliss record. This is a genuine re-derivation, not a carrier move: profile.focus.primary/secondary is re-run for all 11 in-category records under the amended rules. Four values change — slot 8 (Gliss) repair -> smoothing, slots 2 (Isana), 6 (Curlsmith), 10 (Olaplex) general -> smoothing — each via a two-observation smoothing_route that the permissive reading now clears as beyond baseline conditioning. Slot 9 (Redken) is independently re-derived and stays general: R2 is none_visible (qualifying silane below the tail marker) and its smoothing_route fails the two-observation test outright (one observation only), so neither ruling reaches it. The other six in-category records (1, 3, 4, 5, 11, 13) are re-checked and unchanged. Full per-product table: reference-key-v4/transform-notes.md §12."
+    ],
+    "unchanged": [
+      "every g0_state, g0_rationale, identity_status and tail_marker",
+      "every retained §7 dimension value, confidence, evidence level, note and counter-signal",
+      "care_direction on every product -- TRUE AS OF THE T13 PASS ONLY (this transform header was last maintained at T13). Subsequently amended twice, each on one record and each documented in transform-notes.md: T16 (2026-09-11) moves slot 9 `moisture` -> `protein` (§18 of the transform notes), and T19 (2026-09-12) moves slot 5 `unknown` -> `balanced` (§22). Every other record's care_direction is unchanged and was re-checked, not assumed, in both passes.",
+      "every fit and specialist_functions value",
+      "every review_routing entry except the removed scalp_application_fit triggers and, as of T13, the focus-reading triggers named below",
+      "focus.primary/secondary on 7 of 11 in-category records (slots 1, 3, 4, 5, 9, 11, 13) -- re-checked under T13 and confirmed unchanged, not merely carried forward. T13 changes focus.primary/secondary on slots 2, 6, 8 and 10 -- see the T13 rule entry above and transform-notes.md §12"
+    ]
+  },
+  "packet": {
+    "file": "plans/leave-in-inci/research/gold-set/calibration-packet.json",
+    "packet_version": "leave-in-gold-set-calibration-v0.1",
+    "entry_count": 13,
+    "consumed_frozen": [
+      "raw_inci",
+      "normalized_ingredients",
+      "directions_of_use",
+      "claims"
+    ],
+    "web_research_performed": false,
+    "claims_re_researched_or_re_tiered": false
+  },
+  "conventions": {
+    "field_shape": "Every dimension/flag/profile field is {value, confidence, evidence_level, ...}. confidence uses the §4 vocabulary: low | moderate | moderately_high | high. evidence_level uses E0-E5.",
+    "tail_marker": "§3.1.1 first concentration-capped ingredient; rank prong is the single deterministic prong of 'present as architecture' (v0.3 clause 1).",
+    "claim_tier_overrides_applied": [
+      "§2.4.1 rule 6 house-brand clause: dm.de is C2 for alverde (slots 1, 4) and Balea (slot 11); rossmann.de is C2 for ISANA (slot 2). All carry claim_tier_basis: house_brand and route to review.",
+      "§2.4.1 rule 3 governs: a non-German-market manufacturer page is C5 even inside the EU. Applied to evohair.com/us (slot 5), marianila.com (slot 7), olaplex.com (slot 10), kevinmurphy.at and kevinmurphy.com.au (slot 12). The packet's 'C2-equivalent (judgment)' stamps were NOT adopted.",
+      "redken.eu/de-de is a German-market page and IS C2 (slot 9)."
+    ],
+    "excluded_record_dimension_subset": "This lane emits the full §7 set on excluded records, marked informational_and_non_authoritative. §2.3.1 leaves the subset optional; §17.24 records that as an open gap.",
+    "cond_over_satisfaction_rule": "SUPERSEDED 2026-09-10 by ruling T13b -- see 'focus_permissive_reading' below. Historical text, retained so the pre-T13 reasoning stays diffable: where the COND anchor was over-satisfied and more than one admissible establishing set existed, this lane read a route as 'beyond baseline conditioning' only if it was beyond baseline under EVERY admissible set (the conservative reading). That reading blocked slots 2, 6, 8 and 10 from a smoothing route each formula otherwise supports. §10.2.1 did not state a rule at the time; T13b now does.",
+    "focus_permissive_reading": "§10.2.1 (T13b, 2026-09-10). Where COND's anchor is over-satisfied, a route counts as 'beyond baseline conditioning' once it is beyond baseline under AT LEAST ONE admissible COND-establishing set -- the permissive reading, replacing the conservative convention above. Applied to all 11 in-category records: changes profile.focus.primary/secondary on slots 2, 6, 8 and 10 (each moves to smoothing via a two-observation smoothing_route this reading now clears); slots 1, 3, 4, 5, 9, 11 and 13 are re-checked and confirmed unchanged, most because their smoothing_route never passed §7.4.1's two-observation test in the first place, independent of this reading. Combined in the same ruling with T13a (repair row's marketing-position prong deleted, §10.2 principle 4 governs absolutely) -- see reference-key-v4/transform-notes.md §12 for the per-product derivation.",
+    "v0_4_trim": "This run re-projects the round-3 record onto the v0.4 model. It re-derives nothing. Where a v0.4 rule names a different carrier for the same observation (detangling, texture_fit rows 3-5, the smoothing focus test), the value is carried across unchanged by construction and the carrier is recorded so the change is auditable.",
+    "repair_support_level": "§10.3.2. high = exact-product repair evidence at E3+; medium = R2 in {candidate, tested} with conditioning_level >= moderate; low = everything else, explicitly including bond-claim-only products. Applied mechanically, all 11 in-category round-3 records are `low` — no product in the set carries a qualifying R2 route above its tail marker, so the medium row is unexercised (§17.25).",
+    "manufacturer_hold_level": "§7.7 (T7). Captured only from a C1/C2 entry in the frozen claims[]. The packet carries no hold level at any tier; the one manufacturer-stated level in the corpus (Maria Nila „Hold 3/5\") sits on a non-German-market manufacturer page, which §2.4.1 rule 3 makes C5, and it is recorded as a trace observation on slot 7 only.",
+    "reading_conventions_architecture": "§3.1.2 (T11). `dimensions.product_form_architecture` is removed from every record — FORM is no longer a scored dimension. On the 11 in-category records (slots 1-6, 8-11, 13) the same value/confidence/evidence_level/evidence_scope is carried forward verbatim into `reading_conventions.architecture`, a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0, WT's ceiling/G9 clauses and COND's routes — and, for slot 13, cited directly by its profile.product_form row. Slots 7 and 12 (fully excluded, no profile) carry no reading_conventions.architecture: their g0_rationale already states, self-contained, the architecture evidence their own G0 decision needs, and G0's own logic is unchanged by T11. profile.product_form (the presentation form, T10) is untouched on every record.",
+    "application_stage": "§7.13 (T12). `dimensions.usage_role` and `profile.usage_role` are removed from every record — ROLE is no longer a scored dimension or a profile property. On the 11 in-category records (slots 1-6, 8-11, 13), a new `identity.application_stage` object is added, sibling to `identity_status`, transcribed directly from `calibration-packet.json`'s frozen `directions_of_use` text per product: {value: application_stage[], evidence_level: \"E1\", evidence_scope: \"directions\", source_tier, basis: [{stage, quote}], note?}. It carries no confidence, ceiling or anchor — it is identity data, not an assessed dimension, and it is not gated by ROLE's former C1/C2 claim-tier requirement (§2.4.1); it reads whatever directions text G1's general source hierarchy already captured and verified for the record. Slots 7 and 12 (fully excluded, no profile) carry neither a profile nor an identity.application_stage block. Every in-category record's application_stage is non-empty; where the directions text left more than one candidate stage or supported none by a literal keyword match, the record takes the minimal certain reading and records a `note` rather than guessing or leaving the field empty (slots 8, 9, 10)."
+  },
+  "products": [
+    {
+      "slot": 1,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Leave-In Sprühkur Express 7in1",
+      "gtin": "4066447919387",
+      "archetype_role": "Ultra-light detangling spray",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; C2 (house-brand) directions spray into lengths and ends with no rinse (rinse test PASS); conditioning primary. HOLD none, so the §2.3.2 architecture half is not established.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry",
+            "dry_hair"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C3",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden."
+            },
+            {
+              "stage": "dry_hair",
+              "quote": "Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "LEVULINIC ACID",
+        "rank": 9,
+        "list_length": 32,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). No counter-indication recorded on this marker (LEVULINIC ACID r9/32); ordinary plausible reading."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "unknown",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "multi_family",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "mandatory_counter_signal": "Families: medium-band vegetable oil (Helianthus Annuus Hybrid Oil, r2) and dry-feel esters/ether (Dicaprylyl Ether r5, Isoamyl Laurate r8). The absent rich/low-spreading band member holds the value below high; the only rich-band species (Ricinus Communis Seed Oil) is at r11, below the marker at r9.",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT did not resolve to high from formula alone (a C2 finish statement 'ohne zu beschweren' exists)"
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "note": "No C1/C2 heat claim (C2 house-brand page checked, silent). L9 member Hydrolyzed Wheat Protein at r14 is below the marker and carries no claim - no upgrade on two independent rules."
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "plain_hydrolysate_note": "Hydrolyzed Corn (13), Wheat (14), Soy (15) Protein - plain hydrolysates are none_visible at any position",
+          "candidate_below_tail": false
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "Alcohol Denat. materially present at rank 3"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "two_phase",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "emollient",
+        "basis": "SFR moderate rested on the medium-band vegetable oil (Helianthus Annuus Hybrid Oil r2) and the dry-feel esters/ether (Dicaprylyl Ether r5, Isoamyl Laurate r8). No continuous film former of any family is present as architecture.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived - §17.20 has no value vocabulary",
+        "shn_qualifier": "absent",
+        "shn_note": "SHN removed 2026-09-13 (freeze-prep housekeeping, ledger row 20 — §8.1's present/absent anchor, added by the same pass: present only where `smoothing_route` is a continuous-film type — `silicone_film`, `cationic_alignment` or `fixative_film`; absent at `emollient` or `none`). This record's `smoothing_route` is `emollient` (Helianthus Annuus Hybrid Oil r2, Dicaprylyl Ether r5, Isoamyl Laurate r8 — no continuous film former present as architecture), so SHN reads `absent`, not `present`. The pre-pass `present` reading predates the anchor and is superseded; no other field on this record moves.",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `moderate`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+        "focus": {
+          "primary": "general",
+          "secondary": []
+        },
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Vor Gebrauch gut schütteln – sonst schwankt die Dosierung stark.",
+          "Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe."
+        ]
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "claim_tier_basis_house_brand",
+          "two_phase_product",
+          "tail_marker_dependence"
+        ]
+      }
+    },
+    {
+      "slot": 2,
+      "brand": "ISANA PROFESSIONAL",
+      "product": "Leave-In Conditioner Hyaluron & Panthenol",
+      "gtin": "4305615946733",
+      "archetype_role": "Mainstream milk/lotion",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; C2 (house-brand) directions apply to towel-dried lengths and ends then style, no rinse anywhere including the storage block (rinse test PASS).",
+      "out_of_category": false,
+      "identity_status": "verified_with_minor_source_difference",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2-equivalent (judgment)",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Den Conditioner auf die handtuchtrockenen Längen und Spitzen verteilen und einmassieren."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "SODIUM BENZOATE",
+        "rank": 9,
+        "list_length": 21,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). No counter-indication recorded on this marker (SODIUM BENZOATE r9/21); ordinary plausible reading."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "unknown",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "row": "lgn_pair",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 2 - no C1/C2 intended-finish statement exists (claims[] empty)"
+        },
+        "persistence_removal_class": {
+          "value": "permanent_cationic",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "note": "C1/C2 source located and silent - the claim does not exist; not a claim_authority_gap"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": false
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": []
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "cationic_alignment",
+        "basis": "SFR high rested on two observations, and the film half is a substantive cationic-polymer film: Guar Hydroxypropyltrimonium Chloride r5. No persistent silicone is present.",
+        "derived_from_sfr": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "two_observations": [
+            "film: Guar Hydroxypropyltrimonium Chloride r5",
+            "lubrication: Dicaprylyl Ether r4"
+          ]
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          },
+          {
+            "flag": "LAYER",
+            "value": true,
+            "note": "LAYER fires — persistence_removal_class resolves to `permanent_cationic` via Guar Hydroxypropyltrimonium Chloride r5, present as architecture (§8.4, firing condition added 2026-09-13 — freeze-prep housekeeping, ledger row 20 addendum; round-4 report residue item 4). One caution string only: no compatibility matrix, no layering score, no product-to-product verdict."
+          },
+          {
+            "flag": "buildup",
+            "value": true,
+            "note": "Buildup caution, emitted from the PERS evidence. Non-quantitative by G11: no wash count, no duration, no applications-to-buildup, no clarification schedule (§8.5)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "spray",
+        "product_form_basis": "Evidence correction, 2026-09-13 (round-4 evidence-gap-closure.md, Gap 1 item 1). Was `lotion` (round-3 guess; the calibration/blind packet carried no pack-shot or dispenser evidence for this slot). rossmann.de packshots — two angles of the same rossmann.de Art.-Nr. 124771 SKU, the second confirming the on-pack EAN 4305615946733 against this record's frozen GTIN — show a black finger-pump/trigger spray actuator (round push-button, horizontal nozzle, clear overcap), the same head style already adjudicated `spray` for the sibling ISANA PROFESSIONAL Argan Leave-in Conditioner (unseen-test/u5-format-evidence.md). Spray, confidence high.",
+        "conditioning_level": "high",
+        "weight_potential": "high",
+        "persistence": "high",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `high`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+        "focus": {
+          "primary": "smoothing",
+          "secondary": []
+        },
+        "focus_basis": "T13 re-derivation (2026-09-10, permissive reading, §10.2.1): smoothing_route is cationic_alignment on a two-observation SFR-high read (film: Guar Hydroxypropyltrimonium Chloride r5; lubrication: Dicaprylyl Ether r4), clearing §7.4.1's two-observation test. COND high was over-satisfied (the LGN pair r2/r7/r8 alone would have carried it), so under the conservative reading the film route read as baseline conditioning; under the now-adopted permissive reading, a single admissible establishing set (the LGN pair) suffices to leave the cationic film beyond baseline. No qualifying repair route exists (R2 none_visible, and the marketing-position prong is deleted by T13a; claims[] is empty in any case), so repair is unavailable and does not out-rank smoothing. Every other route fails its own gate (curl_definition: HOLD none; heat_styling: HEAT not_claimed; detangling: no C1/C2 positioning and COND/WT both too high; volume_lightness: WT high; shine: would restate the smoothing film, G3). Supersedes this record's pre-T13 focus_basis (there was none recorded; the v3 evidence chain's Focus section states the conservative-reading `general` result and predates this ruling).",
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "caution",
+          "medium": "conditional",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "conditional",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "recommended"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Legt sich spürbar aufs Haar – bei feinem Haar sparsam dosieren.",
+          "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+          "Kann mit stark anionischen Stylingprodukten flocken oder pillen. Belegt ist das nicht – im Zweifel erst an einer kleinen Partie testen.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe."
+        ]
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "claim_tier_basis_house_brand",
+          "identity_conflict_preserved",
+          "tail_marker_dependence"
+        ]
+      }
+    },
+    {
+      "slot": 3,
+      "brand": "Cantu",
+      "product": "Leave-In Haarkur Repair Creme",
+      "gtin": "810006945430",
+      "archetype_role": "Rich cream dry/damaged",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; directions state 'Nicht ausspülen' (rinse test PASS); conditioning primary. HOLD none.",
+      "out_of_category": false,
+      "identity_status": "provisional_formula_conflict",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C3",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Großzügig und gleichmäßig auf die feuchten Haarspitzen auftragen und in Richtung Ansatz einarbeiten und durchkämmen."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 28,
+        "list_length": 51,
+        "limitation": "very late marker - uncovered by §3.1.1 limits 2 and 3; open gap §17.18",
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). The marker is late (r28/51, open gap §17.18) but not vacuous — real architecture genuinely sits in its tail (§17.18's own example: Polyquaternium-10 r30 etc.); no `plausible: false` or `vacuous: true` was ever recorded on this record, so the ordinary plausible reading stands."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "unknown",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "row": "lgn_pair_and_rich_band",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 2 - the C2 statements are repair/benefit claims, not statements about the finish this product leaves"
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "monomeric_quat_note": true,
+          "below_marker_counter_signal": "Polyquaternium-10 at r30 vs marker r28 - strict rank under-states persistence and under-warns on buildup (FS-20)"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_authority_gap": true,
+          "note": "heat statement C3 only (dm.de); the C2 manufacturer page was checked and makes no heat claim"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": false,
+          "counter_signal": "two C2 repair claims exist; a claim cannot set R2"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "Benzyl Alcohol r36 is outside the Alcohol Denat./Alcohol enumeration - no alcohol note emitted (§17.21)"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "emollient",
+        "basis": "SFR moderate: no continuous film route above the marker (PQ-10 sits at r30 vs a marker at r28). The alignment read that remains is the LGN/rich-medium lipid package.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "no continuous film route above the marker; PQ-10 at r30 is below it"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "buildup",
+            "value": true,
+            "note": "Buildup caution, emitted from the weight_potential evidence (T17/§8.5, hard-rule audit item H6: weight_potential projects high with a persistent non-volatile family present as architecture). Non-quantitative by G11: no wash count, no duration, no applications-to-buildup, no clarification schedule (§8.5). persistence_removal_class itself is unchanged (neutral_non_volatile) — only which end can raise the caution is widened, not what PERS projects (G3 rule 4)."
+          },
+          {
+            "flag": "transfer",
+            "value": true,
+            "note": "Transfer caution — a low-spreading, non-volatile, non-film-forming lipid load is present (skin, collar, pillow, phone). Qualitative only: no published instrumental transfer method for hair leave-ons surfaced (§5 L3, §7.5)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "absent",
+        "shn_note": "SHN removed 2026-09-13 (freeze-prep housekeeping, ledger row 20 — §8.1's present/absent anchor, added by the same pass: present only where `smoothing_route` is a continuous-film type — `silicone_film`, `cationic_alignment` or `fixative_film`; absent at `emollient` or `none`). This record's `smoothing_route` is `emollient` (no continuous film former above the marker; Polyquaternium-10 r30 sits below it), so SHN reads `absent`, not `present`. The pre-pass `present` reading predates the anchor and is superseded; no other field on this record moves.",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "cream",
+        "conditioning_level": "high",
+        "weight_potential": "high",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `high`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 2: marketing never moves the level. This product carries C2 repair claims and they do not raise it.",
+        "focus": {
+          "primary": "general",
+          "secondary": []
+        },
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "caution",
+          "medium": "conditional",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "conditional",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "recommended"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Legt sich spürbar aufs Haar – bei feinem Haar sparsam dosieren.",
+          "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe.",
+          "Dazu haben wir keine belastbare Information."
+        ]
+      },
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "formula_or_identity_conflict",
+          "claim_authority_gap",
+          "below_marker_persistence_route",
+          "directions_below_authority",
+          "very_late_tail_marker"
+        ],
+        "housekeeping_row20_note": "2026-09-13 (freeze-prep housekeeping, §21.3 ledger row 20): trigger re-keyed `formula_source_conflict` -> `formula_or_identity_conflict`. This record used `formula_source_conflict` ad hoc, before the name existed in the standard; T18 then defined it with a narrow meaning this record does not meet - a SAME-market formula-set conflict that failed §2.4.2's convergence bar. Cantu's difference is the documented CROSS-market DE/US split, which is an identity question under §2.4.1 rule 7 (T14) and routes under the standing `formula_or_identity_conflict` trigger (§14). T18's own naming note flagged the collision and left it; this closes it. Name only: the routing, the review_status, every dimension and profile value, every confidence band and every evidence level on this record are unchanged, and no other record is touched."
+      }
+    },
+    {
+      "slot": 4,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan",
+      "gtin": "4066447105032",
+      "archetype_role": "Two-phase spray",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; C2 (house-brand) directions spray into lengths and ends, no rinse (rinse test PASS).",
+      "out_of_category": false,
+      "identity_status": "provisional_identity_conflict",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry",
+            "dry_hair"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C3",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden."
+            },
+            {
+              "stage": "dry_hair",
+              "quote": "Die Pflegekur kann sowohl in das trockene als auch in das feuchte Haar gesprüht werden."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "value": "none_visible",
+        "note": "T17/§3.1.1 (hard-rule audit item H2): the declared EU fragrance-allergen block is removed from the marker-eligible list. No other capped ingredient (Phenoxyethanol, Sodium Benzoate, Potassium Sorbate, Benzyl Alcohol, Hydroxyacetophenone, Ethylhexylglycerin, Levulinic Acid/Sodium Levulinate, Chlorphenesin, Dehydroacetic Acid, or Caprylyl Glycol as a preservative pair) is declared anywhere on this formula, so no tail boundary is readable at all. Mandatory limit 2 governs: fall back to the ordinal read, confidence lowered one step on every anchor that depends on the tail-boundary convention, and the record routes to human review.",
+        "superseded_marker": {
+          "ingredient": "LINALOOL (declared EU allergen block)",
+          "rank": 14,
+          "list_length": 16,
+          "limitation": "no preservative is declared at all; the marker rests on the allergen block. tail_marker: none_visible NOT invoked, since the block is enumerated in §3.1.1.",
+          "superseded": "2026-09-11 (T17/H2): the declared EU fragrance-allergen block is removed from §3.1.1's marker-eligible list; this reading is retained verbatim for audit rather than silently overwritten."
+        },
+        "marker_status": "none_visible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). Matches this record's existing `tail_marker.value: \"none_visible\"` (T17/H2, mandatory limit 2) verbatim — no capped ingredient of any kind is declared, so no tail boundary is readable at all."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "unknown",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          },
+          "tail_marker_none_visible_note": "T17/§3.1.1 limit 2: confidence lowered one step because the record's tail marker is now none_visible (H2 removed the allergen-block marker) rather than the allergen block at r14. No ingredient's rank position, and no dimension value, changes as a result — every decisive ingredient on this record (Glycine Soja Oil r2, Argania Spinosa Kernel Oil r7) sits well above where any capped-material marker could plausibly fall."
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "single_family",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "soy (r2) and argan (r7) are both unenumerated liquid vegetable oils read medium-band; the multi-family alternative reading lands on the same value. G9 clause 1 as corrected in v0.3: the bulk oil above the tail is a recorded supporting observation, not a second route to high.",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT is not high; and no candidate C1/C2 statement exists",
+          "tail_marker_none_visible_note": "T17/§3.1.1 limit 2: confidence lowered one step because the record's tail marker is now none_visible (H2 removed the allergen-block marker) rather than the allergen block at r14. No ingredient's rank position, and no dimension value, changes as a result — every decisive ingredient on this record (Glycine Soja Oil r2, Argania Spinosa Kernel Oil r7) sits well above where any capped-material marker could plausibly fall."
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "tail_marker_none_visible_note": "T17/§3.1.1 limit 2: confidence lowered one step because the record's tail marker is now none_visible (H2 removed the allergen-block marker) rather than the allergen block at r14. No ingredient's rank position, and no dimension value, changes as a result — every decisive ingredient on this record (Glycine Soja Oil r2, Argania Spinosa Kernel Oil r7) sits well above where any capped-material marker could plausibly fall."
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null,
+          "tail_marker_none_visible_note": "T17/§3.1.1 limit 2: confidence lowered one step because the record's tail marker is now none_visible (H2 removed the allergen-block marker) rather than the allergen block at r14. No ingredient's rank position, and no dimension value, changes as a result — every decisive ingredient on this record (Glycine Soja Oil r2, Argania Spinosa Kernel Oil r7) sits well above where any capped-material marker could plausibly fall."
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "moderate",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_authority_gap": true,
+          "note": "the C1/C2 search could not be completed against a current source - SKU appears delisted, archive unavailable (§2.4 rule 2)"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": false,
+          "tail_marker_none_visible_note": "T17/§3.1.1 limit 2: confidence lowered one step because the record's tail marker is now none_visible (H2 removed the allergen-block marker) rather than the allergen block at r14. No ingredient's rank position, and no dimension value, changes as a result — every decisive ingredient on this record (Glycine Soja Oil r2, Argania Spinosa Kernel Oil r7) sits well above where any capped-material marker could plausibly fall."
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "Alcohol materially present at rank 3"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "two_phase",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "emollient",
+        "basis": "SFR moderate on the unemulsified oil phase (soy r2, argan r7), both unenumerated liquid vegetable oils read medium-band. No film former.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "absent",
+        "shn_note": "SHN removed 2026-09-13 (freeze-prep housekeeping, ledger row 20 — §8.1's present/absent anchor, added by the same pass: present only where `smoothing_route` is a continuous-film type — `silicone_film`, `cationic_alignment` or `fixative_film`; absent at `emollient` or `none`). This record's `smoothing_route` is `emollient` (the unemulsified soy/argan oil phase, r2/r7; no film former), so SHN reads `absent`, not `present`. The pre-pass `present` reading predates the anchor and is superseded; no other field on this record moves.",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `moderate`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+        "focus": {
+          "primary": "general",
+          "secondary": []
+        },
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [
+          "conditioning_level",
+          "weight_potential",
+          "persistence",
+          "hold_support"
+        ],
+        "cautions_de": [
+          "Vor Gebrauch gut schütteln – sonst schwankt die Dosierung stark.",
+          "Enthält Alkohol – bei empfindlicher Kopfhaut lieber nur in die Längen geben.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe."
+        ]
+      },
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "two_phase_product",
+          "absent_exact_market_identifier",
+          "claim_authority_gap",
+          "claim_tier_basis_house_brand",
+          "tail_marker_none_visible"
+        ],
+        "resolved_triggers": [
+          {
+            "trigger": "tail_marker_allergen_block_only",
+            "resolved": "2026-09-11",
+            "note": "T17/H2: the EU fragrance-allergen block is removed from §3.1.1's marker-eligible list. No other capped ingredient exists on this formula, so the record now reads tail_marker: none_visible under mandatory limit 2 and routes under the standing tail_marker_none_visible trigger instead."
+          }
+        ]
+      }
+    },
+    {
+      "slot": 5,
+      "brand": "EVO",
+      "product": "Head Mistress Cuticle Sealer",
+      "gtin": "9349769013144",
+      "archetype_role": "Silicone-rich smoother",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; directions apply to towel-dried hair before blow-drying, no rinse (rinse test PASS). HOLD none - Polyacrylamide is deliberately unenumerated in L5 (§17.19) and plausibly serves the emulsifier system.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry",
+            "pre_heat",
+            "post_style"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2-equivalent (judgment)",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Apply to towel-dried hair and blow-dry for improved manageability and softness."
+            },
+            {
+              "stage": "pre_heat",
+              "quote": "Apply to towel-dried hair and blow-dry for improved manageability and softness."
+            },
+            {
+              "stage": "post_style",
+              "quote": "Apply after styling to control frizz and fly-aways."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 6,
+        "list_length": 25,
+        "limitation": "early marker - §3.1.1 limit 3 strong counter-signal on WT, SFR, PERS, R2 and care_direction",
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). The marker is early (r6/25, §3.1.1 limit 3 counter-signal) but the T16 plausibility test (does the marker sit after this record's own core conditioning architecture?) is not failed; no `plausible: false` was ever recorded here."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "capped by the LGN gate on COND high - carried-open item BR §2.10",
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "dry_biased",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "single_family",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT is not high; and no C1/C2 statement of any kind exists"
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "below_marker_counter_signal": "Quaternium-80 (silicone-functional quat) at r14 vs marker r6 - cannot set permanent_cationic on the rank prong; under-warns on buildup (FS-20)"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "Polyacrylamide unenumerated in L5 - §17.19",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_authority_gap": true,
+          "note": "heat statements exist only at C5 (US manufacturer page) and C4 (German retailer); no German-market EVO source exists"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": true,
+          "candidate_below_tail_note": "Quaternium-80 (silicone quat) at rank 14; marker Phenoxyethanol at rank 6",
+          "plain_hydrolysate_note": "Hydrolyzed Quinoa r12"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": []
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "non_lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "SFR moderate on the Dimethicone (r2) / Dimethiconol (r5) pair, which §7.4.1 clause 2 counts as ONE observation; every candidate second route sits below the rank-6 marker.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "§7.4 clause 2 - a Dimethicone/Dimethiconol pair counted as film and lubricant is ONE observation; clause 3 - the candidate second routes are below the marker"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "moderate",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_led_neutral",
+        "note": "T19 re-derivation (2026-09-12), value CHANGED from `unknown`. Nick's ruling gives `balanced` a second, explicitly co-equal reading — directional neutrality — and reserves `unknown` for genuine evidence failure (§9; open gap §17.22 closes). All four clauses of §9's film-led rule hold on this record: (1) no R2 route present as architecture — repair_surface_film is `none_visible`, Quaternium-80 (silicone quat) sits at r14, below the r6 marker; (2) a substantive L2 film above the marker — Dimethicone r2, Cyclopentasiloxane r3, Dimethiconol r5 (architecture `emulsion`/non_lgn per §3.1.2; smoothing_route `silicone_film` per §7.4.1); (3) no L1, L3 or L4 species above the marker at all; (4) every film species outranks every candidate leg species, so the reading does not rest on the r6 marker's exact position. Confidence stays at the §9 ceiling `moderate`: this record's marker is independently verified plausible under T16 (transform-notes §18 — Dimethicone r2 and Dimethiconol r5 both sit above it), so the film-led row's one-step reduction for an implausible, vacuous or absent marker does not apply. The observation itself is unchanged — same film, same absent legs, same ranks — only the value the standard draws from it. Under AD-2 this record can now commit to the catalog; as `unknown` it could not. The pre-T19 reading is retained verbatim below.",
+        "mandatory_counter_signal": "§4 marker counter-signal — clause 3's leg-absence half is decided on the §3.1.1 tail marker. Marker: Phenoxyethanol, rank 6 of 25, early (§3.1.1 limit 3 strong counter-signal). Film species: Dimethicone r2, Cyclopentasiloxane r3, Dimethiconol r5. Subordinate leg species, every one of them below the marker AND below every film species: Panthenol r8 (L4), Macadamia Ternifolia Seed Oil r13 (L3), Butylene Glycol r18 (L4 on the conservative glycol reading). Hydrolyzed Quinoa r12 is a plain hydrolysate and no route at all (§7.10). No L1 cationic species exists above the marker; Quaternium-80 r14 is the only quat and is itself below it.",
+        "superseded_reading": "Pre-T19 reading, retained verbatim for audit rather than silently overwritten — value `unknown`, confidence `moderate`, evidence_level E2, note: \"§9 silicone-led rule fires cleanly: no R2 route and no material humectant or emollient leg above the marker\". Superseded 2026-09-12 (T19): §9's v0.2 silicone-led `unknown` rule is replaced by the film-led `balanced` rule. It was a correct application of the rule as it then stood, and it is the gold set's only clean firing of that rule (reference-key-v3/summary.md §7)."
+      },
+      "profile": {
+        "product_form": "cream",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "balanced",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `moderate`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 4: a qualifying route sits at or below the tail marker (Quaternium-80 (silicone quat) at rank 14; marker Phenoxyethanol at rank 6), so R2 holds its rank-supported `none_visible` value and the level is `low`; the record routes to human review on the below-marker note.",
+        "focus": {
+          "primary": "general",
+          "secondary": []
+        },
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [],
+        "uncertain_fields_note": "T19 (2026-09-12): `care_direction` was this array's only entry and is removed with the value change `unknown` → `balanced`. §10 emits an `uncertain_fields` entry only where the field itself resolved to `unknown`; no other field on this record is `unknown`, so the array is now empty.",
+        "cautions_de": [
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe."
+        ],
+        "cautions_de_note": "T19 (2026-09-12): the §18 „Dazu haben wir keine belastbare Information.\"-string was emitted by `care_direction: unknown`, the record's only `unknown` field, and is dropped with it. `balanced` emits no §18 string in either reading, so no string replaces it. This is the ruling's only user-facing copy consequence anywhere in the gold set."
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "claim_authority_gap",
+          "candidate_below_tail",
+          "below_marker_persistence_route",
+          "early_tail_marker",
+          "directions_below_authority",
+          "polyacrylamide_l5_open_gap"
+        ],
+        "t19_note": "Unchanged by T19. The `early_tail_marker` and `candidate_below_tail` triggers stand on their own grounds (§3.1.1 limit 3; §7.10's below-marker route), and the film-led `balanced` row adds no trigger of its own on this record — its marker is plausible (T16), not vacuous and not absent, so §9's one-step-down-and-route-to-review path does not fire."
+      }
+    },
+    {
+      "slot": 6,
+      "brand": "Curlsmith",
+      "product": "Hydrate & Plump Leave-In",
+      "gtin": null,
+      "archetype_role": "Silicone-free cationic/polymeric",
+      "g0_state": "in_category",
+      "g0_rationale": "Water rank 1; directions work the product into wet hair, no rinse, explicitly a leave-in conditioner (rinse test PASS). HOLD incidental_film - a substantive conditioning architecture dominates the PVP, so the §2.3.2 architecture half is not established.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C3-equivalent (judgment)",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Work the conditioner into your wet hair, adjusting the amount used according to the length of your hair if necessary."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 36,
+        "list_length": 40,
+        "limitation": "very late marker - the above/below test separates almost nothing; open gap §17.18",
+        "vacuous": true,
+        "vacuous_note": "T17/§3.1.1 clause 6 (hard-rule audit item H1): every ingredient at or below the marker (Potassium Sorbate r37, Sodium Benzoate r38, Hydroxycitronellal r39, Citronellol r40) is itself a capped preservative or a declared EU allergen -- nothing the architecture read would have placed there anyway, so the test separates nothing. The marker cannot establish 'present as architecture' for any anchor on rank alone; the coherence/ordinal read governs instead. Re-checked against every anchor on this record: none is established solely by the vacuous marker's rank boundary -- COND/WT/PERS's decisive ingredients (Cetearyl Alcohol r3, Castor Oil r5, Behentrimonium Chloride r6, Guar HPTC r11, Polyquaternium-10 r12) sit far above the marker regardless of its lateness, and HOLD's PVP r32 observation already carries its own coherence_counter_signal (token-addition reading, confidence held at the floor) rather than resting on rank-prong credit. No dimension value moves.",
+        "marker_status": "vacuous",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). Matches this record's existing `tail_marker.vacuous: true` (T17/H1, §3.1.1 clause 6) verbatim."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "unknown",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "row": "lgn_pair_and_rich_band",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 2 - the lightness statement 'Lightweight moisture with no weigh-down' is C5; a C3-C5 statement never triggers the tag"
+        },
+        "persistence_removal_class": {
+          "value": "permanent_cationic",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "hold_route_state": {
+          "value": "incidental_film",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "coherence_counter_signal": "PVP at rank 32 of 40 ahead of a marker at 36 reads as a token addition; recorded, lowers confidence one step, cannot lower the rank-supported value (§3.1.1 clause 2) [T17/H1: the marker itself is now formally ruled vacuous (§3.1.1 clause 6) -- PVP's incidental_film reading was already, and remains, supported by the coherence/ordinal read alone, never by rank-prong credit from this marker; the value is unchanged.]",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_authority_gap": true,
+          "note": "no L9 member - plain PVP is NOT on the closed L9 list"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": false
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "no Parfum declared; Hydroxycitronellal r39 and Citronellol r40 are declared EU allergens",
+            "Isopropyl Alcohol r27 is outside the Alcohol Denat./Alcohol enumeration - no alcohol note (§17.21)"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "cationic_alignment",
+        "basis": "SFR high rested on two observations, and the film half is the cationic-polymer film Guar HPTC r11 + PQ-10 r12. The product is silicone-free.",
+        "derived_from_sfr": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "two_observations": [
+            "film: Guar HPTC r11 + PQ-10 r12",
+            "lubrication: Dicaprylyl Carbonate r2, Coco-Caprylate/Caprate r4"
+          ]
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          },
+          {
+            "flag": "LAYER",
+            "value": true,
+            "note": "LAYER fires — persistence_removal_class resolves to `permanent_cationic` via Guar Hydroxypropyltrimonium Chloride r11 + Polyquaternium-10 r12, present as architecture (§8.4, firing condition added 2026-09-13 — freeze-prep housekeeping, ledger row 20 addendum; round-4 report residue item 4). One caution string only: no compatibility matrix, no layering score, no product-to-product verdict."
+          },
+          {
+            "flag": "buildup",
+            "value": true,
+            "note": "Buildup caution, emitted from the PERS evidence. Non-quantitative by G11: no wash count, no duration, no applications-to-buildup, no clarification schedule (§8.5)."
+          },
+          {
+            "flag": "transfer",
+            "value": true,
+            "note": "Transfer caution — a low-spreading, non-volatile, non-film-forming lipid load is present (skin, collar, pillow, phone). Qualitative only: no published instrumental transfer method for hair leave-ons surfaced (§5 L3, §7.5)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "cream",
+        "product_form_basis": "Evidence correction, 2026-09-13 (round-4 evidence-gap-closure.md, Gap 1 item 2). Was `lotion` (round-3 guess; no packet form evidence). lockenbox.com packshots show a lotion/cream-style pump dispenser and a texture-callout swatch of a thick, opaque white cream (label reads \"Conditioning Cream\"); curlsmith.com's own Product Specifications field states verbatim \"Format: Light Cream.\" Cream, confidence high.",
+        "conditioning_level": "high",
+        "weight_potential": "high",
+        "persistence": "high",
+        "hold_support": "incidental",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `high`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+        "focus": {
+          "primary": "smoothing",
+          "secondary": []
+        },
+        "focus_basis": "T13 re-derivation (2026-09-10, permissive reading, §10.2.1): smoothing_route is cationic_alignment on a two-observation SFR-high read (film: Guar HPTC r11 + PQ-10 r12; lubrication: Dicaprylyl Carbonate r2, Coco-Caprylate/Caprate r4), clearing §7.4.1's two-observation test. COND high was over-satisfied (the LGN pair r3/r6 plus the rich emollient package r2/r4/r5/r9/r10 could each independently carry it), so under the conservative reading the cationic film read as baseline conditioning; under the now-adopted permissive reading, the LGN-pair-plus-emollient set leaves the cationic film beyond baseline. No qualifying repair route exists (R2 none_visible; claims[] has no C1/C2 marketing position at all, so the now-deleted T13a prong was never reachable here regardless). curl_definition fails the v0.3 negative gate (no C1/C2 curl/wave positioning or texture-targeted directions — this product's only source tier is C3-equivalent). Every other route fails its own gate (heat_styling: HEAT not_claimed; detangling: no C1/C2 positioning and WT high; volume_lightness: WT high; shine: would restate the smoothing film, G3). This record's pre-T13 `focus` uncertain_fields entry — recorded because the §10.2.1 reading, not the evidence, decided it — is removed: the reading is now a settled rule, not an open call.",
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "caution",
+          "medium": "conditional",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "conditional",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "recommended"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Legt sich spürbar aufs Haar – bei feinem Haar sparsam dosieren.",
+          "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+          "Kann mit stark anionischen Stylingprodukten flocken oder pillen. Belegt ist das nicht – im Zweifel erst an einer kleinen Partie testen.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe.",
+          "Dazu haben wir keine belastbare Information."
+        ]
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "absent_exact_market_identifier",
+          "claim_authority_gap",
+          "tail_marker_vacuous",
+          "directions_below_authority"
+        ],
+        "resolved_triggers": [
+          {
+            "trigger": "very_late_tail_marker",
+            "resolved": "2026-09-11",
+            "note": "T17/H1: the marker's tail (ranks 37-40) contains only capped preservative and declared-allergen material -- the marker is vacuous under §3.1.1 clause 6, and the record now routes under the standing tail_marker_vacuous trigger instead."
+          }
+        ]
+      }
+    },
+    {
+      "slot": 7,
+      "brand": "Maria Nila",
+      "product": "Curlicue Cream",
+      "gtin": null,
+      "archetype_role": "Curl cream with hold polymer",
+      "g0_state": "excluded_styling_first",
+      "g0_rationale": "§2.3.2 clause 3. Architecture half established: PVP (r4, fixative-class L5) above the marker in a film-forming context (Carbomer + Triethanolamine), with thin conditioning behind it - no silicone, no lipid emollient, no cationic polymer, no LGN pair; Cetyl Alcohol r5 is a lone fatty alcohol and Quaternium-95 r11 an unresolvable quat. Positioning half rests only on C4/C5 ('Hold 3/5', 'Wirkung: Anti-Frizz', 'Haartyp: Lockiges Haar'), and no C1/C2 evidence points the other way - no C1/C2 source exists at all. A weak positioning tier does not manufacture an ambiguity, so clause 2 (provisional_boundary) does not apply.",
+      "out_of_category": true,
+      "identity_status": "verified",
+      "tail_marker": {
+        "ingredient": "ETHYLHEXYLGLYCERIN",
+        "rank": 13,
+        "list_length": 17,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). Informational only (excluded record, `excluded_styling_first`, §2.3.1) — §14 rule 3 binds in-category records only; recorded here as part of the optional informational block this record already carries (`informational_and_non_authoritative: true`), consistent with its other marker-adjacent fields. No counter-indication recorded on this marker (ETHYLHEXYLGLYCERIN r13/17)."
+      },
+      "informational_and_non_authoritative": true,
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "unknown",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "low",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "conflict_tag_applied": false
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "quat_structure": "unresolved",
+          "monomeric_quat_note": true
+        },
+        "hold_route_state": {
+          "value": "meaningful_hold_route",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "manufacturer_hold_level": null,
+          "manufacturer_hold_level_observation": "„Hold 3/5\" — the manufacturer's own scale, on marianila.com. NOT frozen claim data (the packet excludes it from claims[] under the verbatim-German-only constraint) and C5 under §2.4.1 rule 3 (non-German-market manufacturer page). §7.7 clause 3: a hold level below C1/C2 does not populate the field. Recorded verbatim with its tier and not adopted as a level."
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "candidate_below_tail": false
+        },
+        "fragrance_scalp_exposure": {
+          "value": "fragrance_declared",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "notes": []
+        }
+      },
+      "smoothing_route": {
+        "value": "fixative_film",
+        "basis": "Informational only (excluded record). The only film in this formula is the fixative-class PVP r4 in a Carbomer/Triethanolamine context; there is no silicone, no lipid emollient and no cationic polymer.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "low",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "low",
+        "evidence_level": "E2",
+        "note": "humectant-led minimum row; informational only"
+      },
+      "profile": null,
+      "profile_note": "Not emitted. §2.3.1: an excluded record carries no focus, no fit fields, no specialist_functions and no cautions. 'No lean profile present' is the machine-readable signal of exclusion.",
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "g0_product_form_decision",
+          "hold_meaningful_hold_route",
+          "claim_authority_gap",
+          "quat_structure_unresolved",
+          "absent_exact_market_identifier",
+          "directions_below_authority"
+        ]
+      }
+    },
+    {
+      "slot": 8,
+      "brand": "Schwarzkopf GLISS",
+      "product": "Sprüh-Conditioner Express-Repair Ultimate Repair",
+      "gtin": "4015100813494",
+      "archetype_role": "Heat-protective primer",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; C2 directions state 'Nicht ausspülen!' explicitly despite the 'Sprüh-Conditioner'/'Spülung' naming (rinse test PASS). HOLD none.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry",
+            "dry_hair"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Nach jeder Haarwäsche in das handtuchtrockene oder trockene Haar sprühen."
+            },
+            {
+              "stage": "dry_hair",
+              "quote": "Nach jeder Haarwäsche in das handtuchtrockene oder trockene Haar sprühen."
+            }
+          ],
+          "note": "Diverges from this record's own v0.3 ROLE reading, which withheld `refresh` because the dry-hair option is textually bound to \"Nach jeder Haarwäsche\" and so read as a post-wash variant, not an independent between-washes occasion (see dimensions history / §7.13.1). application_stage is a judgment-free transcription, not a scored role: the direction sentence names both \"handtuchtrockene\" and \"trockene\" hair states explicitly, so both are transcribed. The two readings are not in conflict — they answer different questions (is this an independently informative *role*, vs. what hair states does the label name)."
+        }
+      },
+      "tail_marker": {
+        "ingredient": "SODIUM BENZOATE",
+        "rank": 14,
+        "list_length": 21,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). No counter-indication recorded on this marker (SODIUM BENZOATE r14/21); ordinary plausible reading."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "capped by the LGN gate - carried-open item BR §2.10",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "dry_biased",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "multi_family",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "mandatory_counter_signal": "Three families: persistent silicone (r3/r5/r8), medium-band vegetable oil (Prunus Armeniaca Kernel Oil r4), cationic-polymer film (PQ-16 r9). The absent rich/low-spreading band member holds the value below high - no rich-band species appears at any rank, and apricot kernel oil is unenumerated and read medium-band.",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT is not high; and no C1/C2 intended-finish statement exists"
+        },
+        "persistence_removal_class": {
+          "value": "permanent_cationic",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "Polyquaternium-16 r9 above the marker, enumerated by INCI name"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "claim_only",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_tier": "C2",
+          "l9_member_present": false,
+          "routes_to_review": "claim looks formula-unsupported (§13.3 rule 2)",
+          "note": "PQ-16 is not PQ-55; Hydrolyzed Keratin is not hydrolyzed wheat protein. The closed L9 list is by exact species. The 230 °C figure is never used as a protection level (FS-14)."
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "plain_hydrolysate_note": "Hydrolyzed Keratin r6 and Hydrolyzed Pearl r7 - both above the marker and both none_visible; cationisation or silane functionalisation, not rank, is what makes a protein an R2 route",
+          "candidate_below_tail": false
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": []
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "non_lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "SFR high rested on two observations, and the film half is the persistent silicone system Dimethicone r3, Phenyl Trimethicone r5, Dimethiconol r8.",
+        "derived_from_sfr": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "two_observations": [
+            "film: Dimethicone r3, Phenyl Trimethicone r5, Dimethiconol r8",
+            "lubrication: Prunus Armeniaca Kernel Oil r4"
+          ]
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          },
+          {
+            "flag": "LAYER",
+            "value": true,
+            "note": "LAYER fires — persistence_removal_class resolves to `permanent_cationic` via Polyquaternium-16 r9, present as architecture (§8.4, firing condition added 2026-09-13 — freeze-prep housekeeping, ledger row 20 addendum; round-4 report residue item 4). One caution string only: no compatibility matrix, no layering score, no product-to-product verdict."
+          },
+          {
+            "flag": "buildup",
+            "value": true,
+            "note": "Buildup caution, emitted from the PERS evidence. Non-quantitative by G11: no wash count, no duration, no applications-to-buildup, no clarification schedule (§8.5)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2",
+        "note": "§9 constraint 3 - a product sold on keratin repair whose only protein is a plain hydrolysate reads moisture. §9 silicone-led unknown rule under-fires (§17.22) because a material emollient leg (apricot oil r4) is present."
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "high",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `moderate`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 2: marketing never moves the level. This product carries C2 repair claims and they do not raise it.",
+        "focus": {
+          "primary": "smoothing",
+          "secondary": []
+        },
+        "focus_basis": "T13 re-derivation (2026-09-10). RESOLVED — supersedes the pre-T13 basis below, kept for history. `repair` no longer qualifies: T13a deletes the repair row's marketing-position prong, and R2 is `none_visible` (Hydrolyzed Keratin r6 / Hydrolyzed Pearl r7 are plain hydrolysates, §7.10) — this record's only route to `repair` was the deleted prong, so it is unavailable as primary AND as secondary (a marketing-only claim was never independent support). `smoothing` now qualifies: smoothing_route is silicone_film on a two-observation SFR-high read (film: Dimethicone r3, Phenyl Trimethicone r5, Dimethiconol r8; lubrication: Prunus Armeniaca Kernel Oil r4), clearing §7.4.1's two-observation test. COND moderate was capped by the LGN gate (no fatty alcohol partner) and rests on the same silicone system plus the cationic-polymer film PQ-16 r9 as admissible alternates; under the now-adopted T13b permissive reading, at least one admissible establishing set (the PQ-16 cationic route) leaves the silicone film beyond baseline conditioning. heat_styling remains the near-miss it always was: provides_heat_protection is true (claim-led), but application_stage is [towel_dry, dry_hair] with no pre_heat, so the row does not qualify. Every other route fails its own gate (curl_definition: HOLD none; detangling: no detangling-led C1/C2 positioning; volume_lightness: WT moderate; shine: would restate the smoothing film, G3). PRE-T13 BASIS (superseded, retained for history — Recorded contradiction — the most consequential open reading in this record, per the v3 evidence chain and 2026-09-04 gold-set review): §10.2 repair row, second prong — protein actives named in the C1/C2 marketing position ('Rekonstruktion der Haarstruktur durch flüssiges Keratin'). Recorded contradiction with principle 4 ('positioning never creates a route'); the specific row was applied over the general principle and the record routed to review on this point. Nick adjudicated this exact contradiction on 2026-09-10 while reviewing this record and resolved it in principle 4's favour (T13a) — see standard §10.2.",
+        "specialist_functions": {
+          "provides_heat_protection": true
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Hitzeschutz ist ausgelobt; in der Rezeptur finden wir dafür keinen belegten Wirkstoff. Wir prüfen das.",
+          "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+          "Kann mit stark anionischen Stylingprodukten flocken oder pillen. Belegt ist das nicht – im Zweifel erst an einer kleinen Partie testen.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe."
+        ]
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "heat_claim_without_l9_member",
+          "care_direction_underfires_on_film_led_architecture",
+          "tail_marker_dependence"
+        ]
+      }
+    },
+    {
+      "slot": 9,
+      "brand": "Redken",
+      "product": "Extreme Anti-Snap Leave-In Treatment",
+      "gtin": null,
+      "gtin_candidates": [
+        "884486453402",
+        "884486210777"
+      ],
+      "archetype_role": "Protein/surface-repair",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; directions state 'Ohne ausspülen' (rinse test PASS). HOLD none.",
+      "out_of_category": false,
+      "identity_status": "provisional_identity_conflict",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Nach dem Extreme Shampoo und Conditioner anwenden. Ins handtuchtrockenen Haar geben. Nicht ausspülen. Wie gewohnt stylen.",
+              "source": "redken.eu/de-de",
+              "source_tier": "C2",
+              "captured": "2026-09-13",
+              "note": "[Merged 2026-09-13: supersedes the round-3 basis entry (Auf einzelne brüchige Haarstellen oder auf dem ganzen Haar verteilen und einmassieren. Ohne ausspülen, direkt die Haare wie gewohnt stylen.); see evidence_upgrade_note.]"
+            }
+          ],
+          "note": "The softest-basis call in this pass. No literal wetness word (\"feucht\"/\"trocken\"/\"handtuchtrocken\"/\"nass\") appears anywhere in the captured directions. `towel_dry` is the minimal-certain reading, resting on the apply-then-proceed-directly-to-styling sequence (\"ohne ausspülën, direkt... stylen\"), which is the standard post-wash leave-in usage pattern. `dry_hair`, `pre_heat` and `post_style` are not established by this text and are deliberately withheld rather than guessed. A reviewer with a more explicit source (e.g. the redken.eu C2 page noted in this record's ROLE history) should confirm or correct this call.",
+          "evidence_upgrade_note": "Evidence upgraded 2026-09-13 (round-4 evidence-gap-closure.md, Gap 2). The prior basis (douglas.de, C3) was silent on stage — no literal wetness word (\"feucht\"/\"trocken\"/\"handtuchtrocken\"/\"nass\") appears anywhere in that captured text; `towel_dry` was the minimal-certain inferred reading recorded in this field's own `note` above. A second, independent C2 manufacturer German-market source (redken.eu/de-de) now names the stage verbatim (\"Ins handtuchtrockenen Haar geben\"), closing the softest-basis call the original note flagged and answering its own call for \"a reviewer with a more explicit source.\" Value is unchanged (`['towel_dry']`) — the new source confirms, not revises, the existing reading. `source_tier` raised C3 -> C2 to reflect the stronger of the two now-attached sources; the original C3 quote is retained verbatim in `basis` rather than replaced. Basis merged to a single towel_dry entry (record convention: one basis entry per stage); the C2 verbatim quote is the basis of record, the prior entry retained inside its note."
+        }
+      },
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 3,
+        "list_length": 24,
+        "limitation": "§3.1.1 limit 3 paradigm case - an entire conditioning architecture sits nominally in the unordered sub-1 % tail. Values held at the level the readable architecture supports, fields marked uncertain, confidence lowered one step. Where an anchor carries its own explicit above-tail requirement, the rank prong governs.",
+        "plausible": false,
+        "plausibility_rule": "T16 (2026-09-11) / §3.1.1. Plausibility test: does the marker sit AFTER the product's core conditioning architecture (the ingredients that establish COND/WT)? Here COND/WT are established by Amodimethicone r4, Isopropyl Myristate r8 and the LGN/cationic deposit r15-17 - every one of them ranked AFTER the marker at r3. The marker sits BEFORE the architecture it is supposed to bound, so it is implausible: it is Nick's motivating example for T16 (Phenoxyethanol r3 of 24 would put the product's own main conditioning silicone, r4, in the sub-1% tail - a listing artifact, not a real 1% boundary). It may not be used to disqualify any route or ingredient on this record; the record routes to review with a tail_marker_implausible note.",
+        "core_conditioning_architecture_ranks": {
+          "amodimethicone": 4,
+          "isopropyl_myristate": 8,
+          "cetyl_alcohol": 15,
+          "cetrimonium_chloride": 16,
+          "behentrimonium_methosulfate": 17
+        },
+        "marker_status": "implausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). Matches this record's existing `tail_marker.plausible: false` (T16, 2026-09-11) verbatim — the marker sits before this record's own core conditioning architecture."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "unknown",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "low",
+            "v3_slip_evidence_level": "E2",
+            "uncertain": true,
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "multi_family",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "mandatory_counter_signal": "Families: persistent silicone (Amodimethicone r4), dry-feel ester (Isopropyl Myristate r8), LGN/cationic deposit (Cetyl Alcohol r15, Cetrimonium Chloride r16, Behentrimonium Methosulfate r17). The absent rich/low-spreading band member holds it below high - no rich-band species appears at any rank and IPM is high-spreading. All families sit below the rank-3 marker.",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT is not high"
+        },
+        "persistence_removal_class": {
+          "value": "ph_dependent_cationic",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "quat_structure": "unresolved",
+          "note": "Quaternium-33 r19 is opaque and is NOT promoted (§7.6). Amodimethicone r4 sits below the marker; the alternative monomeric-quat reading also projects moderate, so the projected field is robust."
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "Polyacrylamide unenumerated in L5 (§17.19); here plainly the pre-neutralised emulsifier system",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "claim_only",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_tier": "C2",
+          "claim_source": "redken.eu/de-de (German-market page - C2 under rule 3)",
+          "l9_member_present": false,
+          "routes_to_review": "claim looks formula-unsupported (§13.3 rule 2)",
+          "note": "the silanetriol is not hydrolyzed wheat protein; Quaternium-33 is not Quaternium-70. No °C figure exists on the C2 page and none is used."
+        },
+        "repair_surface_film": {
+          "value": "candidate",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "route": "silane_derivative",
+          "route_species": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol",
+          "route_rank": 14,
+          "tail_marker_implausible": true,
+          "tail_marker_implausible_note": "T16/§3.1.1: the marker (Phenoxyethanol r3) sits before this product's own core conditioning architecture (Amodimethicone r4; LGN/cationic deposit r15-17), so it is implausible and unreliable. Per T16 it may not be used to disqualify this route. The silane at r14 is a §7.10-qualifying substantive route (a silane derivative) and is no longer read as below-marker-disqualified; R2 takes its qualifying value `candidate` directly. Routes to human review under the standing `tail_marker_implausible` note rather than the retired `candidate_below_tail` mechanism.",
+          "plain_hydrolysate_note": "Hydrolyzed Soy Protein r12"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "Benzyl Alcohol r21 is outside the Alcohol Denat./Alcohol enumeration - no alcohol note (§17.21)"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "non_lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "SFR moderate. The alignment route read is the persistent amino silicone Amodimethicone r4; §7.4.1 clause 3 governs, because every candidate route sits below the rank-3 marker.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "note": "§7.4 clause 3 governs - every candidate route sits below the rank-3 marker"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "low",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "protein",
+        "confidence": "low",
+        "evidence_level": "E2",
+        "uncertain": true,
+        "note": "T16 re-derivation: R2 is now `candidate` (the silane no longer sits below a reliable marker), so §9's `protein` anchor is met directly. `moisture`'s conditioning+humectant+emollient branch requires no protein-film route, which is no longer true, so it stops applying. `balanced` is not reached: it additionally requires a material moisture leg above the tail, and this pass does not extend the T16 relief to the moisture-side ingredients (IPM r8, the LGN/cationic deposit r15-17) - only R2's own route was re-derived per the ruling's stated consequence. Positioning ('Es stärkt und glättet die Schuppenschicht', 'bis zu 96% stärker') corroborates but is recorded as a counter-signal, never the route (§9 constraint 3)."
+      },
+      "profile": {
+        "product_form": "spray",
+        "product_form_basis": "Evidence correction, 2026-09-13 (round-4 evidence-gap-closure.md, Gap 2). Was `lotion` (round-3 guess; no packet form evidence). redken.eu/de-de product photography (image filenames embed GTIN 884486453402, matching one of this record's frozen `gtin_candidates`) shows a black spray-trigger pump head with a horizontal atomizing nozzle on the 250 ml bottle — the same fine-mist trigger-spray geometry as slot 2's ISANA packshot. Spray, confidence high.",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "protein",
+        "repair_support_level": "medium",
+        "repair_support_basis": "T16 re-derivation (2026-09-11). R2 is now `candidate` (E1) — the silane, Hydrolyzed Vegetable Protein PG-Propyl Silanetriol at r14, is no longer disqualified: the tail marker (Phenoxyethanol r3) sits before this product's own core conditioning architecture (Amodimethicone r4; LGN/cationic deposit r15-17), so it is `tail_marker_implausible` and T16 forbids using it to disqualify any route. conditioning_level = `moderate` (>= moderate). §10.3.2's `medium` row (R2 ∈ {candidate, tested} with conditioning_level >= moderate) is reached directly — this is the first gold-set record to exercise it; the `high` row still needs exact-product E3+ evidence, which does not exist here. §10.3.2 clause 2 (marketing never moves the level) is unaffected: the level moves on the formula route, not on the C2 copy.",
+        "focus": {
+          "primary": "repair",
+          "secondary": []
+        },
+        "focus_basis": "T16 re-derivation (2026-09-11), value CHANGED from `general`. A dedicated repair route now exists — R2 = `candidate` (§7.10, via the T16 tail-marker-implausible relief) — so §10.2's `repair` row (R2 ∈ {candidate, tested}, and nothing else, T13a) qualifies for the first time on this record. `smoothing` is re-checked and still does not qualify: this pass's T16 relief is scoped to R2 alone (per the ruling's stated consequence), so SFR/`smoothing_route` is left exactly as it was — `moderate`, one observation only, because §7.4.1 clause 3's below-marker treatment of the candidate second (lubrication) route is not re-opened here — and §7.4.1's two-observation test still fails outright. `repair` is therefore the sole qualifying route in the rank order (repair > smoothing > curl_definition > heat_styling > detangling > volume_lightness > shine); it becomes `primary` without needing a tie-break. The C2 marketing position is repair-led ('Anti-Snap', 'reduziert Haarbruch und Spliss', 'bis zu 96% stärker') and corroborates the now-qualifying formula route, but it does not create it (principle 4, §10.2 step 5) — the route already clears on R2 alone. Every other route still fails its own gate exactly as before: curl_definition (HOLD none), heat_styling (application_stage [towel_dry], no pre_heat), detangling (no C1/C2 positioning), volume_lightness (WT moderate), shine (would restate the film). No secondary focus: nothing else clears its own independent-support bar. Result: repair, still uncertain — this record's values remain broadly uncertain from the rank-3 marker, now formally `tail_marker_implausible` (§3.1.1, T16) rather than the retired `candidate_below_tail` reading.",
+        "specialist_functions": {
+          "provides_heat_protection": true
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "conditional",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "recommended"
+        },
+        "damage_fit_basis": "T16 re-derivation (2026-09-11). R2 = `candidate` and conditioning_level = `moderate` (>= moderate) now open §10.3's repair-film path (row 3b), which supersedes row 2 (no qualifying repair route no longer applies). Row 3b: healthy `conditional`, moderately_damaged `recommended`, highly_damaged `recommended` — the tier written for exactly this archetype (R14) is reached for the first time in this gold set. `healthy` moves recommended -> conditional and `highly_damaged` moves conditional -> recommended; `moderately_damaged` stays recommended (row 2 and row 3b agree on that cell).",
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [
+          "conditioning_level",
+          "weight_potential",
+          "persistence",
+          "care_direction",
+          "focus",
+          "repair_support_level",
+          "damage_fit"
+        ],
+        "cautions_de": [
+          "Hitzeschutz ist ausgelobt; in der Rezeptur finden wir dafür keinen belegten Wirkstoff. Wir prüfen das.",
+          "Enthält einen Protein-Baustein, der sich als Film aufs Haar legen kann. Das ist Pflege an der Oberfläche, keine Reparatur.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe.",
+          "Dazu haben wir keine belastbare Information."
+        ]
+      },
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "tail_marker_implausible",
+          "very_early_tail_marker",
+          "heat_claim_without_l9_member",
+          "quat_structure_unresolved",
+          "claim_authority_gap",
+          "identity_conflict",
+          "directions_below_authority"
+        ],
+        "resolved_triggers": [
+          {
+            "trigger": "candidate_below_tail",
+            "resolved": "2026-09-11",
+            "note": "T16: the marker (Phenoxyethanol r3) is ruled `tail_marker_implausible` — it sits before this product's own core conditioning architecture (Amodimethicone r4) — so it may not be used to disqualify the silane route. R2 takes `candidate` directly and the record now carries the standing `tail_marker_implausible` trigger instead of `candidate_below_tail`."
+          }
+        ]
+      }
+    },
+    {
+      "slot": 10,
+      "brand": "Olaplex",
+      "product": "N°.6 Bond Smoother",
+      "gtin": null,
+      "gtin_candidates": [
+        "896364002602",
+        "896364002619"
+      ],
+      "archetype_role": "Bond-repair claim",
+      "g0_state": "in_category",
+      "g0_rationale": "Water rank 1; the manufacturer's own FAQ names it an out-of-shower leave-in treatment; no rinse instruction (rinse test PASS). HOLD none, so the 'styling product' self-description does not reach §2.3.2.",
+      "out_of_category": false,
+      "identity_status": "provisional_identity_conflict",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2-equivalent (judgment)",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Apply one pump to clean, damp hair."
+            }
+          ],
+          "note": "The frozen `directions_of_use` field supports only `towel_dry` (\"damp hair\"). This record's packet also quotes a manufacturer FAQ (\"You can use Nº.6 Bond Smoother® on either damp or dry hair\"; \"...great when used before air drying or blow drying\"; \"...used on dry hair to refresh or touch up a style\") in `directions_source.note`, which would additionally support `dry_hair`, `pre_heat` and `post_style` — but that text sits outside the frozen `directions_of_use` field this pass transcribes from, so it is deliberately not folded in here. Recorded as an open widening candidate for a future packet revision that freezes the FAQ text itself."
+        }
+      },
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 14,
+        "list_length": 46,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). No counter-indication recorded on this marker (PHENOXYETHANOL r14/46); ordinary plausible reading."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "dry_biased",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "row": "lgn_pair",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 2 - no C1/C2 intended-finish statement exists; the only frozen claim is C3"
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "monomeric_quat_note": true,
+          "note": "Hydroxypropyl Guar r18 is the non-ionic guar, NOT Guar Hydroxypropyltrimonium Chloride; no polymeric or silicone-functional quat is present"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "note": "Hydroxyethylcellulose r17 and Hydroxypropyl Guar r18 are explicit L5 rheology exclusions",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "claim_only",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_tier": "C2_cross_market_verified",
+          "l9_member_present": false,
+          "routes_to_review": "claim looks formula-unsupported (§13.3 rule 2)",
+          "note": "T14 (2026-09-10, §2.4.1 rule 7): the 232 °C / 450°F statement is byte-identical on olaplex.com and es.olaplex.com (both non-German-market) and is now admitted as claim-creating because product identity is verified (46-ingredient INCI matches the frozen douglas.de capture set-for-set; EAN 850018802796 confirmed at German retailer xhair.eu) and douglas.de (C3) corroborates it. Dimethicone and Phenyl Trimethicone are generic silicones, not L9 members, so formula_plausible is not reached. Resolves the prior R12/claim_authority_gap reading (was: not_claimed, false) — see the guarding counter-example for Cantu, whose documented US/German formula split fails T14's identity prong."
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": true,
+          "candidate_below_tail_note": "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol (silane derivative) at rank 24; marker Phenoxyethanol at rank 14"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [
+            "Isopropyl Alcohol r16 is outside the Alcohol Denat./Alcohol enumeration - no alcohol note (§17.21)"
+          ]
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "emulsion",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "emulsion_subtype": "lgn",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "SFR high rested on two observations, and the film half is the persistent silicone system Dimethicone r3, Phenyl Trimethicone r9.",
+        "derived_from_sfr": {
+          "value": "high",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "two_observations": [
+            "film: Dimethicone r3, Phenyl Trimethicone r9",
+            "lubrication: Coco-Caprylate r5, Neopentyl Glycol Diheptanoate r6"
+          ]
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          },
+          {
+            "flag": "buildup",
+            "value": true,
+            "note": "Buildup caution, emitted from the weight_potential evidence (T17/§8.5, hard-rule audit item H6: weight_potential projects high with a persistent non-volatile family present as architecture). Non-quantitative by G11: no wash count, no duration, no applications-to-buildup, no clarification schedule (§8.5). persistence_removal_class itself is unchanged (neutral_non_volatile) — only which end can raise the caution is widened, not what PERS projects (G3 rule 4)."
+          },
+          {
+            "flag": "R3",
+            "value": "chemistry_candidate",
+            "confidence": "moderately_high",
+            "evidence_level": "E1",
+            "note": "Bis-Aminopropyl Diglycol Dimaleate r11, above the marker. Opens bond_claim_review; never sets a repair level; salon-regime evidence barred by G8 (FS-26)."
+          }
+        ],
+        "r3_state": "chemistry_candidate",
+        "r3_review_routing": [
+          "bond_chemistry_candidate"
+        ],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "evidence_level": "E2"
+      },
+      "profile": {
+        "product_form": "cream",
+        "product_form_basis": "Confirmed, 2026-09-13 (round-4 evidence-gap-closure.md, Gap 1 item 4). Value unchanged — the only one of the four evidence-gap items where round-3's `lotion` guess was already absent (this slot was already `cream`). douglas.de's full-resolution packshot (Art. 1111439, exact identity match) shows a squat opaque white airless-pump bottle with a flat push-dome top — no spray nozzle, no flip-cap, no visible tube; olaplex.com's own product copy states verbatim \"An anti-frizz styling cream to smooth, hydrate, and reduce breakage.\" Cream, confidence high.",
+        "conditioning_level": "high",
+        "weight_potential": "high",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `high`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 4: a qualifying route sits at or below the tail marker (Hydrolyzed Vegetable Protein PG-Propyl Silanetriol (silane derivative) at rank 24; marker Phenoxyethanol at rank 14), so R2 holds its rank-supported `none_visible` value and the level is `low`; the record routes to human review on the below-marker note. §10.3.2 clause 1: an R3 bond chemistry candidate is invisible to this rule (R14, G8, FS-26). A bond-claim-only product is `low`.",
+        "focus": {
+          "primary": "smoothing",
+          "secondary": []
+        },
+        "focus_basis": "T13 re-derivation (2026-09-10, permissive reading, §10.2.1): smoothing_route is silicone_film on a two-observation SFR-high read (film: Dimethicone r3, Phenyl Trimethicone r9; lubrication: Coco-Caprylate r5, Neopentyl Glycol Diheptanoate r6), clearing §7.4.1's two-observation test — consistent with the product's own 'Bond Smoother' identity (§10.2.1's stated rationale for adopting the permissive reading names this record explicitly). COND high was over-satisfied (the LGN pair r2/r7 alone would have carried it, with the silicone system and the dry-feel esters both available as further independent routes), so under the conservative reading the silicone film read as baseline conditioning; under the now-adopted permissive reading, the LGN pair alone leaves it beyond baseline. `repair` remains unavailable: R2 is `none_visible` (the qualifying silane sits below the tail marker), no C1/C2 marketing position exists at all for this product, and the R3 `chemistry_candidate` bond flag alone may never set `repair` as primary (R14) — as a secondary focus it would additionally need an independent moderate+ observation, and the only candidate (the below-marker silane) does not clear the rank prong, so it is not taken; this reasoning is unaffected by T13, which only removed the now-moot marketing-position route. Every other route fails its own gate (curl_definition: HOLD none; heat_styling: `application_stage` lacks `pre_heat` — T14 (2026-09-10) moved HEAT to `claim_only`/`true`, but the `heat_styling` route independently requires `application_stage` to include `pre_heat` (§10.2), and this record's frozen directions support only `towel_dry`, so the route still fails; detangling: no C1/C2 positioning; volume_lightness: WT high; shine: would restate the film). This record's pre-T13 `focus` uncertain_fields entry — recorded because the §10.2.1 reading, not the evidence, decided it — is removed: the reading is now a settled rule.",
+        "specialist_functions": {
+          "provides_heat_protection": true
+        },
+        "hair_thickness_fit": {
+          "fine": "caution",
+          "medium": "conditional",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "conditional",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "recommended"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Legt sich spürbar aufs Haar – bei feinem Haar sparsam dosieren.",
+          "Hitzeschutz ist ausgelobt; in der Rezeptur finden wir dafür keinen belegten Wirkstoff. Wir prüfen das.",
+          "Bleibt lange im Haar. Bei häufiger Anwendung kann ein kräftigeres Shampoo nötig sein – wie schnell sich etwas aufbaut, hängt von Menge, Häufigkeit und Shampoo ab.",
+          "Enthält einen Baustein aus der Bond-Kategorie. Unabhängige Belege dafür, dass sich damit die Haarstruktur verändert, fehlen – wir prüfen das.",
+          "Enthält deklarierte Duftstoff-Allergene oder aromatische Pflanzenstoffe.",
+          "Dazu haben wir keine belastbare Information."
+        ]
+      },
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "bond_chemistry_candidate",
+          "heat_claim_without_l9_member",
+          "candidate_below_tail",
+          "identity_conflict",
+          "directions_below_authority"
+        ]
+      }
+    },
+    {
+      "slot": 11,
+      "brand": "Balea",
+      "product": "Leichtkämmspray Pure Styling",
+      "gtin": "4067796148855",
+      "archetype_role": "Sensitive/fragrance-free fibre leave-in",
+      "g0_state": "in_category",
+      "g0_rationale": "Aqua rank 1; C2 (house-brand) directions state 'Produkt muss nicht wieder ausgespült werden.' (rinse test PASS). HOLD none - the 'Pure Styling' name does not touch the decision.",
+      "out_of_category": false,
+      "identity_status": "verified",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C3",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Auf nasses Haar aufsprühen, kurz einwirken lassen, kämmen und wie gewohnt frisieren."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "HYDROXYACETOPHENONE",
+        "rank": 7,
+        "list_length": 11,
+        "marker_status": "vacuous",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6, registered value). This record's `tail_marker` carried no explicit vacuous/implausible flag before this pass; the registered backfill applies §3.1.1 clause 6's closed-set test to the tail (HYDROXYACETOPHENONE r7/11) and records `vacuous`. No dimension value moves — every anchor on this record rests on the coherence read of the species at r1-r6, not on the marker's rank boundary (transform-notes.md §24, \"the one consequence … slot 11\", the same finding pre-registered a day earlier)."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "low",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "limitation": "§7.2 'short-chain quat' vs §7.6 'monomeric long-chain' vocabulary conflict for one material class - carried open (ref A18, blind A24)",
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "wet_biased",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "moderate",
+            "v3_slip_evidence_level": "E2",
+            "note": "reproduces the carried-open COND low / SLIP moderate contradiction on a single monomeric-quat observation",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "low",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT is low, not high; and the C2 statement 'Kein Verkleben oder Beschweren' agrees with the formula read rather than contradicting it"
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "monomeric_quat_note": true,
+          "note": "§7.6 explicitly refuses volatile_or_water_soluble when a monomeric long-chain quat is the dominant persistent species"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "note": "C2 house-brand page fetched live and actively checked - the claim genuinely does not exist; not a claim_authority_gap"
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": false,
+          "note": "Panthenol r6 is a fibre-mechanics signal, not an R2 route and not a heat route (FS-24)"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "no_listed_fragrance_signal",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "notes": [],
+          "hard_limit": "not fragrance-free, not allergy-safe, not hypoallergenic; the C2 'Ohne Parfüm' badge is the manufacturer's claim, never a tolerance conclusion"
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "aqueous_or_hydroalcoholic_solution",
+          "confidence": "moderately_high",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed."
+        }
+      },
+      "smoothing_route": {
+        "value": "none",
+        "basis": "SFR low: no persistent film at any rank. Water phase, Panthenol and a single monomeric long-chain quat only.",
+        "derived_from_sfr": {
+          "value": "low",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "absent",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "low",
+        "evidence_level": "E2",
+        "row": "humectant_led_minimum",
+        "mandatory_counter_signal": "thin architecture - no L3 leg at all and a single monomeric quat as the L1 leg"
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "low",
+        "weight_potential": "low",
+        "persistence": "moderate",
+        "hold_support": "none",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `low`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached.",
+        "focus": {
+          "primary": "detangling",
+          "secondary": [
+            "volume_lightness"
+          ]
+        },
+        "focus_basis": "detangling qualifies on BOTH prongs - detangling-led C2 positioning ('Leichtkämmspray', 'erleichtert das Kämmen erheblich') with SLIP moderate, and a slip-dominant light architecture (SLIP moderate, COND low, WT low). volume_lightness qualifies (WT low, no persistent film route) and ranks below detangling; it clears the independent-support bar on a distinct weight observation.",
+        "specialist_functions": {
+          "provides_heat_protection": false
+        },
+        "hair_thickness_fit": {
+          "fine": "recommended",
+          "medium": "recommended",
+          "coarse": "conditional"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "conditional",
+          "highly_damaged": "caution"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "conditional",
+          "coily": "caution"
+        },
+        "uncertain_fields": [],
+        "cautions_de": [
+          "Bleibt leicht im Haar und beschwert kaum.",
+          "Keine deklarierten Duftstoffe in der Liste. Das heißt nicht parfümfrei oder hypoallergen."
+        ]
+      },
+      "review_routing": {
+        "review_status": "draft",
+        "routed": true,
+        "triggers": [
+          "fragrance_free_or_hypoallergenic_implication",
+          "claim_tier_basis_house_brand",
+          "carried_open_cond_slip_contradiction"
+        ]
+      }
+    },
+    {
+      "slot": 12,
+      "brand": "Kevin Murphy",
+      "product": "Young.Again Oil",
+      "gtin": null,
+      "gtin_candidates": [
+        "9339341020356",
+        "9339341001744"
+      ],
+      "archetype_role": "Boundary / source-conflict",
+      "g0_state": "excluded_anhydrous",
+      "g0_rationale": "Water (Aqua) at rank 23 of 36 - absent from the top of the list under either capture - with Cyclopentasiloxane (1), Dimethicone (2), Dimethiconol (3) and Bis-Cetearyl Amodimethicone (4) leading. §2.3 trap 1: an anhydrous product leaves the category regardless of the label or of leave-on directions. NOT provisional_boundary: §2.3.2 clause 4 reserves that state for genuine evidence conflicts, and although a formula-source conflict exists, both captures agree the architecture is silicone-leading/anhydrous-serum-like, so the conditioning architecture is readable; and there are no two C1/C2 sources to disagree.",
+      "out_of_category": true,
+      "identity_status": "provisional_formula_conflict",
+      "tail_marker": {
+        "ingredient": "PHENOXYETHANOL",
+        "rank": 29,
+        "list_length": 36,
+        "limitation": "very late marker (§17.18)",
+        "vacuous": true,
+        "vacuous_note": "T17/§3.1.1 clause 6 (hard-rule audit item H1): every ingredient at or below the marker (Potassium Sorbate r30, Fragrance/Parfum r31, Linalool r32, Limonene r33, Geraniol r34, Hydroxyisohexyl 3-Cyclohexene Carboxaldehyde r35, Violet 2 (CI 60725) r36) is a capped preservative, a fragrance/allergen declaration or a colourant -- nothing the architecture read would have placed there anyway. Informational only: this record is `excluded_anhydrous` (§2.3.1) and emits no lean profile; the G0 exclusion rests on Aqua's position and the leading cyclomethicone/dimethicone/oil architecture, none of which reads the tail marker, so the vacuous reading changes no decision on this record.",
+        "marker_status": "vacuous",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). Matches this record's existing `tail_marker.vacuous: true` (T17/H1, §3.1.1 clause 6) verbatim. Informational only (excluded record, `excluded_anhydrous`, §2.3.1) — §14 rule 3 binds in-category records only; recorded here as part of the optional informational block this record already carries (`informational_and_non_authoritative: true`), consistent with its existing `vacuous_note`, which is itself already informational-only."
+      },
+      "informational_and_non_authoritative": true,
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "high",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "absorbed_slip_observation": {
+            "m1_contributors": "two_or_more",
+            "bias": "dry_biased",
+            "v3_slip_value": "high",
+            "v3_slip_confidence": "low",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "high",
+          "row": "lgn_pair",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 2 - the only lightness statement ('schwereloses Haaröl, das nicht fettet') is C5"
+        },
+        "persistence_removal_class": {
+          "value": "ph_dependent_cationic",
+          "confidence": "low",
+          "evidence_level": "E2",
+          "quat_structure": "unresolved"
+        },
+        "hold_route_state": {
+          "value": "none",
+          "confidence": "moderately_high",
+          "evidence_level": "E1",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "not_claimed",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "claim_authority_gap": true,
+          "note": "kevinmurphy.at is Austrian, not German-market - C5 under rule 3; kevinmurphy.com.au is C5. No C1/C2 source exists. The 93 °C figure is never read as a protection strength (FS-14)."
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "candidate_below_tail": false,
+          "plain_hydrolysate_note": "Hydrolyzed Soy Protein r14; Hexapeptide-11 r15 is a peptide with no cationisation or silane function and is not an R2 candidate route"
+        },
+        "fragrance_scalp_exposure": {
+          "value": "aromatic_or_allergen_exposure",
+          "confidence": "high",
+          "evidence_level": "E1",
+          "notes": [
+            "HICC (r35) is EU-restricted and is one of the four preserved conflicts",
+            "Ethylhexyl Methoxycinnamate r27 and Violet 2 (CI 60725) r36 recorded as observations only; no colour-deposit conclusion is drawn"
+          ]
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "Informational only (excluded record). Silicone-leading anhydrous architecture: Cyclopentasiloxane r1, Dimethicone r2, Dimethiconol r3, Bis-Cetearyl Amodimethicone r4.",
+        "derived_from_sfr": {
+          "value": "high",
+          "confidence": "low",
+          "evidence_level": "E2"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "low",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "low",
+        "evidence_level": "E2",
+        "note": "§9 silicone-led unknown rule under-fires (§17.22) - material emollient and humectant legs above the marker block it on a plainly film-led product. Informational only."
+      },
+      "profile": null,
+      "profile_note": "Not emitted. §2.3.1 exclusion contract.",
+      "regulatory_re_review_trigger": "2027-06-06",
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "g0_product_form_decision",
+          "formula_and_identity_conflicts_x4",
+          "absent_exact_market_formula",
+          "claim_authority_gap",
+          "quat_structure_unresolved",
+          "tail_marker_vacuous",
+          "regulatory_re_review_cyclosiloxane_led"
+        ],
+        "resolved_triggers": [
+          {
+            "trigger": "very_late_tail_marker",
+            "resolved": "2026-09-11",
+            "note": "T17/H1: the marker's tail (ranks 30-36) contains only capped preservative, fragrance/allergen declarations and a colourant -- the marker is vacuous under §3.1.1 clause 6. Informational only (this record emits no lean profile, §2.3.1); routes under the standing tail_marker_vacuous trigger instead."
+          }
+        ]
+      }
+    },
+    {
+      "slot": 13,
+      "brand": "Neqi",
+      "product": "Diamond Glass Ultimate Styling Spray",
+      "gtin": "4063528094575",
+      "archetype_role": "Boundary/identity-trap secondary",
+      "g0_state": "in_category",
+      "g0_rationale": "T15, 2026-09-10 - Nick's adjudication of the designed styling-boundary archetype, superseding the round-3/v0.3 provisional_boundary call below. The HOLD anchor now reads incidental_film: Silicone Quaternium-18 (r11), a substantive, permanently-cationic conditioning agent, together with Polysilicone-29 (r7), a smoothing silicone film, form a genuine conditioning film, with the fixative-class VP/Methacrylamide/Vinyl Imidazole Copolymer (r8) standing behind it as ONE supporting polymer rather than the dominant architecture. The styling-first test's architecture half is therefore not established at all, so the record resolves cleanly in_category - the C2 blow-dry-primer directions ('auf das handtuchtrockene Haar sprühen... mit Hitze und auf Spannung föhnen') now corroborate an included use rather than merely contradicting an exclusion. Name conflicts (dm.de 'Leave-In Spray' vs the manufacturer's 'Styling Spray') decide nothing either way (§2.3, G0's 'never by name'). This record is the archetype round-3 routed to Nick as a product-level call (round-3 report item 4) and is now the standard's worked example for §2.3.2/§7.7, paired with slot 7 (Maria Nila Curlicue Cream, excluded_styling_first): Curlicue's conditioning behind its fixative polymer is absent; this record's is present and substantive. Superseded round-3/v0.3 rationale, retained for audit: '§2.3.2 clause 2. Architecture half established: VP/Methacrylamide/Vinyl Imidazole Copolymer (r8, fixative-class L5 under the v0.3 enumeration) above the marker in a film-forming context (Polysilicone-29 r7), with thin conditioning behind it - the only cationic conditioning species, Silicone Quaternium-18, is at r11, below the marker, and Polysilicone-29 does not set HOLD on its own. But C1/C2 evidence materially contradicts the exclusion: the C2 directions describe a blow-dry primer (…), one of the two paradigm included uses clause 2 names. A provisional_boundary record is NOT an exclusion - it stays in-category, completes the record and marks every affected field uncertain.'",
+      "out_of_category": false,
+      "identity_status": "verified_with_minor_source_difference",
+      "identity": {
+        "application_stage": {
+          "value": [
+            "towel_dry",
+            "pre_heat"
+          ],
+          "evidence_level": "E1",
+          "evidence_scope": "directions",
+          "source_tier": "C2",
+          "basis": [
+            {
+              "stage": "towel_dry",
+              "quote": "Das Spray großzügig und gleichmäßig auf das handtuchtrockene (nicht nasse) Haar sprühen."
+            },
+            {
+              "stage": "pre_heat",
+              "quote": "Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen."
+            }
+          ]
+        }
+      },
+      "tail_marker": {
+        "ingredient": "ETHYLHEXYLGLYCERIN",
+        "rank": 9,
+        "list_length": 15,
+        "marker_status": "plausible",
+        "marker_status_note": "§14 rule 3 backfill, 2026-09-13 (ledger row 20; round-4 report residue item 6). No counter-indication recorded on this marker (ETHYLHEXYLGLYCERIN r9/15); ordinary plausible reading."
+      },
+      "dimensions": {
+        "conditioning_potential": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "absorbed_slip_observation": {
+            "m1_contributors": "one",
+            "bias": "dry_biased",
+            "v3_slip_value": "moderate",
+            "v3_slip_confidence": "low",
+            "v3_slip_evidence_level": "E2",
+            "rule": "T1 / §7.2. SLIP is not a property. This observation is recorded inside COND, may not move the COND value (G3), and is the input the `detangling` focus row and the `texture_fit` row-3/4/5 modifier read. The thresholds are the v0.3 SLIP anchors written out, so no value changes."
+          }
+        },
+        "weight_residue_potential": {
+          "value": "moderate",
+          "row": "single_family",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "conflict_tag_applied": false,
+          "conflict_tag_condition_failed": "condition 1 - WT did not resolve to high from formula alone. Conditions 2, 3 and 4 ARE all satisfied (C2 'Ultra-leichte Textur ohne Beschweren', materially about the finish, no E3+ evidence), which is why the decline is recorded explicitly: a lane applying the downgrade here would be downgrading a value that was never high."
+        },
+        "persistence_removal_class": {
+          "value": "neutral_non_volatile",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "below_marker_counter_signal": "Silicone Quaternium-18 at r11 vs marker r9 - cannot set permanent_cationic on the rank prong; under-warns on buildup (FS-20)"
+        },
+        "hold_route_state": {
+          "value": "incidental_film",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "note": "T15, 2026-09-10 (Nick's adjudication of the designed boundary archetype; supersedes the round-3/v0.3 meaningful_hold_route reading below). VP/Methacrylamide/Vinyl Imidazole Copolymer (r8) is fixative-class and present as architecture, but it is ONE supporting polymer standing behind a genuine, substantive conditioning film: Silicone Quaternium-18 (r11), a permanently-cationic conditioning agent, together with Polysilicone-29 (r7), a smoothing silicone film. That conditioning architecture dominates, which is the incidental_film shape (§7.7). Coarse state only - no hold level, grade or score. Superseded round-3/v0.3 note, retained for audit: 'coarse state only - no hold level, grade or score. §5 v0.3: the vinyl copolymer is fixative-class and CAN set HOLD; Polysilicone-29 is a silicone film former and cannot set it alone.'",
+          "manufacturer_hold_level": null
+        },
+        "heat_protection_evidence_state": {
+          "value": "claim_only",
+          "confidence": "high",
+          "evidence_level": "E0",
+          "evidence_scope": "product",
+          "claim_tier": "C2",
+          "l9_member_present": false,
+          "routes_to_review": "claim looks formula-unsupported (§13.3 rule 2)",
+          "note": "VP/Methacrylamide/Vinyl Imidazole Copolymer is enumerated in v0.3 as L5 fixative-class, NOT L9. Structural family resemblance to a tested polymer is not membership. The 'bis 230°' figure is never used as a protection level (FS-14)."
+        },
+        "repair_surface_film": {
+          "value": "none_visible",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "candidate_below_tail": true,
+          "candidate_below_tail_note": "Silicone Quaternium-18 (silicone quat) at rank 11; marker Ethylhexylglycerin at rank 9",
+          "species_reading_conflict_note": "T17/§2.3.2 consistency clause (hard-rule audit item H9): Silicone Quaternium-18 at r11 is named by T15 as part of the substantive conditioning film that decides this record's HOLD/G0 reading (hold_route_state: incidental_film, §7.7) -- while §7.10's rank prong independently keeps the same species, at the same rank, as candidate_below_tail for R2 (repair_surface_film stays none_visible). Two rules read one species at one rank differently. Neither reading is overridden: HOLD keeps incidental_film (T15 stands) and R2 keeps none_visible (the conservative, rank-supported value, unchanged) -- the record routes to human review so the divergence is visible rather than silently carried."
+        },
+        "fragrance_scalp_exposure": {
+          "value": "no_listed_fragrance_signal",
+          "confidence": "moderate",
+          "evidence_level": "E1",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "counter_signal": "Gardenia Taitensis Flower Extract r3 is an aromatic botanical high in the list; L8's aromatic value covers essential oils, and an extract is not an essential oil, so the literal read stands and the field is marked uncertain"
+        }
+      },
+      "reading_conventions": {
+        "architecture": {
+          "value": "microemulsion",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "uncertain": true,
+          "note": "v0.3 §7.1 asymmetry applied: test (i) solubiliser package (Trideceth-6 r12 + Trideceth-13 r13) carries NO position requirement; test (ii) requires the oil/silicone load above the tail, and Polysilicone-29 r7 satisfies it. Not the ambiguous middle, which is now only a single solubiliser plus a single oil/silicone species at or below the marker.",
+          "rule": "T11 / §3.1.2. Not a dimension — a trace reading convention on the same footing as the §3.1.1 tail marker, consumed inline by G0's boundary rationale, WT's ceiling and G9 clauses (§7.5) and COND's routes (§7.2). Value, confidence and evidence level are carried unchanged from the pre-T11 `dimensions.product_form_architecture` object; only its status as a separately reviewable dimension is removed. Added despite slot 13 sitting alongside slots 7/12 in the G0-boundary group, because slot 13 (provisional_boundary, in-category) still emits a profile and its product_form row cites this value — unlike the two fully-excluded records."
+        }
+      },
+      "smoothing_route": {
+        "value": "silicone_film",
+        "basis": "SFR moderate on the silicone film former Polysilicone-29 r7; the only candidate second route, Silicone Quaternium-18 r11, sits below the rank-9 marker.",
+        "derived_from_sfr": {
+          "value": "moderate",
+          "confidence": "moderate",
+          "evidence_level": "E2",
+          "evidence_scope": "formula",
+          "note": "§7.4 clause 3 - the only candidate second route (Silicone Quaternium-18 r11) is below the marker"
+        },
+        "rule": "T2 / §7.4. Not a scored dimension and not a reviewable row. Typed from the existing SFR + §6 mechanism evidence; the v0.3 SFR object is retained verbatim for diffability. It appears only inside the focus row's evidence and is never projected (G14)."
+      },
+      "hinweise": {
+        "fired": [
+          {
+            "flag": "SHN",
+            "value": "present",
+            "confidence": "moderate",
+            "evidence_level": "E2",
+            "note": "Shine qualifier `present` — the optical (M3) consequence of the same alignment/deposition film already counted in COND. Never an independent value, and never a gloss measurement (§8.1, FS-23)."
+          }
+        ],
+        "r3_state": "none",
+        "r3_review_routing": [],
+        "curl_note": "not derived — §17.20 has no value vocabulary",
+        "shn_qualifier": "present",
+        "rule": "T5 / §8.6. One conditional record per product listing only the flags that fired. §8.1–§8.5 are unchanged and still decide whether a flag fires. R3's full enum and review routing survive here, including `none`, which does not fire."
+      },
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "low",
+        "evidence_level": "E2",
+        "row": "humectant_led_minimum",
+        "uncertain": true,
+        "note": "§9 silicone-led unknown rule under-fires (§17.22) - a film-led product with a humectant leg above the tail is labelled moisture while its own C2 page claims 'Feuchtigkeitsschutz'"
+      },
+      "profile": {
+        "product_form": "spray",
+        "conditioning_level": "moderate",
+        "weight_potential": "moderate",
+        "persistence": "moderate",
+        "hold_support": "incidental",
+        "care_direction": "moisture",
+        "repair_support_level": "low",
+        "repair_support_basis": "R2 = `none_visible` (E1), conditioning_level = `moderate`. No qualifying substantive film route (R2 is not `candidate` or `tested`), so the `medium` row is not reached. No exact-product repair evidence at E3+, so the `high` row is not reached. §10.3.2 clause 4: a qualifying route sits at or below the tail marker (Silicone Quaternium-18 (silicone quat) at rank 11; marker Ethylhexylglycerin at rank 9), so R2 holds its rank-supported `none_visible` value and the level is `low`; the record routes to human review on the below-marker note.",
+        "focus": {
+          "primary": "heat_styling",
+          "secondary": []
+        },
+        "focus_basis": "the only qualifying route. HEAT >= claim_only under C1/C2 authority AND ROLE includes heat_styling with its direction sentence. curl_definition was disqualified by the v0.3 negative gate (no C1/C2 curl/wave positioning; the directions blow-dry auf Spannung). volume_lightness was refused despite a C2 lightness claim - positioning never creates a route.",
+        "specialist_functions": {
+          "provides_heat_protection": true
+        },
+        "hair_thickness_fit": {
+          "fine": "conditional",
+          "medium": "recommended",
+          "coarse": "recommended"
+        },
+        "damage_fit": {
+          "healthy": "recommended",
+          "moderately_damaged": "recommended",
+          "highly_damaged": "conditional"
+        },
+        "texture_fit": {
+          "straight": "recommended",
+          "wavy": "recommended",
+          "curly": "recommended",
+          "coily": "conditional"
+        },
+        "uncertain_fields": [
+          "product_form",
+          "conditioning_level",
+          "weight_potential",
+          "hold_support",
+          "care_direction",
+          "focus",
+          "fragrance_scalp_exposure"
+        ],
+        "cautions_de": [
+          "Hitzeschutz ist ausgelobt; in der Rezeptur finden wir dafür keinen belegten Wirkstoff. Wir prüfen das.",
+          "Keine deklarierten Duftstoffe in der Liste. Das heißt nicht parfümfrei oder hypoallergen.",
+          "Dazu haben wir keine belastbare Information."
+        ]
+      },
+      "review_routing": {
+        "review_status": "provisional",
+        "routed": true,
+        "triggers": [
+          "heat_claim_without_l9_member",
+          "candidate_below_tail",
+          "below_marker_persistence_route",
+          "care_direction_underfires_on_film_led_architecture",
+          "identity_trap",
+          "species_reading_conflict"
+        ],
+        "resolved_triggers": [
+          {
+            "trigger": "provisional_boundary_clause_2",
+            "resolved": "2026-09-10",
+            "basis": "T15 - Nick's adjudication resolves the designed boundary archetype in_category; the §2.3.2 clause-2 evidence conflict this trigger flagged no longer exists once HOLD reads incidental_film (the architecture half of the styling-first test is not established)."
+          },
+          {
+            "trigger": "hold_meaningful_hold_route",
+            "resolved": "2026-09-10",
+            "basis": "T15 - hold_route_state moves meaningful_hold_route -> incidental_film; the styling-boundary review this trigger existed to route is resolved by the ruling itself."
+          }
+        ]
+      }
+    }
+  ],
+  "stop_condition": "Research artifacts only. No catalog value, recommendation, Product Intake rule, Supabase row, user-facing copy or production matcher changes on this record's authority (§19)."
+}

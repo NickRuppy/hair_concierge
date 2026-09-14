@@ -44,7 +44,10 @@ function escapeHtml(value: string): string {
 // renders anywhere (viewers, chat uploads) without its sibling files.
 async function embed(target: string | null): Promise<string | null> {
   if (!target) return null
-  const buf = await sharp(target).resize({ width: 480, height: 480, fit: "inside", withoutEnlargement: true }).png().toBuffer()
+  const buf = await sharp(target)
+    .resize({ width: 480, height: 480, fit: "inside", withoutEnlargement: true })
+    .png()
+    .toBuffer()
   return `data:image/png;base64,${buf.toString("base64")}`
 }
 
@@ -85,7 +88,10 @@ async function renderCard(result: ImageResult): Promise<string> {
 </div>`
 }
 
-async function buildHtml(payload: { summary: Record<string, unknown>; results: ImageResult[] }): Promise<string> {
+async function buildHtml(payload: {
+  summary: Record<string, unknown>
+  results: ImageResult[]
+}): Promise<string> {
   const rows = (await Promise.all(payload.results.map((result) => renderCard(result)))).join("\n")
   return `<!doctype html>
 <html lang="de">
@@ -173,7 +179,9 @@ async function main(): Promise<void> {
     results: ImageResult[]
   }
   if (!Array.isArray(payload.results)) {
-    throw new Error(`${resultsPath} does not look like a batch-run.ts results.json (missing "results" array)`)
+    throw new Error(
+      `${resultsPath} does not look like a batch-run.ts results.json (missing "results" array)`,
+    )
   }
 
   const html = await buildHtml(payload)
