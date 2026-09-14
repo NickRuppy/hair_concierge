@@ -179,7 +179,7 @@ test("checkout return emits browser Subscribe only for subscription Stripe retur
 
   assert.match(
     source,
-    /if \(shouldTrackCheckoutReturnSubscriptionStarted\(\{[\s\S]*purchaseKind,[\s\S]*sessionId,[\s\S]*isTrialCheckout,[\s\S]*trialEnrollmentId,[\s\S]*\}\)\) \{[\s\S]*trackAppEvent\("subscription_started", \{[\s\S]*checkoutSessionId: sessionId/,
+    /if\s*\(\s*shouldTrackCheckoutReturnSubscriptionStarted\(\{\s*purchaseKind,\s*sessionId,\s*isTrialCheckout,\s*trialEnrollmentId,\s*\}\)\s*\)\s*\{\s*trackAppEvent\("subscription_started",\s*\{\s*checkoutSessionId:\s*sessionId/,
   )
   assert.match(
     source,
