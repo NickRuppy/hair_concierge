@@ -1,8 +1,12 @@
 {
   "base": "92f00b8c16f899278222401e8d6bf43a553730ab",
-  "fingerprint": "7db344b3bcac89849856935868ed82e2594a77718583fcb5472d9b77923ac680",
+  "fingerprint": "dd3b982a6c2d9f67050676a51843c6108c34c1efa268c3629da2929929039392",
   "method": "SHA256 of sorted relative-path TAB content-sha256 LF; self-referential receipt and manifest excluded",
   "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
     {
       "path": "eslint.config.mjs",
       "sha256": "e630234bbf25589e9cbcebcf354715c1a218195ee8e5cd31cdd09b347f5dde5e"
@@ -948,8 +952,16 @@
       "sha256": "5c1405ba7d813b97003c9795b9bc314e3d6364273031bff63f0f4f939a97fb52"
     },
     {
+      "path": "tests/ci-workflow-orchestration.test.ts",
+      "sha256": "9b7772dae56c620a159f26f08de42d52634979177e367b0c13e5aa5cab341c2e"
+    },
+    {
       "path": "tests/offer-section-order.test.ts",
       "sha256": "34f6dea8b36a9f61cb04f300a1ed6ccf6867994351d92a9b076dccea1cb7270f"
+    },
+    {
+      "path": "tests/offer-tracking-contract.test.ts",
+      "sha256": "069cb0e0deb50086f70ef820ed4c7931b3dbd7e91122c2beba3c6a3adcd1fa63"
     },
     {
       "path": "tests/quiz-funnel-package-context.test.tsx",

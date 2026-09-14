@@ -10,7 +10,7 @@ test("offer provider claims sections and FAQs without duplicate events", () => {
 
   assert.match(source, /viewedSectionsRef\.current\.has\(sectionId\)/)
   assert.match(source, /openedFaqsRef\.current\.has\(faqId\)/)
-  assert.match(source, /resolveOfferSectionIndex\(offerVariant, sectionId\)/)
+  assert.match(source, /resolveOfferSectionIndex\(offerVariant, sectionId, offerRevision\)/)
   assert.match(source, /resolveOfferFaqOpenClaim/)
   assert.match(source, /faqOpenIndexRef\.current = faqOpenClaim\.nextOpenIndex/)
   assert.match(source, /openIndex: faqOpenClaim\.openIndex/)

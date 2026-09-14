@@ -60,7 +60,7 @@ Historical build diagnosis, resolved during shipping: the worktree initially res
 - Preview server deliberately left running on port 3228 for Nick. The root checkout was not modified. No commit or publication was performed.
 
 - Final unit regression rerun after review fixes/formatting: **108/108 passed**. Repository ESLint: **0 errors, 5 warnings** (existing source/planning warnings). `git diff --check`: passed.
-- Canonical content fingerprint: `7db344b3bcac89849856935868ed82e2594a77718583fcb5472d9b77923ac680`, covering 246 paths. See `verification/content-manifest.json`; the self-referential receipt and manifest are excluded, and all other in-scope source, tests, configuration, media and retained planning evidence are included.
+- Canonical content fingerprint: `dd3b982a6c2d9f67050676a51843c6108c34c1efa268c3629da2929929039392`, covering 249 paths. See `verification/content-manifest.json`; the self-referential receipt and manifest are excluded, and all other in-scope source, tests, configuration, media and retained planning evidence are included.
 
 Final base refresh incorporated the upstream zero-total trial activation fix (#552) by safe fast-forward; no refinement path overlapped. Main reviewed the four-path delta and reran trial authorization/account activation plus scanner routing/pricing guards. No new visual decision or checkout implementation was introduced.
 
@@ -76,3 +76,11 @@ The original content manifest had no drift before shipping. Subsequent changes a
 Artifact disposition is unchanged: commit the intended source, tests, scoped assets and durable planning evidence; retain historical preview/review material as archived evidence in the plan directory; keep transient review/log/old generated build artifacts outside Git. No blocker remains for draft publication. Day-5 reminder delivery, final captions and the real WhatsApp destination still gate activation.
 
 Packaging audit: explicitly retained 44 approved/historical PNG review assets excluded by the generic `*.png` ignore rule. This changes artifact packaging only; source behavior and review conclusions are unchanged.
+
+## Merge verification delta
+
+Nick explicitly authorized “merge”. The first GitHub run passed browser, static and security lanes but failed two stale top-level contracts: the Stage-3 command expectation omitted the scanner suite, and the tracking-provider assertion omitted the approved revision argument. Both expectations now preserve the intended new contracts.
+
+Main also found the scanner command was reachable from the local aggregate, but GitHub invokes the split journey command. The workflow now invokes the scanner refinement suite explicitly after the existing development journeys. A failing assertion demonstrated the missing workflow step before the fix; all 22 orchestration/tracking/section-order checks now pass. The earlier statement that the aggregate alone established GitHub coverage is superseded by this explicit wiring.
+
+This narrow delta changes verification wiring and tests only. Application behavior, approved journey, browser evidence, production build and whole-branch review conclusions remain applicable. Main reviewed the complete delta; independent read-only CI review checks environment isolation and execution. Updated fingerprint covers the workflow and both contract tests. Activation prerequisites remain unchanged.
