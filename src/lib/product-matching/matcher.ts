@@ -264,7 +264,7 @@ export async function matchShampooProducts(params: ShampooMatchParams): Promise<
 
     const { data, error } = await supabase
       .from("product_shampoo_specs")
-      .select("products:product_id(*)")
+      .select("products(*)")
       .eq("thickness", thickness)
       .eq("shampoo_bucket", shampooBucket)
 
@@ -301,7 +301,7 @@ export async function matchConditionerProducts(
 
     const { data, error } = await supabase
       .from("product_conditioner_specs")
-      .select("products:product_id(*)")
+      .select("products(*)")
       .eq("thickness", thickness)
       .eq("protein_moisture_balance", proteinMoistureBalance)
 
@@ -336,7 +336,7 @@ export async function matchLeaveInProducts(params: LeaveInMatchParams): Promise<
 
     const { data, error } = await supabase
       .from("product_leave_in_eligibility")
-      .select("products:product_id(*)")
+      .select("products(*)")
       .eq("thickness", thickness)
       .eq("need_bucket", needBucket)
       .eq("styling_context", stylingContext)
@@ -372,7 +372,7 @@ export async function matchOilProducts(params: OilMatchParams): Promise<MatchedP
 
     const { data, error } = await supabase
       .from("product_oil_eligibility")
-      .select("products:product_id(*)")
+      .select("products(*)")
       .eq("thickness", thickness)
       .eq("oil_subtype", oilSubtype)
 
