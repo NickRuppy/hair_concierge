@@ -103,7 +103,7 @@ test("the solution insert's positive card judges the scalp and names the match",
 })
 
 test("the home insert turns the user's own bathroom into the first shelf", () => {
-  const html = renderInsert(18, { thickness: "coarse", treatment: ["blondiert"] })
+  const html = renderInsert(18, { thickness: "fine", treatment: ["blondiert"] })
 
   assert.match(html, /Und zu Hause/)
   assert.match(html, /Dein Bad ist das erste Regal\./)
@@ -112,9 +112,9 @@ test("the home insert turns the user's own bathroom into the first shelf", () =>
     /Scann, was da steht\. Was passt, bleibt\. Was nicht passt, fliegt raus\. Was fehlt, kommt in deinen Plan\./,
   )
   assert.match(html, imageUrl("bad-ablage.webp"))
-  assert.match(html, /Balea Professional Repair Kur/)
-  assert.match(html, /Haarmaske · ca\. 1,95 €/)
-  assert.match(html, /Pflegegewicht: mittel statt reichhaltig · Repair-Pflege: mittel statt hoch/)
+  assert.match(html, /Alterra Feuchtigkeits-Haarmaske/)
+  assert.match(html, /Haarmaske · ca\. 2,79 €/)
+  assert.match(html, /Pflegegewicht: reichhaltig statt leicht · Repair-Pflege: mittel statt hoch/)
 })
 
 test("every insert marks its card as an example and keeps the preceding question's counter", () => {
@@ -129,6 +129,21 @@ test("every insert marks its card as an example and keeps the preceding question
     assert.match(html, new RegExp(counter.replace("/", "\\/")), `insert ${step} counter`)
     assert.match(html, /scan-insert-example-card/, `insert ${step} animates the card`)
     assert.doesNotMatch(html, /Urteil/, `insert ${step} avoids verdict jargon`)
+  }
+})
+
+// The card used to carry a generic bottle silhouette. Every other product tile
+// in the app shows the real packshot, and so does this one now.
+test("every example card shows the product's own packshot, not a glyph", () => {
+  const expected: [QuizStep, string][] = [
+    [16, "example-ogx-argan-oil.webp"],
+    [17, "example-balea-kopfhaut-sensitive.webp"],
+    [18, "example-alterra-feuchtigkeits-maske.webp"],
+  ]
+  for (const [step, file] of expected) {
+    const html = renderInsert(step, { thickness: "normal", scalp_type: "trocken" })
+    assert.match(html, imageUrl(file), `insert ${step} packshot`)
+    assert.ok(!html.includes("M10 2.75h4v2.5"), `insert ${step} drops the bottle glyph`)
   }
 })
 
