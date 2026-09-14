@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.2",
+  "standardVersion": "mask-inci-v0.3",
   "productId": "03-bali-curls-sos-protein-treatment",
   "identity": {
     "brand": "Bali Curls (by Hank Ge) / Bali Care",
@@ -32,7 +32,7 @@
     "rank": 10,
     "index": 10,
     "plausible": true,
-    "anomalyNote": "No §3.1 anomaly: rank 10, well past the conditioning head. Consequential detail: the marker at 10 places both hydrolyzed proteins (@15, @17) and Panthenol (@11) in the tail. Its near-twin #10 (Bali Curls Deep Repair Mask, near-identical architecture) has its earliest tail-class ingredient at rank 12 (Sodium Benzoate), which places Panthenol above the tail there. See AP-03-TWINS.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. CETEARYL ALCOHOL @2, GLYCINE SOJA OIL @3, BUTYROSPERMUM PARKII BUTTER @5, CETRIMONIUM CHLORIDE @6, COCOS NUCIFERA OIL @7 and BEHENTRIMONIUM METHOSULFATE @9 all outrank PARFUM @10; conventional O/W emulsion with AQUA @1. Neither limb fires. Note for v0.2: BEHENTRIMONIUM METHOSULFATE @9 sits at tail_index - 1 and is excluded from carrying a structural signal (R3 tail-edge exclusion) - see conditioningLevel."
+    "anomalyNote": "No §3.1 anomaly: rank 10, well past the conditioning head. Consequential detail: the marker at 10 places both hydrolyzed proteins (@15, @17) and Panthenol (@11) in the tail. Its near-twin #10 (Bali Curls Deep Repair Mask, near-identical architecture) has its earliest tail-class ingredient at rank 12 (Sodium Benzoate), which places Panthenol above the tail there. See AP-03-TWINS.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. CETEARYL ALCOHOL @2, GLYCINE SOJA OIL @3, BUTYROSPERMUM PARKII BUTTER @5, CETRIMONIUM CHLORIDE @6, COCOS NUCIFERA OIL @7 and BEHENTRIMONIUM METHOSULFATE @9 all outrank PARFUM @10; conventional O/W emulsion with AQUA @1. Neither limb fires. RE-DERIVED UNDER v0.3 (E1, 2026-09-14): R3's tail-edge exclusion is WITHDRAWN. BEHENTRIMONIUM METHOSULFATE @9, at tail_index - 1, counts normally toward S1; conditioning_level returns to `high` and the value is capped at `moderate` confidence with a `boundary_position_ingredient` hinweise note - see conditioningLevel. Third plausibility limb (E2, §3.1.1) checked and NOT fired: PARFUM @10 is the fragrance compound itself and no declared allergen outranks it."
   },
   "aboveTailSegment": [
     "1 AQUA",
@@ -109,33 +109,36 @@
   },
   "profile": {
     "conditioningLevel": {
-      "value": "moderate",
+      "value": "high",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "evidenceScope": "Formula-only, above-tail ranks 1–9; category-relative to the German drugstore rinse-out mask shelf.",
-      "rationale": "Re-derived under v0.2 (R3). The formula's second cationic is declared at tail_index − 1 and is excluded from carrying S1; with S1 mandatory for `high`, the value drops to the `moderate` bucket even though S2 and S3 both fire comfortably. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
+      "rationale": "Re-derived under v0.3 (E1, 2026-09-14). E1 withdraws R3's tail-edge exclusion, so BEHENTRIMONIUM METHOSULFATE @9 carries S1 in full alongside CETRIMONIUM CHLORIDE @6. With S1 satisfied and both S2 and S3 firing comfortably, the `high` bar is met with more headroom than any other product in the cohort that moved under E1. Confidence is capped at `moderate` because S1 is load-bearing on a boundary-position species: without BEHENTRIMONIUM METHOSULFATE @9 the value would be `moderate`. This reverses v0.2's value and closes AP-03-TAILEDGE. It also resolves the twin divergence: this product and its near-twin #10 Bali Curls Deep Repair now agree on field 1, as two near-identical formulas from one brand should. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
       "evidenceSignals": [
-        "CETRIMONIUM CHLORIDE (rank 6) — long-chain cationic quat above the tail, the only cationic surviving the tail-edge exclusion",
-        "BEHENTRIMONIUM METHOSULFATE (rank 9) — second distinct cationic, declared at tail_index − 1 (PARFUM @10) and therefore excluded from carrying a signal (§9.1 tail-edge exclusion, R3); retained as an E1 formula fact",
-        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three: S2 satisfied",
-        "GLYCINE SOJA OIL (3), BUTYROSPERMUM PARKII BUTTER (5), COCOS NUCIFERA OIL (7) — three distinct non-fatty-alcohol lipids above the tail, none at tail_index − 1: S3 satisfied",
-        "PARFUM (rank 10) — tail marker, plausible under §3.1.1 (R2)"
+        "CETRIMONIUM CHLORIDE (rank 6) — long-chain cationic quat above the tail (tail_index 10, PARFUM): first distinct S1 species",
+        "BEHENTRIMONIUM METHOSULFATE (rank 9) — a second, structurally distinct long-chain cationic, declared at tail_index − 1. Under E1 (2026-09-14) it COUNTS in full; it is the species S1 hinges on, and the reason confidence is capped at `moderate`",
+        "S1 SATISFIED on those two distinct cationic species",
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three: S2 SATISFIED, and independent of the boundary band",
+        "GLYCINE SOJA OIL (3), BUTYROSPERMUM PARKII BUTTER (5), COCOS NUCIFERA OIL (7) — three distinct non-fatty-alcohol lipids above the tail, none of them at the boundary: S3 SATISFIED, also independent of the boundary band",
+        "PARFUM (rank 10) — tail marker, plausible under §3.1.1 on all three limbs (R2; third limb added E2)"
       ],
-      "derivation": "Recompute with every tail_index − 1 species removed (R3). S1 = NOT satisfied: BEHENTRIMONIUM METHOSULFATE @9 is excluded, leaving CETRIMONIUM CHLORIDE @6 as the only distinct cationic. S2 = satisfied. S3 = satisfied (three lipids, all ranked above tail_index − 1). Two signals fire, but S1 is not one of them.",
+      "derivation": "§9.1 on the above-tail segment (ranks 1–9), under E1's boundary-position rule (no species is removed). S1 = SATISFIED: CETRIMONIUM CHLORIDE @6 and BEHENTRIMONIUM METHOSULFATE @9. S2 = SATISFIED: CETEARYL ALCOHOL @2. S3 = SATISFIED: three distinct lipids at ranks 3, 5 and 7. All three signals fire; `high` needs S1 plus one of S2/S3 and gets both. Load-bearing boundary check (E1): removing BEHENTRIMONIUM METHOSULFATE @9 would drop S1 and therefore the value (S2+S3 without S1 is explicitly `moderate`) → the species IS load-bearing → confidence capped at `moderate` and `boundary_position_ingredient` emitted. S2 and S3 are unaffected by the boundary in either direction.",
       "thresholdReasoning": [
-        "Clears `moderate`: §9.1 is explicit that S2 + S3 without S1 is `moderate`, because both of those signals read the fatty/emollient load, which is the axis §9.2 owns. Saying it twice would be the shared-mechanism double count §6 rule 1 forbids — and this product is the clearest cohort instance of that, since its richness is already said in `weight_potential: high`.",
-        "`high` does not apply: S1 is mandatory under R3 and fails on the tail-edge exclusion.",
-        "`low` does not apply: S2 and S3 both hold.",
-        "Material counter-signals checked and NOT fired: resolved, plausible marker; no §2.4.1 tier-2 conflict; no fired signal resting on a family-10 species (GLYCERYL STEARATE SE @14 is in the tail and was never counted)."
+        "Clears `high`: S1 mandatory plus at least one of S2/S3, with no material counter-signal. S1 fires on two distinct cationics and BOTH S2 and S3 fire independently of the boundary band. D1's multiple-independent-signals breadth is met three times over, across all three signal families.",
+        "`moderate` does not apply, and this is the value that MOVED: v0.2 read `moderate` only because R3's tail-edge exclusion struck BEHENTRIMONIUM METHOSULFATE @9 before the count, leaving S2+S3 without S1 — a combination §9.1 assigns to `moderate` precisely because S2 and S3 both read the fatty/emollient load that §9.2 owns. That reasoning is intact; what changed is that S1 now fires, so the `high` here is not a second reading of the richness already stated in `weight_potential: high`. It is the cationic-breadth reading S1 exists for.",
+        "`low` does not apply: all three signals hold.",
+        "Material counter-signals checked and NOT fired: resolved, plausible marker on all three §3.1.1 limbs; no §2.4.1 tier-2 conflict; no fired signal resting on a lexicon family-10 species (GLYCERYL STEARATE SE @14 is in the tail and was never counted).",
+        "Confidence is `moderate`, not `high`, under §9.1's E1-amended confidence rule: S1 would not fire without a tail_index − 1 species. The sub-drugstore sourcing tier is a second, independent reason the cap would hold anyway."
       ],
       "counterSignals": [
-        "The value hinges entirely on one rank: BEHENTRIMONIUM METHOSULFATE at 9 against PARFUM at 10. Its near-twin #10 has the same two cationics at @8 and @10 against a marker at 12, and therefore keeps `high`. §9.1 flags the width of the boundary band (one rank vs two) as the open calibration question; this pair is the cohort's sharpest test of it. See AP-03-TWINS and AP-03-TAILEDGE.",
+        "S1 hinges on one rank: BEHENTRIMONIUM METHOSULFATE at 9 against PARFUM at 10. Under v0.2's strike this product read `moderate` and its near-twin #10 — same two cationics at @8 and @10 against a marker at 12 — read `high`, so the twins diverged on a two-rank printing difference. Under E1 both read `high` and the divergence is gone; what remains is that #03 carries a confidence cap #10 does not. That is the honest difference between them and the right place for it. See AP-03-TWINS.",
         "Long ingredient list and the rheology-only GLYCERYL STEARATE SE @14 and HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE @13 — §9.1 NON-material counter-signals: recorded, never capping.",
-        "Two hydrolyzed proteins (@15, @17) sit in the tail behind an 'SOS Protein' pack — a sub-1 % hero tail, recorded in `hinweise` and credited nowhere."
+        "Two hydrolyzed proteins (@15, @17) sit in the tail behind an 'SOS Protein' pack — a sub-1 % hero tail, recorded in `hinweise` and credited nowhere. It does not touch this field.",
+        "Lexicon §13: two distinct above-tail cationics is 'near-baseline in this market', so S1's threshold sits low against the German shelf (§18.1)."
       ],
       "limitations": [
         "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
-        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable."
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable. That is precisely the uncertainty E1's confidence cap encodes on this record."
       ]
     },
     "weightPotential": {
@@ -183,7 +186,8 @@
         "Clears `moisture`: a coherent conditioning/humectant/emollient architecture without a dominant protein-film route — D6's category default.",
         "`protein` does not apply: both R5 species are in the tail, where §3.1 gives them zero credit and §9.3's counter-signal rule directs 'protein naming with the protein only in the tail → moisture, with the claim recorded'.",
         "`balanced` does not apply: its first conjunct (material R5 route) is absent. Note that its SECOND conjunct — S3 satisfied — IS met here, which is why the value would jump straight to `balanced` rather than `protein` if the tail marker moved (see counter-signals).",
-        "Re-checked under v0.2 (R6). Reading (a) is unavailable: no R5 species above the tail (both hydrolyzed proteins are tail-side) and the humectant count is two (GLYCERIN @4, BETAINE @8) against a required three. Reading (b) fails at clause 2 — no silicone at any rank, and HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE @13 is in the tail — and would fail at clause 3 as well, on a three-species lipid stack above the tail. `moisture` is unchanged."
+        "Re-checked under v0.2 (R6). Reading (a) is unavailable: no R5 species above the tail (both hydrolyzed proteins are tail-side) and the humectant count is two (GLYCERIN @4, BETAINE @8) against a required three. Reading (b) fails at clause 2 — no silicone at any rank, and HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE @13 is in the tail — and would fail at clause 3 as well, on a three-species lipid stack above the tail. `moisture` is unchanged.",
+        "Re-checked under v0.3 (E1, field-uniform). E1's boundary-position rule applies to §9.3 as it does everywhere — and changes nothing here, in either direction. The two R5 species sit at ranks 15 and 17, five and seven ranks INSIDE the tail, not at its edge; the humectant count above the tail (GLYCERIN @4, BETAINE @8) is unaffected by the boundary; and BEHENTRIMONIUM METHOSULFATE @9, the record's one boundary-position species, is a cationic and carries no §9.3 test. `moisture` is unchanged, and so is its `moderate` confidence, which rests on the swing described in counterSignals rather than on the boundary band."
       ],
       "counterSignals": [
         "This is the cohort's sharpest archetype defeat: product #3 was frozen to fill the 'protein-forward protein bomb' slot and the standard finds no protein route at all.",
@@ -303,17 +307,19 @@
       "derivedEcho": true,
       "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
       "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
-      "rationale": "Echo field (R9). conditioning_level `moderate` selects row 2 — the same output set row 3 gave under v0.1, so the conditioning re-derivation does not propagate here.",
+      "rationale": "Echo field (R9). Re-derived under v0.3 because its driver moved: conditioning_level is now `high` (E1). §9.7 row 3 governs — `high` WITHOUT a qualifying specialist route — and its output set is identical to row 2's, so the value does not move.",
       "evidenceSignals": [
-        "conditioning_level = moderate (re-derived under R3)",
+        "conditioning_level = high (re-derived under E1, 2026-09-14; confidence capped at moderate)",
         "repair_support_level = low",
         "bond_route = none"
       ],
-      "derivation": "§9.7 row 2.",
+      "derivation": "§9.7 row 3 (`conditioning_level: high` WITHOUT a qualifying specialist route → exactly healthy + moderately_damaged).",
       "thresholdReasoning": [
-        "Clears {healthy, moderately_damaged}: the `moderate` row.",
-        "{moderately_damaged, highly_damaged} does not apply: the two hydrolyzed proteins are both in the tail, so no specialist route qualifies.",
-        "{healthy} alone does not apply: it requires conditioning_level `low`."
+        "Clears {healthy, moderately_damaged}: §9.7 row 3.",
+        "{moderately_damaged, highly_damaged} does not apply: no qualifying specialist route. Leg (a) fails — both hydrolyzed proteins are in the tail (@15, @17), so repair_support_level is `low`, not ≥ medium; leg (b) fails (bond_route `none`); legs (c) and (d) have no recorded fact, and under §9.8's echo caveat the echo step may not establish one. This is the whole point of the specialist gate: an 'SOS Protein Treatment' whose proteins earn nothing does not reach the highly_damaged prior.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "This field has now read the same set under v0.1's `high`, v0.2's `moderate` and v0.3's `high` — §9.7 rows 2 and 3 have identical outputs, so it is insensitive to the conditioning_level question in either direction.",
+        "`specialist_damage_fit` does NOT fire."
       ],
       "counterSignals": [],
       "limitations": [
@@ -372,7 +378,7 @@
     }
   ],
   "projectedOutputs": {
-    "concentration": "medium",
+    "concentration": "high",
     "weight": "rich",
     "balance_direction": "moisture",
     "repair_support_level": "low",
@@ -385,9 +391,9 @@
   "adjudicationPoints": [
     {
       "id": "AP-03-TAILEDGE",
-      "title": "R3's tail-edge exclusion moves this product's conditioning_level, which the ruling ledger did not predict — ESCALATION",
-      "body": "Same mechanism as AP-01-TAILEDGEDROP, on a different species. BEHENTRIMONIUM METHOSULFATE is declared at rank 9 and PARFUM at rank 10, so the second cationic is a tail_index − 1 species; removing it per §9.1's tail-edge exclusion leaves CETRIMONIUM CHLORIDE @6 as the only cationic and S1 fails. With S1 mandatory, `conditioning_level` drops from `high` to `moderate`. The ledger's R3 line predicts two such drops (#06, #12) and five surviving `high` calls; applying the standard as written gives four drops (#01, #03, #06, #12) and three surviving (#04, #05, #10). The divergence is flagged, not forced. It is also sharply visible in the twin pair: #10 Bali Curls Deep Repair carries the SAME two cationics at ranks 8 and 10 against a marker at 12, so both survive the exclusion and it keeps `high`. Two near-identical formulas from one brand now differ on field 1 because of a two-rank difference in where a preservative was printed. That is either the boundary band doing its job or the band being too wide; §9.1 records the width as the open calibration question, and this pair is the cohort's cleanest test of it.",
-      "source": "§9.1 tail-edge exclusion (R3); plans/mask-inci/round1-rule-rulings.md R3 expected effects; AP-03-TWINS"
+      "title": "CLOSED by E1 (2026-09-14) — the tail-edge strike is withdrawn, conditioning_level returns to `high`, and the twin divergence with #10 disappears",
+      "body": "Raised under v0.2: R3's tail-edge exclusion struck BEHENTRIMONIUM METHOSULFATE @9 (against PARFUM @10), S1 failed, and this product dropped to `moderate` — while its near-twin #10, carrying the same two cationics at @8 and @10 against a marker at @12, kept `high`. Two near-identical formulas from one brand diverged on field 1 because of a two-rank difference in where a preservative was printed. Nick ruled E1 on 2026-09-14: a boundary-position species counts normally and the boundary uncertainty is carried as a confidence cap. conditioning_level therefore returns to `high` at `moderate` confidence, the twins agree again, and the only remaining difference between them is that #03 carries the cap and #10 does not — which is the honest statement of the two-rank difference. The boundary-band WIDTH question that AP-03-TWINS framed is largely defused with it: under E1 no width of band strikes anything, so widening the band could only widen the set of capped values (§9.1, E1). Nothing further is needed from Nick on this record.",
+      "source": "§9.1 boundary-position rule (E1, 2026-09-14); plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-1b), E1; AP-03-TWINS"
     }
   ],
   "uncertainFields": [
@@ -395,18 +401,25 @@
     "careDirection"
   ],
   "assumptionNotes": [
-    "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors re-checked; R5 disqualifier checked; R6 readings checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
-    "Fields whose value moved: conditioningLevel (high → moderate, R3). weightPotential was re-derived under R4's new anchor structure and lands on `high` again, now on a heavy-lipid core (shea @5, coconut @7) plus a dense fatty base (cetearyl @2) instead of on the removed cationic gate.",
-    "Review triggers under v0.2 — FIRED: none newly. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review` (both proteins are tail-side; `protein_tail_only` applies instead), `bond_claim_review`, `specialist_damage_fit`, `weight_high_conflict` (no lightness positioning).",
+    "Re-derived under v0.3 (E1 boundary-position rule, replacing R3's tail-edge exclusion, and applied field-uniformly per E5; E2 third plausibility limb checked and not fired; E4 checked against weight_potential and not engaging), not patched.",
+    "Fields whose value moved under v0.3: conditioningLevel (moderate → high, E1; confidence held at moderate by the boundary cap). Fields whose evidence text was re-derived: conditioningLevel (E1), damageFit (echo of the moved driver — output set unchanged, §9.7 rows 2 and 3 are identical), careDirection (E1 field-uniform re-check, no change), tailMarker (E2 limb checked). weightPotential was re-checked under E4 and does NOT move: the `low` leanness test fails at conjunct 1 on BUTYROSPERMUM PARKII BUTTER @5 and COCOS NUCIFERA OIL @7, two R4b heavy lipids above the marker, and independently at conjunct 3 (two cationic species above the tail). `high` stands on the unchanged R4 anchor.",
+    "Review triggers under v0.3 — FIRED: none newly. NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved` (marker plausible on all three §3.1.1 limbs, including E2's new one), `protein_payload_review` (both proteins are tail-side; `protein_tail_only` applies instead), `bond_claim_review`, `specialist_damage_fit`, `weight_high_conflict` (no lightness positioning), `low_confidence_field` (the boundary dependence caps at `moderate`, it does not step down).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+    "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors re-checked; R5 disqualifier checked; R6 readings checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers). Under v0.2 conditioningLevel read `moderate` and AP-03-TAILEDGE escalated the divergence from the ruling ledger and from the twin #10; E1 closed both.",
+    "weightPotential was re-derived under R4's anchor structure and lands on `high` on a heavy-lipid core (shea @5, coconut @7) plus a dense fatty base (cetearyl @2) instead of on the removed cationic gate — unchanged under v0.3.",
     "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
-    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
-    "Review triggers fired: none. Specifically NOT fired: `protein_payload_review` (D4's above-tail detection threshold is unmet), `bond_claim_review` (no bond positioning), `tail_marker_anomaly` (marker resolved), `low_confidence_field` (no field at low confidence).",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception. NOTE (E1, 2026-09-14): the lexicon §0.2 boundary-band caution is again a confidence modifier only, as v0.1's policy had it, and is now the standard's own rule.",
     "Protocol metadata for traceability only, zero classification credit: contact time 3 minutes per the DE brand page; the EN storefront's 10–20 minute figure is a recorded conflict, not averaged (§2.4). Placement stated as Längen und Spitzen, P5-compliant.",
     "Sourcing tier is below drugstore by Nick's explicit approval; this affects coverage-target accounting, not the evidence ceiling."
   ],
-  "derivedFrom": "reference-key-v0/03-bali-curls-sos-protein-treatment.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "derivedFrom": "reference-key-v1/03-bali-curls-sos-protein-treatment.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-derived under Standard v0.3 (E1–E4), not patched.",
   "hinweise": {
     "fired": [
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "BEHENTRIMONIUM METHOSULFATE @9, one rank above tail_index 10 (PARFUM); load-bearing for conditioning_level",
+        "note": "conditioning_level `high` hinges on a boundary-position ingredient: S1 fires only because BEHENTRIMONIUM METHOSULFATE @9 is counted as the second distinct cationic, and it sits at tail_index − 1. Without it S2+S3 would fire without S1, which §9.1 assigns to `moderate`. Under E1 (2026-09-14) the species counts in full and the uncertainty is carried here and as the field's `moderate` confidence cap. This note moves no value. No other field hinges on it: S2, S3, weight_potential (shea @5 + coconut @7 core, cetearyl @2 completer) and care_direction all stand clear of the boundary."
+      },
       {
         "flag": "protein_tail_only",
         "value": "HYDROLYZED VEGETABLE PROTEIN @15, HYDROLYZED SWEET ALMOND PROTEIN @17 (tail_index 10)",

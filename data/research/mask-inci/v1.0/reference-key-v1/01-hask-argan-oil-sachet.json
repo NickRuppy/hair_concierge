@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.2",
+  "standardVersion": "mask-inci-v0.3",
   "productId": "01-hask-argan-oil-sachet",
   "identity": {
     "brand": "HASK",
@@ -32,7 +32,7 @@
     "rank": 6,
     "index": 6,
     "plausible": true,
-    "anomalyNote": "No §3.1 anomaly by the letter: rank 6 > 3 and conditioning ingredients (Cetearyl Alcohol @2, Cetrimonium Chloride @4, Quaternium-18 @5) precede the marker. But the marker is unusually early relative to list length (6 of 34), so the entire marketed payload — Argania Spinosa Kernel Oil @7, five protein species @8/@10/@11/@13/@14, Glycerin @19, Panthenol @20, Sodium PCA @22 — falls in the tail and earns nothing. This is the cohort's most extreme hero-tail structure.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. Every architecture-establishing species outranks the marker - CETEARYL ALCOHOL @2, LANOLIN @3, CETRIMONIUM CHLORIDE @4 and QUATERNIUM-18 @5 all sit above PARFUM @6 - and the product is a conventional O/W emulsion with AQUA @1, so the low-water limb does not fire. Earliness alone (rank 6 of 34) is a counter-signal to record, never a disqualification (§3.1.1, 'a merely early marker is still a marker'). The v0.1 reviewer-judgment discomfort about the hero tail is therefore recorded and not acted on. Separately, QUATERNIUM-18 @5 sits at tail_index - 1 and is excluded from carrying a structural signal under R3's tail-edge exclusion (see conditioningLevel)."
+    "anomalyNote": "No §3.1 anomaly by the letter: rank 6 > 3 and conditioning ingredients (Cetearyl Alcohol @2, Cetrimonium Chloride @4, Quaternium-18 @5) precede the marker. But the marker is unusually early relative to list length (6 of 34), so the entire marketed payload — Argania Spinosa Kernel Oil @7, five protein species @8/@10/@11/@13/@14, Glycerin @19, Panthenol @20, Sodium PCA @22 — falls in the tail and earns nothing. This is the cohort's most extreme hero-tail structure.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. Every architecture-establishing species outranks the marker - CETEARYL ALCOHOL @2, LANOLIN @3, CETRIMONIUM CHLORIDE @4 and QUATERNIUM-18 @5 all sit above PARFUM @6 - and the product is a conventional O/W emulsion with AQUA @1, so the low-water limb does not fire. Earliness alone (rank 6 of 34) is a counter-signal to record, never a disqualification (§3.1.1, 'a merely early marker is still a marker'). The v0.1 reviewer-judgment discomfort about the hero tail is therefore recorded and not acted on. Separately, QUATERNIUM-18 @5 sits at tail_index - 1. RE-DERIVED UNDER v0.3 (E1, 2026-09-14): R3's tail-edge exclusion is WITHDRAWN. A boundary-position species counts normally in every field; what its position costs is confidence, not credit. QUATERNIUM-18 @5 therefore carries S1 in full, conditioning_level returns to `high`, and the value is capped at `moderate` confidence with a `boundary_position_ingredient` hinweise note (see conditioningLevel). Third plausibility limb (E2, §3.1.1) checked and NOT fired: PARFUM @6 is the fragrance compound itself, and its declared allergens BENZYL BENZOATE @31 and LIMONENE @32 sit far BELOW it, which is the ordinally consistent direction."
   },
   "aboveTailSegment": [
     "1 AQUA",
@@ -105,33 +105,35 @@
   },
   "profile": {
     "conditioningLevel": {
-      "value": "moderate",
+      "value": "high",
       "confidence": "moderate",
       "evidenceLevel": "E2",
       "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 dff721bd…), above-tail ranks 1–5; category-relative to the German drugstore rinse-out mask shelf.",
-      "rationale": "Re-derived under v0.2 (R3). S1 is now mandatory for `high` and it fails here once the tail-edge exclusion is applied: the second cationic species is declared at tail_index − 1. One signal (S2) survives, which is the `moderate` bucket. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
+      "rationale": "Re-derived under v0.3 (E1, 2026-09-14). E1 withdraws R3's tail-edge exclusion: a species at tail_index − 1 counts normally and the boundary uncertainty is carried as a confidence cap, not as a value move. QUATERNIUM-18 @5 therefore carries S1 in full alongside CETRIMONIUM CHLORIDE @4, S2 is satisfied by CETEARYL ALCOHOL @2, and no material counter-signal fires — so the `high` bar (S1 mandatory plus at least one of S2/S3) is met. Confidence is capped at `moderate` because S1 is load-bearing on a boundary-position species: without QUATERNIUM-18 @5 the value would be `moderate`. This reverses the v0.2 value (`moderate`) and closes AP-01-TAILEDGEDROP in the direction the ruling ledger's 'five evidence-backed highs stand' line implied. E2 ceiling: comparative structural intensity potential, never measured treatment performance.",
       "evidenceSignals": [
-        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three of the full list: S2 satisfied, and unaffected by the tail-edge exclusion (rank 2 ≠ tail_index − 1 = 5)",
-        "CETRIMONIUM CHLORIDE (rank 4) — long-chain cationic quat above the tail (tail_index 6, PARFUM), the only cationic surviving the tail-edge exclusion",
-        "QUATERNIUM-18 (rank 5) — a second, structurally distinct dialkyl cationic quat, declared at tail_index − 1 and therefore excluded from carrying a signal (§9.1 tail-edge exclusion, R3). Retained as an E1 formula fact and listed here, as the rule requires",
-        "LANOLIN (rank 3) — the only non-fatty-alcohol lipid above the tail; ARGANIA SPINOSA KERNEL OIL @7 and ISOPROPYL PALMITATE @21 are in the tail: S3 not satisfied",
-        "PARFUM (rank 6) — tail marker, plausible under §3.1.1 (R2)"
+        "CETRIMONIUM CHLORIDE (rank 4) — long-chain cationic quat above the tail (tail_index 6, PARFUM): first distinct S1 species",
+        "QUATERNIUM-18 (rank 5) — a second, structurally distinct dialkyl cationic quat, declared at tail_index − 1. Under E1 (2026-09-14) it COUNTS in full: relative order above the marker is Art. 19-reliable, only the invisible 1 % line is uncertain, and ~1 % of a co-conditioning quat is a functional dose. It is the species S1 hinges on, and the reason confidence is capped at `moderate`",
+        "S1 SATISFIED on those two distinct cationic species; S2 SATISFIED on CETEARYL ALCOHOL (rank 2), a long-chain fatty alcohol in the top three of the full list",
+        "LANOLIN (rank 3) — the only non-fatty-alcohol lipid above the tail; ARGANIA SPINOSA KERNEL OIL @7 and ISOPROPYL PALMITATE @21 are in the tail: S3 NOT satisfied (one lipid is not breadth)",
+        "PARFUM (rank 6) — tail marker, plausible under §3.1.1 on all three limbs (R2; third limb added E2 — the declared allergens BENZYL BENZOATE @31 and LIMONENE @32 sit below their own PARFUM, which is the consistent ordering)"
       ],
-      "derivation": "Recompute S1/S2/S3 with every tail_index − 1 species removed (§9.1, R3). S1 = NOT satisfied: with QUATERNIUM-18 @5 excluded, only CETRIMONIUM CHLORIDE @4 remains, i.e. one distinct cationic. S2 = satisfied (CETEARYL ALCOHOL @2). S3 = NOT satisfied (LANOLIN @3 is the sole above-tail non-fatty-alcohol lipid). One signal, and S1 absent.",
+      "derivation": "§9.1 on the above-tail segment (ranks 1–5), under E1's boundary-position rule (no species is removed). S1 = SATISFIED: CETRIMONIUM CHLORIDE @4 and QUATERNIUM-18 @5, two distinct long-chain cationic species above tail_index 6. S2 = SATISFIED: CETEARYL ALCOHOL @2. S3 = NOT satisfied: LANOLIN @3 is the sole above-tail non-fatty-alcohol lipid. `high` = S1 (mandatory) + at least one of {S2, S3} + no material counter-signal → satisfied via S2. Load-bearing boundary check (E1): removing QUATERNIUM-18 @5 would drop S1 and therefore the value → the species IS load-bearing → confidence capped at `moderate` and `boundary_position_ingredient` emitted.",
       "thresholdReasoning": [
-        "Clears `moderate`: §9.1 assigns `moderate` to everything else, explicitly including exactly one satisfied signal, and it is the NEQI-pattern fallback D1 requires.",
-        "`high` does not apply, and fails twice over: R3 makes S1 mandatory, and S1 does not fire once the boundary-band species is removed. Even read without the tail-edge rule, S2 alone plus a failed S3 would not reach the S1-plus-one bar.",
-        "`low` does not apply: `low` requires none of S1/S2/S3; S2 is satisfied by CETEARYL ALCOHOL @2, and the formula additionally carries two distinct cationic species.",
-        "Material counter-signals (§9.1 closed list) checked and NOT fired: the tail marker is resolved and plausible, there is no §2.4.1 tier-2 conflict, and no fired signal rests on a lexicon family-10 species. The cap is therefore not what produces `moderate` here — the S1 failure is."
+        "Clears `high`: §9.1's post-R3 bar is S1 mandatory plus S2 or S3, with no material counter-signal. S1 and S2 both fire and no counter-signal is material. D1's multiple-independent-signals requirement is met by two signals from two different families — cationic breadth (S1) and fatty-alcohol prominence (S2).",
+        "`moderate` does not apply, and this is the value that MOVED: it was v0.2's value only because R3's tail-edge exclusion struck QUATERNIUM-18 @5 before the count. E1 withdraws that strike, so the only thing the boundary position now costs is confidence.",
+        "`low` does not apply: `low` requires none of S1/S2/S3; two of the three fire.",
+        "Material counter-signals (§9.1 closed list) checked and NOT fired: (a) the tail marker is resolved and plausible on all three §3.1.1 limbs; (b) no §2.4.1 tier-2 conflict; (c) no fired signal rests on a lexicon family-10 rheology-only/emulsifier species — both S1 carriers are declared quats and CETEARYL ALCOHOL @2 is a fatty alcohol, not a Ceteareth/Glyceryl Stearate blend half.",
+        "Confidence is `moderate`, not `high`, under §9.1's E1-amended confidence rule: S1 would not fire without a tail_index − 1 species. Two further independent caps point the same way — the fallback-tier source and the provisional identity conflict — so no single fix would lift it."
       ],
       "counterSignals": [
-        "This product is the worked case §9.1's tail-edge exclusion was written for: it reached `high` under v0.1 on a second cationic sitting one rank above the Parfum. The value moves for exactly that reason.",
+        "The value hinges on one rank: QUATERNIUM-18 @5 against PARFUM @6. Under v0.2's tail-edge exclusion this product read `moderate`; under E1 it reads `high` at capped confidence. Both readings are recorded here so the reviewer can see exactly what the boundary is doing — it is carried as a confidence cap and a `hinweise` note, never as a silent value swing.",
         "The above-tail segment is only five entries; a single transcription slip in a fallback-tier source would change the signal count.",
-        "ARGANIA SPINOSA KERNEL OIL @7 and four protein species @8/@10/@11/@13 in the tail are a textbook sub-1 % hero tail — a §9.1 NON-material counter-signal: recorded, never credited, and explicitly not capping."
+        "ARGANIA SPINOSA KERNEL OIL @7 and four protein species @8/@10/@11/@13 in the tail are a textbook sub-1 % hero tail — a §9.1 NON-material counter-signal: recorded, never credited, and explicitly not capping.",
+        "Lexicon §13's honest caveat applies with full force here: two distinct above-tail cationics is 'near-baseline in this market', so S1's threshold sits low against the German shelf. R3 makes S1 necessary but does not claim it is sufficient — which is why S2 is also required — and whether S1's count should rise to three is §18.1's open calibration question."
       ],
       "limitations": [
         "A three-step concentration scale is at the edge of INCI support; no published dataset maps INCI patterns to validated low/medium/high thresholds (§9.1 honest limitation).",
-        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable.",
+        "Rank is used qualitatively only. EU Art. 19 hides the 1 % boundary; no percentage, ratio, dose or deposited amount is inferable. That is precisely the uncertainty E1's confidence cap encodes on this record.",
         "Source is hautschutzengel fallback tier; dm.de is JS-rendered and could not be fetched."
       ]
     },
@@ -299,22 +301,24 @@
       "derivedEcho": true,
       "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
       "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
-      "rationale": "Echo field (R9): read, never re-judged. conditioning_level `moderate` selects row 2 — the same output set row 3 produced under v0.1, so the conditioning re-derivation does not propagate here.",
+      "rationale": "Echo field (R9): read, never re-judged. Re-derived under v0.3 because its driver moved: conditioning_level is now `high` (E1). §9.7 row 3 governs — `high` WITHOUT a qualifying specialist route — and row 3's output set is identical to row 2's, so the value does not move.",
       "evidenceSignals": [
-        "conditioning_level = moderate (re-derived under R3)",
+        "conditioning_level = high (re-derived under E1, 2026-09-14; confidence capped at moderate)",
         "repair_support_level = low",
         "bond_route = none"
       ],
-      "derivation": "§9.7 row 2 (`conditioning_level: moderate` → exactly healthy + moderately_damaged).",
+      "derivation": "§9.7 row 3 (`conditioning_level: high` WITHOUT a qualifying specialist route → exactly healthy + moderately_damaged). Under v0.2 the same set came from row 2; rows 2 and 3 have identical outputs, so the driver's move does not propagate.",
       "thresholdReasoning": [
-        "Clears {healthy, moderately_damaged}: the `moderate` row.",
-        "{moderately_damaged, highly_damaged} does not apply: no qualifying specialist route — no protein/peptide film route (repair_support_level low), no bond chemistry, no corroborated exceptional protection and no exact-product test on the record.",
+        "Clears {healthy, moderately_damaged}: §9.7 row 3, the `high`-without-specialist-route row.",
+        "{moderately_damaged, highly_damaged} does not apply: no qualifying specialist route on any of the four legs — leg (a) fails (repair_support_level is `low`, not ≥ medium; all five protein species sit in the tail and earn nothing under §3.1), leg (b) fails (bond_route `none`), leg (c) fails (no corroborated exceptional protection), leg (d) fails (no exact-product test). §9.7's never-qualifying list names generic oil, panthenol, ceramide and free amino acids explicitly — which is the whole of this product's tail payload.",
         "{healthy} alone does not apply: it requires conditioning_level `low`.",
-        "Robustness note retained from v0.1: rows 2 and 3 of §9.7 produce the same output set, so this field was insensitive to the conditioning_level question in either direction."
+        "Robustness note, now demonstrated rather than predicted: rows 2 and 3 of §9.7 produce the same output set, so this field was insensitive to the conditioning_level question in either direction — it read the same under v0.1's `high`, v0.2's `moderate`, and v0.3's `high`.",
+        "`specialist_damage_fit` does NOT fire: the specialist branch was not taken."
       ],
       "counterSignals": [],
       "limitations": [
-        "Echo field under R9: approving conditioning_level and repair_support_level approves this projection."
+        "Echo field under R9: approving conditioning_level and repair_support_level approves this projection.",
+        "Its confidence cannot exceed its driver's (§9.5E); conditioning_level is capped at `moderate` under E1, so this field is `moderate` too."
       ]
     },
     "textureFit": {
@@ -368,7 +372,7 @@
     }
   ],
   "projectedOutputs": {
-    "concentration": "medium",
+    "concentration": "high",
     "weight": "rich",
     "balance_direction": "moisture",
     "repair_support_level": "low",
@@ -381,9 +385,9 @@
   "adjudicationPoints": [
     {
       "id": "AP-01-TAILEDGEDROP",
-      "title": "R3's tail-edge exclusion moves this product's conditioning_level, which the ruling ledger did not predict — ESCALATION",
-      "body": "The round-1 ruling ledger records R3's expected cohort effect as '#06 MONDAY + #12 Guhl high→moderate; five evidence-backed highs stand', which implies this product keeps `high`. Applying §9.1 as written it does not. The tail-edge exclusion says: recompute S1, S2 and S3 with every tail_index − 1 species removed, and a signal counts only if it still fires. QUATERNIUM-18 is declared at rank 5 and PARFUM at rank 6, so the second cationic is exactly a tail_index − 1 species; removing it leaves CETRIMONIUM CHLORIDE @4 as the only cationic and S1 fails. With S1 mandatory under R3, `high` is unreachable and the value is `moderate`. This is not a strained reading: §9.1's own text says the exclusion 'closes the reading in which a mask reached high on a second cationic that sat one rank above the Parfum', and that sentence describes this product and no other in the cohort. The value is therefore recorded as the standard produces it, and the divergence from the ledger's arithmetic is flagged rather than forced in either direction. What Nick decides: whether the ledger's 'five highs stand' count or the standard's tail-edge text governs. They cannot both be right, and the standard is the normative document.",
-      "source": "§9.1 tail-edge exclusion (R3); plans/mask-inci/round1-rule-rulings.md R3 expected effects"
+      "title": "CLOSED by E1 (2026-09-14) — the tail-edge strike is withdrawn and this product's conditioning_level returns to `high`",
+      "body": "Raised under v0.2: applying R3's tail-edge exclusion as written dropped this product from `high` to `moderate` because QUATERNIUM-18 @5 sat exactly at tail_index − 1 (PARFUM @6), which contradicted the ruling ledger's 'five evidence-backed highs stand' arithmetic. Nick ruled E1 on 2026-09-14: the ledger's reading governs and the mechanism was wrong. A boundary-position species counts normally; the boundary uncertainty is a confidence matter, because relative order above the marker is legally reliable under Art. 19 and only the 1 % line is invisible, and because ~1 % of a co-conditioning quat is a functional dose rather than a decorative trace. conditioning_level therefore returns to `high` at `moderate` confidence, with the dependence recorded as a `boundary_position_ingredient` hinweise note. Nothing further is needed from Nick on this record.",
+      "source": "§9.1 boundary-position rule (E1, 2026-09-14); plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-1b), E1"
     }
   ],
   "uncertainFields": [
@@ -391,18 +395,24 @@
     "careDirection"
   ],
   "assumptionNotes": [
-    "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors; R8 lanolin lexicon entry and the `hinweise` record; R2 plausibility prong; R9 echo markers), not patched — §12 G7 and §15 both require re-derivation, and no v0.1 field approval or fingerprint carries forward.",
-    "Fields whose value moved: conditioningLevel (high → moderate, R3). Fields whose evidence text was re-derived under a changed rule: conditioningLevel (R3), weightPotential (R4 + R8), damageFit (echo of the moved driver, R9), careDirection and primaryFocus (one added threshold line each, R6 and R5). Every other field carries its v0.1 value and text.",
-    "Review triggers under v0.2 — FIRED: none newly. NOT fired: `tail_marker_anomaly` (marker present), `tail_marker_unresolved` (marker plausible), `protein_payload_review` (the payload is tail-side, so §13.1's `protein_tail_only` note applies instead and it may not fire a trigger of its own), `bond_claim_review`, `low_confidence_field`, `weight_high_conflict`, `specialist_damage_fit`.",
+    "Re-derived under v0.3 (E1 boundary-position rule, replacing R3's tail-edge exclusion; E2 third plausibility limb checked and not fired; E4 checked against weight_potential and not engaging), not patched — §12 G7 and §15 both require re-derivation, and no v0.2 field approval or fingerprint carries forward.",
+    "Fields whose value moved under v0.3: conditioningLevel (moderate → high, E1; confidence held at moderate by the boundary cap). Fields whose evidence text was re-derived under a changed rule: conditioningLevel (E1), damageFit (echo of the moved driver — output set unchanged because §9.7 rows 2 and 3 are identical), tailMarker (E2 limb checked). weightPotential was re-checked under E4 and does NOT move: the `low` leanness test fails at its first conjunct on LANOLIN @3, an R4b heavy lipid above the marker, so `high` stands on the unchanged R4 anchor. Every other field carries its v0.2 value and text.",
+    "Review triggers under v0.3 — FIRED: none newly. NOT fired: `tail_marker_anomaly` (marker present), `tail_marker_unresolved` (marker plausible on all three §3.1.1 limbs, including E2's new one), `protein_payload_review` (the payload is tail-side, so §13.1's `protein_tail_only` note applies instead and it may not fire a trigger of its own), `bond_claim_review`, `low_confidence_field` (no field at `low` confidence — the boundary dependence caps at `moderate`, it does not step down), `weight_high_conflict`, `specialist_damage_fit`.",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+    "Re-derived under v0.2 (R3 tail-edge exclusion; R4 weight anchors; R8 lanolin lexicon entry and the `hinweise` record; R2 plausibility prong; R9 echo markers). Under v0.2 conditioningLevel read `moderate` and AP-01-TAILEDGEDROP escalated the divergence from the ruling ledger; E1 closed it.",
     "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
-    "Reviewer policy applied to every record in this lane: §3.1's hard cut (strictly before tail_index) determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier where a threshold's satisfaction depends on an ingredient at tail_index − 1, and never moves a value.",
-    "Review triggers fired: tail-marker structure noted but `tail_marker_anomaly` NOT fired (marker is resolved and §3.1's literal anomaly conditions are unmet); `low_confidence_field` not fired (no field at low confidence).",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut (strictly before tail_index) determines above-tail membership without exception. NOTE (E1, 2026-09-14): the lexicon §0.2 boundary-band caution — applied in v0.1 as a confidence modifier and in v0.2 as a value-moving strike — is now the standard's own rule again, and in the v0.1 direction: confidence modifier only.",
     "Protocol metadata for traceability only, zero classification credit: contact time 'bis zu 10 Minuten', source aggregated dm.de/retailer copy, confidence moderate. Placement not stated; P5 owns it.",
     "Identity state is provisional_identity_conflict (unresolved retail EAN). Per G5 this lowers the smallest affected scope: it caps confidence, it does not block the profile."
   ],
-  "derivedFrom": "reference-key-v0/01-hask-argan-oil-sachet.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "derivedFrom": "reference-key-v1/01-hask-argan-oil-sachet.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-derived under Standard v0.3 (E1–E4), not patched.",
   "hinweise": {
     "fired": [
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "QUATERNIUM-18 @5, one rank above tail_index 6 (PARFUM); load-bearing for conditioning_level",
+        "note": "conditioning_level `high` hinges on a boundary-position ingredient: S1 fires only because QUATERNIUM-18 @5 is counted as the second distinct cationic, and it sits at tail_index − 1. Without it the value would be `moderate`. Under E1 (2026-09-14) the species counts in full — relative order above the marker is reliable, only the invisible 1 % line is not — and the uncertainty is carried here and as the field's `moderate` confidence cap. This note moves no value. No other field on this record hinges on it: weight_potential rests on LANOLIN @3 and care_direction on the absence of any above-tail R5 species."
+      },
       {
         "flag": "protein_tail_only",
         "value": "HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE @8, HYDROLYZED COLLAGEN @10, HYDROLYZED KERATIN @11, HYDROLYZED SOY PROTEIN @13 (tail_index 6)",
@@ -417,7 +427,7 @@
   },
   "v0AdjudicationPointStatus": {
     "AP-01-LANOLIN": "CLOSED by R8. Lexicon family 3 now lists Lanolin and its derivatives in the heavy band explicitly, so the R4b reading is lexicon-backed rather than a reviewer judgment. `weight_potential: high` no longer rests on a hinge.",
-    "AP-01-TAILSWING": "PARTLY CLOSED by R2/R3. The marker is now formally assessed (plausible) and the boundary-band species is handled by a rule — the tail-edge exclusion — rather than by a confidence modifier. The residual question, the width of the band, is §9.1's open calibration item.",
+    "AP-01-TAILSWING": "CLOSED by E1 (was PARTLY CLOSED under v0.2). The marker is formally assessed (plausible on all three §3.1.1 limbs) and the boundary-band species is handled exactly as v0.1's reviewer policy proposed — as a confidence modifier that never moves a value. The residual band-width question survives only as a low-stakes calibration item (§9.1, E1): no width of band strikes anything any more.",
     "AP-D4-BLINDSPOT": "STILL LIVE — carried forward unchanged from reference-key-v0; R8's `protein_tail_only` flag now makes the tail payload visible on the review surface, which is a partial answer.",
     "AP-G0-PLACEMENT": "CLOSED by R8. Placement is no longer a G0 conjunct; unstated placement defaults to the P5 canonical placement and the product stays eligible."
   }
