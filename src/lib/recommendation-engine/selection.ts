@@ -1627,16 +1627,11 @@ export function rerankLeaveInProductsWithEngine(params: {
     decision,
     hairProfile,
     requestedFormats = [],
-    runtime,
     includeProductIds,
     preserveProductIds,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
-  const careBalanceHeatRow = getCareBalanceRow(runtime, "heat_protectant")
-  const preferStrongHeatProtection =
-    hasCareBalanceReason(careBalanceHeatRow, "heat_protectant_missing") ||
-    hasCareBalanceReason(careBalanceHeatRow, "heat_protectant_below_heat_cadence")
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
   const eligibleCandidates = filterUnverifiedOwnedAssessmentCandidates(
@@ -1663,31 +1658,16 @@ export function rerankLeaveInProductsWithEngine(params: {
       "Die Leave-in-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
       "Weicht bei Nutzen, Hitzeschutz oder Conditioner-Rolle zu deutlich von deinem Bedarf ab.",
     )
-    const strongHeatBonus =
-      preferStrongHeatProtection &&
-      spec?.provides_heat_protection &&
-      (spec.heat_protection_max_c ?? 0) >= 220
-        ? 24
-        : 0
-    const score =
-      toBaseScore(product) +
-      fitStatusAdjustment(fit.status) +
-      fitReasonAdjustment(fit) +
-      strongHeatBonus
+    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
     const integratedHeatBonusReason =
       shouldPreferIntegratedLeaveInHeatBonus(target) && spec?.provides_heat_protection
         ? "Kann ein Produkt weniger in der Routine bedeuten: Leave-in-Pflege plus Föhnhitzeschutz in einem Produkt."
-        : null
-    const careBalanceHeatReason =
-      strongHeatBonus > 0
-        ? `CareBalance-Hinweis: stärkerer Hitzeschutz-Fit (${spec?.heat_protection_max_c} C) bei hoher oder kumulativer Hitze.`
         : null
 
     const recommendationMeta: LeaveInRecommendationMetadata = {
       category: "leave_in",
       score: Math.round(score * 10) / 10,
       top_reasons: [
-        careBalanceHeatReason,
         ...positives,
         integratedHeatBonusReason,
         target.needBucket === "heat_protect"

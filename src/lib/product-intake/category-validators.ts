@@ -97,7 +97,6 @@ type ProductIntakeSpecRowByTable = {
     weight: string
     roles: string[]
     provides_heat_protection: boolean
-    heat_protection_max_c: number | null
     heat_activation_required: boolean
     care_benefits: string[]
     ingredient_flags: string[]
@@ -566,7 +565,6 @@ const leaveInSpecsSchema = z
         weight: z.enum(LEAVE_IN_WEIGHTS),
         roles: z.array(z.enum(LEAVE_IN_ROLES)).min(1),
         provides_heat_protection: z.boolean(),
-        heat_protection_max_c: z.number().int().positive().nullable(),
         heat_activation_required: z.boolean(),
         care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).min(1),
         ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)),

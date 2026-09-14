@@ -173,7 +173,6 @@ export interface ProductLeaveInSpecs {
   conditioner_relationship?: LeaveInConditionerRelationship
   roles: LeaveInRole[]
   provides_heat_protection: boolean
-  heat_protection_max_c: number | null
   heat_activation_required: boolean
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
