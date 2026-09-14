@@ -151,7 +151,7 @@ test("the card animation is defined once and disabled under reduced motion", () 
   assert.match(globalsSource, /@keyframes scanInsertCardUp/)
   assert.match(
     globalsSource,
-    /\.scan-insert-example-card \{\s*animation: scanInsertCardUp 1s 0\.8s cubic-bezier\(0\.22, 0\.8, 0\.36, 1\) both;/,
+    /\.scan-insert-example-card \{\s*animation: scanInsertCardUp 0\.75s 0\.6s cubic-bezier\(0\.22, 0\.8, 0\.36, 1\) both;/,
   )
   const reducedMotion = globalsSource.slice(globalsSource.indexOf("prefers-reduced-motion"))
   assert.match(reducedMotion, /\.scan-insert-example-card \{\s*animation: none !important;/)
