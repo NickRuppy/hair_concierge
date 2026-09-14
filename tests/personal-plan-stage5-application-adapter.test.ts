@@ -8,6 +8,8 @@ import {
 } from "../src/lib/personal-plan/routine/application-adapter"
 import type { RoutinePayloadV1 } from "../src/lib/personal-plan/routine/contracts"
 import { CatalogDatabaseReadError } from "../src/lib/catalog-authority/product-spec-relationships"
+import { compileApplicationView } from "../src/lib/routines/personal-plan/application/compiler"
+import { APPLICATION_DAY_TYPE_KEYS } from "../src/lib/routines/personal-plan/application/contracts"
 
 const planId = "10000000-0000-4000-8000-000000000001"
 const refinedVersionId = "20000000-0000-4000-8000-000000000001"
@@ -285,6 +287,119 @@ test("Stage 5 adapter carries reviewed Oil weight into application dosage facts"
   )
   assert.equal(result.routineItems[0]?.catalogFacts.weight, "rich")
   assert.equal(result.routineItems[0]?.catalogFactProvenance?.weight, "catalog_spec")
+})
+
+test("catalog Oil row and leave-on protocol compile as the integrated styling-day heat carrier", async () => {
+  const oilPayload = activePayload()
+  oilPayload.items[0] = {
+    ...oilPayload.items[0]!,
+    category: "oil",
+    role: "leave_on_fibre_conditioning",
+  } as never
+  const guidancePayload = {
+    schemaVersion: 1,
+    guidanceKey: `product-oil-${productId}-leave-on`,
+    protocolVersion: 1,
+    locale: "de",
+    scope: { kind: "product", category: "oil", productId },
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    compatibleDayTypes: ["wash_day", "intensive_care_day", "styling_day"],
+    exactGuidanceRequired: true,
+    sequence: {
+      anchor: "damp_leave_on",
+      before: [],
+      after: [],
+      conflictsWith: [],
+    },
+    requirements: {
+      requiredCatalogFacts: [],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: [],
+    },
+    protocolFacts: {
+      applicationArea: "lengths_ends",
+      rinse: "leave_in",
+      contactTimeSeconds: null,
+      conditionerRelationship: "not_applicable",
+      reapplication: "none",
+      amount: null,
+      cautions: [],
+    },
+    steps: [
+      {
+        stepKey: "apply-oil",
+        action: "apply_product",
+        copyTemplateDe: "Sparsam in Längen und Spitzen verteilen.",
+      },
+    ],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/oil",
+        sourceType: "manufacturer",
+        checkedAt: "2026-09-03",
+      },
+    ],
+  }
+  const { client } = productClient(
+    [
+      {
+        id: productId,
+        category: "oil",
+        category_key: "oil",
+        is_active: true,
+        lifecycle_status: "active",
+        product_oil_specs: {
+          weight: "light",
+          role_support: ["leave_on_fibre_conditioning"],
+          provides_heat_protection: true,
+        },
+      },
+    ],
+    null,
+    [
+      {
+        product_id: productId,
+        category: "oil",
+        role: "leave_on_fibre_conditioning",
+        application_state: "damp",
+        reapplication: "not_stated",
+        guidance_payload: guidancePayload,
+        source_url: "https://example.com/oil",
+        source_text: "Auf feuchtem Haar verteilen.",
+        updated_at: "2026-09-03T00:00:00.000Z",
+      },
+    ],
+  )
+
+  const adapted = await adaptAcceptedActiveRoutineForApplication({
+    client,
+    activeVersion: { id: "routine-v1", payload: oilPayload },
+  })
+  const compiled = compileApplicationView({
+    input: {
+      profile: {
+        heatEvents: [{ id: "heat:iron", tool: "straightener", route: "direct_contact_heat" }],
+      },
+      routineItems: adapted.routineItems,
+      unresolvedRoutineItems: adapted.unresolvedRoutineItems,
+      dayTypes: APPLICATION_DAY_TYPE_KEYS.map((key, index) => ({
+        key,
+        sortOrder: index + 1,
+      })),
+    },
+    protocols: adapted.exactGuidanceProtocols,
+  })
+
+  const block = compiled.days
+    .find((day) => day.key === "styling_day")
+    ?.productBlocks.find((candidate) => candidate.productId === productId)
+  assert.ok(block)
+  assert.equal(block.noteDe, null)
+  assert.equal(
+    block.steps[0]?.copyDe,
+    "Sparsam in Längen und Spitzen verteilen. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+  )
 })
 
 test("Stage 5 adapter preserves a canonical planned product as provisional guidance input", async () => {

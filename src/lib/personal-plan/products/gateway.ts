@@ -13,6 +13,7 @@ import type {
 import type { Stage3AuthoritySemanticIntent } from "./authority/contracts"
 import type { Stage3AuthorityEvaluation } from "./authority/contracts"
 import type { Stage3FitComparison } from "./fit-comparison"
+import type { Stage3DecisionReviewBundle } from "./stage3-bootstrap-review-contract"
 
 export type Stage3ProductsGatewayErrorCode =
   | "temporarily_unavailable"
@@ -138,6 +139,14 @@ export type Stage3MutationResponse =
   | { status: "saved"; draft: Stage3ProductDraft }
   | { status: "conflict"; latestDraft: Stage3ProductDraft }
 
+export type Stage3DecisionReviewProjection =
+  | {
+      status: "ready"
+      bundles: Stage3DecisionReviewBundle[]
+      autoResolvedIntents: Stage3AuthoritySemanticIntent[]
+    }
+  | { status: "conflict"; latestDraft: Stage3ProductDraft }
+
 export type Stage3CompleteResponse =
   | {
       status: "ready_for_routine"
@@ -204,6 +213,11 @@ export type Stage3ProductsGateway = {
     expectedRevision: number
     intents: Stage3AuthoritySemanticIntent[]
   }): Promise<Stage3MutationResponse>
+  previewDecisionBundles?(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3DecisionReviewProjection>
   resolveNeedRevision?(input: {
     draftId: string
     expectedRevision: number

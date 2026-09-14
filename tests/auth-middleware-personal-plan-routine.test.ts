@@ -27,6 +27,7 @@ type RoutinePlanResult =
 function createMiddleware({
   currentAccess = true,
   paidAccess = false,
+  partnerAccess = false,
   frontierResult = { data: { eligible: false, source_ready: false, plan: null }, error: null },
   planResult = {
     data: { pending_routine_proposal_id: "proposal-1", active_routine_version_id: null },
@@ -36,12 +37,15 @@ function createMiddleware({
   useDefaultFrontier = false,
   userAppMetadata = { access_kind: "field_test" },
   moderatorAccess = "none",
+  oneTimeAccessState = "none",
   hairProfile = completeQuizProfile as Record<string, unknown> | null,
+  onboardingCompleted = false,
   observedTables,
   frontierCalls,
 }: {
   currentAccess?: boolean
   paidAccess?: boolean
+  partnerAccess?: boolean
   frontierResult?: {
     data: {
       eligible: boolean
@@ -60,7 +64,9 @@ function createMiddleware({
   useDefaultFrontier?: boolean
   userAppMetadata?: Record<string, unknown>
   moderatorAccess?: "active" | "ended" | "none" | "unavailable"
+  oneTimeAccessState?: "none" | "paid_pending" | "active" | "revoked"
   hairProfile?: Record<string, unknown> | null
+  onboardingCompleted?: boolean
   observedTables?: string[]
   frontierCalls?: { count: number }
 } = {}) {
@@ -116,7 +122,7 @@ function createMiddleware({
                       data:
                         columns === "is_admin"
                           ? { is_admin: false }
-                          : { onboarding_completed: false },
+                          : { onboarding_completed: onboardingCompleted },
                     }
                   }
                   if (table === "hair_profiles") {
@@ -143,8 +149,10 @@ function createMiddleware({
       currentAccess) as UpdateSessionDependencies["hasCurrentAppAccess"],
     hasCurrentPaidAppAccess: (async () =>
       paidAccess) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
+    hasCurrentPartnerAccess: (async () =>
+      partnerAccess) as UpdateSessionDependencies["hasCurrentPartnerAccess"],
     resolveOneTimeAccessState: (async () =>
-      "none") as UpdateSessionDependencies["resolveOneTimeAccessState"],
+      oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
     resolveModeratorAccess: (async () =>
       moderatorAccess) as UpdateSessionDependencies["resolveModeratorAccess"],
     getRouteEnvironment: () => ({ nodeEnv: "test", localDevLoginEnabled: false }),
@@ -280,6 +288,201 @@ test("tracker still redirects an authenticated user without current access to re
   assert.equal(frontierCalls.count, 0)
 })
 
+// --- Freemium scanner-first flag (T2), end-to-end through createUpdateSession ---
+
+test("flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/tracker"))
+
+    assert.equal(response.status, 307)
+    assert.equal(
+      response.headers.get("location"),
+      "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
+    )
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/tracker"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user without current access is still gated on a non-admitted route (POST /api/chat stays subscription_required)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    for (const request of [
+      new NextRequest("https://chaarlie.de/api/chat", { method: "POST" }),
+      new NextRequest("https://chaarlie.de/api/chat/conversation-1", { method: "DELETE" }),
+      new NextRequest("https://chaarlie.de/api/chat/feedback", { method: "POST" }),
+      new NextRequest("https://chaarlie.de/api/chat/trigger", { method: "POST" }),
+      new NextRequest("https://chaarlie.de/api/chat/product-selection", { method: "POST" }),
+      new NextRequest("https://chaarlie.de/api/profile"),
+    ]) {
+      const response = await createMiddleware({
+        currentAccess: false,
+        userAppMetadata: {},
+      })(request)
+
+      assert.equal(response.status, 403, `${request.method} ${request.nextUrl.pathname}`)
+      const body = await response.json()
+      assert.deepEqual(body, { error: "subscription_required" })
+    }
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+// T17 keepsake reads: a lapsed owner's own conversation history has to stay readable on
+// `/chat/[conversationId]`, which needs `GET /api/chat` and `GET /api/chat/[id]`. The
+// carve-out is scoped by METHOD, deliberately NOT by adding `/api/chat` to
+// `FREEMIUM_ADMITTED_ROUTE_PREFIXES` — that would admit the streaming POST too, since no
+// route under this prefix carries an in-route entitlement guard (enforcement-matrix.md).
+// Both reads are session-scoped and owner-filtered, so a never-paid user reaching them
+// sees only their own (empty) history.
+test("flag on: GET /api/chat and GET /api/chat/[id] are admitted for keepsake reads (T17)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    for (const pathname of ["/api/chat", "/api/chat/conversation-1"]) {
+      const response = await createMiddleware({
+        currentAccess: false,
+        userAppMetadata: {},
+      })(new NextRequest(`https://chaarlie.de${pathname}`))
+
+      assert.equal(response.status, 200, pathname)
+      assert.equal(response.headers.get("location"), null, pathname)
+    }
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: GET /api/chat is still subscription_required (byte-identical)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/api/chat"))
+
+    assert.equal(response.status, 403)
+    assert.deepEqual(await response.json(), { error: "subscription_required" })
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const observedTables: string[] = []
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      observedTables,
+    })(new NextRequest("https://chaarlie.de/scan"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+    // No personal_plans routine lookup is needed to admit this free user —
+    // the /scan bypass is now entitlement-independent under the flag.
+    assert.ok(!observedTables.includes("personal_plans"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    // Default hairProfile (complete) + default profile.onboarding_completed
+    // false resolves to intakeState "needs_onboarding". No paid access at
+    // all: no current app access, no one-time purchase, no moderator grant.
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    // This mirrors the flag-OFF outcome exactly: a paying one-time-access
+    // owner who hasn't finished legacy onboarding must not be admitted by
+    // the freemium exemption just because the underlying `active` (current
+    // app access) boolean happens to be false.
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "active",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 307)
+    assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "active",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/anwendung"))
+
+    assert.equal(response.status, 307)
+    assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
 test("chat retains proxy intake and preserves redirect query parameters", async () => {
   const observedTables: string[] = []
   const frontierCalls = { count: 0 }
@@ -372,6 +575,113 @@ test("an ended moderator with independently verified paid access remains admitte
   })(new NextRequest("https://chaarlie.de/tracker"))
 
   assert.equal(response.status, 200)
+})
+
+// Codex F4: an active partner ("Partnerzugang") grant is its own independent
+// entitlement, distinct from `hasCurrentPaidAppAccess` (provider
+// subscription / one-time / legacy profile only) — it must keep an
+// ended-moderator account admitted on its own.
+test("an ended moderator with an active partner grant remains admitted", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    partnerAccess: true,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/tracker"))
+
+  assert.equal(response.status, 200)
+})
+
+test("an ended moderator without paid or partner access is still routed to the ended screen", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    partnerAccess: false,
+    userAppMetadata: {},
+    moderatorAccess: "ended",
+  })(new NextRequest("https://chaarlie.de/routine"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
+})
+
+// partner-access-robust: the grant-at-claim partner journey resolves through
+// ordinary hasCurrentAppAccess (not the moderator lookup), and a claim onto
+// an existing account leaves it with a "fresh start" profile (onboarding
+// reset, hair profile deleted). Pin that this composed state lands on /quiz,
+// not /reactivate (which would fire if `active` were false) and not
+// /onboarding (which would fire if a stale hair profile survived the reset).
+test("a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    hairProfile: null,
+    onboardingCompleted: false,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/quiz")
+})
+
+// Note on scope: with the default moderatorAccess: "none", this pass-through
+// is driven entirely by `hasCurrentAppAccess` (`currentAccess: true`) plus a
+// completed profile — the moderator-ended/unavailable recomputation branch
+// that actually calls `hasCurrentPaidAppAccess`/`hasCurrentPartnerAccess`
+// (middleware.ts ~L504-513) never runs here. `paidAccess` and the partner
+// metadata are incidental; this only pins that a currently paying account
+// which also happens to carry partner metadata keeps ordinary /chat access.
+// See the two tests below for the actual paid/partner composition guard.
+test("a currently paying account that also carries partner metadata keeps ordinary /chat access", async () => {
+  const response = await createMiddleware({
+    currentAccess: true,
+    paidAccess: true,
+    userAppMetadata: { access_kind: "partner" },
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
+// Composed case: once a moderator record has ended, the middleware
+// recomputes access from `hasCurrentPaidAppAccess` OR `hasCurrentPartnerAccess`
+// alone (middleware.ts ~L504-518) — `hasCurrentAppAccess`/`currentAccess` is
+// discarded. Pin that independently verified paid access keeps a
+// partner-labelled, fully onboarded account on /chat, mirroring "an ended
+// moderator with independently verified paid access remains admitted".
+test("an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    paidAccess: true,
+    partnerAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    moderatorAccess: "ended",
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 200)
+  assert.equal(response.headers.get("location"), null)
+})
+
+// Negative twin: carrying `access_kind: "partner"` metadata alone is not an
+// independently verified grant — without `hasCurrentPaidAppAccess` or
+// `hasCurrentPartnerAccess` resolving true, an ended moderator is still
+// routed to the ended screen, mirroring "an ended moderator without paid or
+// partner access is still routed to the ended screen".
+test("an ended moderator with partner metadata but no independently verified access is still routed to the ended screen", async () => {
+  const response = await createMiddleware({
+    currentAccess: false,
+    paidAccess: false,
+    partnerAccess: false,
+    userAppMetadata: { access_kind: "partner" },
+    moderatorAccess: "ended",
+    onboardingCompleted: true,
+  })(new NextRequest("https://chaarlie.de/chat"))
+
+  assert.equal(response.status, 307)
+  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
 })
 
 test("a moderator access lookup outage is unavailable rather than an expiry or paywall", async () => {
@@ -633,4 +943,72 @@ test("synthetic guest access does not depend on the unrelated moderator membersh
     new NextRequest("https://chaarlie.de/tracker"),
   )
   assert.equal(response.status, 200)
+})
+
+test("flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    // The scan_v1 funnel buyer: current app access from the subscription, no
+    // one-time purchase, no guest marker, no moderator grant — i.e. no
+    // Personal-Plan routine entitlement — and legacy onboarding unfinished.
+    const observedTables: string[] = []
+    const response = await createMiddleware({
+      currentAccess: true,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+      observedTables,
+    })(new NextRequest("https://chaarlie.de/scan?welcome=scan"))
+
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+    // The /scan paid-access bypass never reads routine pointers.
+    assert.ok(!observedTables.includes("personal_plans"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    for (const pathname of ["/chat", "/anwendung"]) {
+      const response = await createMiddleware({
+        currentAccess: true,
+        userAppMetadata: {},
+        oneTimeAccessState: "none",
+        moderatorAccess: "none",
+      })(new NextRequest(`https://chaarlie.de${pathname}`))
+
+      assert.equal(response.status, 307)
+      assert.equal(response.headers.get("location"), "https://chaarlie.de/onboarding")
+    }
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("flag off: a user without any paid access is still bounced off /scan by the paywall", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  try {
+    const response = await createMiddleware({
+      currentAccess: false,
+      userAppMetadata: {},
+      oneTimeAccessState: "none",
+      moderatorAccess: "none",
+    })(new NextRequest("https://chaarlie.de/scan"))
+
+    // No paid access at all: the subscription paywall owns this request and
+    // sends the user to /reactivate, never into the scan shell.
+    assert.equal(response.status, 307)
+    assert.ok(response.headers.get("location")?.startsWith("https://chaarlie.de/reactivate"))
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
 })

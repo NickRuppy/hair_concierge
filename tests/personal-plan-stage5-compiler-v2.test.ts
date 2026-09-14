@@ -571,6 +571,87 @@ test("V2 compiler groups one Oil selected for finish and leave-in roles only onc
   assert.deepEqual(new Set(blocks[0]?.roles), new Set(["finish", "leave_in"]))
 })
 
+test("V2 compiler applies integrated Oil heat copy after washing for an airflow dryer", () => {
+  const applicationInput = input("oil", "leave_in") as never as {
+    routineItems: Array<Record<string, unknown>>
+    profile: Record<string, unknown>
+  }
+  const oilItem = applicationInput.routineItems.find((item) => item.productId === productId)!
+  oilItem.sourceRoutineRole = "leave_on_fibre_conditioning"
+  oilItem.catalogFacts = { provides_heat_protection: true }
+  applicationInput.profile = {
+    heatEvents: [{ id: "heat:dryer", tool: "hair_dryer", route: "airflow_shaping" }],
+  }
+  const leaveOnOil = pointer({
+    scope: { kind: "product", category: "oil", productId },
+    sourceRole: "leave_on_fibre_conditioning",
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    facts: {
+      ...pointer().facts,
+      applicationState: "damp_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+    },
+  })
+
+  const result = compileApplicationViewV2({
+    input: applicationInput as never,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), leaveOnOil],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  const block = result.days
+    .find(({ key }) => key === "wash_day")
+    ?.productBlocks.find((candidate) => candidate.productId === productId)
+  assert.ok(block)
+  assert.equal(block.noteDe, null)
+  assert.equal(
+    block.steps.filter(({ action }) => action === "apply_product").at(-1)?.copyDe,
+    "Sparsam in handtuchtrockene Längen und Spitzen verteilen. Nicht ausspülen. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+  )
+})
+
+test("V2 compiler does not synthesize a damp leave-on Oil onto a direct-heat styling day", () => {
+  const applicationInput = input("oil", "leave_in") as never as {
+    routineItems: Array<Record<string, unknown>>
+    profile: Record<string, unknown>
+  }
+  const oilItem = applicationInput.routineItems.find((item) => item.productId === productId)!
+  oilItem.sourceRoutineRole = "leave_on_fibre_conditioning"
+  oilItem.catalogFacts = { provides_heat_protection: true }
+  applicationInput.profile = {
+    heatEvents: [{ id: "heat:iron", tool: "straightener", route: "direct_contact_heat" }],
+  }
+  const leaveOnOil = pointer({
+    scope: { kind: "product", category: "oil", productId },
+    sourceRole: "leave_on_fibre_conditioning",
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    facts: {
+      ...pointer().facts,
+      applicationState: "damp_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+    },
+  })
+
+  const result = compileApplicationViewV2({
+    input: applicationInput as never,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), leaveOnOil],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  assert.equal(
+    result.days
+      .find(({ key }) => key === "styling_day")
+      ?.productBlocks.some((candidate) => candidate.productId === productId) ?? false,
+    false,
+  )
+})
+
 test("V2 compiler does not generalize pre-wash-only, heat-only, or scalp-only Oils", () => {
   const preWash = compileApplicationViewV2({
     input: input("oil", "intensive_care"),

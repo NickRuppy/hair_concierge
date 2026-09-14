@@ -1,0 +1,13 @@
+{
+  "version": "shampoo-v14-wave-blocked-products-v1",
+  "blocked_products": [
+    {
+      "product_id": "fructis-coco-water",
+      "gtin": "3600541970533",
+      "status": "material_formula_conflict",
+      "excluded_from_pilot_manifest": true,
+      "reason": "Selected exact-GTIN dm formula and manufacturer formula conflict materially; neither may be chosen or merged without pack-bound resolution.",
+      "required_resolution": "Current exact-pack manufacturer asset or independent exact-GTIN formula corroboration."
+    }
+  ]
+}

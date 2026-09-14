@@ -55,6 +55,17 @@ test("resolveIntakeState returns needs_quiz for quizless users", () => {
   assert.equal(resolveIntakeState({ onboarding_completed: false }, null), "needs_quiz")
 })
 
+// partner-access-robust: an existing account claiming a partner invitation
+// gets a "fresh start" (onboarding_completed reset to false, hair profile
+// row deleted). Pin that this profile shape routes exactly like a brand-new
+// account — into the quiz, not onboarding or straight into the app.
+test("a partner's fresh-start profile (reset onboarding, no hair profile) resolves to needs_quiz and routes /chat through /quiz", () => {
+  const freshStartProfile = { onboarding_completed: false }
+  assert.equal(resolveIntakeState(freshStartProfile, null), "needs_quiz")
+  assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_quiz"), null)
+  assert.equal(getAuthenticatedAppRedirect("/chat", "needs_quiz"), "/quiz")
+})
+
 test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
   assert.equal(getAuthenticatedAppRedirect("/auth", "needs_quiz"), "/quiz")
   assert.equal(getAuthenticatedAppRedirect("/auth", "needs_onboarding"), "/onboarding")
@@ -294,5 +305,182 @@ test("scan bypasses legacy onboarding for any personal-plan entitlement holder, 
       personalPlanRoutineAccess: activeRoutine,
     }),
     "/quiz",
+  )
+})
+
+// --- Freemium scanner-first flag (T2) --------------------------------------
+
+test("flag off: canBypassLegacyOnboardingForPersonalPlanRoutine for /scan is unchanged (still requires entitlement)", () => {
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", undefined), false)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", undefined, {
+      freemiumScannerFirstEnabled: false,
+    }),
+    false,
+  )
+})
+
+test("flag on: /scan bypasses legacy onboarding with no entitlement at all", () => {
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", undefined, {
+      freemiumScannerFirstEnabled: true,
+    }),
+    true,
+  )
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine(
+      "/scan",
+      {
+        hasActivePersonalPlanEntitlement: false,
+        pendingRoutineProposalId: null,
+        activeRoutineVersionId: null,
+      },
+      { freemiumScannerFirstEnabled: true },
+    ),
+    true,
+  )
+})
+
+test("flag on: /scan decoupling does not leak to routine, anwendung or chat", () => {
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", undefined, {
+      freemiumScannerFirstEnabled: true,
+    }),
+    false,
+  )
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung", undefined, {
+      freemiumScannerFirstEnabled: true,
+    }),
+    false,
+  )
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/chat", undefined, {
+      freemiumScannerFirstEnabled: true,
+    }),
+    false,
+  )
+})
+
+test("flag on: getAuthenticatedAppRedirect lets a quiz-complete, entitlement-less user reach /scan", () => {
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      freemiumScannerFirstEnabled: true,
+    }),
+    null,
+  )
+})
+
+test("flag off: getAuthenticatedAppRedirect still bounces the same user to /onboarding", () => {
+  assert.equal(getAuthenticatedAppRedirect("/scan", "needs_onboarding"), "/onboarding")
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      freemiumScannerFirstEnabled: false,
+    }),
+    "/onboarding",
+  )
+})
+
+test("flag on: quiz-incomplete users are still sent to /quiz before /scan, unaffected by the flag", () => {
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_quiz", {
+      freemiumScannerFirstEnabled: true,
+    }),
+    "/quiz",
+  )
+})
+
+// --- Scanner funnel (`scan_v1`): subscription buyers reach /scan -------------
+
+test("flag off: a subscription buyer with paid app access but no personal-plan entitlement reaches /scan", () => {
+  // The scan_v1 funnel sells the subscription, so the buyer has current paid
+  // app access but no Personal-Plan routine entitlement (that composite only
+  // covers one-time access, field-test / partner guests and moderators).
+  const subscriptionBuyer = {
+    hasActivePersonalPlanEntitlement: false,
+    hasPaidAppAccess: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: null,
+  }
+
+  assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/scan", subscriptionBuyer), true)
+  assert.equal(
+    canBypassLegacyOnboardingForPersonalPlanRoutine("/scan/ergebnis", subscriptionBuyer),
+    true,
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      personalPlanRoutineAccess: subscriptionBuyer,
+    }),
+    null,
+  )
+  // The profile prerequisite is unchanged: without quiz diagnostics the intake
+  // gate still sends the buyer to /quiz first.
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_quiz", {
+      personalPlanRoutineAccess: subscriptionBuyer,
+    }),
+    "/quiz",
+  )
+})
+
+test("flag off: paid app access alone does not open /routine, /anwendung or /chat", () => {
+  const subscriptionBuyer = {
+    hasActivePersonalPlanEntitlement: false,
+    hasPaidAppAccess: true,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: null,
+  }
+  // Even with routine pointers present, the entitlement-gated rules are
+  // unchanged — paid access is a /scan-only key.
+  const subscriptionBuyerWithPointers = {
+    ...subscriptionBuyer,
+    pendingRoutineProposalId: "proposal-1",
+    activeRoutineVersionId: "routine-1",
+  }
+
+  for (const access of [subscriptionBuyer, subscriptionBuyerWithPointers]) {
+    assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/routine", access), false)
+    assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/anwendung", access), false)
+    assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine("/chat", access), false)
+  }
+
+  assert.equal(
+    getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
+      personalPlanRoutineAccess: subscriptionBuyerWithPointers,
+    }),
+    "/onboarding",
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/anwendung", "needs_onboarding", {
+      personalPlanRoutineAccess: subscriptionBuyerWithPointers,
+    }),
+    "/onboarding",
+  )
+  assert.equal(
+    getAuthenticatedAppRedirect("/chat", "needs_onboarding", {
+      personalPlanRoutineAccess: subscriptionBuyerWithPointers,
+    }),
+    "/onboarding",
+  )
+})
+
+test("flag off: without paid access and without entitlement nothing is bypassed", () => {
+  const noAccess = {
+    hasActivePersonalPlanEntitlement: false,
+    hasPaidAppAccess: false,
+    pendingRoutineProposalId: null,
+    activeRoutineVersionId: null,
+  }
+
+  for (const pathname of ["/scan", "/scan/ergebnis", "/routine", "/anwendung", "/chat"]) {
+    assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine(pathname, noAccess), false)
+    assert.equal(canBypassLegacyOnboardingForPersonalPlanRoutine(pathname, undefined), false)
+  }
+  assert.equal(
+    getAuthenticatedAppRedirect("/scan", "needs_onboarding", {
+      personalPlanRoutineAccess: noAccess,
+    }),
+    "/onboarding",
   )
 })

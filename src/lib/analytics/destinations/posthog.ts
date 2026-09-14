@@ -161,6 +161,13 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "quiz_goals_selected":
       return payload
+    case "quiz_insert_viewed": {
+      const data = payload as AppEventMap["quiz_insert_viewed"]
+      return {
+        insert_id: data.insertId,
+        funnel_package_key: data.funnelPackageKey,
+      }
+    }
     case "quiz_started":
     case "quiz_step_viewed": {
       const data = payload as AppEventMap["quiz_started" | "quiz_step_viewed"]

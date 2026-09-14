@@ -1,0 +1,58 @@
+{
+  "version": "shampoo-v14-wave-validation-v1",
+  "status": "pass_research_draft_pending_nick_review",
+  "scope": {
+    "wave": "wave-01",
+    "products": 5,
+    "remaining_approved_cohort": 42,
+    "database_writes": 0,
+    "catalog_updates": 0
+  },
+  "source_gate": {
+    "status": "pass",
+    "complete_current_formula_packets": 5,
+    "formula_hashes_verified": 5,
+    "identity_bound_packets": 5,
+    "preserved_formula_variants_or_deltas": 2
+  },
+  "lane_gate": {
+    "status": "pass",
+    "blind_lane_a": 5,
+    "unblinded_lane_a": 5,
+    "independent_lane_b": 5,
+    "adjudicated_products": 5,
+    "all_final_properties_moderate_or_high": true,
+    "source_identity_failures": 0,
+    "systematic_rule_gaps": 0
+  },
+  "agreement": {
+    "judgment_matches": 32,
+    "judgment_decisions": 35,
+    "overall": 0.9142857142857143,
+    "minimum_property_agreement": 0.6,
+    "dandruff_agreement": 1,
+    "thresholds_pass": true,
+    "receipt": "agreement.json"
+  },
+  "focus_v15_gate": {
+    "status": "pass",
+    "hash_bound_overlays": 5,
+    "moisture_primary": 1,
+    "moisture_secondary": 1,
+    "gentle_focus_values": 0
+  },
+  "adapter_gate": {
+    "status": "pass",
+    "property_lane_ready": 5,
+    "needs_research": 0,
+    "routed_deep_cleansing": 0,
+    "runs_per_product": 2,
+    "byte_identical_pairs": 5
+  },
+  "review_gate": {
+    "nick_review_required": true,
+    "database_apply_authorized": false,
+    "catalog_publish_authorized": false,
+    "commit_or_push_authorized": false
+  }
+}

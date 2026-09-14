@@ -2,17 +2,20 @@
 
 import { useEffect, useRef, useState, type Ref } from "react"
 
+import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
+import { getQuizFunnelCopy, type QuizFunnelCopy } from "@/lib/quiz/funnel-copy"
+
 export type QuizTransitionPhase = "commit" | "loading" | "ready"
 export type QuizCommitChoice = "ja" | "neugierig"
 
 export const QUIZ_TRANSITION_LOADING_MS = 2600
 export const QUIZ_TRANSITION_READY_BEAT_MS = 900
 
+const ORGANIC_QUIZ_FUNNEL_COPY = getQuizFunnelCopy(null)
+
+/** @deprecated Kept for its existing callers/tests; use `getQuizFunnelCopy(packageKey).commitHeading` for a package-aware heading. */
 export function getCommitHeading(name: string) {
-  const normalized = name.trim()
-  return normalized
-    ? `${normalized}, bereit für den nächsten Schritt mit deinem Haar?`
-    : "Bereit für den nächsten Schritt mit deinem Haar?"
+  return ORGANIC_QUIZ_FUNNEL_COPY.commitHeading(name)
 }
 
 export function getLoadingHeading(name: string) {
@@ -84,12 +87,14 @@ export function startQuizAnalysisReveal(
 
 export function QuizAnalysisView({
   commitPending,
+  copy = ORGANIC_QUIZ_FUNNEL_COPY,
   name,
   onCommit,
   phase,
   statusRef,
 }: {
   commitPending: boolean
+  copy?: QuizFunnelCopy
   name: string
   onCommit: (choice: QuizCommitChoice) => void
   phase: QuizTransitionPhase
@@ -100,7 +105,7 @@ export function QuizAnalysisView({
       {phase === "commit" ? (
         <div className="mx-auto flex w-full max-w-[26rem] flex-col items-center py-10 text-center sm:py-16">
           <h2 className="text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
-            {getCommitHeading(name)}
+            {copy.commitHeading(name)}
           </h2>
           <button
             className="quiz-btn-primary mt-9 min-h-12 w-full rounded-[14px] px-5 py-3 text-base font-bold disabled:cursor-wait disabled:opacity-80"
@@ -108,7 +113,7 @@ export function QuizAnalysisView({
             onClick={() => onCommit("ja")}
             type="button"
           >
-            Ja, zeig mir meine Analyse
+            {copy.commitButton}
           </button>
           <button
             className="mt-3 min-h-11 w-full rounded-[14px] px-5 py-2.5 text-sm font-semibold text-[var(--text-sub)] transition-colors hover:bg-[var(--brand-plum-ice)] hover:text-[var(--brand-plum)] disabled:cursor-wait disabled:opacity-80"
@@ -138,7 +143,7 @@ export function QuizAnalysisView({
               {getLoadingHeading(name)}
             </h2>
             <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
-              Deine Haaranalyse wird erstellt.
+              {copy.analysisLoadingHeadline}
             </p>
             <div aria-hidden="true" className="quiz-shimmer-bar mt-8" />
           </>
@@ -161,6 +166,8 @@ export interface QuizAnalysisProps {
 }
 
 export function QuizAnalysis({ name, onCommit, onReveal, ready }: QuizAnalysisProps) {
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const copy = getQuizFunnelCopy(funnelPackageKey)
   const [choice, setChoice] = useState<QuizCommitChoice | null>(null)
   const [loadingElapsed, setLoadingElapsed] = useState(false)
   const revealStartedRef = useRef(false)
@@ -216,6 +223,7 @@ export function QuizAnalysis({ name, onCommit, onReveal, ready }: QuizAnalysisPr
   return (
     <QuizAnalysisView
       commitPending={choice !== null}
+      copy={copy}
       name={name}
       onCommit={handleCommit}
       phase={phase}

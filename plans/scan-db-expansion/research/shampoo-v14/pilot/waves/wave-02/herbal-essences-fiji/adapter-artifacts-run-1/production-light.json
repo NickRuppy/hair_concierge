@@ -1,0 +1,161 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-fiji-positioning",
+          "usage:rossmann-directions",
+          "adjudication:herbal-essences-fiji:cleansingStrength",
+          "adjudication:herbal-essences-fiji:scalpComfortTarget"
+        ],
+        "rationale": "The product is positioned for hair moisture, softness and no weight, not for dandruff, oily, dry-feeling sensitive scalp or irritation; ordinary balanced scalp route is supported."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.04",
+          "formula.surfactant.05",
+          "formula.architecture.01"
+        ],
+        "rationale": "Moderate: isethionate and sarcosinate anionic surfactants are paired with two betaines, giving ordinary effective cleansing without the sharper SLES/reset profile. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:herbal-essences-fiji:conditioningLevel",
+          "adjudication:herbal-essences-fiji:weightPotential",
+          "adjudication:herbal-essences-fiji:focusPrimary",
+          "adjudication:herbal-essences-fiji:conditioningLevel",
+          "adjudication:herbal-essences-fiji:weightPotential",
+          "adjudication:herbal-essences-fiji:focusPrimary",
+          "adjudication:herbal-essences-fiji:conditioningLevel",
+          "adjudication:herbal-essences-fiji:weightPotential",
+          "adjudication:herbal-essences-fiji:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — Low weight potential and no-weigh-down moisture positioning make this a good fine-hair default despite ordinary moderate cleansing. normal — Moderate cleansing, moderate conditioning and low weight produce a balanced moisture-leaning fit for normal hair. Conditional (not emitted): coarse — Coarse hair can use the moisture-leaning shampoo, but the low-weight/moderate-care formula may not be rich enough as an ideal coarse-hair default."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-fiji-positioning",
+          "usage:rossmann-directions"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.04",
+          "formula.surfactant.05",
+          "formula.architecture.01"
+        ],
+        "rationale": "Moderate: isethionate and sarcosinate anionic surfactants are paired with two betaines, giving ordinary effective cleansing without the sharper SLES/reset profile."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.11",
+          "formula.architecture.02"
+        ],
+        "rationale": "Moderate: Polyquaternium-10 provides one meaningful conditioning route, while glycerin and coconut fruit juice are late supportive clues rather than a rich care system."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim:dm-fiji-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.11"
+        ],
+        "rationale": "General: the dominant claim is lightweight moisture, but moisture is not a v1.4 focus value; the formula supports light care rather than a distinct volume, shine, repair, clarifying, scalp-active or gentle role."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-fiji-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: no distinct secondary v1.4 focus has both a separate claim and independent formula route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:dm-fiji-positioning",
+          "formula.canonical_inci",
+          "formula.fragrance.08"
+        ],
+        "rationale": "Not targeted: the product is positioned for lightweight hair moisture/softness, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:rossmann-directions",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are standard wet-hair lather and rinse-out use, with no explicit daily/frequent, treatment, alternating or reset trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.11",
+          "claim:dm-fiji-positioning"
+        ],
+        "rationale": "Low: one mid-list cationic polymer and very late humectant/plant-juice clues create limited residue potential, while the surfactant system provides adequate reset and there is no silicone/oil payload."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "coarse"
+    ],
+    "productId": "herbal-essences-fiji",
+    "productName": "Shampoo Fiji",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

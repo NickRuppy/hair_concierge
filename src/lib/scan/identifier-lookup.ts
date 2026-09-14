@@ -11,8 +11,11 @@ import { SCAN_ACTIVE_LIFECYCLE_STATUS } from "./catalog-eligibility"
  * an EAN read, but the lookup treats them as interchangeable — mirrors
  * `BARCODE_IDENTIFIER_TYPES` in `src/lib/product-intake/product-matching.ts` (not exported
  * there, so re-declared here rather than reached into).
+ *
+ * Deliberately not exported: it belongs to the DB matcher below, not to any API or client
+ * contract, which are `"ean"`-only (ruling R9).
  */
-export type ScanIdentifierType = "ean" | "gtin" | "barcode"
+type ScanIdentifierType = "ean" | "gtin" | "barcode"
 const BARCODE_IDENTIFIER_TYPES: readonly ScanIdentifierType[] = ["ean", "gtin", "barcode"]
 
 export type ScanIdentifierInput = {
@@ -92,9 +95,3 @@ export function validateEanInput(raw: string): ValidateEanInputResult {
   }
   return { ok: true, type: "ean", value: trimmed }
 }
-
-/**
- * GS1 mod-10 check digit: from the digit immediately left of the check digit, weights
- * alternate 3, 1, 3, 1, … moving further left. Uniform across EAN-8 and EAN-13 because
- * both are defined relative to the rightmost (check) digit.
- */

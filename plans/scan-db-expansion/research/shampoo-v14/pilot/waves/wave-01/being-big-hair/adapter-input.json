@@ -1,0 +1,202 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "being-big-hair",
+    "market": "DE",
+    "exactProductName": "Big Hair Shampoo",
+    "exactPackSize": "354 ml",
+    "gtinAliases": [
+      "4895248005872"
+    ],
+    "capturedAt": "2026-09-03T12:00:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "resolved",
+    "sources": [
+      {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+        "tier": "preferred_retailer_de",
+        "capturedAt": "2026-09-03T12:00:00+02:00"
+      },
+      {
+        "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html",
+        "tier": "preferred_retailer_de",
+        "capturedAt": "2026-09-03T12:00:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes",
+    "inciFingerprintSha256": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:7e56fd05827182a056dc6e24e8503a87d5ed5762056495b499a5c0f8447b9cd0"
+    ],
+    "sources": [
+      {
+        "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html",
+        "tier": "preferred_retailer_de",
+        "capturedAt": "2026-09-03T12:00:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conflicting_global_manufacturer_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.07",
+        "formula.surfactant.15"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: macadamia oil, avocado oil, glycerin, panthenol, polyquaternium-10 and cationic guar provide real rinse-off care, but the product is not a rich 2-in-1 and has no silicone stack.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "claim:being-global-positioning"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: two plant oils plus polyquaternium-10 and cationic guar create noticeable but bounded residue potential, while the multi-surfactant, silicone-free, volume-positioned architecture keeps this below high.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "formula.surfactant.03",
+        "claim:being-global-positioning"
+      ]
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "rationale": "Volume: the exact product identity centers on Big Hair and supporting positioning targets fullness/body for thin or fine hair; the silicone-free multi-surfactant formula is compatible with that role.",
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the oil and humectant story supports care feel inside the volume product, not a separate exact-product secondary focus with an independent route.",
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use with no treatment, daily/frequent, alternating or reset trigger.",
+      "evidenceRefs": [
+        "usage:being-global",
+        "usage:superdrug",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: revealed claims target volume/fullness, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:rossmann-de-positioning",
+        "claim:being-global-positioning",
+        "formula.canonical_inci",
+        "formula.fragrance.12"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete exact-GTIN formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "The volume positioning is explicitly for thin/fine hair and the silicone-free formula has enough cleanser/texture support to keep fine hair in the ideal set.",
+      "evidenceRefs": [
+        "adjudication:being-big-hair:conditioningLevel",
+        "adjudication:being-big-hair:weightPotential",
+        "adjudication:being-big-hair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "Normal hair may use it for volume, but the moderate conditioning/weight route and fine-hair targeting make it less central.",
+      "evidenceRefs": [
+        "adjudication:being-big-hair:conditioningLevel",
+        "adjudication:being-big-hair:weightPotential",
+        "adjudication:being-big-hair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "not_suited",
+      "confidence": "moderate",
+      "rationale": "Coarse hair usually needs more conditioning than a volume-first, moderate-care shampoo offers.",
+      "evidenceRefs": [
+        "adjudication:being-big-hair:conditioningLevel",
+        "adjudication:being-big-hair:weightPotential",
+        "adjudication:being-big-hair:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+      "positioningEvidenceRefs": [
+        "formula.canonical_inci"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:being-big-hair:cleansingStrength",
+        "adjudication:being-big-hair:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "usage:being-global",
+      "usage:superdrug",
+      "formula.canonical_inci"
+    ]
+  }
+}

@@ -1970,6 +1970,72 @@ function shampooAuthorityDraft(
   }
 }
 
+function oilLeaveOnGuidancePayload(productId: string, compatibleDayTypes: string[]) {
+  return {
+    schemaVersion: 1,
+    guidanceKey: `product-oil-${productId}-leave-on`,
+    protocolVersion: 1,
+    locale: "de",
+    scope: { kind: "product", category: "oil", productId },
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    compatibleDayTypes,
+    exactGuidanceRequired: true,
+    sequence: { anchor: "damp_leave_on", before: [], after: [], conflictsWith: [] },
+    requirements: {
+      requiredCatalogFacts: [],
+      requiredProtocolFacts: [],
+      requiredProfileFacts: [],
+    },
+    protocolFacts: {
+      applicationArea: "lengths_ends",
+      rinse: "leave_in",
+      contactTimeSeconds: null,
+      conditionerRelationship: "not_applicable",
+      reapplication: "none",
+      amount: null,
+      cautions: [],
+    },
+    steps: [
+      {
+        stepKey: "apply-oil",
+        action: "apply_product",
+        copyTemplateDe: "Sparsam in Längen und Spitzen verteilen.",
+      },
+    ],
+    evidence: [
+      {
+        sourceUrl: "https://example.com/oil",
+        sourceType: "manufacturer",
+        checkedAt: "2026-09-03",
+      },
+    ],
+  }
+}
+
+function plannedOilDecision(productId: string) {
+  return {
+    decisionKey: "decision:oil:leave_on_fibre_conditioning:uncovered",
+    category: "oil",
+    role: "leave_on_fibre_conditioning",
+    capturedProductId: null,
+    verdict: "ideal",
+    choiceState: "planned_purchase",
+    criterionResults: [],
+    recommendation: {
+      recommendationId: `recommend:${productId}:leave_on_fibre_conditioning`,
+      productId,
+      category: "oil",
+      role: "leave_on_fibre_conditioning",
+      displayName: "Planned heat-capable Oil",
+      reason: "Passt zur Leave-on-Rolle.",
+      authorityRuleId: "oil.selection.core_fit",
+    },
+    limitationAcknowledged: false,
+    resolutionAction: "plan_recommendation",
+  }
+}
+
 function shampooAuthorityFactClient(
   shampooSpecs: Record<string, unknown>[],
   recommendationProducts: Record<string, unknown>[] = [],
@@ -2797,6 +2863,15 @@ test("heat-carrier coverage batches assigned product facts and protocols", async
       ],
     } as never,
     ["direct_contact_heat"],
+    [
+      {
+        id: "heat:iron",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
   )
 
   assert.deepEqual(coverage, {
@@ -2814,6 +2889,427 @@ test("heat-carrier coverage batches assigned product facts and protocols", async
     ),
     true,
   )
+})
+
+test("oil heat-carrier coverage is derived from leave-on purpose plus the capability flag", async () => {
+  const calls: Array<{
+    table: string
+    range: [number, number] | null
+    inIds: string[] | null
+    exactCount: boolean
+  }> = []
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: "55555555-5555-4555-8555-555555555555",
+            name: "Heat-capable leave-on oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: "55555555-5555-4555-8555-555555555555",
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [
+          {
+            product_id: "55555555-5555-4555-8555-555555555555",
+            thickness: "normal",
+            oil_subtype: "styling-oel",
+            oil_purpose: "styling_finish",
+          },
+        ],
+        product_application_protocols: [
+          {
+            product_id: "55555555-5555-4555-8555-555555555555",
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload("55555555-5555-4555-8555-555555555555", [
+              "styling_day",
+            ]),
+          },
+        ],
+        application_guidance_protocols: [],
+      },
+      calls,
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          identity: {
+            kind: "catalog_product",
+            productId: "55555555-5555-4555-8555-555555555555",
+            displayName: "Heat-capable leave-on oil",
+            category: "oil",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          category: "oil",
+          roles: ["leave_on_fibre_conditioning"],
+        },
+      ],
+    } as never,
+    ["direct_contact_heat"],
+    [
+      {
+        id: "heat:iron",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "oil",
+    verifiedRoutes: ["direct_contact_heat"],
+    qualifyingEventIds: ["heat:iron"],
+    verifiedEventIds: ["heat:iron"],
+  })
+})
+
+test("oil heat-carrier coverage keeps all airflow uncovered when its wash-family protocol is partial", async () => {
+  const productId = "33333333-3333-4333-8333-333333333333"
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: productId,
+            name: "Heat-capable wash-family Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: productId,
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [
+          {
+            product_id: productId,
+            thickness: "normal",
+            oil_subtype: "styling-oel",
+            oil_purpose: "styling_finish",
+          },
+        ],
+        product_application_protocols: [
+          {
+            product_id: productId,
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload(productId, ["wash_day"]),
+          },
+        ],
+        application_guidance_protocols: [],
+      },
+      [],
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          identity: {
+            kind: "catalog_product",
+            productId,
+            displayName: "Heat-capable wash-family Oil",
+            category: "oil",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          category: "oil",
+          roles: ["leave_on_fibre_conditioning"],
+        },
+      ],
+    } as never,
+    ["airflow_shaping"],
+    [
+      {
+        id: "heat:dryer",
+        tool: "hair_dryer",
+        route: "airflow_shaping",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+      {
+        id: "heat:dryer-brush",
+        tool: "dryer_brush",
+        route: "airflow_shaping",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:dryer", "heat:dryer-brush"],
+    verifiedEventIds: [],
+  })
+})
+
+test("oil heat-carrier coverage rejects a dryer-brush event with an ordinary-airflow route", async () => {
+  const productId = "44444444-4444-4444-8444-444444444444"
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: productId,
+            name: "Heat-capable styling Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: productId,
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [],
+        product_application_protocols: [
+          {
+            product_id: productId,
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload(productId, ["styling_day"]),
+          },
+        ],
+        application_guidance_protocols: [],
+      },
+      [],
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          identity: {
+            kind: "catalog_product",
+            productId,
+            displayName: "Heat-capable styling Oil",
+            category: "oil",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          category: "oil",
+          roles: ["leave_on_fibre_conditioning"],
+        },
+      ],
+    } as never,
+    ["ordinary_airflow"],
+    [
+      {
+        id: "heat:ordinary-dryer-brush",
+        tool: "dryer_brush",
+        route: "ordinary_airflow",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:ordinary-dryer-brush"],
+    verifiedEventIds: [],
+  })
+})
+
+test("oil heat-carrier coverage rejects a heat-capable Oil selected only for dry finish", async () => {
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: "oil-carrier",
+            name: "Heat-capable Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: "oil-carrier",
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning", "dry_finish"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [],
+        product_application_protocols: [],
+        application_guidance_protocols: [
+          {
+            product_id: "oil-carrier",
+            id: "oil-leave-on-guidance",
+            role_key: "leave_on_fibre_conditioning",
+            scope_kind: "product",
+            status: "active",
+            locale: "de",
+          },
+        ],
+      },
+      [],
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          identity: {
+            kind: "catalog_product",
+            productId: "oil-carrier",
+            displayName: "Heat-capable Oil",
+            category: "oil",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "captured-oil-carrier",
+          category: "oil",
+          roles: ["dry_finish"],
+        },
+      ],
+    } as never,
+    ["direct_contact_heat"],
+    [
+      {
+        id: "heat:iron",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, { carrierCategory: null, verifiedRoutes: [] })
+})
+
+test("oil heat-carrier coverage accepts an explicitly planned leave-on Oil", async () => {
+  const draft = shampooAuthorityDraft()
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: "66666666-6666-4666-8666-666666666666",
+            name: "Planned heat-capable Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: "66666666-6666-4666-8666-666666666666",
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [],
+        product_application_protocols: [
+          {
+            product_id: "66666666-6666-4666-8666-666666666666",
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload("66666666-6666-4666-8666-666666666666", [
+              "styling_day",
+            ]),
+          },
+        ],
+        application_guidance_protocols: [],
+      },
+      [],
+    ) as never,
+    {
+      ...draft,
+      decisions: [
+        {
+          decisionKey: "decision:oil:leave_on_fibre_conditioning:uncovered",
+          category: "oil",
+          role: "leave_on_fibre_conditioning",
+          capturedProductId: null,
+          verdict: "ideal",
+          choiceState: "planned_purchase",
+          criterionResults: [],
+          recommendation: {
+            recommendationId: "recommend:planned-oil-carrier:leave_on_fibre_conditioning",
+            productId: "66666666-6666-4666-8666-666666666666",
+            category: "oil",
+            role: "leave_on_fibre_conditioning",
+            displayName: "Planned heat-capable Oil",
+            reason: "Passt zur Leave-on-Rolle.",
+            authorityRuleId: "oil.selection.core_fit",
+          },
+          limitationAcknowledged: false,
+          resolutionAction: "plan_recommendation",
+        },
+      ],
+    } as never,
+    ["direct_contact_heat"],
+    [
+      {
+        id: "heat:iron",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "oil",
+    verifiedRoutes: ["direct_contact_heat"],
+    qualifyingEventIds: ["heat:iron"],
+    verifiedEventIds: ["heat:iron"],
+  })
 })
 
 test("batched singleton specs preserve maybeSingle duplicate failure semantics", async () => {
@@ -2941,6 +3437,228 @@ test("request-scoped persistence coalesces identical complete-catalog candidate 
     2,
     "a distinct authority context must not reuse the candidate snapshot",
   )
+})
+
+test("request-scoped heat coverage is recomputed when a planned Oil decision changes at the same draft revision", async () => {
+  const oilProductId = "77777777-7777-4777-8777-777777777777"
+  const client = completeCatalogFactClient(
+    {
+      products: [
+        {
+          id: "shampoo-candidate",
+          name: "Candidate",
+          category_key: "shampoo",
+          is_active: true,
+          lifecycle_status: "active",
+          is_chaarlie_recommended: true,
+          suitable_thicknesses: ["normal"],
+          sort_order: 1,
+        },
+        {
+          id: oilProductId,
+          name: "Planned Oil",
+          category_key: "oil",
+          is_active: true,
+          lifecycle_status: "active",
+          is_chaarlie_recommended: true,
+          suitable_thicknesses: ["normal"],
+          sort_order: 2,
+        },
+      ],
+      product_shampoo_specs: [
+        {
+          product_id: "shampoo-candidate",
+          thickness: "normal",
+          shampoo_bucket: "normal",
+          scalp_route: "balanced",
+          cleansing_intensity: "gentle",
+        },
+      ],
+      product_oil_specs: [
+        {
+          product_id: oilProductId,
+          weight: "light",
+          role_support: ["leave_on_fibre_conditioning"],
+          provides_heat_protection: true,
+        },
+      ],
+      product_oil_eligibility: [],
+      product_application_protocols: [
+        {
+          product_id: oilProductId,
+          role: "leave_on_fibre_conditioning",
+          guidance_payload: oilLeaveOnGuidancePayload(oilProductId, ["styling_day"]),
+        },
+      ],
+      application_guidance_protocols: [
+        {
+          product_id: "shampoo-candidate",
+          id: "guidance-1",
+          role_key: "shampoo_everyday",
+          scope_kind: "product",
+          status: "active",
+          locale: "de",
+        },
+      ],
+    },
+    [],
+  )
+  const persistence = createSupabaseStage3ProductionPersistence(client as never)
+  const baseDraft = {
+    ...shampooAuthorityDraft(),
+    draftId: "same-draft",
+    revision: 1,
+    products: [],
+    roleAssignments: [],
+  }
+  const context = {
+    ...normalRefinedContext,
+    refinedNeedSnapshot: {
+      ...normalRefinedContext.refinedNeedSnapshot,
+      assessments: {
+        heatExposure: {
+          events: [
+            {
+              id: "heat:iron",
+              tool: "straightener",
+              route: "direct_contact_heat",
+              frequency: "weekly_2x",
+              sourceRuleIds: [],
+            },
+          ],
+        },
+      },
+    },
+  }
+  const inputFor = (draft: Stage3ProductDraft) =>
+    ({
+      userId: draft.userId,
+      draft,
+      subject: {
+        decisionKey: "decision:shampoo:shampoo_everyday:uncovered",
+        category: "shampoo",
+        role: "shampoo_everyday",
+        capturedProductId: null,
+        subjectKind: "uncovered_role",
+      },
+      heatRoutes: ["direct_contact_heat"],
+      context,
+    }) as unknown as Parameters<typeof persistence.loadAuthorityFacts>[0]
+
+  const withPlannedOil = {
+    ...baseDraft,
+    decisions: [plannedOilDecision(oilProductId)],
+  } as never as Stage3ProductDraft
+  const withoutPlannedOil = { ...baseDraft, decisions: [] } as never as Stage3ProductDraft
+
+  const first = await persistence.loadAuthorityFacts(inputFor(withPlannedOil))
+  const second = await persistence.loadAuthorityFacts(inputFor(withoutPlannedOil))
+
+  assert.equal(first.heatCarrierCoverage.carrierCategory, "oil")
+  assert.equal(second.heatCarrierCoverage.carrierCategory, null)
+})
+
+test("a selected planned Oil replacement supersedes an owned Oil carrier for the same leave-on role", async () => {
+  const ownedProductId = "88888888-8888-4888-8888-888888888888"
+  const plannedProductId = "99999999-9999-4999-8999-999999999999"
+  const coverage = await loadStage3HeatCarrierCoverage(
+    completeCatalogFactClient(
+      {
+        products: [
+          {
+            id: ownedProductId,
+            name: "Owned wash Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 1,
+          },
+          {
+            id: plannedProductId,
+            name: "Planned styling Oil",
+            category_key: "oil",
+            is_active: true,
+            lifecycle_status: "active",
+            is_chaarlie_recommended: true,
+            suitable_thicknesses: ["normal"],
+            sort_order: 2,
+          },
+        ],
+        product_oil_specs: [
+          {
+            product_id: ownedProductId,
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+          {
+            product_id: plannedProductId,
+            weight: "light",
+            role_support: ["leave_on_fibre_conditioning"],
+            provides_heat_protection: true,
+          },
+        ],
+        product_oil_eligibility: [],
+        product_application_protocols: [
+          {
+            product_id: ownedProductId,
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload(ownedProductId, ["wash_day"]),
+          },
+          {
+            product_id: plannedProductId,
+            role: "leave_on_fibre_conditioning",
+            guidance_payload: oilLeaveOnGuidancePayload(plannedProductId, ["styling_day"]),
+          },
+        ],
+        application_guidance_protocols: [],
+      },
+      [],
+    ) as never,
+    {
+      ...shampooAuthorityDraft(),
+      products: [
+        {
+          capturedProductId: "owned-oil",
+          identity: {
+            kind: "catalog_product",
+            productId: ownedProductId,
+            displayName: "Owned wash Oil",
+            category: "oil",
+          },
+        },
+      ],
+      roleAssignments: [
+        {
+          capturedProductId: "owned-oil",
+          category: "oil",
+          roles: ["leave_on_fibre_conditioning"],
+        },
+      ],
+      decisions: [
+        { ...plannedOilDecision(plannedProductId), resolutionAction: "select_replacement" },
+      ],
+    } as never,
+    ["airflow_shaping"],
+    [
+      {
+        id: "heat:dryer",
+        tool: "hair_dryer",
+        route: "airflow_shaping",
+        frequency: "weekly_2x",
+        sourceRuleIds: [],
+      },
+    ],
+  )
+
+  assert.deepEqual(coverage, {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:dryer"],
+    verifiedEventIds: [],
+  })
 })
 
 test("default Stage 3 persistence loads the complete catalogue canonically", async () => {
@@ -4043,7 +4761,6 @@ test("Oil combines every eligibility row while its product spec stays singular",
     pre_wash_fibre_treatment: true,
     leave_on_fibre_conditioning: false,
     dry_finish: true,
-    pre_heat_protection: false,
   })
   assert.equal(bundle.productFacts.spec.weight, "light")
   assert.equal(bundle.productFacts.spec.targetThicknessEligible, true)

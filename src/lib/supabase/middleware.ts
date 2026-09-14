@@ -8,7 +8,11 @@ import {
   type PersonalPlanRoutineAccess,
 } from "@/lib/auth/intake-state"
 import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
-import { hasCurrentAppAccess, hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
+import {
+  hasCurrentAppAccess,
+  hasCurrentPaidAppAccess,
+  hasCurrentPartnerAccess,
+} from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
@@ -23,6 +27,7 @@ import {
   pathMatchesRoutePrefix,
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 
 const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/scan", "/tracker"]
 export const AUTHENTICATED_SESSION_RESPONSE_HEADER = "x-chaarlie-authenticated-session"
@@ -87,6 +92,124 @@ export function isAuthenticatedAppRoutePath(pathname: string) {
 
 export function requiresSubscriptionPath(pathname: string) {
   return SUB_REQUIRED_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
+// Freemium scanner-first (flag-gated): the app-shell page routes plus
+// /api/scan admit an authenticated user without paid access — page/API
+// shells render instead of bouncing to /reactivate. Every other /api/*
+// prefix (chat, profile, personal-plan, routine, tracker, memory,
+// product-intake) is deliberately excluded and stays subscription-gated;
+// per-feature/premium API enforcement inside these shells is a later task.
+const FREEMIUM_ADMITTED_ROUTE_PREFIXES = [
+  "/anwendung",
+  "/chat",
+  "/routine",
+  "/scan",
+  "/api/scan",
+  "/profile",
+  "/tracker",
+]
+
+export function isFreemiumAdmittedRoutePath(pathname: string) {
+  return FREEMIUM_ADMITTED_ROUTE_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
+// Freemium keepsake reads (flag-gated, T17): the journey's step 11 promise —
+// "profile, Merkliste and routine remain readable … nothing free is ever
+// removed" — needs the user's OWN conversation history to stay readable on
+// `/chat/[conversationId]` after a lapse. `/api/chat` therefore gains a
+// carve-out that is scoped by METHOD, not just by path: only `GET` is admitted
+// (`GET /api/chat` lists the caller's own conversations, `GET /api/chat/[id]`
+// returns one of their own conversations' messages — both are session-scoped,
+// owner-filtered reads). Every mutating method on this prefix — `POST
+// /api/chat` (the streaming turn), `POST /api/chat/trigger`, `POST
+// /api/chat/product-selection`, `POST /api/chat/feedback` and `DELETE
+// /api/chat/[id]` — keeps the ordinary `subscription_required` 403 from the
+// paywall below, which is what keeps chat itself premium. This is deliberately
+// NOT an entry in `FREEMIUM_ADMITTED_ROUTE_PREFIXES`: that list admits a prefix
+// wholesale, which would open the streaming endpoint (no /api/chat route has an
+// in-route entitlement guard — see plans/freemium-scanner-first/enforcement-matrix.md).
+const FREEMIUM_KEEPSAKE_READ_ROUTE_PREFIXES = ["/api/chat"]
+
+export function isFreemiumKeepsakeReadRoutePath(pathname: string) {
+  return FREEMIUM_KEEPSAKE_READ_ROUTE_PREFIXES.some((prefix) =>
+    pathMatchesRoutePrefix(pathname, prefix),
+  )
+}
+
+export type ReactivationRedirectContext = {
+  pathname: string
+  freemiumScannerFirstEnabled: boolean
+  /**
+   * The request method, used only by the keepsake read carve-out above. Omitted
+   * (as every pre-T17 caller and test does) it can never admit anything: the
+   * carve-out requires a literal `"GET"`.
+   */
+  method?: string
+}
+
+/**
+ * Decides whether a user who has resolved to "no active paid access" at the
+ * outer subscription gate should be sent to /reactivate (pages) or receive
+ * the subscription_required 403 (APIs). Extracted so T17 can extend the
+ * freemium carve-out without re-threading the surrounding paywall control
+ * flow. Behavior today (flag off, or flag on for a non-admitted route) is
+ * unchanged: always redirect/deny.
+ */
+export function shouldRedirectToReactivation(ctx: ReactivationRedirectContext): boolean {
+  if (ctx.freemiumScannerFirstEnabled && isFreemiumAdmittedRoutePath(ctx.pathname)) {
+    return false
+  }
+  // T17 keepsake reads — GET only, see `FREEMIUM_KEEPSAKE_READ_ROUTE_PREFIXES`.
+  if (
+    ctx.freemiumScannerFirstEnabled &&
+    ctx.method === "GET" &&
+    isFreemiumKeepsakeReadRoutePath(ctx.pathname)
+  ) {
+    return false
+  }
+  return true
+}
+
+export type PersonalPlanFrontierBypassContext = {
+  pathname: string
+  freemiumScannerFirstEnabled: boolean
+  /** Whether the subscription paywall actually ran for this request (`requiresSubscriptionPath`). */
+  subscriptionChecked: boolean
+  /** The paywall's own composite: `active || oneTime === "active" || moderator === "active"`. */
+  hasPaidAppAccess: boolean
+  /** The routing frontier resolved for this user. */
+  frontierKind: PersonalPlanRoutingFrontier["kind"]
+}
+
+/**
+ * T2 review finding I2, implemented in T17: the Personal-Plan frontier redirect
+ * bounces a LAPSED user off `/routine` and `/anwendung` to `/plan-start`, which is
+ * not a freemium-admitted route and therefore lands them on `/reactivate` — the
+ * exact bounce the keepsake journey step forbids. Under the flag, suppress that one
+ * redirect for a user who has no current paid access on a freemium-admitted route.
+ *
+ * Never-paid users are unaffected *by construction*, not merely by intent: their
+ * routing source does not exist, so `loadPersonalPlanRoutingFrontierForUser` resolves
+ * `{ kind: "legacy" }` and `getPersonalPlanFrontierRedirect` already returns `null`
+ * for them. Requiring `frontierKind === "personal_plan"` here makes that explicit, so
+ * the bypass can only ever fire for someone who reached the Personal-Plan journey —
+ * i.e. someone who paid.
+ *
+ * Scope discipline: this suppresses the REDIRECT only. The frontier is still loaded,
+ * and its unavailable/error path (the 503 in the surrounding `catch`) is untouched for
+ * everyone — an unreadable frontier keeps failing closed to today's behaviour.
+ */
+export function shouldBypassPersonalPlanFrontierRedirect(
+  ctx: PersonalPlanFrontierBypassContext,
+): boolean {
+  return (
+    ctx.freemiumScannerFirstEnabled &&
+    ctx.subscriptionChecked &&
+    !ctx.hasPaidAppAccess &&
+    ctx.frontierKind === "personal_plan" &&
+    isFreemiumAdmittedRoutePath(ctx.pathname)
+  )
 }
 
 export function isAdminRoutePath(pathname: string) {
@@ -189,6 +312,7 @@ export type UpdateSessionDependencies = {
   createServerClient: typeof createServerClient
   hasCurrentAppAccess: typeof hasCurrentAppAccess
   hasCurrentPaidAppAccess?: typeof hasCurrentPaidAppAccess
+  hasCurrentPartnerAccess?: typeof hasCurrentPartnerAccess
   resolveOneTimeAccessState: typeof resolveOneTimeAccessState
   resolveModeratorAccess?: (input: {
     client: Pick<SupabaseClient, "from">
@@ -220,6 +344,7 @@ const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
   createServerClient,
   hasCurrentAppAccess,
   hasCurrentPaidAppAccess,
+  hasCurrentPartnerAccess,
   resolveOneTimeAccessState,
   // Moderator membership is deliberately service-only. Never pass the browser
   // session client here or RLS would convert ordinary protected requests into
@@ -244,6 +369,7 @@ export function createUpdateSession(
     })
 
     const { pathname } = request.nextUrl
+    const freemiumScannerFirstEnabled = isFreemiumScannerFirstEnabled()
     const routeEnvironment = dependencies.getRouteEnvironment()
     const routeClassification = classifyRoute(pathname, routeEnvironment)
 
@@ -353,6 +479,13 @@ export function createUpdateSession(
     const partnerGuest = isPartnerAccessGuest(user)
     let oneTimeAccessState: OneTimeAccessState | null = null
     let hasActivePersonalPlanEntitlement = false
+    // Mirrors the paywall's own "has paid access" definition (see the
+    // `!active && oneTimeAccessState !== "active" && moderatorAccess !==
+    // "active"` gate below) — NOT just `hasCurrentAppAccess`. A one-time
+    // purchaser or active moderator counts as paid even while `active` is
+    // `false`, so they must not be treated as free-tier by the freemium
+    // intake exemption below.
+    let hasPaidAppAccessResult = false
     let moderatorAccess: ModeratorAccessState = "none"
 
     if (needsSub) {
@@ -369,12 +502,19 @@ export function createUpdateSession(
         ])
         let hasIndependentPaidEntitlement = oneTimeAccessState === "active"
         if (moderatorAccess === "ended" || moderatorAccess === "unavailable") {
-          hasIndependentPaidEntitlement = dependencies.hasCurrentPaidAppAccess
-            ? await dependencies.hasCurrentPaidAppAccess(supabase, { userId: user.id })
-            : false
+          const [hasCurrentPaidAccess, hasPartnerAccess] = await Promise.all([
+            dependencies.hasCurrentPaidAppAccess
+              ? dependencies.hasCurrentPaidAppAccess(supabase, { userId: user.id })
+              : Promise.resolve(false),
+            dependencies.hasCurrentPartnerAccess
+              ? dependencies.hasCurrentPartnerAccess(supabase, { userId: user.id })
+              : Promise.resolve(false),
+          ])
+          hasIndependentPaidEntitlement = hasCurrentPaidAccess || hasPartnerAccess
           // `active` includes a manual tester grant. Once its matching
           // moderator record has ended or cannot be read, only independently
-          // verified paid access may keep the protected route open.
+          // verified paid access (paid app access or an active partner
+          // grant) may keep the protected route open.
           active = hasIndependentPaidEntitlement
         }
         if (moderatorAccess === "unavailable" && !hasIndependentPaidEntitlement) {
@@ -401,6 +541,8 @@ export function createUpdateSession(
           moderatorAccess,
           oneTimeAccessState,
         })
+        hasPaidAppAccessResult =
+          active || oneTimeAccessState === "active" || moderatorAccess === "active"
       } catch (error) {
         console.warn("[billing] app access check failed", error)
         if (fieldTestGuest) {
@@ -467,18 +609,28 @@ export function createUpdateSession(
           url.search = ""
           return redirectWithSupabaseCookies(url, supabaseResponse)
         }
-        if (pathMatchesRoutePrefix(pathname, "/api")) {
-          return NextResponse.json({ error: "subscription_required" }, { status: 403 })
+        if (
+          shouldRedirectToReactivation({
+            pathname,
+            freemiumScannerFirstEnabled,
+            method: request.method,
+          })
+        ) {
+          if (pathMatchesRoutePrefix(pathname, "/api")) {
+            return NextResponse.json({ error: "subscription_required" }, { status: 403 })
+          }
+          const url = request.nextUrl.clone()
+          const next = sanitizeReactivationReturnDestination(
+            `${request.nextUrl.pathname}${request.nextUrl.search}`,
+          )
+          url.pathname = "/reactivate"
+          url.search = ""
+          url.searchParams.set("reason", "expired")
+          url.searchParams.set("next", next)
+          return redirectWithSupabaseCookies(url, supabaseResponse)
         }
-        const url = request.nextUrl.clone()
-        const next = sanitizeReactivationReturnDestination(
-          `${request.nextUrl.pathname}${request.nextUrl.search}`,
-        )
-        url.pathname = "/reactivate"
-        url.search = ""
-        url.searchParams.set("reason", "expired")
-        url.searchParams.set("next", next)
-        return redirectWithSupabaseCookies(url, supabaseResponse)
+        // Freemium admission: flag on + admitted route -> fall through so the
+        // page/API shell renders without an active subscription.
       }
     }
     // --- End subscription paywall ------------------------------------------
@@ -517,7 +669,16 @@ export function createUpdateSession(
             : null
         const frontierRedirect =
           moderatorEntryRedirect ?? getPersonalPlanFrontierRedirect(pathname, frontier)
-        if (frontierRedirect) {
+        // T17 (T2 review finding I2): a lapsed owner keeps their keepsake reads on
+        // `/routine` and `/anwendung` instead of being bounced to `/plan-start` → `/reactivate`.
+        const keepsakeFrontierBypass = shouldBypassPersonalPlanFrontierRedirect({
+          pathname,
+          freemiumScannerFirstEnabled,
+          subscriptionChecked: needsSub,
+          hasPaidAppAccess: hasPaidAppAccessResult,
+          frontierKind: frontier.kind,
+        })
+        if (frontierRedirect && !keepsakeFrontierBypass) {
           const url = buildAuthenticatedIntakeRedirectUrl(
             request.nextUrl,
             pathname,
@@ -553,39 +714,69 @@ export function createUpdateSession(
       let personalPlanRoutineAccess: PersonalPlanRoutineAccess | undefined
       if (
         intakeState === "needs_onboarding" &&
-        hasActivePersonalPlanEntitlement &&
+        (hasActivePersonalPlanEntitlement || hasPaidAppAccessResult) &&
         isPersonalPlanOnboardingBypassRoute(pathname)
       ) {
-        try {
-          const { data: plan, error } = await supabase
-            .from("personal_plans")
-            .select("pending_routine_proposal_id,active_routine_version_id")
-            .eq("user_id", user.id)
-            .maybeSingle()
-
-          if (error) {
-            console.warn("[personal-plan] routine access check failed", error)
-          } else {
-            personalPlanRoutineAccess = {
-              hasActivePersonalPlanEntitlement,
-              pendingRoutineProposalId:
-                typeof plan?.pending_routine_proposal_id === "string"
-                  ? plan.pending_routine_proposal_id
-                  : null,
-              activeRoutineVersionId:
-                typeof plan?.active_routine_version_id === "string"
-                  ? plan.active_routine_version_id
-                  : null,
-            }
+        if (!hasActivePersonalPlanEntitlement) {
+          // Scanner funnel (`scan_v1`): a plain subscription buyer holds no
+          // Personal-Plan routine entitlement, but paid app access alone opens
+          // `/scan` (see canBypassLegacyOnboardingForPersonalPlanRoutine). That
+          // rule never reads the routine pointers, so skip the extra query —
+          // and the entitlement-gated /routine, /anwendung and /chat rules keep
+          // resolving exactly as before against the null pointers.
+          personalPlanRoutineAccess = {
+            hasActivePersonalPlanEntitlement: false,
+            hasPaidAppAccess: true,
+            pendingRoutineProposalId: null,
+            activeRoutineVersionId: null,
           }
-        } catch (error) {
-          console.warn("[personal-plan] routine access check failed", error)
+        } else {
+          try {
+            const { data: plan, error } = await supabase
+              .from("personal_plans")
+              .select("pending_routine_proposal_id,active_routine_version_id")
+              .eq("user_id", user.id)
+              .maybeSingle()
+
+            if (error) {
+              console.warn("[personal-plan] routine access check failed", error)
+            } else {
+              personalPlanRoutineAccess = {
+                hasActivePersonalPlanEntitlement,
+                hasPaidAppAccess: hasPaidAppAccessResult,
+                pendingRoutineProposalId:
+                  typeof plan?.pending_routine_proposal_id === "string"
+                    ? plan.pending_routine_proposal_id
+                    : null,
+                activeRoutineVersionId:
+                  typeof plan?.active_routine_version_id === "string"
+                    ? plan.active_routine_version_id
+                    : null,
+              }
+            }
+          } catch (error) {
+            console.warn("[personal-plan] routine access check failed", error)
+          }
         }
       }
-      const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
+      const rawRedirectPath = getAuthenticatedAppRedirect(pathname, intakeState, {
         isQuizRetake,
         personalPlanRoutineAccess,
+        freemiumScannerFirstEnabled,
       })
+      // Freemium admission: a free-tier user (no paid access, per the same
+      // composite the subscription paywall uses — hasCurrentAppAccess OR an
+      // active one-time purchase OR an active moderator grant) navigating an
+      // admitted app-shell route is never bounced into legacy onboarding —
+      // they land where they navigated. Paid users (including one-time
+      // owners and active moderators), and any non-admitted route (e.g.
+      // /auth, /quiz), are unaffected.
+      const freemiumIntakeAdmitted =
+        freemiumScannerFirstEnabled &&
+        rawRedirectPath === "/onboarding" &&
+        !hasPaidAppAccessResult &&
+        isFreemiumAdmittedRoutePath(pathname)
+      const redirectPath = freemiumIntakeAdmitted ? null : rawRedirectPath
 
       if (redirectPath) {
         const url = buildAuthenticatedIntakeRedirectUrl(request.nextUrl, pathname, redirectPath)

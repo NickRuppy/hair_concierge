@@ -178,6 +178,7 @@ export type RoutineCatalogProductPresentation = {
   productId: string
   displayName: string | null
   imageUrl: string | null
+  verifiedLeaveOnHeatProtection: boolean
 }
 
 export type RoutineProductPresentation = {

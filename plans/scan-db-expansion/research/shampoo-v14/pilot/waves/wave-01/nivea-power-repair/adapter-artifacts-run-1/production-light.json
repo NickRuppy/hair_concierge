@@ -1,0 +1,172 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "adjudication:nivea-power-repair:cleansingStrength",
+          "adjudication:nivea-power-repair:scalpComfortTarget"
+        ],
+        "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.04",
+          "formula.surfactant.05",
+          "claim:nivea-de-positioning"
+        ],
+        "rationale": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:nivea-power-repair:conditioningLevel",
+          "adjudication:nivea-power-repair:weightPotential",
+          "adjudication:nivea-power-repair:focusPrimary",
+          "adjudication:nivea-power-repair:conditioningLevel",
+          "adjudication:nivea-power-repair:weightPotential",
+          "adjudication:nivea-power-repair:focusPrimary",
+          "adjudication:nivea-power-repair:conditioningLevel",
+          "adjudication:nivea-power-repair:weightPotential",
+          "adjudication:nivea-power-repair:focusPrimary"
+        ],
+        "rationale": "Ideal: normal — Moderate cleansing with high repair conditioning and moderate weight is a good fit for normal damaged hair. coarse — Coarse hair can use the richer repair/oil/cationic care system without the same lift penalty. Conditional (not emitted): fine — High conditioning and moderate residue risk can reduce lift on fine hair, though the no-silicone and no-weigh-down counter-signals keep it conditional rather than excluded."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.04",
+          "formula.surfactant.05",
+          "claim:nivea-de-positioning"
+        ],
+        "rationale": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.09",
+          "formula.conditioning.11",
+          "formula.conditioning.13",
+          "formula.conditioning.14",
+          "formula.conditioning.18"
+        ],
+        "rationale": "High: squalane, panthenol, coconut oil, dicaprylyl ether, cationic guar, glyceryl oleate, glycerin, glycol distearate and hydrogenated castor oil create multiple complementary rinse-off care routes."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:nivea-de-positioning",
+          "claim:dm-de-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.09",
+          "formula.conditioning.11",
+          "formula.conditioning.13"
+        ],
+        "rationale": "Repair: exact-product positioning targets damaged or stressed hair, and the formula supports that with a broad oil, panthenol, cationic polymer and refatting care system."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:nivea-de-positioning",
+          "claim:dm-de-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: moisture/no-weight language is not a v1.4 secondary focus, and the care routes support the same repair positioning rather than an independent focus."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:nivea-de-positioning",
+          "claim:dm-de-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: the packet targets damaged hair and repair/moisture care, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:nivea-de",
+          "usage:dm-de",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conditioning.09",
+          "formula.conditioning.11",
+          "formula.conditioning.13",
+          "formula.conditioning.14",
+          "formula.conditioning.18",
+          "claim:nivea-de-positioning",
+          "claim:dm-de-positioning"
+        ],
+        "rationale": "Moderate: oils, squalane, cationic guar and waxy/refatting materials create noticeable residue potential, but SLES/CAPB/glucoside cleansing and the absence of silicone keep it below a high-weight call."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "fine"
+    ],
+    "productId": "nivea-power-repair",
+    "productName": "Power Repair Reparatur Shampoo",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "gliss-sealing-miracle",
+  "run1InputSha256": "3a7ec09bd160bd50792f2019d6c6f5641f5dcc7e373cab8b646d482cf4f73fab",
+  "run2InputSha256": "3a7ec09bd160bd50792f2019d6c6f5641f5dcc7e373cab8b646d482cf4f73fab",
+  "outputSha256": "5e0273d23f7bfe07a1022a8546c832fdc5865adf8c59d6d6ab7890fd38cae34f",
+  "summarySha256": "232445c869001abdf40b07ab02db208939dbed3e5463138fd8403e1785f536e8",
+  "byteIdentical": true
+}

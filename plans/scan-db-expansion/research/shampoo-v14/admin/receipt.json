@@ -1,0 +1,59 @@
+{
+  "schema_version": "shampoo-v14-administrative-receipt-v1",
+  "generated_at": "2026-09-03",
+  "purpose": "Preserves reusable administrative research while the prior manifest property projections are quarantined as invalidated drafts.",
+  "classification_status": "omitted: category specs, thickness and concern eligibility, and formula-classification rationales are intentionally absent from every administrative snapshot.",
+  "snapshots": [
+    {
+      "path": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-01.json",
+      "sha256": "9a91a5d41e44f103cf0ef19427c87aae58ba841c803652831c45a46a352591d2"
+    },
+    {
+      "path": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+      "sha256": "1436e51908a08121dc8ec5029061fa56a9d91fdd6aee17b0b5b55cfceaba3cab"
+    },
+    {
+      "path": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+      "sha256": "c5c07c3bddcdc0908eb8de777f4a0d2f45d103ed2d27576da82bbc620882c8ef"
+    },
+    {
+      "path": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+      "sha256": "3341637c37786c2f2e685bbfd92203dfa7c7e91d8fdb065e26c44d47ed5184ce"
+    }
+  ],
+  "totals": {
+    "new_products": 52,
+    "existing_product_updates": 2,
+    "ean_candidates": 52,
+    "cross_source_eans": 51,
+    "excluded_eans": 1,
+    "prices": 51,
+    "raw_image_candidates": 52,
+    "protocol_packets": 52
+  },
+  "remaining_ean_exclusion": {
+    "value": "3600542461030",
+    "product": "Garnier Wahre Schätze Shampoo Honig Schätze",
+    "reason": "dm DE and dm AT are the same retailer organization; the manufacturer page confirms the product but does not bind this GTIN."
+  },
+  "ean_recoveries": [
+    {
+      "value": "4068134071132",
+      "product": "ISANA Shampoo Feuchtigkeit 300 ml",
+      "sources": [
+        "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
+        "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724"
+      ]
+    },
+    {
+      "value": "8006530325530",
+      "product": "AUSSIE Shampoo Bouncy Curls 300 ml",
+      "sources": [
+        "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+        "https://www.for-me-online.de/teilnahmebedingungen-aktion/aussie-shampoo-50prozent"
+      ],
+      "source_label_caveat": "The official P&G/for-me record uses the shorter label 'Aussie Shampoo Curls'; the exact shared GTIN binds it to dm DE's Bouncy Curls PDP."
+    }
+  ],
+  "stop_boundary": "Research artifacts only. No database write, catalog apply, image upload, approval, commit, push, merge, or deployment occurred."
+}

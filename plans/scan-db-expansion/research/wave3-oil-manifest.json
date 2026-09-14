@@ -1,0 +1,173 @@
+{
+  "batch_id": "scan-db-expansion-wave3-oil-2026-09-03",
+  "generated_at": "2026-09-03T14:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Hitzeschutz Öl-Spray Oil Nutritive",
+          "brand": "Gliss",
+          "category_key": "oil",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 5.49,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/131/MAM_13113207/MAM_13113207_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876"
+          },
+          "description": "Leichtes anhydrisches Hitzeschutz-Öl-Spray mit Omega 9 und Marula-Öl für strohiges, strapaziertes Haar; schützt vor Hitze bis zu 230 °C beim Föhnen, Locken und Glätten, verleiht sinnliche Geschmeidigkeit und intensiven Glanz; ins handtuchtrockene oder trockene Haar sprühen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4015100813876",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+              "https://www.dm.de/hitzeschutz-oel-spray-oil-nutritive-p4015100813876.html"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_oil_specs": {
+            "weight": "light",
+            "role_support": [
+              "pre_heat_protection"
+            ]
+          },
+          "product_oil_eligibility": [
+            {
+              "thickness": "fine",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "normal",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            },
+            {
+              "thickness": "coarse",
+              "oil_subtype": "styling-oel",
+              "oil_purpose": "styling_finish",
+              "ingredient_flags": [
+                "oils"
+              ]
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-OIL-HEAT",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+              "text": "Für optimalen Hitzeschutz vor dem Föhnen und Glätten ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben und trocknen. Nicht auswaschen!"
+            },
+            "deviation": null,
+            "usable_on_dry_hair": true
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4015100813876",
+            "source_label": "rossmann.de Produktseite (URL-GTIN-Konvention); unabhängig bestätigt durch dm.de Produktseite (identische EAN in der URL: hitzeschutz-oel-spray-oil-nutritive-p4015100813876.html)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_text": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_oil_specs.authority_facts",
+            "fact_value": {
+              "weight": "light",
+              "role_support": [
+                "pre_heat_protection"
+              ],
+              "ingredient_flags": [
+                "oils"
+              ],
+              "inci_basis": "Isododecane, Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Helianthus Annuus (Sunflower) Seed Oil, Prunus Armeniaca (Apricot) Kernel Oil, Sclerocarya Birrea Seed Oil (Marula), Parfum, Tocopherol, CI 40800 — anhydrische Formel (kein Aqua), KEINE Silikone trotz Spray-Format und Hitzeschutz-Positionierung (formula-beats-marketing / W1: substantiell ein Öl, kategorisiert als oil statt heat_protectant)"
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_text": "Isododecane, Caprylic/Capric Triglyceride, Dicaprylyl Carbonate, Helianthus Annuus (Sunflower) Seed Oil, Prunus Armeniaca (Apricot) Kernel Oil, Sclerocarya Birrea Seed Oil, Parfum (Fragrance), Linalool, Limonene, Alpha-Isomethyl Ionone, Geraniol, Benzyl Alcohol, Tocopherol, CI 40800 (Beta-Carotene)",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_oil_heat.application",
+            "fact_value": "Vor dem Föhnen und Glätten ins handtuchtrockene ODER trockene Haar sprühen, sparsam auf mittlere Längen und Spitzen, trocknen, nicht auswaschen.",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_text": "Für optimalen Hitzeschutz vor dem Föhnen und Glätten ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben und trocknen. Nicht auswaschen! ... Niemals Glätteisen oder Lockenstab bei nassem Haar verwenden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.heat_protection",
+            "fact_value": "Schützt vor Temperaturen bis zu 230 °C beim Föhnen, Locken und Glätten; Formel mit Omega 9 & Marula-Öl; nährt und verleiht sinnliche Geschmeidigkeit und intensiven Glanz; speziell für strohiges, strapaziertes Haar.",
+            "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_text": "Das Oil Nutritive Hitzeschutz Öl-Spray schützt das Haar beim Haarstyling vor Hitze bis zu 230 °C, während es das Haar zusätzlich pflegt und nährt. Die Formel mit Omega 9 und Marula-Öl ist speziell abgestimmt auf die Bedürfnisse von strohigem, strapaziertem Haar. Mit dem leichten Hitzeschutz Spray erhältst du sinnliche Geschmeidigkeit und intensiven Glanz.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 5.49,
+            "source_label": "rossmann.de Produktseite (Artikelpreis, 150 ml, 36,60 EUR/l)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-hitzeschutz-oel-spray-oil-nutritive/p/4015100813876",
+            "source_text": "5,49 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de Produktseite (h1): 'Hitzeschutz Öl-Spray Oil Nutritive'.",
+          "identifiers.ean_capture": "Rossmann-Produkt-URL trägt die EAN als letztes Pfadsegment (bestätigte Konvention). Unabhängiger Zweitbeleg: dm.de führt dieselbe EAN in der eigenen Produkt-URL. cross_source_agreement=true (Gliss/Schwarzkopf ist keine Rossmann/dm-Eigenmarke, W5 verlangt 2 Quellen).",
+          "category_specs.product_oil_specs.weight": "light: expliziter Claim 'Mit dem leichten Hitzeschutz Spray'.",
+          "category_specs.product_oil_specs.role_support": "NUR pre_heat_protection (bewusst eng): die gesamte gesourcte Anwendungsanleitung ist ausschließlich als Hitzeschutz-vor-dem-Styling gerahmt ('Für optimalen Hitzeschutz vor dem Föhnen und Glätten...'); es gibt keinen separaten 'jederzeit als Finish'-Anwendungsfall im Text, daher KEIN dry_finish/leave_on_fibre_conditioning-Stamp ohne eigene Textstütze.",
+          "category_specs.product_oil_eligibility.oil_subtype": "styling-oel: Hitzeschutz-/Styling-Positionierung ('zum Föhnen, Locken und Haare Glätten'), volatile Trägerbasis (Isododecane) trotz fehlender Silikone.",
+          "category_specs.product_oil_eligibility.oil_purpose": "styling_finish: explizite Styling-Kontext-Bindung ('vor dem Föhnen und Glätten').",
+          "category_specs.product_oil_eligibility.ingredient_flags": "oils: Sonnenblumenöl, Aprikosenkernöl, Marula-Öl (Sclerocarya Birrea). KEINE Silikone in der INCI (W1-Befund: Formel ist ein reines anhydrisches Öl trotz Spray-Format und Hitzeschutz-Marketing — Kategorie oil bestätigt, kein heat_protectant-Recast nötig).",
+          "thickness_eligibility": "Alle Stärken: leichte Formel ohne Stärke-Einschränkung im Text.",
+          "concern_eligibility": "hair_damage: 'strohiges, strapaziertes Haar' als Zielgruppe. repair: wörtlicher Claim 'Reparatur und... verbesserte Haarqualität' (Basis-Formel-Beschreibung aller Gliss-Produkte).",
+          "protocols.tpl_oil_heat": "Keine Deviation: Platzierung 'mittlere Längen und Spitzen' konform mit lengths_ends, 'nicht auswaschen' konform mit rinse=leave_in.",
+          "protocols.tpl_oil_heat.usable_on_dry_hair": "true (either_state_protection): Quelle nennt explizit 'handtuchtrockene ODER trockene Haar' für die Hitzeschutz-Anwendung selbst — erfüllt P9s Entweder-oder-Kriterium direkt, keine bloße Präferenzformulierung.",
+          "protocols.tpl_oil_heat.format": "QA-Audit M9: 150-ml-PUMPSPRAY — TPL-OIL-HEAT hat nur Tropfen-Dosierung (\"Wenige Tropfen … verreiben\"); Stamper braucht Spray-Dosierungscopy (\"Sparsam aufsprühen\", Quelle: \"ins handtuchtrockene oder trockene Haar sprühen. Sparsam auf die mittleren Längen und Spitzen geben.\"). Copy-Entscheidung an Nick vor dem Stamp.",
+          "identifiers.0.excluded_from_apply": "Ruling (Nick, 2026-09-03): Kategorie Öl bestätigt (W1, wasserfreie INCI), aber für Wave 3 geparkt — Spray-Dosierungscopy für TPL-OIL noch nicht entschieden; Produkt kommt mit der Copy-Entscheidung in einer späteren Welle."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "rename": {
+        "from": "OGX Argan Oil",
+        "to": "OGX Haaröl Moroccan Argan Penetrating Oil",
+        "reason": "Dedupe-Check (wave3, Kandidat 'OGX Haaröl Moroccan Argan Penetrating Oil, 100 ml, dm+Rossmann'): dm.de-Produktseite bestätigt strukturiert 'GTIN: 3574661563312' — identisch mit der bereits im Katalog hinterlegten EAN für 'OGX Argan Oil'. dm-Beschreibung ('Einfach eine kleine Menge... auf das handtuchtrockene Haar bis in die Spitzen verteilen. Schützt wirksam vor Schädigungen durch Hitze-Styling... und UV-Strahlen') und dm-Anwendungshinweis stimmen mit einem klassischen Penetrating-Oil-Profil überein. SAME PRODUCT über die dm-Quelle, kein neuer Datensatz nötig, EAN bereits im Katalog vorhanden (keine add_identifiers-Aktion notwendig). OFFENE FRAGE für Nick: die im Selection-File mitgelieferte Rossmann-URL (.../p/3574661563336, 'ogx renewing+ Argan Oil of Morocco Extra Penetrating Oil', 7,99 €) trägt eine DRITTE, abweichende EAN mit abweichender INCI (Dimethicone/Isopropyl Myristate/Dimethiconol-Silikonbasis statt der reinen Öl-Formel) — das ist vermutlich eine separate Rossmann-exklusive SKU/Reformulierung der gleichen Produktlinie, NICHT dieselbe GTIN wie der dm-Kandidat oder 'OGX Argan weightless Öl' (3574661563350). Diese dritte SKU wurde bewusst NICHT recherchiert/aufgenommen, da außerhalb des Scopes dieses Dedupe-Checks; falls gewünscht, eigenständige Prüfung empfohlen."
+      }
+    }
+  ]
+}

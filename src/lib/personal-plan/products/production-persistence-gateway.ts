@@ -20,6 +20,7 @@ export type { Stage3DecisionReviewBundle } from "./stage3-bootstrap-review-contr
 import type {
   Stage3CompletionReceiptResponse,
   Stage3CompleteResponse,
+  Stage3DecisionReviewProjection,
   Stage3DraftResponse,
   Stage3MutationResponse,
   Stage3ProductsGateway,
@@ -225,6 +226,11 @@ export type Stage3AuthorityProductionGateway = Stage3ProductsGateway & {
   prepareLoadedDraft(input: Stage3DraftResponse): Promise<Stage3DraftResponse>
   evaluateDecisions(input: { draftId: string }): Promise<Stage3AuthorityEvaluation[]>
   reviewDecisionBundles(input: { draftId: string }): Promise<Stage3DecisionReviewBundle[]>
+  previewDecisionBundles(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }): Promise<Stage3DecisionReviewProjection>
   resolveDecision(input: {
     draftId: string
     expectedRevision: number
@@ -1075,11 +1081,17 @@ export function createProductionStage3ProductsGateway(
         fitComparison,
       }))
     },
+    async previewDecisionBundles(input) {
+      return resolveAuthorityDecisions(input, true) as Promise<Stage3DecisionReviewProjection>
+    },
     async resolveDecision(input) {
-      return resolveAuthorityDecisions({ ...input, intents: [input.intent] })
+      return resolveAuthorityDecisions({
+        ...input,
+        intents: [input.intent],
+      }) as Promise<Stage3MutationResponse>
     },
     async resolveDecisions(input) {
-      return resolveAuthorityDecisions(input)
+      return resolveAuthorityDecisions(input) as Promise<Stage3MutationResponse>
     },
   }
 
@@ -1104,11 +1116,14 @@ export function createProductionStage3ProductsGateway(
     }
   }
 
-  async function resolveAuthorityDecisions(input: {
-    draftId: string
-    expectedRevision: number
-    intents: Stage3AuthoritySemanticIntent[]
-  }): Promise<Stage3MutationResponse> {
+  async function resolveAuthorityDecisions(
+    input: {
+      draftId: string
+      expectedRevision: number
+      intents: Stage3AuthoritySemanticIntent[]
+    },
+    preview = false,
+  ): Promise<Stage3MutationResponse | Stage3DecisionReviewProjection> {
     const operation =
       input.intents.length === 1 ? "stage3_authority_single" : "stage3_authority_batch"
     let phaseStartedAt = performance.now()
@@ -1142,7 +1157,17 @@ export function createProductionStage3ProductsGateway(
       durationMs: performance.now() - phaseStartedAt,
     })
     const desired = classifyStage3DesiredState(draft, input.intents)
-    if (desired === "satisfied") return { status: "saved", draft }
+    if (desired === "satisfied") {
+      if (preview) {
+        const reviews = await Promise.all(
+          authorityDecisionSubjects(draft).map((subject) =>
+            authoritativeReview(draft, subject.decisionKey, context),
+          ),
+        )
+        return { status: "ready", bundles: reviews, autoResolvedIntents: [] }
+      }
+      return { status: "saved", draft }
+    }
     if (desired === "different" || draft.revision !== input.expectedRevision) {
       return { status: "conflict", latestDraft: draft }
     }
@@ -1154,9 +1179,17 @@ export function createProductionStage3ProductsGateway(
       if (!subject) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
       return subject
     })
+    const heatIntentIndexes = input.intents
+      .map((intent, index) => (subjects[index]?.category === "heat_protectant" ? index : -1))
+      .filter((index) => index >= 0)
+    const nonHeatIntentIndexes = input.intents
+      .map((_, index) => index)
+      .filter((index) => !heatIntentIndexes.includes(index))
     phaseStartedAt = performance.now()
-    const reviews = await Promise.all(
-      subjects.map((subject) => authoritativeReview(draft, subject.decisionKey, context)),
+    const nonHeatReviews = await Promise.all(
+      nonHeatIntentIndexes.map((index) =>
+        authoritativeReview(draft, subjects[index]!.decisionKey, context),
+      ),
     )
     reportPersonalPlanTransitionTiming({
       layer: "server",
@@ -1166,8 +1199,11 @@ export function createProductionStage3ProductsGateway(
     })
 
     const snapshot = requireCurrentAuthoritySnapshot(draft)
-    const decisions = input.intents.map((intent, index) => {
-      const review = reviews[index]!
+    const decisionFor = (
+      intent: Stage3AuthoritySemanticIntent,
+      subject: ReturnType<typeof deriveStage3DecisionSubjects>[number],
+      review: Stage3DecisionReviewBundle,
+    ) => {
       const evaluation = review.authorityEvaluation
       if (
         intent.action !== "select_replacement" &&
@@ -1179,15 +1215,86 @@ export function createProductionStage3ProductsGateway(
         throw new Stage3AuthorityMutationError("stage3_authority_action_invalid")
       }
       const selectedCandidate = validateSelectedCandidate(intent, review)
-      return buildAuthorityDecision(
-        subjects[index]!,
-        intent,
-        evaluation,
-        snapshot,
-        selectedCandidate,
+      return buildAuthorityDecision(subject, intent, evaluation, snapshot, selectedCandidate)
+    }
+    const decisionsByIndex = new Map<number, Stage3ProductDecision>()
+    for (const [reviewIndex, intentIndex] of nonHeatIntentIndexes.entries()) {
+      decisionsByIndex.set(
+        intentIndex,
+        decisionFor(
+          input.intents[intentIndex]!,
+          subjects[intentIndex]!,
+          nonHeatReviews[reviewIndex]!,
+        ),
       )
-    })
+    }
+    const projected = [...decisionsByIndex.values()].reduce(recordProductDecision, draft)
+    const omittedProjectedHeatIntentIndexes = new Set<number>()
+    const resolveProjectedHeatDecisions = async () => {
+      const projectedSubjectsByKey = new Map(
+        deriveStage3DecisionSubjects(projected).map((subject) => [subject.decisionKey, subject]),
+      )
+      for (const intentIndex of heatIntentIndexes) {
+        const subjectKey = subjects[intentIndex]!.decisionKey
+        const projectedSubject = projectedSubjectsByKey.get(subjectKey)
+        // A preceding selection can resolve this exact dependent heat review.
+        // Omit only that stale heat intent; every original non-heat subject was
+        // already validated and every remaining heat subject is re-reviewed below.
+        if (!projectedSubject) {
+          omittedProjectedHeatIntentIndexes.add(intentIndex)
+          continue
+        }
+        const projectedReview = await authoritativeReview(projected, subjectKey, context)
+        decisionsByIndex.set(
+          intentIndex,
+          decisionFor(input.intents[intentIndex]!, projectedSubject, projectedReview),
+        )
+      }
+    }
+    await resolveProjectedHeatDecisions()
+    const decisions = input.intents
+      .map((_, index) => {
+        const decision = decisionsByIndex.get(index)
+        if (omittedProjectedHeatIntentIndexes.has(index)) return null
+        if (!decision) throw new Stage3AuthorityMutationError("stage3_authority_subject_invalid")
+        return decision
+      })
+      .filter((decision): decision is Stage3ProductDecision => decision !== null)
     const folded = decisions.reduce(recordProductDecision, draft)
+    if (preview) {
+      const reviews = await Promise.all(
+        authorityDecisionSubjects(folded).map((subject) =>
+          authoritativeReview(folded, subject.decisionKey, context),
+        ),
+      )
+      const autoResolvedIntents = reviews.flatMap(({ authorityEvaluation }) =>
+        authorityEvaluation.category === "heat_protectant" &&
+        authorityEvaluation.status === "known" &&
+        authorityEvaluation.verdict === "ideal" &&
+        authorityEvaluation.criteria.some(
+          (criterion) =>
+            criterion.criterionId === "heat_protectant.carrier.verified" &&
+            criterion.result === "pass",
+        ) &&
+        authorityEvaluation.allowedActions.includes("leave_uncovered")
+          ? [
+              {
+                type: "resolve_decision" as const,
+                subjectKey: authorityEvaluation.subjectKey,
+                action: "leave_uncovered" as const,
+              },
+            ]
+          : [],
+      )
+      const autoKeys = new Set(autoResolvedIntents.map((intent) => intent.subjectKey))
+      return {
+        status: "ready",
+        bundles: reviews.filter(
+          ({ authorityEvaluation }) => !autoKeys.has(authorityEvaluation.subjectKey),
+        ),
+        autoResolvedIntents,
+      }
+    }
     const next = { ...folded, revision: draft.revision + 1, updatedAt: now() }
     phaseStartedAt = performance.now()
     const saved = await options.persistence.save({

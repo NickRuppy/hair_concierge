@@ -326,12 +326,43 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
     },
     async insertProductSubmission(row) {
       calls.push("insert_submission")
+      // Mirrors idx_product_submissions_one_open_scan (migration 20260820103000): at most one
+      // OPEN scan submission per (user_id, scanned_identifier_value). Postgres answers a second
+      // insert with SQLSTATE 23505, which is what the get-or-create path keys off.
+      if (row.source === "scan" && row.scanned_identifier_value) {
+        const conflicting = Array.from(submissions.values()).find(
+          (existing) =>
+            existing.source === "scan" &&
+            existing.user_id === row.user_id &&
+            existing.scanned_identifier_value === row.scanned_identifier_value &&
+            openStatuses.has(existing.status),
+        )
+        if (conflicting) {
+          throw Object.assign(
+            new Error(
+              'duplicate key value violates unique constraint "idx_product_submissions_one_open_scan"',
+            ),
+            { code: "23505" },
+          )
+        }
+      }
       const submission = makeSubmission({
         id: `submission-new-${nextSubmission++}`,
         ...row,
       })
       submissions.set(submission.id, submission)
       return submission
+    },
+    async findOpenScanSubmissionByIdentifier({ userId, identifierValue }) {
+      calls.push(`find_open_scan_submission:${identifierValue}`)
+      const match = Array.from(submissions.values()).find(
+        (submission) =>
+          submission.source === "scan" &&
+          submission.user_id === userId &&
+          submission.scanned_identifier_value === identifierValue &&
+          openStatuses.has(submission.status),
+      )
+      return match ? { id: match.id } : null
     },
     async updateProductSubmission(id, patch) {
       calls.push(`update_submission:${id}:${patch.status ?? "link"}`)
@@ -1446,6 +1477,7 @@ test("scan submit with a cataloged EAN resolves already_in_catalog and touches z
       scannedIdentifier: { type: "ean", value: "4006381333931" },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => true,
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1464,6 +1496,46 @@ test("scan submit with a cataloged EAN resolves already_in_catalog and touches z
   assert.deepEqual(fake.calls, [])
 })
 
+test("a catalog match that fails the scan eligibility gate (quarantined/inactive) falls through to a pending submission, same as a miss", async () => {
+  const catalogWithIdentifier: ProductIntakeCatalog = {
+    ...catalog,
+    identifiers: [
+      {
+        product_id: "product-garnier-mask",
+        identifier_type: "ean",
+        identifier_value: "4006381333931",
+        source: null,
+      },
+    ],
+  }
+  const fake = createFakeRepository({ catalog: catalogWithIdentifier })
+  let checkedProductId: string | null = null
+
+  const result = await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "4006381333931" },
+    }),
+    repository: fake.repository,
+    isMatchScanEligible: async (productId) => {
+      checkedProductId = productId
+      return false
+    },
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(checkedProductId, "product-garnier-mask")
+  assert.equal(result.kind, "pending_review")
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].source, "scan")
+  assert.equal(fake.submissions[0].scanned_identifier_type, "ean")
+  assert.equal(fake.submissions[0].scanned_identifier_value, "4006381333931")
+  assert.equal(fake.usage, null)
+  assert.deepEqual(fake.calls, ["insert_submission"])
+})
+
 test("unknown scanned EAN creates an anchorless pending submission with the normalized identifier persisted, touching zero user_product_usage rows", async () => {
   const fake = createFakeRepository()
 
@@ -1475,6 +1547,9 @@ test("unknown scanned EAN creates an anchorless pending submission with the norm
       scannedIdentifier: { type: "ean", value: "9999999999999" },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1490,6 +1565,79 @@ test("unknown scanned EAN creates an anchorless pending submission with the norm
   assert.deepEqual(fake.calls, ["insert_submission"])
 })
 
+test("a lost race on the one-open-scan-submission index returns the submission that won it", async () => {
+  // Two concurrent submits for the same user+EAN: the loser's INSERT trips
+  // idx_product_submissions_one_open_scan (migration 20260820103000). Without the
+  // get-or-create branch that surfaced as a 503, even though the research request the
+  // user asked for exists.
+  const winner = makeSubmission({
+    id: "submission-open-scan",
+    source: "scan",
+    status: "researching",
+    category: "mask",
+    frequency_range: null,
+    scanned_identifier_type: "ean",
+    scanned_identifier_value: "9999999999999",
+  })
+  const fake = createFakeRepository({ submissions: [winner] })
+
+  const result = await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "9999999999999" },
+    }),
+    repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.kind, "pending_review")
+  assert.equal(
+    result.kind === "pending_review" ? result.submission.id : null,
+    "submission-open-scan",
+  )
+  // No second row: the index held, and the reload answered with the existing one.
+  assert.equal(fake.submissions.length, 1)
+  assert.deepEqual(fake.calls, ["insert_submission", "find_open_scan_submission:9999999999999"])
+})
+
+test("a unique violation with no reloadable open submission still surfaces as an error", async () => {
+  // Defensive: if the conflicting row cannot be read back (closed in between, or a
+  // different unique index entirely), the failure must stay a failure rather than
+  // become a silent success with no submission id.
+  const fake = createFakeRepository()
+  const repository = {
+    ...fake.repository,
+    async insertProductSubmission() {
+      throw Object.assign(new Error("duplicate key value violates unique constraint"), {
+        code: "23505",
+      })
+    },
+  }
+
+  await assert.rejects(
+    () =>
+      submitScanProductIntake({
+        userId: USER_ID,
+        input: scanProductIntakeSubmissionSchema.parse({
+          category: "mask",
+          frequency_range: "weekly_1x",
+          scannedIdentifier: { type: "ean", value: "9999999999999" },
+        }),
+        repository,
+        isMatchScanEligible: async () => {
+          throw new Error("must not be called: no product matched")
+        },
+        now: () => "2026-06-13T10:00:00.000Z",
+      }),
+    /duplicate key/,
+  )
+})
+
 test("scan submission normalizes the scanned identifier once before it is matched and persisted", async () => {
   const fake = createFakeRepository()
   const rawValue = "  AB-12  "
@@ -1502,6 +1650,9 @@ test("scan submission normalizes the scanned identifier once before it is matche
       scannedIdentifier: { type: "barcode", value: rawValue },
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 
@@ -1523,6 +1674,9 @@ test("scan submission omits scanned_identifier columns and matchProductIntake's 
       product_name_text: "Mystery Maske",
     }),
     repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: no product matched")
+    },
     now: () => "2026-06-13T10:00:00.000Z",
   })
 

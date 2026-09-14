@@ -41,8 +41,14 @@ import {
 } from "@/lib/paypal/checkout-intents"
 import {
   ensurePayPalCheckoutAccount,
+  completePayPalReactivationCheckout,
   type PayPalCheckoutAccountResult,
 } from "@/lib/paypal/checkout-activation"
+import {
+  freemiumPayPalProvisioningUserId,
+  runFreemiumPayPalSubscriptionProvisioning,
+  type PayPalWebhookFreemiumProvisioningDeps,
+} from "@/lib/paypal/freemium-webhook-provisioning"
 import {
   cancelAndMarkPayPalDuplicate,
   findPayPalCheckoutDuplicateReason,
@@ -111,7 +117,7 @@ export type PayPalWebhookEvent = {
   }
 }
 
-export interface PayPalWebhookDeps {
+export interface PayPalWebhookDeps extends PayPalWebhookFreemiumProvisioningDeps {
   supabase: SupabaseClient
   premiumTierId: string
   freeTierId: string
@@ -225,7 +231,15 @@ export async function handlePayPalWebhookEvent(
 
     switch (eventType) {
       case "BILLING.SUBSCRIPTION.ACTIVATED": {
-        await activateOrRefreshSubscription(subscription, deps)
+        const outcome = await activateOrRefreshSubscription(subscription, deps)
+        // The Premium sheet's own post-purchase provisioning, beside — never instead of —
+        // the activation above, and LAST, because it is the only step here whose failure has
+        // to reach PayPal: it throws when the delivery must be retried, and the catch below
+        // releases the event claim so the redelivery is processable. This is the lane for the
+        // buyer who approved and closed the tab; without it that buyer is paid, entitled and
+        // planless forever. Everything above has already run and is dedupe-guarded, so a
+        // retried delivery repeats it harmlessly.
+        await provisionPremiumSheetPurchase(outcome, deps)
         return { handled: true }
       }
       case "PAYMENT.SALE.COMPLETED": {
@@ -255,6 +269,20 @@ export async function handlePayPalWebhookEvent(
         }
         if (deps.recordBillingAnalytics) {
           await recordPayPalSuccessfulPayment(event, deps, outcome, sale)
+        }
+        // The second chance for the same purchase: the sale that pays for the checkout the
+        // sheet started, in case `BILLING.SUBSCRIPTION.ACTIVATED` never arrived or gave up
+        // retrying. Gated on the SAME "is this the initial payment" predicate the analytics
+        // classification uses, so a renewal months later — whose intent is long expired —
+        // never re-enters provisioning, while a redelivery of this sale still does.
+        if (
+          outcome.checkoutIntent &&
+          isPayPalCheckoutIntentEligibleForInitialPayment(outcome.checkoutIntent, {
+            providerSubscriptionId: outcome.billingRow.provider_subscription_id,
+            eventCreatedAt: sale.occurredAt,
+          })
+        ) {
+          await provisionPremiumSheetPurchase(outcome, deps)
         }
         return { handled: true }
       }
@@ -636,6 +664,7 @@ async function activateOrRefreshSubscription(
   if (activation.status === "duplicate") return { kind: "none", reason: "duplicate" }
   if (
     boundIntent &&
+    boundIntent.reactivation_reservation_id == null &&
     (["created", "approved", "activated"] as PayPalCheckoutIntentRow["status"][]).includes(
       boundIntent.status,
     )
@@ -652,12 +681,41 @@ async function activateOrRefreshSubscription(
       `PayPal subscription ${subscription.id} activation did not create a billing row`,
     )
   }
+  await completePayPalReactivationCheckout(deps.supabase, {
+    intent: boundIntent,
+    subscription,
+    activation,
+    billingRow,
+  })
   return {
     kind: "active",
     billingRow,
     checkoutIntent: boundIntent,
     funnelMetadata: boundIntent?.metadata ?? null,
   }
+}
+
+/**
+ * The Premium sheet's freemium lane, hung off an activation that actually produced an active
+ * subscription (docket rework — closing T14's one open concern).
+ *
+ * Inert for everything else: a subscription whose checkout intent is not the sheet's, and
+ * every subscription at all while the flag is off, leaves this function without touching a
+ * single row. Identity is the intent's `user_id` versus the account the activation itself
+ * resolved, and the provider reference is the subscription id — the same one the sheet's
+ * completion endpoint provisions against, so the two lanes share one admission row.
+ */
+async function provisionPremiumSheetPurchase(
+  outcome: PayPalActivationOutcome,
+  deps: PayPalWebhookDeps,
+): Promise<void> {
+  if (outcome.kind !== "active") return
+  const intent = outcome.checkoutIntent
+  if (!freemiumPayPalProvisioningUserId(intent, deps)) return
+  await runFreemiumPayPalSubscriptionProvisioning(intent, deps, {
+    userId: outcome.billingRow.user_id,
+    subscriptionId: outcome.billingRow.provider_subscription_id,
+  })
 }
 
 async function updateExistingSubscription(

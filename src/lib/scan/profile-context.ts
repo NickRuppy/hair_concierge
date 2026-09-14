@@ -104,6 +104,7 @@ export async function loadScanHeatCarrierCoverage(
   client: SupabaseClient,
   draft: Stage3ProductDraft,
   heatRoutes: string[],
+  heatEvents: InitialNeedPlanSnapshot["assessments"]["heatExposure"]["events"],
 ): Promise<Stage3AuthorityFactBundle["heatCarrierCoverage"]> {
-  return loadStage3HeatCarrierCoverage(client, draft, heatRoutes)
+  return loadStage3HeatCarrierCoverage(client, draft, heatRoutes, heatEvents)
 }

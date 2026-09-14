@@ -1,23 +1,22 @@
-import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { after } from "next/server"
 import { z } from "zod"
 
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
-import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
-import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import { getEntitlements } from "@/lib/entitlements"
+import { resolvePaidAppAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
+import { hasUsedFreeReveal } from "@/lib/entitlements/free-reveal"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
 import {
   loadScanProductFacts,
-  loadStage3RecommendationCandidates,
-  type CategorySelectionContext,
+  loadStage3RecommendationCandidatesByRole,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
-import type { Stage3CategoryProductFacts } from "@/lib/personal-plan/products/authority/contracts"
 import {
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   type PersonalPlanCategory,
 } from "@/lib/personal-plan/products/contracts"
-import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
 import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
@@ -34,16 +33,25 @@ import {
 import {
   presentScanVerdictPayload,
   toScanProductHeader,
+  withEligibleAlternatives,
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
+import { loadScanVerdictForProduct } from "@/lib/scan/load-scan-verdict"
+import { maskScanVerdictPayload, type ScanMaskedVerdictResult } from "@/lib/scan/masked-alternative"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
-import { buildScanVerdict, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
-import { loadScanSavedState } from "@/lib/scan/saved-state"
-import type { ScanResolveResult, ScanVerdictPayload } from "@/lib/scan/types"
+import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
+import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
+import {
+  autoSaveScanWishlistProduct,
+  loadScanSavedState,
+  type ScanSavedStatePayload,
+} from "@/lib/scan/saved-state"
+import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
 import { captureScanException } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
 
 /**
  * v1 API surface only ever needs "ean" (ruling R9): the scanner emits ean_13/ean_8 and
@@ -68,6 +76,8 @@ const resolveBodySchema = z
     message: "exactly_one_of_identifier_or_product_id",
   })
 
+type ResolveInput = z.infer<typeof resolveBodySchema>
+
 type ActiveProductLookup = { id: string; category: PersonalPlanCategory } | null
 
 export type ScanResolveRouteDeps = {
@@ -84,7 +94,7 @@ export type ScanResolveRouteDeps = {
   loadQuarantinedProductIdsAmong: typeof loadQuarantinedProductIdsAmong
   loadScanEvaluationContext: typeof loadScanEvaluationContext
   loadScanProductFacts: typeof loadScanProductFacts
-  loadRecommendationCandidates: typeof loadStage3RecommendationCandidates
+  loadRecommendationCandidates: typeof loadStage3RecommendationCandidatesByRole
   loadScanSavedState: typeof loadScanSavedState
   buildScanVerdict: typeof buildScanVerdict
   loadActiveProductById: (client: SupabaseClient, productId: string) => Promise<ActiveProductLookup>
@@ -92,110 +102,224 @@ export type ScanResolveRouteDeps = {
     client: SupabaseClient,
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
+  /**
+   * Freemium scanner-first (T8): the same paid-access composite `requirePremiumAccess`
+   * uses on save/wishlist (see access.ts). Only consulted when the flag is on AND the
+   * verdict is `in_catalog` (nothing to mask otherwise) — flag-off and premium responses
+   * never call this, so they stay byte-identical to before T8.
+   */
+  resolvePaidAccess: (userId: string) => Promise<FreemiumAccessResult>
+  /** T7 accessor, called with the admin `client` already in scope — never a user-scoped
+   * client, or RLS hides the row and this reports "unused" forever. */
+  hasUsedFreeReveal: typeof hasUsedFreeReveal
+  /**
+   * T16: every successful PREMIUM scan of an `in_catalog` product auto-saves it to the
+   * Merkliste, insert-only (see the doc comment on `autoSaveScanWishlistProduct` for why
+   * this is never `moveScanSavedProduct`). Called only from inside the same
+   * `isFreemiumScannerFirstEnabled() && eligibleVerdict.kind === "in_catalog"` branch that
+   * `resolvePaidAccess` already gates on — flag-off, a free/masked verdict, and a
+   * `not_needed` result never call this, matching the masking block's own byte-identity
+   * invariant. Best-effort: a write failure here is caught and reported (see the call site)
+   * rather than turning an otherwise-successful resolve into a 5xx — the user's verdict is
+   * not allowed to depend on a Merkliste write succeeding.
+   */
+  autoSaveScanWishlist: typeof autoSaveScanWishlistProduct
   captureScanException?: typeof captureScanException
+  /**
+   * Injection seam for Next's `after`, which throws outside a request scope. Tests pass a
+   * runner that holds the task until they drain it, mirroring post-response execution.
+   */
+  after?: ScanAfter
+}
+
+type ScanAfter = (task: () => Promise<void> | void) => void
+
+/**
+ * Mutable attempt-telemetry bookkeeping for one request, created fresh per parse() call
+ * and threaded through the wrapper's ctx.body so both the handler (normal completion) and
+ * `onError` (the catch-all's completeAttempt("temporarily_unavailable", ...) call) see the
+ * same state. Task 4 owns the telemetry semantics themselves — this is scaffolding-removal
+ * only, carrying the same fields the old inline `let`s held.
+ */
+type ResolveAttemptTracker = {
+  attemptId: string | null
+  /** Request start, written as the attempt row's `created_at` — see `ScanResolveAttempt`. */
+  startedAt: string
+  lookupOutcome: ScanResolveLookupOutcome | null
+  matchedProductId: string | null
+  failureStage: ScanResolveFailureStage
+  /** Deferred telemetry writes, drained in FIFO order — see `scheduleAttemptWrite`. */
+  telemetryWrites: Array<() => Promise<void>>
+  telemetryDrainScheduled: boolean
+}
+
+type ResolveRouteBody = {
+  input: ResolveInput
+  attempt: ResolveAttemptTracker
+  /** One admin client per request, shared by the handler and the `onError` hook. */
+  client: SupabaseClient
+}
+
+type ResolveTerminalOutcome =
+  | "invalid_identifier"
+  | "unknown_product"
+  | "pending_submission"
+  | "resolved"
+  | "verdict_unknown"
+  | "profile_ineligible"
+  | "temporarily_unavailable"
+
+/**
+ * Attempt telemetry must not sit on the response path (F11), but the attempt row is
+ * INSERTed by `recordScanResolveAttempt` and then UPDATEd by `completeScanResolveAttempt`,
+ * so the two writes still have to run in order. Two separate `after` calls would NOT give
+ * that: `AfterContext.addCallback` pushes each callback into a p-queue constructed with
+ * p-queue's default `concurrency: Infinity`
+ * (node_modules/next/dist/server/after/after-context.js), so callbacks are only *started*
+ * in enqueue order and then run concurrently — the UPDATE could overtake its INSERT and
+ * the completion would be silently lost (both helpers are fail-open).
+ *
+ * So the writes are collected here and drained by a single `after` callback that awaits
+ * them one at a time. Registering that drain on the first write is safe because `after`
+ * callbacks only run once the response has been sent
+ * (`AfterContext.runCallbacksOnClose`), by which point the completion is already queued.
+ */
+function scheduleAttemptWrite(
+  attempt: ResolveAttemptTracker,
+  runAfter: ScanAfter,
+  write: () => Promise<void>,
+) {
+  attempt.telemetryWrites.push(write)
+  if (attempt.telemetryDrainScheduled) return
+  attempt.telemetryDrainScheduled = true
+  try {
+    runAfter(async () => {
+      for (let index = 0; index < attempt.telemetryWrites.length; index += 1) {
+        await attempt.telemetryWrites[index]()
+      }
+    })
+  } catch (error) {
+    // `after()` throws synchronously when there is no request store or `waitUntil` (e.g. a
+    // misconfigured runtime) — telemetry scheduling must stay fail-open like the writes
+    // themselves, never turn an otherwise-resolved scan into a 503.
+    console.warn("[scan] telemetry scheduling failed", error)
+  }
 }
 
 /**
- * A category with no target to compare against — genuinely not needed, or not decided
- * yet. Duplicated (not imported) from `resolve-verdict.ts`'s private `isNotNeeded`: that
- * predicate isn't exported (Task 1's settled interface), and this route only needs it to
- * skip an unnecessary full-catalog `recommendationCandidates` load — `buildScanVerdict`
- * itself re-derives the real branch internally regardless of what this route decides here.
+ * Shared by the handler's normal-completion calls and the wrapper's `onError` hook (the
+ * catch-all's own completion, for a throw mid-handler) — same guard, same shape, one place.
  */
-function isDecisionWithoutTarget(decision: PlanCategoryDecision): boolean {
-  if (decision.needTier === "not_needed") return true
-  return (
-    decision.target === null && decision.needTier !== "basis" && decision.needTier !== "optional"
+function completeResolveAttempt(
+  deps: ScanResolveRouteDeps,
+  runAfter: ScanAfter,
+  client: SupabaseClient,
+  attempt: ResolveAttemptTracker,
+  terminalOutcome: ResolveTerminalOutcome,
+  stage: ScanResolveFailureStage | null,
+) {
+  if (!attempt.attemptId) return
+  const completion = {
+    attemptId: attempt.attemptId,
+    lookupOutcome: attempt.lookupOutcome,
+    terminalOutcome,
+    matchedProductId: attempt.matchedProductId,
+    failureStage: stage,
+  }
+  scheduleAttemptWrite(attempt, runAfter, () =>
+    deps.completeScanResolveAttempt(
+      client,
+      completion,
+      deps.captureScanException ?? captureScanException,
+    ),
   )
 }
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
-  return async function POST(request: Request) {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
+  const parseBody = parseJsonBody(resolveBodySchema)
+  const runAfter: ScanAfter = deps.after ?? after
 
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
+  return createScanRoute<ResolveRouteBody>({
+    route: "resolve",
+    deps,
+    parse: async (request) => {
+      const parsed = await parseBody(request)
+      if (!parsed.ok) return parsed
+      return {
+        ok: true,
+        body: {
+          input: parsed.body,
+          client: deps.createAdminClient(),
+          attempt: {
+            attemptId: null,
+            startedAt: new Date().toISOString(),
+            lookupOutcome: null,
+            matchedProductId: null,
+            failureStage: "identifier_lookup",
+            telemetryWrites: [],
+            telemetryDrainScheduled: false,
+          },
+        },
+      }
+    },
+    failureReason: "resolve_failed",
+    onError: async (_error, ctx) => {
+      const { attempt, client } = ctx.body
+      completeResolveAttempt(
+        deps,
+        runAfter,
+        client,
+        attempt,
+        "temporarily_unavailable",
+        attempt.failureStage,
       )
-    }
+    },
+    handler: async (ctx) => {
+      const { input, attempt, client } = ctx.body
+      const userId = ctx.userId
 
-    let body: unknown
-    try {
-      body = await request.json()
-    } catch {
-      return fail("invalid_request", 400)
-    }
-    const parsed = resolveBodySchema.safeParse(body)
-    if (!parsed.success) return fail("invalid_request", 400)
-
-    const client = deps.createAdminClient()
-    const ok = (result: ScanResolveResult) =>
-      NextResponse.json(result, { headers: { "Cache-Control": "no-store" } })
-
-    const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
-      kind: "unknown_product",
-      identifier: { type, value },
-      categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
-        key,
-        label: CATEGORY_COPY[key].label,
-      })),
-    })
-
-    let attemptId: string | null = null
-    let lookupOutcome: ScanResolveLookupOutcome | null = null
-    let matchedProductId: string | null = null
-    let failureStage: ScanResolveFailureStage = "identifier_lookup"
-
-    const completeAttempt = async (
-      terminalOutcome:
-        | "invalid_identifier"
-        | "unknown_product"
-        | "pending_submission"
-        | "resolved"
-        | "verdict_unknown"
-        | "profile_ineligible"
-        | "temporarily_unavailable",
-      stage: ScanResolveFailureStage | null,
-    ) => {
-      if (!attemptId) return
-      await deps.completeScanResolveAttempt(client, {
-        attemptId,
-        lookupOutcome,
-        terminalOutcome,
-        matchedProductId,
-        failureStage: stage,
+      const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
+        kind: "unknown_product",
+        identifier: { type, value },
+        categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
+          key,
+          label: CATEGORY_COPY[key].label,
+        })),
       })
-    }
 
-    try {
+      const completeAttempt = (
+        terminalOutcome: ResolveTerminalOutcome,
+        stage: ScanResolveFailureStage | null,
+      ) => completeResolveAttempt(deps, runAfter, client, attempt, terminalOutcome, stage)
+
       let productId: string
       let category: PersonalPlanCategory
 
-      if (parsed.data.identifier) {
-        const identifier = parsed.data.identifier
+      if (input.identifier) {
+        const identifier = input.identifier
         // Barcode attempts are started before validation; productId resolution below
         // originates in the search sheet and intentionally has no barcode telemetry.
-        attemptId = deps.createScanResolveAttemptId()
-        await deps.recordScanResolveAttempt(client, {
-          attemptId,
-          userId,
-          identifierType: identifier.type,
-          rawValue: identifier.value,
-        })
+        const attemptId = deps.createScanResolveAttemptId()
+        attempt.attemptId = attemptId
+        scheduleAttemptWrite(attempt, runAfter, () =>
+          deps.recordScanResolveAttempt(
+            client,
+            {
+              attemptId,
+              userId,
+              identifierType: identifier.type,
+              rawValue: identifier.value,
+              createdAt: attempt.startedAt,
+            },
+            deps.captureScanException ?? captureScanException,
+          ),
+        )
 
         const validation = deps.validateEanInput(identifier.value)
         if (!validation.ok) {
-          lookupOutcome = "invalid"
-          await completeAttempt("invalid_identifier", "identifier_lookup")
-          return fail("invalid_identifier", 400)
+          attempt.lookupOutcome = "invalid"
+          completeAttempt("invalid_identifier", "identifier_lookup")
+          return scanFail("invalid_identifier", 400)
         }
         const normalizedValue = normalizeIdentifierValue(validation.value)
 
@@ -204,125 +328,81 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
           value: identifier.value,
         })
 
+        // F15: bind the match to the attempt before the quarantine await below, so a
+        // failure in there still completes with the product the identifier matched.
+        attempt.matchedProductId = hit?.productId ?? null
+        attempt.lookupOutcome = hit ? "hit" : "miss"
+
         // Ruling R7: a disposition-quarantined product (identity_ambiguous, retired, or
         // awaiting exact analysis — personal_plan_product_search_dispositions) is not
         // resolvable via scan either. The research/review pipeline is the right place to
         // untangle it; treat it as though the identifier lookup missed.
-        failureStage = "quarantine_lookup"
+        attempt.failureStage = "quarantine_lookup"
         const quarantined =
           hit !== null && (await deps.isProductSearchQuarantined(client, hit.productId))
-        matchedProductId = hit?.productId ?? null
-        lookupOutcome = quarantined ? "quarantined" : hit ? "hit" : "miss"
+        if (quarantined) attempt.lookupOutcome = "quarantined"
 
         if (!hit || quarantined) {
           // The catalog is the authority: an open research submission only decides what
           // this scan shows once the EAN is genuinely not (usably) in the catalog. A
           // cataloged product must still reach its verdict while a submission is open.
-          failureStage = "submission_lookup"
+          attempt.failureStage = "submission_lookup"
           const pending = await deps.findOpenScanSubmission(client, userId, normalizedValue)
           if (pending) {
-            await completeAttempt("pending_submission", null)
-            return ok({
+            completeAttempt("pending_submission", null)
+            return scanOk({
               kind: "pending_submission",
               submissionId: pending.submissionId,
               headline: SCAN_PENDING_SUBMISSION_HEADLINE,
               status: pending.status,
-            })
+            } satisfies ScanResolveResult)
           }
-          await completeAttempt("unknown_product", null)
-          return ok(unknownProduct(identifier.type, normalizedValue))
+          completeAttempt("unknown_product", null)
+          return scanOk(unknownProduct(identifier.type, normalizedValue))
         }
 
         productId = hit.productId
         category = hit.category
       } else {
         // Schema refine() guarantees productId is set on this branch.
-        const active = await deps.loadActiveProductById(client, parsed.data.productId as string)
-        if (!active) return fail("product_not_found", 404)
+        const active = await deps.loadActiveProductById(client, input.productId as string)
+        if (!active) return scanFail("product_not_found", 404)
         if (await deps.isProductSearchQuarantined(client, active.id)) {
-          return fail("product_not_found", 404)
+          return scanFail("product_not_found", 404)
         }
         productId = active.id
         category = active.category
       }
 
-      failureStage = "profile_context"
+      attempt.failureStage = "profile_context"
       const context = await deps.loadScanEvaluationContext(client, userId)
       if (!context) {
-        await completeAttempt("profile_ineligible", null)
-        return fail("profile_missing", 409)
+        completeAttempt("profile_ineligible", null)
+        return scanFail("profile_missing", 409)
       }
 
-      failureStage = "decision"
+      attempt.failureStage = "decision"
       const decision = context.snapshot.decisions.find((entry) => entry.category === category)
       if (!decision) throw new Error("scan_resolve_decision_missing")
 
-      const shampooTarget =
-        category === "shampoo" && decision.target?.category === "shampoo" ? decision.target : null
-      const conditionerTarget =
-        category === "conditioner" && decision.target?.category === "conditioner"
-          ? decision.target
-          : null
-
-      const loadFactsForRole = async (role: PlanProductRole): Promise<ScanRoleFacts> => {
-        const selectionContext: CategorySelectionContext = {
-          hairThickness: context.snapshot.profile.hair.thickness,
-          role,
-          shampooTarget,
-          conditionerTarget,
-        }
-        failureStage = "product_facts"
-        const [productFacts, recommendationCandidates] = await Promise.all([
-          deps.loadScanProductFacts(client, category, productId, selectionContext),
-          isDecisionWithoutTarget(decision)
-            ? Promise.resolve<Stage3CategoryProductFacts[]>([])
-            : deps.loadRecommendationCandidates(client, {
-                category,
-                hairThickness: selectionContext.hairThickness,
-                role,
-                shampooTarget,
-                conditionerTarget,
-                completeCatalog: true,
-              }),
-        ])
-        return { productFacts, recommendationCandidates }
-      }
-
-      /**
-       * `buildScanVerdict` evaluates EVERY role of the decision, but a category's derived
-       * facts are identical for all of its roles except Shampoo, where `selectShampooSpec`
-       * picks the spec row by the role's expected bucket/scalp route. So mirror
-       * `product-previews.ts`: one shared load for every other category, one load per role
-       * for a role-sensitive one — otherwise e.g. the dandruff role would be graded against
-       * facts loaded for the everyday role.
-       */
-      const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
-      const roleSensitive = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
-      const rolesToLoad = roleSensitive
-        ? [...new Set<PlanProductRole>([primaryRole, ...decision.roles])]
-        : [primaryRole]
-      const loadedFacts = new Map<PlanProductRole, ScanRoleFacts>(
-        await Promise.all(
-          rolesToLoad.map(async (role) => [role, await loadFactsForRole(role)] as const),
-        ),
-      )
-      const primaryFacts = loadedFacts.get(primaryRole) as ScanRoleFacts
-
-      failureStage = "verdict"
-      const verdict = deps.buildScanVerdict({
+      // T8: facts-loading + `buildScanVerdict` extracted to `load-scan-verdict.ts`, shared
+      // with `/api/scan/reveal` — see that module for why. The `onEnterVerdictStage`
+      // callback (fix round 1, F4) restores the original two-stage telemetry split: a
+      // throw during facts-loading still reports "product_facts", a throw inside
+      // `buildScanVerdict` itself now reports "verdict" again instead of collapsing both
+      // into one stage.
+      attempt.failureStage = "product_facts"
+      const verdict = await loadScanVerdictForProduct(
+        client,
+        deps,
         category,
+        productId,
         decision,
-        productFacts: primaryFacts.productFacts,
-        recommendationCandidates: primaryFacts.recommendationCandidates,
-        perRoleFacts: roleSensitive ? Object.fromEntries(loadedFacts) : undefined,
-        coverage: context.snapshot.coverage,
-        hairThickness: context.snapshot.profile.hair.thickness,
-        // No Stage3ProductDraft exists for scan — mirrors product-previews.ts's no-draft
-        // default for heat-carrier coverage instead of computing a real one.
-        heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
-        refinedVersionId: context.refinedVersionId,
-        refinedInputHash: context.refinedInputHash,
-      })
+        context,
+        () => {
+          attempt.failureStage = "verdict"
+        },
+      )
 
       // One catalog read covers the sheet's product header and the alternatives' brand +
       // purchase link — neither exists on the authority facts the verdict is built from.
@@ -330,7 +410,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
         verdict.kind === "in_catalog"
           ? verdict.alternatives.map((alternative) => alternative.productId)
           : []
-      failureStage = "post_verdict_load"
+      attempt.failureStage = "post_verdict_load"
       const [savedState, presentationRows] = await Promise.all([
         deps.loadScanSavedState(client, userId, productId),
         deps.loadPresentationRows(client, [productId, ...alternativeIds]),
@@ -344,58 +424,111 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       // be offered as an alternative on a surface that refuses to resolve or save it. Done
       // on the final (≤3) list rather than on the candidate pool: same outcome, one small
       // keyed query instead of filtering the whole catalog.
-      failureStage = "alternative_filter"
+      attempt.failureStage = "alternative_filter"
       const eligibleVerdict = await withEligibleAlternatives(verdict, (ids) =>
         deps.loadQuarantinedProductIdsAmong(client, ids),
       )
 
-      failureStage = "response_build"
-      const result = {
-        ...presentScanVerdictPayload(eligibleVerdict, presentationRows),
-        product: toScanProductHeader(scannedRow),
-        snapshotSource: context.snapshotSource,
-        savedState,
-      }
-      await completeAttempt(
+      attempt.failureStage = "response_build"
+      const productHeader = toScanProductHeader(scannedRow)
+      const resolvedOutcome = (): ResolveTerminalOutcome =>
         eligibleVerdict.kind === "in_catalog" && eligibleVerdict.verdict === "unknown"
           ? "verdict_unknown"
-          : "resolved",
-        null,
-      )
-      return ok(result)
-    } catch (error) {
-      console.error("[scan] resolve failed", error)
-      await completeAttempt("temporarily_unavailable", failureStage)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "resolve",
-        status: 503,
-        reason: "resolve_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
-}
+          : "resolved"
+      // T16 fix round 1 (F3): defaults to the pre-save read; the auto-save branch below
+      // updates it to the predicted post-save state when it schedules a write.
+      let responseSavedState: ScanSavedStatePayload = savedState
 
-/**
- * Drops disposition-quarantined products from an `in_catalog` verdict's alternatives.
- * Leaving the list empty is fine — the sheet only renders the section when it has entries.
- */
-async function withEligibleAlternatives(
-  verdict: ScanVerdictPayload,
-  loadQuarantined: (productIds: string[]) => Promise<Set<string>>,
-): Promise<ScanVerdictPayload> {
-  if (verdict.kind !== "in_catalog" || verdict.alternatives.length === 0) return verdict
-  const quarantined = await loadQuarantined(
-    verdict.alternatives.map((alternative) => alternative.productId),
-  )
-  if (quarantined.size === 0) return verdict
-  return {
-    ...verdict,
-    alternatives: verdict.alternatives.filter(
-      (alternative) => !quarantined.has(alternative.productId),
-    ),
-  }
+      // Freemium scanner-first (T8): masking only ever applies to an `in_catalog`
+      // verdict's alternatives, and only with the flag on — flag-off or a `not_needed`
+      // verdict never call `resolvePaidAccess` at all, so neither performs a billing
+      // lookup it didn't before T8 (mirrors the F1a "inert with the flag off" pattern on
+      // `hasFreemiumPaidAccess`). Premium falls through to the untouched full path below.
+      //
+      // Fail-closed constraint (fix round 1, F3): `resolvePaidAccess` returning
+      // "unavailable" 503s every `in_catalog` verdict here, premium included — an
+      // entitlement-source outage must never be treated as "unmask," so this is the one
+      // case where "flag on + premium ⇒ byte-identical" does not hold.
+      if (isFreemiumScannerFirstEnabled() && eligibleVerdict.kind === "in_catalog") {
+        const access = await deps.resolvePaidAccess(userId)
+        if (access === "unavailable") throw new Error("scan_resolve_entitlements_unavailable")
+
+        // Fix round 1 (F2): the brief names `getEntitlements(...).canSeeAlternatives` as
+        // the deciding signal, not the raw `resolvePaidAccess` result — same module the
+        // reveal route now also branches on, so a future ruling that grants some free
+        // cohort alternatives only has one place to change.
+        const entitlements = await getEntitlements(userId, {
+          hasAppAccess: async () => access === "allowed",
+          readFreeRevealUsed: (id) => deps.hasUsedFreeReveal(client, id),
+        })
+
+        if (!entitlements.canSeeAlternatives) {
+          const maskedResult: ScanMaskedVerdictResult = {
+            ...maskScanVerdictPayload(eligibleVerdict),
+            product: productHeader,
+            snapshotSource: context.snapshotSource,
+            savedState,
+            freeRevealAvailable: entitlements.freeRevealAvailable,
+          }
+          completeAttempt(resolvedOutcome(), null)
+          return scanOk(maskedResult)
+        }
+
+        // T16: a successful PREMIUM scan of an in-catalog product auto-saves to the
+        // Merkliste — insert-only, idempotent, never the move endpoint (see the doc
+        // comment on `autoSaveScanWishlistProduct`/the dep above for THE hazard this
+        // avoids). Best-effort: a write failure here must not turn an otherwise-resolved
+        // verdict into a 5xx, so it is caught and reported rather than rethrown.
+        //
+        // T16 fix round 1 (F5): deferred through the route's existing `after()` seam
+        // (the same one attempt telemetry already uses above) instead of an inline
+        // `await` on the response's critical path — a Merkliste write has no reason to add
+        // a DB round trip to every premium verdict's latency.
+        try {
+          runAfter(async () => {
+            try {
+              await deps.autoSaveScanWishlist(client, userId, productId)
+            } catch (autoSaveError) {
+              ;(deps.captureScanException ?? captureScanException)(autoSaveError, {
+                route: "resolve",
+                status: 200,
+                reason: "scan_wishlist_auto_save_failed",
+                userId,
+                level: "warning",
+              })
+            }
+          })
+        } catch (schedulingError) {
+          // `after()` throws synchronously when there is no request store or `waitUntil`
+          // (mirrors `scheduleAttemptWrite`'s own guard above) — scheduling failure must
+          // stay fail-open, never turn an otherwise-resolved scan into a 503.
+          console.warn("[scan] auto-save scheduling failed", schedulingError)
+        }
+
+        // T16 fix round 1 (F3): the deferred write above has not run yet when this
+        // response is built, so the `savedState` read earlier (before this branch) cannot
+        // reflect it — serving it unchanged made the client show "not saved" on the same
+        // response whose badge count already includes this product. Predict the outcome
+        // instead of a second DB round trip: `autoSaveScanWishlistProduct` only ever moves
+        // a `null` state to `merkliste` (F2's ownership skip above keeps a `routine` state
+        // exactly as it is, and a state that is already `merkliste` is untouched by
+        // `ON CONFLICT DO NOTHING`) — so a `null` pre-save state is the only case this
+        // response needs to update.
+        if (savedState.state === null) {
+          responseSavedState = { state: "merkliste", managedByScan: true }
+        }
+      }
+
+      const result: ScanResolvedVerdictResult = {
+        ...presentScanVerdictPayload(eligibleVerdict, presentationRows),
+        product: productHeader,
+        snapshotSource: context.snapshotSource,
+        savedState: responseSavedState,
+      }
+      completeAttempt(resolvedOutcome(), null)
+      return scanOk(result)
+    },
+  })
 }
 
 async function loadActiveProductById(
@@ -470,9 +603,28 @@ export const POST = createScanResolveRouteHandler({
   loadQuarantinedProductIdsAmong,
   loadScanEvaluationContext,
   loadScanProductFacts,
-  loadRecommendationCandidates: loadStage3RecommendationCandidates,
+  loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
   loadScanSavedState,
   buildScanVerdict,
   loadActiveProductById,
   loadPresentationRows,
+  resolvePaidAccess: resolvePaidAccessForCurrentUser,
+  hasUsedFreeReveal,
+  autoSaveScanWishlist: autoSaveScanWishlistProduct,
 })
+
+/**
+ * Separate from `getUserId`: the shared scan wrapper only forwards a userId string to the
+ * handler (`ScanRouteContext`), so the email + `access_kind` `resolvePaidAppAccess` needs
+ * (mirrors the C1/F1 fixes on the save/wishlist guard, access.ts) have no path from
+ * `getUserId` alone without a second `auth.getUser()` read — a deliberate, request-scoped
+ * read, same as `requirePremiumAccessForCurrentUser` on the save route.
+ */
+async function resolvePaidAccessForCurrentUser(userId: string): Promise<FreemiumAccessResult> {
+  const { data } = await (await createClient()).auth.getUser()
+  return resolvePaidAppAccess(
+    userId,
+    data.user?.email,
+    isPersonalPlanFieldTestGuest(data.user ?? {}),
+  )
+}

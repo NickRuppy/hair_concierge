@@ -1,6 +1,12 @@
 import { RouteAwareApplicationPage } from "@/components/application/application-page"
 import type { ApplicationPageView } from "@/components/application/application-types"
 import { toApplicationPageView } from "@/components/application/application-view-adapter"
+import { GatedAnwendungExample } from "@/components/gated-preview/gated-anwendung-example"
+import { resolveGatedPageMode } from "@/lib/gated-preview/gate"
+import {
+  loadPersonalPlanKeepsakeContentForUser,
+  type PersonalPlanKeepsakeContent,
+} from "@/lib/personal-plan/keepsake-content"
 import {
   PERSONAL_PLAN_STAGE5_CONTRACT_VERSION,
   type PersonalPlanStage5ContractVersion,
@@ -58,6 +64,13 @@ export type AnwendungResolverDeps = {
   appEnabled: () => boolean
   stage4Enabled: () => boolean
   reportFailure: (details: PersonalPlanApplicationFailureDetails) => void
+  /**
+   * T17 keepsake: proof that this user owns an accepted Routine version, read WITHOUT
+   * the entitlement authority (`loadJourneyAccess`) — see the doc comment on
+   * `resolveKeepsakeRoutinePage` in `app/routine/page.tsx` for why widening that loader
+   * instead was rejected. Only ever consulted in keepsake mode.
+   */
+  loadKeepsakeContent?: (userId: string) => Promise<PersonalPlanKeepsakeContent | null>
 }
 
 // Only Stage 5's own throw codes may become a Sentry tag. A database or Zod
@@ -88,6 +101,16 @@ function failureReason(error: unknown): PersonalPlanApplicationFailureDetails["r
 export async function resolveAnwendungPage(
   deps: AnwendungResolverDeps,
   selectedDayType?: ApplicationDayTypeKey,
+  options?: {
+    /**
+     * T17: resolve the Anwendung from KEEPSAKE evidence (a lapsed owner's own accepted
+     * Routine) instead of from live journey entitlement. Everything downstream — the
+     * routine version read, the adapter, the compiler, the failure reporting — is the
+     * identical owner-scoped pipeline; only the source of `{planId, routineVersionId}`
+     * differs. Omitted (every pre-T17 caller) the journey path runs verbatim.
+     */
+    keepsake?: boolean
+  },
 ): Promise<ApplicationPageView> {
   if (!deps.appEnabled() || !deps.stage4Enabled()) {
     return { state: "feature_disabled" }
@@ -99,24 +122,35 @@ export async function resolveAnwendungPage(
   let failureContext: Omit<PersonalPlanApplicationFailureDetails, "reason" | "durationMs"> = {}
 
   try {
-    const journey = await deps.loadJourneyAccess(userId)
-    if (!canAccessPersonalPlanJourneyStage(journey, "stage5")) {
-      return { state: "feature_disabled" }
-    }
-    if (journey.kind !== "personal_plan" || !journey.activeRoutineVersionId) {
-      return { state: "no_active_routine" }
+    let source: { personalPlanId: string; activeRoutineVersionId: string }
+    if (options?.keepsake) {
+      const keepsake = await deps.loadKeepsakeContent?.(userId)
+      if (!keepsake) return { state: "no_active_routine" }
+      source = keepsake
+    } else {
+      const journey = await deps.loadJourneyAccess(userId)
+      if (!canAccessPersonalPlanJourneyStage(journey, "stage5")) {
+        return { state: "feature_disabled" }
+      }
+      if (journey.kind !== "personal_plan" || !journey.activeRoutineVersionId) {
+        return { state: "no_active_routine" }
+      }
+      source = {
+        personalPlanId: journey.personalPlanId,
+        activeRoutineVersionId: journey.activeRoutineVersionId,
+      }
     }
     const client = deps.createReadClient()
     const contractVersion = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
     const content = deps.loadContent(contractVersion)
     const [activeVersion, dayDefinitions, protocols] = await Promise.all([
-      deps.loadRoutineVersion(userId, journey.personalPlanId, journey.activeRoutineVersionId),
+      deps.loadRoutineVersion(userId, source.personalPlanId, source.activeRoutineVersionId),
       content.loadActiveDayTypeDefinitions(),
       content.loadActiveGuidanceProtocols(),
     ])
     if (!activeVersion) return { state: "no_active_routine" }
     failureContext = {
-      planId: journey.personalPlanId,
+      planId: source.personalPlanId,
       routineVersionId: activeVersion.id,
       refinedVersionId: activeVersion.payload.source.refinedVersionId,
     }
@@ -125,7 +159,7 @@ export async function resolveAnwendungPage(
       deps.loadProfile({
         client,
         userId,
-        planId: journey.personalPlanId,
+        planId: source.personalPlanId,
         refinedVersionId: activeVersion.payload.source.refinedVersionId,
       }),
     ])
@@ -229,11 +263,15 @@ const defaultDeps: AnwendungResolverDeps = {
   appEnabled: isPersonalPlanAppV1Enabled,
   stage4Enabled: isPersonalPlanStage4Enabled,
   reportFailure: capturePersonalPlanApplicationFailure,
+  loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
 }
 
-async function resolveDefaultAnwendungPage(selectedDayType?: ApplicationDayTypeKey) {
+async function resolveDefaultAnwendungPage(
+  selectedDayType?: ApplicationDayTypeKey,
+  options?: { keepsake?: boolean },
+) {
   const startedAt = performance.now()
-  const view = await resolveAnwendungPage(defaultDeps, selectedDayType)
+  const view = await resolveAnwendungPage(defaultDeps, selectedDayType, options)
   const durationMs = performance.now() - startedAt
   reportPersonalPlanTransitionTiming({
     layer: "server",
@@ -247,7 +285,46 @@ async function resolveDefaultAnwendungPage(selectedDayType?: ApplicationDayTypeK
 export default async function AnwendungPage({
   selectedDayType,
 }: { selectedDayType?: ApplicationDayTypeKey } = {}) {
-  const { view, durationMs } = await resolveDefaultAnwendungPage(selectedDayType)
+  // T12 (freemium-scanner-first PR3): the free tier gets the framed „Beispiel" Anwendung
+  // instead of its own (stage-gated, empty) one — for the overview and for every
+  // `/anwendung/[dayType]` deep link, which re-renders this same component.
+  //
+  // Pre-boundary fix wave (F2): the tier check and `resolveDefaultAnwendungPage` now start
+  // CONCURRENTLY instead of the tier gating serially ahead of the resolver — the previous
+  // order added one `auth.getUser()` plus a billing/moderator composite in front of every
+  // PREMIUM render, which is the common case. The trade is a resolver read a FREE render
+  // now performs and discards (never a write — `resolveAnwendungPage` is read-only; its
+  // `reportFailure` calls only fire on genuine compile failures, unrelated to the tier) for
+  // zero added latency on the premium path. Semantics are unchanged: a free render still
+  // never reaches `view`, and `resolveGatedPageMode` itself still fails closed to
+  // premium on flag-off or an entitlement-source outage.
+  //
+  // T17 widens that one branch from two states to three: `"example"` is the never-paid
+  // free tier (unchanged), `"keepsake"` is a LAPSED owner reading their OWN Anwendung
+  // (same page, same compiler — sourced from their accepted Routine instead of live
+  // journey entitlement; the page itself has no mutations to lock), and `"premium"` falls
+  // straight through to today's page.
+  const [pageMode, { view, durationMs }] = await Promise.all([
+    resolveGatedPageMode(),
+    resolveDefaultAnwendungPage(selectedDayType),
+  ])
+  if (pageMode === "keepsake") {
+    const keepsake = await resolveDefaultAnwendungPage(selectedDayType, { keepsake: true })
+    // A keepsake read that produced nothing renderable falls back to the free tier's own
+    // page rather than showing an owner a "feature disabled" dead end.
+    if (keepsake.view.state !== "feature_disabled" && keepsake.view.state !== "unavailable") {
+      return <RouteAwareApplicationPage view={keepsake.view} />
+    }
+    return <GatedAnwendungExample />
+  }
+  const renderGatedExample = pageMode === "example"
+  // F3: verified with two production builds + a live network capture — the suspected
+  // bundle bloat did not reproduce. `GatedPreview`'s (and therefore `PremiumSheet`'s)
+  // client chunk set is IDENTICAL to `ApplicationPage`'s own (see the matching comment in
+  // `app/chat/page.tsx`), i.e. that code already ships on this route via a chunk shared
+  // for unrelated reasons, so a dynamic import here would move nothing. Kept static.
+  if (renderGatedExample) return <GatedAnwendungExample />
+
   const internalComputeMs =
     process.env.PERSONAL_PLAN_APPLICATION_PERFORMANCE_MARKER_ENABLED === "true"
       ? Math.round(durationMs * 100) / 100

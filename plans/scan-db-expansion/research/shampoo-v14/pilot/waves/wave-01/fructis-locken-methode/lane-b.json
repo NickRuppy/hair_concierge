@@ -1,0 +1,131 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "fructis-locken-methode",
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong: olefin sulfonate at position 2 is reinforced by sodium lauroyl sarcosinate at position 7, with CAPB/betaine buffering and moisture-care routes present but not enough to make the net chassis merely ordinary.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM C14-16 OLEFIN SULFONATE", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic olefin sulfonate"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 5, "factId": "formula.surfactant.05", "observation": "amphoteric buffer"},
+        {"ingredient": "SODIUM LAUROYL SARCOSINATE", "position": 7, "factId": "formula.surfactant.07", "observation": "second anionic route"},
+        {"ingredient": "GLYCERIN", "position": 4, "factId": "formula.humectant.04", "observation": "early humectant counter-signal"}
+      ],
+      "counterSignal": "Glycerin, glycol distearate, shea butter and later cationic polymers buffer feel, so confidence is moderate rather than high.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.same_gtin_delta", "formula.surfactant.02", "formula.surfactant.05", "formula.surfactant.07", "formula.conditioning.06", "formula.conditioning.10"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: early glycerin, glycol distearate, shea butter, sodium hyaluronate and two cationic polymer routes form a broad curl/moisture care system despite the strong cleanser.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERIN", "position": 4, "factId": "formula.humectant.04", "observation": "early humectant"},
+        {"ingredient": "GLYCOL DISTEARATE", "position": 6, "factId": "formula.conditioning.06", "observation": "fatty ester/refatting support"},
+        {"ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER", "position": 10, "factId": "formula.conditioning.10", "observation": "fatty butter/emollient route"},
+        {"ingredient": "POLYQUATERNIUM-7", "position": 21, "factId": "formula.conditioning.21", "observation": "cationic conditioning polymer"}
+      ],
+      "counterSignal": "The formula is silicone-free and strong-cleansing, and the dm same-GTIN delta is preserved rather than merged.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.same_gtin_delta", "formula.humectant.04", "formula.humectant.14", "formula.conditioning.06", "formula.conditioning.10", "formula.conditioning.19", "formula.conditioning.21"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: shea butter, glycol distearate and cationic guar/polyquaternium routes can leave noticeable curl-care residue, while the strong olefin-sulfonate/anionic chassis and no silicone stack argue against high.",
+      "formulaFacts": [
+        {"ingredient": "GLYCOL DISTEARATE", "position": 6, "factId": "formula.conditioning.06", "observation": "fatty ester/refatting support"},
+        {"ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER", "position": 10, "factId": "formula.conditioning.10", "observation": "butter/emollient payload clue"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 19, "factId": "formula.conditioning.19", "observation": "cationic guar deposition polymer"},
+        {"ingredient": "POLYQUATERNIUM-7", "position": 21, "factId": "formula.conditioning.21", "observation": "cationic conditioning polymer"}
+      ],
+      "counterSignal": "Olefin sulfonate and sarcosinate provide strong reset capacity, and no silicone ingredient is present.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "formula.same_gtin_delta", "formula.conditioning.06", "formula.conditioning.10", "formula.conditioning.19", "formula.conditioning.21", "formula.surfactant.02", "formula.surfactant.07"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": ["Exact shea butter and polymer deposition levels cannot be proven from INCI order alone.", "Same-GTIN dm formula tail delta is preserved; it does not remove the main cleanser, butter, humectant or polymer routes.", "PEG-55 Propylene Glycol Oleate is kept as solubilizing/refatting support rather than a standalone persistent payload route."],
+        "whyThisBand": "The formula has a real curl-care residue route from butter/fatty ester plus two cationic polymers.",
+        "whyNotNeighborBand": "Not high because the reset system is strong and the persistent routes are either mid/late or silicone-free rather than a dense early coating stack."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "General: the dominant positioning is curl-method moisture, but curl and moisture are not v1.4 focus values; the formula strongly supports moisture/curl care without fitting a more specific v1.4 focus cleanly.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERIN", "position": 4, "factId": "formula.humectant.04", "observation": "early humectant supporting moisture positioning"},
+        {"ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER", "position": 10, "factId": "formula.conditioning.10", "observation": "emollient curl-care route"},
+        {"ingredient": "SODIUM HYALURONATE", "position": 14, "factId": "formula.humectant.14", "observation": "film-forming humectant clue"}
+      ],
+      "counterSignal": "Strong cleansing architecture could tempt a clarifying call, but the exact positioning is moisture/curl rather than reset.",
+      "neighboringAlternative": "clarifying",
+      "evidenceRefs": ["claims.manufacturer", "formula.canonical_inci", "formula.same_gtin_delta", "formula.humectant.04", "formula.humectant.14", "formula.conditioning.10"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: there is no distinct v1.4 secondary focus with its own independent claim route; sulfate-free, silicone-free and curl-method language all support the same moisture/curl positioning.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM HYALURONATE", "position": 14, "factId": "formula.humectant.14", "observation": "moisture route not available as v1.4 secondary"},
+        {"ingredient": "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER", "position": 10, "factId": "formula.conditioning.10", "observation": "curl-care support, not separate repair claim"}
+      ],
+      "counterSignal": "The formula has a strong cleanser, but no separate clarifying/reset claim is present.",
+      "neighboringAlternative": ["clarifying"],
+      "evidenceRefs": ["claims.manufacturer", "formula.canonical_inci"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: the packet gives ordinary wet-scalp application and rinse-out directions, with no treatment, daily/frequent, alternating or explicit reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM C14-16 OLEFIN SULFONATE", "position": 2, "factId": "formula.surfactant.02", "observation": "strong cleanser but not by itself a v1.4 alternating trigger"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 5, "factId": "formula.surfactant.05", "observation": "ordinary shampoo buffer"}
+      ],
+      "counterSignal": "Strong cleansing is recorded in cleansingStrength, but v1.4 requires reset/clarifying/oily-root intent for alternating use.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": ["directions.manufacturer", "claims.manufacturer", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: directions mention applying to the scalp because it is a shampoo, but the product positioning is curly hair moisture rather than sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERIN", "position": 4, "factId": "formula.humectant.04", "observation": "humectant clue without scalp-comfort positioning"},
+        {"ingredient": "PARFUM / FRAGRANCE", "position": 8, "factId": "formula.fragrance.08", "observation": "fragrance exposure before several functional materials"},
+        {"ingredient": "SALICYLIC ACID", "position": 23, "factId": "formula.canonical_inci", "observation": "acid clue without anti-dandruff active status"}
+      ],
+      "counterSignal": "Moisture ingredients exist, but v1.4 does not treat general hydration/curl care as targeted scalp comfort.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claims.manufacturer", "directions.manufacturer", "formula.canonical_inci", "formula.fragrance.08"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is not a v1.4 dandruff active.",
+      "formulaFacts": [
+        {"ingredient": "SALICYLIC ACID", "position": 23, "factId": "formula.canonical_inci", "observation": "acid clue, not a recognized v1.4 dandruff active"},
+        {"ingredient": "SODIUM HYALURONATE", "position": 14, "factId": "formula.humectant.14", "observation": "moisture clue, not a dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.same_gtin_delta"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/fructis-locken-methode/source-packet.json",
+    "sourcePacketSha256": "8cbabab434d4ab4d9a66360d68c70251ced84b1c90e11a080c54a6cd107376b8",
+    "formulaFingerprint": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T15:46:55+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

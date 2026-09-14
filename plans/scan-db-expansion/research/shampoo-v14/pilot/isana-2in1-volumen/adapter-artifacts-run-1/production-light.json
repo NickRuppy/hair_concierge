@@ -1,0 +1,154 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "fine"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning",
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04"
+        ],
+        "rationale": "The exact product is positioned for fine-hair volume and 2-in-1 care, not a named scalp concern; the ordinary balanced route is supported."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.11"
+        ],
+        "rationale": "Moderate: SLES leads the formula, but CAPB, coco-glucoside and 2-in-1 care routes buffer the net cleansing below strong. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:isana-2in1-volumen:conditioningLevel",
+          "adjudication:isana-2in1-volumen:weightPotential",
+          "adjudication:isana-2in1-volumen:focusPrimary",
+          "adjudication:isana-2in1-volumen:conditioningLevel",
+          "adjudication:isana-2in1-volumen:weightPotential",
+          "adjudication:isana-2in1-volumen:focusPrimary",
+          "adjudication:isana-2in1-volumen:conditioningLevel",
+          "adjudication:isana-2in1-volumen:weightPotential",
+          "adjudication:isana-2in1-volumen:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — Exact fine-hair volume positioning and no silicone stack support fine hair; moderate weight keeps the high-conditioning 2-in-1 architecture from becoming an automatic exclusion. Conditional (not emitted): normal — The 2-in-1 can suit normal hair needing care, but high conditioning makes it less clearly volume-preserving as a diameter-level default. coarse — High rinse-off conditioning is useful, but the volume/fine-hair positioning and lack of a richer coarse-hair care system make this situational."
+      },
+      "required_protocol_roles": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.04",
+          "formula.surfactant.11"
+        ],
+        "rationale": "Moderate: SLES leads the formula, but CAPB, coco-glucoside and 2-in-1 care routes buffer the net cleansing below strong."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning",
+          "formula.conditioning.07",
+          "formula.conditioning.09",
+          "formula.conditioning.12",
+          "formula.conditioning.13"
+        ],
+        "rationale": "High: explicit 2-in-1 positioning is backed by protein, panthenol, glyceryl oleate, cationic guar and lipid/fatty ester routes, making substantial rinse-off care likely."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "claim-rossmann-de-positioning"
+        ],
+        "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Volume: the exact German product name and claims target lifeless/fine hair volume, and the silicone-free formula keeps that role compatible despite 2-in-1 care."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning"
+        ],
+        "rationale": "Empty: 2-in-1 care is not a distinct v1.4 focus value, and there is no separate gentle, shine, repair, clarifying or scalp-active claim with an independent route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Not targeted: dermatological/pH-neutral wording is present, but the product is positioned for volume and 2-in-1 care rather than sensitive, itchy or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "directions-rossmann-de",
+          "directions-rossmann-hu",
+          "claim-rossmann-de-positioning"
+        ],
+        "rationale": "Regular: directions are ordinary rinse-out use and no explicit daily, treatment, alternating, clarifying or reset trigger appears."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claim-rossmann-de-positioning",
+          "claim-rossmann-hu-positioning",
+          "formula.conditioning.07",
+          "formula.conditioning.12",
+          "formula.conditioning.13",
+          "formula.conditioning.16"
+        ],
+        "rationale": "Moderate: 2-in-1 care routes can leave bounded residue, but silicone-free volume positioning and SLES/CAPB cleansing argue against high weight."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "normal",
+      "coarse"
+    ],
+    "productId": "isana-2in1-volumen",
+    "productName": "Shampoo & Spülung 2in1 Volumen",
+    "rows": 1
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

@@ -160,6 +160,15 @@ test("partner invitation status is derived from current revocation and grant sta
       activatedAt: null,
       grantActive: false,
     }),
+    "revoked",
+  )
+  assert.equal(
+    derivePartnerInvitationStatus({
+      claimedAt: "now",
+      revokedAt: null,
+      activatedAt: null,
+      grantActive: true,
+    }),
     "claimed",
   )
 })
@@ -200,7 +209,7 @@ test("admin list distinguishes a claimed account from an untouched invitation", 
         claimed_at: "2026-09-01T12:00:00.000Z",
         activated_at: null,
         revoked_at: null,
-        grant_active: false,
+        grant_active: true,
       },
     ],
   })

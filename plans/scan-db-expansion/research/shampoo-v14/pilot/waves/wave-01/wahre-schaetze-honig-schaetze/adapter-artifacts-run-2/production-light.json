@@ -1,0 +1,168 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "fine"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "adjudication:wahre-schaetze-honig-schaetze:cleansingStrength",
+          "adjudication:wahre-schaetze-honig-schaetze:scalpComfortTarget"
+        ],
+        "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.14",
+          "formula.surfactant.15",
+          "formula.surfactant.19",
+          "formula.conditioning.09"
+        ],
+        "rationale": "Strong: Sodium Lauryl Sulfate is the position-2 primary cleanser and is supported by CAPB plus later betaine, glucoside and glucamide routes. Refatting ingredients buffer feel but do not make the net chassis merely ordinary. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:wahre-schaetze-honig-schaetze:conditioningLevel",
+          "adjudication:wahre-schaetze-honig-schaetze:weightPotential",
+          "adjudication:wahre-schaetze-honig-schaetze:focusPrimary",
+          "adjudication:wahre-schaetze-honig-schaetze:conditioningLevel",
+          "adjudication:wahre-schaetze-honig-schaetze:weightPotential",
+          "adjudication:wahre-schaetze-honig-schaetze:focusPrimary",
+          "adjudication:wahre-schaetze-honig-schaetze:conditioningLevel",
+          "adjudication:wahre-schaetze-honig-schaetze:weightPotential",
+          "adjudication:wahre-schaetze-honig-schaetze:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — Strong cleansing with only moderate weight makes fine hair usable when damage care is desired, though repeated use may feel drying on already dry lengths. normal — Moderate conditioning and moderate weight balance the strong SLS-led cleanser for normal hair. Conditional (not emitted): coarse — Coarse or very dry hair may need more conditioning than this no-silicone, SLS-led repair shampoo provides."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.14",
+          "formula.surfactant.15",
+          "formula.surfactant.19",
+          "formula.conditioning.09"
+        ],
+        "rationale": "Strong: Sodium Lauryl Sulfate is the position-2 primary cleanser and is supported by CAPB plus later betaine, glucoside and glucamide routes. Refatting ingredients buffer feel but do not make the net chassis merely ordinary."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "claims.beeswax_mismatch",
+          "formula.humectant.05",
+          "formula.humectant.08",
+          "formula.conditioning.09",
+          "formula.conditioning.17"
+        ],
+        "rationale": "Moderate: honey materials, glycerin, glyceryl oleate, glycol distearate, lecithin and cationic guar provide several rinse-off softness routes, but there is no silicone stack, protein system or rich 2-in-1 architecture."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.dm_de_matching_inci"
+        ],
+        "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claims.beeswax_mismatch",
+          "formula.canonical_inci",
+          "formula.humectant.05",
+          "formula.humectant.06",
+          "formula.conditioning.09",
+          "formula.conditioning.17"
+        ],
+        "rationale": "Repair: revealed positioning is for stressed, damaged-looking hair, and the formula has compatible honey/humectant plus refatting/cationic care routes. Confidence stays moderate because the beeswax claim is not visible in INCI."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claims.beeswax_mismatch",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: no distinct v1.4 secondary focus is supported; honey/beeswax positioning serves the same damaged-looking hair care story rather than an independent route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claims.beeswax_mismatch",
+          "formula.canonical_inci",
+          "formula.fragrance.26",
+          "formula.fragrance.27"
+        ],
+        "rationale": "Not targeted: the packet is focused on stressed or damaged-looking hair, not sensitive, itchy, dry-feeling or uncomfortable scalp support."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "directions.standard_rinse",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are normal wet-hair massage and rinse-out use and there is no treatment or explicit reset trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "claims.beeswax_mismatch",
+          "formula.conditioning.09",
+          "formula.conditioning.10",
+          "formula.conditioning.12",
+          "formula.conditioning.17",
+          "formula.surfactant.02"
+        ],
+        "rationale": "Moderate: multiple lipid/refatting and cationic guar routes can leave bounded residue, while the SLS-led system and absence of silicone or confirmed beeswax keep the band below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "coarse"
+    ],
+    "productId": "wahre-schaetze-honig-schaetze",
+    "productName": "Shampoo Honig Schätze",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

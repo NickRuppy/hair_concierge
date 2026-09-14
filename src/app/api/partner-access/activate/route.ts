@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
-import { resolveFunnelCookieContext } from "@/lib/funnel/server"
 import { sendPartnerAccountReadyEmailBestEffort } from "@/lib/partner-access/email"
 import { activatePartnerOffer, resolvePartnerOfferAuthorization } from "@/lib/partner-access/offer"
 import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
@@ -13,7 +11,6 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 
 type ActivateDependencies = {
   getUserId: () => Promise<string | null>
-  resolveFunnelSessionId: (cookie: string | undefined) => Promise<string | null>
   authorize: typeof resolvePartnerOfferAuthorization
   activate: typeof activatePartnerOffer
   sendReadyEmail: typeof sendPartnerAccountReadyEmailBestEffort
@@ -26,15 +23,9 @@ export function createPartnerActivateHandler(overrides: Partial<ActivateDependen
       return jsonError("Ungültige Anfrage.", 403)
     const leadId = await readLeadId(request)
     if (!leadId) return jsonError("Ungültige Anfrage.", 400)
-    const [userId, funnelSessionId] = await Promise.all([
-      overrides.getUserId?.() ?? defaultGetUserId(),
-      (overrides.resolveFunnelSessionId ?? defaultResolveFunnelSessionId)(
-        request.cookies.get(FUNNEL_SESSION_COOKIE)?.value,
-      ),
-    ])
+    const userId = await (overrides.getUserId?.() ?? defaultGetUserId())
     const authorization = await (overrides.authorize ?? resolvePartnerOfferAuthorization)({
       userId,
-      funnelSessionId,
       leadId,
     })
     if (!authorization) return jsonError("Dein Zugang ist nicht verfügbar.", 403)
@@ -84,11 +75,6 @@ async function defaultGetUserId() {
     data: { user },
   } = await session.auth.getUser()
   return user?.id ?? null
-}
-
-async function defaultResolveFunnelSessionId(cookie: string | undefined) {
-  const funnel = await resolveFunnelCookieContext(cookie)
-  return funnel?.sessionId ?? null
 }
 
 async function readLeadId(request: Request) {

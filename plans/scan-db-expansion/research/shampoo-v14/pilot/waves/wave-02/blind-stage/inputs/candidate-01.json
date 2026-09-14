@@ -1,0 +1,148 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-01",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "german_retailer_exact_gtin_formula",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA (WATER, EAU)",
+      "SODIUM LAURETH SULFATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "PANTHENOL",
+      "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+      "COCOS NUCIFERA (COCONUT) FRUIT EXTRACT",
+      "SORBITOL",
+      "COCAMIDE MEA",
+      "CITRIC ACID",
+      "GLYCOL DISTEARATE",
+      "AMODIMETHICONE",
+      "DIMETHICONE",
+      "PARFUM (FRAGRANCE)",
+      "PEG-7 GLYCERYL COCOATE",
+      "PEG-40 HYDROGENATED CASTOR OIL",
+      "LAURETH-4",
+      "LAURETH-23",
+      "PROPYLENE GLYCOL",
+      "HYDROGENATED CASTOR OIL",
+      "TRIDECETH-10",
+      "SODIUM HYDROXIDE",
+      "HEXYL CINNAMAL",
+      "SODIUM BENZOATE",
+      "PHENOXYETHANOL",
+      "SODIUM SALICYLATE",
+      "CI 16255",
+      "CI 47005"
+    ],
+    "normalized_inci_string": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, COCOS NUCIFERA (COCONUT) FRUIT EXTRACT, SORBITOL, COCAMIDE MEA, CITRIC ACID, GLYCOL DISTEARATE, AMODIMETHICONE, DIMETHICONE, PARFUM (FRAGRANCE), PEG-7 GLYCERYL COCOATE, PEG-40 HYDROGENATED CASTOR OIL, LAURETH-4, LAURETH-23, PROPYLENE GLYCOL, HYDROGENATED CASTOR OIL, TRIDECETH-10, SODIUM HYDROXIDE, HEXYL CINNAMAL, SODIUM BENZOATE, PHENOXYETHANOL, SODIUM SALICYLATE, CI 16255, CI 47005",
+    "formula_fingerprint_sha256": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 4,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.04"
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 5,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.05"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 13,
+        "route": "amine-functional silicone conditioning route",
+        "fact_id": "formula.conditioning.13"
+      },
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 14,
+        "route": "silicone film-forming route",
+        "fact_id": "formula.conditioning.14"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate is at position 2 and amphoteric betaine at position 4."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Cationic polymer, panthenol, plant oil/extract and silicone routes occur before or through the fragrance region."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion facts are recorded separately and excluded from independent cleansing-route count."
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "PANTHENOL",
+        "position": 6,
+        "clue": "humectant care clue"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 13,
+        "clue": "silicone film route"
+      },
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 14,
+        "clue": "silicone film route"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "PARFUM (FRAGRANCE)",
+        "position": 15,
+        "flag": "fragrance mixture"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.corroborating_inci"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "LAURETH-4",
+        "position": 18,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.18",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-10",
+        "position": 22,
+        "function": "silicone_emulsifier_helper",
+        "fact_id": "formula.function.22",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      }
+    ]
+  }
+}

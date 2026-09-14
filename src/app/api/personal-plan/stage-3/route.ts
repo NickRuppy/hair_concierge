@@ -479,6 +479,32 @@ export function createStage3RouteHandlers(deps: Stage3RouteDeps) {
         })
       }
     },
+    async POST(request: Request) {
+      const started = Date.now()
+      const auth = await authorize()
+      if ("response" in auth) return auth.response
+      const parsed = authorityIntentBatchSchema.safeParse(await request.json().catch(() => null))
+      if (!parsed.success) return response({ error: "invalid_request" }, 400)
+      try {
+        const gateway = deps.gatewayFor(auth.userId)
+        const result = await requireAuthorityPreviewGateway(gateway).previewDecisionBundles(
+          parsed.data,
+        )
+        if (result.status === "conflict") {
+          log("conflict", started, "revision_conflict", auth.phases)
+          return response({ error: "revision_conflict", latestDraft: result.latestDraft }, 409)
+        }
+        log("preview", started, "authority_projection", auth.phases)
+        return response(result, 200)
+      } catch (error) {
+        if (error instanceof Stage3AuthorityMutationError)
+          return response({ error: "invalid_request" }, 400)
+        if (error instanceof Stage3AuthoritySnapshotError)
+          return response({ error: error.code }, 409)
+        log("unavailable", started, "temporarily_unavailable", auth.phases)
+        return response({ error: "temporarily_unavailable" }, 503)
+      }
+    },
   }
 }
 
@@ -494,6 +520,13 @@ function requireAuthorityBatchGateway(
 ): Pick<Stage3AuthorityProductionGateway, "resolveDecisions"> {
   if (!gateway.resolveDecisions) throw new Error("stage3_authority_gateway_unavailable")
   return { resolveDecisions: gateway.resolveDecisions.bind(gateway) }
+}
+
+function requireAuthorityPreviewGateway(
+  gateway: Stage3RouteGateway,
+): Pick<Stage3AuthorityProductionGateway, "previewDecisionBundles"> {
+  if (!gateway.previewDecisionBundles) throw new Error("stage3_authority_gateway_unavailable")
+  return { previewDecisionBundles: gateway.previewDecisionBundles.bind(gateway) }
 }
 
 function requireNeedRevisionGateway(
@@ -526,7 +559,7 @@ type Stage3RouteGateway = Stage3ProductsGateway &
   Partial<
     Pick<
       Stage3AuthorityProductionGateway,
-      "evaluateDecisions" | "resolveDecision" | "resolveDecisions"
+      "evaluateDecisions" | "resolveDecision" | "resolveDecisions" | "previewDecisionBundles"
     >
   >
 

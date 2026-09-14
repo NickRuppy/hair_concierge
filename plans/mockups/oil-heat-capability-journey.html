@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Oil + Hitzeschutz — Planungs-Mockup</title>
+    <style>
+      :root { color-scheme: light; --ink:#241f2a; --muted:#6f6876; --purple:#7657a2; --purple-soft:#f3eef9; --green:#24634d; --green-soft:#eaf6f0; --line:#e8e1eb; --paper:#fffdfb; --canvas:#f7f3f1; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--canvas); }
+      main { max-width:1180px; margin:0 auto; padding:40px 24px 56px; }
+      h1 { margin:0 0 8px; font-family:Georgia,serif; font-size:30px; font-weight:500; }
+      .intro { margin:0 0 28px; color:var(--muted); line-height:1.5; }
+      .screens { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+      .screen { min-height:650px; overflow:hidden; border:1px solid #ded5e2; border-radius:28px; background:var(--paper); box-shadow:0 16px 42px rgba(54,40,62,.10); }
+      .topbar { padding:18px 20px 14px; border-bottom:1px solid var(--line); }
+      .eyebrow { color:var(--purple); font-size:12px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; }
+      .topbar h2 { margin:6px 0 3px; font-family:Georgia,serif; font-size:24px; font-weight:500; }
+      .topbar p { margin:0; color:var(--muted); font-size:13px; }
+      .content { padding:20px; }
+      .card { border:1px solid var(--line); border-radius:18px; padding:17px; background:#fff; }
+      .product { display:flex; gap:13px; align-items:center; }
+      .bottle { width:54px; height:76px; flex:0 0 auto; border-radius:16px 16px 12px 12px; display:grid; place-items:center; color:#fff; font-weight:800; background:linear-gradient(155deg,#ed8b49,#b94d36); }
+      .brand { color:var(--muted); font-size:12px; }
+      .name { margin-top:2px; font-weight:760; line-height:1.25; }
+      .chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+      .chip { border-radius:999px; padding:6px 9px; background:var(--purple-soft); color:#5c3d82; font-size:12px; font-weight:700; }
+      .chip.green { background:var(--green-soft); color:var(--green); }
+      .fit-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+      .fit-head .chip { margin-top:0; }
+      .properties { margin-top:16px; border-top:1px solid var(--line); }
+      .property { display:grid; grid-template-columns:1fr auto; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); font-size:13px; }
+      .property span { color:var(--muted); }
+      .property strong { text-align:right; font-size:13px; }
+      .quiet-detail { margin:12px 0 0; color:var(--muted); font-size:12px; line-height:1.45; }
+      .button { margin-top:18px; padding:13px 16px; border-radius:13px; text-align:center; color:#fff; background:var(--purple); font-weight:760; }
+      .section-label { margin:22px 0 9px; color:var(--muted); font-size:12px; font-weight:750; text-transform:uppercase; letter-spacing:.06em; }
+      .routine-row { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+      .routine-row h3 { margin:0 0 5px; font-size:16px; }
+      .routine-row p { margin:0; color:var(--muted); font-size:13px; }
+      .availability { margin-top:12px; color:#a26220; font-size:12px; font-weight:700; }
+      .routine-properties { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:14px; }
+      .routine-property { min-height:63px; padding:11px; border-radius:12px; background:#f8f5f8; }
+      .routine-property span { display:block; margin-bottom:4px; color:var(--muted); font-size:11px; }
+      .routine-property strong { font-size:12px; line-height:1.35; }
+      .details { margin-top:13px; padding-top:12px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; font-weight:700; }
+      .details p { margin:8px 0 0; color:var(--muted); font-weight:500; line-height:1.45; }
+      .step { display:grid; grid-template-columns:27px 1fr; gap:10px; margin-top:15px; line-height:1.45; font-size:14px; }
+      .number { width:27px; height:27px; border-radius:50%; display:grid; place-items:center; background:var(--purple-soft); color:var(--purple); font-weight:800; }
+      .fallback { margin-top:26px; padding:18px; border:1px dashed #b9acbf; border-radius:18px; background:rgba(255,255,255,.65); }
+      .fallback strong { display:block; margin-bottom:5px; }
+      .fallback p { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
+      @media (max-width:900px) { main { padding:24px 14px 40px; } .screens { grid-template-columns:1fr; } .screen { min-height:auto; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Ein Produkt, zwei Aufgaben — ohne vierte Öl-Rolle</h1>
+      <p class="intro">Planungsansicht für die konsistente Darstellung in Produktauswahl, Routine und Anwendung.</p>
+      <section class="screens">
+        <article class="screen">
+          <header class="topbar"><div class="eyebrow">Stage 3 · Produktauswahl</div><h2>Dieses Produkt passt</h2><p>Die Einordnung nutzt dieselben Eigenschaften wie bisher.</p></header>
+          <div class="content">
+            <div class="card">
+              <div class="fit-head"><div class="product"><div class="bottle">G</div><div><div class="brand">Garnier Fructis</div><div class="name">Sleek &amp; Stay Öl</div></div></div><span class="chip">✓ Passt</span></div>
+              <div class="section-label">Eigenschaft für Eigenschaft</div>
+              <div class="properties">
+                <div class="property"><span>Anwendung</span><strong>Pflege ohne Ausspülen</strong></div>
+                <div class="property"><span>Hitzeschutz</span><strong>Ja</strong></div>
+                <div class="property"><span>Formelgewicht</span><strong>Leicht</strong></div>
+              </div>
+              <p class="quiet-detail">Der bestätigte Hitzeschutz wird zusammen mit der Leave-on-Anwendung berücksichtigt.</p>
+              <div class="button">Dieses Produkt einplanen</div>
+            </div>
+            <div class="fallback"><strong>Wenn eine Voraussetzung fehlt</strong><p>Nur Pre-Wash oder Finish, Hitzeschutz nicht bestätigt oder Protokoll unvollständig: Der Hitzeschutz bleibt offen und wird separat empfohlen.</p></div>
+          </div>
+        </article>
+        <article class="screen">
+          <header class="topbar"><div class="eyebrow">Stage 4 · Routine</div><h2>Deine Routine</h2><p>Das Produkt bleibt in seiner normalen Leave-on-Position.</p></header>
+          <div class="content">
+            <div class="section-label">Nach der Haarwäsche</div>
+            <div class="card">
+              <div class="routine-row"><div><h3>Garnier Fructis Sleek &amp; Stay Öl</h3><p>Pflege ohne Ausspülen</p></div><span class="chip">✓ Passt</span></div>
+              <div class="availability">Noch kaufen</div>
+              <div class="routine-properties">
+                <div class="routine-property"><span>Rhythmus</span><strong>Nach jeder Haarwäsche</strong></div>
+                <div class="routine-property"><span>Wann</span><strong>Nach der Haarwäsche</strong></div>
+              </div>
+              <div class="details">Nach jeder Haarwäsche · Nach der Haarwäsche · Hitzeschutz: bestätigt · Noch kaufen</div>
+            </div>
+            <div class="fallback"><strong>Was bewusst nicht erscheint</strong><p>Kein zweiter Öl-Eintrag und keine künstliche Rolle „Pre-Heat“. Das Produkt bleibt seiner echten Anwendung zugeordnet.</p></div>
+          </div>
+        </article>
+        <article class="screen">
+          <header class="topbar"><div class="eyebrow">Stage 5 · Anwendung</div><h2>Bestätigter Hitzebedarf</h2><p>Die Anleitung verbindet Pflege und die folgende Hitzeanwendung.</p></header>
+          <div class="content">
+            <div class="card">
+              <div class="brand">Garnier Fructis</div><div class="name">Sleek &amp; Stay Öl</div>
+              <div class="step"><div class="number">1</div><div>Eine kleine Menge in die feuchten Längen und Spitzen geben.</div></div>
+              <div class="step"><div class="number">2</div><div>Gleichmäßig verteilen und nicht ausspülen. Vor dem anschließenden Föhnen oder Glätten im Haar lassen — der bestätigte Hitzeschutz ist damit aufgetragen.</div></div>
+            </div>
+            <div class="fallback"><strong>Profil ohne Hitzenutzung</strong><p>Die gleichen Leave-on-Schritte bleiben sichtbar. Der Hitzeschutz-Hinweis entfällt, weil kein Hitzebedarf bestätigt ist.</p></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

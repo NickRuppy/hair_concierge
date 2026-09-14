@@ -282,7 +282,8 @@ export function derivePartnerInvitationStatus(input: {
   activatedAt: string | null
   grantActive: boolean
 }): PartnerInvitationStatus {
-  if (input.revokedAt || (input.activatedAt && !input.grantActive)) return "revoked"
+  if (input.revokedAt || ((input.claimedAt || input.activatedAt) && !input.grantActive))
+    return "revoked"
   if (input.activatedAt && input.grantActive) return "active"
   return input.claimedAt ? "claimed" : "invited"
 }

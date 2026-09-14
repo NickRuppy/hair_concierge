@@ -1,0 +1,199 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "gliss-sealing-miracle",
+    "market": "DE",
+    "exactProductName": "Sealing Miracle Versiegelndes Shampoo",
+    "exactPackSize": "200 ml",
+    "gtinAliases": [
+      "4015100895025"
+    ],
+    "capturedAt": "2026-09-03T16:20:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "resolved",
+    "sources": [
+      {
+        "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-09-03T16:20:00+02:00"
+      },
+      {
+        "url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C7N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_back-DE?hei=3004&fmt=png-alpha&qlt=100",
+        "tier": "exact_de_pack",
+        "capturedAt": "2026-09-03T16:20:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, PISUM SATIVUM (PEA) PEPTIDE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PARFUM (FRAGRANCE), SODIUM BENZOATE, COCO-GLUCOSIDE, GLYCERYL OLEATE, CITRIC ACID, PEG-7 GLYCERYL COCOATE, GLYCOL DISTEARATE, LAURETH-4, HYDROGENATED CASTOR OIL, PEG-120 METHYL GLUCOSE DIOLEATE, SODIUM HYDROXIDE, BENZYL ALCOHOL, PROPYLENE GLYCOL, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE",
+    "inciFingerprintSha256": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23",
+    "canonicalSource": "exact_de_pack",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:b394eca723c385252218d6bc8332ddd4b1e52d046318b24432f51f5ab7c5acd7"
+    ],
+    "sources": [
+      {
+        "url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C7N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_back-DE?hei=3004&fmt=png-alpha&qlt=100",
+        "tier": "exact_de_pack",
+        "capturedAt": "2026-09-03T16:20:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 gives effective ordinary cleansing, but CAPB, later coco-glucoside and early peptide/cationic-care signals prevent a strong-reset classification.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.conditioning.05"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: pea peptide at position 5, cationic guar at position 6 and several lipid/refatting/waxy routes create a substantial rinse-off care system for split-end/damage positioning.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.conditioning.15"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early cationic guar plus peptide, glyceryl oleate and hydrogenated castor oil can leave residue, but SLES/CAPB cleansing, no silicone and no-weight positioning keep this below high.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.conditioning.15",
+        "claim:rossmann-sealing-positioning"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: revealed claims center on split-end and damaged-hair sealing, and the formula has a compatible early peptide, cationic polymer and refatting care architecture.",
+      "evidenceRefs": [
+        "claim:gliss-manufacturer-sealing-positioning",
+        "claim:rossmann-sealing-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: split-end sealing and damaged-hair claims are one repair story, with no distinct secondary volume, shine, clarifying or scalp-active route.",
+      "evidenceRefs": [
+        "claim:gliss-manufacturer-sealing-positioning",
+        "claim:rossmann-sealing-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution and rinse-out use; regular application wording confirms ordinary recurring use rather than treatment or reset usage.",
+      "evidenceRefs": [
+        "usage:gliss-back-pack-directions",
+        "usage:rossmann-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for hair-fiber damage and split-end sealing, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:gliss-manufacturer-sealing-positioning",
+        "claim:rossmann-sealing-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "High conditioning plus peptide/cationic/refatting routes can reduce lift on fine hair, even without silicone.",
+      "evidenceRefs": [
+        "adjudication:gliss-sealing-miracle:conditioningLevel",
+        "adjudication:gliss-sealing-miracle:weightPotential",
+        "adjudication:gliss-sealing-miracle:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Moderate cleansing, high repair conditioning and moderate weight fit normal split-end-prone hair.",
+      "evidenceRefs": [
+        "adjudication:gliss-sealing-miracle:conditioningLevel",
+        "adjudication:gliss-sealing-miracle:weightPotential",
+        "adjudication:gliss-sealing-miracle:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Coarse hair benefits from the high care system while the moderate weight remains acceptable.",
+      "evidenceRefs": [
+        "adjudication:gliss-sealing-miracle:conditioningLevel",
+        "adjudication:gliss-sealing-miracle:weightPotential",
+        "adjudication:gliss-sealing-miracle:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+      "positioningEvidenceRefs": [
+        "formula.canonical_inci"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:gliss-sealing-miracle:cleansingStrength",
+        "adjudication:gliss-sealing-miracle:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "usage:gliss-back-pack-directions",
+      "usage:rossmann-directions",
+      "formula.canonical_inci"
+    ]
+  }
+}

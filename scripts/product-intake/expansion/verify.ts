@@ -1,10 +1,12 @@
 import { readFile } from "node:fs/promises"
+import { resolve } from "node:path"
+import { fileURLToPath } from "node:url"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { loadScanProductFacts } from "@/lib/personal-plan/products/authority/catalog-facts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import { evaluateScanCatalogReadiness } from "@/lib/scan/catalog-readiness"
+import { evaluateScanCatalogReadiness } from "@/lib/product-intake/scan-catalog-readiness"
 import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 
 import { createSupabaseClientFromEnv, flag, parseArgs } from "../cli"
@@ -81,8 +83,11 @@ async function main() {
     (identifiers ?? [])
       .filter(
         (row) =>
-          ["ean", "gtin", "barcode"].includes(String((row as Record<string, unknown>).identifier_type)) &&
-          canonicalizeGtin(String((row as Record<string, unknown>).identifier_value ?? "")) !== null,
+          ["ean", "gtin", "barcode"].includes(
+            String((row as Record<string, unknown>).identifier_type),
+          ) &&
+          canonicalizeGtin(String((row as Record<string, unknown>).identifier_value ?? "")) !==
+            null,
       )
       .map((row) => String((row as Record<string, unknown>).product_id)),
   )
@@ -135,7 +140,9 @@ async function main() {
   if (ready !== productIds.length) process.exitCode = 1
 }
 
-void main().catch((error) => {
-  process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
-  process.exitCode = 1
-})
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  void main().catch((error) => {
+    process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
+    process.exitCode = 1
+  })
+}

@@ -1,0 +1,278 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "productId": "gliss-sealing-miracle",
+  "candidateSlot": "wave01-candidate-05",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate is supported by a SLES primary cleanser buffered by betaine and a later glucoside, with early peptide, cationic polymer and refatting routes; there is no second independent anionic reset route.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04"
+        },
+        {
+          "ingredient": "COCO-GLUCOSIDE",
+          "position": 9,
+          "factId": "formula.surfactant.09"
+        }
+      ],
+      "counterSignal": "The position-2 sulfate keeps low off the table, but peptide/polymer/refatting clues keep strong from being the best band.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.surfactant.09",
+        "formula.architecture.01",
+        "formula.architecture.04"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High conditioning is plausible because peptide, cationic guar and multiple lipid-like/refatting routes occur early enough to matter; confidence stays moderate because there is no silicone and the formula is still sulfate-led.",
+      "formulaFacts": [
+        {
+          "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+          "position": 5,
+          "factId": "formula.conditioning.05"
+        },
+        {
+          "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "PEG-7 GLYCERYL COCOATE",
+          "position": 12,
+          "factId": "formula.conditioning.12"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 15,
+          "factId": "formula.conditioning.15"
+        }
+      ],
+      "counterSignal": "No silicone route appears and SLES remains the primary cleanser, so high is plausible but not locked with high confidence.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.conditioning.12",
+        "formula.conditioning.15",
+        "formula.architecture.04"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential fits early cationic guar plus peptide and several lipid-like/waxy routes, while the sulfate cleanser and absence of silicone argue against high.",
+      "formulaFacts": [
+        {
+          "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+          "position": 5,
+          "factId": "formula.conditioning.05"
+        },
+        {
+          "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 15,
+          "factId": "formula.conditioning.15"
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        }
+      ],
+      "counterSignal": "SLES gives moderate reset capacity and there is no nonvolatile silicone or heavy butter/oil route.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.conditioning.15",
+        "formula.surfactant.02"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "PEG-120 Methyl Glucose Dioleate is preserved as thickener/emulsifier and not counted as substantive conditioning."
+        ],
+        "whyThisBand": "Peptide, cationic guar and lipid-like routes can plausibly leave a bounded residue signal.",
+        "whyNotNeighborBand": "High would overread no-silicone rinse-off deposition; low would ignore the early cationic/polymer and refatting convergence."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair is the strongest formula-first direction because peptide at position 5 and cationic guar at position 6 form a coherent damage-care-compatible route, supported by refatting/lipid-like materials.",
+      "formulaFacts": [
+        {
+          "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+          "position": 5,
+          "factId": "formula.conditioning.05"
+        },
+        {
+          "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 6,
+          "factId": "formula.conditioning.06"
+        },
+        {
+          "ingredient": "GLYCERYL OLEATE",
+          "position": 10,
+          "factId": "formula.conditioning.10"
+        }
+      ],
+      "counterSignal": "Without claims, this could still resolve to shine or general because the same smoothing/refatting route can serve multiple care stories.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.10",
+        "formula.architecture.04"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because shine/smoothing would reuse the same peptide, polymer and refatting route as the provisional repair focus.",
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-7 GLYCERYL COCOATE",
+          "position": 12,
+          "factId": "formula.conditioning.12"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 15,
+          "factId": "formula.conditioning.15"
+        }
+      ],
+      "counterSignal": "Visible positioning could later separate shine as a secondary, but blind evidence alone would be route duplication.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "formula.conditioning.12",
+        "formula.conditioning.15",
+        "formula.architecture.04"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular is the blind default because the formula has ordinary sulfate cleansing with no recognized treatment active and no explicit reset architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4,
+          "factId": "formula.surfactant.04"
+        },
+        {
+          "ingredient": "COCO-GLUCOSIDE",
+          "position": 9,
+          "factId": "formula.surfactant.09"
+        }
+      ],
+      "counterSignal": "The formula is not low cleansing, but strong cleansing alone is not enough to leave regular.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.surfactant.09"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted is supported because no scalp-active or sensitive-scalp route appears, while fragrance at position 7 and SLES at position 2 are comfort counter-signals.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "PARFUM (FRAGRANCE)",
+          "position": 7,
+          "factId": "formula.fragrance.07"
+        },
+        {
+          "ingredient": "BENZYL ALCOHOL",
+          "position": 18,
+          "factId": "formula.fragrance.18"
+        }
+      ],
+      "counterSignal": "Propylene Glycol is humectant-adjacent, but it appears late and does not establish scalp-comfort intent.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.fragrance.07",
+        "formula.fragrance.18",
+        "formula.conditioning.05"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "AQUA (WATER, EAU)",
+          "position": 1,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "No ingredient in the complete INCI is a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "b394eca723c385252218d6bc8332ddd4b1e52d046318b24432f51f5ab7c5acd7",
+    "formulaFingerprintSha256": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T17:05:00Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false,
+    "sourcePacketSha256": "b394eca723c385252218d6bc8332ddd4b1e52d046318b24432f51f5ab7c5acd7",
+    "blindResultSha256": "1c7cfe6c86aaf1ae05fffbc344de68ec362281096cc259584d209eb8214e0347",
+    "mappedAfterBlindFreeze": false,
+    "mappedAt": null
+  }
+}

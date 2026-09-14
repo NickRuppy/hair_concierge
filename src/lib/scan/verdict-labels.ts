@@ -67,12 +67,27 @@ export const SCAN_DEFERRED_HEADLINE = "Das klären wir noch"
  * it above the category cards — tapping a card submits immediately (no step 2).
  */
 export const SCAN_UNKNOWN_HEADLINE = "Danke dir – das ist neu für uns!"
+/**
+ * The bridge between the viewfinder and this sheet (plan 2026-09-05): the pill said the
+ * barcode was read, and the very next screen says the product is new. Without this line
+ * the two read as a contradiction — with it, "gelesen" and "fehlt noch" are one story.
+ */
+export const SCAN_UNKNOWN_BRIDGE = "Barcode gelesen – das Produkt fehlt noch in unserer Datenbank."
 export const SCAN_UNKNOWN_SUBLINE = "Wir nehmen es auf. Dein Ergebnis kommt in den Chat."
 export const SCAN_UNKNOWN_QUESTION = "Wobei benutzt du es?"
 
 /** Resolving sheet while the verdict loads (Variante A decode feedback). */
 export const SCAN_RESOLVING_TITLE = "Produkt wird geprüft …"
 export const SCAN_RESOLVING_SUBLINE = "Passt es zu deinem Haar?"
+
+/**
+ * The free tier's one-lifetime reveal (T9) came back with nothing to show — T8 spends NO
+ * credit in that case, so the CTA stays. Shared between the toast `scan-flow.tsx` raises
+ * for a user-initiated reveal and the inline fallback `scan-result-card.tsx` renders if a
+ * `reveal_succeeded` ever carries an empty list (fix round 1, F4) — one string, so the two
+ * surfaces can never drift apart.
+ */
+export const SCAN_REVEAL_EMPTY_NOTICE = "Aktuell keine Alternative gefunden."
 
 /**
  * `POST /api/scan/resolve` and `POST /api/scan/submit`: an open submission exists.

@@ -1,0 +1,432 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "elvital-hydra-hyaluronic",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "packet_conflict_resolution": {
+    "status": "resolved_non_material_for_eight_v14_properties",
+    "selected_canonical_source_tier": "manufacturer_de",
+    "selected_formula_hash": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+    "conflicting_formula_hashes": [
+      "a70b3f72f16206a451e439b83d727dd8544d9abf438e1550a9aea82182910d63"
+    ],
+    "rationale": "Current exact German manufacturer formula is canonical under the v1.4 hierarchy. The dm same-GTIN delta affects colorants/fragrance/exposure details and shifts amodimethicone late; it preserves the property-bearing surfactant, silicone/polymer, sodium hyaluronate, acid and anti-dandruff-active architecture."
+  },
+  "identity": {
+    "market": "DE",
+    "brand": "L'Oréal Paris Elvital",
+    "exact_current_de_name": "Elvital Hydra [Hyaluronic] 72H Feuchtigkeit-Auffüllendes Shampoo",
+    "size": {
+      "value": 1000,
+      "unit": "ml",
+      "display": "1000 ml"
+    },
+    "gtin": "3600524099299",
+    "captured_at": "2026-09-03T09:24:10+02:00",
+    "current_sources": [
+      {
+        "id": "src-loreal-de-pdp",
+        "label": "L’Oréal Paris DE exact PDP",
+        "url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "claims",
+          "directions",
+          "formula"
+        ]
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "label": "dm DE exact PDP",
+        "url": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+        "source_type": "retailer",
+        "tier": "preferred_german_retailer_exact_gtin",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "price",
+          "formula",
+          "claims"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "explicit_conflicts": [
+      {
+        "field": "formula",
+        "description": "Use current exact German manufacturer formula as canonical source under v1.4 hierarchy; preserve dm exact-GTIN formula as resolved non-material conflict evidence and do not merge formulas. Resolved as non-material for the eight v1.4 properties: the two formulas preserve the same primary surfactant system, early glycol distearate, silicone/cationic-polymer routes, sodium hyaluronate, acids and absence of recognized v1.4 dandruff actives. The delta is limited to colorants/fragrance/exposure details and amodimethicone shifting from late position 23 to late position 25."
+      }
+    ]
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.size",
+      "fact_key": "identity.size",
+      "fact_value": "1000 ml",
+      "source_id": "src-loreal-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Feuchtigkeit-Auffüllendes Shampoo 1000ml; sid_3600524099299.",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    {
+      "fact_id": "identity.sid",
+      "fact_key": "identity.gtin",
+      "fact_value": "3600524099299",
+      "source_id": "src-loreal-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "sid_3600524099299.",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    {
+      "fact_id": "identity.size",
+      "fact_key": "identity.size",
+      "fact_value": "1.000 ml",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "source_text": "Shampoo Hydra Hyaluronic, feuchtigkeitsspendend, 1.000 ml.",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    {
+      "fact_id": "identity.gtin",
+      "fact_key": "identity.gtin",
+      "fact_value": "3600524099299",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "source_text": "GTIN: 3600524099299.",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_key": "formula.raw_inci",
+      "fact_value": "1239839 G5 - INGREDIENTS: AQUA / WATER * SODIUM LAURETH SULFATE * GLYCOL DISTEARATE * SODIUM CHLORIDE * COCAMIDOPROPYL BETAINE * DIMETHICONE * CI 60730 / EXT. VIOLET 2 * GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE * COCAMIDE MEA * COCO-BETAINE * SODIUM BENZOATE * SODIUM HYDROXIDE * SODIUM HYALURONATE * STEARETH-6 * PHENOXYETHANOL * ACETIC ACID * PEG-100 STEARATE * TRIDECETH-10 * TRIDECETH-3 * SALICYLIC ACID * LIMONENE * FUMARIC ACID * AMODIMETHICONE * CARBOMER * CITRIC ACID * HEXYLENE GLYCOL * PARFUM / FRAGRANCE (F.I.L. Z70045709/1).",
+      "source_id": "src-loreal-de-pdp",
+      "source_type": "manufacturer",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    {
+      "fact_id": "formula.conflict_inci",
+      "fact_key": "formula.conflicting_raw_inci",
+      "fact_value": "INGREDIENTS: AQUA / WATER * SODIUM LAURETH SULFATE * GLYCOL DISTEARATE * SODIUM CHLORIDE * COCAMIDOPROPYL BETAINE * DIMETHICONE * CI 17200 / RED 33 * CI 42090 / BLUE 1 * GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE * COCAMIDE MEA * COCO-BETAINE * SODIUM BENZOATE * SODIUM HYDROXIDE * SODIUM HYALURONATE * STEARETH-6 * PHENOXYETHANOL * ACETIC ACID * PEG-100 STEARATE * TRIDECETH-10 * TRIDECETH-3 * SALICYLIC ACID * DIMETHYL PHENETHYL ACETATE * LIMONENE * FUMARIC ACID * AMODIMETHICONE * CARBOMER * CARVONE * CITRIC ACID * TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES * CITRUS AURANTIUM PEEL OIL * HEXYLENE GLYCOL * PARFUM / FRAGRANCE",
+      "source_id": "src-dm-de-pdp",
+      "source_type": "retailer",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    }
+  ],
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "1239839 G5 - INGREDIENTS: AQUA / WATER * SODIUM LAURETH SULFATE * GLYCOL DISTEARATE * SODIUM CHLORIDE * COCAMIDOPROPYL BETAINE * DIMETHICONE * CI 60730 / EXT. VIOLET 2 * GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE * COCAMIDE MEA * COCO-BETAINE * SODIUM BENZOATE * SODIUM HYDROXIDE * SODIUM HYALURONATE * STEARETH-6 * PHENOXYETHANOL * ACETIC ACID * PEG-100 STEARATE * TRIDECETH-10 * TRIDECETH-3 * SALICYLIC ACID * LIMONENE * FUMARIC ACID * AMODIMETHICONE * CARBOMER * CITRIC ACID * HEXYLENE GLYCOL * PARFUM / FRAGRANCE (F.I.L. Z70045709/1).",
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM LAURETH SULFATE",
+      "GLYCOL DISTEARATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "DIMETHICONE",
+      "CI 60730 / EXT. VIOLET 2",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "COCAMIDE MEA",
+      "COCO-BETAINE",
+      "SODIUM BENZOATE",
+      "SODIUM HYDROXIDE",
+      "SODIUM HYALURONATE",
+      "STEARETH-6",
+      "PHENOXYETHANOL",
+      "ACETIC ACID",
+      "PEG-100 STEARATE",
+      "TRIDECETH-10",
+      "TRIDECETH-3",
+      "SALICYLIC ACID",
+      "LIMONENE",
+      "FUMARIC ACID",
+      "AMODIMETHICONE",
+      "CARBOMER",
+      "CITRIC ACID",
+      "HEXYLENE GLYCOL",
+      "PARFUM / FRAGRANCE"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM LAURETH SULFATE, GLYCOL DISTEARATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, DIMETHICONE, CI 60730 / EXT. VIOLET 2, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDE MEA, COCO-BETAINE, SODIUM BENZOATE, SODIUM HYDROXIDE, SODIUM HYALURONATE, STEARETH-6, PHENOXYETHANOL, ACETIC ACID, PEG-100 STEARATE, TRIDECETH-10, TRIDECETH-3, SALICYLIC ACID, LIMONENE, FUMARIC ACID, AMODIMETHICONE, CARBOMER, CITRIC ACID, HEXYLENE GLYCOL, PARFUM / FRAGRANCE",
+    "sha256_normalized_inci": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+    "canonical_source": {
+      "id": "src-loreal-de-pdp",
+      "tier": "manufacturer_de",
+      "captured_at": "2026-09-03T09:24:10+02:00"
+    },
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {
+        "id": "src-loreal-de-pdp",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "canonical_current_exact_german_manufacturer_formula",
+        "formula_hash_if_normalized": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c"
+      },
+      {
+        "id": "src-dm-de-pdp",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "resolved_non_material_current_exact_gtin_retailer_formula_conflict",
+        "formula_hash_if_normalized": "a70b3f72f16206a451e439b83d727dd8544d9abf438e1550a9aea82182910d63"
+      }
+    ],
+    "version_or_reformulation_conflicts": [
+      "dm exact-GTIN INCI replaces CI 60730 with CI 17200/CI 42090, adds several fragrance/exposure ingredients and shifts amodimethicone later; manufacturer formula selected as canonical by hierarchy, not merged. Difference resolved as non-material for the eight v1.4 property-bearing architecture."
+    ],
+    "normalization_notes": "Removed manufacturer batch/F.I.L. code and INGREDIENTS prefix; converted bullet separators to comma-space; preserved INCI spelling, case, slash aliases and order."
+  },
+  "blind_packet": {
+    "formula_source_tier": "manufacturer_de",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "resolved_non_material_same_gtin_retailer_delta",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA / WATER",
+      "SODIUM LAURETH SULFATE",
+      "GLYCOL DISTEARATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "DIMETHICONE",
+      "CI 60730 / EXT. VIOLET 2",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "COCAMIDE MEA",
+      "COCO-BETAINE",
+      "SODIUM BENZOATE",
+      "SODIUM HYDROXIDE",
+      "SODIUM HYALURONATE",
+      "STEARETH-6",
+      "PHENOXYETHANOL",
+      "ACETIC ACID",
+      "PEG-100 STEARATE",
+      "TRIDECETH-10",
+      "TRIDECETH-3",
+      "SALICYLIC ACID",
+      "LIMONENE",
+      "FUMARIC ACID",
+      "AMODIMETHICONE",
+      "CARBOMER",
+      "CITRIC ACID",
+      "HEXYLENE GLYCOL",
+      "PARFUM / FRAGRANCE"
+    ],
+    "normalized_inci_string": "AQUA / WATER, SODIUM LAURETH SULFATE, GLYCOL DISTEARATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, DIMETHICONE, CI 60730 / EXT. VIOLET 2, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, COCAMIDE MEA, COCO-BETAINE, SODIUM BENZOATE, SODIUM HYDROXIDE, SODIUM HYALURONATE, STEARETH-6, PHENOXYETHANOL, ACETIC ACID, PEG-100 STEARATE, TRIDECETH-10, TRIDECETH-3, SALICYLIC ACID, LIMONENE, FUMARIC ACID, AMODIMETHICONE, CARBOMER, CITRIC ACID, HEXYLENE GLYCOL, PARFUM / FRAGRANCE",
+    "formula_fingerprint_sha256": "a123fa7c22b207723b93c4ec0af0eda556fb0939c5e3ecc6de8cce400895db4c",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 5,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.05"
+      },
+      {
+        "ingredient": "COCAMIDE MEA",
+        "position": 9,
+        "family": "nonionic alkanolamide foam/viscosity support",
+        "fact_id": "formula.surfactant.09"
+      },
+      {
+        "ingredient": "COCO-BETAINE",
+        "position": 10,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.10"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate appears at position 2."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Two amphoteric betaines appear before preservative/pH ingredients at positions 5 and 10."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "Pearlescent/refatting ester appears unusually early at position 3."
+      },
+      {
+        "fact_id": "formula.architecture.04",
+        "text": "Silicone and cationic polymer routes appear in the first eight ingredients."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion/solubilizer/hydrotrope facts are preserved in formula_function_facts_positions and excluded from independent cleansing-route count."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 6,
+        "route": "nonvolatile silicone deposition/slip clue",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 8,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.08"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 23,
+        "route": "amine-functional silicone deposition clue",
+        "fact_id": "formula.conditioning.23"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "GLYCOL DISTEARATE",
+        "position": 3,
+        "clue": "pearlizing/refatting wax ester"
+      },
+      {
+        "ingredient": "SODIUM HYALURONATE",
+        "position": 13,
+        "clue": "humectant/polymeric moisture-binding clue"
+      },
+      {
+        "ingredient": "PEG-100 STEARATE",
+        "position": 17,
+        "clue": "emulsifier/refatting support, not standalone persistent payload"
+      },
+      {
+        "ingredient": "ACETIC ACID",
+        "position": 16,
+        "clue": "acid/pH adjustment clue"
+      },
+      {
+        "ingredient": "FUMARIC ACID",
+        "position": 22,
+        "clue": "acid/pH adjustment clue"
+      },
+      {
+        "ingredient": "CITRIC ACID",
+        "position": 25,
+        "clue": "acid/pH adjustment clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "LIMONENE",
+        "position": 21,
+        "flag": "fragrance allergen"
+      },
+      {
+        "ingredient": "PARFUM / FRAGRANCE",
+        "position": 27,
+        "flag": "fragrance mixture"
+      },
+      {
+        "ingredient": "SALICYLIC ACID",
+        "position": 20,
+        "flag": "acid/exfoliation-adjacent clue; not a v1.4 recognized anti-dandruff active by itself"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "CI 60730 / EXT. VIOLET 2",
+        "position": 7,
+        "reason": "colorant; no expected conditioning or cleansing role"
+      },
+      {
+        "ingredient": "HEXYLENE GLYCOL",
+        "position": 26,
+        "reason": "solvent/humectant-like auxiliary; late and not material alone"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "STEARETH-6",
+        "position": 14,
+        "function": "nonionic_emulsifier_solubilizer_helper",
+        "fact_id": "formula.function.14",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-100 STEARATE",
+        "position": 17,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.17",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-10",
+        "position": 18,
+        "function": "nonionic_silicone_emulsion_helper",
+        "fact_id": "formula.function.18",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-3",
+        "position": 19,
+        "function": "nonionic_silicone_emulsion_helper",
+        "fact_id": "formula.function.19",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      }
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {
+        "id": "claim:loreal-hydration-positioning",
+        "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+        "source_type": "manufacturer",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "source_text": "Formel mit Hyaluronsäure versorgt Kopfhaut und Längen mit Feuchtigkeit; reinigt das Haar und füllt es mit Feuchtigkeit auf; für gesund glänzendes, lebendiges und schwungvolles Haar."
+      },
+      {
+        "id": "claim:dm-hydration-positioning",
+        "source_url": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "source_text": "Feuchtigkeitsspendendes Shampoo; für trockenes und strapaziertes Haar geeignet; bis zu 72h Feuchtigkeit."
+      }
+    ],
+    "directions": [
+      {
+        "id": "usage:loreal-directions",
+        "source_url": "https://www.loreal-paris.de/elvital/hydra-hyaluronic/feuchtigkeit-auffuellendes-shampoo-1000ml",
+        "source_type": "manufacturer",
+        "captured_at": "2026-09-03T09:24:10+02:00",
+        "source_text": "Auf nassem Haar auftragen, sanft in die Kopfhaut einmassieren und ausspülen. Die Pflegeroutine mit der Spülung oder der Maske aus der Serie vervollständigen."
+      }
+    ]
+  },
+  "provenance_checks": {
+    "gtin_check_digit_valid": true,
+    "formula_hash_recomputed": true,
+    "blind_packet_identity_terms_checked": true,
+    "old_manifest_labels_used": false,
+    "database_reads_or_writes": false,
+    "notes": [
+      "manufacturer_de selected over preferred retailer because both are current exact German sources for the same GTIN and the manufacturer page is the higher tier; dm delta resolved as non-material for the eight property-bearing architecture.",
+      "Administrative manifest used only for starting GTIN, starting source URLs, draft size/price/image candidate."
+    ]
+  },
+  "open_questions": []
+}

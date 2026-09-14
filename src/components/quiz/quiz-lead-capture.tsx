@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
+import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
+import { getQuizFunnelCopy } from "@/lib/quiz/funnel-copy"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
@@ -36,6 +38,9 @@ function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
 }
 
+/** Shown on blur of a malformed address — the server never sees that request. */
+const INVALID_EMAIL_MESSAGE = "Bitte eine gültige E-Mail-Adresse eingeben."
+
 export function QuizLeadCapture() {
   const { user, loading: authLoading } = useAuth()
   const {
@@ -51,6 +56,8 @@ export function QuizLeadCapture() {
     goNext,
     goBack,
   } = useQuizStore()
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const copy = getQuizFunnelCopy(funnelPackageKey)
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
@@ -58,6 +65,16 @@ export function QuizLeadCapture() {
   const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
   const [contextAttempt, setContextAttempt] = useState(0)
   const emailInputRef = useRef<HTMLInputElement>(null)
+  // A rejected address sends the user back to the e-mail step. The consent
+  // question was already answered by then, so it must not be asked a second
+  // time: the stored answer is resubmitted with the corrected address.
+  //
+  // The marker belongs to that one submission and to nothing else. It survives
+  // as long as the user stays on the e-mail step correcting the address, and is
+  // dropped the moment the recovery ends — the Back button leaves the step, a
+  // successful save finishes it. Otherwise a later, unrelated address would be
+  // sent with a consent answer the user never gave for it.
+  const consentAnsweredRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
   const contextLookupKey = getPartnerQuizContextLookupKey({
     authLoading,
@@ -144,35 +161,93 @@ export function QuizLeadCapture() {
     }
   }
 
-  const handleEmailSubmit = () => {
-    if (isValidEmail(lead.email)) {
-      setError("")
-      setServerSuggestion(null)
-      setLeadCaptureSubStep("consent")
-    }
+  const handleEmailBlur = () => {
+    if (!lead.email.trim()) return
+    if (!isValidEmail(lead.email)) setError(INVALID_EMAIL_MESSAGE)
   }
 
+  const handleEmailSubmit = () => {
+    if (saving) return
+    if (!isValidEmail(lead.email)) {
+      setError(INVALID_EMAIL_MESSAGE)
+      return
+    }
+    setError("")
+    setServerSuggestion(null)
+    if (consentAnsweredRef.current) {
+      void handleConsent(lead.marketingConsent)
+      return
+    }
+    setLeadCaptureSubStep("consent")
+  }
+
+  // Set immediately before `returnToEmailStep()` calls `requestBack()`, so
+  // `handleBack` can tell that one intentional call apart from every other
+  // route into it (the header button — disabled while saving — a real
+  // browser-history pop from hardware/OS back, or a stale `requestBack`).
+  // `requestBack()` may invoke the registered handler synchronously (no
+  // history depth left) or only later via `popstate`; either way this is the
+  // one flag that is true exactly for that call, so it is read and cleared as
+  // the very first thing `handleBack` does.
+  const recoveryBackRef = useRef(false)
+
   const handleBack = useCallback(() => {
+    const isRecoveryBack = recoveryBackRef.current
+    recoveryBackRef.current = false
+    // A save is in flight (submitted from the consent step). Ignore any
+    // other route into this handler so a stale sub-step can't win a race
+    // against the pending response — the recovery call above is exempt, it
+    // is what moves the user to the e-mail step once the response lands.
+    if (saving && !isRecoveryBack) return
     if (leadCaptureSubStep === "consent") {
       if (leadCaptureMode === "partner") {
+        consentAnsweredRef.current = false
         goBack()
         return
       }
+      // The rejection recovery routes through this branch, so the stored
+      // consent must survive it — it belongs to the submission being corrected.
       setLeadCaptureSubStep("email")
     } else if (leadCaptureSubStep === "email") {
+      // Leaving the e-mail step ends that recovery. The next submission is a
+      // fresh one, so the consent question is asked again.
+      consentAnsweredRef.current = false
       setError("")
       setServerSuggestion(null)
       setLeadCaptureSubStep("name")
     } else if (leadCaptureSubStep === "name") {
+      consentAnsweredRef.current = false
       goBack()
     }
-  }, [goBack, leadCaptureMode, leadCaptureSubStep, setLeadCaptureSubStep])
+  }, [goBack, leadCaptureMode, leadCaptureSubStep, saving, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
+
+  /**
+   * Where a failed save puts the user: always the e-mail step, with the server
+   * message and the suggestion still on screen.
+   *
+   * The retry after a rejection is submitted from the e-mail step itself, so a
+   * second rejection must not move at all — a Back request from there would
+   * step on to the name screen and clear both the message and the suggestion.
+   * Partner capture has no e-mail step; its error stays on the consent sheet.
+   */
+  const returnToEmailStep = () => {
+    if (leadCaptureMode === "partner") return
+    if (leadCaptureSubStep !== "consent") return
+    // Routed through the Back request so the browser history depth stays in
+    // sync; the consent branch of `handleBack` keeps the error and suggestion.
+    // This call is still made while `saving` is true (it runs before
+    // `handleConsent`'s `finally` clears it), so it must get through the
+    // saving-guard in `handleBack` — mark it as the one exempt call.
+    recoveryBackRef.current = true
+    requestBack()
+  }
 
   const handleConsent = async (accepted: boolean) => {
     if (saving) return
 
     setLeadField("marketingConsent", accepted)
+    consentAnsweredRef.current = true
     setSaving(true)
     setError("")
 
@@ -216,7 +291,7 @@ export function QuizLeadCapture() {
                 ? "Dein persönlicher Zugang konnte gerade nicht bestätigt werden."
                 : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
             )
-            if (leadCaptureMode !== "partner") requestBack()
+            returnToEmailStep()
             window.scrollTo(0, 0)
             return
           }
@@ -230,13 +305,15 @@ export function QuizLeadCapture() {
           }
           setServerSuggestion(suggestion)
           setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
-          requestBack()
+          returnToEmailStep()
           window.scrollTo(0, 0)
           return
         }
         throw new Error("Speichern fehlgeschlagen")
       }
 
+      // The submission is done, so the recovery it belonged to is over too.
+      consentAnsweredRef.current = false
       setLeadId(data.leadId)
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
@@ -251,7 +328,7 @@ export function QuizLeadCapture() {
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
-      if (leadCaptureMode !== "partner") requestBack()
+      returnToEmailStep()
     } finally {
       setSaving(false)
     }
@@ -300,9 +377,11 @@ export function QuizLeadCapture() {
       {/* Progress bar */}
       <div className="flex items-center gap-3 mb-4">
         <button
-          onClick={requestBack}
+          onClick={saving ? undefined : requestBack}
           aria-label="Zurück"
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          aria-disabled={saving}
+          disabled={saving}
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -327,9 +406,7 @@ export function QuizLeadCapture() {
             />
           </svg>
         </span>
-        <span className="text-base font-medium text-foreground">
-          Dein persönlicher Pflegeplan ist bereit!
-        </span>
+        <span className="text-base font-medium text-foreground">{copy.leadCaptureHeadline}</span>
       </div>
 
       {/* Sub-step content */}
@@ -353,7 +430,8 @@ export function QuizLeadCapture() {
               onClick={handleNameSubmit}
               disabled={!lead.name.trim()}
               variant="unstyled"
-              className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${lead.name.trim() ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+              /* Dimmed, never de-shaped: `.quiz-btn-primary:disabled` carries the 40 % opacity. */
+              className="quiz-btn-primary h-14 w-full rounded-xl text-base font-bold tracking-wide"
             >
               Weiter zum Ergebnis
             </Button>
@@ -376,6 +454,7 @@ export function QuizLeadCapture() {
             aria-invalid={Boolean(error)}
             aria-describedby={error ? "legacy-quiz-email-error" : undefined}
             className="h-14 rounded-xl bg-muted border-border text-foreground placeholder:text-muted-foreground text-base mb-3"
+            onBlur={handleEmailBlur}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleEmailSubmit()
             }}
@@ -412,7 +491,8 @@ export function QuizLeadCapture() {
               onClick={handleEmailSubmit}
               disabled={!isValidEmail(lead.email) || saving}
               variant="unstyled"
-              className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${isValidEmail(lead.email) ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+              /* Dimmed, never de-shaped: `.quiz-btn-primary:disabled` carries the 40 % opacity. */
+              className="quiz-btn-primary h-14 w-full rounded-xl text-base font-bold tracking-wide"
             >
               {saving ? "Wird gespeichert..." : "Weiter"}
             </Button>

@@ -1,0 +1,124 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "being-big-hair",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "packet_conflict_resolution": {
+    "status": "material_formula_variant_preserved_for_adjudication",
+    "selected_canonical_source_tier": "preferred_german_retailer_exact_gtin",
+    "selected_formula_hash": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "conflicting_formula_hashes": ["5b1896fcf4a7e2cd0bc9754f1b6fbb946241d597d4876779e5f67b0c13b251c6"],
+    "rationale": "The canonical formula is the current exact-GTIN 4895248005872 retailer label transcription. The global Being manufacturer page publishes a materially different market/formula variant; it remains explicit conflict evidence and is not merged. The common early cleansing architecture is visible, but later-order and disclosure differences remain for the classification lanes to assess."
+  },
+  "identity": {
+    "market": "DE",
+    "brand": "Being",
+    "exact_current_de_name": "Big Hair Shampoo",
+    "size": {"value": 354, "unit": "ml", "display": "354 ml"},
+    "gtin": "4895248005872",
+    "captured_at": "2026-09-03T12:00:00+02:00",
+    "current_sources": [
+      {"id": "src-rossmann-de-pdp", "label": "Rossmann DE exact PDP", "url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872", "source_type": "retailer", "tier": "preferred_german_retailer_exact_gtin", "captured_at": "2026-09-03T12:00:00+02:00", "facts": ["exact_current_de_name", "size", "gtin", "price", "claims"]},
+      {"id": "src-hagel-de-pdp", "label": "Hagel Shop DE exact GTIN PDP", "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html", "source_type": "retailer", "tier": "preferred_german_retailer_exact_gtin_formula", "captured_at": "2026-09-03T12:00:00+02:00", "facts": ["size", "gtin", "formula"]},
+      {"id": "src-bebe-tei-exact-gtin", "label": "Bebe Tei exact GTIN PDP", "url": "https://comenzi.bebetei.ro/ingrijire-personala/ingrijirea-parului/sampon/sampon-pentru-parul-fin-si-drept-big-volume-354-ml-being-p476099", "source_type": "retailer", "tier": "eu_retailer_exact_gtin_formula_corrob", "captured_at": "2026-09-03T12:00:00+02:00", "facts": ["size", "gtin", "formula"]},
+      {"id": "src-superdrug-exact-gtin", "label": "Superdrug exact GTIN PDP", "url": "https://www.superdrug.com/hair/shampoo/being-big-volume-thickening-shampoo-354ml/p/847874", "source_type": "retailer", "tier": "eu_retailer_exact_gtin_formula_corrob", "captured_at": "2026-09-03T12:00:00+02:00", "facts": ["size", "gtin", "formula", "directions"]},
+      {"id": "src-being-global-pdp", "label": "Being global PDP", "url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/", "source_type": "manufacturer", "tier": "manufacturer_global_market_formula_variant", "captured_at": "2026-09-03T12:00:00+02:00", "facts": ["claims", "directions", "formula"]}
+    ],
+    "confidence": "high",
+    "explicit_conflicts": [
+      {"field": "formula", "description": "The global Being manufacturer page lists a different ordered formula from the exact-GTIN retail label sources. Its version has Polyquaternium-10 earlier, includes Linoleamidopropyl PG-Dimonium Chloride Phosphate and Tocopheryl Acetate, and orders late ingredients differently; the exact-GTIN retail formula discloses Sodium Citrate and Tetramethyl Acetyloctahydronaphthalenes. No formula merge is permitted."},
+      {"field": "name", "description": "The German Rossmann source uses Big Hair Shampoo, while English retailer and global manufacturer sources use BIG HAIR Volumizing/Big Volume Thickening Shampoo. The GTIN and 354 ml pack bind the exact German SKU identity; translated marketing wording is not used as an alias formula match."}
+    ]
+  },
+  "source_facts": [
+    {"fact_id": "identity.rossmann_de", "fact_key": "identity.exact_current_de_name_size_gtin", "fact_value": "Big Hair Shampoo, 354 ml, GTIN 4895248005872", "source_id": "src-rossmann-de-pdp", "source_type": "retailer", "source_text": "Rossmann exact product page uses the 4895248005872 product identifier and lists 354 ml.", "captured_at": "2026-09-03T12:00:00+02:00"},
+    {"fact_id": "formula.canonical_inci", "fact_key": "formula.raw_inci", "fact_value": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes", "source_id": "src-bebe-tei-exact-gtin", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00"},
+    {"fact_id": "formula.corroborating_inci", "fact_key": "formula.corroborating_raw_inci", "fact_value": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes", "source_id": "src-superdrug-exact-gtin", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00"},
+    {"fact_id": "formula.conflicting_global_manufacturer_inci", "fact_key": "formula.conflicting_raw_inci", "fact_value": "Aqua (Water), Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima (Avocado) Oil, Polyquaternium-10, Propylene Glycol, Disodium Laureth Sulfosuccinate, Acrylates Copolymer, Sodium Benzoate, Panthenol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium Edta, Cyclodextrin, Linoleamidopropyl PG-Dimonium Chloride Phosphate, Citric Acid, Sodium Starch Octenylsuccinate, Phenoxyethanol, Hydroxypropyl Starch Phosphate, Tocopheryl Acetate, Parfum (Fragrance).", "source_id": "src-being-global-pdp", "source_type": "manufacturer", "captured_at": "2026-09-03T12:00:00+02:00"}
+  ],
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes",
+    "normalized_ordered_inci": ["Aqua/Water/Eau", "Cocamidopropyl Betaine", "Sodium C14-16 Olefin Sulfonate", "Sodium Chloride", "Coco-Glucoside", "Glycerin", "Sodium Cocoyl Isethionate", "Macadamia Integrifolia Seed Oil", "Persea Gratissima Oil", "Phenoxyethanol", "Propylene Glycol", "Parfum (Fragrance)", "Sodium Benzoate", "Acrylates Copolymer", "Disodium Laureth Sulfosuccinate", "Panthenol", "Polyquaternium-10", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "Disodium EDTA", "Cyclodextrin", "Sodium Starch Octenylsuccinate", "Citric Acid", "Sodium Citrate", "Hydroxypropyl Starch Phosphate", "Tetramethyl Acetyloctahydronaphthalenes"],
+    "normalized_inci_string": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes",
+    "sha256_normalized_inci": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "canonical_source": {"id": "src-hagel-de-pdp", "tier": "preferred_german_retailer_exact_gtin_formula", "captured_at": "2026-09-03T12:00:00+02:00"},
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {"id": "src-hagel-de-pdp", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "canonical_current_exact_german_retailer_formula", "formula_hash_if_normalized": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6"},
+      {"id": "src-bebe-tei-exact-gtin", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "agrees_with_canonical_exact_gtin_retailer_formula", "formula_hash_if_normalized": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6"},
+      {"id": "src-superdrug-exact-gtin", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "agrees_with_canonical_exact_gtin_retailer_formula", "formula_hash_if_normalized": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6"},
+      {"id": "src-being-global-pdp", "captured_at": "2026-09-03T12:00:00+02:00", "formula_observed": true, "formula_relation_to_canonical": "conflicting_global_manufacturer_market_formula_variant", "formula_hash_if_normalized": "5b1896fcf4a7e2cd0bc9754f1b6fbb946241d597d4876779e5f67b0c13b251c6"}
+    ],
+    "version_or_reformulation_conflicts": ["Global Being manufacturer formula is a market/formula variant, not an exact-GTIN formula authority. It is preserved unmerged because it differs in late ingredient order and disclosed ingredients."],
+    "normalization_notes": "Canonical string preserves the exact-GTIN retailer label's slash aliases, capitalization and order. The global manufacturer variant is retained only as a separately hashed conflict record; no ingredients or positions were merged."
+  },
+  "blind_packet": {
+    "formula_source_tier": "preferred_german_retailer_exact_gtin",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "material_global_manufacturer_market_formula_variant_preserved",
+    "policy_hashes": {"classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24", "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"},
+    "normalized_ordered_inci": ["Aqua/Water/Eau", "Cocamidopropyl Betaine", "Sodium C14-16 Olefin Sulfonate", "Sodium Chloride", "Coco-Glucoside", "Glycerin", "Sodium Cocoyl Isethionate", "Macadamia Integrifolia Seed Oil", "Persea Gratissima Oil", "Phenoxyethanol", "Propylene Glycol", "Parfum (Fragrance)", "Sodium Benzoate", "Acrylates Copolymer", "Disodium Laureth Sulfosuccinate", "Panthenol", "Polyquaternium-10", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "Disodium EDTA", "Cyclodextrin", "Sodium Starch Octenylsuccinate", "Citric Acid", "Sodium Citrate", "Hydroxypropyl Starch Phosphate", "Tetramethyl Acetyloctahydronaphthalenes"],
+    "normalized_inci_string": "Aqua/Water/Eau, Cocamidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Chloride, Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Macadamia Integrifolia Seed Oil, Persea Gratissima Oil, Phenoxyethanol, Propylene Glycol, Parfum (Fragrance), Sodium Benzoate, Acrylates Copolymer, Disodium Laureth Sulfosuccinate, Panthenol, Polyquaternium-10, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Disodium EDTA, Cyclodextrin, Sodium Starch Octenylsuccinate, Citric Acid, Sodium Citrate, Hydroxypropyl Starch Phosphate, Tetramethyl Acetyloctahydronaphthalenes",
+    "formula_fingerprint_sha256": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "surfactant_families_positions": [
+      {"ingredient": "Cocamidopropyl Betaine", "position": 2, "family": "amphoteric_betaine", "fact_id": "formula.surfactant.02"},
+      {"ingredient": "Sodium C14-16 Olefin Sulfonate", "position": 3, "family": "anionic_olefin_sulfonate", "fact_id": "formula.surfactant.03"},
+      {"ingredient": "Coco-Glucoside", "position": 5, "family": "nonionic_glucoside", "fact_id": "formula.surfactant.05"},
+      {"ingredient": "Sodium Cocoyl Isethionate", "position": 7, "family": "anionic_isethionate", "fact_id": "formula.surfactant.07"},
+      {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 15, "family": "anionic_sulfosuccinate", "fact_id": "formula.surfactant.15"}
+    ],
+    "architecture_facts": [
+      {"fact_id": "formula.architecture.01", "text": "An amphoteric betaine at position 2 precedes an anionic olefin sulfonate at position 3; a nonionic glucoside and anionic isethionate follow at positions 5 and 7."},
+      {"fact_id": "formula.architecture.02", "text": "A further anionic sulfosuccinate occurs at position 15 after the fragrance/preservative region."},
+      {"fact_id": "formula.architecture.variant", "text": "A distinct global manufacturer market/formula variant is preserved in the source packet and must not be merged into this ordered formula."},
+      {"fact_id": "formula.architecture.helper_functions_preserved", "text": "Formula-function helpers are preserved separately and are not counted as independent cleansing routes."}
+    ],
+    "conditioning_deposition_routes_positions": [
+      {"ingredient": "Macadamia Integrifolia Seed Oil", "position": 8, "route": "nonvolatile_plant_oil_clue", "fact_id": "formula.conditioning.08"},
+      {"ingredient": "Persea Gratissima Oil", "position": 9, "route": "nonvolatile_plant_oil_clue", "fact_id": "formula.conditioning.09"},
+      {"ingredient": "Polyquaternium-10", "position": 17, "route": "cationic_polymer", "fact_id": "formula.conditioning.17"},
+      {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 18, "route": "cationic_guar_polymer", "fact_id": "formula.conditioning.18"}
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {"ingredient": "Glycerin", "position": 6, "clue": "humectant"},
+      {"ingredient": "Macadamia Integrifolia Seed Oil", "position": 8, "clue": "plant_oil"},
+      {"ingredient": "Persea Gratissima Oil", "position": 9, "clue": "plant_oil"},
+      {"ingredient": "Panthenol", "position": 16, "clue": "humectant_or_hair_feel_support"}
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {"ingredient": "Parfum (Fragrance)", "position": 12, "flag": "fragrance_mixture"},
+      {"ingredient": "Tetramethyl Acetyloctahydronaphthalenes", "position": 25, "flag": "fragrance_disclosure_ingredient"}
+    ],
+    "unresolved_ingredients": [
+      {"ingredient": "Acrylates Copolymer", "position": 14, "reason": "polymer function is preserved without treating it as a substantive conditioning route before whole-formula adjudication."},
+      {"ingredient": "Cyclodextrin", "position": 20, "reason": "helper or odor-control function is not assigned a direct formula-property meaning before adjudication."},
+      {"ingredient": "Hydroxypropyl Starch Phosphate", "position": 24, "reason": "polymeric thickener or texture helper is not treated as a conditioning route."}
+    ],
+    "source_fact_identifiers": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conflicting_global_manufacturer_inci"],
+    "formula_function_facts_positions": [
+      {"ingredient": "Acrylates Copolymer", "position": 14, "function": "polymeric_texture_helper", "fact_id": "formula.function.14", "note": "Preserved as a formula-function helper, not an independent cleansing or conditioning route."},
+      {"ingredient": "Cyclodextrin", "position": 20, "function": "helper_or_odor_control_clue", "fact_id": "formula.function.20", "note": "Preserved as a formula-function helper without a direct property conclusion."},
+      {"ingredient": "Hydroxypropyl Starch Phosphate", "position": 24, "function": "polymeric_texture_helper", "fact_id": "formula.function.24", "note": "Preserved as a formula-function helper, not an independent cleansing or conditioning route."}
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {"id": "claim:rossmann-de-positioning", "source_url": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Big Hair Shampoo; Rossmann DE exact 354 ml product listing."},
+      {"id": "claim:being-global-positioning", "source_url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/", "source_type": "manufacturer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "For straight and/or thin and fine hair seeking fullness and body; sulfate-free and silicone-free formula with avocado and macadamia oils."}
+    ],
+    "directions": [
+      {"id": "usage:being-global", "source_url": "https://beinghaircare.com/product/big-hair-volumizing-shampoo/", "source_type": "manufacturer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Apply to wet hair, lather and rinse well."},
+      {"id": "usage:superdrug", "source_url": "https://www.superdrug.com/hair/shampoo/being-big-volume-thickening-shampoo-354ml/p/847874", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Apply to wet hair, lather and rinse well."}
+    ],
+    "warnings": [{"id": "warning:superdrug", "source_url": "https://www.superdrug.com/hair/shampoo/being-big-volume-thickening-shampoo-354ml/p/847874", "source_type": "retailer", "captured_at": "2026-09-03T12:00:00+02:00", "source_text": "Use only as directed. Avoid contact with eyes; rinse immediately with water if contact occurs."}]
+  }
+}

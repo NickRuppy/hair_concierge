@@ -36,7 +36,8 @@
             "role_support": [
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -115,6 +116,7 @@
                 "leave_on_fibre_conditioning",
                 "dry_finish"
               ],
+              "provides_heat_protection": false,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -201,9 +203,9 @@
             "weight": "light",
             "role_support": [
               "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
           },
           "product_oil_eligibility": [
             {
@@ -262,16 +264,6 @@
               "text": "Das Öl Magique Haaröl kann täglich als veredelnde Pflege auf trockenem und nassem Haar verwendet werden. Während dem Duschen, vor dem Föhnen oder als glanzvolles Styling-Finish."
             },
             "deviation": null
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
-              "text": "Täglich als veredelnde Pflege auf trockenem und nassem Haar verwendbar - vor dem Föhnen oder als glanzvolles Styling-Finish. Bietet Schutz vor hitzebedingten Stylingschäden bis 230° C."
-            },
-            "deviation": null,
-            "usable_on_dry_hair": true
           }
         ],
         "evidence": [
@@ -290,9 +282,9 @@
               "weight": "light",
               "role_support": [
                 "leave_on_fibre_conditioning",
-                "dry_finish",
-                "pre_heat_protection"
+                "dry_finish"
               ],
+              "provides_heat_protection": true,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -336,14 +328,14 @@
         "field_rationales": {
           "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
           "category_specs.product_oil_specs.weight": "light: Isododecane (flüchtig) an INCI-Position 1, Herstellerclaim 'natürlich leichtes Haargefühl'; keine Butter.",
-          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit trockenes UND nasses Haar, Styling-Finish. pre_heat_protection: expliziter Claim 'Schutz vor hitzebedingten Stylingschäden bis 230° C' + 'vor dem Föhnen'.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit trockenes UND nasses Haar und Styling-Finish. Hitzeschutz ist eine separate Fähigkeit, keine vierte Anwendung.",
+          "category_specs.product_oil_specs.provides_heat_protection": "true: expliziter Claim 'Schutz vor hitzebedingten Stylingschäden bis 230° C' + 'vor dem Föhnen'.",
           "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-dominante INCI, Styling-Finish-Positionierung; kein reines Pflanzenöl, nicht als Trockenöl vermarktet. Subtyp-Konvention siehe Notes.",
           "category_specs.product_oil_eligibility.oil_purpose": "styling_finish (solide): wörtlich 'als glanzvolles Styling-Finish' auf der Packung.",
           "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Kokosöl, Marulaöl (Sclerocarya Birrea), Kamelienöl, Caprylic/Capric Triglyceride. Keine Humectants/Proteine/Polymere.",
           "thickness_eligibility": "Alle Stärken: explizit 'für alle Haartypen', leichte Formel.",
           "concern_eligibility": "frizz: 'Wirkt gegen Frizz'. dryness: 'Schützt das Haar vor dem Austrocknen'. Glanz hat keinen sauberen Concern-Code (bekanntes Thema aus dem Mask-Batch).",
-          "protocols": "Keine Deviation: keine Platzierungs-, Rinse- oder Zeitangaben, die den Templates widersprechen. 'Während dem Duschen' ist eine zusätzliche Anwendungsgelegenheit auf nassem Haar, kein Widerspruch. Die Overnight-Anwendung existiert NUR auf der Herstellerseite (1 von 10 Vorschlägen) - nicht encodiert, in den Notes dokumentiert.",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: Packung erlaubt explizit 'auf trockenem und nassem Haar' - either_state laut P9-Mapping."
+          "protocols": "Keine Deviation: Das bestehende Leave-on-Protokoll trägt die Anwendung. Nach der normalen Leave-on-Anwendung kann Wärme folgen; es gibt bewusst kein separates Öl-Hitze-Protokoll. 'Während dem Duschen' ist eine zusätzliche nasse Anwendung, und die nur auf der Herstellerseite genannte Overnight-Anwendung bleibt unencodiert."
         }
       }
     },
@@ -383,7 +375,8 @@
               "pre_wash_fibre_treatment",
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -472,6 +465,7 @@
                 "leave_on_fibre_conditioning",
                 "dry_finish"
               ],
+              "provides_heat_protection": false,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -549,7 +543,8 @@
             "weight": "light",
             "role_support": [
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -620,6 +615,7 @@
               "role_support": [
                 "dry_finish"
               ],
+              "provides_heat_protection": false,
               "ingredient_flags": [
                 "silicones",
                 "oils"

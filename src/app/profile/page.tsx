@@ -2,24 +2,31 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { signOutAction } from "@/app/auth/actions"
+import { FooterCookieSettingsButton } from "@/components/landing/footer-links"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { HaarCheckEditControl } from "@/components/profile/haar-check-edit-control"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
+import { MemoryToggleControl } from "@/components/profile/memory-toggle-control"
+import { useProfilePageTier } from "@/components/profile/profile-page-tier"
 import { useProfileRoutineAccess } from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
 import {
   filterRetainedPersonalPlanProductRows,
   RetainedPersonalPlanProducts,
 } from "@/components/profile/retained-personal-plan-products"
+import { VerfeinerungTeaser } from "@/components/profile/verfeinerung-teaser"
+import { PremiumSheet } from "@/components/premium-sheet/premium-sheet"
+import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import type { MembershipManagementState } from "@/lib/billing/types"
 import { formatBillingDate } from "@/lib/billing/display"
 import { intervalLabel } from "@/lib/billing/plan-change-client"
@@ -83,6 +90,20 @@ type RefinementPresentationApiResponse = {
   completedQuestionIds: string[]
   routineProducts: RoutineProductFromPlan[] | null
 }
+
+/**
+ * T15 (freemium-scanner-first PR5): this page's two premium gates always resolve to the
+ * same sheet context (mirrors `MERKLISTE_GATE`/`EMPFEHLUNGEN_GATE` in `scan-flow.tsx`).
+ */
+const HAARCHECK_GATE: PremiumSheetContext = { feature: "haarcheck", source: "profil:haarcheck" }
+const VERFEINERUNG_GATE: PremiumSheetContext = {
+  feature: "verfeinerung",
+  source: "profil:verfeinerung",
+}
+// T15 fix round 1 (F5, controller ruling): the memory toggle's own gate — free tier's
+// `/api/memory` is subscription-gated (see enforcement-matrix.md), so a locked tap opens
+// the sheet instead of ever calling that endpoint.
+const MEMORY_GATE: PremiumSheetContext = { feature: "chat", source: "profil:gedaechtnis" }
 
 function membershipStatusLabel(state: MembershipManagementState) {
   if (state.kind === "payment_problem") return "Zahlung ausstehend"
@@ -527,6 +548,17 @@ export default function ProfilePage() {
   // reached Stage 4 — the Routine tab is hidden for them and `/routine` renders
   // its unavailable state. Same signal, so the two can never disagree.
   const hasRoutineAccess = useProfileRoutineAccess()
+  // T15: server-resolved tier for the Haar-Check edit lock and the Verfeinerungs-Teaser —
+  // see `ProfilePageTierProvider` (set in `layout.tsx` from `loadAuthenticatedAppPageTier`).
+  const tier = useProfilePageTier()
+
+  const [premiumSheetOpen, setPremiumSheetOpen] = useState(false)
+  const [premiumSheetContext, setPremiumSheetContext] = useState<PremiumSheetContext | null>(null)
+
+  function openPremiumSheet(context: PremiumSheetContext) {
+    setPremiumSheetContext(context)
+    setPremiumSheetOpen(true)
+  }
 
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
   const [profileLoading, setProfileLoading] = useState(true)
@@ -942,7 +974,17 @@ export default function ProfilePage() {
   const goalsStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(goalsFilled.length, goalsFields.length)
-  const memoryStatus = memoryLoading ? "Wird geladen" : memoryEnabled ? "Aktiv" : "Pausiert"
+  // T15 fix round 1 (F5): free tier never reaches `/api/memory` (subscription-gated, not
+  // freemium-admitted), so `memoryEnabled` never reflects a real setting for them — the
+  // status must say so honestly instead of defaulting to "Aktiv".
+  const memoryStatus =
+    tier === "free"
+      ? "Nur mit Premium"
+      : memoryLoading
+        ? "Wird geladen"
+        : memoryEnabled
+          ? "Aktiv"
+          : "Pausiert"
 
   const memoryEntryLabel = memoryEntries.length === 1 ? "Erinnerung" : "Erinnerungen"
   const memorySectionSummary: ProfileSectionSummary = {
@@ -998,6 +1040,14 @@ export default function ProfilePage() {
   }
 
   function startQuizEditing(fieldKey?: string) {
+    // T15: every entry point into Haar-Check editing (the header button, an individual
+    // field card via `openTarget`, the "Haarlänge ergänzen" prompt) funnels through here —
+    // gating this one function corner-locks all of them at once, with a single choke point
+    // instead of duplicating the check at each call site.
+    if (tier === "free") {
+      openPremiumSheet(HAARCHECK_GATE)
+      return
+    }
     setQuizNotice(null)
     if (fieldKey) {
       setPendingQuizFocusKey(fieldKey)
@@ -1205,6 +1255,15 @@ export default function ProfilePage() {
           </h1>
         </div>
 
+        {/* T15: a free user never has `hasRoutineAccess` (only a real Personal Plan owner
+            does, and that owner is always premium — see `hasRoutineTabAccess`'s doc
+            comment), so `HairProfileSection` below never renders for them today. This is a
+            separate block, not a branch of that same conditional, so the existing premium
+            block below stays byte-for-byte untouched. */}
+        {tier === "free" ? (
+          <VerfeinerungTeaser onUnlock={() => openPremiumSheet(VERFEINERUNG_GATE)} />
+        ) : null}
+
         {hasRoutineAccess && refinementStatus ? (
           <HairProfileSection
             view={buildHairProfileSection({
@@ -1228,14 +1287,7 @@ export default function ProfilePage() {
                 controls={
                   <>
                     {!quizEditing ? (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Haar-Check bearbeiten
-                      </Button>
+                      <HaarCheckEditControl tier={tier} onEdit={() => startQuizEditing()} />
                     ) : null}
                   </>
                 }
@@ -2062,11 +2114,12 @@ export default function ProfilePage() {
                 preview={memorySectionSummary.preview}
                 controls={
                   <>
-                    <Switch
+                    <MemoryToggleControl
+                      tier={tier}
                       checked={memoryEnabled}
                       disabled={memoryLoading || memorySaving}
                       onCheckedChange={handleMemoryToggle}
-                      aria-label="Erinnerungen aktivieren"
+                      onLockedTap={() => openPremiumSheet(MEMORY_GATE)}
                     />
                     <Button
                       type="button"
@@ -2302,8 +2355,57 @@ export default function ProfilePage() {
               </form>
             </CardContent>
           </Card>
+
+          <nav
+            aria-label="Rechtliches"
+            className="flex flex-wrap items-center justify-center gap-x-2 pb-2 text-xs text-muted-foreground"
+          >
+            <Link
+              href="/impressum"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Impressum
+            </Link>
+            <Link
+              href="/datenschutz"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Datenschutz
+            </Link>
+            <Link
+              href="/agb"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              AGB
+            </Link>
+            <Link
+              href="/widerruf"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Widerruf
+            </Link>
+            <Link
+              href="/kontakt"
+              className="inline-flex min-h-11 items-center px-1 transition-colors hover:text-foreground"
+            >
+              Kontakt
+            </Link>
+            <FooterCookieSettingsButton className="inline-flex min-h-11 cursor-pointer items-center border-0 bg-transparent px-1 py-0 font-[inherit] text-xs text-muted-foreground transition-colors hover:text-foreground" />
+          </nav>
         </div>
       </main>
+
+      {/* T15: the one sheet for this page's two premium gates (Haar-Check editing,
+          Verfeinerungs-Teaser). `tier` is server-resolved and re-read from the refreshed
+          layout after a purchase (`PremiumSheet`'s own `router.refresh()`), so no
+          `onUnlocked` is needed here — unlike a surface holding its own client-copied tier
+          state, this page never copies `tier` out of the context it reads it from. */}
+      <PremiumSheet
+        open={premiumSheetOpen}
+        context={premiumSheetContext}
+        onClose={() => setPremiumSheetOpen(false)}
+        onRequestOpen={(context) => openPremiumSheet(context ?? HAARCHECK_GATE)}
+      />
     </div>
   )
 }

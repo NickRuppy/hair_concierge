@@ -1,0 +1,129 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "syoss-intense-keratin",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES plus CAPB gives effective ordinary cleansing, but the early refatting/protein/silicone care stack prevents a strong-reset classification.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03", "observation": "amphoteric buffer"},
+        {"ingredient": "PEG-7 Glyceryl Cocoate", "position": 5, "factId": "formula.surfactant.05", "observation": "refatting/nonionic surfactant clue"},
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "early protein counter-signal"}
+      ],
+      "counterSignal": "SLES is high in the list, so low is not plausible.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.surfactant.02", "formula.surfactant.03", "formula.architecture.helper_functions_preserved"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: protein, dimethicone, amodimethicone, cationic guar and a waxy/lipid route appear before or near the fragrance/pH region, making substantial rinse-off softness and manageability likely.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "protein/film route"},
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07", "observation": "nonvolatile silicone slip clue"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11", "observation": "amine-functional silicone clue"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 12, "factId": "formula.conditioning.12", "observation": "cationic polymer"}
+      ],
+      "counterSignal": "The product rinses out and relies on a cleansing base, so this is not a leave-on richness claim.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.conditioning.06", "formula.conditioning.07", "formula.conditioning.11", "formula.conditioning.12"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: multiple persistent routes converge early enough to make movement/root-lift loss plausible despite moderate cleansing reset.",
+      "formulaFacts": [
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07", "observation": "persistent silicone deposition clue"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11", "observation": "targeted silicone deposition clue"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 12, "factId": "formula.conditioning.12", "observation": "cationic polymer"},
+        {"ingredient": "Hydrogenated Castor Oil", "position": 13, "factId": "formula.conditioning.13", "observation": "waxy/lipid-like payload clue"}
+      ],
+      "counterSignal": "SLES/CAPB and rinse-off use provide some reset, and PEG-40 Hydrogenated Castor Oil is treated only as a solubilizer/emulsifier helper.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.conditioning.07", "formula.conditioning.11", "formula.conditioning.12", "formula.conditioning.13", "formula.function.16"],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact deposition level and silicone particle system cannot be proven from INCI alone.", "PEG-120 Methyl Glucose Dioleate function remains auxiliary rather than substantive conditioning."],
+        "whyThisBand": "Two silicone routes plus cationic guar and hydrogenated castor oil form more than one route kind and are not all late traces.",
+        "whyNotNeighborBand": "Not moderate because the care system is broader and more persistent than a single polymer or light refatter; the reset is not strong enough to erase that load."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: all revealed exact-product claims center on keratin, brittle/weak hair and repair, and the formula contains an early hydrolyzed keratin route plus substantive conditioning support.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "protein route compatible with repair positioning"},
+        {"ingredient": "Amodimethicone", "position": 11, "factId": "formula.conditioning.11", "observation": "conditioning support for damaged-feel positioning"}
+      ],
+      "counterSignal": "The formula is cleansing-led at the front, but v1.4 keeps a compatible repair focus when repair is the dominant product positioning.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claim:syoss-manufacturer-repair-positioning", "claim:dm-repair-positioning", "claim:rossmann-repair-positioning", "formula.canonical_inci"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the packet shows one dominant repair/keratin positioning, and conditioning is already the route that supports that primary focus rather than a distinct secondary focus.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "primary repair route"},
+        {"ingredient": "Dimethicone", "position": 7, "factId": "formula.conditioning.07", "observation": "care support but not a distinct focus claim"}
+      ],
+      "counterSignal": "There are several care ingredients, but no separate exact-product volume, shine, clarifying, gentle or scalp-active positioning.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claim:syoss-manufacturer-repair-positioning", "claim:dm-repair-positioning", "claim:rossmann-repair-positioning"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary rinse-out use and follow-up conditioner guidance; there is no treatment, reset, alternating or daily-use trigger.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "The word 'tiefenpflegend' supports repair/care positioning, not v1.4 treatment usage.",
+      "neighboringAlternative": "treatment",
+      "evidenceRefs": ["usage:syoss-directions", "usage:dm-directions", "claim:syoss-manufacturer-repair-positioning"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the packet is repair/hair-breakage positioned and includes no sensitive, itchy, dry-feeling or uncomfortable-scalp intent.",
+      "formulaFacts": [
+        {"ingredient": "Parfum (Fragrance)", "position": 9, "factId": "formula.exposure.09", "observation": "fragrance mixture"},
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "hair repair route rather than scalp-comfort route"}
+      ],
+      "counterSignal": "Some humectant/protein care may improve feel, but it is not scalp-comfort positioning.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["claim:syoss-manufacturer-repair-positioning", "formula.canonical_inci"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Salicylate", "position": 28, "factId": "formula.inci.28", "observation": "salicylate salt, not a v1.4 dandruff active"},
+        {"ingredient": "Hydrolyzed Keratin", "position": 6, "factId": "formula.conditioning.06", "observation": "repair route, not a dandruff active"}
+      ],
+      "counterSignal": "No recognized anti-dandruff active is present in the complete canonical INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/syoss-intense-keratin/source-packet.json",
+    "sourcePacketSha256": "774d663fce9c5317d6868e1f5d23b0d8662c57c57e125d590bca0ff5a2dfdcd1",
+    "formulaFingerprint": "9d68e3abce11e8e7af0982a2ee376633bdc8b4990df3e5d4b2808bef943dcc1a",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T09:45:07+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

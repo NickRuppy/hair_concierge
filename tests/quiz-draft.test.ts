@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import type { QuizAnswers } from "../src/lib/quiz/types"
 import {
   QUIZ_DRAFT_STORAGE_KEY,
   QUIZ_DRAFT_TTL_MS,
@@ -60,7 +61,7 @@ test("quiz draft stores only restorable quiz answers and progress", () => {
   assert.ok(raw)
   const stored = JSON.parse(raw)
 
-  assert.equal(stored.version, 1)
+  assert.equal(stored.version, 2)
   assert.equal(stored.step, 12)
   assert.deepEqual(stored.answers, {
     structure: "wavy",
@@ -312,4 +313,167 @@ test("quiz store applies verified partner identity and consent mode atomically",
   assert.equal(useQuizStore.getState().leadCaptureMode, "regular")
   assert.equal(useQuizStore.getState().leadCaptureSubStep, "name")
   Reflect.deleteProperty(globalThis, "window")
+})
+
+test("quiz drafts record the funnel package the progress belongs to", () => {
+  const storage = new MemoryStorage()
+
+  saveQuizDraft(
+    {
+      step: 16,
+      answers: { structure: "wavy", thickness: "fine", density: "medium" },
+      funnelPackageKey: "scan_v1",
+    },
+    storage,
+  )
+
+  const raw = storage.getItem(QUIZ_DRAFT_STORAGE_KEY)
+  assert.ok(raw)
+  const stored = JSON.parse(raw)
+  assert.equal(stored.version, 2)
+  assert.equal(stored.step, 16)
+  assert.equal(stored.funnelPackageKey, "scan_v1")
+
+  const draft = loadQuizDraft(storage)
+  assert.equal(draft?.step, 16)
+  assert.equal(draft?.funnelPackageKey, "scan_v1")
+})
+
+test("an organic quiz draft carries no funnel package", () => {
+  const storage = new MemoryStorage()
+
+  saveQuizDraft({ step: 3, answers: { structure: "wavy" } }, storage)
+
+  assert.equal(loadQuizDraft(storage)?.funnelPackageKey, null)
+})
+
+test("legacy version 1 quiz drafts still restore", () => {
+  const storage = new MemoryStorage()
+
+  storage.setItem(
+    QUIZ_DRAFT_STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      savedAt: Date.now(),
+      step: 4,
+      answers: { structure: "wavy", thickness: "normal", hair_length: "medium" },
+    }),
+  )
+
+  const draft = loadQuizDraft(storage)
+  assert.equal(draft?.step, 4)
+  assert.equal(draft?.funnelPackageKey, null)
+  assert.deepEqual(draft?.answers, {
+    structure: "wavy",
+    thickness: "normal",
+    hair_length: "medium",
+  })
+})
+
+test("insert drafts without a hair length still resume at the hair length question", () => {
+  for (const step of [17, 18]) {
+    const storage = new MemoryStorage()
+
+    storage.setItem(
+      QUIZ_DRAFT_STORAGE_KEY,
+      JSON.stringify({
+        version: 2,
+        savedAt: Date.now(),
+        step,
+        answers: { structure: "wavy", thickness: "normal", density: "medium" },
+        funnelPackageKey: "scan_v1",
+      }),
+    )
+
+    assert.equal(loadQuizDraft(storage)?.step, 15)
+  }
+})
+
+async function restoreDraftWithPackageKey(storage: MemoryStorage, funnelPackageKey: string | null) {
+  Object.defineProperty(globalThis, "window", {
+    value: { localStorage: storage },
+    configurable: true,
+  })
+  try {
+    const { useQuizStore } = await import("../src/lib/quiz/store")
+    // `reset` clears the stored draft, so the fixture is written back before
+    // the quiz restores it.
+    const storedDraft = storage.getItem(QUIZ_DRAFT_STORAGE_KEY)
+    useQuizStore.getState().reset()
+    if (storedDraft) storage.setItem(QUIZ_DRAFT_STORAGE_KEY, storedDraft)
+    useQuizStore.getState().setFunnelPackageKey(funnelPackageKey)
+    assert.equal(useQuizStore.getState().restoreDraft(), true)
+    return useQuizStore.getState()
+  } finally {
+    Reflect.deleteProperty(globalThis, "window")
+  }
+}
+
+const SCAN_DRAFT_ANSWERS = {
+  structure: "wavy",
+  thickness: "normal",
+  density: "medium",
+  hair_length: "medium",
+  fingertest: "leicht_uneben",
+  pulltest: "stretches_bounces",
+  treatment: ["natur"],
+  scalp_type: "ausgeglichen",
+  has_scalp_issue: false,
+} satisfies QuizAnswers
+
+test("a scan draft on an insert restores to the insert inside the scan package", async () => {
+  const storage = new MemoryStorage()
+  saveQuizDraft(
+    {
+      step: 16,
+      answers: { structure: "wavy", thickness: "normal", density: "medium" },
+      funnelPackageKey: "scan_v1",
+    },
+    storage,
+  )
+
+  const state = await restoreDraftWithPackageKey(storage, "scan_v1")
+
+  assert.equal(state.step, 16)
+  assert.equal(state.funnelPackageKey, "scan_v1")
+})
+
+test("a scan draft on an insert restores to the preceding question when the quiz is organic", async () => {
+  const storage = new MemoryStorage()
+  saveQuizDraft({ step: 17, answers: SCAN_DRAFT_ANSWERS, funnelPackageKey: "scan_v1" }, storage)
+
+  const state = await restoreDraftWithPackageKey(storage, null)
+
+  assert.equal(state.step, 6)
+  assert.equal(state.funnelPackageKey, null)
+  assert.equal(state.answers.scalp_type, "ausgeglichen")
+})
+
+test("an organic draft keeps its step when the quiz runs the scan package", async () => {
+  const storage = new MemoryStorage()
+  saveQuizDraft({ step: 8, answers: SCAN_DRAFT_ANSWERS }, storage)
+
+  const state = await restoreDraftWithPackageKey(storage, "scan_v1")
+
+  assert.equal(state.step, 8)
+  assert.equal(state.funnelPackageKey, "scan_v1")
+})
+
+test("a legacy draft restores its answers under the current funnel package", async () => {
+  const storage = new MemoryStorage()
+  storage.setItem(
+    QUIZ_DRAFT_STORAGE_KEY,
+    JSON.stringify({
+      version: 1,
+      savedAt: Date.now(),
+      step: 12,
+      answers: SCAN_DRAFT_ANSWERS,
+    }),
+  )
+
+  const state = await restoreDraftWithPackageKey(storage, "scan_v1")
+
+  assert.equal(state.step, 12)
+  assert.equal(state.funnelPackageKey, "scan_v1")
+  assert.equal(state.answers.structure, "wavy")
 })

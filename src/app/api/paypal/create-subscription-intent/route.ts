@@ -4,6 +4,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { captureCheckoutException } from "@/lib/observability/checkout"
+import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
+import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
 import {
   createOrAdoptPayPalReactivationCheckoutIntent,
   createPayPalCheckoutIntent,
@@ -17,6 +19,7 @@ import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import {
   parseSubscriptionPricingCatalog,
   resolveSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
   type SubscriptionPricingCatalog,
 } from "@/lib/billing/pricing-catalog"
 import { cookies } from "next/headers"
@@ -34,6 +37,11 @@ import {
   MembershipReactivationCheckoutConflictError,
   type MembershipReactivationCheckoutReservation,
 } from "@/lib/reactivation/checkout-reservations"
+import {
+  claimPayPalReactivationClientCreation,
+  findOwnedReactivationCheckout,
+  reactivationRecoveryPayload,
+} from "@/lib/reactivation/checkout-recovery"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 
 export const runtime = "nodejs"
@@ -42,15 +50,55 @@ export const PayPalSubscriptionIntentRequestSchema = z
   .object({
     interval: z.enum(["month", "quarter", "year"]),
     leadId: z.string().uuid().nullable().optional(),
-    source: z.enum(["pricing_page", "quiz_result_offer"]),
+    source: z.enum(["pricing_page", "quiz_result_offer", "premium_sheet"]),
     funnelEventId: z.string().uuid().optional(),
     checkoutAttemptId: z.string().uuid().optional(),
     checkoutContext: z.literal("membership_reactivation").optional(),
+    recoveryOnly: z.boolean().optional(),
     returnDestination: z.string().max(500).optional(),
   })
   .strict()
+  .superRefine(({ source, leadId, checkoutContext, returnDestination, recoveryOnly }, context) => {
+    if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "recovery is limited to reactivation",
+        path: ["recoveryOnly"],
+      })
+    // Cleanup batch: mirror Stripe's `create-checkout-session` premium_sheet contract
+    // (`StripeCheckoutSessionRequestSchema`'s `superRefine`). The Premium sheet sells
+    // exactly one thing — a standard-catalog subscription for an already-authenticated
+    // free user — and `leadId` (the lead/funnel offer contract) and `checkoutContext` /
+    // `returnDestination` (membership reactivation's own protocol) belong to OTHER
+    // checkout paths this endpoint speaks. `funnelEventId` and `checkoutAttemptId` stay
+    // allowed: both are legitimately used for premium_sheet, same as on the Stripe route.
+    if (source === "premium_sheet" && (leadId || checkoutContext || returnDestination)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "invalid Premium-sheet checkout contract",
+        path: ["source"],
+      })
+    }
+  })
 
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
+
+/**
+ * Docket rework R1 — the same pin Stripe's `create-checkout-session` applies for
+ * `source: "premium_sheet"` (`resolveCheckoutPricingCatalog`).
+ *
+ * The Premium sheet renders the STANDARD catalog unconditionally
+ * (`src/lib/premium-sheet/pricing.ts`, T13 §11 F06), so its PayPal plan must be resolved
+ * from the standard catalog too — otherwise a live `PERSONAL_PLAN_LAUNCH_PRICING_ENABLED`
+ * would hand a sheet buyer a 69,99/19,99/9,99 PayPal plan under a 99,99/34,99/14,99 row.
+ * Every other entry point keeps following the flag exactly as before.
+ */
+export function resolvePayPalCheckoutPricingCatalog(
+  source: PayPalCheckoutSource,
+): SubscriptionPricingCatalog {
+  if (source === "premium_sheet") return STANDARD_PRICING_CATALOG
+  return resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+}
 
 export function resolveStoredPayPalCheckoutIntentPlan({
   intentInterval,
@@ -97,6 +145,7 @@ export async function POST(request: Request) {
     funnelEventId,
     checkoutAttemptId,
     checkoutContext,
+    recoveryOnly,
     returnDestination: rawReturnDestination,
   } = parsed.data
   try {
@@ -110,7 +159,25 @@ export async function POST(request: Request) {
       checkoutContext === "membership_reactivation" &&
       (!user?.id || !checkoutAttemptId || leadId)
     ) {
-      return NextResponse.json({ error: "authenticated reactivation required" }, { status: 401 })
+      captureServerPaymentFailure({
+        signal: "payment_checkout_initialization_failed",
+        provider: "paypal",
+        stage: "paypal_create_subscription_intent",
+        source,
+        interval,
+        commerceKind: "subscription",
+        origin: "provider_api",
+        method: "paypal",
+        truth: "unknown",
+        errorFamily: "authentication",
+        status: "reactivation_authentication_required",
+        isInternalTest: false,
+        live: resolvePaymentRuntime({
+          PAYPAL_ENVIRONMENT: process.env.PAYPAL_ENVIRONMENT,
+          VERCEL_ENV: process.env.VERCEL_ENV,
+        }).paypalLive,
+      })
+      return NextResponse.json({ error: "reactivation_authentication_required" }, { status: 401 })
     }
 
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
@@ -145,63 +212,7 @@ export async function POST(request: Request) {
       if (conflict) return conflict
     }
 
-    const leadFunnelContext = resolvedLeadId
-      ? await resolveFunnelContextForLead(resolvedLeadId)
-      : null
-    if (checkoutContext === "membership_reactivation" && user?.id && checkoutAttemptId) {
-      try {
-        reactivationReservation = await acquireMembershipReactivationCheckout(admin, {
-          userId: user.id,
-          checkoutAttemptId,
-          interval: interval as BillingInterval,
-          returnDestination: sanitizeReactivationReturnDestination(rawReturnDestination),
-        })
-        reactivationReservation = await claimMembershipReactivationProvider(
-          admin,
-          reactivationReservation.id,
-          user.id,
-          "paypal",
-        )
-      } catch (error) {
-        if (error instanceof MembershipReactivationCheckoutConflictError) {
-          return NextResponse.json({ error: "reactivation_checkout_in_progress" }, { status: 409 })
-        }
-        throw error
-      }
-
-      const existingIntent = await findPayPalCheckoutIntentByReactivationReservationId(
-        admin,
-        reactivationReservation.id,
-      )
-      if (existingIntent && !["expired", "duplicate"].includes(existingIntent.status)) {
-        await bindMembershipReactivationProviderReference(
-          admin,
-          reactivationReservation.id,
-          existingIntent.id,
-        )
-        try {
-          const storedPlan = resolveStoredPayPalCheckoutIntentPlan({
-            intentInterval: existingIntent.interval,
-            metadata: existingIntent.metadata,
-            requestedInterval: interval,
-          })
-          return NextResponse.json({ token: existingIntent.token, planId: storedPlan.planId })
-        } catch (error) {
-          captureCheckoutException(error, {
-            provider: "paypal",
-            stage: "paypal_create_subscription_intent",
-            source,
-            interval,
-            leadId,
-            status: 500,
-            reason: "stored_intent_plan_invalid",
-          })
-          return NextResponse.json({ error: "paypal checkout intent invalid" }, { status: 500 })
-        }
-      }
-    }
-
-    const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+    const pricingCatalog = resolvePayPalCheckoutPricingCatalog(source)
     const analyticsPlan = getStripePricingPlan(interval, pricingCatalog)
     let planId: string
     try {
@@ -223,6 +234,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "paypal plan not configured" }, { status: 500 })
     }
 
+    const leadFunnelContext = resolvedLeadId
+      ? await resolveFunnelContextForLead(resolvedLeadId)
+      : null
     const cookieStore = await cookies()
     const funnelContext =
       (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
@@ -233,6 +247,98 @@ export async function POST(request: Request) {
           funnelContext,
         )
       : null
+    if (checkoutContext === "membership_reactivation" && user?.id && checkoutAttemptId) {
+      reactivationReservation = await findOwnedReactivationCheckout(admin, user.id)
+      if (
+        reactivationReservation?.provider &&
+        (reactivationReservation.provider !== "paypal" ||
+          reactivationReservation.interval !== interval)
+      ) {
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation, "resume"), {
+          status: 409,
+        })
+      }
+      if (recoveryOnly && !reactivationReservation?.provider) {
+        return NextResponse.json(
+          {
+            error: "reactivation_checkout_unavailable",
+            recovery: { provider: null, state: "not_started" },
+          },
+          { status: 409 },
+        )
+      }
+      if (reactivationReservation?.provider === "paypal") {
+        const existing = await findPayPalCheckoutIntentByReactivationReservationId(
+          admin,
+          reactivationReservation.id,
+        )
+        if (existing) {
+          if (
+            existing.provider_subscription_id &&
+            !["expired", "duplicate"].includes(existing.status)
+          ) {
+            return NextResponse.json({
+              statusUrl: `/welcome?provider=paypal&token=${encodeURIComponent(existing.token)}`,
+            })
+          }
+          return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+            status: 409,
+          })
+        }
+      }
+      try {
+        reactivationReservation = await acquireMembershipReactivationCheckout(admin, {
+          userId: user.id,
+          checkoutAttemptId: reactivationReservation?.checkout_attempt_id ?? checkoutAttemptId,
+          interval: interval as BillingInterval,
+          returnDestination:
+            reactivationReservation?.return_destination ??
+            sanitizeReactivationReturnDestination(rawReturnDestination),
+        })
+        reactivationReservation = await claimMembershipReactivationProvider(
+          admin,
+          reactivationReservation.id,
+          user.id,
+          "paypal",
+        )
+      } catch (error) {
+        if (error instanceof MembershipReactivationCheckoutConflictError) {
+          const owned = await findOwnedReactivationCheckout(admin, user.id)
+          return NextResponse.json(
+            owned
+              ? reactivationRecoveryPayload(owned, "resume")
+              : { error: "reactivation_checkout_in_progress" },
+            { status: 409 },
+          )
+        }
+        throw error
+      }
+
+      const existingIntent = await findPayPalCheckoutIntentByReactivationReservationId(
+        admin,
+        reactivationReservation.id,
+      )
+      if (existingIntent) {
+        // Returning its token to the SDK would create another provider subscription.
+        // A known binding can use the existing provider-verifying completion path.
+        if (
+          existingIntent.provider_subscription_id &&
+          !["expired", "duplicate"].includes(existingIntent.status)
+        ) {
+          return NextResponse.json({
+            statusUrl: `/welcome?provider=paypal&token=${encodeURIComponent(existingIntent.token)}`,
+          })
+        }
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+          status: 409,
+        })
+      }
+      if (recoveryOnly)
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+          status: 409,
+        })
+    }
+
     const intentInput = {
       interval: interval as BillingInterval,
       source: source as PayPalCheckoutSource,
@@ -268,6 +374,13 @@ export async function POST(request: Request) {
         })
       : await createPayPalCheckoutIntent(admin, intentInput)
     if (reactivationReservation) {
+      // Revalidate after asynchronous preflight/intent creation, before issuing
+      // permission to the browser SDK. Partner or paid access may have changed.
+      const accessConflict = await toConflictResponse(
+        assertCanStartCheckout(admin, user!.id),
+        user!.email,
+      )
+      if (accessConflict) return accessConflict
       if (["expired", "duplicate"].includes(intent.status)) {
         return NextResponse.json({ error: "reactivation_checkout_in_progress" }, { status: 409 })
       }
@@ -276,6 +389,11 @@ export async function POST(request: Request) {
         reactivationReservation.id,
         intent.id,
       )
+      if (!(await claimPayPalReactivationClientCreation(admin, intent, user!.id))) {
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+          status: 409,
+        })
+      }
     }
 
     const funnelRecorded = funnelContext

@@ -1,5 +1,6 @@
 import type { LeadCaptureSubStep, QuizStep } from "./types"
 import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "./questions"
+import { getQuizProgressStep } from "./screen-order"
 
 export interface QuizBrandPanelContent {
   eyebrow: string | null
@@ -25,11 +26,15 @@ const QUESTION_PANEL_DESCRIPTIONS: Partial<Record<QuizStep, string>> = {
 export function getQuizBrandPanelContent(
   step: QuizStep,
   leadCaptureSubStep: LeadCaptureSubStep,
+  funnelPackageKey: string | null = null,
 ): QuizBrandPanelContent {
   void leadCaptureSubStep
 
-  const questionDescription = QUESTION_PANEL_DESCRIPTIONS[step]
-  const questionNumber = getQuizQuestionNumber(step)
+  // A funnel insert carries no question of its own, so the panel keeps the
+  // state of the question it follows.
+  const progressStep = getQuizProgressStep(step, funnelPackageKey)
+  const questionDescription = QUESTION_PANEL_DESCRIPTIONS[progressStep]
+  const questionNumber = getQuizQuestionNumber(progressStep)
   if (questionDescription && questionNumber) {
     return {
       eyebrow: `FRAGE ${questionNumber} VON ${QUIZ_TOTAL_QUESTIONS}`,

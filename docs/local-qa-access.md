@@ -73,6 +73,25 @@ page fabricates its own scenario. Useful ones under `src/app/labs/`:
 - `/labs/personal-plan-application`, `/labs/personal-plan-application/[dayType]` — Anwendung
 - `/labs/personal-plan-chapters`, `/labs/personal-plan-view-transition`,
   `/labs/personal-plan-routine-editor`, `/labs/offer-page`, `/labs/profile-reactivation`
+- `/labs/scan` — the `/scan` flow on a **fake camera and a fake barcode detector**, so the
+  scanner is clickable on a laptop with no webcam. Drive it from the browser console via
+  `window.__scanLab`: `emit("4006381333931")` scans a barcode (two detections = one stable
+  read; it then stays in frame), `emitNone(3)` takes it back out, `denyCamera("NotAllowedError")`
+  makes the next camera acquisition fail, `stall()` kills the live stream, `startCamera()`
+  releases a camera held by the `__SCAN_LAB_HOLD_CAMERA` boot flag, `holdDetection()` /
+  `releaseDetection()` freeze one detection cycle mid-await (so a decode can be made to
+  land while a sheet is open), `spot("4006381333931", "4006381333955")` holds the
+  viewfinder's amber "spotted" state indefinitely (the value alternates, so the two
+  consecutive matches a stable read needs never happen — `emit(value, 1)` cannot do this,
+  its resting frame decodes on the very next cycle), and `events` /
+  `transitions` / `state` expose what the flow tracked and where it is. `state.detection`
+  (and the `detection` field on every entry in `transitions`) is what the VIEWFINDER is
+  drawing — `searching` / `spotted` / `read` — read off the scanner root's
+  `data-scan-detection`, so a state that only lasts a frame is still assertable from the
+  transition history afterwards. The `/api/scan/*`
+  calls are NOT mocked by the page — without a signed-in session every resolve fails, so
+  for anything past the decode either use the dev login (§1) or intercept the routes the
+  way `tests/scan-flow.spec.ts` does.
 
 These are the right tool for UI/copy/layout review of a stage. They do not exercise
 entitlement, routing, or persistence — that's §3.
@@ -174,3 +193,20 @@ Do not use a production creator or send real Customer.io messages. The personal 
 projected locally with `PARTNER_ACCESS_INVITATION_SIGNING_SECRET`; verify that opening or refreshing
 the URL does not mutate the invitation and that only `Los geht’s` begins the claim. For the complete
 operator contract and environment keys, see `docs/partner-access-operations.md`.
+
+**Existing-account case (fresh start on an already-used account):** sign up a plain test account —
+not the §1 dev-login fixture, which already seeds a paid legacy `profiles` period and would hit the
+paid exemption instead of a fresh start — and either complete the legacy `/onboarding` flow, or take
+it through a full Personal Plan via the local post-payment lane (§3) to get a finished plan. Note its
+e-mail, then create and claim a partner invitation for that same e-mail in `/admin/partner-access`.
+Verify the quiz starts at step 1 (not resumed) and that opening `/chat` mid-quiz routes to `/quiz`
+rather than the chat surface — this exercises the claim's fresh-start reset
+(`docs/partner-access-operations.md`, "Neustart") end to end.
+
+**Former field-test moderator case:** take an account whose email-bound field-test moderator
+membership has already ended or been revoked (§4 pointer, `docs/personal-plan-field-test-access.md`
+— creating or resetting a moderator roster is production-authorized tooling, not a local seed), then
+create and claim a partner invitation for that same e-mail and sign in as that account. Verify it
+gets independent app access from the partner grant instead of being blocked as an ended moderator —
+this exercises the middleware re-check at `src/lib/supabase/middleware.ts` where an active partner
+grant is checked once a moderator membership is found `ended`/`unavailable`.

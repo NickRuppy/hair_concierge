@@ -35,14 +35,16 @@ test("Methodik shows the required trust, commercial, ownership, and medical boun
   assert.doesNotMatch(html, /ärztlich validiert/i)
 })
 
-test("the Methodik shell is discoverable without exposing a premature Ratgeber", () => {
+test("the Methodik shell keeps the shared frame without exposing a premature Ratgeber", () => {
   const shellSource = readFileSync("src/components/editorial/editorial-shell.tsx", "utf8")
   const footerHtml = renderToStaticMarkup(<SiteFooter />)
 
   assert.match(shellSource, /<LandingHeader \/>/)
   assert.match(shellSource, /<main /)
   assert.match(shellSource, /<SiteFooter \/>/)
-  assert.match(footerHtml, /href="\/methodik"/)
+  // Ruling 2026-09-04: the unified footer is legal-only — no Methodik link, and still no Ratgeber.
+  assert.match(footerHtml, /href="\/impressum"/)
+  assert.doesNotMatch(footerHtml, /href="\/methodik"/)
   assert.doesNotMatch(footerHtml, /href="\/ratgeber"/)
 })
 
@@ -86,6 +88,10 @@ test("approved public copy uses serious, non-medical product framing", () => {
   const footerSource = readFileSync("src/components/landing/site-footer.tsx", "utf8")
   const faqSource = readFileSync("src/components/landing/faq.tsx", "utf8")
   const analysisSource = readFileSync("src/components/quiz/quiz-analysis.tsx", "utf8")
+  // The default-package commit/loading copy asserted below now lives in the
+  // funnel copy map (src/lib/quiz/funnel-copy.ts) — quiz-analysis.tsx renders
+  // it via `getQuizFunnelCopy`, but the organic literals themselves moved.
+  const funnelCopySource = readFileSync("src/lib/quiz/funnel-copy.ts", "utf8")
   const resultsSource = readFileSync("src/components/quiz/quiz-results.tsx", "utf8")
   const pricingSource = readFileSync("src/components/quiz/result-offer-pricing.tsx", "utf8")
   const planSelectorSource = readFileSync(
@@ -100,11 +106,11 @@ test("approved public copy uses serious, non-medical product framing", () => {
   assert.match(finalCtaSource, /Bereit für eine Pflege, die besser zu deinen/)
   assert.match(valueSource, /Keine eigenen Produkte\. Eine persönliche Auswertung/)
   assert.match(valueSource, /Transparente Datennutzung/)
-  assert.match(footerSource, /Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben/)
+  assert.match(footerSource, /Haarmony LLC/)
   assert.match(faqSource, /Chaarlie sicher bereitzustellen und zu verbessern/)
-  assert.match(analysisSource, /bereit für den nächsten Schritt mit deinem Haar\?/)
-  assert.match(analysisSource, /Ja, zeig mir meine Analyse/)
-  assert.match(analysisSource, /Deine Haaranalyse wird erstellt\./)
+  assert.match(funnelCopySource, /bereit für den nächsten Schritt mit deinem Haar\?/)
+  assert.match(funnelCopySource, /Ja, zeig mir meine Analyse/)
+  assert.match(funnelCopySource, /Deine Haaranalyse wird erstellt\./)
   assert.doesNotMatch(analysisSource, /Meine Haaranalyse ansehen/)
   assert.doesNotMatch(analysisSource, /DEIN PROFIL WIRD ERSTELLT/)
   assert.doesNotMatch(analysisSource, /Deine Angaben zur Haarstruktur werden ausgewertet/)

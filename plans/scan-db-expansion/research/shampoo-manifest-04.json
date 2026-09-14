@@ -1,0 +1,1205 @@
+{
+  "batch_id": "scan-db-expansion-shampoo-wave-04-2026-09-02",
+  "generated_at": "2026-09-02T12:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Totes Meer",
+          "brand": "ISANA MED",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/567/MAM_56763628/MAM_56763628_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230"
+          },
+          "description": "pH-hautneutrales Shampoo für empfindliche und juckende Kopfhaut mit Totem Meer Salz, Allantoin und Bisabolol.",
+          "price_eur": 0.99
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615629230",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+              "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml?q=isana+sensitive&suggestionType=0-res-product"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "irritated",
+              "shampoo_bucket": "irritationen",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "irritated",
+              "shampoo_bucket": "irritationen",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "irritated",
+              "shampoo_bucket": "irritationen",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "healthy_scalp"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-TARGETED",
+            "product_source": {
+              "label": "Rossmann HU PDP (Anwendung, research capture)",
+              "url": "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml?q=isana+sensitive&suggestionType=0-res-product",
+              "text": "Normal rinse-off directions were not exposed on the currently opened German PDP; corroborating Rossmann HU page states use on wet hair and rinse."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615629230",
+            "source_label": "Rossmann DE PDP (GTIN/EAN)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+            "source_type": "retailer",
+            "source_text": "EAN 4305615629230; Shampoo Totes Meer; 200 ml.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Lauryl Lactate, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Parfum, Menthol, Laureth-4, Maris Sal, Allantoin, Bisabolol, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Citric Acid, Glycerin, Formic Acid",
+              "source_completeness": "complete"
+            },
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+            "source_type": "retailer",
+            "source_text": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Lauryl Lactate, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Parfum, Menthol, Laureth-4, Maris Sal, Allantoin, Bisabolol, Sodium Benzoate, Potassium Sorbate, Sodium Chloride, Citric Acid, Glycerin, Formic Acid",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Normal rinse-off directions were not exposed on the currently opened German PDP; corroborating Rossmann HU page states use on wet hair and rinse.",
+            "source_label": "Rossmann HU PDP (Anwendung, research capture)",
+            "source_url": "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml?q=isana+sensitive&suggestionType=0-res-product",
+            "source_type": "retailer",
+            "source_text": "Normal rinse-off directions were not exposed on the currently opened German PDP; corroborating Rossmann HU page states use on wet hair and rinse.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt; Schutz vor Austrocknung für Kopfhaut & Haar; pH hautneutral.",
+            "source_label": "Rossmann DE PDP (Produktclaims)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+            "source_type": "retailer",
+            "source_text": "Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt; Schutz vor Austrocknung für Kopfhaut & Haar; pH hautneutral.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+            "source_type": "retailer",
+            "source_text": "Visual inspection: single front-facing bottle on a plain light background; remote rendition is 1200 square.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.99,
+            "source_label": "Rossmann DE PDP (Preis)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+            "source_type": "retailer",
+            "source_text": "0.99 €; 200 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "Exact sensitive/itchy-scalp positioning and the reviewed formula support the sensitive cosmetic scalp route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: scalp_active is the primary product focus.",
+          "research.properties.focusSecondary": "Reviewed claim-plus-formula assessment: gentle is an independently distinct secondary focus.",
+          "research.properties.scalpComfortTarget": "Exact sensitive/itchy-scalp positioning and formula support a cosmetic scalp-comfort target.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Nur konservativ aus expliziter Positionierung abgeleitete, anerkannte Concern-Codes; nicht abgedeckte Marketingclaims werden nicht erzwungen.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Plex Care",
+          "brand": "Balea PROFESSIONAL",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+          "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_4000%2Cw_4000/v1775776337/assets/pas/images/33578266-4a80-465c-aa22-40a430b240f9/balea-professional-shampoo-plex-care",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care"
+          },
+          "description": "Rinse-out Shampoo mit 3-fach-Protein-Komplex für chemisch behandeltes und geschädigtes Haar.",
+          "price_eur": 1.95
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4070765006285",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+              "https://www.dm.ro/p/d/1674700/balea-professional-sampon-plex-care"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm DE PDP (Anwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+              "text": "Sanft ins nasse Haar einmassieren und sorgfältig mit lauwarmem Wasser ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4070765006285",
+            "source_label": "dm DE PDP (GTIN/EAN)",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "EAN 4070765006285; Shampoo Plex Care; 250 ml.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Betaine, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine, Parfum, Glycerin, Glyceryl Oleate, Polyglyceryl-3 Caprate, PCA, Glycine, Histidine, Coco-Glucoside, Guar Hydroxypropyltrimonium Chloride, PEG-4 Rapeseedamide, Glycol Distearate, Silicone Quaternium-22, Dipropylene Glycol, Glyceryl Stearate, Hydrolyzed Vegetable Protein, Sodium PCA, Aspartic Acid, Palmitamidopropyltrimonium Chloride, Propylene Glycol, Alanine, Valine, Hydrolyzed Silk, Isoleucine, Proline, Threonine, Phenylalanine, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Octadecyl Di-T-Butyl-4 Hydroxyhydrocinnamate, Phenoxyethanol, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid, Sodium Hydroxide, Sodium Lactate, Lactic Acid",
+              "source_completeness": "complete"
+            },
+            "source_label": "dm DE PDP",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Betaine, Hydrolyzed Keratin, Hydrolyzed Pea Protein, Arginine, Serine, Parfum, Glycerin, Glyceryl Oleate, Polyglyceryl-3 Caprate, PCA, Glycine, Histidine, Coco-Glucoside, Guar Hydroxypropyltrimonium Chloride, PEG-4 Rapeseedamide, Glycol Distearate, Silicone Quaternium-22, Dipropylene Glycol, Glyceryl Stearate, Hydrolyzed Vegetable Protein, Sodium PCA, Aspartic Acid, Palmitamidopropyltrimonium Chloride, Propylene Glycol, Alanine, Valine, Hydrolyzed Silk, Isoleucine, Proline, Threonine, Phenylalanine, Sodium Benzoate, Potassium Sorbate, Benzoic Acid, Octadecyl Di-T-Butyl-4 Hydroxyhydrocinnamate, Phenoxyethanol, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid, Sodium Hydroxide, Sodium Lactate, Lactic Acid",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Sanft ins nasse Haar einmassieren und sorgfältig mit lauwarmem Wasser ausspülen.",
+            "source_label": "dm DE PDP (Anwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "Sanft ins nasse Haar einmassieren und sorgfältig mit lauwarmem Wasser ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Für chemisch behandeltes und geschädigtes Haar; Intense-Repair-Technologie, 3-fach-Protein-Komplex und Aminosäuren; reinigt sanft.",
+            "source_label": "dm DE PDP (Produktclaims)",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "Für chemisch behandeltes und geschädigtes Haar; Intense-Repair-Technologie, 3-fach-Protein-Komplex und Aminosäuren; reinigt sanft.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "Visual inspection: single front-facing bottle, transparent/plain presentation; 1200-pixel long side rendition.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.95,
+            "source_label": "dm DE PDP (Preis)",
+            "source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+            "source_type": "retailer",
+            "source_text": "1.95 €; 250 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: normal — Production-light projection: normal hair is an ideal fit for the reviewed high-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed high-weight rinse-out profile. Conditional (not emitted): fine — Production-light projection: fine hair is conditional because the reviewed high-weight rinse-out profile can be substantial.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: high conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: repair is the primary product focus.",
+          "research.properties.focusSecondary": "No independently evidenced secondary focus is retained.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: high weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Nur konservativ aus expliziter Positionierung abgeleitete, anerkannte Concern-Codes; nicht abgedeckte Marketingclaims werden nicht erzwungen.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Keratin & Repair",
+          "brand": "ISANA PROFESSIONAL",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/185/MAM_18582916/MAM_18582916_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940"
+          },
+          "description": "Silikonfreies Rinse-out Shampoo mit Keratin und kaltgepresstem Marulaöl für stark geschädigtes und brüchiges Haar.",
+          "price_eur": 1.29
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615830940",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+              "https://shop.rossmann.hu/termek/isana-hair-professional-anti-haarbruch-sampon-250-ml"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "breakage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann DE PDP (Anwendungshinweise)",
+              "url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+              "text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet."
+            },
+            "deviation": {
+              "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+              "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615830940",
+            "source_label": "Rossmann DE PDP (GTIN/EAN)",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "EAN 4305615830940; Shampoo Keratin & Repair; 250 ml.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Panthenol, Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin, Sclerocarya Birrea Seed Oil, Glycol Distearate, Guar Hydroxypropyltrimonium Chloride, Laureth-4, Sodium Chloride, Parfum, Linalool, Benzyl Alcohol, Citronellol, Citric Acid, Benzoic Acid, Formic Acid, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate",
+              "source_completeness": "complete"
+            },
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Glycerin, Panthenol, Keratin, Laurdimonium Hydroxypropyl Hydrolyzed Keratin, Hydrolyzed Keratin, Sclerocarya Birrea Seed Oil, Glycol Distearate, Guar Hydroxypropyltrimonium Chloride, Laureth-4, Sodium Chloride, Parfum, Linalool, Benzyl Alcohol, Citronellol, Citric Acid, Benzoic Acid, Formic Acid, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet.",
+            "source_label": "Rossmann DE PDP (Anwendungshinweise)",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Für stark geschädigtes und brüchiges Haar; mit Keratin und kaltgepresstem Marulaöl; ohne Silikone.",
+            "source_label": "Rossmann DE PDP (Produktclaims)",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "Für stark geschädigtes und brüchiges Haar; mit Keratin und kaltgepresstem Marulaöl; ohne Silikone.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "Visual inspection: single front-facing tube on a plain light background; remote rendition is 1200 square.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.29,
+            "source_label": "Rossmann DE PDP (Preis)",
+            "source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+            "source_type": "retailer",
+            "source_text": "1.29 €; 250 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: repair is the primary product focus.",
+          "research.properties.focusSecondary": "No independently evidenced secondary focus is retained.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: frequent is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Nur konservativ aus expliziter Positionierung abgeleitete, anerkannte Concern-Codes; nicht abgedeckte Marketingclaims werden nicht erzwungen.",
+          "protocols": "Die nicht numerische Einwirkzeit wird als echte Abweichung dokumentiert; ansonsten gilt die Standard-Rinse-out-Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Plex Shampoo",
+          "brand": "ISANA PROFESSIONAL",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/159/MAM_15957163/MAM_15957163_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917"
+          },
+          "description": "Rinse-out Plex Shampoo mit Phytoprotein-Komplex für geschwächte und geschädigte Haarstruktur.",
+          "price_eur": 1.99
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615975917",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+              "https://www.rossmann.com.tr/isana-professional-plex-sampuan-250-ml-p-sr23110228"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "breakage",
+          "repair"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann DE PDP (Anwendungshinweise)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+              "text": "Sanft auf die feuchte Kopfhaut einmassieren und sorgfältig ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615975917",
+            "source_label": "Rossmann DE PDP (GTIN/EAN)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "EAN 4305615975917; Plex Shampoo; 250 ml.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Oryza Sativa Seed Protein, Phytic Acid, Tocopherol, Ascorbyl Palmitate, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Parfum, Glycerin, Glyceryl Oleate, Calcium Gluconate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Coco-Glucoside, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Lactate, Sodium Hydroxide, Lactic Acid, Gluconolactone",
+              "source_completeness": "complete"
+            },
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "Aqua, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Panthenol, Oryza Sativa Seed Protein, Phytic Acid, Tocopherol, Ascorbyl Palmitate, Oryza Sativa Extract, Hydrolyzed Adansonia Digitata Seed Extract, Parfum, Glycerin, Glyceryl Oleate, Calcium Gluconate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrolyzed Wheat Protein, Coco-Glucoside, Hydrolyzed Soy Protein, Rice Amino Acids, Proline, Hydrogenated Palm Glycerides Citrate, Lecithin, Sodium Benzoate, Potassium Sorbate, Citric Acid, Sodium Lactate, Sodium Hydroxide, Lactic Acid, Gluconolactone",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Sanft auf die feuchte Kopfhaut einmassieren und sorgfältig ausspülen.",
+            "source_label": "Rossmann DE PDP (Anwendungshinweise)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "Sanft auf die feuchte Kopfhaut einmassieren und sorgfältig ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Reinigt das Haar sanft; Phytoprotein-Komplex aus Reis, Soja und Weizen repariert die geschädigte Haarstruktur, bändigt Spliss und reduziert Haarbruch.",
+            "source_label": "Rossmann DE PDP (Produktclaims)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "Reinigt das Haar sanft; Phytoprotein-Komplex aus Reis, Soja und Weizen repariert die geschädigte Haarstruktur, bändigt Spliss und reduziert Haarbruch.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "Visual inspection: single front-facing bottle on a plain light background; remote rendition is 1200 square.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 1.99,
+            "source_label": "Rossmann DE PDP (Preis)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+            "source_type": "retailer",
+            "source_text": "1.99 €; 250 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: repair is the primary product focus.",
+          "research.properties.focusSecondary": "No independently evidenced secondary focus is retained.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Nur konservativ aus expliziter Positionierung abgeleitete, anerkannte Concern-Codes; nicht abgedeckte Marketingclaims werden nicht erzwungen.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Energy Power",
+          "brand": "ISANA MEN",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/565/MAM_56579592/MAM_56579592_SHOP_IMAGE_2.3.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428"
+          },
+          "description": "Rinse-out Shampoo für feines und energieloses Haar; die aktuelle Pack- und PDP-Identität lautet Energy Power.",
+          "price_eur": 0.65
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4305615633428",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+              "https://allegro.pl/produkt/isana-men-energy-power-szampon-kofeina-keratyna-7bb9abb8-31ff-4fbe-9ceb-700e88588c73?fromInactiveOffer=archived"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann DE PDP (Anwendungshinweise)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+              "text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet."
+            },
+            "deviation": {
+              "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+              "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4305615633428",
+            "source_label": "Rossmann DE PDP (GTIN/EAN)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "EAN 4305615633428; Shampoo Energy Power; 300 ml.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Panthenol, Pantolactone, Niacinamide, Keratin, Hydrolyzed Keratin, Hydrolyzed Wheat Protein, Caffeine, Propylene Glycol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Decyl Glucoside, PEG-3 Distearate, Parfum, Hexyl Cinnamal, Linalool, Limonene, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+              "source_completeness": "complete"
+            },
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Panthenol, Pantolactone, Niacinamide, Keratin, Hydrolyzed Keratin, Hydrolyzed Wheat Protein, Caffeine, Propylene Glycol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Decyl Glucoside, PEG-3 Distearate, Parfum, Hexyl Cinnamal, Linalool, Limonene, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet.",
+            "source_label": "Rossmann DE PDP (Anwendungshinweise)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Energy Power mit leistungsstarker Pflegeformel für feines & energieloses Haar.",
+            "source_label": "Rossmann DE PDP (Produktclaims)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "Energy Power mit leistungsstarker Pflegeformel für feines & energieloses Haar.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "Visual inspection: single front-facing bottle on a plain light background. Pack says Energy Power, confirming the name correction.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 0.65,
+            "source_label": "Rossmann DE PDP (Preis)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+            "source_type": "retailer",
+            "source_text": "0.65 €; 300 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route. The frozen selection name Energy Effect is stale; the exact-EAN current pack and PDP identify Energy Power.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: volume is the primary product focus.",
+          "research.properties.focusSecondary": "No independently evidenced secondary focus is retained.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: frequent is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Die aktuelle Rossmann-PDP und der Packshot zum exakten EAN 4305615633428 nennen Energy Power; Energy Effect bleibt ausschließlich als veralteter Auswahlname dokumentiert.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Kein konservativer anerkannter Concern-Code wird allein aus dem verfügbaren Marketing abgeleitet.",
+          "protocols": "Die nicht numerische Einwirkzeit wird als echte Abweichung dokumentiert; ansonsten gilt die Standard-Rinse-out-Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Kokosmilch & Macadamia Normales & Trockenes Haar",
+          "brand": "Garnier Wahre Schätze",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/899/MAM_8998657/MAM_8998657_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402"
+          },
+          "description": "Rinse-out Shampoo mit Kokosmilch und Macadamiaöl für normales und trockenes Haar.",
+          "price_eur": 2.49
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "3600542462402",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+              "https://www.budni.de/sortiment/produkte/5399571009"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+              "text": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Kokosmilch & Macadamia sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "3600542462402",
+            "source_label": "Rossmann DE PDP (GTIN/EAN)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "250 ml (1 L = 9,96 €); 2.49 €; 1161774 G - INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE ...",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCERIN • GLYCOL DISTEARATE • SODIUM CHLORIDE • PARFUM / FRAGRANCE • MACADAMIA INTEGRIFOLIA SEED OIL • COCOS NUCIFERA OIL / COCONUT OIL • CARBOMER • PPG-5-CETETH-20 • SODIUM HYDROXIDE • CITRIC ACID • POLYQUATERNIUM-10 • SODIUM BENZOATE • LINALOOL • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE",
+              "source_completeness": "complete"
+            },
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "AQUA / WATER • SODIUM LAURETH SULFATE • COCO-BETAINE • GLYCERIN • GLYCOL DISTEARATE • SODIUM CHLORIDE • PARFUM / FRAGRANCE • MACADAMIA INTEGRIFOLIA SEED OIL • COCOS NUCIFERA OIL / COCONUT OIL • CARBOMER • PPG-5-CETETH-20 • SODIUM HYDROXIDE • CITRIC ACID • POLYQUATERNIUM-10 • SODIUM BENZOATE • LINALOOL • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Kokosmilch & Macadamia sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+            "source_label": "Rossmann.de Produktseite (Anwendung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Kokosmilch & Macadamia sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Für normales und trockenes Haar; Kokosmilch & Macadamia; das Haar wird seidig glänzend.",
+            "source_label": "Rossmann DE PDP",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "Für normales und trockenes Haar; Kokosmilch & Macadamia; das Haar wird seidig glänzend.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "Produktseite (Produktbild)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "Official retailer asset requested at 1200x1200; automated fetch timed out, so product-only framing remains a visual-review item.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.49,
+            "source_label": "Rossmann DE PDP (Preis)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+            "source_type": "retailer",
+            "source_text": "2.49 €; 250 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: general is the primary product focus.",
+          "research.properties.focusSecondary": "Reviewed claim-plus-formula assessment: shine is an independently distinct secondary focus.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Nur konservativ aus expliziter Positionierung abgeleitete, anerkannte Concern-Codes; nicht abgedeckte Marketingclaims werden nicht erzwungen.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Sheer Blonde Refresh & Shine Shampoo",
+          "brand": "John Frieda Sheer Blonde",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1770853700/assets/pas/images/72f9e796-edbb-479c-b814-cc68ee3a191a/john-frieda-shampoo-sheer-blonde",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde"
+          },
+          "description": "Rinse-out Shampoo für blondes Haar mit Fokus auf Glanz und leicht klärender Entfernung stumpf machender Rückstände."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "5037156296105",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+              "https://www.johnfrieda.com/de-ch/produkte/blonde/sheer-blonde/refresh-shine-shampoo/",
+              "https://www.rossmann.dk/da/pleje-og-duft-john-frieda-sheer-blonde-sheer-blonde-refresh-og-shine-shampoo/p/5037156296105"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "dm.de Produktseite (Anwendung)",
+              "url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+              "text": "Anwendung: Sanft ins nasse Haar einmassieren, aufschäumen und gründlich ausspülen. Anschließend Go Blonder Conditioner verwenden."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "5037156296105",
+            "source_label": "dm DE PDP (GTIN/EAN)",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+            "source_type": "retailer",
+            "source_text": "GTIN: 5037156296105 ... INGREDIENTS: WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE ...",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, GLYCERYL OLEATE, HYDROGENATED VEGETABLE OIL, SORBITAN CAPRYLATE, DICAPRYLYL ETHER, DECYL GLUCOSIDE, LACTIC ACID, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, ASCORBIC ACID, SODIUM BENZOATE, BENZOIC ACID, FRAGRANCE/PARFUM, BENZYL ALCOHOL, CITRUS AURANTIUM PEEL OIL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE, LINALOOL, CARAMEL",
+              "source_completeness": "complete"
+            },
+            "source_label": "dm DE PDP + John Frieda DE-CH manufacturer PDP",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+            "source_type": "manufacturer",
+            "source_text": "WATER/AQUA/EAU, SODIUM LAURETH SULFATE, COCO-GLUCOSIDE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, GLYCERYL OLEATE, HYDROGENATED VEGETABLE OIL, SORBITAN CAPRYLATE, DICAPRYLYL ETHER, DECYL GLUCOSIDE, LACTIC ACID, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, CITRIC ACID, ASCORBIC ACID, SODIUM BENZOATE, BENZOIC ACID, FRAGRANCE/PARFUM, BENZYL ALCOHOL, CITRUS AURANTIUM PEEL OIL, CITRUS LIMON (LEMON) PEEL OIL, HEXYL CINNAMAL, LIMONENE, LINALOOL, CARAMEL",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Anwendung: Sanft ins nasse Haar einmassieren, aufschäumen und gründlich ausspülen. Anschließend Go Blonder Conditioner verwenden.",
+            "source_label": "dm.de Produktseite (Anwendung)",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+            "source_type": "retailer",
+            "source_text": "Anwendung: Sanft ins nasse Haar einmassieren, aufschäumen und gründlich ausspülen. Anschließend Go Blonder Conditioner verwenden.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Belebt blondes Haar, verstärkt den Glanz und entfernt stumpf machende Rückstände leicht klärend.",
+            "source_label": "dm DE PDP",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+            "source_type": "retailer",
+            "source_text": "Belebt blondes Haar, verstärkt den Glanz und entfernt stumpf machende Rückstände leicht klärend.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "dm.de Produktseite (Produktbild)",
+            "source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+            "source_type": "retailer",
+            "source_text": "Exact product-only dm rendition recovered and visually verified.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed moderate-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed moderate-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed moderate-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: moderate conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: shine is the primary product focus.",
+          "research.properties.focusSecondary": "Reviewed claim-plus-formula assessment: clarifying is an independently distinct secondary focus.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: moderate weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+          "product.identifiers.ean": "GS1-valid; die exakte Packungsgröße/EAN ist durch die im Identifier hinterlegten Quellen bestätigt.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Kein konservativer anerkannter Concern-Code wird allein aus dem verfügbaren Marketing abgeleitet.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Shampoo Bouncy Curls",
+          "brand": "AUSSIE",
+          "category_key": "shampoo",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "net_content_value": 300,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2800%2Cw_2800/v1778026207/assets/pas/images/180d7727-7157-427e-880a-178a61653209/aussie-shampoo-bouncy-curls",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls"
+          },
+          "description": "Sulfatfreies Rinse-out Shampoo für lockiges Haar mit vollständiger deutscher dm-INCI.",
+          "price_eur": 4.95
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530325530",
+        "cross_source_agreement": true,
+        "source_urls": [
+          "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+          "https://www.for-me-online.de/teilnahmebedingungen-aktion/aussie-shampoo-50prozent"
+        ],
+        "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            },
+            {
+              "cleansing_intensity": "regular",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [],
+        "protocols": [
+          {
+            "template_id": "TPL-SHAMPOO-STD",
+            "product_source": {
+              "label": "Rossmann.de Produktseite (Anwendung)",
+              "url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+              "text": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen"
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+      {
+        "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530325530",
+            "source_label": "dm DE PDP (GTIN/EAN)",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "AUSSIE Shampoo Bouncy Curls, 300 ml; 4,95 €; GTIN: 8006530325530; Ingredients: Aqua, Sodium Cocoyl Isethionate ...",
+        "checked_at": "2026-09-02"
+      },
+      {
+        "fact_key": "product.identifiers.ean",
+        "fact_value": "8006530325530",
+        "source_label": "P&G for-me official campaign record (independent GTIN corroboration)",
+        "source_url": "https://www.for-me-online.de/teilnahmebedingungen-aktion/aussie-shampoo-50prozent",
+        "source_type": "manufacturer",
+        "source_text": "Official P&G/for-me record lists GTIN 8006530325530 as \"Aussie Shampoo Curls\". The shorter label is reconciled to dm DE's exact 300 ml \"AUSSIE Shampoo Bouncy Curls\" PDP by the shared GTIN.",
+        "checked_at": "2026-09-03"
+      },
+          {
+            "fact_key": "product_shampoo_specs.authority_facts",
+            "fact_value": {
+              "inci_basis": "AQUA, SODIUM COCOYL ISETHIONATE, LAURAMIDOPROPYL BETAINE, COCAMIDOPROPYL BETAINE, SODIUM LAUROYL SARCOSINATE, SODIUM CHLORIDE, SODIUM BENZOATE, PARFUM, SODIUM SALICYLATE, POLYQUATERNIUM-10, SODIUM CITRATE, CITRIC ACID, TETRASODIUM EDTA, CITRUS AURANTIUM PEEL OIL, DIMETHYL PHENETHYL ACETATE, LIMONENE, BENZYL SALICYLATE, HEXYL CINNAMAL, BENZYL ALCOHOL, SODIUM HYDROXIDE, LINALOOL, COUMARIN, BUTYLENE GLYCOL, FRAGARIA CHILOENSIS FRUIT EXTRACT",
+              "source_completeness": "complete"
+            },
+            "source_label": "dm DE PDP",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "AQUA, SODIUM COCOYL ISETHIONATE, LAURAMIDOPROPYL BETAINE, COCAMIDOPROPYL BETAINE, SODIUM LAUROYL SARCOSINATE, SODIUM CHLORIDE, SODIUM BENZOATE, PARFUM, SODIUM SALICYLATE, POLYQUATERNIUM-10, SODIUM CITRATE, CITRIC ACID, TETRASODIUM EDTA, CITRUS AURANTIUM PEEL OIL, DIMETHYL PHENETHYL ACETATE, LIMONENE, BENZYL SALICYLATE, HEXYL CINNAMAL, BENZYL ALCOHOL, SODIUM HYDROXIDE, LINALOOL, COUMARIN, BUTYLENE GLYCOL, FRAGARIA CHILOENSIS FRUIT EXTRACT",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "protocols.usage",
+            "fact_value": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen",
+            "source_label": "Rossmann.de Produktseite (Anwendung)",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.claims",
+            "fact_value": "Für lockiges Haar; curl/moisture marketing bleibt ohne zusätzliche shipped focus enum.",
+            "source_label": "dm DE PDP",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "Für lockiges Haar; curl/moisture marketing bleibt ohne zusätzliche shipped focus enum.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.candidate_image",
+            "fact_value": "Exact product-only packshot candidate.",
+            "source_label": "dm.de Produktseite (Produktbild)",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "Exact product-only dm rendition recovered and visually verified.",
+            "checked_at": "2026-09-02"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.95,
+            "source_label": "dm DE PDP (Preis)",
+            "source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+            "source_type": "retailer",
+            "source_text": "4.95 €; 300 ml.",
+            "checked_at": "2026-09-02"
+          }
+        ],
+        "field_rationales": {
+          "category_specs.product_shampoo_specs": "No targeted scalp condition is claimed; the reviewed regular shampoo projects to the ordinary balanced route.",
+          "category_specs.product_shampoo_specs.cleansing_intensity": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI. Observed intensity: regular.",
+          "product.suitable_thicknesses": "Ideal: fine — Production-light projection: fine hair is an ideal fit for the reviewed low-weight rinse-out profile. normal — Production-light projection: normal hair is an ideal fit for the reviewed low-weight rinse-out profile. coarse — Production-light projection: coarse hair is an ideal fit for the reviewed low-weight rinse-out profile. Conditional (not emitted): none.",
+          "required_protocol_roles": "Roles derived from reviewed buckets: shampoo_everyday.",
+          "research.properties.cleansingStrength": "Reviewed full-formula assessment: moderate cleansing from the complete current DE INCI.",
+          "research.properties.conditioningLevel": "Reviewed full-formula assessment: low conditioning/deposition potential from the complete current DE INCI.",
+          "research.properties.dandruffSupport": "The complete exact current INCI has no accepted anti-dandruff active for this product.",
+          "research.properties.focusPrimary": "Reviewed claim-plus-formula assessment: general is the primary product focus.",
+          "research.properties.focusSecondary": "No independently evidenced secondary focus is retained.",
+          "research.properties.scalpComfortTarget": "No exact targeted scalp-comfort claim is retained.",
+          "research.properties.usageRole": "Reviewed usage assessment: regular is the conservative v1.4 role from claims, use text and formula.",
+          "research.properties.weightPotential": "Reviewed full-formula assessment: low weight potential from the complete current DE INCI.",
+          "product.name": "Exakter Name der geprüften deutschen Produktseite.",
+      "product.identifiers.ean": "GS1-valid; dm DE exact 300 ml Bouncy Curls PDP and the official P&G/for-me record independently corroborate GTIN 8006530325530. The P&G label is shorter (\"Aussie Shampoo Curls\") but shares the exact GTIN.",
+          "product.candidate_image": "Geprüfter exakter Produkt-Packshot; finalisierte Produktbilder bleiben dem separaten Bildprozess vorbehalten.",
+          "concern_eligibility": "Kein konservativer anerkannter Concern-Code wird allein aus dem verfügbaren Marketing abgeleitet.",
+          "protocols": "Normale Rinse-out-Anwendung ohne echte Abweichung von der Vorlage."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": []
+}

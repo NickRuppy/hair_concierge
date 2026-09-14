@@ -5,8 +5,9 @@ trennen das Ergebnis des Identifier-Lookups (`lookup_outcome`) vom tatsächlich
 für die Person abgeschlossenen Terminal-Ergebnis (`terminal_outcome`).
 `completed_at` ist nur bei einer vollständig aufgebauten Antwort gesetzt;
 `failure_stage` zeigt bei unvollständigen Antworten die begrenzte technische
-Stufe. Die alte Spalte `outcome` wird während der Dual-Write-Phase bewusst
-weitergeschrieben und ist kein Ersatz für `terminal_outcome`.
+Stufe. Die alte Spalte `outcome` wird seit dem 2026-09-04 nicht mehr
+beschrieben und bleibt nur für Zeilen erhalten, die älter sind als dieses
+Datum.
 Ein exakter Katalogtreffer mit noch nicht belastbar bewertbarem Fit wird als
 `verdict_unknown` abgeschlossen und zählt ausdrücklich nicht als `resolved`.
 

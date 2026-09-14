@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import {
@@ -54,6 +55,7 @@ export type CheckoutActivationErrorCode =
   | "checkout_ownership_conflict"
   | "checkout_moderator_reset_cutoff"
   | "checkout_user_race_unresolved"
+  | "checkout_reactivation_pending_binding"
   | "checkout_one_time_invalid"
   | "checkout_one_time_payment_intent_missing"
   | "checkout_one_time_consent_missing"
@@ -183,7 +185,15 @@ export type StripeOneTimeRecoveryVerification = {
   }
 }
 
-export async function verifyCheckoutSessionForActivation(
+/**
+ * The retrieve half of `verifyCheckoutSessionForActivation`, with none of its assertions.
+ *
+ * Split out for callers that must decide something about the Session BEFORE its payment
+ * state is classified — the Premium sheet's completion endpoint checks ownership first, so
+ * a caller who supplies somebody else's Session id learns nothing about it
+ * (freemium-scanner-first T14, fix round 1 F6).
+ */
+export async function retrieveCheckoutSessionForActivation(
   sessionId: string,
   stripe?: Stripe,
 ): Promise<Stripe.Checkout.Session> {
@@ -195,11 +205,17 @@ export async function verifyCheckoutSessionForActivation(
   }
 
   const stripeClient = stripe ?? (await import("./client")).getStripe()
-  const session = await measureCheckoutStep("stripe.checkout.sessions.retrieve", () =>
+  return measureCheckoutStep("stripe.checkout.sessions.retrieve", () =>
     stripeClient.checkout.sessions.retrieve(sessionId, {
       expand: ["line_items.data.price", "payment_intent.latest_charge"],
     }),
   )
+}
+
+/** The assertion half: throws `CheckoutActivationError` for a Session that cannot activate. */
+export function assertCheckoutSessionActivatable(
+  session: Stripe.Checkout.Session,
+): Stripe.Checkout.Session {
   if (session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND) {
     assertOneTimeCheckoutSession(session as OneTimeSession)
     return session
@@ -208,6 +224,15 @@ export async function verifyCheckoutSessionForActivation(
   assertCheckoutPaymentAuthorized(session)
   assertCheckoutPreparationClaimed(session)
   return session
+}
+
+export async function verifyCheckoutSessionForActivation(
+  sessionId: string,
+  stripe?: Stripe,
+): Promise<Stripe.Checkout.Session> {
+  return assertCheckoutSessionActivatable(
+    await retrieveCheckoutSessionForActivation(sessionId, stripe),
+  )
 }
 
 export async function ensureCheckoutAccount(
@@ -222,9 +247,13 @@ export async function ensureCheckoutAccount(
   const sub = await retrieveCheckoutSubscription(deps.stripe, valid.subscriptionId)
   assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
 
-  const existingProfile = await measureCheckoutStep("profiles.findExisting", () =>
-    findExistingProfile(deps, valid.email, valid.customerId, sub.id),
-  )
+  const retainedAccount = await resolveRetainedReactivationAccount(session, valid, sub, deps)
+  if (retainedAccount) valid.email = retainedAccount.email
+  const existingProfile =
+    retainedAccount?.profile ??
+    (await measureCheckoutStep("profiles.findExisting", () =>
+      findExistingProfile(deps, valid.email, valid.customerId, sub.id),
+    ))
 
   let userId: string
   let canSetInitialPassword = false
@@ -233,7 +262,7 @@ export async function ensureCheckoutAccount(
     userId = existingProfile.id
     const authUser = await readExistingCheckoutAuthUser(deps, userId)
     assertCheckoutAfterModeratorResetCutoff(authUser.app_metadata, session, sub)
-    canSetInitialPassword = canSetPasswordForAuthUser(authUser, valid.id)
+    canSetInitialPassword = !retainedAccount && canSetPasswordForAuthUser(authUser, valid.id)
   } else {
     const created = await measureCheckoutStep("auth.createCheckoutUser", () =>
       createCheckoutUser(deps, valid.email, valid.id, valid.customerId, sub.id),
@@ -256,36 +285,51 @@ export async function ensureCheckoutAccount(
     interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
   })
 
-  await measureCheckoutStep("profiles.upsertSubscription", () =>
-    upsertSubscriptionProfile(deps, userId, {
-      email: valid.email,
-      stripe_customer_id: valid.customerId,
-      stripe_subscription_id: sub.id,
-      subscription_status: "active",
-      subscription_interval: interval,
-      current_period_end: subPeriodEndIso(sub),
-      subscription_tier_id: deps.premiumTierId,
-    }),
-  )
+  const writeProfile = () =>
+    measureCheckoutStep("profiles.upsertSubscription", () =>
+      (retainedAccount ? updateRetainedSubscriptionProfile : upsertSubscriptionProfile)(
+        deps,
+        userId,
+        {
+          email: valid.email,
+          stripe_customer_id: valid.customerId,
+          stripe_subscription_id: sub.id,
+          subscription_status: "active",
+          subscription_interval: interval,
+          current_period_end: subPeriodEndIso(sub),
+          subscription_tier_id: deps.premiumTierId,
+        },
+        retainedAccount?.profile,
+      ),
+    )
+
+  // Legacy checkout keeps its existing write order. For retained accounts, establish
+  // billing ownership first so a late conflicting owner cannot grant profile access.
+  if (!retainedAccount) await writeProfile()
 
   await measureCheckoutStep("billing.upsertSubscription", () =>
-    upsertBillingSubscription(deps.supabase, {
-      user_id: userId,
-      provider: "stripe",
-      provider_customer_id: valid.customerId,
-      provider_subscription_id: sub.id,
-      provider_status: sub.status ?? "active",
-      entitlement_status: stripeEntitlementStatus(sub.status),
-      interval,
-      current_period_end: subPeriodEndIso(sub),
-      cancel_at_period_end: false,
-      metadata: {
-        checkout_session_id: valid.id,
-        payment_status: session.payment_status ?? "unknown",
-        ...stripePricingMetadata(price.id),
+    (retainedAccount ? upsertRetainedBillingSubscription : upsertBillingSubscription)(
+      deps.supabase,
+      {
+        user_id: userId,
+        provider: "stripe",
+        provider_customer_id: valid.customerId,
+        provider_subscription_id: sub.id,
+        provider_status: sub.status ?? "active",
+        entitlement_status: stripeEntitlementStatus(sub.status),
+        interval,
+        current_period_end: subPeriodEndIso(sub),
+        cancel_at_period_end: false,
+        metadata: {
+          checkout_session_id: valid.id,
+          payment_status: session.payment_status ?? "unknown",
+          ...stripePricingMetadata(price.id),
+        },
       },
-    }),
+    ),
   )
+
+  if (retainedAccount) await writeProfile()
 
   await linkCheckoutQuizProfile(session, deps, userId, valid.email)
   const subscriptionPaidAtSeconds = typeof sub.created === "number" ? sub.created : null
@@ -298,6 +342,20 @@ export async function ensureCheckoutAccount(
           provider: "stripe",
         })
       : false
+
+  if (
+    session.metadata?.checkout_context === "membership_reactivation" &&
+    session.metadata.reactivation_reservation_id
+  ) {
+    // Activation is server-owned: a lost browser return must not leave the
+    // reservation blocking a future purchase. Failure propagates for webhook retry.
+    await markMembershipReactivationCheckoutCompleted(
+      deps.supabase,
+      session.metadata.reactivation_reservation_id,
+      userId,
+      { provider: "stripe", providerReference: valid.id },
+    )
+  }
 
   console.info("[checkout-activation] account ensured", {
     sessionHash,
@@ -875,8 +933,8 @@ function assertCheckoutSessionShape(session: Stripe.Checkout.Session): ValidChec
       "checkout session is not complete",
     )
   }
-  const email = session.customer_details?.email
-  if (!email) {
+  const email = session.customer_details?.email ?? ""
+  if (!email && !session.metadata?.stripe_checkout_context_version) {
     throw new CheckoutActivationError(
       "checkout_session_email_missing",
       "checkout session has no customer email",
@@ -942,6 +1000,159 @@ function assertCheckoutPreparationClaimed(session: Stripe.Checkout.Session) {
 
 function isUuid(value: string | undefined): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value ?? "")
+}
+
+/** Versioned reactivation derives identity only from the server-owned provider binding. */
+async function resolveRetainedReactivationAccount(
+  session: Stripe.Checkout.Session,
+  valid: ValidCheckoutSession,
+  sub: RetrievedSub,
+  deps: CheckoutActivationDeps,
+): Promise<{ profile: ProfileRow; email: string } | null> {
+  const marker = session.metadata?.stripe_checkout_context_version
+  if (!marker) return null
+  const reservationId = session.metadata?.reactivation_reservation_id
+  if (
+    marker !== "1" ||
+    session.metadata?.checkout_context !== "membership_reactivation" ||
+    !isUuid(reservationId)
+  ) {
+    throw checkoutOwnershipConflict("invalid versioned reactivation identity")
+  }
+  const { data: reservation, error } = await deps.supabase
+    .from("membership_reactivation_checkout_reservations")
+    .select("id, user_id, provider, provider_reference, status, stripe_checkout_context")
+    .eq("id", reservationId!)
+    .maybeSingle()
+  if (error) throw error
+  const context = reservation?.stripe_checkout_context
+  if (
+    !reservation ||
+    reservation.provider !== "stripe" ||
+    !isRecord(context) ||
+    context.version !== 1 ||
+    context.user_id !== reservation.user_id ||
+    typeof context.account_email !== "string" ||
+    !context.account_email.trim() ||
+    (context.profile_customer_id !== null && typeof context.profile_customer_id !== "string") ||
+    context.livemode !== session.livemode ||
+    typeof context.stripe_account_id !== "string"
+  ) {
+    throw checkoutOwnershipConflict("reactivation reservation context does not match checkout")
+  }
+  if (!reservation.provider_reference && reservation.status === "reconciliation_required") {
+    // Stripe retries this failure. A completed Session is not permission to bypass binding.
+    throw new CheckoutActivationError(
+      "checkout_reactivation_pending_binding",
+      "reactivation checkout is awaiting provider binding",
+    )
+  }
+  if (
+    reservation.provider_reference !== valid.id ||
+    !["provider_created", "completed", "reconciliation_required"].includes(reservation.status)
+  ) {
+    throw checkoutOwnershipConflict("reactivation checkout has no matching provider binding")
+  }
+  const params = context.recovery_params ?? context.initial_params
+  if (
+    !isRecord(params) ||
+    !isRecord(params.metadata) ||
+    params.mode !== "subscription" ||
+    params.metadata.reactivation_reservation_id !== reservation.id ||
+    params.metadata.stripe_checkout_context_version !== "1" ||
+    Object.entries(params.metadata).some(([key, value]) => session.metadata?.[key] !== value) ||
+    (typeof params.customer === "string" && params.customer !== valid.customerId)
+  ) {
+    throw checkoutOwnershipConflict("reactivation checkout differs from its frozen request")
+  }
+  const account = await deps.stripe.accounts.retrieve(null)
+  if (account.id !== context.stripe_account_id) {
+    throw checkoutOwnershipConflict("reactivation Stripe account does not match frozen request")
+  }
+  const [profile, customerOwner, subscriptionOwner, authUser] = await Promise.all([
+    findProfileBy(deps, "id", reservation.user_id),
+    findProfileBy(deps, "stripe_customer_id", valid.customerId),
+    findBillingSubscriptionByProviderId(deps.supabase, "stripe", sub.id),
+    readExistingCheckoutAuthUser(deps, reservation.user_id),
+  ])
+  if (
+    !profile ||
+    !authUser.email ||
+    !profile.email ||
+    authUser.email.trim().toLowerCase() !== profile.email.trim().toLowerCase() ||
+    (customerOwner && customerOwner.id !== profile.id) ||
+    (subscriptionOwner && subscriptionOwner.user_id !== profile.id) ||
+    ((profile.stripe_customer_id ?? null) !== context.profile_customer_id &&
+      profile.stripe_customer_id !== valid.customerId)
+  ) {
+    throw checkoutOwnershipConflict("reactivation account ownership changed")
+  }
+  return { profile, email: profile.email }
+}
+
+async function updateRetainedSubscriptionProfile(
+  deps: CheckoutActivationDeps,
+  userId: string,
+  patch: SubscriptionProfilePatch,
+  profile?: ProfileRow,
+): Promise<void> {
+  if (!profile) throw checkoutOwnershipConflict("reactivation owner profile is missing")
+  let query = deps.supabase
+    .from("profiles")
+    .update(patch)
+    .eq("id", userId)
+    .eq("email", profile.email!)
+  query = profile.stripe_customer_id
+    ? query.eq("stripe_customer_id", profile.stripe_customer_id)
+    : query.is("stripe_customer_id", null)
+  const { data, error } = await query.select("id").maybeSingle()
+  if (error) throw error
+  if (!data) throw checkoutOwnershipConflict("reactivation profile changed before activation")
+}
+
+/** Never overwrite a competing subscription owner through an unconditional upsert. */
+async function upsertRetainedBillingSubscription(
+  supabase: SupabaseClient,
+  input: Parameters<typeof upsertBillingSubscription>[1],
+): Promise<unknown> {
+  const existing = await findBillingSubscriptionByProviderId(
+    supabase,
+    "stripe",
+    input.provider_subscription_id,
+  )
+  if (!existing) {
+    const { data, error } = await supabase
+      .from("billing_subscriptions")
+      .insert(input)
+      .select("*")
+      .single()
+    if (!error) return data
+    if (error.code !== "23505") throw error
+    // Another activation won the insert. Re-read its immutable owner before updating.
+  }
+  const owner =
+    existing ??
+    (await findBillingSubscriptionByProviderId(supabase, "stripe", input.provider_subscription_id))
+  if (!owner || owner.user_id !== input.user_id) {
+    throw checkoutOwnershipConflict("reactivation subscription has a conflicting owner")
+  }
+  const { user_id: userId, ...patch } = input
+  const { data, error } = await supabase
+    .from("billing_subscriptions")
+    .update({
+      ...patch,
+      metadata: { ...owner.metadata, ...input.metadata },
+      updated_at: new Date().toISOString(),
+    })
+    .eq("provider", "stripe")
+    .eq("provider_subscription_id", input.provider_subscription_id)
+    .eq("user_id", userId!)
+    .select("*")
+    .maybeSingle()
+  if (error) throw error
+  if (!data)
+    throw checkoutOwnershipConflict("reactivation subscription owner changed during activation")
+  return data
 }
 
 async function findExistingProfile(
@@ -1137,7 +1348,7 @@ function canSetPasswordForAuthUser(user: { app_metadata?: unknown }, sessionId: 
 async function readExistingCheckoutAuthUser(
   deps: CheckoutActivationDeps,
   userId: string,
-): Promise<{ app_metadata?: unknown }> {
+): Promise<{ email?: string; app_metadata?: unknown }> {
   const user = await getAuthUserById(deps, userId)
   if (!user) throw checkoutOwnershipConflict("existing checkout owner Auth record is unavailable")
   return user
@@ -1169,10 +1380,10 @@ function checkoutOwnershipConflict(message: string): CheckoutActivationError {
 async function getAuthUserById(
   deps: CheckoutActivationDeps,
   userId: string,
-): Promise<{ app_metadata?: unknown } | null> {
+): Promise<{ email?: string; app_metadata?: unknown } | null> {
   const admin = deps.supabase.auth.admin as unknown as {
     getUserById?: (userId: string) => Promise<{
-      data?: { user?: { app_metadata?: unknown } | null }
+      data?: { user?: { email?: string; app_metadata?: unknown } | null }
       error?: { message?: string } | null
     }>
   }

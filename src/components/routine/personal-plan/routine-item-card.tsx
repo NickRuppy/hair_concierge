@@ -141,6 +141,17 @@ function catalogPresentationFor(
   )
 }
 
+function hasVerifiedLeaveOnOilHeatProtection(
+  item: RoutineItem,
+  productPresentation: RoutineProductPresentation | null = null,
+) {
+  return (
+    item.category === "oil" &&
+    item.role === "leave_on_fibre_conditioning" &&
+    catalogPresentationFor(item, productPresentation)?.verifiedLeaveOnHeatProtection === true
+  )
+}
+
 function productName(
   item: RoutineItem,
   productPresentation: RoutineProductPresentation | null = null,
@@ -194,7 +205,10 @@ export function routineFitLabel(
   return "✓ Passt"
 }
 
-function detailCopy(item: RoutineItem) {
+function detailCopy(
+  item: RoutineItem,
+  productPresentation: RoutineProductPresentation | null = null,
+) {
   if (item.state.availability === "none" && item.state.systemAssessment === "basis") {
     return "Für diesen Basis-Baustein fehlt noch ein Produkt. Ergänze ihn, bevor die Anwendung vollständig wird."
   }
@@ -204,7 +218,9 @@ function detailCopy(item: RoutineItem) {
   if (item.state.availability === "pending_review") {
     return "Dieses Produkt wartet noch auf Analyse und bleibt bis dahin nicht ausführbar."
   }
-  return `${routinePurposeDescription(item)} Rhythmus: ${routineCadenceLabel(item)}. Zeitpunkt: ${routineTimingLabel(item)}.`
+  const verifiedOilHeatProtection = hasVerifiedLeaveOnOilHeatProtection(item, productPresentation)
+  const capabilityCopy = verifiedOilHeatProtection ? " Hitzeschutz: bestätigt." : ""
+  return `${routinePurposeDescription(item)} Rhythmus: ${routineCadenceLabel(item)}. Zeitpunkt: ${routineTimingLabel(item)}.${capabilityCopy}`
 }
 
 export function RoutineItemCard({
@@ -287,7 +303,9 @@ export function RoutineItemCard({
           <summary className="cursor-pointer font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Anwendungsdetails
           </summary>
-          <p className="mt-2 leading-relaxed text-muted-foreground">{detailCopy(item)}</p>
+          <p className="mt-2 leading-relaxed text-muted-foreground">
+            {detailCopy(item, productPresentation)}
+          </p>
         </details>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <RoutineStatusBadge item={item} />
@@ -416,11 +434,12 @@ export function RoutineCategoryCard({
     const timing = routineTimingLabel(item)
     const status = rowStatus(item)
     const image = catalogPresentationFor(item, productPresentation)?.imageUrl ?? null
+    const verifiedOilHeatProtection = hasVerifiedLeaveOnOilHeatProtection(item, productPresentation)
     const missingBasisProduct =
       item.state.availability === "none" && item.state.systemAssessment === "basis"
     const accessibleName = `Zweck: ${purpose}; Produkt: ${product}; Kategorie: ${label}; Status: ${status}; Rhythmus: ${cadence}${
-      missingBasisProduct ? "; Für diesen Basis-Baustein fehlt noch ein Produkt" : ""
-    }`
+      verifiedOilHeatProtection ? "; Hitzeschutz: bestätigt" : ""
+    }${missingBasisProduct ? "; Für diesen Basis-Baustein fehlt noch ein Produkt" : ""}`
     const content = (
       <>
         <span
@@ -474,7 +493,9 @@ export function RoutineCategoryCard({
             </span>
           ) : null}
           <span className="mt-1.5 block border-t border-[rgba(67,55,48,0.09)] pt-1.5 text-[11px] font-bold leading-[1.35] text-[#665e58]">
-            {cadence} · {timing} · <span className={statusClassName(item, status)}>{status}</span>
+            {cadence} · {timing}
+            {verifiedOilHeatProtection ? " · Hitzeschutz: bestätigt" : ""} ·{" "}
+            <span className={statusClassName(item, status)}>{status}</span>
           </span>
           {missingBasisProduct ? (
             <span className="mt-1.5 block text-[11px] font-bold leading-snug text-[var(--status-danger-text)]">

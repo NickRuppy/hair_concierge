@@ -1,0 +1,329 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "schauma-repair-pflege",
+  "candidateSlot": "candidate-01",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Effective ordinary cleansing is most consistent with a SLES-led chassis that is buffered by amphoteric betaine and several care/refatting routes rather than reinforced into a clarifying/reset system.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        }
+      ],
+      "counterSignal": "SLES at position 2 is a strong anionic cleansing signal, with sodium chloride at position 3 suggesting a conventional surfactant base.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "candidate-01.json:formula.surfactant.02",
+        "candidate-01.json:formula.surfactant.04",
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "Substantial rinse-off softness and slip are likely because a cationic polymer, panthenol/oil care clues and two silicone routes converge within the complete formula.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The product remains a rinse-off shampoo with SLES/CAPB cleansing, so conditioning is not leave-on or mask-like.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14",
+        "candidate-01.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Noticeable but bounded residue is plausible from cationic polymer plus silicone and lipid/refatting clues, while the SLES/CAPB cleansing chassis gives meaningful reset capacity.",
+      "formulaFacts": [
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The cleansing system is not weak, and the silicone routes occur after the mid-formula care/oil region rather than as the earliest non-water ingredients.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "candidate-01.json:formula.conditioning.05",
+        "candidate-01.json:formula.conditioning.13",
+        "candidate-01.json:formula.conditioning.14",
+        "candidate-01.json:formula.surfactant.02",
+        "candidate-01.json:formula.surfactant.04",
+        "candidate-01.json:formula.function.18"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [],
+        "whyThisBand": "The formula has more than a single light polymer: cationic guar, amodimethicone, dimethicone and nonvolatile lipid clues can plausibly leave noticeable residue over repeated use.",
+        "whyNotNeighborBand": "Not high because the SLES/CAPB shampoo chassis should remove or offset part of that residue, and the rich/persistent routes are not paired with a limited-reset base."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair is the dominant post-unblind role: the exact product is positioned as Repair & Pflege for damaged/dry hair, and the cationic polymer, panthenol/oil and silicone routes make that repair/care direction formula-compatible.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 14
+        }
+      ],
+      "counterSignal": "Silicone, cationic polymer and panthenol/oil routes could later support a care, shine or repair-positioned focus if unblind claims are compatible.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.13",
+        "formula.conditioning.14"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No distinct secondary focus is assigned: dry-hair and smoothing language supports the same care/repair route rather than a separate v1.4 secondary role.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 5
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 13
+        }
+      ],
+      "counterSignal": "Multiple care routes could support a secondary focus after post-unblind positioning review.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.13"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "The directions are ordinary rinse-out shampoo directions with short contact and no v1.4 trigger for frequent, alternating, reset or treatment use.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        }
+      ],
+      "counterSignal": "Cleansing may be too care-rich for a reset role, but unblind claims could still introduce a non-default usage trigger.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "usage:dm-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.04"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "The claims target damaged and dry hair, not sensitive, itchy or dry-feeling scalp; the formula has fragrance and no recognized scalp-comfort active route.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "Panthenol and buffered cleansing could be compatible with comfort positioning if later claims explicitly target sensitive or uncomfortable scalp.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "The complete INCI contains neither Piroctone Olamine nor Climbazole under the mechanical v1.4 rule.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "SODIUM SALICYLATE at position 27 is not a recognized anti-dandruff active under this rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "candidate-01.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "repair",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "Repair is the dominant post-unblind role: the exact product is positioned as Repair & Pflege for damaged/dry hair, and the cationic polymer, panthenol/oil and silicone routes make that repair/care direction formula-compatible.",
+      "revealedEvidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.13",
+        "formula.conditioning.14"
+      ]
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "finalValue": [],
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "No distinct secondary focus is assigned: dry-hair and smoothing language supports the same care/repair route rather than a separate v1.4 secondary role.",
+      "revealedEvidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.conditioning.05",
+        "formula.conditioning.13"
+      ]
+    },
+    {
+      "property": "usageRole",
+      "blindValue": "regular",
+      "finalValue": "regular",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "The directions are ordinary rinse-out shampoo directions with short contact and no v1.4 trigger for frequent, alternating, reset or treatment use.",
+      "revealedEvidenceRefs": [
+        "usage:dm-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.04"
+      ]
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "blindConfidence": "moderate",
+      "finalConfidence": "high",
+      "reason": "The claims target damaged and dry hair, not sensitive, itchy or dry-feeling scalp; the formula has fragrance and no recognized scalp-comfort active route.",
+      "revealedEvidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    }
+  ],
+  "unchangedProperties": [
+    {
+      "property": "cleansingStrength",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "conditioningLevel",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "weightPotential",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "dandruffSupport",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    }
+  ],
+  "receipt": {
+    "candidateSlot": "candidate-01",
+    "sourcePacketSha256": "b5e2f17f6f5a4800893666bc19ab899d24212ddf7b39a83ef36b6f555e71b60c",
+    "blindInputSha256": "26e7d28a6d0a281b846b6b795e66ba6967865001ecc2bb9948bd08efba09da02",
+    "blindResultSha256": "4173ff2ade1f2ec5b1a8a17c8a956fd6dff1622e692fdb091fef070d735666c9",
+    "cleanRerunResultSha256": "53610cf0a07bc18c6feee698b988c09a6dd3ec2910a024600d678933ae6abd4c",
+    "canonicalResultProjection": "schema-only: provisionalProperties renamed to properties; formulaFacts normalized to anonymous INCI ingredient/position objects; structuredWeightAssessment renamed to weightAssessment",
+    "sourcePacketPath": "schauma-repair-pflege/source-packet.json",
+    "postUnblindEvidence": "schauma-repair-pflege/source-packet.json:post_unblind_evidence",
+    "consumedLaneB": false,
+    "consumedOldManifest": false
+  }
+}

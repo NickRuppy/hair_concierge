@@ -1,7 +1,15 @@
 export class ProductIntakePersistenceError extends Error {
-  constructor(message: string) {
+  /**
+   * Postgres SQLSTATE of the failing query, when the repository could preserve it.
+   * `submitScanProductIntake` needs `23505` to tell a lost race on
+   * `idx_product_submissions_one_open_scan` apart from a real persistence outage.
+   */
+  readonly code?: string
+
+  constructor(message: string, options: { code?: string } = {}) {
     super(message)
     this.name = "ProductIntakePersistenceError"
+    this.code = options.code
   }
 }
 

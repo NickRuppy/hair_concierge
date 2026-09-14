@@ -1,0 +1,149 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "wahre-schaetze-honig-schaetze",
+  "candidateSlot": "wave01-candidate-01",
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong remains the final band because Sodium Lauryl Sulfate is the position-2 primary cleanser with several secondary surfactant routes; ordinary rinse-off directions do not soften the formula-derived cleansing call.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 3, "factId": "formula.surfactant.03"},
+        {"ingredient": "COCO-BETAINE", "position": 14, "factId": "formula.surfactant.14"},
+        {"ingredient": "COCO-GLUCOSIDE", "position": 15, "factId": "formula.surfactant.15"},
+        {"ingredient": "LAUROYL/MYRISTOYL METHYL GLUCAMIDE", "position": 19, "factId": "formula.surfactant.19"}
+      ],
+      "counterSignal": "Glyceryl Oleate, Glycol Distearate, Lecithin and cationic guar buffer the chassis enough to keep confidence moderate.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.03", "formula.surfactant.14", "formula.surfactant.15", "formula.surfactant.19", "directions.standard_rinse"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning remains supported by mid-list refatting and deposition routes; honey/beeswax positioning corroborates a care story but cannot create visible beeswax formula evidence.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "GLYCOL DISTEARATE", "position": 10, "factId": "formula.conditioning.10"},
+        {"ingredient": "LECITHIN", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17"}
+      ],
+      "counterSignal": "The position-2 SLS chassis and no-silicone formula argue against high conditioning.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.conditioning.09", "formula.conditioning.10", "formula.conditioning.12", "formula.conditioning.17", "claims.beeswax_mismatch"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential remains formula-derived from refatting lipids and cationic guar, with strong sulfate reset preventing a high-weight conclusion.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "GLYCOL DISTEARATE", "position": 10, "factId": "formula.conditioning.10"},
+        {"ingredient": "LECITHIN", "position": 12, "factId": "formula.conditioning.12"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17"},
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02"}
+      ],
+      "counterSignal": "No silicone or heavy butter/oil route appears, and SLS gives strong same-wash reset capacity.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": ["formula.conditioning.09", "formula.conditioning.10", "formula.conditioning.12", "formula.conditioning.17", "formula.surfactant.02"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [],
+        "whyThisBand": "Several mid-list refatting/deposition clues can plausibly leave bounded softness or residue, especially with cationic guar.",
+        "whyNotNeighborBand": "Low would ignore the combined lipid/polymer routes; high would overread a no-silicone, strong-cleansing formula."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair is final because revealed positioning targets stressed, damaged-looking hair and the formula has compatible refatting, humectant and cationic-polymer care routes; confidence stays moderate because the beeswax claim is not visible in INCI.",
+      "formulaFacts": [
+        {"ingredient": "MEL / HONEY", "position": 5, "factId": "formula.humectant.05"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17"}
+      ],
+      "counterSignal": "The product story names beeswax, but no beeswax INCI such as CERA ALBA is present; this keeps the repair read bounded.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claims.beeswax_mismatch", "formula.humectant.05", "formula.conditioning.09", "formula.conditioning.17"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because the revealed care positioning reuses the same honey/refatting/polymer route as the repair primary.",
+      "formulaFacts": [
+        {"ingredient": "MEL EXTRACT / HONEY EXTRACT", "position": 6, "factId": "formula.humectant.06"},
+        {"ingredient": "LECITHIN", "position": 12, "factId": "formula.conditioning.12"}
+      ],
+      "counterSignal": "No distinct shine, volume, scalp_active or clarifying claim has an independent route.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["formula.humectant.06", "formula.conditioning.12", "claims.beeswax_mismatch"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains final because directions are normal wet-hair lather-and-rinse use and there is no treatment or explicit reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 3, "factId": "formula.surfactant.03"}
+      ],
+      "counterSignal": "The strong cleanser chassis would support alternating only if reset/oily-root positioning were revealed.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.03", "directions.standard_rinse"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted remains final because the revealed claims concern damaged-looking hair, not sensitive or uncomfortable scalp, and the formula has SLS/fragrance counter-signals.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "COUMARIN", "position": 26, "factId": "formula.fragrance.26"},
+        {"ingredient": "LIMONENE", "position": 27, "factId": "formula.fragrance.27"}
+      ],
+      "counterSignal": "Glycerin and honey can support hair feel, but no scalp-comfort intent is revealed.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.surfactant.02", "formula.fragrance.26", "formula.fragrance.27", "claims.beeswax_mismatch"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "AQUA / WATER", "position": 1, "factId": "formula.canonical_inci"}
+      ],
+      "counterSignal": "No revealed anti-dandruff positioning or recognized active changes the formula rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": ["formula.canonical_inci"]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "blindConfidence": "low",
+      "finalValue": "repair",
+      "finalConfidence": "moderate",
+      "revealedEvidenceRefs": ["claims.beeswax_mismatch"],
+      "reason": "Revealed positioning targets stressed, damaged-looking hair; the formula has compatible care routes, while the beeswax/INCI mismatch limits confidence."
+    }
+  ],
+  "unchangedProperties": [
+    {"property": "cleansingStrength", "reason": "Claims and normal directions do not change the formula-derived strong cleansing call."},
+    {"property": "conditioningLevel", "reason": "Care claims corroborate but do not alter the moderate formula-derived conditioning band."},
+    {"property": "weightPotential", "reason": "Claims cannot assign weight; refatting/polymer deposition plus strong reset remains moderate."},
+    {"property": "focusSecondary", "reason": "No distinct secondary claim/route is separate from the repair-compatible care route."},
+    {"property": "usageRole", "reason": "Ordinary rinse-off directions provide no non-default usage trigger."},
+    {"property": "scalpComfortTarget", "reason": "Revealed claims do not target sensitive, itchy or dry-feeling scalp."},
+    {"property": "dandruffSupport", "reason": "The complete INCI still contains neither recognized v1.4 anti-dandruff active."}
+  ],
+  "receipt": {
+    "blindResultSha256": "d5562998e6162f5d6c0cdc98099e8ff8364933b3dda9227819a0f414f9382f7a",
+    "sourcePacketSha256": "a67571d03ad4fc366d7e39a62abcc880efa272959ee3f53989bab4ed120314b3",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T17:20:00Z",
+    "laneBSeen": false,
+    "oldManifestSeen": false
+  }
+}

@@ -386,7 +386,6 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const partnerAuthorization = partnerIntent
     ? await resolvePartnerOfferAuthorization({
         userId: authenticatedAccess.userId,
-        funnelSessionId: funnelContext?.sessionId,
         leadId,
       })
     : null

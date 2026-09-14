@@ -62,7 +62,10 @@ function recommendationCandidate(input: HeatInput): Stage3HeatProtectantFacts | 
 
   const candidates = [...sharedFit].sort(compareRecommendationCandidates)
   if (candidates.length === 0) return null
-  if (candidates.length > 1 && compareRecommendationCandidates(candidates[0], candidates[1]) === 0) {
+  if (
+    candidates.length > 1 &&
+    compareRecommendationCandidates(candidates[0], candidates[1]) === 0
+  ) {
     return null
   }
   return candidates[0]
@@ -91,9 +94,14 @@ export function evaluateHeatProtectantAuthority(input: HeatInput): Stage3Authori
     { category: "heat_protectant" }
   > | null
   const routes = target?.qualifyingRoutes ?? []
+  const qualifyingEventIds = input.heatCarrierCoverage.qualifyingEventIds
   const integratedCarrier =
     input.heatCarrierCoverage.carrierCategory !== null &&
-    routes.every((route) => input.heatCarrierCoverage.verifiedRoutes.includes(route))
+    (qualifyingEventIds && qualifyingEventIds.length > 0
+      ? qualifyingEventIds.every((eventId) =>
+          input.heatCarrierCoverage.verifiedEventIds?.includes(eventId),
+        )
+      : routes.every((route) => input.heatCarrierCoverage.verifiedRoutes.includes(route)))
 
   if (!input.productFacts) {
     if (integratedCarrier) {

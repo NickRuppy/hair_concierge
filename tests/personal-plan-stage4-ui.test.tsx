@@ -336,6 +336,7 @@ test("uses presentation-only catalog image and name facts outside the Routine pa
           productId: "product-shampoo",
           displayName: "Aktueller Katalogname",
           imageUrl: "https://example.test/shampoo.webp",
+          verifiedLeaveOnHeatProtection: false,
         },
       ],
     },
@@ -347,6 +348,63 @@ test("uses presentation-only catalog image and name facts outside the Routine pa
   assert.match(html, /src="https:\/\/example.test\/shampoo.webp"/)
   assert.doesNotMatch(html, /Eingefrorener Produktname/)
   assert.equal(routine.items[0]?.product.displayName, "Eingefrorener Produktname")
+})
+
+test("shows verified Oil heat capability in the existing Stage 4 metadata line only", () => {
+  const routine = payload([
+    item({
+      itemKey: "oil-leave-on",
+      assignmentKey: "oil-leave-on",
+      category: "oil",
+      role: "leave_on_fibre_conditioning",
+      purposeKey: "leave_on_fibre_conditioning",
+      product: {
+        kind: "owned",
+        capturedProductId: "captured-oil",
+        productId: "product-oil",
+        displayName: "Haaröl",
+      },
+    }),
+    item({
+      itemKey: "oil-finish",
+      assignmentKey: "oil-finish",
+      category: "oil",
+      role: "dry_finish",
+      purposeKey: "dry_finish",
+      product: {
+        kind: "owned",
+        capturedProductId: "captured-oil",
+        productId: "product-oil",
+        displayName: "Haaröl",
+      },
+    }),
+  ])
+  const view: PersonalPlanRoutineView = {
+    ...proposalView(routine),
+    status: "active",
+    activeVersion: { id: routine.versionId, payload: routine },
+    pendingProposal: null,
+    productPresentation: {
+      catalogProducts: [
+        {
+          productId: "product-oil",
+          displayName: "Haaröl",
+          imageUrl: null,
+          verifiedLeaveOnHeatProtection: true,
+        },
+      ],
+    },
+  }
+
+  const html = renderToStaticMarkup(<RoutinePage view={view} />)
+
+  assert.equal((html.match(/Hitzeschutz: bestätigt/g) ?? []).length, 2)
+  assert.match(
+    html,
+    /aria-label="Zweck: Pflege ohne Ausspülen; Produkt: Haaröl; Kategorie: Öl; Status: Aktiv; Rhythmus: Täglich; Hitzeschutz: bestätigt"/,
+  )
+  assert.match(html, /Nach der Wäsche · Hitzeschutz: bestätigt · <span[^>]*>Aktiv/)
+  assert.doesNotMatch(html, /Im trockenen Haar · Hitzeschutz: bestätigt/)
 })
 
 test("renders active routine as product-led result with separated later additions", () => {

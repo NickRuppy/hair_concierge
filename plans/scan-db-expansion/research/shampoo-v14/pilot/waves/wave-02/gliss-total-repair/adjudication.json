@@ -1,0 +1,376 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "gliss-total-repair",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 and CAPB at position 3 provide effective ordinary cleansing, while early dimethicone, keratin and later amodimethicone/cationic guar keep the complete architecture from reading as strong reset.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic sulfate"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "amphoteric buffer"
+        },
+        {
+          "ingredient": "SODIUM CHLORIDE",
+          "position": 4,
+          "factId": "formula.canonical_inci",
+          "observation": "early electrolyte/thickening context"
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "early silicone care counter-signal"
+        }
+      ],
+      "counterSignal": "SLES is still the primary cleanser and no mild-use claim is present, so low would understate the cleansing strength.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.conditioning.05",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: dimethicone at position 5, keratin, amodimethicone, cationic guar and lipid/waxy refatting clues create a substantial rinse-off repair-care system.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "early silicone film-forming route"
+        },
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived care clue"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12,
+          "factId": "formula.conditioning.12",
+          "observation": "amine-functional silicone conditioning route"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic conditioning polymer"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 18,
+          "factId": "formula.canonical_inci",
+          "observation": "waxy/lipid-like care clue"
+        }
+      ],
+      "counterSignal": "The product rinses out and remains cleanser-led, but the early silicone/protein plus later silicone/polymer breadth makes moderate too low.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: early dimethicone, amodimethicone, cationic guar, keratin and waxy/refatting clues create a persistent multi-route deposition system despite ordinary SLES/CAPB reset.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "early silicone film-forming route"
+        },
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived film clue"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12,
+          "factId": "formula.conditioning.12",
+          "observation": "persistent silicone conditioning route"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic polymer deposition route"
+        },
+        {
+          "ingredient": "HYDROGENATED CASTOR OIL",
+          "position": 18,
+          "factId": "formula.canonical_inci",
+          "observation": "waxy/lipid-like payload clue"
+        }
+      ],
+      "counterSignal": "SLES/CAPB provides meaningful reset and helper ingredients such as Laureth-4, PEG-120 Methyl Glucose Dioleate and Trideceth-10 are not counted as independent payload routes.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci",
+        "formula.regional_conflict",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13",
+        "formula.function.15",
+        "formula.function.16",
+        "formula.function.20"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "high",
+        "persistence": "high",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "Exact silicone/polymer/protein levels cannot be proven from INCI order alone.",
+          "Regional/stale exact-EAN conflicts are recorded but resolved in favor of current German manufacturer/dm agreement."
+        ],
+        "whyThisBand": "The early dimethicone plus amodimethicone and cationic guar create multiple persistent routes, reinforced by keratin and waxy/refatting clues.",
+        "whyNotNeighborBand": "Not moderate because the silicone stack begins very early and is joined by a cationic polymer, making noticeable weight more plausible than a bounded single-route residue."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: the revealed product positioning targets dry, damaged hair and liquid keratin, and the formula has a compatible silicone, keratin and cationic-polymer repair-care system.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "smoothing/protective film route"
+        },
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived repair-positioning route"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12,
+          "factId": "formula.conditioning.12",
+          "observation": "targeted silicone conditioning route"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "conditioning polymer support"
+        }
+      ],
+      "counterSignal": "The source also mentions shine and suppleness, but damaged-hair repair is the dominant exact-product role.",
+      "neighboringAlternative": "shine",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.06",
+        "formula.conditioning.12",
+        "formula.conditioning.13"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "shine"
+      ],
+      "confidence": "moderate",
+      "rationale": "Shine secondary: the source explicitly promises glossy hair, and the silicone/smoothing system provides an independent route beyond the keratin-led repair positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 5,
+          "factId": "formula.conditioning.05",
+          "observation": "silicone smoothing/shine route"
+        },
+        {
+          "ingredient": "AMODIMETHICONE",
+          "position": 12,
+          "factId": "formula.conditioning.12",
+          "observation": "silicone conditioning/shine support"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 14,
+          "factId": "formula.canonical_inci",
+          "observation": "pearlizing/surface-gloss adjacent clue"
+        }
+      ],
+      "counterSignal": "The shine claim is secondary to repair and may partly describe the same smoothing outcome, so confidence is moderate rather than high.",
+      "neighboringAlternative": [],
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.12"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular use; no daily/frequent, alternating, reset or treatment trigger is present.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "ordinary shampoo cleanser"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 3,
+          "factId": "formula.surfactant.03",
+          "observation": "ordinary buffered shampoo route"
+        }
+      ],
+      "counterSignal": "Repair/keratin language is cosmetic positioning and does not create a v1.4 treatment usage role.",
+      "neighboringAlternative": "treatment",
+      "evidenceRefs": [
+        "usage:dm-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product targets dry/damaged hair fiber repair, softness and shine, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {
+          "ingredient": "PARFUM (FRAGRANCE)",
+          "position": 8,
+          "factId": "formula.canonical_inci",
+          "observation": "fragrance exposure"
+        },
+        {
+          "ingredient": "GLYCERIN",
+          "position": 17,
+          "factId": "formula.canonical_inci",
+          "observation": "humectant clue without scalp-comfort positioning"
+        }
+      ],
+      "counterSignal": "Dry-hair language is present, but it is hair-fiber dryness rather than scalp-comfort targeting.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-total-repair-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "HYDROLYZED KERATIN",
+          "position": 6,
+          "factId": "formula.conditioning.06",
+          "observation": "protein-derived care clue, not a v1.4 dandruff active"
+        },
+        {
+          "ingredient": "SODIUM SALICYLATE",
+          "position": 26,
+          "factId": "formula.canonical_inci",
+          "observation": "preservative-related salicylate, not a recognized dandruff active"
+        }
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.manufacturer_corroborating_inci"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected moderate; SLES/CAPB gives effective ordinary cleansing but the early dimethicone/keratin/care phase prevents a strong reset call."
+    },
+    "conditioningLevel": {
+      "laneAValue": "high",
+      "laneBValue": "high",
+      "finalValue": "high",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected high; dimethicone at position 5 plus keratin, amodimethicone, cationic guar and refatting/waxy clues create substantial rinse-off care."
+    },
+    "weightPotential": {
+      "laneAValue": "high",
+      "laneBValue": "high",
+      "finalValue": "high",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected high; early dimethicone plus amodimethicone, cationic guar and waxy/refatting routes create converging persistent deposition despite ordinary cleansing."
+    },
+    "focusPrimary": {
+      "laneAValue": "repair",
+      "laneBValue": "repair",
+      "finalValue": "repair",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected repair; dry/damaged-hair and liquid-keratin positioning is directly supported by the formula."
+    },
+    "focusSecondary": {
+      "laneAValue": [
+        "shine"
+      ],
+      "laneBValue": [
+        "shine"
+      ],
+      "finalValue": [
+        "shine"
+      ],
+      "outcome": "agreement",
+      "rationale": "Both lanes selected shine as secondary; exact-product copy names shiny hair and a separate smoothing/film route supports it alongside repair."
+    },
+    "usageRole": {
+      "laneAValue": "regular",
+      "laneBValue": "regular",
+      "finalValue": "regular",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected regular; no non-default product-level cadence trigger is present."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "not_targeted",
+      "laneBValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "outcome": "agreement",
+      "rationale": "Both lanes selected not_targeted; damaged-hair care does not equal scalp-comfort targeting."
+    },
+    "dandruffSupport": {
+      "laneAValue": "not_supported",
+      "laneBValue": "not_supported",
+      "finalValue": "not_supported",
+      "outcome": "agreement",
+      "rationale": "Both lanes agree with the mechanical dandruff rule: no Piroctone Olamine or Climbazole in the complete INCI."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": false,
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. Claims were used only for claim-gated focus/usage/scalp intent, never to assign cleansing, conditioning or weight by themselves."
+}

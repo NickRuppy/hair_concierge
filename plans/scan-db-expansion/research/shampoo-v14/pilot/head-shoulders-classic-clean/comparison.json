@@ -1,0 +1,76 @@
+{
+  "version": "shampoo-v14-comparison-v1",
+  "productId": "head-shoulders-classic-clean",
+  "laneAProductId": "head-shoulders-classic-clean",
+  "laneBProductId": "head-shoulders-classic-clean",
+  "judgmentProperties": [
+    "cleansingStrength",
+    "conditioningLevel",
+    "weightPotential",
+    "focusPrimary",
+    "focusSecondary",
+    "usageRole",
+    "scalpComfortTarget"
+  ],
+  "propertyComparison": {
+    "cleansingStrength": {
+      "laneAValue": "strong",
+      "laneAConfidence": "high",
+      "laneBValue": "strong",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "high",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneAConfidence": "high",
+      "laneBValue": "moderate",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "focusPrimary": {
+      "laneAValue": "scalp_active",
+      "laneAConfidence": "high",
+      "laneBValue": "scalp_active",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneAConfidence": "moderate",
+      "laneBValue": [
+        "clarifying"
+      ],
+      "laneBConfidence": "moderate",
+      "exactAgreement": false
+    },
+    "usageRole": {
+      "laneAValue": "treatment",
+      "laneAConfidence": "high",
+      "laneBValue": "treatment",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "targeted",
+      "laneAConfidence": "high",
+      "laneBValue": "targeted",
+      "laneBConfidence": "moderate",
+      "exactAgreement": true
+    },
+    "dandruffSupport": {
+      "laneAValue": "supported",
+      "laneAConfidence": "high",
+      "laneBValue": "supported",
+      "laneBConfidence": "high",
+      "exactAgreement": true
+    }
+  },
+  "dandruffAgreement": true
+}

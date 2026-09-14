@@ -2,11 +2,17 @@
 
 import { X, Info } from "lucide-react"
 
+import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
+import { getQuizFunnelCopy } from "@/lib/quiz/funnel-copy"
+
 type Props = {
   onDismiss: () => void
 }
 
 export function QuizInfoStrip({ onDismiss }: Props) {
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const copy = getQuizFunnelCopy(funnelPackageKey)
+
   return (
     <div
       role="note"
@@ -17,10 +23,7 @@ export function QuizInfoStrip({ onDismiss }: Props) {
         className="mt-px h-[18px] w-[18px] shrink-0 text-[var(--brand-plum)]"
       />
       <p className="flex-1">
-        <strong className="font-semibold">
-          Lass uns deine Haare verstehen — Schritt für Schritt.
-        </strong>{" "}
-        10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.
+        <strong className="font-semibold">{copy.infoStripLead}</strong> {copy.infoStripBody}
       </p>
       <button
         type="button"

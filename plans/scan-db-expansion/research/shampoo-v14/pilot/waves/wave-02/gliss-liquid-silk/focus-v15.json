@@ -1,0 +1,64 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "gliss-liquid-silk",
+  "formulaFingerprintSha256": "6832d1a0af15e97534cd859587f96295f9d652deb80ca3b4f683ae595fffe7f2",
+  "priorV14": {
+    "primary": "shine",
+    "secondary": [],
+    "adjudicationSha256": "ca17821462e6115b8c3b7e24813ab933ea8ebdd36bbd8bf12a34160050e2708b"
+  },
+  "effectiveV15": {
+    "primary": "shine",
+    "secondary": [],
+    "confidence": "high",
+    "rationale": "Shine bleibt der beste v1.5-Fokus: Die Positionierung nennt Glanz, Geschmeidigkeit und geglaettete Haaroberflaeche; glycosphingolipids, hydrolyzed silk/sericin, Polyquaternium-10 und Glyceryl Oleate geben dafuer eine klare formula-kompatible Smoothing-/Feel-Route.",
+    "formulaFacts": [
+      {
+        "ingredient": "GLYCOSPHINGOLIPIDS",
+        "position": 5,
+        "observation": "lipidartige Oberflaechen-/Smoothing-Route"
+      },
+      {
+        "ingredient": "HYDROLYZED SILK",
+        "position": 6,
+        "observation": "Seidenprotein-Hinweis fuer Haargefuehl und Oberflaechenglaettung"
+      },
+      {
+        "ingredient": "SERICIN",
+        "position": 7,
+        "observation": "seidenbezogene Film-/Feel-Route"
+      },
+      {
+        "ingredient": "POLYQUATERNIUM-10",
+        "position": 10,
+        "observation": "kationische Polymerroute fuer Kaemmbarkeit und glatteres Haargefuehl"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 15,
+        "observation": "refettende Glanz-/Geschmeidigkeits-kompatible Route"
+      }
+    ],
+    "counterSignal": "Die Pflegebreite koennte kosmetisch auch Repair- oder Moisture-Sprache tragen, aber die exakte Positionierung ist nicht Damage- oder Feuchtigkeits-dominant.",
+    "neighboringAlternative": "repair",
+    "evidenceRefs": [
+      "claim:dm-liquid-silk-positioning",
+      "formula.canonical_inci",
+      "formula.manufacturer_corroborating_inci",
+      "formula.conditioning.05",
+      "formula.conditioning.06",
+      "formula.conditioning.10"
+    ]
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+      "Silk-/Polymer-/Refatting-Routen stuetzen Oberflaechenglaettung und Geschmeidigkeit, ohne eine repair/moisture-Grenzentscheidung zu erzwingen"
+    ],
+    "limitation": "Die repair/moisture-Grenze ist fuer dieses Produkt nicht der entscheidende Konflikt; v1.5 behandelt es weiter als Shine-Fokus."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "v1.4 Shine bleibt unveraendert. Der v1.5 Overlay entfernt gentle als Fokus und fuegt moisture hinzu, aber die Produkt- und Formelspur bleibt hier klar Shine."
+}

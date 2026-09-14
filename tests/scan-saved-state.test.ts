@@ -2,11 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  autoSaveScanWishlistProduct,
   loadScanSavedState,
+  moveScanSavedProduct,
   removeScanRoutineProduct,
   removeScanWishlistProduct,
-  saveScanRoutineProduct,
-  saveScanWishlistProduct,
 } from "../src/lib/scan/saved-state"
 
 type TableHandlers = Record<
@@ -16,12 +16,14 @@ type TableHandlers = Record<
     /** For a `.select().eq()...` chain awaited directly (list read, no `maybeSingle`). */
     selectList?: (calls: { filters: Map<string, unknown> }) => { data: unknown; error: unknown }
     insert?: (payload: unknown) => { error: unknown }
+    upsert?: (payload: unknown, options: unknown) => { error: unknown }
     delete?: (calls: { filters: Map<string, unknown> }) => { error: unknown }
   }
 >
 
 function stubClient(handlers: TableHandlers) {
   const inserts: Array<{ table: string; payload: unknown }> = []
+  const upserts: Array<{ table: string; payload: unknown; options: unknown }> = []
   const deletes: Array<{ table: string; filters: Map<string, unknown> }> = []
 
   const client = {
@@ -62,11 +64,16 @@ function stubClient(handlers: TableHandlers) {
           if (!handler.insert) throw new Error(`no insert handler for ${table}`)
           return handler.insert(payload)
         },
+        upsert: (payload: unknown, options: unknown) => {
+          upserts.push({ table, payload, options })
+          if (!handler.upsert) throw new Error(`no upsert handler for ${table}`)
+          return handler.upsert(payload, options)
+        },
         delete: () => deleteChain,
       }
     },
   }
-  return { client, inserts, deletes }
+  return { client, inserts, upserts, deletes }
 }
 
 test("loadScanSavedState: wishlist row present returns merkliste before checking user_products", async () => {
@@ -150,71 +157,6 @@ test("loadScanSavedState: a lookup error throws a stable error", async () => {
   )
 })
 
-const activeProduct = { select: () => ({ data: { id: "prod-1" }, error: null }) }
-const notQuarantined = { select: () => ({ data: null, error: null }) }
-const quarantined = { select: () => ({ data: { product_id: "prod-1" }, error: null }) }
-
-test("saveScanWishlistProduct: inserts a row scoped to user and product", async () => {
-  const { client, inserts } = stubClient({
-    products: activeProduct,
-    personal_plan_product_search_dispositions: notQuarantined,
-    scan_wishlist: { insert: () => ({ error: null }) },
-  })
-  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, {
-    outcome: "saved",
-    savedState: { state: "merkliste", managedByScan: true },
-  })
-  assert.deepEqual(inserts, [
-    { table: "scan_wishlist", payload: { user_id: "user-1", product_id: "prod-1" } },
-  ])
-})
-
-test("saveScanWishlistProduct: an inactive/unknown product is reported, not inserted", async () => {
-  const { client, inserts } = stubClient({
-    products: { select: () => ({ data: null, error: null }) },
-  })
-  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-missing")
-  assert.deepEqual(result, { outcome: "product_not_found" })
-  assert.deepEqual(inserts, [])
-})
-
-test("saveScanWishlistProduct: a disposition-quarantined product is refused (ruling R7)", async () => {
-  const { client, inserts } = stubClient({
-    products: activeProduct,
-    personal_plan_product_search_dispositions: quarantined,
-    // scan_wishlist deliberately has no handler: must not be reached.
-  })
-  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, { outcome: "product_not_saveable" })
-  assert.deepEqual(inserts, [])
-})
-
-test("saveScanWishlistProduct: a unique-conflict is idempotent success", async () => {
-  const { client } = stubClient({
-    products: activeProduct,
-    personal_plan_product_search_dispositions: notQuarantined,
-    scan_wishlist: { insert: () => ({ error: { code: "23505", message: "duplicate key" } }) },
-  })
-  const result = await saveScanWishlistProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, {
-    outcome: "saved",
-    savedState: { state: "merkliste", managedByScan: true },
-  })
-})
-
-test("saveScanWishlistProduct: a non-conflict error still throws", async () => {
-  const { client } = stubClient({
-    products: activeProduct,
-    personal_plan_product_search_dispositions: notQuarantined,
-    scan_wishlist: { insert: () => ({ error: { code: "23503", message: "fk violation" } }) },
-  })
-  await assert.rejects(
-    () => saveScanWishlistProduct(client as never, "user-1", "prod-1"),
-    /scan_wishlist_save_failed/,
-  )
-})
-
 test("removeScanWishlistProduct: deletes scoped to user and product, no-op if absent", async () => {
   const { client, deletes } = stubClient({
     scan_wishlist: { delete: () => ({ error: null }) },
@@ -224,145 +166,6 @@ test("removeScanWishlistProduct: deletes scoped to user and product, no-op if ab
   assert.equal(deletes.length, 1)
   assert.equal(deletes[0].filters.get("user_id"), "user-1")
   assert.equal(deletes[0].filters.get("product_id"), "prod-1")
-})
-
-test("saveScanRoutineProduct: unknown/inactive product is reported, not inserted", async () => {
-  const { client, inserts } = stubClient({
-    products: { select: () => ({ data: null, error: null }) },
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-missing")
-  assert.deepEqual(result, { outcome: "product_not_found" })
-  assert.deepEqual(inserts, [])
-})
-
-test("saveScanRoutineProduct: already-owned row is a no-op success (any origin)", async () => {
-  const { client, inserts } = stubClient({
-    products: {
-      select: () => ({
-        data: {
-          id: "prod-1",
-          name: "Shampoo X",
-          brand: "Marke",
-          category_key: "shampoo",
-          origin: "user_submitted",
-        },
-        error: null,
-      }),
-    },
-    personal_plan_product_search_dispositions: notQuarantined,
-    user_products: {
-      selectList: () => ({ data: [{ id: "up-1", intake_source: "catalog_search" }], error: null }),
-    },
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
-  // No fake insert-success: the row exists, it just is not the scan surface's to manage.
-  assert.deepEqual(result, {
-    outcome: "saved",
-    savedState: { state: "routine", managedByScan: false },
-  })
-  assert.deepEqual(inserts, [])
-})
-
-test("saveScanRoutineProduct: inserts a matched/owned/scan row for a new curated product", async () => {
-  const { client, inserts } = stubClient({
-    products: {
-      select: () => ({
-        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
-        error: null,
-      }),
-    },
-    personal_plan_product_search_dispositions: notQuarantined,
-    user_products: {
-      selectList: () => ({ data: [], error: null }),
-      insert: () => ({ error: null }),
-    },
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, {
-    outcome: "saved",
-    savedState: { state: "routine", managedByScan: true },
-  })
-  assert.deepEqual(inserts, [
-    {
-      table: "user_products",
-      payload: {
-        user_id: "user-1",
-        category: "shampoo",
-        catalog_product_id: "prod-1",
-        brand_text: "Marke",
-        product_name_text: "Shampoo X",
-        identity_status: "matched",
-        ownership_status: "owned",
-        intake_source: "scan",
-      },
-    },
-  ])
-})
-
-// Ruling R7, relaxed 2026-09-01: a product ruling that users must never hit a save dead
-// end. `origin` no longer gates a first-time routine save — only lifecycle-active +
-// not-quarantined does (18 active `user_submitted` products were blocked under the old
-// origin === "curated" rule).
-test("saveScanRoutineProduct: a lifecycle-active user_submitted product is saveable (ruling R7 relaxed 2026-09-01)", async () => {
-  const { client, inserts } = stubClient({
-    products: {
-      select: () => ({
-        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
-        error: null,
-      }),
-    },
-    personal_plan_product_search_dispositions: notQuarantined,
-    user_products: {
-      selectList: () => ({ data: [], error: null }),
-      insert: () => ({ error: null }),
-    },
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, {
-    outcome: "saved",
-    savedState: { state: "routine", managedByScan: true },
-  })
-  assert.deepEqual(inserts, [
-    {
-      table: "user_products",
-      payload: {
-        user_id: "user-1",
-        category: "shampoo",
-        catalog_product_id: "prod-1",
-        brand_text: "Marke",
-        product_name_text: "Shampoo X",
-        identity_status: "matched",
-        ownership_status: "owned",
-        intake_source: "scan",
-      },
-    },
-  ])
-})
-
-test("saveScanRoutineProduct: a disposition-quarantined product is refused regardless of origin (ruling R7)", async () => {
-  const { client, inserts } = stubClient({
-    products: {
-      select: () => ({
-        data: { id: "prod-1", name: "Shampoo X", brand: "Marke", category_key: "shampoo" },
-        error: null,
-      }),
-    },
-    personal_plan_product_search_dispositions: quarantined,
-    // user_products deliberately has no handler: must not be reached.
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-1")
-  assert.deepEqual(result, { outcome: "product_not_saveable" })
-  assert.deepEqual(inserts, [])
-})
-
-test("saveScanRoutineProduct: an inactive product is refused before quarantine is even checked", async () => {
-  const { client, inserts } = stubClient({
-    products: { select: () => ({ data: null, error: null }) },
-    // personal_plan_product_search_dispositions deliberately has no handler: must not be reached.
-  })
-  const result = await saveScanRoutineProduct(client as never, "user-1", "prod-inactive")
-  assert.deepEqual(result, { outcome: "product_not_found" })
-  assert.deepEqual(inserts, [])
 })
 
 test("removeScanRoutineProduct: only deletes rows this helper's own intake_source created", async () => {
@@ -401,4 +204,167 @@ test("removeScanRoutineProduct: nothing owned at all is a plain idempotent succe
   })
   const result = await removeScanRoutineProduct(client as never, "user-1", "prod-1")
   assert.deepEqual(result, { outcome: "removed" })
+})
+
+/**
+ * T16: `autoSaveScanWishlistProduct` is the ONLY write auto-save ever performs. These
+ * tests prove its shape — insert-only, into `scan_wishlist` alone, `ON CONFLICT (user_id,
+ * product_id) DO NOTHING` — at the JS-call level. The real Postgres semantics of that
+ * upsert (including the named non-destructive regression against a seeded `user_products`
+ * ownership row) are covered separately in tests/scan-wishlist-auto-save-postgres.test.ts.
+ *
+ * Fix round 1 (F2): the function now does one `user_products` READ (ownership check)
+ * before the `scan_wishlist` write, so every test below has to wire a `user_products`
+ * `selectList` handler too — an empty result models "not owned".
+ */
+const NOT_OWNED = { user_products: { selectList: () => ({ data: [], error: null }) } }
+
+test("autoSaveScanWishlistProduct: upserts user_id + product_id into scan_wishlist with ON CONFLICT DO NOTHING semantics", async () => {
+  const { client, upserts } = stubClient({
+    scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
+  })
+  await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
+  assert.equal(upserts.length, 1)
+  assert.equal(upserts[0].table, "scan_wishlist")
+  assert.deepEqual(upserts[0].payload, { user_id: "user-1", product_id: "prod-1" })
+  assert.deepEqual(upserts[0].options, { onConflict: "user_id,product_id", ignoreDuplicates: true })
+})
+
+test("autoSaveScanWishlistProduct: the F2 ownership check only READS user_products — never writes to any table but scan_wishlist", async () => {
+  // `user_products` has a selectList handler (the ownership lookup) but deliberately no
+  // insert/upsert/delete handler: an attempted write against it would throw "no <op>
+  // handler for user_products" from `stubClient` — this is THE hazard's regression at the
+  // call-shape level, mirroring `loadScanSavedState`'s wishlist-first test above.
+  const { client } = stubClient({
+    scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
+  })
+  await assert.doesNotReject(() => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"))
+})
+
+test("autoSaveScanWishlistProduct: an owned product is skipped — no scan_wishlist write, exclusivity intact (F2 ruling)", async () => {
+  const { client, upserts } = stubClient({
+    // No upsert handler on scan_wishlist: reaching it at all would throw and fail the test.
+    scan_wishlist: {},
+    user_products: {
+      selectList: () => ({ data: [{ id: "up-1", intake_source: "catalog_search" }], error: null }),
+    },
+  })
+  await assert.doesNotReject(() => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"))
+  assert.deepEqual(upserts, [])
+})
+
+test("autoSaveScanWishlistProduct: rescanning the same product upserts again — idempotency is ON CONFLICT's job", async () => {
+  const { client, upserts } = stubClient({
+    scan_wishlist: { upsert: () => ({ error: null }) },
+    ...NOT_OWNED,
+  })
+  await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
+  await autoSaveScanWishlistProduct(client as never, "user-1", "prod-1")
+  assert.equal(upserts.length, 2)
+  assert.deepEqual(upserts[0].payload, upserts[1].payload)
+})
+
+test("autoSaveScanWishlistProduct: an upsert error throws a stable error", async () => {
+  const { client } = stubClient({
+    scan_wishlist: { upsert: () => ({ error: { message: "boom" } }) },
+    ...NOT_OWNED,
+  })
+  await assert.rejects(
+    () => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"),
+    /scan_wishlist_auto_save_failed/,
+  )
+})
+
+test("autoSaveScanWishlistProduct: an ownership-lookup error throws a stable error, before any write", async () => {
+  const { client, upserts } = stubClient({
+    scan_wishlist: {},
+    user_products: { selectList: () => ({ data: null, error: { message: "boom" } }) },
+  })
+  await assert.rejects(
+    () => autoSaveScanWishlistProduct(client as never, "user-1", "prod-1"),
+    /scan_saved_state_lookup_failed/,
+  )
+  assert.deepEqual(upserts, [])
+})
+
+/**
+ * `moveScanSavedProduct` owns no logic beyond the RPC call and the shape check — the
+ * move itself (eligibility, both writes, the post-write state read) lives in
+ * `scan_move_saved_product` and is covered against real Postgres in
+ * tests/scan-move-saved-product-postgres.test.ts.
+ */
+function rpcClient(response: { data: unknown; error: unknown }) {
+  const calls: Array<{ name: string; args: unknown }> = []
+  const client = {
+    rpc: async (name: string, args: unknown) => {
+      calls.push({ name, args })
+      return response
+    },
+  }
+  return { client, calls }
+}
+
+test("moveScanSavedProduct: passes user, product and kind to the RPC", async () => {
+  const { client, calls } = rpcClient({
+    data: { outcome: "saved", savedState: { state: "routine", managedByScan: true } },
+    error: null,
+  })
+  const result = await moveScanSavedProduct(client as never, "user-1", "prod-1", "routine")
+  assert.deepEqual(result, {
+    outcome: "saved",
+    savedState: { state: "routine", managedByScan: true },
+  })
+  assert.deepEqual(calls, [
+    {
+      name: "scan_move_saved_product",
+      args: { p_user_id: "user-1", p_product_id: "prod-1", p_kind: "routine" },
+    },
+  ])
+})
+
+test("moveScanSavedProduct: reports the RPC's refusal outcomes unchanged", async () => {
+  for (const outcome of ["product_not_found", "product_not_saveable"] as const) {
+    const { client } = rpcClient({ data: { outcome }, error: null })
+    const result = await moveScanSavedProduct(client as never, "user-1", "prod-1", "merkliste")
+    assert.deepEqual(result, { outcome })
+  }
+})
+
+test("moveScanSavedProduct: a not-saved end state is carried through, not rewritten", async () => {
+  const { client } = rpcClient({
+    data: { outcome: "saved", savedState: { state: null, managedByScan: false } },
+    error: null,
+  })
+  const result = await moveScanSavedProduct(client as never, "user-1", "prod-1", "merkliste")
+  assert.deepEqual(result, {
+    outcome: "saved",
+    savedState: { state: null, managedByScan: false },
+  })
+})
+
+test("moveScanSavedProduct: an RPC error throws a stable error", async () => {
+  const { client } = rpcClient({ data: null, error: { message: "boom" } })
+  await assert.rejects(
+    () => moveScanSavedProduct(client as never, "user-1", "prod-1", "routine"),
+    /scan_move_failed/,
+  )
+})
+
+test("moveScanSavedProduct: a malformed payload throws instead of being reported as saved", async () => {
+  const malformed = [
+    null,
+    { outcome: "who_knows" },
+    { outcome: "saved" },
+    { outcome: "saved", savedState: { state: "wunschliste", managedByScan: true } },
+    { outcome: "saved", savedState: { state: "routine", managedByScan: "yes" } },
+  ]
+  for (const data of malformed) {
+    const { client } = rpcClient({ data, error: null })
+    await assert.rejects(
+      () => moveScanSavedProduct(client as never, "user-1", "prod-1", "routine"),
+      /scan_move_failed/,
+    )
+  }
 })

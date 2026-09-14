@@ -1,0 +1,172 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-02",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "german_retailer_exact_gtin_formula",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "recorded_non_material_regional_same_gtin_conflict",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA (WATER, EAU)",
+      "SODIUM LAURETH SULFATE",
+      "COCAMIDOPROPYL BETAINE",
+      "SODIUM CHLORIDE",
+      "DIMETHICONE",
+      "HYDROLYZED KERATIN",
+      "COMBRETUM FARINOSUM FLOWER NECTAR",
+      "PARFUM (FRAGRANCE)",
+      "SODIUM BENZOATE",
+      "PEG-7 GLYCERYL COCOATE",
+      "CITRIC ACID",
+      "AMODIMETHICONE",
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "GLYCOL DISTEARATE",
+      "LAURETH-4",
+      "PEG-120 METHYL GLUCOSE DIOLEATE",
+      "GLYCERIN",
+      "HYDROGENATED CASTOR OIL",
+      "LAURETH-23",
+      "TRIDECETH-10",
+      "SODIUM HYDROXIDE",
+      "CITRUS AURANTIUM PEEL OIL",
+      "LIMONENE",
+      "PHENOXYETHANOL",
+      "PROPYLENE GLYCOL",
+      "SODIUM SALICYLATE",
+      "BENZYL ALCOHOL",
+      "POTASSIUM SORBATE"
+    ],
+    "normalized_inci_string": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, SODIUM CHLORIDE, DIMETHICONE, HYDROLYZED KERATIN, COMBRETUM FARINOSUM FLOWER NECTAR, PARFUM (FRAGRANCE), SODIUM BENZOATE, PEG-7 GLYCERYL COCOATE, CITRIC ACID, AMODIMETHICONE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCOL DISTEARATE, LAURETH-4, PEG-120 METHYL GLUCOSE DIOLEATE, GLYCERIN, HYDROGENATED CASTOR OIL, LAURETH-23, TRIDECETH-10, SODIUM HYDROXIDE, CITRUS AURANTIUM PEEL OIL, LIMONENE, PHENOXYETHANOL, PROPYLENE GLYCOL, SODIUM SALICYLATE, BENZYL ALCOHOL, POTASSIUM SORBATE",
+    "formula_fingerprint_sha256": "209d35dcd3c52b9d8faf830439b361366fbdbb590d710efe89605857c756e027",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 3,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.03"
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 5,
+        "route": "silicone film-forming route",
+        "fact_id": "formula.conditioning.05"
+      },
+      {
+        "ingredient": "HYDROLYZED KERATIN",
+        "position": 6,
+        "route": "protein-derived care clue",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 12,
+        "route": "amine-functional silicone conditioning route",
+        "fact_id": "formula.conditioning.12"
+      },
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 13,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.13"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate is at position 2 with amphoteric betaine at position 3."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Silicone, protein-derived and cationic polymer care routes occur in the formula."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion facts are recorded separately and excluded from independent cleansing-route count."
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "HYDROLYZED KERATIN",
+        "position": 6,
+        "clue": "protein-derived clue"
+      },
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 5,
+        "clue": "silicone film route"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 12,
+        "clue": "silicone film route"
+      },
+      {
+        "ingredient": "GLYCERIN",
+        "position": 17,
+        "clue": "humectant clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "PARFUM (FRAGRANCE)",
+        "position": 8,
+        "flag": "fragrance mixture"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 16,
+        "reason": "polymeric thickener/emulsifier clue; not treated as independent cleansing or substantive conditioning route"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.manufacturer_corroborating_inci",
+      "formula.regional_conflict"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "LAURETH-4",
+        "position": 15,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.15",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 16,
+        "function": "polymeric_thickener_emulsifier_helper",
+        "fact_id": "formula.function.16",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      },
+      {
+        "ingredient": "TRIDECETH-10",
+        "position": 20,
+        "function": "silicone_emulsifier_helper",
+        "fact_id": "formula.function.20",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      }
+    ]
+  }
+}

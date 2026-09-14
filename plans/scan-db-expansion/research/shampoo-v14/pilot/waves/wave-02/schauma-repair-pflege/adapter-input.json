@@ -1,0 +1,200 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "schauma-repair-pflege",
+    "market": "DE",
+    "exactProductName": "Shampoo Repair & Pflege",
+    "exactPackSize": "400 ml",
+    "gtinAliases": [
+      "4015100890372"
+    ],
+    "capturedAt": "2026-09-03T18:00:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "none",
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      },
+      {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-repair-und-pflege/p/4015100890372",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PANTHENOL, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, COCOS NUCIFERA (COCONUT) FRUIT EXTRACT, SORBITOL, COCAMIDE MEA, CITRIC ACID, GLYCOL DISTEARATE, AMODIMETHICONE, DIMETHICONE, PARFUM (FRAGRANCE), PEG-7 GLYCERYL COCOATE, PEG-40 HYDROGENATED CASTOR OIL, LAURETH-4, LAURETH-23, PROPYLENE GLYCOL, HYDROGENATED CASTOR OIL, TRIDECETH-10, SODIUM HYDROXIDE, HEXYL CINNAMAL, SODIUM BENZOATE, PHENOXYETHANOL, SODIUM SALICYLATE, CI 16255, CI 47005",
+    "inciFingerprintSha256": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+    "canonicalSource": "reputable_german_retailer",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:b5e2f17f6f5a4800893666bc19ab899d24212ddf7b39a83ef36b6f555e71b60c"
+    ],
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+        "tier": "reputable_german_retailer",
+        "capturedAt": "2026-09-03T18:00:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 and early sodium chloride make this an effective cleanser, but CAPB plus a very early cationic polymer/panthenol/oil/silicone care phase keeps the net architecture below a strong reset shampoo.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.conditioning.05",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: early cationic guar, panthenol, apricot oil, coconut extract and later amodimethicone/dimethicone create multiple complementary rinse-off care routes.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.architecture.02"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: early cationic guar, plant oil, dual silicones and later waxy/refatting materials create converging persistent deposition potential despite SLES/CAPB reset.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.function.18",
+        "formula.function.22"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: exact-product positioning targets damaged/dry hair and repair, and the formula supports that with polymer, panthenol, oil and silicone care routes.",
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.05",
+        "formula.conditioning.13",
+        "formula.conditioning.14"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the dry-hair and smoothing claims support the same repair/care story rather than a distinct v1.4 secondary focus.",
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.13",
+        "formula.conditioning.14"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair distribution, short contact and rinse-out, with no daily, alternating, reset or treatment trigger.",
+      "evidenceRefs": [
+        "usage:dm-directions",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product targets damaged/dry hair fiber repair, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:dm-repair-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "not_suited",
+      "confidence": "moderate",
+      "rationale": "High conditioning plus high weight potential from early cationic guar, oil, amodimethicone and dimethicone makes loss of lift too plausible for fine hair.",
+      "evidenceRefs": [
+        "adjudication:schauma-repair-pflege:conditioningLevel",
+        "adjudication:schauma-repair-pflege:weightPotential",
+        "adjudication:schauma-repair-pflege:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "The repair-care stack can help damaged normal hair, but high weight potential makes it situational rather than an ideal diameter-level default.",
+      "evidenceRefs": [
+        "adjudication:schauma-repair-pflege:conditioningLevel",
+        "adjudication:schauma-repair-pflege:weightPotential",
+        "adjudication:schauma-repair-pflege:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Coarse hair is the best default fit for the high-conditioning/high-weight repair profile; the richer deposition is less likely to compromise useful movement.",
+      "evidenceRefs": [
+        "adjudication:schauma-repair-pflege:conditioningLevel",
+        "adjudication:schauma-repair-pflege:weightPotential",
+        "adjudication:schauma-repair-pflege:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "high",
+      "rationale": "The product is positioned for damaged/dry hair repair rather than a named scalp concern; the ordinary balanced scalp route is the only supported production target.",
+      "positioningEvidenceRefs": [
+        "claim:dm-repair-positioning",
+        "usage:dm-directions"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:schauma-repair-pflege:cleansingStrength",
+        "adjudication:schauma-repair-pflege:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "claim:dm-repair-positioning",
+      "usage:dm-directions"
+    ]
+  }
+}

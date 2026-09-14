@@ -90,7 +90,12 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(client, /takePersonalPlanReadyPollRequest/)
   assert.match(client, /\/plan-bereit\/status\?lead=/)
   assert.doesNotMatch(client, /window\.location\.assign\(nextHref\)/)
-  assert.match(client, /<PlanBereitArrival[\s\S]*actionHref=\{nextHref\}/)
+  // The default package still hands `nextHref` to the frame and marks the stage
+  // navigation; only the scan_v1 funnel swaps in the scanner destination.
+  assert.match(
+    client,
+    /<PlanBereitArrival[\s\S]*actionHref=\{scanFunnel \? SCAN_ARRIVAL_HREF : nextHref\}/,
+  )
   assert.match(client, /markPersonalPlanStageNavigation\("\/plan-start"\)/)
   assert.doesNotMatch(client, /PersonalPlanChapterTransition/)
   assert.match(client, /missingHairLength\.question/)

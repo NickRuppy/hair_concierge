@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  CANDIDATE_LOAD_LIMIT,
   createScanSearchRouteHandler,
   searchScanCatalog,
   type ScanSearchRouteDeps,
@@ -14,7 +15,7 @@ function baseDeps(overrides: Partial<ScanSearchRouteDeps> = {}): ScanSearchRoute
     getUserId: async () => userId,
     checkRateLimit: async () => ({ allowed: true }),
     createAdminClient: () => ({}) as never,
-    search: async () => [],
+    search: async () => ({ results: [], truncated: false }),
     ...overrides,
   }
 }
@@ -62,14 +63,14 @@ test("scan search: a too-short query is empty results, not a 400", async () => {
   )
   const response = await handler(request("?q=a"))
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { results: [] })
+  assert.deepEqual(await response.json(), { results: [], truncated: false })
 })
 
 test("scan search: missing q param is empty results", async () => {
   const handler = createScanSearchRouteHandler(baseDeps())
   const response = await handler(request(""))
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { results: [] })
+  assert.deepEqual(await response.json(), { results: [], truncated: false })
 })
 
 test("scan search: returns the injected search results", async () => {
@@ -81,10 +82,12 @@ test("scan search: returns the injected search results", async () => {
     categoryLabel: "Shampoo",
     imageUrl: null,
   }
-  const handler = createScanSearchRouteHandler(baseDeps({ search: async () => [entry] }))
+  const handler = createScanSearchRouteHandler(
+    baseDeps({ search: async () => ({ results: [entry], truncated: false }) }),
+  )
   const response = await handler(request("?q=shampoo"))
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { results: [entry] })
+  assert.deepEqual(await response.json(), { results: [entry], truncated: false })
 })
 
 test("scan search: an unexpected lookup error maps to 503 and captures to Sentry", async () => {
@@ -170,7 +173,7 @@ test("searchScanCatalog: matches across brand+name, case-insensitive", async () 
       sort_order: 1,
     },
   ])
-  const results = await searchScanCatalog(client as never, "EINHORN")
+  const { results } = await searchScanCatalog(client as never, "EINHORN")
   assert.equal(results.length, 1)
   assert.equal(results[0].id, "1")
   assert.equal(results[0].categoryLabel, "Shampoo")
@@ -195,7 +198,7 @@ test("searchScanCatalog: an exact label match ranks first regardless of sort_ord
       sort_order: 9,
     },
   ])
-  const results = await searchScanCatalog(client as never, "marke shampoo")
+  const { results } = await searchScanCatalog(client as never, "marke shampoo")
   assert.equal(results[0].id, "2")
 })
 
@@ -209,7 +212,7 @@ test("searchScanCatalog: caps results at 8", async () => {
     sort_order: index,
   }))
   const { client } = stubProductsClient(rows)
-  const results = await searchScanCatalog(client as never, "shampoo")
+  const { results } = await searchScanCatalog(client as never, "shampoo")
   assert.equal(results.length, 8)
 })
 
@@ -243,9 +246,48 @@ test("searchScanCatalog: excludes a disposition-quarantined product (ruling R7)"
     ],
     { quarantinedIds: ["1"] },
   )
-  const results = await searchScanCatalog(client as never, "shampoo")
+  const { results } = await searchScanCatalog(client as never, "shampoo")
   assert.deepEqual(
     results.map((r) => r.id),
     ["2"],
   )
+})
+
+test("scan search: the truncation flag is passed through to the response", async () => {
+  const handler = createScanSearchRouteHandler(
+    baseDeps({ search: async () => ({ results: [], truncated: true }) }),
+  )
+  const response = await handler(request("?q=shampoo"))
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { results: [], truncated: true })
+})
+
+test("searchScanCatalog: a full candidate page reports truncated", async () => {
+  const rows = Array.from({ length: CANDIDATE_LOAD_LIMIT }, (_, index) => ({
+    id: `p${index}`,
+    name: `Shampoo ${index}`,
+    brand: "Marke",
+    category_key: "shampoo",
+    image_url: null,
+    sort_order: index,
+  }))
+  const { client } = stubProductsClient(rows)
+  const { results, truncated } = await searchScanCatalog(client as never, "shampoo")
+  assert.equal(truncated, true)
+  assert.equal(results.length, 8)
+})
+
+test("searchScanCatalog: a partial candidate page is not truncated", async () => {
+  const { client } = stubProductsClient([
+    {
+      id: "1",
+      name: "Shampoo Deluxe",
+      brand: "Marke",
+      category_key: "shampoo",
+      image_url: null,
+      sort_order: 0,
+    },
+  ])
+  const { truncated } = await searchScanCatalog(client as never, "shampoo")
+  assert.equal(truncated, false)
 })

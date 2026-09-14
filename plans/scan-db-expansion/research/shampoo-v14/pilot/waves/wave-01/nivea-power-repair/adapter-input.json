@@ -1,0 +1,200 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "nivea-power-repair",
+    "market": "DE",
+    "exactProductName": "Power Repair Reparatur Shampoo",
+    "exactPackSize": "250 ml",
+    "gtinAliases": [
+      "4006000192543"
+    ],
+    "capturedAt": "2026-09-03T12:00:00+02:00",
+    "confidence": "high",
+    "conflictStatus": "none",
+    "sources": [
+      {
+        "url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-09-03T12:00:00+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Decyl Glucoside, Coco-Glucoside, Sodium Chloride, Citric Acid, Gardenia Taitensis Flower Extract, Squalane, Panthenol, Cocos Nucifera Oil, Dicaprylyl Ether, Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Glycerin, Pantolactone, Glycol Distearate, Hydrogenated Castor Oil, Sodium Benzoate, Tocopherol, Benzoic Acid, Parfum",
+    "inciFingerprintSha256": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:60677c08caabe9ae9c45d1d002dae4aa2b91a8418ee9d5dd1243a74b51c1cc8b"
+    ],
+    "sources": [
+      {
+        "url": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-09-03T12:00:00+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.04",
+        "formula.surfactant.05",
+        "claim:nivea-de-positioning"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: squalane, panthenol, coconut oil, dicaprylyl ether, cationic guar, glyceryl oleate, glycerin, glycol distearate and hydrogenated castor oil create multiple complementary rinse-off care routes.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: oils, squalane, cationic guar and waxy/refatting materials create noticeable residue potential, but SLES/CAPB/glucoside cleansing and the absence of silicone keep it below a high-weight call.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.conditioning.18",
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: exact-product positioning targets damaged or stressed hair, and the formula supports that with a broad oil, panthenol, cationic polymer and refatting care system.",
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: moisture/no-weight language is not a v1.4 secondary focus, and the care routes support the same repair positioning rather than an independent focus.",
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger.",
+      "evidenceRefs": [
+        "usage:nivea-de",
+        "usage:dm-de",
+        "formula.canonical_inci"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the packet targets damaged hair and repair/moisture care, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "evidenceRefs": [
+        "claim:nivea-de-positioning",
+        "claim:dm-de-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "High conditioning and moderate residue risk can reduce lift on fine hair, though the no-silicone and no-weigh-down counter-signals keep it conditional rather than excluded.",
+      "evidenceRefs": [
+        "adjudication:nivea-power-repair:conditioningLevel",
+        "adjudication:nivea-power-repair:weightPotential",
+        "adjudication:nivea-power-repair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Moderate cleansing with high repair conditioning and moderate weight is a good fit for normal damaged hair.",
+      "evidenceRefs": [
+        "adjudication:nivea-power-repair:conditioningLevel",
+        "adjudication:nivea-power-repair:weightPotential",
+        "adjudication:nivea-power-repair:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Coarse hair can use the richer repair/oil/cationic care system without the same lift penalty.",
+      "evidenceRefs": [
+        "adjudication:nivea-power-repair:conditioningLevel",
+        "adjudication:nivea-power-repair:weightPotential",
+        "adjudication:nivea-power-repair:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "moderate",
+      "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket.",
+      "positioningEvidenceRefs": [
+        "formula.canonical_inci"
+      ],
+      "formulaEvidenceRefs": [
+        "adjudication:nivea-power-repair:cleansingStrength",
+        "adjudication:nivea-power-repair:scalpComfortTarget"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "usage:nivea-de",
+      "usage:dm-de",
+      "formula.canonical_inci"
+    ]
+  }
+}

@@ -7,6 +7,15 @@ export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
 
 export type PersonalPlanRoutineAccess = {
   hasActivePersonalPlanEntitlement: boolean
+  /**
+   * Current paid app access, mirroring the subscription paywall's own
+   * composite (`hasCurrentAppAccess` OR an active one-time purchase OR an
+   * active moderator grant). Distinct from
+   * `hasActivePersonalPlanEntitlement`, which deliberately excludes plain
+   * subscribers. Only the `/scan` rule reads it; omitted means "unknown",
+   * treated as no paid access.
+   */
+  hasPaidAppAccess?: boolean
   pendingRoutineProposalId: string | null
   activeRoutineVersionId: string | null
 }
@@ -37,7 +46,11 @@ export function resolveIntakeState(
 export function getAuthenticatedAppRedirect(
   pathname: string,
   intakeState: IntakeState,
-  options?: { isQuizRetake?: boolean; personalPlanRoutineAccess?: PersonalPlanRoutineAccess },
+  options?: {
+    isQuizRetake?: boolean
+    personalPlanRoutineAccess?: PersonalPlanRoutineAccess
+    freemiumScannerFirstEnabled?: boolean
+  },
 ): string | null {
   if (pathname === "/quiz" && options?.isQuizRetake) {
     return null
@@ -61,6 +74,7 @@ export function getAuthenticatedAppRedirect(
       return canBypassLegacyOnboardingForPersonalPlanRoutine(
         pathname,
         options?.personalPlanRoutineAccess,
+        { freemiumScannerFirstEnabled: options?.freemiumScannerFirstEnabled },
       )
         ? null
         : "/onboarding"
@@ -84,8 +98,25 @@ export function isPersonalPlanOnboardingBypassRoute(pathname: string): boolean {
 export function canBypassLegacyOnboardingForPersonalPlanRoutine(
   pathname: string,
   access: PersonalPlanRoutineAccess | undefined,
+  options?: { freemiumScannerFirstEnabled?: boolean },
 ): boolean {
-  if (!access?.hasActivePersonalPlanEntitlement) return false
+  // Freemium scanner-first: /scan's onboarding bypass is decoupled from the
+  // Personal-Plan routine entitlement entirely when the flag is on — it no
+  // longer matters whether the user holds any paid/guest entitlement.
+  if (options?.freemiumScannerFirstEnabled && isRoute(pathname, "/scan")) {
+    return true
+  }
+
+  if (!access?.hasActivePersonalPlanEntitlement) {
+    // Scanner funnel (`scan_v1`): the funnel sells the *subscription* and lands
+    // the buyer on `/scan`, but a plain subscriber holds no Personal-Plan
+    // routine entitlement (that composite covers one-time access, field-test /
+    // partner guests and moderators only). Current paid app access alone opens
+    // `/scan`; the profile prerequisite stays enforced downstream by the scan
+    // page's own gate (loadScanRouteAccess -> redirect to /quiz).
+    if (isRoute(pathname, "/scan") && access?.hasPaidAppAccess) return true
+    return false
+  }
 
   const hasPendingOrActiveRoutine = Boolean(
     access.pendingRoutineProposalId || access.activeRoutineVersionId,

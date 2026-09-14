@@ -62,12 +62,14 @@ function createSupabaseStub(seed?: {
   profiles?: Record<string, Record<string, unknown>>
   authUsers?: Record<string, AuthUserStub>
   paypalIntents?: Array<Record<string, unknown>>
+  reactivationReservations?: Array<Record<string, unknown>>
 }) {
   const billing = (seed?.billing ?? []).map((row, index) => createBillingRow(row, index))
   const profiles = seed?.profiles ?? {}
   const authUsers = seed?.authUsers ?? {}
   const paypalIntents = seed?.paypalIntents ?? []
   const webhookEvents = new Set<string>()
+  const reactivationReservations = seed?.reactivationReservations ?? []
 
   function makeQuery(table: string) {
     const state: {
@@ -77,6 +79,7 @@ function createSupabaseStub(seed?: {
     } = { filters: [] }
 
     function rows() {
+      if (table === "membership_reactivation_checkout_reservations") return reactivationReservations
       if (table === "billing_subscriptions") return billing
       if (table === "profiles") return Object.values(profiles)
       if (table === "paypal_checkout_intents") return paypalIntents
@@ -884,4 +887,101 @@ test("webhook-first PayPal activation cancels duplicate fallback subscriber emai
   assert.equal(paypalIntents[0].status, "duplicate")
   assert.equal(paypalIntents[0].duplicate_reason, "intent_email_already_has_access")
   assert.equal(billing.length, 1)
+})
+
+function returningBrowserFixture() {
+  const reservation = {
+    id: "reservation-browser",
+    user_id: "returning-user",
+    provider: "paypal",
+    provider_reference: "intent-browser",
+    status: "provider_created",
+  }
+  const intent = {
+    id: "intent-browser",
+    token: "browser-token",
+    interval: "month",
+    source: "pricing_page",
+    status: "approved",
+    provider_subscription_id: "I-active",
+    email: "login@example.com",
+    user_id: "returning-user",
+    expires_at: futureIso(),
+    reactivation_reservation_id: reservation.id as string | null,
+    metadata: {
+      checkout_context: "membership_reactivation",
+      reactivation_reservation_id: reservation.id,
+    },
+  }
+  const state = createSupabaseStub({
+    paypalIntents: [intent],
+    reactivationReservations: [reservation],
+    profiles: { "returning-user": { id: "returning-user", email: "login@example.com" } },
+  })
+  const deps = {
+    supabase: state.supabase as any,
+    premiumTierId: "premium",
+    retrievePayPalSubscription: async () => paypalSubscription(),
+  }
+  return { ...state, reservation, intent, deps }
+}
+
+test("verified PayPal browser success completes exact local reservation before returning active", async () => {
+  const f = returningBrowserFixture()
+  const result = await ensurePayPalCheckoutAccountForToken("browser-token", f.deps)
+  assert.equal(result.status, "active")
+  assert.equal(f.reservation.status, "completed")
+  assert.equal(f.reservation.provider_reference, "intent-browser")
+  assert.equal(f.billing[0].user_id, "returning-user")
+  assert.equal(f.profiles["returning-user"].email, "login@example.com")
+  assert.equal(
+    (await ensurePayPalCheckoutAccountForToken("browser-token", f.deps)).status,
+    "active",
+  )
+  assert.equal(f.reservation.status, "completed")
+})
+
+test("PayPal browser activation cannot return success with mismatched reservation binding", async () => {
+  const f = returningBrowserFixture()
+  f.reservation.provider_reference = "another-intent"
+  await assert.rejects(ensurePayPalCheckoutAccountForToken("browser-token", f.deps))
+  assert.equal(f.reservation.status, "provider_created")
+})
+
+test("PayPal browser pending/duplicate and unrelated intents do not complete reservations", async () => {
+  for (const kind of ["pending", "duplicate", "ordinary"] as const) {
+    const f = returningBrowserFixture()
+    if (kind === "pending")
+      f.deps.retrievePayPalSubscription = async () => ({
+        ...paypalSubscription(),
+        status: "APPROVED",
+      })
+    if (kind === "duplicate") f.intent.status = "duplicate"
+    if (kind === "ordinary") {
+      f.intent.metadata.checkout_context = "quiz_result"
+      f.intent.reactivation_reservation_id = null
+    }
+    const result = await ensurePayPalCheckoutAccountForToken("browser-token", f.deps)
+    assert.equal(result.status, kind === "ordinary" ? "active" : kind)
+    assert.equal(f.reservation.status, "provider_created")
+  }
+})
+
+test("PayPal browser rejects a column-bound reactivation whose metadata is missing", async () => {
+  const f = returningBrowserFixture()
+  f.intent.metadata.checkout_context = ""
+  f.intent.metadata.reactivation_reservation_id = ""
+  await assert.rejects(ensurePayPalCheckoutAccountForToken("browser-token", f.deps))
+  assert.equal(f.reservation.status, "provider_created")
+})
+
+test("PayPal metadata alone cannot associate an ordinary intent with a reservation", async () => {
+  const f = returningBrowserFixture()
+  f.intent.reactivation_reservation_id = null
+  assert.equal(
+    (await ensurePayPalCheckoutAccountForToken("browser-token", f.deps)).status,
+    "active",
+  )
+  assert.equal(f.intent.status, "activated")
+  assert.equal(f.reservation.status, "provider_created")
 })

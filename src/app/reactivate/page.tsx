@@ -6,9 +6,11 @@ import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog
 import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import { buildQuizOfferPreview } from "@/lib/quiz/offer-preview"
 import { buildQuizAnswersFromHairProfile } from "@/lib/reactivation/profile-quiz-answers"
-import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
-import type { BillingInterval } from "@/lib/stripe/intervals"
-import { DEFAULT_PRICING_INTERVAL } from "@/lib/stripe/pricing-plans"
+import {
+  buildReactivationSignInUrl,
+  parseReactivationInterval,
+  sanitizeReactivationReturnDestination,
+} from "@/lib/reactivation/return-destination"
 import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = "force-dynamic"
@@ -20,17 +22,14 @@ export default async function ReactivatePage({
 }) {
   const params = await searchParams
   const returnDestination = sanitizeReactivationReturnDestination(params.next)
-  const initialInterval = parseInterval(params.interval)
+  const initialInterval = parseReactivationInterval(params.interval)
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    const authParams = new URLSearchParams({
-      next: `/reactivate?next=${encodeURIComponent(returnDestination)}`,
-    })
-    redirect(`/auth?${authParams.toString()}`)
+    redirect(buildReactivationSignInUrl(initialInterval, returnDestination))
   }
 
   let accessState: "active" | "expired" | "uncertain"
@@ -79,10 +78,4 @@ export default async function ReactivatePage({
       showCheckout={accessState === "expired"}
     />
   )
-}
-
-function parseInterval(value: string | undefined): BillingInterval {
-  return value === "month" || value === "quarter" || value === "year"
-    ? value
-    : DEFAULT_PRICING_INTERVAL
 }

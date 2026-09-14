@@ -112,11 +112,11 @@ test("landing quiz CTAs do not prefetch checkout-heavy quiz bundles", () => {
     }
   }
 
+  // The unified legal footer carries no /quiz link at all, so it cannot prefetch quiz bundles.
   const footerSource = read("src/components/landing/site-footer.tsx")
   const footerLinksSource = read("src/components/landing/footer-links.tsx")
-  assert.match(footerSource, /footerProductLinks\.map/)
-  assert.match(footerSource, /<FooterLink \{\.\.\.item\} \/>/)
-  assert.match(footerLinksSource, /href: "\/quiz", label: "Haaranalyse starten", prefetch: false/)
+  assert.match(footerSource, /legalFooterLinks\.map/)
+  assert.doesNotMatch(footerLinksSource, /href: "\/quiz"/)
   assert.match(footerLinksSource, /<Link href=\{href\} prefetch=\{prefetch\}/)
 })
 

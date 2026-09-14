@@ -9,6 +9,7 @@ import {
 } from "@paypal/react-paypal-js"
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
+import { readReactivationStatusDestination } from "@/lib/reactivation/return-destination"
 import { usePaymentRuntime } from "@/components/providers/payment-runtime-provider"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import { usePaymentSupportReport } from "@/components/checkout/use-payment-support-report"
@@ -21,7 +22,11 @@ import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
 import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
-import type { CheckoutFailure } from "./payment-method-checkout"
+import {
+  readReactivationCheckoutRecovery,
+  type CheckoutFailure,
+  type ReactivationCheckoutRecovery,
+} from "./payment-method-checkout"
 import type { CheckoutContext } from "@/lib/analytics/events"
 import { reportPayPalScriptFailureOnce } from "./paypal-script-failure"
 import {
@@ -95,6 +100,14 @@ class CheckoutAccessAlreadyExistsError extends Error {
   }
 }
 
+class ReactivationStatusRedirectError extends Error {}
+class ReactivationAuthenticationRequiredError extends Error {}
+class ReactivationRecoveryError extends Error {
+  constructor(readonly recovery: ReactivationCheckoutRecovery) {
+    super("reactivation checkout recovery required")
+  }
+}
+
 export function buildPayPalWelcomeUrl(token: string) {
   const params = new URLSearchParams({
     provider: "paypal",
@@ -161,6 +174,9 @@ export function PayPalSubscriptionButton({
   checkoutContext,
   interval,
   leadId,
+  onApproved,
+  onReactivationAuthenticationRequired,
+  onReactivationRecovery,
   onCheckoutCancelled,
   onCheckoutFailed,
   onClientMounted,
@@ -177,6 +193,22 @@ export function PayPalSubscriptionButton({
   checkoutContext?: CheckoutContext
   interval: BillingInterval
   leadId?: string | null
+  /**
+   * Completion routing override (docket rework R1). PayPal's approval comes back through
+   * this component's own `onApprove` CALLBACK, not a redirect — so the single thing that
+   * decides where the buyer ends up is the last line of that callback.
+   *
+   * Absent (the offer page, the payment modal, every existing mount): the server-verified
+   * approval navigates to `/welcome?provider=paypal&token=…`, byte-identical to before.
+   *
+   * Present (the Premium sheet): the same verified approval is handed back instead, with
+   * the intent token, and the caller finishes in place. Nothing else about the button —
+   * intent creation, approval, duplicate handling, observability, the error surfaces —
+   * differs between the two mounts.
+   */
+  onApproved?: (token: string) => void
+  onReactivationAuthenticationRequired?: () => void
+  onReactivationRecovery?: (recovery: ReactivationCheckoutRecovery) => void
   onCheckoutCancelled?: () => void
   onCheckoutFailed?: (failure: CheckoutFailure) => void
   onClientMounted?: () => void
@@ -484,6 +516,33 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch (err) {
+              if (
+                checkoutContext === "membership_reactivation" &&
+                err instanceof ReactivationStatusRedirectError
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                throw err
+              }
+              if (
+                checkoutContext === "membership_reactivation" &&
+                err instanceof ReactivationAuthenticationRequiredError
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationAuthenticationRequired?.()
+                throw err
+              }
+              if (
+                checkoutContext === "membership_reactivation" &&
+                !(err instanceof CheckoutAccessAlreadyExistsError)
+              ) {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationRecovery?.(
+                  err instanceof ReactivationRecoveryError
+                    ? err.recovery
+                    : { provider: "paypal", state: "resume" },
+                )
+                throw err
+              }
               if (err instanceof CheckoutAccessAlreadyExistsError) {
                 suppressNextPayPalErrorRef.current = true
                 setDuplicateEmail(err.email ?? null)
@@ -562,6 +621,11 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch (err) {
+              if (checkoutContext === "membership_reactivation") {
+                suppressNextPayPalErrorRef.current = true
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                throw err
+              }
               setError(paypalStartError)
               suppressNextPayPalErrorRef.current = true
               capturePayPalSubscriptionCustomerPaymentError({
@@ -586,6 +650,10 @@ export function PayPalSubscriptionButton({
           onApprove={async (data: OnApproveData) => {
             const token = intentTokenRef.current
             if (!data.subscriptionID || !token) {
+              if (checkoutContext === "membership_reactivation") {
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                return
+              }
               setError(paypalStartError)
               capturePayPalSubscriptionCustomerPaymentError({
                 checkoutAttemptId,
@@ -649,6 +717,10 @@ export function PayPalSubscriptionButton({
                 watchdogsRef.current.settle(watchdog)
               }
             } catch {
+              if (checkoutContext === "membership_reactivation") {
+                onReactivationRecovery?.({ provider: "paypal", state: "pending" })
+                return
+              }
               setError(paypalStartError)
               capturePayPalSubscriptionCustomerPaymentError({
                 checkoutAttemptId,
@@ -724,7 +796,10 @@ export function PayPalSubscriptionButton({
               paypalSubscriptionId: data.subscriptionID,
               paypalTokenPresent: true,
             })
-            window.location.assign(buildPayPalWelcomeUrl(token))
+            // The ONLY divergence between the offer page's mount and the Premium sheet's
+            // (docket rework R1). Without the override this is the historical navigation.
+            if (onApproved) onApproved(token)
+            else window.location.assign(buildPayPalWelcomeUrl(token))
           }}
           onCancel={() => {
             onCheckoutLifecycle?.({
@@ -738,6 +813,10 @@ export function PayPalSubscriptionButton({
             if (!visibleRef.current) return
             if (suppressNextPayPalErrorRef.current) {
               suppressNextPayPalErrorRef.current = false
+              return
+            }
+            if (checkoutContext === "membership_reactivation") {
+              onReactivationRecovery?.({ provider: "paypal", state: "pending" })
               return
             }
             setError(paypalStartError)
@@ -824,6 +903,20 @@ async function createSubscriptionIntent({
     }),
   })
   const body = await response.json().catch(() => ({}))
+  if (checkoutContext === "membership_reactivation") {
+    if (response.status === 401 && body?.error === "reactivation_authentication_required") {
+      throw new ReactivationAuthenticationRequiredError("reactivation authentication required")
+    }
+    const statusDestination = response.ok
+      ? readReactivationStatusDestination(body.statusUrl, window.location.origin)
+      : null
+    if (statusDestination) {
+      window.location.assign(statusDestination)
+      throw new ReactivationStatusRedirectError("reactivation checkout verification required")
+    }
+    const recovery = readReactivationCheckoutRecovery(body)
+    if (recovery) throw new ReactivationRecoveryError(recovery)
+  }
   if (!response.ok) {
     if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
       throw new CheckoutAccessAlreadyExistsError(readCheckoutAccessAlreadyExistsEmail(body))

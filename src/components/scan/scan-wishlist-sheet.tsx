@@ -7,7 +7,9 @@ import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/
 import { Skeleton } from "@/components/ui/skeleton"
 import type { ScanWishlistEntry } from "@/app/api/scan/wishlist/route"
 import { scanAlternativeMetaLine } from "@/lib/scan/result-presentation"
+import { useLatestRequest } from "@/lib/scan/use-latest-request"
 
+import { ScanLockBadge } from "./scan-lock-badge"
 import { ScanProductThumb } from "./scan-product-thumb"
 
 /**
@@ -18,7 +20,78 @@ import { ScanProductThumb } from "./scan-product-thumb"
 const EMPTY_COPY = "Noch nichts gemerkt. Scanne ein Produkt und speichere es hier."
 const ERROR_COPY = "Deine Merkliste lässt sich gerade nicht laden."
 
-export function ScanWishlistTrigger({ onClick }: { onClick: () => void }) {
+/**
+ * `locked` is the free tier's Merken gate (T9): `/api/scan/wishlist` denies a free user
+ * server-side, so the bookmark opens the Premium sheet instead of a list it may not read.
+ * The marker is a CORNER badge — the bookmark symbol itself stays fully visible (binding
+ * constraint, same contract as T3's `NavLockBadge`).
+ *
+ * PR2 review fix (C4): `locked` and `!locked` are two fully separate branches, not one
+ * markup shape with conditional attributes/classes layered on top — the unlocked branch is
+ * byte-identical to this component's pre-T9 markup (no `data-scan-wishlist-locked`
+ * attribute at all, no `relative` in the class list), matching the same pattern
+ * `ScanActionFooter`'s `saveLocked` branch already uses. A free/premium mid-render is never
+ * observable to markup as "true"/"false" on the same shape — only as present-or-absent.
+ *
+ * T16 extends the same discipline to `count`: premium's corner badge mirrors free's lock
+ * badge (`ScanLockBadge`) in position and contract, but is its OWN third markup shape, not
+ * a conditional layered onto the plain unlocked button. A falsy `count` (absent, 0 — every
+ * free/flag-off render, and a premium render before the Merkliste count has loaded or while
+ * it is empty) renders the exact pre-T16 unlocked markup: no badge, no `relative`, no
+ * `data-scan-wishlist-count` attribute.
+ */
+export function ScanWishlistTrigger({
+  onClick,
+  locked = false,
+  count,
+}: {
+  onClick: () => void
+  locked?: boolean
+  /**
+   * T16: a `scan_wishlist` listing count fetched separately (never a client-side guess) —
+   * see `ScanFlow`'s wishlist-count effect. Deep-links (via `onClick`) to the „Gemerkt"
+   * section on the Routine page instead of opening a sheet here.
+   */
+  count?: number
+}) {
+  if (locked) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        data-scan-wishlist-locked="true"
+        aria-label="Merkliste öffnen — Premium"
+        className="relative flex h-11 w-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+      >
+        <Bookmark className="h-5 w-5" aria-hidden="true" />
+        {/* The 44px tap target is much larger than the 20px symbol inside it: without this
+            offset the badge would float in empty space at the button's corner instead of
+            marking the bookmark it belongs to. */}
+        <ScanLockBadge className="right-[7px] top-[7px]" />
+      </button>
+    )
+  }
+
+  if (count) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        data-scan-wishlist-count={count}
+        aria-label={`Merkliste öffnen — ${count} gemerkt`}
+        className="relative flex h-11 w-11 items-center justify-center rounded-full text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+      >
+        <Bookmark className="h-5 w-5" aria-hidden="true" />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[var(--brand-plum)] px-1 text-[10px] font-bold leading-none text-white ring-2 ring-background"
+        >
+          {count > 9 ? "9+" : count}
+        </span>
+      </button>
+    )
+  }
+
   return (
     <button
       type="button"
@@ -46,26 +119,36 @@ export function ScanWishlistSheet({
 }) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [entries, setEntries] = useState<ScanWishlistEntry[]>([])
+  const requests = useLatestRequest()
 
   const load = useCallback(async () => {
+    // Close/reopen and the "Erneut versuchen" button can both leave an older GET in
+    // flight; without the guard its late response overwrites the newer list — or paints
+    // an error over a list that loaded fine (F13).
+    const token = requests.begin()
     setStatus("loading")
     try {
       const response = await fetch("/api/scan/wishlist", { cache: "no-store" })
       if (!response.ok) throw new Error("wishlist_unavailable")
       const body = (await response.json()) as { entries: ScanWishlistEntry[] }
+      if (!requests.isCurrent(token)) return
       setEntries(body.entries ?? [])
       setStatus("ready")
     } catch {
+      if (!requests.isCurrent(token)) return
       setStatus("error")
     }
-  }, [])
+  }, [requests])
 
   useEffect(() => {
     if (open) void load()
   }, [open, load])
 
   async function remove(productId: string) {
-    const previous = entries
+    const index = entries.findIndex((entry) => entry.productId === productId)
+    if (index < 0) return
+    const removed = entries[index]
+    const precededBy = entries.slice(0, index).map((entry) => entry.productId)
     setEntries((current) => current.filter((entry) => entry.productId !== productId))
     try {
       const response = await fetch("/api/scan/save", {
@@ -75,7 +158,19 @@ export function ScanWishlistSheet({
       })
       if (!response.ok) throw new Error("remove_failed")
     } catch {
-      setEntries(previous)
+      // Re-insert THIS entry only. Restoring the whole array as it looked before the
+      // request would also resurrect every other removal that happened meanwhile, and
+      // would undo a reload that landed in between (F13). The row goes back behind the
+      // last of its former predecessors that is still listed, so a plain failure puts it
+      // exactly where it was and a concurrent removal cannot shuffle it to the end.
+      setEntries((current) => {
+        if (current.some((entry) => entry.productId === productId)) return current
+        let at = 0
+        current.forEach((entry, position) => {
+          if (precededBy.includes(entry.productId)) at = position + 1
+        })
+        return [...current.slice(0, at), removed, ...current.slice(at)]
+      })
     }
   }
 

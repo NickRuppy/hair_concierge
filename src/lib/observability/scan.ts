@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/nextjs"
  * rest of the API surface treats it (only the checkout-critical auth-link path also captures it,
  * which is not the general pattern this scope follows).
  */
-export type ScanRoute = "resolve" | "search" | "submit" | "save" | "wishlist"
+export type ScanRoute = "resolve" | "search" | "submit" | "save" | "wishlist" | "reveal"
 
 type BreadcrumbLevel = "debug" | "info" | "warning" | "error"
 
@@ -19,6 +19,12 @@ export interface ScanSentryDetails {
   status: number
   reason?: string | null
   userId?: string | null
+  /**
+   * Sentry severity. Defaults to "error" — the 5xx case this helper exists for. Writers
+   * that capture a degraded-but-served request (the fail-open attempt log) pass "warning"
+   * so an alert on scan errors is not raised by telemetry the user never noticed.
+   */
+  level?: "warning" | "error"
 }
 
 export interface ScanSentryPayload {
@@ -65,7 +71,7 @@ export function captureScanException(
       scope.setTag(key, value)
     }
     scope.setContext("scan", payload.context)
-    scope.setLevel?.("error")
+    scope.setLevel?.(details.level ?? "error")
     sink.captureException(error)
   })
 }

@@ -201,9 +201,38 @@ jobs:
 
   quality-personal-plan-journey:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Raised from 10 (M1): this lane runs many Playwright specs in sequence, one of
+    # which (tests/scan-funnel-journey.spec.ts, on the full-CI live run below) writes
+    # real rows to production Supabase and depends on its own afterAll to clean them
+    # up. A job-level timeout that fires mid-run SIGKILLs the whole process before any
+    # afterAll can execute, leaving rows behind — 20 keeps a real margin over this
+    # spec's own 300s test.setTimeout plus every other spec sharing the lane.
+    timeout-minutes: 20
     needs: [detect-ci-scope]
     if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    # tests/scan-funnel-journey.spec.ts drives the scan_v1 package end to end, so
+    # this lane needs the scan route gate, funnel attribution and a signing secret
+    # in the dev server it boots, plus the spec's own live-run opt-in. Job level so
+    # both the Playwright process and that server inherit them; no other lane is
+    # affected.
+    env:
+      SCAN_FUNNEL_ENABLED: "true"
+      FUNNEL_ATTRIBUTION_ENABLED: "true"
+      FUNNEL_COOKIE_SIGNING_SECRET: "ci-scan-funnel-secret"
+      # I1: tests/scan-funnel-journey.spec.ts writes real users/leads/plans to
+      # production Supabase, so its live run is reserved for the same manual
+      # full-CI gate playwright-payment-feedback-v2 uses (full_ci), and only when a
+      # real service-role key is configured — never the ci.yml placeholder default.
+      # Every other spec `test:playwright:personal-plan-stage3:journey` runs is
+      # unaffected and keeps running on every PR; only this one variable changes.
+      PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE: ${{ (needs.detect-ci-scope.outputs.full_ci == 'true' && secrets.SUPABASE_SERVICE_ROLE_KEY != '') && '1' || '0' }}
+      # scan_v1 runs the LEGACY quiz, so its buyer's lead is a legacy lead. Without
+      # the production legacy-quiz cutover release configuration,
+      # `findPersonalPlanEnrollmentForUser` refuses every legacy lead and
+      # /plan-bereit can never report ready — the scanner hand-over would be
+      # untestable. These two mirror the production release state for this lane only.
+      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true"
+      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: "2020-01-01T00:00:00Z"
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6

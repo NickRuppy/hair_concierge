@@ -1,0 +1,66 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "being-big-hair",
+  "formulaFingerprintSha256": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+  "priorV14": {
+    "primary": "volume",
+    "secondary": [],
+    "adjudicationSha256": "1fa903513dabcec839ef47ccee428744a5355e057272dc28c8381cc5bf062348"
+  },
+  "effectiveV15": {
+    "primary": "volume",
+    "secondary": [],
+    "confidence": "moderate",
+    "rationale": "Volume ist der passende v1.5-Fokus: Big-Hair-/Fullness-Positionierung passt zu einem betaine-led, silicone-free Reinigungssystem mit Texture-Helpern. Macadamia- und Avocadooel sowie kationische Polymere sind Gewichtscounter-Signale, deshalb bleibt die Sicherheit moderat.",
+    "formulaFacts": [
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 2,
+        "observation": "milderer Lead-Surfactant vor Olefin Sulfonate"
+      },
+      {
+        "ingredient": "Sodium C14-16 Olefin Sulfonate",
+        "position": 3,
+        "observation": "lift-/reset-kompatible Reinigungsroute"
+      },
+      {
+        "ingredient": "Acrylates Copolymer",
+        "position": 14,
+        "observation": "Texture-Helper, nicht als Conditioning-Payload gezaehlt"
+      },
+      {
+        "ingredient": "Hydroxypropyl Starch Phosphate",
+        "position": 24,
+        "observation": "Texture-Helper-Signal"
+      }
+    ],
+    "counterSignal": "Macadamia- und Avocadooel plus Polyquaternium-10 und kationisches Guar erzeugen moderate Gewichts-/Residue-Risiken; die globale Herstellerformel bleibt zudem eine nicht gemergte Variante.",
+    "neighboringAlternative": "general",
+    "evidenceRefs": [
+      "claim:rossmann-de-positioning",
+      "claim:being-global-positioning",
+      "formula.surfactant.02",
+      "formula.surfactant.03",
+      "formula.function.14",
+      "formula.function.24",
+      "formula.conditioning.08",
+      "formula.conditioning.09"
+    ]
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [
+      "Glycerin an Position 6",
+      "Panthenol an Position 16"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+      "Macadamia Integrifolia Seed Oil an Position 8",
+      "Persea Gratissima Oil an Position 9",
+      "Polyquaternium-10 an Position 17"
+    ],
+    "limitation": "Die Care-Routen werden als Gewichtscounter-Signal innerhalb eines Volume-Produkts behandelt, nicht als eigenstaendiger Moisture- oder Repair-Fokus."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Formel und Claims zeigen zusammen Volume, aber die Oel-/Polyquat-Signale verhindern eine hochsichere Lightweight-Einordnung. Moisture/repair werden nicht emittiert, weil sie die Produktlogik nicht besser erklaeren."
+}

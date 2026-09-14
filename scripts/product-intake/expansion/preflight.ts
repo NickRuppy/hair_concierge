@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { readFile } from "node:fs/promises"
-import { dirname } from "node:path"
+import { dirname, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -66,7 +67,12 @@ async function loadLiveSnapshot(): Promise<Snapshot> {
       "id,name,brand,category_key,is_active,lifecycle_status,is_chaarlie_recommended",
       "id",
     ),
-    readAll(client, "product_identifiers", "product_id,identifier_type,identifier_value", "product_id"),
+    readAll(
+      client,
+      "product_identifiers",
+      "product_id,identifier_type,identifier_value",
+      "product_id",
+    ),
     readAll(client, "personal_plan_product_search_dispositions", "product_id", "product_id"),
   ])
   return {
@@ -103,9 +109,7 @@ async function main() {
   }
 
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as unknown
-  const supplement = JSON.parse(
-    await readFile(supplementPath, "utf8"),
-  ) as ExpansionApplySupplement
+  const supplement = JSON.parse(await readFile(supplementPath, "utf8")) as ExpansionApplySupplement
 
   const manifestReport = validateExpansionManifest(manifest)
   process.stdout.write(`Manifest: ${manifestPath}\n`)
@@ -191,7 +195,9 @@ async function main() {
   }
   process.stdout.write("\n")
 
-  process.stdout.write(`Batch fingerprint (sha256 of the raw UTF-8 payload):\n  ${result.batchFingerprint}\n`)
+  process.stdout.write(
+    `Batch fingerprint (sha256 of the raw UTF-8 payload):\n  ${result.batchFingerprint}\n`,
+  )
   process.stdout.write(`Items to apply: ${result.batch.items.length}\n`)
 
   if (outPath) {
@@ -203,12 +209,16 @@ async function main() {
     )
   }
 
-  const blocked = result.readinessPrediction.filter((item) => item.predicted !== "scan_result_ready")
+  const blocked = result.readinessPrediction.filter(
+    (item) => item.predicted !== "scan_result_ready",
+  )
   if (blocked.length > 0 || result.batch.items.length === 0) process.exitCode = 1
   if (flagBool(args, "strict") && result.parked.length > 0) process.exitCode = 1
 }
 
-void main().catch((error) => {
-  process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
-  process.exitCode = 1
-})
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  void main().catch((error) => {
+    process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`)
+    process.exitCode = 1
+  })
+}

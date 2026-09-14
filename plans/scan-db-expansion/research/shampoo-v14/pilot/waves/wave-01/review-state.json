@@ -1,0 +1,53 @@
+{
+  "version": "shampoo-v14-pilot-review-state-v1",
+  "products": {
+    "wahre-schaetze-honig-schaetze": {
+      "hash": "652d67fc971b955fc174a9129811ea293071773250608bdd677f85f2b2a48060",
+      "review": {
+        "formula": {
+          "status": "approved"
+        },
+        "properties": {
+          "cleansingStrength": {
+            "status": "pending"
+          },
+          "conditioningLevel": {
+            "status": "pending"
+          },
+          "weightPotential": {
+            "status": "pending"
+          },
+          "focusPrimary": {
+            "status": "pending"
+          },
+          "focusSecondary": {
+            "status": "pending"
+          },
+          "usageRole": {
+            "status": "pending"
+          },
+          "scalpComfortTarget": {
+            "status": "pending"
+          },
+          "dandruffSupport": {
+            "status": "pending"
+          }
+        },
+        "projection": {
+          "status": "pending"
+        },
+        "product": {
+          "status": "pending"
+        },
+        "history": [
+          {
+            "action": "approve_formula",
+            "scope": "formula",
+            "at": "2026-09-03T18:57:14.295Z"
+          }
+        ],
+        "archived": []
+      }
+    }
+  }
+}

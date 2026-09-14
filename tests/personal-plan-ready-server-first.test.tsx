@@ -25,6 +25,7 @@ test("server-first pending envelope renders approved static copy and no-JS recov
         sourceVersion: "2026-08-12T08:00:00.000Z",
         missingFacts: [],
         initialAction: "link",
+        funnelPackageKey: null,
       },
     }),
   )
@@ -55,6 +56,7 @@ test("server-first ready envelope renders the signed-off arrival screen (Variant
         sourceVersion: "2026-08-12T08:00:00.000Z",
         missingFacts: [],
         initialAction: "none",
+        funnelPackageKey: null,
       },
     }),
   )
@@ -108,6 +110,7 @@ test("missing source facts ask for the fact without claiming no action is needed
         quizSourceKind: "legacy",
         sourceVersion: "2026-08-12T08:00:00.000Z",
         initialAction: "none",
+        funnelPackageKey: null,
         missingFacts: [
           {
             field: "hair_length",
@@ -138,6 +141,7 @@ test("forbidden and invalid states show support without waiting or payment claim
           sourceVersion: null,
           missingFacts: [],
           initialAction: "none",
+          funnelPackageKey: null,
         },
       }),
     )
@@ -163,6 +167,7 @@ test("timeout and transient states lead with a retry state instead of a live che
               sourceVersion: null,
               missingFacts: [],
               initialAction: "none" as const,
+              funnelPackageKey: null,
             },
           }
     const html = renderToStaticMarkup(React.createElement(PersonalPlanReadyClient, props))
@@ -197,6 +202,7 @@ test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as t
         sourceVersion: "2026-08-12T08:00:00.000Z",
         missingFacts: [],
         initialAction: "link",
+        funnelPackageKey: null,
       },
     }),
   )
@@ -209,6 +215,7 @@ test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as t
         quizSourceKind: "legacy",
         sourceVersion: "2026-08-12T08:00:00.000Z",
         initialAction: "none",
+        funnelPackageKey: null,
         missingFacts: [
           {
             field: "hair_length",
@@ -230,6 +237,7 @@ test("non-ready /plan-bereit states also retire the 5-stage bar (same relic as t
         sourceVersion: null,
         missingFacts: [],
         initialAction: "none",
+        funnelPackageKey: null,
       },
     }),
   )

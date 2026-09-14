@@ -1,0 +1,10 @@
+{
+  "version": "shampoo-v14-pilot-manifest-v1",
+  "products": [
+    { "id": "wahre-schaetze-honig-schaetze", "path": "wahre-schaetze-honig-schaetze" },
+    { "id": "fructis-locken-methode", "path": "fructis-locken-methode" },
+    { "id": "nivea-power-repair", "path": "nivea-power-repair" },
+    { "id": "being-big-hair", "path": "being-big-hair" },
+    { "id": "gliss-sealing-miracle", "path": "gliss-sealing-miracle" }
+  ]
+}

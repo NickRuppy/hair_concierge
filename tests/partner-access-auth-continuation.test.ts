@@ -42,3 +42,12 @@ test("partner continuation retries with the in-memory handoff after removing it 
   assert.match(source, /void continueClaim\(\)/)
   assert.doesNotMatch(source, /window\.location\.reload/)
 })
+
+test("partner continuation clears a stale quiz draft only on a fresh-start claim", async () => {
+  const source = await readFile("src/app/partner/weiter/partner-access-continuation.tsx", "utf8")
+  assert.match(source, /shouldClearQuizDraft\(body\)/)
+  assert.match(source, /clearQuizDraft\(\)/)
+  const clearIndex = source.indexOf("clearQuizDraft()")
+  const assignIndex = source.indexOf("window.location.assign(destination)")
+  assert.ok(clearIndex > 0 && assignIndex > clearIndex, "draft must be cleared before navigating")
+})

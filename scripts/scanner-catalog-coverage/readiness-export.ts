@@ -8,7 +8,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { canonicalizeGtin } from "../../src/lib/product-identity/normalize"
 import { loadScanProductFacts } from "../../src/lib/personal-plan/products/authority/catalog-facts"
 import type { PersonalPlanCategory } from "../../src/lib/personal-plan/products/contracts"
-import { evaluateScanCatalogReadiness } from "../../src/lib/scan/catalog-readiness"
+import { evaluateScanCatalogReadiness } from "../../src/lib/product-intake/scan-catalog-readiness"
 
 const OUTPUT_PATH = "data/scanner-catalog-coverage/2026-08-26/readiness-baseline.json"
 const PAGE_SIZE = 500

@@ -1,0 +1,130 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "isana-2in1-volumen",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES leads the formula, but CAPB, coco-glucoside and 2-in-1 care routes buffer the net cleansing below strong.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 4, "factId": "formula.surfactant.04", "observation": "amphoteric buffer"},
+        {"ingredient": "Coco-Glucoside", "position": 11, "factId": "formula.surfactant.11", "observation": "nonionic glucoside support"},
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07", "observation": "early care counter-signal"}
+      ],
+      "counterSignal": "Sodium chloride appears very early at position 3, so the architecture is not mild/low.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.11"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: explicit 2-in-1 positioning is backed by protein, panthenol, glyceryl oleate, cationic guar and lipid/fatty ester routes, making substantial rinse-off care likely.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07", "observation": "protein film/hair-feel route"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09", "observation": "humectant/hair-feel support"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12", "observation": "refatting route"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "cationic guar polymer"}
+      ],
+      "counterSignal": "Silicone-free volume positioning prevents treating the formula as maximally rich, so confidence is moderate.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["claim-rossmann-de-positioning", "claim-rossmann-hu-positioning", "formula.conditioning.07", "formula.conditioning.09", "formula.conditioning.12", "formula.conditioning.13"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: 2-in-1 care routes can leave bounded residue, but silicone-free volume positioning and SLES/CAPB cleansing argue against high weight.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07", "observation": "film-forming protein clue"},
+        {"ingredient": "Glyceryl Oleate", "position": 12, "factId": "formula.conditioning.12", "observation": "refatting route"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "cationic polymer"},
+        {"ingredient": "Hydrogenated Palm Glycerides Citrate", "position": 16, "factId": "formula.conditioning.16", "observation": "lipid/emulsifier clue"}
+      ],
+      "counterSignal": "The product is positioned for fine/lifeless hair volume and has no silicone stack.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["claim-rossmann-de-positioning", "claim-rossmann-hu-positioning", "formula.conditioning.07", "formula.conditioning.12", "formula.conditioning.13", "formula.conditioning.16"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact Soft-Care complex levels and cationic guar deposition are not knowable from INCI order alone.", "Identity confidence is moderate_high because one corroborating formula source is a search-index snippet only."],
+        "whyThisBand": "Protein, refatter, cationic guar and lipid/fatty ester routes make the formula heavier than a low-deposition volume shampoo.",
+        "whyNotNeighborBand": "Not high because there is no silicone stack or rich oil/butter load, and the product's own volume/fine-hair positioning plus SLES reset constrain expected buildup."
+      }
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "high",
+      "rationale": "Volume: the exact German product name and claims target lifeless/fine hair volume, and the silicone-free formula keeps that role compatible despite 2-in-1 care.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "cleansing lift-support route"},
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "care route bounded enough for a volume product"}
+      ],
+      "counterSignal": "The product is also a shampoo-and-conditioner 2-in-1, so weight and conditioning record the care tradeoff separately.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claim-rossmann-de-positioning", "claim-rossmann-hu-positioning", "formula.canonical_inci"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: 2-in-1 care is not a distinct v1.4 focus value, and there is no separate gentle, shine, repair, clarifying or scalp-active claim with an independent route.",
+      "formulaFacts": [
+        {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "factId": "formula.conditioning.07", "observation": "care route supporting the 2-in-1 claim"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.conditioning.09", "observation": "care support, not a separate focus"}
+      ],
+      "counterSignal": "The claim names Soft-Care complex and wheat protein, but v1.4 does not have a conditioning secondary and these routes serve the 2-in-1 volume product story.",
+      "neighboringAlternative": ["repair"],
+      "evidenceRefs": ["claim-rossmann-de-positioning", "claim-rossmann-hu-positioning"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary rinse-out use and no explicit daily, treatment, alternating, clarifying or reset trigger appears.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 4, "factId": "formula.surfactant.04", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "The 2-in-1 format changes conditioning expectations but not v1.4 usage role.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["directions-rossmann-de", "directions-rossmann-hu", "claim-rossmann-de-positioning"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: dermatological/pH-neutral wording is present, but the product is positioned for volume and 2-in-1 care rather than sensitive, itchy or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "Niacinamide", "position": 8, "factId": "formula.scalp.08", "observation": "skin-care-active presence without sensitive-scalp positioning"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.scalp.09", "observation": "comfort/humectant clue without scalp-comfort claim"},
+        {"ingredient": "Parfum", "position": 20, "factId": "formula.exposure.20", "observation": "fragrance exposure"}
+      ],
+      "counterSignal": "Panthenol and niacinamide could support comfort, but v1.4 requires intentional sensitive/uncomfortable-scalp positioning.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claim-rossmann-de-positioning", "formula.canonical_inci"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "Niacinamide", "position": 8, "factId": "formula.scalp.08", "observation": "skin-care clue, not a v1.4 dandruff active"},
+        {"ingredient": "Panthenol", "position": 9, "factId": "formula.scalp.09", "observation": "comfort clue, not a v1.4 dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete canonical INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "claim-rossmann-de-positioning"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/isana-2in1-volumen/source-packet.json",
+    "sourcePacketSha256": "ec93111803b40743af9c8b261a7ddb46ea83518307c47d23f186adcd7242a578",
+    "formulaFingerprint": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T09:45:07+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

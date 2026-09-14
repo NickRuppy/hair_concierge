@@ -1,0 +1,52 @@
+{
+  "version": "shampoo-v14-pilot-agreement-v1",
+  "products": 5,
+  "judgmentDecisions": 35,
+  "exactMatches": 30,
+  "overallAgreement": 0.8571428571428571,
+  "byProperty": {
+    "cleansingStrength": {
+      "exactMatches": 5,
+      "decisions": 5,
+      "agreement": 1
+    },
+    "conditioningLevel": {
+      "exactMatches": 4,
+      "decisions": 5,
+      "agreement": 0.8
+    },
+    "weightPotential": {
+      "exactMatches": 5,
+      "decisions": 5,
+      "agreement": 1
+    },
+    "focusPrimary": {
+      "exactMatches": 5,
+      "decisions": 5,
+      "agreement": 1
+    },
+    "focusSecondary": {
+      "exactMatches": 3,
+      "decisions": 5,
+      "agreement": 0.6
+    },
+    "usageRole": {
+      "exactMatches": 4,
+      "decisions": 5,
+      "agreement": 0.8
+    },
+    "scalpComfortTarget": {
+      "exactMatches": 4,
+      "decisions": 5,
+      "agreement": 0.8
+    }
+  },
+  "dandruffAgreement": 1,
+  "disagreements": 5,
+  "thresholds": {
+    "overall": 0.75,
+    "perProperty": 0.6,
+    "dandruff": 1
+  },
+  "pass": true
+}

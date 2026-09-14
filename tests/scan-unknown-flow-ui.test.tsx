@@ -130,6 +130,22 @@ test("ScanUnknownFlow: renders the signed-off headline and question verbatim", (
   assert.match(markup, /Wobei benutzt du es\?/)
 })
 
+/**
+ * The viewfinder just said "✓ Gelesen – wird geprüft" and this sheet says the product is
+ * new: without the bridge line the two read as a contradiction (Nick's phone test,
+ * plan 2026-09-05). It has to sit between the headline and the existing subline.
+ */
+test("ScanUnknownFlow: the bridge line sits under the headline, above the subline", () => {
+  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
+  const markup = renderToStaticMarkup(tree.value)
+  assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\./)
+
+  const headline = markup.indexOf("Danke dir")
+  const bridge = markup.indexOf("Barcode gelesen")
+  const subline = markup.indexOf("Wir nehmen es auf")
+  assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)
+})
+
 test("ScanUnknownFlow: renders no brand or product-name inputs (step 2 is gone)", () => {
   const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
   const inputs = findAll(tree.value, (element) => element.type === "input")
@@ -220,4 +236,39 @@ test("ScanUnknownFlow: the tapped card alone shows the submitting label while ot
   for (const key of ["shampoo", "conditioner", "leave_in", "oil"] as const) {
     categoryButton(tree.value, CATEGORY_COPY[key].label)
   }
+})
+
+test("ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)", () => {
+  // The parent settles the request: `submitting` goes back to false and an error line
+  // appears. The card the user tapped must stop claiming it is still being submitted.
+  const parentState = { submitting: false, error: null as string | null }
+  const tree = withClientHooks(() =>
+    ScanUnknownFlow({
+      unknown: unknownResult(),
+      submitting: parentState.submitting,
+      error: parentState.error,
+      onSubmit: () => undefined,
+    }),
+  )
+
+  const oilLabel = CATEGORY_COPY.oil.label
+  categoryButton(tree.value, oilLabel).props.onClick()
+  parentState.submitting = true
+  tree.value = tree.rerender()
+  assert.equal(
+    findAll(tree.value, (element) => textContent(element) === "Wird eingereicht").length > 0,
+    true,
+  )
+
+  parentState.submitting = false
+  parentState.error = "Hat nicht geklappt – versuch's nochmal."
+  tree.value = tree.rerender()
+
+  const markup = renderToStaticMarkup(tree.value)
+  assert.doesNotMatch(markup, /Wird eingereicht/)
+  assert.match(markup, /Hat nicht geklappt/)
+  // …and the card is no longer rendered as the selected one.
+  const card = categoryButton(tree.value, oilLabel)
+  assert.equal(card.props["aria-pressed"], false)
+  assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)
 })

@@ -67,7 +67,7 @@ test("privacy notice accurately describes anonymous Speed Insights measurement",
   assert.match(privacyNotice, /Web Vitals einschließlich der\s*Elementzuordnung/)
   assert.match(
     privacyNotice,
-    /weder einer einzelnen Person\s*noch einer IP-Adresse oder Sitzung\s*zugeordnet/,
+    /weder einer einzelnen Person\s+noch einer IP-Adresse\s+oder\s+Sitzung\s+zugeordnet/,
   )
   assert.match(privacyNotice, /berechtigten Interesses nach Art\. 6\s*Abs\. 1 lit\. f DSGVO/)
 })

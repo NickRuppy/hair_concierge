@@ -1,0 +1,1262 @@
+{
+  "batch_id": "scan-db-expansion-wave3-leave-in-2026-09-03",
+  "generated_at": "2026-09-03T14:00:00.000Z",
+  "products": [
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarkur, für lockiges Haar",
+          "brand": "Afrolocke",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 16.95,
+          "net_content_value": 250,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747495959/assets/pas/images/a97516e5-71a1-4e79-a6c4-b69142889456/afrolocke-leave-in-haarkur-fuer-lockiges-haar",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html"
+          },
+          "description": "Natürliche Leave-In-Lockenpflege mit Bio-Arganöl, Bio-Sheabutter und Bio-Kokosöl; versorgt lockiges und pflegehungriges Haar mit Feuchtigkeit, gibt Locken ihre Definition zurück, entwirrt und stärkt brüchige, trockene Haarfasern, ohne zu beschweren."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4270000814433",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+              "https://www.ecco-verde.com/afrolocke/leave-in-2"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "cream",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner",
+              "styling_prep"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "curl_definition",
+              "detangling"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "curl_shape_support",
+              "moisture_softness",
+              "detangle"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "curl_definition",
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "curl_definition",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "tangling",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+              "text": "Nach dem Waschen in das feuchte Haar einmassieren. Perfekt zur täglichen Anwendung und Auffrischung geeignet. Die Haare vor der Anwendung am besten leicht mit Wasser befeuchten. Nicht ausspülen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+              "text": "Perfekt zur täglichen Anwendung und Auffrischung geeignet. Die Haare vor der Anwendung am besten leicht mit Wasser befeuchten."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4270000814433",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch ecco-verde.com Produktseite (EAN/Barcode-Feld, identische Ziffernfolge)",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+            "source_text": "GTIN: 4270000814433",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "cream",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Propanediol, Coco Caprylate/Caprate, Brassica Oleracea Italica Seed Oil, Argania Spinosa Kernel Oil, Butyrospermum Parkii Butter, Cocos Nucifera Oil, Magnolia Officinalis Bark Extract, Rosmarinus Officinalis Leaf Extract, Helianthus Annuus Seed Oil, Tocopherol (silikonfrei laut Merkmal + INCI, keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe + Produktmerkmale)",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+            "source_text": "Aqua, Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Propanediol, Coco Caprylate/Caprate, Brassica Oleracea Italica Seed Oil* (Brokkolisamenöl), Argania Spinosa Kernel Oil* (Arganöl), Butyrospermum, Parkii Butter* (Shea Butter), Cocos Nucifera Oil* (Kokosöl)",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Nach dem Waschen ins feuchte Haar einmassieren; täglich zur Auffrischung geeignet; kein Ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+            "source_text": "Nach dem Waschen in das feuchte Haar einmassieren. Perfekt zur täglichen Anwendung und Auffrischung geeignet. Die Haare vor der Anwendung am besten leicht mit Wasser befeuchten. Nicht ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.curl_moisture",
+            "fact_value": "Natürliche Leave-In-Pflege versorgt das Haar mit Feuchtigkeit und gibt den Locken ihre Definition zurück; macht die Haare weich, ohne zu beschweren; entwirrt die Haare und stärkt brüchige und trockene Haarfasern.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+            "source_text": "Die natürliche Leave-In Pflege versorgt das Haar mit Feuchtigkeit und gibt den Locken ihre Definition zurück. Zudem macht sie die Haare weich, ohne zu beschweren. Die nachhaltige Pflege entwirrt die Haare und stärkt brüchige und trockene Haarfasern.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 16.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 250 ml, 67,80 EUR/l)",
+            "source_url": "https://www.dm.de/afrolocke-leave-in-haarkur-fuer-lockiges-haar-p4270000814433.html",
+            "source_text": "16,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1): 'Leave-In Haarkur, für lockiges Haar'.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '4270000814433', mod-10 valide. Unabhängiger Zweitbeleg: ecco-verde.com (kein dm/Rossmann-Konzernbezug) führt dieselbe EAN. cross_source_agreement=true (R-B erfüllt, Afrolocke ist keine Rossmann/dm-Eigenmarke).",
+          "category_specs.product_leave_in_specs.format": "cream (konservativ): 'Leave-In Haarkur' mit butter-/ölreicher Emulsionsbasis (Cetearyl Alcohol, Distearoylethyl Dimonium Chloride, Sheabutter); kein Spray-/Serum-Hinweis im Namen.",
+          "category_specs.product_leave_in_specs.weight": "light: expliziter Claim 'macht die Haare weich, ohne zu beschweren'.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner + styling_prep: Pflege-Leave-in mit ausgeprägter Locken-Definitions-Funktion.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim in Beschreibung, Merkmalen oder Verwendungshinweisen.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'versorgt das Haar mit Feuchtigkeit'. curl_definition: 'gibt den Locken ihre Definition zurück'. detangling: 'entwirrt die Haare'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Brokkolisamenöl, Arganöl, Sheabutter, Kokosöl, Sonnenblumenöl. humectants: Propanediol. Kein Silikon (Merkmal 'Ohne Silikone' + INCI bestätigt), keine Proteine, keine Polymere.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'in das feuchte Haar einmassieren' (Wäsche-Schritt) sowie 'zur täglichen Auffrischung' mit Vor-Befeuchten auf ggf. trockenem Haar.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: durchgängiger Feuchtigkeits-/Weichheits-Fokus, keine Proteinclaims.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'stärkt brüchige Haarfasern' ist ein Öl-/Emollient-Claim, keine Protein-/Bond-Aktivstoffe in der INCI.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "curl_definition: Kern-Claim der Lockenpflege. detangle_smooth: 'entwirrt die Haare' wörtlich.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als Zusatzpflege nach der Wäsche positioniert, kein Conditioner-Ersatz-Claim.",
+          "product_leave_in_eligibility": "curl_definition für alle Stärken bei air_dry: zentrale Lockenpflege-Positionierung, 'für alle Lockenköpfe'.",
+          "thickness_eligibility": "Alle Stärken: keine Stärke-Einschränkung im Text; Naturkosmetik-Leave-in für 'alle Lockenköpfe'.",
+          "concern_eligibility": "dryness: Feuchtigkeits-Claim. tangling: 'entwirrt'. breakage: 'stärkt brüchige... Haarfasern'.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: Standardanwendung auf feuchtem Haar nach der Wäsche, kein Ausspülen.",
+          "protocols.tpl_leavein_drycare": "R-D explizite Trocken-Auffrischungs-Marketing-Ausnahme: 'Perfekt zur täglichen Anwendung und Auffrischung geeignet' + Hinweis, die Haare vor Anwendung mit Wasser zu befeuchten (Between-Wash-Refresh-Use-Case), unabhängig vom format=cream-Default (der allein damp-only wäre)."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Haarserum Oh My Gloss",
+          "brand": "Aussie",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 8.95,
+          "net_content_value": 160,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1774965279/assets/pas/images/74ee3033-ecca-4b4b-b9b4-55af330d8969/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss"
+          },
+          "description": "Leave-in-Haarserum mit australischem Macadamianussöl für trockenes, glanzloses Haar; spendet intensive Feuchtigkeit, sorgt für ein glänzendes Finish ohne zu beschweren, mit Anti-Frizz-Wirkung als letzter Schritt der Waschroutine oder als Glanz-Booster an waschfreien Tagen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530325387",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "shine",
+              "anti_frizz"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support",
+              "smooth_anti_frizz"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "moisture_anti_frizz",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "frizz"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+              "text": "1. Leave-in Serum als letzten Schritt deiner Haarwaschroutine – für Anti-Frizz und einen extra Glanz-Booster."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+              "text": "2. Leave-in Serum an haarwaschfreien Tagen als Glanz-Booster verwenden, um den strahlenden Glanz zurückzubringen"
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530325387",
+            "source_label": "dm.de Produktseite (GTIN-Feld) — EINZIGE Quelle; kein unabhängiger Zweitbeleg gefunden (neue Produktvariante, noch nicht bei anderen Händlern gelistet). excluded_from_apply=true per R-B.",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_text": "GTIN: 8006530325387",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "humectants",
+                "polymers"
+              ],
+              "inci_basis": "Aqua, Glycerin, Cetyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Carthamus Tinctorius Seed Oil, Simmondsia Chinensis Seed Oil, Hydroxyethylcellulose, PVP, ..., Amodimethicone, ..., Macadamia Ternifolia Seed Oil (keine Proteine)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_text": "Ingredients: Aqua, Glycerin, Cetyl Alcohol, Guar Hydroxypropyltrimonium Chloride, Carthamus Tinctorius Seed Oil, Simmondsia Chinensis Seed Oil, Hydroxyethylcellulose, PVP, Sodium Citrate, Cetearyl Alcohol, Benzyl Alcohol, 1,2-Hexanediol, Caprylyl Glycol, Citric Acid, Polysorbate 60, Parfum, Mica, CI 77891, Amodimethicone, Stearalkonium Chloride",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp_drycare.application",
+            "fact_value": "Zwei sourced Anwendungsfälle: (1) als letzter Schritt der Waschroutine (Post-Wash, feucht), (2) an waschfreien Tagen als Glanz-Booster (Between-Wash, trocken).",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_text": "1. Leave-in Serum als letzten Schritt deiner Haarwaschroutine – für Anti-Frizz und einen extra Glanz-Booster. 2. Leave-in Serum an haarwaschfreien Tagen als Glanz-Booster verwenden, um den strahlenden Glanz zurückzubringen",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_shine",
+            "fact_value": "Angereichert mit australischem Macadamianussöl, spendet intensive Feuchtigkeit, glänzendes Finish ohne zu beschweren, geschmeidiges Haargefühl und strahlender Glanz.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_text": "Angereichert mit australischem Macadamianussöl, spendet die Formel intensive Feuchtigkeit und kann das Haar nähren. ... Die Leave-In Haarkur wird einfach im Haar belassen und sorgt für ein glänzendes Finish, ohne zu beschweren. Das Ergebnis ist ein geschmeidiges Haargefühl und ein strahlender Glanz.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 8.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 160 ml, 55,94 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3136023/aussie-leave-in-haarserum-oh-my-gloss",
+            "source_text": "8,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1): 'Leave-In Haarserum Oh My Gloss'.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '8006530325387', mod-10 valide. KEIN unabhängiger Zweitbeleg auffindbar (neuere Produktvariante) → cross_source_agreement=false, excluded_from_apply=true per R-B.",
+          "category_specs.product_leave_in_specs.format": "serum: 'Leave-In Haarserum' laut Name und dm-Kategorie.",
+          "category_specs.product_leave_in_specs.weight": "light: 'glänzendes Finish, ohne zu beschweren' (wörtlich).",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: pflegendes Zusatzserum als Routine-Schritt, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim in Beschreibung, Merkmalen oder Verwendungshinweisen.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'spendet intensive Feuchtigkeit'. shine: 'strahlender Glanz', 'Glanz-Booster'. anti_frizz: 'für Anti-Frizz' (Verwendungshinweis Schritt 1).",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. oils: Carthamus Tinctorius (Distel), Simmondsia Chinensis (Jojoba), Macadamia Ternifolia. humectants: Glycerin. polymers: Guar Hydroxypropyltrimonium Chloride, Hydroxyethylcellulose, PVP. Keine Proteine.",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: Schritt 1 (Post-Wash, feucht) und Schritt 2 (waschfreie Tage, trocken).",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: expliziter Feuchtigkeits-Kernclaim, keine Proteinbasis.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'kann das Haar nähren' ist ein Pflege-, kein Repair-Claim; keine Protein-/Bond-Aktivstoffe in der INCI.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth (konservativ abgeleitet): 'geschmeidiges Haargefühl' + Anti-Frizz-Claim aus den Verwendungshinweisen; kein wörtliches 'entwirrt', daher als einzige passende Enum-Option aus {heat_protect, curl_definition, repair, detangle_smooth} mit moderater statt hoher Sicherheit gewählt.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als Zusatzserum nach Conditioner/Wäsche positioniert.",
+          "product_leave_in_eligibility": "moisture_anti_frizz + shine_protect für alle Stärken bei air_dry: Kernclaims Feuchtigkeit, Anti-Frizz (Verwendungshinweis) und Glanz.",
+          "thickness_eligibility": "Alle Stärken: leichtes Serum ohne Stärke-Einschränkung.",
+          "concern_eligibility": "dryness: Feuchtigkeitsclaim. frizz: expliziter Anti-Frizz-Verwendungshinweis.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: Verwendungshinweis Schritt 1 = letzter Schritt der Waschroutine (Post-Wash, feucht).",
+          "protocols.tpl_leavein_drycare": "Keine Deviation, explizite Between-Wash-Marketing-Ausnahme (R-D): Verwendungshinweis Schritt 2 nennt wörtlich 'an haarwaschfreien Tagen' als eigenständigen Anwendungsfall."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Spray Sunkiss Glow",
+          "brand": "Pantene Pro-V",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 8.95,
+          "net_content_value": 200,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1754975654/assets/pas/images/67f7df7f-b3a9-444e-84d8-340b68737ab5/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow"
+          },
+          "description": "Leave-in-Pflegespray mit Rizinusöl, Niacinamid und Biotin für sonnenstrapaziertes Haar."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "8006530063807",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+              "https://www.target.com/p/pantene-sunkiss-glow-spray-uv-hair-protection-leave-in-conditioning-treatment-5-7-oz/-/A-1010323960"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support",
+              "repair_support"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+              "text": "Schütteln und auf feuchtes oder trockenes Haar sprühen. Kein Ausspülen erforderlich!"
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+              "text": "Schütteln und auf feuchtes oder trockenes Haar sprühen. Kein Ausspülen erforderlich!"
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "8006530063807",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch target.com US-Listing (UPC-Feld, identische Ziffernfolge)",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_text": "GTIN: 8006530063807",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "spray",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, ..., Cetrimonium Chloride, ..., Ricinus Communis Seed Oil, ..., Niacinamide, ..., Biotin, Rosa Gallica Flower Extract, Silk Extract (kein hydrolysiertes Protein)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_text": "Ingredients: Aqua, Propylene Glycol, Amodimethicone, Quaternium-80, Panthenol, Benzyl Alcohol, 1,2-Hexanediol, Caprylyl Glycol, Parfum, Oleic Acid, Cetrimonium Chloride, Tocopheryl Acetate, Behentrimonium Chloride …",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Schütteln, auf feuchtes oder trockenes Haar sprühen, kein Ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_text": "Schütteln und auf feuchtes oder trockenes Haar sprühen. Kein Ausspülen erforderlich!",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.sun_repair",
+            "fact_value": "Sonnen-Schutzspray für sonnenstrapaziertes Haar; pflegt und repariert; spendet Feuchtigkeit; leichte Textur ohne Beschweren. Hinweis: 'Sonnen-Schutzspray' bezieht sich auf UV-/Sonnenschutz, NICHT auf Hitzestyling-Schutz (kein Hitzeschutz-Claim gefunden).",
+            "source_label": "dm.de Produktseite (Produktbeschreibung + Bullet-Merkmale)",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_text": "Sonnen-Schutzspray. Pflegt und repariert. Spendet Feuchtigkeit. Das Leave-In Spray Sunkiss Glow von PANTENE PRO-V verleiht dem Haar einen strahlenden Glanz und pflegt es intensiv. Speziell entwickelt, um sonnenstrapaziertes Haar zu schützen, sorgt die leichte Textur für geschmeidiges Haar, ohne es zu beschweren.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 8.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 200 ml, 44,75 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3069348/pantene-pro-v-leave-in-spray-sunkiss-glow",
+            "source_text": "8,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1): 'Leave-In Spray Sunkiss Glow'.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '8006530063807', mod-10 valide. Unabhängiger Zweitbeleg: target.com (US-Listing, UPC identisch) — Pantene ist keine dm/Rossmann-Eigenmarke. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "spray: 'Leave-In Spray' laut Name; Anwendung 'sprühen'.",
+          "category_specs.product_leave_in_specs.weight": "light: 'leichte Textur... ohne es zu beschweren' (wörtlich).",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: pflegendes Zusatzspray, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: 'Sonnen-Schutzspray' ist UV-/Sonnenschutz, kein Hitzestyling-Schutz-Claim; keine °C-Angabe, kein 'Hitzeschutz'-Merkmal auf der Seite.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'Spendet Feuchtigkeit'. shine: 'strahlenden Glanz'. repair: wörtlicher Bullet 'Pflegt und repariert'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone. oils: Ricinus Communis Seed Oil, Glyceryl Oleate. humectants: Propylene Glycol, Panthenol, Butylene Glycol. Silk Extract ist ein nicht-hydrolysiertes Extrakt, daher NICHT als proteins-Flag gewertet (konservativ).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'auf feuchtes oder trockenes Haar sprühen'.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Feuchtigkeits-/Glanz-Fokus dominiert; keine hydrolysierten Proteine in der INCI.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: 'Pflegt und repariert' ist ein Marketing-Bullet ohne Protein-/Bond-Aktivstoff in der INCI (Silk Extract ist kein Hydrolysat) — Claim wird in care_benefits/concern_eligibility abgebildet, aber nicht als hohe Repair-Potenz gewertet.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "QA-Audit M10-Folge: repair entfernt (repair_support_level=low, keine Repair-Aktive); Schema erzwingt >=1 aus {heat_protect,curl_definition,repair,detangle_smooth} — detangle_smooth als Forced-Pick-Konvention für Moisture/Shine-Produkte (Wave-2-Präzedenz), Produkt ist ohnehin excluded_from_apply (C1).",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: als Zusatzspray positioniert.",
+          "product_leave_in_eligibility": "repair + shine_protect für alle Stärken bei air_dry: die beiden am klarsten belegten Need-Buckets; kein Frizz-Claim, daher nicht moisture_anti_frizz.",
+          "thickness_eligibility": "Alle Stärken: leichtes Spray ohne Stärke-Einschränkung.",
+          "concern_eligibility": "dryness: Feuchtigkeitsclaim. hair_damage + repair: wörtlicher 'repariert'-Bullet.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'feuchtes oder trockenes Haar' ist Entweder-oder-Erlaubnis.",
+          "protocols.tpl_leavein_drycare": "Explizite Trockenhaar-Erlaubnis wörtlich gesourct ('auf feuchtes ODER trockenes Haar sprühen') — R-D-Ausnahme greift unabhängig vom format/weight-Default.",
+          "product.description": "QA-Audit M10: Sonnenschutz-Marketingclaim entfernt (kein UV-Filter in der INCI); repair-Routing entfernt (repair_support_level=low, keine Repair-Aktive).",
+          "identifiers.0.excluded_from_apply": "QA-Audit C1 (2026-09-03): target.com-UPC 080878204038 (5.7 oz) ist ein anderes SKU als EAN 8006530063807 (200 ml) — Zweitbeleg entfällt, R-B nicht erfüllt. Physischer Scan schaltet frei."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Leave-In Sprühkur",
+          "brand": "Plantur 39",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 6.95,
+          "net_content_value": 125,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1747436023/assets/pas/images/84485bc8-1fc6-42c5-898e-1d38eb6dbb32/plantur-39-leave-in-spruehkur",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur"
+          },
+          "description": "Leave-in-Sprühkur mit Panthenol für Glanz und Geschmeidigkeit; verbessert die Kämmbarkeit, wirkt gegen stumpfes, sprödes und brüchiges Haar, spendet Feuchtigkeit; auf trockenes oder feuchtes Haar sprühen, durchkämmen und trocknen, kein Ausspülen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4008666752314",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+              "https://produkte.globus.de/koerperpflege-kosmetik/haarpflege/shampoo-spuelung-kur/4008666752314/sprueh-kur"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "spray",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "polymers",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness",
+          "breakage"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+              "text": "Je nach Haarlänge 10- bis 15-mal ins trockene oder ins feuchte Haar sprühen, durchkämmen und anschließend trocknen. Nicht ausspülen. Nicht in die Augen sprühen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+              "text": "Je nach Haarlänge 10- bis 15-mal ins trockene oder ins feuchte Haar sprühen, durchkämmen und anschließend trocknen. Nicht ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4008666752314",
+            "source_label": "dm.de Produktseite (GTIN-Feld); unabhängig bestätigt durch produkte.globus.de Produktseite (Barcode in der URL/Produktdaten, identische Ziffernfolge)",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+            "source_text": "GTIN: 4008666752314",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "spray",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "polymers",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Amodimethicone, Propylene Glycol, Panthenol, PEG-40 Hydrogenated Castor Oil, Cetrimonium Chloride, Trideceth-15, Trideceth-3, Polyquaternium-16, VP/VA Copolymer, PEG-14 Dimethicone (keine Proteine, keine Pflegeöle)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+            "source_text": "INGREDIENTS: AQUA, AMODIMETHICONE, PROPYLENE GLYCOL, PANTHENOL, PEG-40 HYDROGENATED CASTOR OIL, CETRIMONIUM CHLORIDE, TRIDECETH-15, TRIDECETH-3, POLYQUATERNIUM-16, VP/VA COPOLYMER, PEG-14 DIMETHICONE",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "10-15x je nach Haarlänge ins trockene oder feuchte Haar sprühen, durchkämmen, trocknen; kein Ausspülen.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+            "source_text": "Je nach Haarlänge 10- bis 15-mal ins trockene oder ins feuchte Haar sprühen, durchkämmen und anschließend trocknen. Nicht ausspülen. Nicht in die Augen sprühen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.shine_combability",
+            "fact_value": "Für Glanz & Geschmeidigkeit; verbessert die Kämmbarkeit; gegen stumpfes, sprödes & brüchiges Haar; enthält Panthenol.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung + Bullet-Merkmale)",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+            "source_text": "Für Glanz & Geschmeidgkeit. Verbessert die Kämmbarkeit. Gegen stumpfes, sprödes & brüchiges Haar. Enthält Panthenol. Die Leave-In Sprühkur von Plantur 39 schenkt dem Haar Glanz und Leben. Die Kur eignet sich hervorragend gegen stumpfes, sprödes und brüchiges Haar. Zudem spendet sie dank dem enthaltenen Panthenols Feuchtigkeit.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 6.95,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 125 ml, 55,60 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/1257393/plantur-39-leave-in-spruehkur",
+            "source_text": "6,95 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1): 'Leave-In Sprühkur'.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '4008666752314', mod-10 valide. Unabhängiger Zweitbeleg: produkte.globus.de (Globus, kein dm/Rossmann-Konzernbezug) führt dieselbe EAN. cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "spray: 'Leave-In Sprühkur', Anwendung 'sprühen'.",
+          "category_specs.product_leave_in_specs.weight": "light: wässriges Sprühprodukt ohne Öle/Butter, silikonbasiert.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: Zusatzpflege-Sprühkur, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: kein Hitzeschutz-Claim in Beschreibung, Merkmalen oder Warnhinweisen.",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'spendet... Feuchtigkeit'. shine: 'Glanz & Geschmeidigkeit'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Amodimethicone, PEG-14 Dimethicone. polymers: Polyquaternium-16, VP/VA Copolymer. humectants: Propylene Glycol, Panthenol. Keine Proteine, keine Pflegeöle (PEG-40 Hydrogenated Castor Oil ist ein nichtionischer Emulgator, kein Pflegeöl).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair: 'ins trockene oder ins feuchte Haar sprühen'.",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Panthenol-Feuchtigkeitsfokus, keine Proteinbasis.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: keine Protein-/Bond-Aktivstoffe in der INCI; 'gegen brüchiges Haar' ist ein präventiver Pflege-, kein Repair-Claim.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth: 'Verbessert die Kämmbarkeit' wörtlich.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: Zusatz-Sprühkur, kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "shine_protect für alle Stärken bei air_dry: einziges klar belegtes Need-Bucket (kein Frizz- oder Repair-Claim, daher nicht moisture_anti_frizz/repair).",
+          "thickness_eligibility": "Alle Stärken: leichtes Spray ohne Stärke-Einschränkung.",
+          "concern_eligibility": "dryness: Feuchtigkeitsclaim. breakage: 'gegen... brüchiges Haar' wörtlich.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: 'trockene oder feuchte Haar' ist Entweder-oder-Erlaubnis.",
+          "protocols.tpl_leavein_drycare": "Explizite Trockenhaar-Erlaubnis wörtlich gesourct ('ins trockene... Haar sprühen') — R-D-Ausnahme greift unabhängig vom format/weight-Default."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Haarserum Nutri-Care",
+          "brand": "alverde NATURKOSMETIK",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 2.75,
+          "net_content_value": 75,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1783724480/assets/pas/images/9f61c74a-6631-4192-80e3-afbd02543eb5/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care"
+          },
+          "description": "Pflegendes Haarserum mit Bio-Mandel-Extrakt, hydrolisiertem Weizenprotein und Arginin für strapaziertes Haar; kann helfen, Lücken in der Haarstruktur aufzufüllen, bietet Hitzeschutz bis zu 230 °C, verbessert die Kämmbarkeit; vegan, zertifizierte Naturkosmetik, ohne Silikone und Alkohol."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4066447975345",
+            "cross_source_agreement": true,
+            "source_urls": [
+              "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care"
+            ],
+            "excluded_from_apply": false
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "serum",
+            "weight": "medium",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": true,
+            "heat_protection_max_c": 230,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "repair",
+              "protein"
+            ],
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "application_stage": [
+              "towel_dry",
+              "dry_hair",
+              "pre_heat"
+            ],
+            "care_direction": "protein",
+            "repair_support_level": "medium",
+            "plan_roles": [
+              "post_wash_leave_in",
+              "pre_heat_application"
+            ],
+            "functional_benefits": [
+              "repair_support",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "medium",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "repair",
+              "heat_protect"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "repair",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "fine",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "heat_protect",
+              "styling_context": "heat_style"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "hair_damage",
+          "repair",
+          "split_ends"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+              "text": "Gleichmäßig ins feuchte Haar verteilen. Haare vor der Nutzung heißer Stylinggeräte trocknen. Für extra Pflege im trockenen Haar verwenden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise)",
+              "url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+              "text": "Für extra Pflege im trockenen Haar verwenden."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-HEAT",
+            "product_source": {
+              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
+              "url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+              "text": "Gleichmäßig ins feuchte Haar verteilen. Haare vor der Nutzung heißer Stylinggeräte trocknen. ... Hitzeschutz bis zu 230 °C"
+            },
+            "deviation": null,
+            "usable_on_dry_hair": false
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4066447975345",
+            "source_label": "dm.de Produktseite (GTIN-Feld) — dm-Eigenmarke (alverde), Rossmann/dm-Konzern-Ausnahme (W5): Einzelquelle ausreichend.",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_text": "GTIN: 4066447975345",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "serum",
+              "weight": "medium",
+              "care_direction": "protein",
+              "repair_support_level": "medium",
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ],
+              "inci_basis": "Aqua, Glycerin, Helianthus Annuus Hybrid Oil, Arginine, Hydrolyzed Wheat Protein, Betaine, Prunus Amygdalus Dulcis Seed Extract, Olus Oil, ..., Propanediol, Cetearyl Alcohol, Gellan Gum (silikonfrei laut Merkmal + INCI)"
+            },
+            "source_label": "dm.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_text": "Ingredients: Aqua, Glycerin, Helianthus Annuus Hybrid Oil, Arginine, Hydrolyzed Wheat Protein, Betaine, Prunus Amygdalus Dulcis Seed Extract, Olus Oil, Parfum, Sodium Levulinate, Propanediol, Cetearyl Alcohol, Gellan Gum, Sodium Stearoyl Glutamate, Inulin, Lecithin",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Gleichmäßig ins feuchte Haar verteilen; vor Hitzestyling trocknen; zusätzlich für extra Pflege im trockenen Haar verwendbar.",
+            "source_label": "dm.de Produktseite (Verwendungshinweise)",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_text": "Gleichmäßig ins feuchte Haar verteilen. Haare vor der Nutzung heißer Stylinggeräte trocknen. Für extra Pflege im trockenen Haar verwenden.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.repair_heat",
+            "fact_value": "Reichhaltige Rezeptur mit Bio-Mandel-Extrakt, hydrolysiertem Weizenprotein und Arginin; pflegt intensiv, kann Lücken in der Haarstruktur auffüllen; Hitzeschutz bis zu 230 °C; verbesserte Kämmbarkeit.",
+            "source_label": "dm.de Produktseite (Produktbeschreibung + Bullet-Merkmale)",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_text": "Hitzeschutz bis zu 230 °C. Das alverde NATURKOSMETIK Haarserum Nutri-Care wurde speziell für die Bedürfnisse von strapaziertem Haar entwickelt. Seine reichhaltige Rezeptur mit Bio-Mandel-Extrakt, hydrolisiertem Weizenprotein und Arginin pflegt das Haar intensiv und kann dabei helfen, Lücken in der Haarstruktur aufzufüllen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 2.75,
+            "source_label": "dm.de Produktseite (dm-Dauerpreis, 75 ml, 36,67 EUR/l)",
+            "source_url": "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care",
+            "source_text": "2,75 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut dm-Produktseite (h1): 'Haarserum Nutri-Care'.",
+          "identifiers.ean_capture": "dm-GTIN-Feld '4066447975345', mod-10 valide. alverde ist dm-Eigenmarke → Rossmann/dm-Konzern-Ausnahme (W5): Einzelquelle ausreichend, cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "serum: 'Haarserum' laut Name.",
+          "category_specs.product_leave_in_specs.weight": "medium: reichhaltige Formel mit Öl-/Protein-/Serumbasis, kein 'leicht/ohne zu beschweren'-Claim, aber auch kein Butter-/Rich-Signal — Balea-Professional-Plex-Care-Präzedenz (Wave 2) für serum+medium.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: intensives Zusatzserum, kein Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "true, max_c=230: expliziter °C-Claim 'Hitzeschutz bis zu 230 °C'.",
+          "category_specs.product_leave_in_specs.care_benefits": "repair: 'kann Lücken in der Haarstruktur auffüllen'. protein: hydrolysiertes Weizenprotein + Arginin, 3-teiliger Wirkstoffkomplex.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "oils: Helianthus Annuus Hybrid Oil, Olus Oil, Prunus Amygdalus Dulcis Seed Extract. proteins: Hydrolyzed Wheat Protein. humectants: Glycerin, Propanediol. Silikonfrei (Merkmal + INCI bestätigt).",
+          "category_specs.product_leave_in_specs.application_stage": "towel_dry + dry_hair + pre_heat: 'ins feuchte Haar verteilen' (Schritt 1), 'für extra Pflege im trockenen Haar' (Schritt 3), 'vor der Nutzung heißer Stylinggeräte trocknen' (Pre-Heat-Kontext).",
+          "category_specs.product_leave_in_specs.care_direction": "protein: dediziertes Protein-/Aminosäuren-Profil in Claim UND INCI (Hydrolyzed Wheat Protein, Arginine).",
+          "category_specs.product_leave_in_specs.repair_support_level": "medium: dedizierte Protein-/Gap-Filling-Formel mit echtem hydrolysiertem Protein (kein Bond-Builder-Aktivstoff, daher nicht high) — analog Balea Professional Plex Care (Wave 2).",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "repair: Kernclaim. heat_protect: expliziter 230-°C-Claim.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: intensives Zusatzserum, kein Ersatz-Claim.",
+          "product_leave_in_eligibility": "repair (alle Stärken, air_dry) + heat_protect (alle Stärken, heat_style): die beiden klar belegten Need-Buckets.",
+          "thickness_eligibility": "Alle Stärken: kein Stärke-Hinweis, sparsam dosierbares Serum.",
+          "concern_eligibility": "hair_damage/repair: 'für strapaziertes Haar', 'Lücken auffüllen'. split_ends: Gap-Filling-Claim liegt nahe an Spliss-Prävention.",
+          "protocols.tpl_leavein_damp": "Keine Deviation: Hauptanwendung ist feuchtes Haar.",
+          "protocols.tpl_leavein_drycare": "R-D explizite Trockenhaar-Marketing-Ausnahme: 'Für extra Pflege im trockenen Haar verwenden' als eigener Anwendungsfall genannt.",
+          "protocols.tpl_leavein_heat.usable_on_dry_hair": "false (pre_heat_damp): Die einzige gesourcte Anwendung für Hitzestyling ist 'ins feuchte Haar verteilen, dann vor Hitzestyling trocknen' — kein 'nass oder trocken'-Claim spezifisch für die Hitzeschutz-Anwendung; der separate Trockenhaar-Hinweis (Schritt 3) ist allgemeine Pflege, nicht explizit als Hitzeschutz-auf-trocken beschrieben."
+        }
+      }
+    },
+    {
+      "final": {
+        "product": {
+          "name": "Moisture Feuchtigkeit Leave-In Conditioner",
+          "brand": "MONDAY Haircare",
+          "category_key": "leave_in",
+          "origin": "curated",
+          "is_chaarlie_recommended": false,
+          "price_eur": 4.99,
+          "net_content_value": 150,
+          "net_content_unit": "ml",
+          "candidate_image": {
+            "url": "https://www.rossmann.de/media-neu/172/MAM_17232416/MAM_17232416_SHOP_IMAGE_2.0.png?width=2000&height=2000&fit=bounds&auto=webp&format=webply&canvas=2000,2000&quality=90",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162"
+          },
+          "description": "Leave-in-Conditioner mit Hyaluronsäure, die eine feuchtigkeitsspeichernde Schutzschicht auf dem Haar bildet und Glanz verleiht; spendet intensive Feuchtigkeit und pflegt das Haar; auf das feuchte Haar auftragen, in Längen und Spitzen verteilen, kein Ausspülen."
+        },
+        "identifiers": [
+          {
+            "type": "ean",
+            "value": "4895248005162",
+            "cross_source_agreement": false,
+            "source_urls": [
+              "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+              "https://incibeauty.com/en/produit/4895248005162"
+            ],
+            "excluded_from_apply": true
+          }
+        ],
+        "category_specs": {
+          "product_leave_in_specs": {
+            "format": "lotion",
+            "weight": "light",
+            "roles": [
+              "extension_conditioner"
+            ],
+            "provides_heat_protection": false,
+            "heat_protection_max_c": null,
+            "heat_activation_required": false,
+            "care_benefits": [
+              "moisture",
+              "shine"
+            ],
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "proteins",
+              "humectants",
+              "polymers"
+            ],
+            "application_stage": [
+              "towel_dry"
+            ],
+            "care_direction": "moisture",
+            "repair_support_level": "low",
+            "plan_roles": [
+              "post_wash_leave_in"
+            ],
+            "functional_benefits": [
+              "moisture_softness",
+              "shine_support"
+            ]
+          },
+          "product_leave_in_fit_specs": {
+            "weight": "light",
+            "conditioner_relationship": "booster_only",
+            "care_benefits": [
+              "detangle_smooth"
+            ]
+          },
+          "product_leave_in_eligibility": [
+            {
+              "thickness": "fine",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "normal",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            },
+            {
+              "thickness": "coarse",
+              "need_bucket": "shine_protect",
+              "styling_context": "air_dry"
+            }
+          ]
+        },
+        "thickness_eligibility": [
+          "fine",
+          "normal",
+          "coarse"
+        ],
+        "concern_eligibility": [
+          "dryness"
+        ],
+        "protocols": [
+          {
+            "template_id": "TPL-LEAVEIN-DAMP",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+              "text": "Auf das feuchte Haar auftragen, gleichmäßig in Längen und Spitzen verteilen und durchkämmen. Nicht ausspülen."
+            },
+            "deviation": null
+          },
+          {
+            "template_id": "TPL-LEAVEIN-DRYCARE",
+            "product_source": {
+              "label": "rossmann.de Produktseite (Anwendung und Gebrauch) — kein expliziter Trockenhaar-Text; Stamp per R-D-Format-Default (format=lotion ∧ weight=light)",
+              "url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+              "text": "Auf das feuchte Haar auftragen, gleichmäßig in Längen und Spitzen verteilen und durchkämmen. Nicht ausspülen."
+            },
+            "deviation": null
+          }
+        ],
+        "evidence": [
+          {
+            "fact_key": "product.identifiers.ean",
+            "fact_value": "4895248005162",
+            "source_label": "rossmann.de Produktseite (URL-GTIN-Konvention); unabhängig bestätigt durch incibeauty.com Produktseite (identische EAN in der URL)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_text": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product_leave_in_specs.authority_facts",
+            "fact_value": {
+              "format": "lotion",
+              "weight": "light",
+              "care_direction": "moisture",
+              "repair_support_level": "low",
+              "ingredient_flags": [
+                "silicones",
+                "oils",
+                "proteins",
+                "humectants",
+                "polymers"
+              ],
+              "inci_basis": "Aqua, Glycerin, Dimethicone, Cocos Nucifera Oil, C10-18 Triglycerides, Cetearyl Alcohol, Simmondsia Chinensis Seed Oil, Sodium Hyaluronate, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, ..., Hydroxyethylcellulose, Polyquaternium-37, Dimethiconol"
+            },
+            "source_label": "rossmann.de Produktseite (Inhaltsstoffe)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_text": "Aqua (Water), Glycerin, Dimethicone, Cocos Nucifera (Coconut) Oil, C10-18 Triglycerides, Cetearyl Alcohol, Simmondsia Chinensis (Jojoba) Seed Oil, Sodium Hyaluronate, Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein, Phenoxyethanol, PEG-100 Stearate, Glyceryl Stearate, Hydroxyethylcellulose, Polyquaternium-37, Dimethiconol",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "protocols.tpl_leavein_damp.application",
+            "fact_value": "Auf feuchtes Haar auftragen, gleichmäßig in Längen und Spitzen verteilen, durchkämmen, kein Ausspülen. Kein Trockenhaar-Anwendungshinweis auf dieser Seite.",
+            "source_label": "rossmann.de Produktseite (Anwendung und Gebrauch)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_text": "Auf das feuchte Haar auftragen, gleichmäßig in Längen und Spitzen verteilen und durchkämmen. Nicht ausspülen.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.claims.moisture_shine",
+            "fact_value": "Spendet intensive Feuchtigkeit und pflegt das Haar; Hyaluronsäure bildet eine feuchtigkeitsspeichernde Schutzschicht und verleiht Glanz.",
+            "source_label": "rossmann.de Produktseite (Produktbeschreibung)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_text": "Der Moisture Leave-In Conditioner von MONDAY Haircare spendet intensive Feuchtigkeit und pflegt das Haar. Der Wirkstoff Hyaluronsäure trägt dazu bei, eine Schutzschicht auf dem Haar zu bilden, die die Feuchtigkeit speichert und dem Haar Glanz verleiht.",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          },
+          {
+            "fact_key": "product.price_eur",
+            "fact_value": 4.99,
+            "source_label": "rossmann.de Produktseite (Artikelpreis, 150 ml, 33,27 EUR/l)",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162",
+            "source_text": "4,99 €",
+            "source_type": "retailer",
+            "checked_at": "2026-09-03"
+          }
+        ],
+        "field_rationales": {
+          "product.name": "Exakter Name laut rossmann.de Produktseite (h1): 'Moisture Feuchtigkeit Leave-In Conditioner'.",
+          "identifiers.ean_capture": "Rossmann-Produkt-URL trägt die EAN als letztes Pfadsegment (bestätigte Konvention, siehe Isana- und OGX-Dedupe-Checks in diesem Batch). Unabhängiger Zweitbeleg: incibeauty.com führt dieselbe EAN in der Produkt-URL (kein Rossmann/dm-Konzernbezug). cross_source_agreement=true.",
+          "category_specs.product_leave_in_specs.format": "lotion (konservativ): pumpbare, wässrige Leave-in-Conditioner-Formel (Aqua-Basis + Dimethicone/Ölemulsion), keine Spray-/Serum-Textur-Angabe.",
+          "category_specs.product_leave_in_specs.weight": "light: leichte Öl-/Silikon-Emulsion ohne Butter, keine 'reichhaltig'-Formulierung.",
+          "category_specs.product_leave_in_specs.roles": "extension_conditioner: Zusatzpflege nach der Wäsche, kein wörtlicher Conditioner-Ersatz-Claim.",
+          "category_specs.product_leave_in_specs.provides_heat_protection": "false: KEIN Hitzeschutz-Claim auf der rossmann.de-Seite (US-Marketing des Herstellers erwähnt 'protecting from heat', aber das ist nicht die gesourcte DE-Handelsseite — bewusst konservativ nicht übernommen).",
+          "category_specs.product_leave_in_specs.care_benefits": "moisture: 'spendet intensive Feuchtigkeit'. shine: 'verleiht dem Haar Glanz'.",
+          "category_specs.product_leave_in_specs.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Cocos Nucifera Oil, C10-18 Triglycerides, Simmondsia Chinensis Seed Oil. proteins: Laurdimonium Hydroxypropyl Hydrolyzed Wheat Protein. humectants: Glycerin, Sodium Hyaluronate. polymers: Hydroxyethylcellulose, Polyquaternium-37, Acrylates/Stearyl Methacrylate Copolymer.",
+          "category_specs.product_leave_in_specs.application_stage": "NUR towel_dry: die rossmann.de-Seite nennt ausschließlich 'auf das feuchte Haar auftragen', kein Trockenhaar-Anwendungstext — dry_hair bewusst NICHT aufgenommen, obwohl der DRYCARE-Stamp separat per R-D-Formel-Default greift (siehe Protokoll-Rationale).",
+          "category_specs.product_leave_in_specs.care_direction": "moisture: Feuchtigkeits-/Glanz-Fokus, kein Repair-Claim trotz Protein-Spur in der INCI.",
+          "category_specs.product_leave_in_specs.repair_support_level": "low: kein Repair-/Struktur-Claim im Text; Protein-Derivat ist konditionierend, nicht als Repair beworben.",
+          "category_specs.product_leave_in_fit_specs.care_benefits": "detangle_smooth (niedrige Sicherheit, konservativ abgeleitet): kein wörtliches 'entwirrt'/'kämmbar', aber die feuchtigkeitsspeichernde Schutzschicht ist ein etablierter Smooth/Slip-Mechanismus; einzige halbwegs passende Option aus dem 4er-Enum {heat_protect, curl_definition, repair, detangle_smooth} — im Report als Low-Confidence-Feld markiert.",
+          "category_specs.product_leave_in_fit_specs.conditioner_relationship": "booster_only: 'Leave-In Conditioner' als Zusatzschritt, kein expliziter Ersatz-Claim für den Rinse-out-Conditioner.",
+          "product_leave_in_eligibility": "shine_protect für alle Stärken bei air_dry: einziges klar belegtes Need-Bucket (kein Frizz-Claim → nicht moisture_anti_frizz; kein Repair-/Heat-Claim).",
+          "thickness_eligibility": "Alle Stärken: leichte Formel ohne Stärke-Einschränkung im Text.",
+          "concern_eligibility": "dryness: einziger klar belegter Concern-Code (Feuchtigkeitsclaim).",
+          "protocols.tpl_leavein_damp": "Keine Deviation: einzige gesourcte Anwendung ist feuchtes Haar.",
+          "protocols.tpl_leavein_drycare": "R-D-Format-Default (format=lotion ∧ weight=light) — KEIN expliziter Trockenhaar-Quellentext; Stamp beruht ausschließlich auf der Format-/Gewichts-Regel, nicht auf einem Marketing-Claim. Deviation bleibt null, da R-D ein Regel-Default ist, kein Quellenwiderspruch.",
+          "identifiers.0.excluded_from_apply": "QA-Audit M7 (2026-09-03): incibeauty-URL ist aus der EAN konstruiert (zirkulär) und Cloudflare-blockiert — kein unabhängiger Zweitbeleg, R-B nicht erfüllt. Physischer Scan schaltet frei."
+        }
+      }
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "rename": {
+        "from": "Isana Feuchtigkeits Leave-In (Hyaluron)",
+        "to": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+        "reason": "Dedupe-Check (wave3, Kandidat 'ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol, 100 ml, Rossmann'): identische EAN 4305615946733 (Rossmann-URL-Pfadsegment = GTIN-Konvention), identischer Preis 2,49 € / 100 ml (1L=24,90 €), identisches Rossmann-Artikelbild-Set. Aktueller Rossmann-Shelf-Name ist 'ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol, feuchtigkeitsspendend, silikonfrei, trockenes Haar' — der Katalog-Datensatz trägt noch den älteren Namen 'Isana Feuchtigkeits Leave-In (Hyaluron)' und die alte Marke 'Isana' statt 'Isana Professional'. SAME PRODUCT, kein neuer Datensatz nötig, EAN bereits im Katalog vorhanden (keine add_identifiers-Aktion notwendig)."
+      }
+    }
+  ]
+}

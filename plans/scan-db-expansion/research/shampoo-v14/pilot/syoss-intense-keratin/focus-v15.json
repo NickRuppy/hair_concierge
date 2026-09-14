@@ -1,0 +1,51 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "syoss-intense-keratin",
+  "formulaFingerprintSha256": "9d68e3abce11e8e7af0982a2ee376633bdc8b4990df3e5d4b2808bef943dcc1a",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [],
+    "adjudicationSha256": "c6fb7b8551f607e1def780c7959fad00b8b9fade6bd21faea97a022b00ba6400"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [],
+    "confidence": "high",
+    "rationale": "Eine frühe Hydrolyzed-Keratin-Route wird von Dimethicone, Amodimethicone und kationischem Guar als substantiven Pflege- und Ablagerungsrouten begleitet. Diese geschlossene Formelarchitektur passt zum exakten Keratin- und Haarbruch-Reparaturversprechen besser als zu einer bloß allgemeinen Konditionierung.",
+    "formulaFacts": [
+      { "ingredient": "Hydrolyzed Keratin", "position": 6, "observation": "frühe Proteinroute" },
+      {
+        "ingredient": "Dimethicone",
+        "position": 7,
+        "observation": "frühe glättende Ablagerungsroute"
+      },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 11,
+        "observation": "substantive Konditionierungsroute"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 12,
+        "observation": "kationische Konditionierungsroute"
+      }
+    ],
+    "counterSignal": "Auch diese Formel ist vorne reinigungsgeführt und kann keine strukturelle Haarreparatur beweisen; die Klassifikation beschreibt die kosmetische Produktfunktion.",
+    "neighboringAlternative": "moisture",
+    "evidenceRefs": [
+      "claim:syoss-manufacturer-repair-positioning",
+      "claim:dm-repair-positioning",
+      "claim:rossmann-repair-positioning",
+      "formula.canonical_inci"
+    ]
+  },
+  "careDirection": {
+    "verdict": "repair_supported",
+    "moistureRoutes": [],
+    "repairRoutes": ["Hydrolyzed Keratin an Position 6", "Amodimethicone an Position 11"],
+    "sharedConditioningRoutes": ["Dimethicone an Position 7", "kationisches Guar an Position 12"],
+    "limitation": "Kosmetische Schadenspflege im Rinse-off-Kontext; kein Nachweis biologischer oder dauerhafter Strukturreparatur."
+  },
+  "claimRole": "corroborating",
+  "decisionTrace": "Nicht das Keratin-Wort allein, sondern die frühe Proteinroute zusammen mit mehreren substantiven Pflegerouten stützt Repair; das exakte Produktversprechen bestätigt diese Formelrichtung."
+}

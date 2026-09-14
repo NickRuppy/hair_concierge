@@ -1,0 +1,48 @@
+{
+  "version": "shampoo-v14-lane-a-rejected-run-receipt-v1",
+  "rejectedAt": "2026-09-03T19:10:00.000Z",
+  "rejectedRun": "blind-stage/results prior to clean rerun promotion",
+  "replacementRun": "blind-stage/results-rerun",
+  "reason": "over-broad search surfaced product-directory names, potentially inferable identity set; run excluded from comparison",
+  "compromisedResultSha256": [
+    {
+      "candidateSlot": "candidate-01",
+      "sha256": "a62f6ac034338e50f76e41d1d1ad6755e0517801c2fdc422c07a1587fc7c9a0e"
+    },
+    {
+      "candidateSlot": "candidate-02",
+      "sha256": "d1b8ecfcdd78ba72304eac62e95ad859cfeaa66cd7e1e7bba89a01d76b9c01ef"
+    },
+    {
+      "candidateSlot": "candidate-03",
+      "sha256": "3fb96f86b5899ba0229f20dbfeab6a6a778b36f1fe2565c525465a2dcc7b499e"
+    },
+    {
+      "candidateSlot": "candidate-04",
+      "sha256": "24f513d6b320139581e59021c8a9b5632bb6597106b72542950959e8ca54fa42"
+    }
+  ],
+  "acceptedResultSha256": [
+    {
+      "candidateSlot": "candidate-01",
+      "sha256": "53610cf0a07bc18c6feee698b988c09a6dd3ec2910a024600d678933ae6abd4c"
+    },
+    {
+      "candidateSlot": "candidate-02",
+      "sha256": "e5b60c0307c778f79bc1086886ae79daee2ef6c3260ff0f6515dd0d90eaa13f0"
+    },
+    {
+      "candidateSlot": "candidate-03",
+      "sha256": "e2eba75a1910ab108928f7accf2d5bf9ce6dc6ba23704719f4e84eb6103ef05b"
+    },
+    {
+      "candidateSlot": "candidate-04",
+      "sha256": "035ea4801759882e6249837d6c083df5d5174453e7612829d5bcabc47ce822fc"
+    }
+  ],
+  "comparisonUse": "excluded",
+  "notes": [
+    "Compromised result contents were not reused for Lane A finalization.",
+    "Accepted canonical result files in blind-stage/results are byte-equivalent to blind-stage/results-rerun."
+  ]
+}

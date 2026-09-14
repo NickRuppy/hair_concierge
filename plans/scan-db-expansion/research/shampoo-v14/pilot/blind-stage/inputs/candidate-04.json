@@ -1,0 +1,165 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-04",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "preferred_german_retailer_exact_gtin",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "normalized_ordered_inci": [
+      "Aqua",
+      "Sodium Laureth Sulfate",
+      "Cocamidopropyl Betaine",
+      "Sodium Chloride",
+      "Citric Acid",
+      "Parfum",
+      "Glyceryl Oleate",
+      "Coco-Glucoside",
+      "PEG-3 Distearate",
+      "Hydrolyzed Wheat Protein",
+      "Sodium Benzoate",
+      "Panthenol",
+      "Niacinamide",
+      "Potassium Sorbate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Benzoic Acid",
+      "Terpineol",
+      "Glycerin",
+      "Propylene Glycol",
+      "Pantolactone",
+      "Sodium Hydroxide",
+      "Phenoxyethanol",
+      "Tocopherol",
+      "Centaurea Cyanus Flower Extract",
+      "Hydrogenated Palm Glycerides Citrate",
+      "Gossypium Herbaceum Flower Extract"
+    ],
+    "formula_fingerprint_sha256": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_sulfate_surfactant",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant",
+        "fact_id": "formula.surfactant.03"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 8,
+        "family": "nonionic_glucoside_surfactant",
+        "fact_id": "formula.surfactant.08"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.primary_secondary",
+        "text": "Primary anionic surfactant at position 2 is paired with amphoteric surfactant at position 3 and nonionic glucoside at position 8."
+      },
+      {
+        "fact_id": "formula.architecture.electrolyte_ph",
+        "text": "Sodium Chloride appears at position 4; Citric Acid at position 5 and Sodium Hydroxide at position 21 are pH-adjustment clues."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 7,
+        "route": "refatting_or_lipid_replenishment",
+        "fact_id": "formula.conditioning.07"
+      },
+      {
+        "ingredient": "PEG-3 Distearate",
+        "position": 9,
+        "route": "fatty_ester_opacifier_or_softness_clue",
+        "fact_id": "formula.conditioning.09"
+      },
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "position": 10,
+        "route": "protein_film_or_hair-feel_clue",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 15,
+        "route": "cationic_guar_polymer",
+        "fact_id": "formula.conditioning.15"
+      },
+      {
+        "ingredient": "Hydrogenated Palm Glycerides Citrate",
+        "position": 25,
+        "route": "late_lipid_or_emulsifier_clue",
+        "fact_id": "formula.conditioning.25"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "Panthenol",
+        "position": 12,
+        "clue": "humectant_or_hair-feel_support"
+      },
+      {
+        "ingredient": "Niacinamide",
+        "position": 13,
+        "clue": "skin-care-active_presence"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 18,
+        "clue": "humectant"
+      },
+      {
+        "ingredient": "Pantolactone",
+        "position": 20,
+        "clue": "panthenol-related_humectant_or_stabilizer_clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [
+      {
+        "ingredient": "Panthenol",
+        "position": 12,
+        "role_clue": "comfort_or_humectant_support"
+      },
+      {
+        "ingredient": "Niacinamide",
+        "position": 13,
+        "role_clue": "skin-care-active_presence"
+      }
+    ],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "Parfum",
+        "position": 6,
+        "flag": "fragrance"
+      },
+      {
+        "ingredient": "Terpineol",
+        "position": 17,
+        "flag": "fragrance_allergen_or_fragrance_component"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.surfactant.02",
+      "formula.surfactant.03",
+      "formula.surfactant.08",
+      "formula.conditioning.07",
+      "formula.conditioning.09",
+      "formula.conditioning.10",
+      "formula.conditioning.15",
+      "formula.conditioning.25"
+    ]
+  }
+}

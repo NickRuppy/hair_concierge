@@ -116,6 +116,9 @@ function createRepository() {
     async findProductSubmission() {
       return null
     },
+    async findOpenScanSubmissionByIdentifier() {
+      throw new Error("Personal Plan intake has no scanned identifier")
+    },
     async insertProductSubmission() {
       throw new Error("Personal Plan intake uses its guarded creation RPC")
     },

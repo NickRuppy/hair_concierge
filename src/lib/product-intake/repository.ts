@@ -7,6 +7,7 @@ import {
   INTAKE_DEDUPE_PRODUCT_SQL_FILTER,
 } from "@/lib/product-catalog/eligibility"
 import { PRODUCT_INTAKE_BUCKET } from "@/lib/product-intake/image-validation"
+import { findOpenScanSubmission } from "@/lib/scan/pending-submission"
 import { ProductIntakePersistenceError } from "@/lib/product-intake/errors"
 import { assertTemporaryUploadPathBelongsToUser } from "@/lib/product-intake/upload-paths"
 import type {
@@ -376,10 +377,24 @@ export function createSupabaseProductIntakeRepository(
     },
 
     async insertProductSubmission(row) {
-      return requireData<ProductIntakeSubmissionRow>(
-        await admin.from("product_submissions").insert(row).select("*").single(),
-        "insert product submission",
-      )
+      const result = await admin.from("product_submissions").insert(row).select("*").single()
+      if (result.error) {
+        // Unlike requireData, this keeps the SQLSTATE: submitScanProductIntake turns a 23505
+        // on idx_product_submissions_one_open_scan into a get-or-create instead of a 503.
+        throw new ProductIntakePersistenceError(
+          `insert product submission: ${result.error.message ?? "unknown error"}`,
+          { code: result.error.code },
+        )
+      }
+      if (!result.data) {
+        throw new ProductIntakePersistenceError("insert product submission: no data returned")
+      }
+      return result.data as ProductIntakeSubmissionRow
+    },
+
+    async findOpenScanSubmissionByIdentifier({ userId, identifierValue }) {
+      const existing = await findOpenScanSubmission(admin, userId, identifierValue)
+      return existing ? { id: existing.submissionId } : null
     },
 
     async updateProductSubmission(id, patch) {

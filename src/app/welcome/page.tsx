@@ -26,7 +26,6 @@ import {
   findOneTimePurchaseEntitlementForUser,
   resolveOneTimePurchaseAccessState,
 } from "@/lib/billing/purchases"
-import { markMembershipReactivationCheckoutCompleted } from "@/lib/reactivation/checkout-reservations"
 import { getStripe } from "@/lib/stripe/client"
 import {
   CheckoutActivationError,
@@ -232,18 +231,6 @@ async function renderStripeWelcome(session_id: string) {
       premiumTierId: await getPremiumTierId(admin),
       linkQuizToProfile,
     })
-    if (
-      session.metadata?.checkout_context === "membership_reactivation" &&
-      session.metadata.reactivation_reservation_id
-    ) {
-      await markMembershipReactivationCheckoutCompleted(
-        admin,
-        session.metadata.reactivation_reservation_id,
-        user.id,
-      ).catch((error) => {
-        console.warn("[welcome] Stripe reactivation reservation completion failed", error)
-      })
-    }
     const returnDestination =
       session.metadata?.checkout_context === "membership_reactivation"
         ? sanitizeReactivationReturnDestination(session.metadata.return_destination)
@@ -474,18 +461,6 @@ async function renderPayPalWelcome(token: string | undefined) {
               : null,
           )
         : null
-    if (
-      intent?.metadata?.checkout_context === "membership_reactivation" &&
-      typeof intent.metadata.reactivation_reservation_id === "string"
-    ) {
-      await markMembershipReactivationCheckoutCompleted(
-        admin,
-        intent.metadata.reactivation_reservation_id,
-        user.id,
-      ).catch((error) => {
-        console.warn("[welcome] PayPal reactivation reservation completion failed", error)
-      })
-    }
     const redirectTo = await resolveAuthenticatedCheckoutRedirect(
       supabase,
       user.id,

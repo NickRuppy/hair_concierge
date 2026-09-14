@@ -1,0 +1,199 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-05",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "preferred_german_retailer_exact_gtin",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "moderate_high",
+    "normalized_ordered_inci": [
+      "Aqua",
+      "Sodium Laureth Sulfate",
+      "Sodium Chloride",
+      "Cocamidopropyl Betaine",
+      "Malva Sylvestris Flower Extract",
+      "Euterpe Oleracea Fruit Extract",
+      "Hydrolyzed Wheat Protein",
+      "Niacinamide",
+      "Panthenol",
+      "Pantolactone",
+      "Coco-Glucoside",
+      "Glyceryl Oleate",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "Magnesium Sulfate",
+      "Tocopherol",
+      "Hydrogenated Palm Glycerides Citrate",
+      "PEG-3 Distearate",
+      "Propylene Glycol",
+      "Glycerin",
+      "Parfum",
+      "Benzyl Salicylate",
+      "Linalool",
+      "Sodium Benzoate",
+      "Potassium Sorbate",
+      "Benzoic Acid",
+      "Phenoxyethanol",
+      "Citric Acid",
+      "Sodium Hydroxide"
+    ],
+    "formula_fingerprint_sha256": "0498a74c1f5f3b6e06c589d969a79f962f77af8d7cb7c93f0b7cca6a9f56dfb6",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_sulfate_surfactant",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 4,
+        "family": "amphoteric_surfactant",
+        "fact_id": "formula.surfactant.04"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 11,
+        "family": "nonionic_glucoside_surfactant",
+        "fact_id": "formula.surfactant.11"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.primary_secondary",
+        "text": "Primary anionic surfactant at position 2 is followed by Sodium Chloride at position 3, amphoteric surfactant at position 4 and nonionic glucoside at position 11."
+      },
+      {
+        "fact_id": "formula.architecture.electrolyte_ph",
+        "text": "Sodium Chloride appears at position 3 and Magnesium Sulfate at position 14; Citric Acid at position 27 and Sodium Hydroxide at position 28 are pH-adjustment clues."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "position": 7,
+        "route": "protein_film_or_hair-feel_clue",
+        "fact_id": "formula.conditioning.07"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 9,
+        "route": "humectant_or_hair-feel_support",
+        "fact_id": "formula.conditioning.09"
+      },
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 12,
+        "route": "refatting_or_lipid_replenishment",
+        "fact_id": "formula.conditioning.12"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 13,
+        "route": "cationic_guar_polymer",
+        "fact_id": "formula.conditioning.13"
+      },
+      {
+        "ingredient": "Hydrogenated Palm Glycerides Citrate",
+        "position": 16,
+        "route": "lipid_or_emulsifier_clue",
+        "fact_id": "formula.conditioning.16"
+      },
+      {
+        "ingredient": "PEG-3 Distearate",
+        "position": 17,
+        "route": "fatty_ester_opacifier_or_softness_clue",
+        "fact_id": "formula.conditioning.17"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "Malva Sylvestris Flower Extract",
+        "position": 5,
+        "clue": "botanical_extract_presence"
+      },
+      {
+        "ingredient": "Euterpe Oleracea Fruit Extract",
+        "position": 6,
+        "clue": "botanical_extract_presence"
+      },
+      {
+        "ingredient": "Hydrolyzed Wheat Protein",
+        "position": 7,
+        "clue": "protein_film_or_hair-feel_clue"
+      },
+      {
+        "ingredient": "Niacinamide",
+        "position": 8,
+        "clue": "skin-care-active_presence"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 9,
+        "clue": "humectant_or_hair-feel_support"
+      },
+      {
+        "ingredient": "Pantolactone",
+        "position": 10,
+        "clue": "panthenol-related_humectant_or_stabilizer_clue"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 18,
+        "clue": "solvent_or_humectant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 19,
+        "clue": "humectant"
+      }
+    ],
+    "recognized_scalp_actives_positions": [
+      {
+        "ingredient": "Niacinamide",
+        "position": 8,
+        "role_clue": "skin-care-active_presence"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 9,
+        "role_clue": "comfort_or_humectant_support"
+      }
+    ],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "Parfum",
+        "position": 20,
+        "flag": "fragrance"
+      },
+      {
+        "ingredient": "Benzyl Salicylate",
+        "position": 21,
+        "flag": "fragrance_allergen"
+      },
+      {
+        "ingredient": "Linalool",
+        "position": 22,
+        "flag": "fragrance_allergen"
+      }
+    ],
+    "unresolved_ingredients": [],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.surfactant.02",
+      "formula.surfactant.04",
+      "formula.surfactant.11",
+      "formula.conditioning.07",
+      "formula.conditioning.09",
+      "formula.conditioning.12",
+      "formula.conditioning.13",
+      "formula.conditioning.16",
+      "formula.conditioning.17"
+    ]
+  }
+}

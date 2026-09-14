@@ -374,6 +374,24 @@ export function createFixtureStage3Gateway(
     })
   }
 
+  async function previewDecisionBundles(input: {
+    draftId: string
+    expectedRevision: number
+    intents: Stage3AuthoritySemanticIntent[]
+  }) {
+    const draft = requireDraft(drafts, input.draftId)
+    if (draft.revision !== input.expectedRevision || draft.status !== "active") {
+      return { status: "conflict" as const, latestDraft: draft }
+    }
+    // Fixtures have no cross-category carrier authority; preserve the ordinary
+    // read-only review shape without mutating the draft.
+    return {
+      status: "ready" as const,
+      bundles: await reviewDecisionBundles(input),
+      autoResolvedIntents: [],
+    }
+  }
+
   async function resolveDecision(input: {
     draftId: string
     expectedRevision: number
@@ -449,6 +467,7 @@ export function createFixtureStage3Gateway(
     complete,
     evaluateDecisions,
     reviewDecisionBundles,
+    previewDecisionBundles,
     resolveDecision,
   }
 }

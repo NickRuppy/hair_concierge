@@ -50,10 +50,6 @@ export function QuizGateLanding() {
     lastTriggerRef.current = event.currentTarget
     setModalOpen(true)
   }
-  const openFooterModal = (trigger: HTMLButtonElement) => {
-    lastTriggerRef.current = trigger
-    setModalOpen(true)
-  }
   const updateModalOpen = (nextOpen: boolean) => {
     setModalOpen(nextOpen)
     if (!nextOpen) window.setTimeout(() => lastTriggerRef.current?.focus(), 0)
@@ -210,7 +206,7 @@ export function QuizGateLanding() {
         </div>
       </section>
 
-      <SiteFooter onQuizAction={openFooterModal} />
+      <SiteFooter />
       <p className="mx-auto max-w-6xl px-6 pb-8 text-center text-xs leading-relaxed text-muted-foreground">
         Diese Seite gehört nicht zu Meta und wird von Meta in keiner Weise unterstützt. Facebook und
         Instagram sind Marken der Meta Platforms, Inc.

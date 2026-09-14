@@ -23,6 +23,7 @@ export function adaptReviewedProductApplicationPointersV2(
 ): ProductApplicationPointerV2[] {
   return rows
     .flatMap((row): ProductApplicationPointerV2[] => {
+      if (row.category === "oil" && row.role === "pre_heat_protection") return []
       const parsed = productApplicationPointerV2Schema.safeParse(row.guidance_payload_v2)
       if (!parsed.success) return []
       const pointer = parsed.data
@@ -44,6 +45,7 @@ export function adaptReviewedProductApplicationProtocols(
 ): ApplicationGuidanceProtocolV1[] {
   const protocols: ApplicationGuidanceProtocolV1[] = []
   for (const row of rows) {
+    if (row.category === "oil" && row.role === "pre_heat_protection") continue
     const canonical = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
     if (canonical.success) {
       const payload = canonical.data
@@ -57,7 +59,7 @@ export function adaptReviewedProductApplicationProtocols(
       continue
     }
     if (
-      !["heat_protectant", "leave_in", "oil"].includes(row.category) ||
+      !["heat_protectant", "leave_in"].includes(row.category) ||
       row.role !== "pre_heat_protection" ||
       !["damp", "dry", "either"].includes(row.application_state ?? "") ||
       !["required", "optional", "not_stated"].includes(row.reapplication ?? "") ||

@@ -26,7 +26,7 @@ const EVIDENCE: ExpansionTemplateSlots["evidence"] = [
 ]
 
 const MASK_TEMPLATE_ID: ExpansionTemplateId = "TPL-MASK"
-const HEAT_TEMPLATE_IDS: ExpansionTemplateId[] = ["TPL-LEAVEIN-HEAT", "TPL-OIL-HEAT"]
+const HEAT_TEMPLATE_IDS: ExpansionTemplateId[] = ["TPL-LEAVEIN-HEAT"]
 
 function isHeat(templateId: ExpansionTemplateId): boolean {
   return HEAT_TEMPLATE_IDS.includes(templateId)
@@ -54,8 +54,8 @@ function parsePayload(templateId: ExpansionTemplateId, row: ExpansionProtocolRow
   return result.data
 }
 
-test("all 12 templates produce a schema-valid, product-scoped V1 guidance payload", () => {
-  assert.equal(EXPANSION_TEMPLATE_IDS.length, 12)
+test("all 11 templates produce a schema-valid, product-scoped V1 guidance payload", () => {
+  assert.equal(EXPANSION_TEMPLATE_IDS.length, 11)
 
   for (const templateId of EXPANSION_TEMPLATE_IDS) {
     const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
@@ -98,6 +98,18 @@ test("all 12 templates produce a schema-valid, product-scoped V1 guidance payloa
   }
 })
 
+test("TPL-OIL-LEAVEON stamps only the reviewed wash-family day types", () => {
+  const row = buildExpansionProtocolRow("TPL-OIL-LEAVEON", defaultSlots("TPL-OIL-LEAVEON"))
+  const payload = parsePayload("TPL-OIL-LEAVEON", row)
+
+  assert.deepEqual(payload.compatibleDayTypes, [
+    "wash_day",
+    "intensive_care_day",
+    "bond_repair_day",
+    "clarifying_wash_day",
+  ])
+})
+
 test("row role/category come from EXPANSION_TEMPLATE_META, not the payload's semantic role", () => {
   for (const templateId of EXPANSION_TEMPLATE_IDS) {
     const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
@@ -113,7 +125,7 @@ test("row role/category come from EXPANSION_TEMPLATE_META, not the payload's sem
   assert.equal((maskRow.guidance_payload as { role: string }).role, "intensive_care")
 })
 
-test("§2.4 column ↔ payload invariants hold for all 12 templates", () => {
+test("§2.4 column ↔ payload invariants hold for all 11 templates", () => {
   for (const templateId of EXPANSION_TEMPLATE_IDS) {
     const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
     const payload = parsePayload(templateId, row)
@@ -354,7 +366,7 @@ test("missing or invalid required per-product slots throw", () => {
   for (const templateId of HEAT_TEMPLATE_IDS) {
     assert.throws(
       () => buildExpansionProtocolRow(templateId, { productId: PRODUCT_ID, evidence: EVIDENCE }),
-      /require slots\.usableOnDryHair/,
+      /requires slots\.usableOnDryHair/,
       templateId,
     )
   }

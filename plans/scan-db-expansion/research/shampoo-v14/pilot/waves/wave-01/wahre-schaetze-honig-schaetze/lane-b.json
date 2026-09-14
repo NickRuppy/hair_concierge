@@ -1,0 +1,132 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "wahre-schaetze-honig-schaetze",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: Sodium Lauryl Sulfate at position 2 makes this an effective cleanser, but CAPB, later betaine/glucoside/glucamide routes and mid-list refatting materials buffer the net result below a clear reset shampoo.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate and the main cleansing driver"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 3, "factId": "formula.surfactant.03", "observation": "early amphoteric buffer"},
+        {"ingredient": "COCO-GLUCOSIDE", "position": 15, "factId": "formula.surfactant.15", "observation": "later nonionic support"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09", "observation": "refatting counter-signal"}
+      ],
+      "counterSignal": "SLS and sodium chloride are both early, so a low-cleansing or very mild reading would overstate the buffering.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.surfactant.02", "formula.surfactant.03", "formula.surfactant.14", "formula.surfactant.15", "formula.surfactant.19", "formula.conditioning.09"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: honey materials, glycerin, glyceryl oleate, glycol distearate, lecithin and cationic guar provide several rinse-off softness routes, but there is no silicone stack, protein system or rich 2-in-1 architecture.",
+      "formulaFacts": [
+        {"ingredient": "MEL / HONEY", "position": 5, "factId": "formula.humectant.05", "observation": "sugar-rich care/humectant clue"},
+        {"ingredient": "GLYCERIN", "position": 8, "factId": "formula.humectant.08", "observation": "humectant"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09", "observation": "refatting lipid/emollient"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17", "observation": "cationic guar deposition polymer"}
+      ],
+      "counterSignal": "The beeswax claim is not visible as a beeswax INCI entry, and the formula remains a sulfate-led rinse-off shampoo.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "claims.beeswax_mismatch", "formula.humectant.05", "formula.humectant.06", "formula.conditioning.09", "formula.conditioning.10", "formula.conditioning.12", "formula.conditioning.17"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: multiple lipid/refatting and cationic guar routes can leave bounded residue, while the SLS-led surfactant system and lack of silicone or heavy butter keep the band below high.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09", "observation": "refatting lipid route"},
+        {"ingredient": "GLYCOL DISTEARATE", "position": 10, "factId": "formula.conditioning.10", "observation": "fatty ester pearlizer/refatting support"},
+        {"ingredient": "LECITHIN", "position": 12, "factId": "formula.conditioning.12", "observation": "amphiphilic lipid conditioning support"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17", "observation": "cationic deposition polymer"}
+      ],
+      "counterSignal": "The formula has no silicone and no confirmed beeswax INCI; the primary SLS cleanser gives meaningful reset capacity.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "claims.beeswax_mismatch", "formula.conditioning.09", "formula.conditioning.10", "formula.conditioning.12", "formula.conditioning.17", "formula.surfactant.02"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact lipid/polymer levels are not knowable from INCI order alone.", "The beeswax marketing claim is preserved as a mismatch because no CERA ALBA / BEESWAX ingredient appears in the canonical INCI.", "GTIN apply status remains an administrative hold and is not used in the formula judgment."],
+        "whyThisBand": "The product has more than one light residue route: refatter, fatty ester, lecithin and cationic guar can plausibly reduce movement after repeated use.",
+        "whyNotNeighborBand": "Not high because the formula lacks silicone, confirmed wax/butter payload, and a low-reset chassis; SLS-led cleansing offsets some deposition."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "rationale": "Repair: the revealed positioning is for stressed, damaged-looking hair, and the formula has compatible honey/humectant plus refatting/cationic care routes, though it lacks a stronger protein or bond-repair-style marker.",
+      "formulaFacts": [
+        {"ingredient": "MEL / HONEY", "position": 5, "factId": "formula.humectant.05", "observation": "care clue compatible with damaged-looking hair positioning"},
+        {"ingredient": "MEL EXTRACT / HONEY EXTRACT", "position": 6, "factId": "formula.humectant.06", "observation": "additional honey-derived care clue"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09", "observation": "refatting care route"},
+        {"ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "position": 17, "factId": "formula.conditioning.17", "observation": "conditioning polymer support"}
+      ],
+      "counterSignal": "The beeswax part of the claim is not present in the ingredient list, so the focus is compatible but not high-confidence repair.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claims.beeswax_mismatch", "formula.canonical_inci", "formula.humectant.05", "formula.humectant.06", "formula.conditioning.09", "formula.conditioning.17"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: no distinct v1.4 secondary focus is supported; honey/beeswax positioning serves the same damaged-looking hair care story rather than an independent volume, shine, clarifying, gentle or scalp-active route.",
+      "formulaFacts": [
+        {"ingredient": "MEL / HONEY", "position": 5, "factId": "formula.humectant.05", "observation": "primary care route"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 9, "factId": "formula.conditioning.09", "observation": "care support but not a separate focus"}
+      ],
+      "counterSignal": "Humectant/refatting signals could later support a v1.5 moisture overlay, but moisture is not an allowed v1.4 focus.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claims.beeswax_mismatch", "formula.canonical_inci"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: the directions are ordinary wet-hair massage and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURYL SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 3, "factId": "formula.surfactant.03", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "The product is care-positioned for damaged-looking hair, but that does not make it a v1.4 treatment usage product.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["directions.standard_rinse", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the packet is focused on stressed or damaged-looking hair, not sensitive, itchy, dry-feeling or uncomfortable scalp support.",
+      "formulaFacts": [
+        {"ingredient": "GLYCERIN", "position": 8, "factId": "formula.humectant.08", "observation": "humectant clue without scalp-comfort positioning"},
+        {"ingredient": "COUMARIN", "position": 26, "factId": "formula.fragrance.26", "observation": "fragrance allergen declaration"},
+        {"ingredient": "PARFUM / FRAGRANCE", "position": 30, "factId": "formula.canonical_inci", "observation": "fragrance mixture at tail"}
+      ],
+      "counterSignal": "Humectant/refatting ingredients may improve cosmetic feel, but v1.4 requires intentional scalp-comfort positioning for targeted.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claims.beeswax_mismatch", "formula.canonical_inci", "formula.fragrance.26", "formula.fragrance.27", "formula.fragrance.28"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete ordered formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "MEL / HONEY", "position": 5, "factId": "formula.humectant.05", "observation": "care/humectant clue, not a v1.4 dandruff active"},
+        {"ingredient": "GLYCERIN", "position": 8, "factId": "formula.humectant.08", "observation": "humectant clue, not a v1.4 dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete canonical INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.dm_de_matching_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/wahre-schaetze-honig-schaetze/source-packet.json",
+    "sourcePacketSha256": "a67571d03ad4fc366d7e39a62abcc880efa272959ee3f53989bab4ed120314b3",
+    "formulaFingerprint": "609ebbc01e280cc74e19d8d324b9738ef990d48cd4836e59ee848b47940d88ce",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T15:46:55+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

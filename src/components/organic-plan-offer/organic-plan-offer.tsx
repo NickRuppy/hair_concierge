@@ -4,6 +4,7 @@ import { Fragment } from "react"
 import Link from "next/link"
 import { ArrowDown, ChevronDown } from "lucide-react"
 
+import { SiteFooter } from "@/components/landing/site-footer"
 import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider"
 import { WistiaVideo } from "@/components/organic-plan-offer/wistia-video"
 import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
@@ -596,7 +597,7 @@ export function OrganicPlanOffer({
           </section>
         ) : null}
 
-        <section className="mx-auto max-w-4xl px-4 pb-24 pt-1" data-offer-section="faq">
+        <section className="mx-auto max-w-4xl px-4 pt-1" data-offer-section="faq">
           <h2 className="text-center font-serif text-[2rem] leading-tight tracking-[-0.035em] sm:text-4xl">
             Häufige Fragen
           </h2>
@@ -648,6 +649,11 @@ export function OrganicPlanOffer({
           </div>
         </section>
       </main>
+      {/*
+        The purchase starts on this page, so it carries the same legal footer
+        the landing does: Impressum, Datenschutz, AGB, Widerruf, Kontakt.
+      */}
+      <SiteFooter className="mt-10" />
     </OfferTrackingProvider>
   )
 }

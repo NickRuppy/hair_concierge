@@ -1,0 +1,444 @@
+{
+  "version": "shampoo-v14-source-packet-v1",
+  "product_id": "gliss-sealing-miracle",
+  "research_method": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "status": "formula_packet_ready",
+  "identity": {
+    "market": "DE",
+    "brand": "Schwarzkopf GLISS",
+    "exact_current_de_name": "Sealing Miracle Versiegelndes Shampoo",
+    "size": {
+      "value": 200,
+      "unit": "ml",
+      "display": "200 ml"
+    },
+    "gtin": "4015100895025",
+    "captured_at": "2026-09-03T16:20:00+02:00",
+    "current_sources": [
+      {
+        "id": "src-gliss-de-pdp",
+        "label": "Schwarzkopf GLISS DE exact PDP",
+        "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de_exact_gtin_pdp",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "claims",
+          "directions"
+        ]
+      },
+      {
+        "id": "src-gliss-de-back-pack",
+        "label": "Schwarzkopf GLISS DE exact back-pack asset",
+        "url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C7N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_back-DE?hei=3004&fmt=png-alpha&qlt=100",
+        "source_type": "manufacturer",
+        "tier": "manufacturer_de_exact_gtin_back_pack",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "formula",
+          "directions"
+        ]
+      },
+      {
+        "id": "src-rossmann-de-pdp",
+        "label": "Rossmann DE exact GTIN PDP",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+        "source_type": "retailer",
+        "tier": "german_retailer_exact_gtin_url",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "facts": [
+          "exact_current_de_name",
+          "size",
+          "gtin",
+          "price",
+          "claims",
+          "directions"
+        ]
+      },
+      {
+        "id": "src-kruidvat-nl-exact-gtin",
+        "label": "Kruidvat NL exact GTIN PDP",
+        "url": "https://www.kruidvat.nl/gliss-sealing-miracle-sealing-shampoo/p/6626849",
+        "source_type": "retailer",
+        "tier": "retailer_exact_gtin_formula_corroboration",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "facts": [
+          "exact_current_name",
+          "size",
+          "gtin",
+          "formula",
+          "directions"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "explicit_conflicts": [
+      {
+        "id": "guard:anti-spliss-250ml-not-merged",
+        "status": "resolved",
+        "severity": "non_material",
+        "summary": "A GLISS Anti-Spliss 250 ml variant is not the selected 200 ml Sealing Miracle GTIN and is excluded from identity and formula evidence.",
+        "resolution": "The canonical packet accepts only evidence explicitly bound to GTIN 4015100895025 and the 200 ml Sealing Miracle pack."
+      },
+      {
+        "id": "guard:other-market-barcodes-not-merged",
+        "status": "resolved",
+        "severity": "non_material",
+        "summary": "Other-market Sealing Miracle barcodes identify other SKUs and cannot establish the DE packet identity.",
+        "resolution": "Only the same-GTIN Kruidvat formula is used as cross-market corroboration; it does not replace the DE manufacturer back-pack source."
+      }
+    ]
+  },
+  "source_facts": [
+    {
+      "fact_id": "identity.name",
+      "fact_key": "identity.exact_current_de_name",
+      "fact_value": "Sealing Miracle Versiegelndes Shampoo",
+      "source_id": "src-gliss-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Sealing Miracle Versiegelndes Shampoo, 200 ml; GTIN 4015100895025.",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    },
+    {
+      "fact_id": "identity.gtin",
+      "fact_key": "identity.gtin",
+      "fact_value": "4015100895025",
+      "source_id": "src-gliss-de-pdp",
+      "source_type": "manufacturer",
+      "source_text": "Exact selected GTIN 4015100895025 in the manufacturer PDP structured product data.",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    },
+    {
+      "fact_id": "identity.size",
+      "fact_key": "identity.size",
+      "fact_value": "200 ml",
+      "source_id": "src-rossmann-de-pdp",
+      "source_type": "retailer",
+      "source_text": "Sealing Shampoo Sealing Miracle, 200 ml; exact product URL ends /p/4015100895025.",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    },
+    {
+      "fact_id": "formula.canonical_inci",
+      "fact_key": "formula.raw_inci",
+      "fact_value": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Pisum Sativum (Pea) Peptide, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Parfum (Fragrance), Sodium Benzoate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Sodium Hydroxide, Benzyl Alcohol, Propylene Glycol, Leuconostoc/Radish Root Ferment Filtrate",
+      "source_id": "src-gliss-de-back-pack",
+      "source_type": "manufacturer",
+      "source_text": "Exact 200 ml DE back-pack ingredient transcription; the back-pack asset filename contains GTIN 4015100895025 and 200ml.",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    },
+    {
+      "fact_id": "formula.corroborating_inci",
+      "fact_key": "formula.corroborating_raw_inci",
+      "fact_value": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Pisum Sativum (Pea) Peptide, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Parfum (Fragrance), Sodium Benzoate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Sodium Hydroxide, Benzyl Alcohol, Propylene Glycol, Leuconostoc/Radish Root Ferment Filtrate",
+      "source_id": "src-kruidvat-nl-exact-gtin",
+      "source_type": "retailer",
+      "source_text": "EAN code: 4015100895025; GLISS SEALING MIRACLE SHAMPOO 200ML; exact published ingredient list.",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    }
+  ],
+  "formula": {
+    "status": "canonical",
+    "raw_inci": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Pisum Sativum (Pea) Peptide, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Parfum (Fragrance), Sodium Benzoate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Sodium Hydroxide, Benzyl Alcohol, Propylene Glycol, Leuconostoc/Radish Root Ferment Filtrate",
+    "normalized_ordered_inci": [
+      "AQUA (WATER, EAU)",
+      "SODIUM LAURETH SULFATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "PISUM SATIVUM (PEA) PEPTIDE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "PARFUM (FRAGRANCE)",
+      "SODIUM BENZOATE",
+      "COCO-GLUCOSIDE",
+      "GLYCERYL OLEATE",
+      "CITRIC ACID",
+      "PEG-7 GLYCERYL COCOATE",
+      "GLYCOL DISTEARATE",
+      "LAURETH-4",
+      "HYDROGENATED CASTOR OIL",
+      "PEG-120 METHYL GLUCOSE DIOLEATE",
+      "SODIUM HYDROXIDE",
+      "BENZYL ALCOHOL",
+      "PROPYLENE GLYCOL",
+      "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE"
+    ],
+    "normalized_inci_string": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, PISUM SATIVUM (PEA) PEPTIDE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PARFUM (FRAGRANCE), SODIUM BENZOATE, COCO-GLUCOSIDE, GLYCERYL OLEATE, CITRIC ACID, PEG-7 GLYCERYL COCOATE, GLYCOL DISTEARATE, LAURETH-4, HYDROGENATED CASTOR OIL, PEG-120 METHYL GLUCOSE DIOLEATE, SODIUM HYDROXIDE, BENZYL ALCOHOL, PROPYLENE GLYCOL, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE",
+    "sha256_normalized_inci": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23",
+    "canonical_source": {
+      "id": "src-gliss-de-back-pack",
+      "tier": "manufacturer_de_exact_gtin_back_pack",
+      "captured_at": "2026-09-03T16:20:00+02:00"
+    },
+    "completeness": "complete_inci_published_for_exact_gtin",
+    "checked_sources": [
+      {
+        "id": "src-gliss-de-back-pack",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "canonical_current_exact_german_manufacturer_back_pack_formula",
+        "formula_hash_if_normalized": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23"
+      },
+      {
+        "id": "src-kruidvat-nl-exact-gtin",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "formula_observed": true,
+        "formula_relation_to_canonical": "agrees_with_canonical_same_gtin_retailer_formula",
+        "formula_hash_if_normalized": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23"
+      },
+      {
+        "id": "src-rossmann-de-pdp",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "formula_observed": false,
+        "formula_relation_to_canonical": "identity_and_claims_checked_no_formula_text_exposed_in_current_crawl"
+      }
+    ],
+    "version_or_reformulation_conflicts": [
+      {
+        "id": "guard:nonexact-anti-spliss-250ml-variant",
+        "status": "resolved",
+        "severity": "non_material",
+        "summary": "A 250 ml Anti-Spliss variant was excluded before formula comparison because it is not GTIN 4015100895025.",
+        "resolution": "No formula from a nonexact pack or barcode is merged into this exact-GTIN record."
+      }
+    ],
+    "normalization_notes": "The manufacturer back-pack transcription preserves source spelling and order in raw_inci. Normalization uppercases every ingredient token and joins the ordered array with comma-space; it does not alter the slash in LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE. The ordered array is authoritative for positions."
+  },
+  "blind_packet": {
+    "formula_source_tier": "manufacturer_de_exact_gtin_back_pack",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none_after_exact_gtin_guard",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA (WATER, EAU)",
+      "SODIUM LAURETH SULFATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "PISUM SATIVUM (PEA) PEPTIDE",
+      "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "PARFUM (FRAGRANCE)",
+      "SODIUM BENZOATE",
+      "COCO-GLUCOSIDE",
+      "GLYCERYL OLEATE",
+      "CITRIC ACID",
+      "PEG-7 GLYCERYL COCOATE",
+      "GLYCOL DISTEARATE",
+      "LAURETH-4",
+      "HYDROGENATED CASTOR OIL",
+      "PEG-120 METHYL GLUCOSE DIOLEATE",
+      "SODIUM HYDROXIDE",
+      "BENZYL ALCOHOL",
+      "PROPYLENE GLYCOL",
+      "LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE"
+    ],
+    "normalized_inci_string": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, PISUM SATIVUM (PEA) PEPTIDE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, PARFUM (FRAGRANCE), SODIUM BENZOATE, COCO-GLUCOSIDE, GLYCERYL OLEATE, CITRIC ACID, PEG-7 GLYCERYL COCOATE, GLYCOL DISTEARATE, LAURETH-4, HYDROGENATED CASTOR OIL, PEG-120 METHYL GLUCOSE DIOLEATE, SODIUM HYDROXIDE, BENZYL ALCOHOL, PROPYLENE GLYCOL, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE",
+    "formula_fingerprint_sha256": "1e197cbc98b440a5189d96018b90bf0f1079882a3572c68a82105b49fefafa23",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 4,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.04"
+      },
+      {
+        "ingredient": "COCO-GLUCOSIDE",
+        "position": 9,
+        "family": "nonionic glucoside surfactant",
+        "fact_id": "formula.surfactant.09"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate appears at position 2."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Amphoteric betaine follows sodium chloride at position 4."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "A nonionic glucoside is present at position 9 after the peptide, conditioning-polymer and fragrance region."
+      },
+      {
+        "fact_id": "formula.architecture.04",
+        "text": "Peptide, cationic polymer and lipid-like/refatting clues occur before the helper/thickener region."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion/thickener facts are preserved in formula_function_facts_positions and excluded from independent cleansing-route count."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+        "position": 5,
+        "route": "peptide/protein-derived care clue",
+        "fact_id": "formula.conditioning.05"
+      },
+      {
+        "ingredient": "HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 6,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 10,
+        "route": "refatting lipid-like clue",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "PEG-7 GLYCERYL COCOATE",
+        "position": 12,
+        "route": "refatting/emollient-surfactant clue",
+        "fact_id": "formula.conditioning.12"
+      },
+      {
+        "ingredient": "HYDROGENATED CASTOR OIL",
+        "position": 15,
+        "route": "waxy/lipid-like payload clue",
+        "fact_id": "formula.conditioning.15"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "PISUM SATIVUM (PEA) PEPTIDE",
+        "position": 5,
+        "clue": "peptide/protein-derived care clue"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 10,
+        "clue": "refatting lipid clue"
+      },
+      {
+        "ingredient": "PEG-7 GLYCERYL COCOATE",
+        "position": 12,
+        "clue": "refatting/emollient-surfactant clue"
+      },
+      {
+        "ingredient": "GLYCOL DISTEARATE",
+        "position": 13,
+        "clue": "pearlizing/refatting wax ester"
+      },
+      {
+        "ingredient": "HYDROGENATED CASTOR OIL",
+        "position": 15,
+        "clue": "lipid-like payload clue"
+      },
+      {
+        "ingredient": "PROPYLENE GLYCOL",
+        "position": 19,
+        "clue": "solvent/humectant auxiliary"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "PARFUM (FRAGRANCE)",
+        "position": 7,
+        "flag": "fragrance mixture"
+      },
+      {
+        "ingredient": "BENZYL ALCOHOL",
+        "position": 18,
+        "flag": "fragrance/preservative disclosure ingredient"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 16,
+        "reason": "polymeric thickener/emulsifier clue; preserved without treating it as an independent cleansing or substantive conditioning route"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.corroborating_inci"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "LAURETH-4",
+        "position": 14,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.14",
+        "note": "Preserved as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 16,
+        "function": "polymeric_thickener_emulsifier_helper",
+        "fact_id": "formula.function.16",
+        "note": "Preserved as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      }
+    ]
+  },
+  "post_unblind_evidence": {
+    "claims_and_positioning": [
+      {
+        "id": "claim:gliss-manufacturer-sealing-positioning",
+        "source_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+        "source_type": "manufacturer",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "source_text": "GLISS Sealing Miracle Shampoo: Reinigung und Pflege für splissgeschädigtes Haar; die Zip & Seal Technologie wirkt wie ein Reißverschluss für die Haarfaser."
+      },
+      {
+        "id": "claim:rossmann-sealing-positioning",
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "source_text": "Das Pflegeshampoo reinigt und pflegt das Haar gründlich, ohne es zu beschweren; speziell entwickelt für geschädigtes Haar und splissanfällige Haare."
+      }
+    ],
+    "directions": [
+      {
+        "id": "usage:gliss-back-pack-directions",
+        "source_url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C7N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_back-DE?hei=3004&fmt=png-alpha&qlt=100",
+        "source_type": "manufacturer",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "source_text": "Anwendung: Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+      },
+      {
+        "id": "usage:rossmann-directions",
+        "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+        "source_type": "retailer",
+        "captured_at": "2026-09-03T16:20:00+02:00",
+        "source_text": "Das GLISS Shampoo gegen Haarbruch einfach sanft im feuchten Haar verteilen und anschließend gut ausspülen. Regelmäßig anwenden."
+      }
+    ]
+  },
+  "provenance_checks": {
+    "gtin_check_digit_valid": true,
+    "formula_hash_recomputed": true,
+    "blind_packet_identity_terms_checked": true,
+    "old_manifest_labels_used": false,
+    "database_reads_or_writes": false,
+    "notes": [
+      "The official DE back-pack asset is canonical and its GTIN-bearing filename matches the selected 200 ml SKU.",
+      "Kruidvat independently exposes the same GTIN, 200 ml pack and the same complete INCI after uppercase comma-space normalization.",
+      "The 250 ml Anti-Spliss variant and other-market barcodes are explicit identity guards, not formula inputs."
+    ]
+  },
+  "open_questions": []
+}

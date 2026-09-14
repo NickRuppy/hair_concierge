@@ -8,6 +8,31 @@ same standard of identity, category properties, sources, image quality, user
 linking, and chat notification. Research and review are local/operator-driven;
 the final Supabase write is guarded and must be explicitly triggered by Nick.
 
+## Which Workflow Am I In?
+
+There is one product-adding workflow, not several: every product passes the
+same core steps regardless of how it arrives — identity → category properties
+→ image → review → guarded publish (this document owns those steps). What
+varies is how products are selected (user submission vs. proactive wave), how
+deep property research goes (standard contract vs. formula engine), and how
+review is batched (per-product cockpit vs. sealed batch). The documentation
+lanes below own those variation points. Each fact and each learning has
+exactly one owning document; the others link to it.
+
+| Lane | Use when | Owning document |
+| --- | --- | --- |
+| Single-product intake | One user-submitted or manually added product goes through research → review → guarded publish | This document (skill: `product-intake`) |
+| Batch scan-DB expansion | A wave of 30-40 scannable, non-recommended products is added through the expansion pipeline | `docs/scan-db-expansion-playbook.md` (recipe, wave learnings, selection signals) |
+| Formula research engines | Deep INCI-based classification of a Shampoo/Conditioner, or engine/standard maintenance | `docs/research/README.md` (skill: `product-research-engine`) |
+| Catalog data contract | What tables own which facts, read/write boundaries | `docs/catalog-authority.md` |
+
+Learnings ownership: wave-process learnings belong in the expansion playbook;
+protocol/template rulings belong in the rulings ledger the playbook names;
+classification-rule changes belong in the owning engine's versioned standard
+(plus its rule-changes log where the engine keeps one, e.g. Conditioner);
+intake-contract changes belong here. Do not restate a rule in a second lane —
+link to it.
+
 ## Core Rule
 
 Codex and the local review tools may prepare research, preview payloads, image
@@ -240,7 +265,7 @@ Supported categories and required spec tables:
 | `conditioner`            | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags`                                                                                                                      |
 | `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`, `repair_support_level` (`low`, `medium`, `high`), `functional_benefits` (`smoothing_frizz_control`, `detangling_slip`, `shine`)                                                                                                                                                                                |
 | `leave_in`               | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection`, `heat_protection_max_c`, `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]`                                                                                                                                       |
-| `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`) and `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`, `pre_heat_protection`); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags`                                                             |
+| `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`), `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`), and independent binary `provides_heat_protection` (source-verified claim only; never a fourth role); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags`                                                             |
 | `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                     |
 | `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                       |
 | `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |

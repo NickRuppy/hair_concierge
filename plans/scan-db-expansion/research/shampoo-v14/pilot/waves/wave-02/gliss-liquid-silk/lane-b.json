@@ -1,0 +1,134 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "gliss-liquid-silk",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 gives effective cleansing, but CAPB, later coco-glucoside and early silk/lipid/polymer care routes keep the net formula below strong.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate"},
+        {"ingredient": "SODIUM CHLORIDE", "position": 3, "factId": "formula.canonical_inci", "observation": "early electrolyte/thickening context"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04", "observation": "amphoteric buffer"},
+        {"ingredient": "COCO-GLUCOSIDE", "position": 13, "factId": "formula.surfactant.13", "observation": "later nonionic glucoside support"},
+        {"ingredient": "GLYCOSPHINGOLIPIDS", "position": 5, "factId": "formula.conditioning.05", "observation": "early care counter-signal"}
+      ],
+      "counterSignal": "SLES and sodium chloride are early, so low would understate the cleansing chassis.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.manufacturer_corroborating_inci", "formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.13", "formula.conditioning.05", "formula.architecture.01", "formula.architecture.02"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: glycosphingolipids, hydrolyzed silk, sericin, Polyquaternium-10 and several refatting/waxy clues create a broad smoothness and slip system.",
+      "formulaFacts": [
+        {"ingredient": "GLYCOSPHINGOLIPIDS", "position": 5, "factId": "formula.conditioning.05", "observation": "lipid-like care clue"},
+        {"ingredient": "HYDROLYZED SILK", "position": 6, "factId": "formula.conditioning.06", "observation": "protein-derived care clue"},
+        {"ingredient": "SERICIN", "position": 7, "factId": "formula.canonical_inci", "observation": "silk/protein-derived care clue"},
+        {"ingredient": "POLYQUATERNIUM-10", "position": 10, "factId": "formula.conditioning.10", "observation": "cationic conditioning polymer"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 15, "factId": "formula.canonical_inci", "observation": "refatting lipid clue"}
+      ],
+      "counterSignal": "There is no silicone in the canonical formula, but the early silk/lipid plus polymer/refatting breadth is beyond moderate.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.manufacturer_corroborating_inci", "formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10", "formula.architecture.02"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: early lipid-like and silk/protein clues, Polyquaternium-10 and later refatting/waxy materials can leave bounded residue, while SLES/CAPB/glucoside cleansing and no silicone keep it below high.",
+      "formulaFacts": [
+        {"ingredient": "GLYCOSPHINGOLIPIDS", "position": 5, "factId": "formula.conditioning.05", "observation": "lipid-like care/deposition clue"},
+        {"ingredient": "HYDROLYZED SILK", "position": 6, "factId": "formula.conditioning.06", "observation": "protein-derived film clue"},
+        {"ingredient": "POLYQUATERNIUM-10", "position": 10, "factId": "formula.conditioning.10", "observation": "cationic polymer deposition route"},
+        {"ingredient": "GLYCERYL OLEATE", "position": 15, "factId": "formula.canonical_inci", "observation": "refatting lipid clue"},
+        {"ingredient": "HYDROGENATED CASTOR OIL", "position": 18, "factId": "formula.canonical_inci", "observation": "waxy/lipid-like payload clue"}
+      ],
+      "counterSignal": "The product lacks a silicone stack, and PEG-120 Methyl Glucose Dioleate/Laureth-4 are helper facts rather than persistent conditioning routes.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "formula.manufacturer_corroborating_inci", "formula.rossmann_stale_conflict", "formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10", "formula.function.12", "formula.function.20"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact glycosphingolipid/silk/polymer levels cannot be proven from INCI order alone.", "A same-GTIN Rossmann formula conflict exists but is resolved in favor of current German manufacturer/dm agreement."],
+        "whyThisBand": "Multiple care routes occur early enough that low weight would understate the polymer/protein/lipid/refatting stack.",
+        "whyNotNeighborBand": "Not high because there is no silicone stack and the formula keeps meaningful anionic/amphoteric/glucoside reset."
+      }
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "high",
+      "rationale": "Shine: exact-product positioning centers on smoothing the hair surface and adding shine/gloss, and the formula supports that with silk/protein, lipid-like and polymer smoothing routes.",
+      "formulaFacts": [
+        {"ingredient": "GLYCOSPHINGOLIPIDS", "position": 5, "factId": "formula.conditioning.05", "observation": "smoothing/lipid-like care route"},
+        {"ingredient": "HYDROLYZED SILK", "position": 6, "factId": "formula.conditioning.06", "observation": "silk/protein-derived smoothing clue"},
+        {"ingredient": "SERICIN", "position": 7, "factId": "formula.canonical_inci", "observation": "silk/protein-derived smoothing clue"},
+        {"ingredient": "POLYQUATERNIUM-10", "position": 10, "factId": "formula.conditioning.10", "observation": "conditioning polymer support"}
+      ],
+      "counterSignal": "The formula is also conditioning, but the dominant revealed claim is shine/smoothness rather than repair.",
+      "neighboringAlternative": "repair",
+      "evidenceRefs": ["claim:dm-liquid-silk-positioning", "formula.canonical_inci", "formula.conditioning.05", "formula.conditioning.06", "formula.conditioning.10"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: silk and surface-smoothing care all serve the same shine story; the packet does not establish a separate repair or scalp/volume/clarifying role.",
+      "formulaFacts": [
+        {"ingredient": "HYDROLYZED SILK", "position": 6, "factId": "formula.conditioning.06", "observation": "same shine/smoothing route"},
+        {"ingredient": "POLYQUATERNIUM-10", "position": 10, "factId": "formula.conditioning.10", "observation": "same shine/smoothing support"}
+      ],
+      "counterSignal": "Protein-derived silk ingredients could sound repair-adjacent, but the claim is surface gloss/smoothness, not damaged-hair repair.",
+      "neighboringAlternative": ["repair"],
+      "evidenceRefs": ["claim:dm-liquid-silk-positioning", "formula.canonical_inci", "formula.conditioning.06"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are standard wet-hair distribution, rinse-out and regular hair-care use, with no daily/frequent, alternating, reset or treatment trigger.",
+      "formulaFacts": [
+        {"ingredient": "SODIUM LAURETH SULFATE", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "COCAMIDOPROPYL BETAINE", "position": 4, "factId": "formula.surfactant.04", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "Regularly apply wording confirms ordinary use, not a treatment role under v1.4.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["usage:manufacturer-directions", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the product is positioned for hair-surface smoothness, shine and manageability, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "PARFUM (FRAGRANCE)", "position": 8, "factId": "formula.canonical_inci", "observation": "fragrance exposure"},
+        {"ingredient": "BUTYLENE GLYCOL", "position": 19, "factId": "formula.canonical_inci", "observation": "humectant/solvent clue without scalp positioning"}
+      ],
+      "counterSignal": "Some smoothing ingredients may feel gentle on lengths, but there is no scalp-comfort claim or targeted architecture.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claim:dm-liquid-silk-positioning", "formula.canonical_inci"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "HYDROLYZED SILK", "position": 6, "factId": "formula.conditioning.06", "observation": "care protein clue, not a v1.4 dandruff active"},
+        {"ingredient": "POTASSIUM SORBATE", "position": 26, "factId": "formula.canonical_inci", "observation": "preservative, not a recognized dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.manufacturer_corroborating_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-02/gliss-liquid-silk/source-packet.json",
+    "sourcePacketSha256": "a5c952f6d4a3952951163619fa18e410f0cdf8e7cbdc407237c724d2e54f6b75",
+    "formulaFingerprint": "6832d1a0af15e97534cd859587f96295f9d652deb80ca3b4f683ae595fffe7f2",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T21:37:30+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

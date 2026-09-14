@@ -1,0 +1,62 @@
+{
+  "version": "shampoo-v14-wave-validation-v1",
+  "status": "pass_research_draft_pending_nick_review",
+  "scope": {
+    "wave": "wave-02",
+    "products": 4,
+    "source_holds": 1,
+    "database_writes": 0,
+    "catalog_updates": 0
+  },
+  "source_gate": {
+    "status": "pass_with_one_explicit_hold",
+    "complete_current_formula_packets": 4,
+    "formula_hashes_verified": 4,
+    "identity_bound_packets": 4,
+    "material_formula_conflicts_held": 1,
+    "held_product_ids": [
+      "fructis-coco-water"
+    ]
+  },
+  "lane_gate": {
+    "status": "pass",
+    "blind_lane_a": 4,
+    "unblinded_lane_a": 4,
+    "independent_lane_b": 4,
+    "adjudicated_products": 4,
+    "all_final_properties_moderate_or_high": true,
+    "source_identity_failures": 0,
+    "systematic_rule_gaps": 0,
+    "rejected_blind_runs": 1
+  },
+  "agreement": {
+    "judgment_matches": 26,
+    "judgment_decisions": 28,
+    "overall": 0.9285714285714286,
+    "minimum_property_agreement": 0.75,
+    "cleansing_strength_agreement": 1,
+    "dandruff_agreement": 1,
+    "thresholds_pass": true,
+    "receipt": "agreement.json"
+  },
+  "focus_v15_gate": {
+    "status": "pass",
+    "hash_bound_overlays": 4,
+    "moisture_primary": 1,
+    "gentle_focus_values": 0
+  },
+  "adapter_gate": {
+    "status": "pass",
+    "property_lane_ready": 4,
+    "needs_research": 0,
+    "routed_deep_cleansing": 0,
+    "runs_per_product": 2,
+    "byte_identical_pairs": 4
+  },
+  "review_gate": {
+    "nick_review_required": true,
+    "database_apply_authorized": false,
+    "catalog_publish_authorized": false,
+    "commit_or_push_authorized": false
+  }
+}

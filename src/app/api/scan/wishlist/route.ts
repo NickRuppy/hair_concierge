@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { presentCatalogCommerce } from "@/lib/personal-plan/routine/commerce"
-import { checkRateLimit, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import { checkRateLimit } from "@/lib/rate-limit"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
+import { createScanRoute, scanFail, scanOk } from "@/lib/scan/route"
+import { hasFreemiumPaidAccess, type FreemiumAccessResult } from "@/lib/entitlements/access"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { hasPersonalPlanKeepsakeEvidenceForUser } from "@/lib/personal-plan/keepsake-content"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
 import { createClient } from "@/lib/supabase/server"
 
 export type ScanWishlistEntry = {
@@ -39,42 +43,57 @@ export type ScanWishlistRouteDeps = {
   createAdminClient: typeof createAdminClient
   listWishlist: (client: SupabaseClient, userId: string) => Promise<ScanWishlistEntry[]>
   captureScanException?: typeof captureScanException
+  /**
+   * Freemium scanner-first (T4): the Merkliste listing is a premium view.
+   * Free-tier users can reach this route (the middleware carve-out admits
+   * `/api/scan` without itself gating the entitlement), so the guard has to
+   * run here, server-side, using the same paid-access composite as the
+   * subscription paywall (see `hasFreemiumPaidAccess`). When the flag is off
+   * no free user ever reaches this route at all (middleware still 403s
+   * them), so this check is redundant-but-harmless in that case.
+   *
+   * Returns the tri-state `FreemiumAccessResult` (T4 review fix I2), not a
+   * plain boolean: an unreadable moderator lookup with no independently
+   * verified paid access must surface as a retriable 503, not a 403 —
+   * mirroring the middleware paywall's own `moderator_access_unavailable`
+   * response.
+   */
+  requirePremiumAccess: (userId: string) => Promise<FreemiumAccessResult>
+  /**
+   * T17 keepsake read: the journey's step 11 promise keeps a LAPSED owner's Merkliste
+   * READABLE („Gemerkt" is rendered from exactly this listing). Consulted only after
+   * `requirePremiumAccess` already said `"denied"`, so a premium request's cost is
+   * unchanged and a never-paid free user — who has no keepsake evidence, and whose
+   * Merkliste is empty anyway because auto-save only runs on a premium resolve — still
+   * gets today's 403.
+   *
+   * Read-only: this widens GET alone. Every Merkliste MUTATION (`POST`/`DELETE
+   * /api/scan/save`) keeps its unchanged premium guard, which is why the „Gemerkt"
+   * section renders `readOnly` for this cohort.
+   *
+   * Fail-closed: an unreadable keepsake signal resolves `false` (today's 403), never an
+   * open listing.
+   */
+  allowKeepsakeRead?: (userId: string) => Promise<boolean>
 }
 
-const fail = (error: string, status: number, headers?: HeadersInit) =>
-  NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store", ...headers } })
-
 export function createScanWishlistRouteHandler(deps: ScanWishlistRouteDeps) {
-  return async function GET() {
-    const userId = await deps.getUserId()
-    if (!userId) return fail("unauthorized", 401)
-
-    // Same shared per-user scan budget as the other scan routes (`SCAN_RATE_LIMIT`).
-    const limited = await deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
-    if (!limited.allowed) {
-      const unavailable = limited.error === "service_unavailable"
-      return fail(
-        unavailable ? "temporarily_unavailable" : "rate_limited",
-        unavailable ? 503 : 429,
-        unavailable ? undefined : { "Retry-After": "60" },
-      )
-    }
-
-    try {
+  return createScanRoute<undefined>({
+    route: "wishlist",
+    deps,
+    parse: async () => ({ ok: true, body: undefined }),
+    failureReason: "wishlist_list_failed",
+    handler: async (ctx) => {
+      const access = await deps.requirePremiumAccess(ctx.userId)
+      if (access === "unavailable") return scanFail("temporarily_unavailable", 503)
+      if (access === "denied" && !(await deps.allowKeepsakeRead?.(ctx.userId))) {
+        return scanFail("subscription_required", 403)
+      }
       const client = deps.createAdminClient()
-      const entries = await deps.listWishlist(client, userId)
-      return NextResponse.json({ entries }, { headers: { "Cache-Control": "no-store" } })
-    } catch (error) {
-      console.error("[scan] wishlist list failed", error)
-      ;(deps.captureScanException ?? captureScanException)(error, {
-        route: "wishlist",
-        status: 503,
-        reason: "wishlist_list_failed",
-        userId,
-      })
-      return fail("temporarily_unavailable", 503)
-    }
-  }
+      const entries = await deps.listWishlist(client, ctx.userId)
+      return scanOk({ entries })
+    },
+  })
 }
 
 export async function listScanWishlist(
@@ -128,9 +147,42 @@ export async function listScanWishlist(
     })
 }
 
+// Separate from `getUserId`: the shared scan wrapper only forwards a userId
+// string to the handler (see `ScanRouteContext` in `@/lib/scan/route.ts`,
+// which this task does not restructure), so the email needed for the C1 fix
+// and the `access_kind` needed for the PR1 review's F1 field-test fix have
+// no path from `getUserId` into `requirePremiumAccess` without a second
+// `auth.getUser()` read. That is a deliberate, request-scoped read — reusing
+// a module-level variable across the two calls would leak one concurrent
+// request's email/app_metadata into another's premium check.
+async function requirePremiumAccessForCurrentUser(userId: string): Promise<FreemiumAccessResult> {
+  const { data } = await (await createClient()).auth.getUser()
+  return hasFreemiumPaidAccess(
+    userId,
+    data.user?.email,
+    isPersonalPlanFieldTestGuest(data.user ?? {}),
+  )
+}
+
+/** T17: keepsake evidence, fail-closed to `false` on any read failure. */
+async function hasKeepsakeReadAccess(userId: string): Promise<boolean> {
+  if (!isFreemiumScannerFirstEnabled()) return false
+  try {
+    // PR5 review fix (Z2): a lapsed owner's Merkliste is readable on ANY paid-era
+    // artifact — their own `scan_wishlist` rows included. Requiring an accepted Routine
+    // version here 403'd exactly the users whose saved products this route exists to
+    // return (legacy subscribers, incomplete provisioning).
+    return await hasPersonalPlanKeepsakeEvidenceForUser(userId)
+  } catch {
+    return false
+  }
+}
+
 export const GET = createScanWishlistRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   checkRateLimit,
   createAdminClient,
   listWishlist: listScanWishlist,
+  requirePremiumAccess: requirePremiumAccessForCurrentUser,
+  allowKeepsakeRead: hasKeepsakeReadAccess,
 })

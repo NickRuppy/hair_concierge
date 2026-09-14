@@ -90,8 +90,11 @@ export function buildScanVerdict(input: BuildScanVerdictInput): ScanVerdictPaylo
  * A category with no target to compare the scanned product against: either genuinely
  * not needed, or not decided yet. Both take this branch; `needMode` keeps them apart so
  * the headline never claims a need verdict the decision has not reached.
+ *
+ * Exported because the resolve route uses the same predicate to skip an unnecessary
+ * full-catalog candidate load — one definition, so the two can never drift apart.
  */
-function isNotNeeded(decision: PlanCategoryDecision): boolean {
+export function isNotNeeded(decision: PlanCategoryDecision): boolean {
   if (decision.needTier === "not_needed") return true
   return (
     decision.target === null && decision.needTier !== "basis" && decision.needTier !== "optional"
@@ -295,6 +298,9 @@ function alternativesFrom(
       netContentLabel: product?.presentation?.netContentLabel ?? null,
       verdict: candidate.verdict,
       verdictLabel: SCAN_VERDICT_COPY[candidate.verdict].label,
+      // T8: already computed by `buildStage3FitComparison` — carried through for the
+      // free-tier masked serializer only, see `ScanAlternative.criteria`.
+      criteria: candidate.criteria,
     }
   })
 }

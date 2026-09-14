@@ -322,7 +322,8 @@
         "category_specs": {
           "product_oil_specs": {
             "weight": "light",
-            "role_support": ["pre_wash_fibre_treatment", "dry_finish"]
+            "role_support": ["pre_wash_fibre_treatment", "dry_finish"],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {

@@ -27,7 +27,6 @@ test("partner activation requires exact authorization and sends ready email only
   const calls: string[] = []
   const response = await createPartnerActivateHandler({
     getUserId: async () => ids.user,
-    resolveFunnelSessionId: async () => ids.funnel,
     authorize: async () => ({
       invitationId: ids.invitation,
       userId: ids.user,
@@ -48,16 +47,35 @@ test("partner activation requires exact authorization and sends ready email only
 
   const denied = await createPartnerActivateHandler({
     getUserId: async () => ids.user,
-    resolveFunnelSessionId: async () => ids.funnel,
     authorize: async () => null,
   })(request())
   assert.equal(denied.status, 403)
 })
 
+test("partner activation requires no funnel cookie — authorization is resolved from the user and lead alone", async () => {
+  const authorizeCalls: unknown[] = []
+  const response = await createPartnerActivateHandler({
+    getUserId: async () => ids.user,
+    authorize: async (input) => {
+      authorizeCalls.push(input)
+      return {
+        invitationId: ids.invitation,
+        userId: ids.user,
+        funnelSessionId: ids.funnel,
+        leadId: ids.lead,
+      }
+    },
+    activate: async () => ({ grantId: "grant", reused: true }),
+    resolveDestinationLeadId: async (_userId, partnerLeadId) => partnerLeadId,
+    sendReadyEmail: async () => true,
+  })(request())
+  assert.equal(response.status, 200)
+  assert.deepEqual(authorizeCalls, [{ userId: ids.user, leadId: ids.lead }])
+})
+
 test("partner activation sends an existing paid creator to their canonical plan lead", async () => {
   const response = await createPartnerActivateHandler({
     getUserId: async () => ids.user,
-    resolveFunnelSessionId: async () => ids.funnel,
     authorize: async () => ({
       invitationId: ids.invitation,
       userId: ids.user,

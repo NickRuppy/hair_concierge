@@ -1,0 +1,68 @@
+{
+  "version": "shampoo-v14-pilot-validation-v1",
+  "status": "pass_research_draft_pending_nick_review",
+  "scope": {
+    "products": 5,
+    "database_writes": 0,
+    "manifest_property_updates": 0,
+    "remaining_cohort_classified": 0
+  },
+  "administrative_preservation": {
+    "status": "pass",
+    "receipt": "../admin/receipt.json",
+    "new_products_preserved": 52,
+    "existing_product_updates_preserved": 2,
+    "formula_classification_fields_omitted": true
+  },
+  "source_gate": {
+    "status": "pass",
+    "complete_current_formula_packets": 5,
+    "formula_hashes_verified": 5,
+    "identity_bound_packets": 5,
+    "material_conflicts": 0,
+    "resolved_non_material_conflicts": 1,
+    "source_audit_reissues": 5,
+    "audit_note": "Three packets were reissued after emulsifier/solubilizer helpers were found in cleansing-route arrays; two were reissued to resolve evidence-reference binding. Both defect classes are now regression-tested."
+  },
+  "lane_gate": {
+    "status": "pass",
+    "blind_inputs": 5,
+    "mapped_blind_outputs": 5,
+    "lane_a_final": 5,
+    "lane_b_independent": 5,
+    "adjudicated_products": 5,
+    "all_final_properties_moderate_or_high": true
+  },
+  "agreement": {
+    "judgment_matches": 30,
+    "judgment_decisions": 35,
+    "overall": 0.8571428571428571,
+    "minimum_property_agreement": 0.6,
+    "dandruff_matches": 5,
+    "dandruff_decisions": 5,
+    "thresholds_pass": true,
+    "receipt": "agreement.json"
+  },
+  "adapter_gate": {
+    "status": "pass",
+    "property_lane_ready": 5,
+    "needs_research": 0,
+    "routed_deep_cleansing": 0,
+    "runs_per_product": 2,
+    "byte_identical_pairs": 5,
+    "warnings": 0
+  },
+  "validator": {
+    "source_phase": "pass",
+    "lane_phase": "pass",
+    "complete_phase": "pass",
+    "negative_self_tests": 15,
+    "self_tests_status": "pass"
+  },
+  "review_gate": {
+    "nick_review_required": true,
+    "remaining_47_blocked": true,
+    "database_apply_authorized": false,
+    "commit_or_push_authorized": false
+  }
+}

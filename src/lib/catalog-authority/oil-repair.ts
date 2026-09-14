@@ -12,6 +12,9 @@ import {
 } from "./repair"
 
 const thicknessSchema = z.enum(["fine", "normal", "coarse"])
+// Historical v1 manifest schema retained for read-only inspection and the
+// Stage 5 V2 artifact generator. The apply CLI is retired; current Oil writes
+// must use the three-purpose schema introduced by the heat-capability migration.
 const oilRoleSchema = z.enum([
   "pre_wash_fibre_treatment",
   "leave_on_fibre_conditioning",

@@ -9,6 +9,27 @@ const longWashDaySteps = Array.from({ length: 12 }, (_, index) => ({
   copyDe: `Sanfter Anwendungsschritt ${index + 1}.`,
 }))
 
+const verifiedHeatOilStep: ApplicationDayView["steps"][number] = {
+  kind: "product",
+  stepKey: "wash-day-verified-heat-oil",
+  applicationInstanceKey: "wash-day:oil:leave-in",
+  productId: "lab-oil-heat-capability",
+  productName: "Wunderöl",
+  imageUrl: null,
+  categoryLabelDe: "Haaröl",
+  purposeDe: "Pflege ohne Ausspülen",
+  actions: [
+    {
+      actionKey: "apply-product",
+      copyDe:
+        "Ein paar Tropfen sparsam in die feuchten Längen und Spitzen einarbeiten. Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze.",
+    },
+  ],
+  coverageNoteDe: null,
+  status: "confirmed",
+  provisionalReason: null,
+}
+
 const supportingDays: ApplicationDayView[] = [
   ["intensive_care_day", "Intensivpflegetag"],
   ["bond_repair_day", "Bond-Repair-Tag"],
@@ -36,7 +57,7 @@ const days: ApplicationDayView[] = [
     labelDe: "Waschtag",
     summaryDe: "Waschen, pflegen und sanft trocknen.",
     cadenceDe: "Nach deinem Rhythmus",
-    steps: longWashDaySteps,
+    steps: [verifiedHeatOilStep, ...longWashDaySteps],
     isPartial: false,
     provisionalProductCount: 0,
     unresolvedProductCount: 0,

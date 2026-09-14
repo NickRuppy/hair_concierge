@@ -1,0 +1,319 @@
+{
+  "version": "shampoo-v14-lane-a-final-v1",
+  "productId": "herbal-essences-fiji",
+  "candidateSlot": "candidate-04",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "The sulfate-free system has enough breadth for effective ordinary cleansing, but isethionate/sarcosinate anionics are buffered by two betaines and a light polymer rather than reading as a strong reset chassis.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "LAURAMIDOPROPYL BETAINE",
+          "position": 3
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        },
+        {
+          "ingredient": "SODIUM LAUROYL SARCOSINATE",
+          "position": 5
+        }
+      ],
+      "counterSignal": "Two anionic cleansing routes plus TETRASODIUM EDTA position 13 provide more reset breadth than a low-cleansing mild shampoo.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.conditioning.11"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful cationic polymer route should provide some manageability support, but the late humectant/plant-juice clues and absence of silicone or rich lipid systems keep the level bounded.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The polymer is after fragrance/preservative ingredients and is not reinforced by silicone, fatty alcohol or meaningful lipid routes.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "candidate-04.json:formula.conditioning.11",
+        "candidate-04.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Noticeable cumulative weight is unlikely because deposition is limited to one later cationic polymer and late light humectant/plant clues, while the cleansing system has broad reset capacity.",
+      "formulaFacts": [
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "LAURAMIDOPROPYL BETAINE",
+          "position": 3
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 4
+        }
+      ],
+      "counterSignal": "Polyquaternium-10 can be persistent and could leave some residue on repeated use.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-04.json:formula.conditioning.11",
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.humectant_refatting_protein_film_clues"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "light",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [],
+        "whyThisBand": "One later cationic polymer with late humectant/plant clues is a light deposition pattern, and the same formula has multiple cleansing routes.",
+        "whyNotNeighborBand": "Not moderate because there is no silicone, rich lipid, waxy payload or interacting deposition system beyond polyquaternium-10."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "The exact product is moisture-positioned, but moisture is not a v1.4 focus value; the light humectant/coconut clues support a general care reading without upgrading to gentle, shine or repair.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "LAURAMIDOPROPYL BETAINE",
+          "position": 3
+        },
+        {
+          "ingredient": "SODIUM LAUROYL SARCOSINATE",
+          "position": 5
+        }
+      ],
+      "counterSignal": "The mild/balanced surfactant architecture could later support gentle or frequent-use positioning if exact claims establish it.",
+      "neighboringAlternative": "gentle",
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.05"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No v1.4 secondary focus is assigned: moisture wording and weightless softness do not create a separate repair, shine, volume, clarifying or scalp-active route.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "POLYQUATERNIUM-10",
+          "position": 11
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "A later gentle or volume-adjacent claim could be formula-compatible, but it is not visible in Lane A blind input.",
+      "neighboringAlternative": [
+        "gentle"
+      ],
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.conditioning.11",
+        "formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "The usage directions are ordinary rinse-out instructions and do not include a daily/mild, reset, alternating or treatment trigger.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "LAURAMIDOPROPYL BETAINE",
+          "position": 3
+        }
+      ],
+      "counterSignal": "The non-strong sulfate-free architecture could support frequent use if exact product positioning later says so.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "usage:rossmann-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.03"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "The moisture claim is hair-focused and does not target sensitive, itchy or dry-feeling scalp; no recognized scalp actives are present and fragrance is present.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        },
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "The cleanser architecture is comfort-compatible enough that post-unblind sensitive positioning could change this property.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "The complete formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM COCOYL ISETHIONATE",
+          "position": 2
+        }
+      ],
+      "counterSignal": "SODIUM SALICYLATE at position 10 does not qualify under the v1.4 dandruff-support rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "candidate-04.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    }
+  },
+  "postUnblindDeltas": [
+    {
+      "property": "focusPrimary",
+      "blindValue": "general",
+      "finalValue": "general",
+      "blindConfidence": "low",
+      "finalConfidence": "moderate",
+      "reason": "The exact product is moisture-positioned, but moisture is not a v1.4 focus value; the light humectant/coconut clues support a general care reading without upgrading to gentle, shine or repair.",
+      "revealedEvidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.05"
+      ]
+    },
+    {
+      "property": "focusSecondary",
+      "blindValue": [],
+      "finalValue": [],
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "No v1.4 secondary focus is assigned: moisture wording and weightless softness do not create a separate repair, shine, volume, clarifying or scalp-active route.",
+      "revealedEvidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.conditioning.11",
+        "formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    {
+      "property": "usageRole",
+      "blindValue": "regular",
+      "finalValue": "regular",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "The usage directions are ordinary rinse-out instructions and do not include a daily/mild, reset, alternating or treatment trigger.",
+      "revealedEvidenceRefs": [
+        "usage:rossmann-directions",
+        "formula.surfactant.02",
+        "formula.surfactant.03"
+      ]
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blindValue": "not_targeted",
+      "finalValue": "not_targeted",
+      "blindConfidence": "low",
+      "finalConfidence": "high",
+      "reason": "The moisture claim is hair-focused and does not target sensitive, itchy or dry-feeling scalp; no recognized scalp actives are present and fragrance is present.",
+      "revealedEvidenceRefs": [
+        "claim:dm-fiji-positioning",
+        "formula.recognized_scalp_actives_positions",
+        "formula.fragrance_cooling_exposure_flags"
+      ]
+    }
+  ],
+  "unchangedProperties": [
+    {
+      "property": "cleansingStrength",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "conditioningLevel",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "weightPotential",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    },
+    {
+      "property": "dandruffSupport",
+      "reason": "Post-unblind evidence did not change the formula-derived value or confidence."
+    }
+  ],
+  "receipt": {
+    "candidateSlot": "candidate-04",
+    "sourcePacketSha256": "4d722c88c4cc5faf34cac8b0cda6ec4b7a0a57dcdd35363c6cf1a6dad4951a9e",
+    "blindInputSha256": "c081abafa634ff8f18d04ec5e1dd4194538c368d8311c760506a5732a196e456",
+    "blindResultSha256": "dd89b335ed0275ca7fec6544a5a96f728052801d1634cb713a63312574ecfd3a",
+    "cleanRerunResultSha256": "035ea4801759882e6249837d6c083df5d5174453e7612829d5bcabc47ce822fc",
+    "canonicalResultProjection": "schema-only: provisionalProperties renamed to properties; formulaFacts normalized to anonymous INCI ingredient/position objects; structuredWeightAssessment renamed to weightAssessment",
+    "sourcePacketPath": "herbal-essences-fiji/source-packet.json",
+    "postUnblindEvidence": "herbal-essences-fiji/source-packet.json:post_unblind_evidence",
+    "consumedLaneB": false,
+    "consumedOldManifest": false
+  }
+}

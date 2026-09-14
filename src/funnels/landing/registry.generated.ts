@@ -2,9 +2,11 @@
 import LandingVariant0 from "./default"
 import LandingVariant1 from "./organic-refresh"
 import LandingVariant2 from "./personal-plan-quiz"
+import LandingVariant3 from "./scan-regal"
 
 export const LANDING_VARIANTS = {
   default: LandingVariant0,
   "organic-refresh": LandingVariant1,
   "personal-plan-quiz": LandingVariant2,
+  "scan-regal": LandingVariant3,
 } as const

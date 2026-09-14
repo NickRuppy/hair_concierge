@@ -34,5 +34,14 @@
     "landingVariant": "personal-plan-quiz",
     "quizVariant": "personal-plan-quiz-v1",
     "offerVariant": "personal-plan-v1"
+  },
+  {
+    "key": "scan_v1",
+    "slug": "scan",
+    "channel": "meta",
+    "status": "active",
+    "landingVariant": "scan-regal",
+    "quizVariant": "legacy-quiz-v1",
+    "offerVariant": "scan-regal-v1"
   }
 ]

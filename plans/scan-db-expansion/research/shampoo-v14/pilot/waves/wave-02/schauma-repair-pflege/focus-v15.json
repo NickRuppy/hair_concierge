@@ -1,0 +1,72 @@
+{
+  "version": "shampoo-focus-v15-overlay-v1",
+  "productId": "schauma-repair-pflege",
+  "formulaFingerprintSha256": "1e363b3d95c453c42d7229da585c6c2dee1f548fd50c500264f53b0e6139b6f9",
+  "priorV14": {
+    "primary": "repair",
+    "secondary": [],
+    "adjudicationSha256": "34e7af32cc8c0742da0f09c4754b42d2d05ce77a01c120b8223e29aa518d55a5"
+  },
+  "effectiveV15": {
+    "primary": "repair",
+    "secondary": [],
+    "confidence": "high",
+    "rationale": "Repair bleibt der beste v1.5-Fokus: Die genaue Positionierung nennt Repair fuer geschaedigtes/trockenes Haar, und die Formel hat mit kationischem Guar, Panthenol, Aprikosenkernöl sowie Amodimethicone/Dimethicone eine klare care- und smoothing-basierte Damage-Care-Architektur.",
+    "formulaFacts": [
+      {
+        "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "position": 5,
+        "observation": "kationische Conditioning-Route fuer geschaedigt/trocken positioniertes Haar"
+      },
+      {
+        "ingredient": "PANTHENOL",
+        "position": 6,
+        "observation": "Humectant- und Haargefuehl-Route"
+      },
+      {
+        "ingredient": "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+        "position": 7,
+        "observation": "emolliente Pflege-/Damage-Care-kompatible Route"
+      },
+      {
+        "ingredient": "AMODIMETHICONE",
+        "position": 13,
+        "observation": "substantive Silikon-Smoothing-Route"
+      },
+      {
+        "ingredient": "DIMETHICONE",
+        "position": 14,
+        "observation": "Silikonfilm mit Glanz-/Glaettungsbezug"
+      }
+    ],
+    "counterSignal": "Panthenol, Sorbitol und Kokos-Extrakt machen auch eine Feuchtigkeitslesart plausibel; der dominante Produktauftrag und die dualen Silikon-/Polymer-Routen kippen die Entscheidung zu Repair.",
+    "neighboringAlternative": "moisture",
+    "evidenceRefs": [
+      "claim:dm-repair-positioning",
+      "formula.canonical_inci",
+      "formula.conditioning.05",
+      "formula.conditioning.13",
+      "formula.conditioning.14"
+    ]
+  },
+  "careDirection": {
+    "verdict": "dual_supported",
+    "moistureRoutes": [
+      "PANTHENOL an Position 6",
+      "SORBITOL an Position 9",
+      "COCOS NUCIFERA (COCONUT) FRUIT EXTRACT an Position 8"
+    ],
+    "repairRoutes": [
+      "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE an Position 5",
+      "AMODIMETHICONE an Position 13",
+      "DIMETHICONE an Position 14",
+      "PRUNUS ARMENIACA (APRICOT) KERNEL OIL an Position 7"
+    ],
+    "sharedConditioningRoutes": [
+      "Panthenol und Oel/Extrakt koennen sowohl Feuchtigkeitserzaehlung als auch allgemeine Pflege stuetzen"
+    ],
+    "limitation": "Die INCI beweist keine echte Strukturreparatur; v1.5 liest hier eine kosmetische, formula-kompatible Repair-Richtung, nicht eine medizinische oder dauerhafte Reparaturwirkung."
+  },
+  "claimRole": "tie_breaker",
+  "decisionTrace": "Die Formel allein waere dual_supported: Humectant-/Extrakt-Signale fuer Moisture, aber Polymer/Oel/Silikon fuer Repair/Smoothing. Die exakte Repair-und-Pflege-Positionierung bricht den Gleichstand zu Repair."
+}

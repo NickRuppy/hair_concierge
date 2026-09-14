@@ -1,27 +1,20 @@
-import { execFileSync } from "node:child_process"
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import {
-  assertOilAuthorityRepairReady,
   inspectOilAuthorityRepair,
-  oilAuthorityRepairContent,
   OIL_AUTHORITY_PRODUCT_IDS,
   parseOilAuthorityRepairManifest,
 } from "@/lib/catalog-authority/oil-repair"
-import {
-  catalogAuthorityCanonicalJson,
-  type CatalogAuthorityCurrentState,
-} from "@/lib/catalog-authority/repair"
+import type { CatalogAuthorityCurrentState } from "@/lib/catalog-authority/repair"
 import {
   createSupabaseClientFromEnv,
   flag,
   flagBool,
   parseArgs,
   printJson,
-  requireFlag,
 } from "../product-intake/cli"
 
 const PROJECT_ID = "pqdkhefxsxkyeqelqegq"
@@ -174,67 +167,23 @@ export async function fetchOilAuthorityCurrentStates(
   })
 }
 
-export function assertOilRepairApplyCliGate(input: {
-  apply: boolean
-  confirm: boolean
-  confirmProject: string | null
-  reviewedHead: string | null
-  expectedFingerprint: string | null
-  actualFingerprint: string
-  manifestReady: boolean
-  gitHead?: string
-  gitStatus?: string
-}): void {
+export function assertOilRepairApplyCliGate(input: { apply: boolean }): void {
   if (!input.apply) return
-  if (!input.confirm) throw new Error("oil_repair_apply_confirmation_missing")
-  if (input.confirmProject !== PROJECT_ID)
-    throw new Error("oil_repair_project_confirmation_mismatch")
-  if (!input.reviewedHead) throw new Error("oil_repair_reviewed_head_missing")
-  if (input.expectedFingerprint !== input.actualFingerprint) {
-    throw new Error("oil_repair_expected_fingerprint_mismatch")
-  }
-  if (!input.manifestReady) throw new Error("oil_repair_manifest_not_approved")
-  const gitHead =
-    input.gitHead ?? execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
-  const gitStatus =
-    input.gitStatus ?? execFileSync("git", ["status", "--porcelain"], { encoding: "utf8" })
-  if (gitHead !== input.reviewedHead) throw new Error("oil_repair_reviewed_head_mismatch")
-  if (gitStatus.trim()) throw new Error("oil_repair_worktree_not_clean")
+  throw new Error("oil_repair_apply_retired_use_oil_heat_capability_migration")
 }
 
 async function main() {
   const args = parseArgs()
+  const apply = flagBool(args, "apply")
+  assertOilRepairApplyCliGate({ apply })
+
   const manifestPath = resolve(flag(args, "file") ?? DEFAULT_MANIFEST)
   const manifest = parseOilAuthorityRepairManifest(JSON.parse(readFileSync(manifestPath, "utf8")))
   const client = createSupabaseClientFromEnv()
   const currentStates = await fetchOilAuthorityCurrentStates(client)
   const inspection = inspectOilAuthorityRepair(manifest, currentStates)
-  const apply = flagBool(args, "apply")
 
-  assertOilRepairApplyCliGate({
-    apply,
-    confirm: flagBool(args, "confirm"),
-    confirmProject: flag(args, "confirm-project"),
-    reviewedHead: flag(args, "reviewed-head"),
-    expectedFingerprint: flag(args, "expected-fingerprint"),
-    actualFingerprint: inspection.contentFingerprint,
-    manifestReady: manifest.review.state === "approved" && inspection.blockers.length === 0,
-  })
-
-  if (!apply) {
-    printJson({ mode: "dry-run", projectId: PROJECT_ID, manifestPath, ...inspection })
-    return
-  }
-
-  assertOilAuthorityRepairReady(manifest, currentStates)
-  const content = catalogAuthorityCanonicalJson(oilAuthorityRepairContent(manifest))
-  const { data, error } = await client.rpc("apply_catalog_authority_oil_repair_v1", {
-    p_manifest_json: content,
-    p_expected_manifest_fingerprint: requireFlag(args, "expected-fingerprint"),
-    p_reviewed_by: "nick",
-  })
-  if (error) throw new Error(`Oil repair apply failed: ${error.message}`)
-  printJson({ mode: "apply", projectId: PROJECT_ID, rows: data })
+  printJson({ mode: "dry-run", projectId: PROJECT_ID, manifestPath, ...inspection })
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

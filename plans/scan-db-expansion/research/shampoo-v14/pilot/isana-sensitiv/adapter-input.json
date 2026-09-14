@@ -1,0 +1,191 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "isana-sensitiv",
+    "market": "DE",
+    "exactProductName": "Shampoo Sensitiv",
+    "exactPackSize": "300 ml",
+    "gtinAliases": [
+      "4305615566184"
+    ],
+    "capturedAt": "2026-09-03T09:24:28+02:00",
+    "confidence": "high",
+    "conflictStatus": "none",
+    "sources": [
+      {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "tier": "preferred_retailer_de",
+        "capturedAt": "2026-09-03T09:24:28+02:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Citric Acid, Parfum, Glyceryl Oleate, Coco-Glucoside, PEG-3 Distearate, Hydrolyzed Wheat Protein, Sodium Benzoate, Panthenol, Niacinamide, Potassium Sorbate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Benzoic Acid, Terpineol, Glycerin, Propylene Glycol, Pantolactone, Sodium Hydroxide, Phenoxyethanol, Tocopherol, Centaurea Cyanus Flower Extract, Hydrogenated Palm Glycerides Citrate, Gossypium Herbaceum Flower Extract",
+    "inciFingerprintSha256": "7441dacfab6f4004cfca5fde4323ff1e35bf877ad8df36f8c9f509888c8c3e52",
+    "canonicalSource": "preferred_retailer_de",
+    "evidenceRefs": [
+      "formula.canonical_inci",
+      "source-packet-sha256:0a00883109d724fe292ae27520c03a5314c01e5a29d3ef0de95fef240ed37f3c"
+    ],
+    "sources": [
+      {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-sensitiv/p/4305615566184",
+        "tier": "preferred_retailer_de",
+        "capturedAt": "2026-09-03T09:24:28+02:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 makes this ordinary effective cleansing, while CAPB, coco-glucoside and refatting/protein care keep it from strong.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.08",
+        "claim-rossmann-de-positioning"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: several light-to-meaningful routes, including glyceryl oleate, protein, panthenol and cationic guar, should give bounded softness without a silicone-rich or 2-in-1 system.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.07",
+        "formula.conditioning.10",
+        "formula.conditioning.15"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: interacting light deposition routes make bounded residue plausible, while no silicone stack and SLES-led cleansing keep it below high.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "claim-rossmann-de-positioning",
+        "formula.conditioning.07",
+        "formula.conditioning.09",
+        "formula.conditioning.10",
+        "formula.conditioning.15"
+      ]
+    },
+    "focusPrimary": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "Gentle: the exact-product claims are sensitive-scalp, mild-care and pH-neutral positioning, and the formula has CAPB/glucoside buffering plus panthenol/niacinamide support.",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning",
+        "formula.canonical_inci"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: sensitive/gentle positioning is dominant, and the normal-hair/care phrases do not create a distinct second focus with an independent route.",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "rationale": "Frequent: the product is explicitly positioned as particularly gentle/mild-use and cleansing is not strong.",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning",
+        "directions-rossmann-de"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "rationale": "Targeted: the packet explicitly says sensitive scalp, calming ingredients, panthenol, dermatologically confirmed and pH-skin-neutral, with supportive formula routes.",
+      "evidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning",
+        "formula.canonical_inci",
+        "formula.exposure.06",
+        "formula.exposure.17"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete formula contains neither Piroctone Olamine nor Climbazole; sensitive-scalp positioning does not upgrade dandruff support.",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "claim-rossmann-de-positioning"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Moderate conditioning and weight avoid an excessively coating fine-hair profile, while the buffered cleansing system supports frequent gentle-positioned use.",
+      "evidenceRefs": [
+        "adjudication:isana-sensitiv:conditioningLevel",
+        "adjudication:isana-sensitiv:weightPotential",
+        "adjudication:isana-sensitiv:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Moderate cleansing, care and weight create a balanced sensitive-scalp option for normal-diameter hair.",
+      "evidenceRefs": [
+        "adjudication:isana-sensitiv:conditioningLevel",
+        "adjudication:isana-sensitiv:weightPotential",
+        "adjudication:isana-sensitiv:focusPrimary"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "The formula has useful care routes but is not a rich coarse-hair default; coarse hair may need a separate conditioner.",
+      "evidenceRefs": [
+        "adjudication:isana-sensitiv:conditioningLevel",
+        "adjudication:isana-sensitiv:weightPotential",
+        "adjudication:isana-sensitiv:focusPrimary"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "sensitive",
+      "confidence": "high",
+      "rationale": "Exact sensitive-scalp and mild-care positioning is backed by buffered cleansing, panthenol, niacinamide and humectant support; fragrance remains a documented counter-signal rather than a veto.",
+      "positioningEvidenceRefs": [
+        "claim-rossmann-de-positioning",
+        "claim-rossmann-dk-positioning"
+      ],
+      "formulaEvidenceRefs": [
+        "formula.canonical_inci",
+        "formula.scalp.12",
+        "formula.scalp.13"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "claim-rossmann-de-positioning",
+      "directions-rossmann-de"
+    ]
+  }
+}

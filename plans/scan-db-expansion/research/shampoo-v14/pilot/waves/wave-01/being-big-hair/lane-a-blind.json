@@ -1,0 +1,293 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "productId": "being-big-hair",
+  "candidateSlot": "wave01-candidate-04",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate is the best whole-formula band because betaine leads the surfactant system ahead of olefin sulfonate, with glucoside and isethionate support plus oils and polymers; the later sulfosuccinate keeps this close to strong.",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "factId": "formula.surfactant.05"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "factId": "formula.surfactant.07"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 15,
+          "factId": "formula.surfactant.15"
+        }
+      ],
+      "counterSignal": "Multiple anionic routes, including olefin sulfonate and sulfosuccinate, prevent a low cleansing call and keep strong as the neighbor.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.05",
+        "formula.surfactant.07",
+        "formula.surfactant.15",
+        "formula.architecture.01",
+        "formula.architecture.02"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning fits two mid-list plant oils plus panthenol and two cationic polymers; no silicone or rich 2-in-1 base is visible.",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "factId": "formula.conditioning.18"
+        }
+      ],
+      "counterSignal": "The cleansing system is broad and includes several anionic routes, so the care effect is bounded.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "formula.canonical_inci"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate weight potential is supported by two plant oils and two cationic polymers, while the broad surfactant system and lack of silicone keep the risk bounded.",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "factId": "formula.conditioning.09"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "factId": "formula.conditioning.18"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        }
+      ],
+      "counterSignal": "Olefin sulfonate, isethionate and sulfosuccinate provide meaningful reset capacity, and no silicone route appears.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.conditioning.08",
+        "formula.conditioning.09",
+        "formula.conditioning.17",
+        "formula.conditioning.18",
+        "formula.surfactant.03",
+        "formula.surfactant.07",
+        "formula.surfactant.15"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": [
+          "A distinct global manufacturer market/formula variant is preserved and not merged into the exact-GTIN formula.",
+          "Acrylates Copolymer, Cyclodextrin and Hydroxypropyl Starch Phosphate remain helper/texture facts, not counted as substantive conditioning routes."
+        ],
+        "whyThisBand": "Oil and cationic polymer deposition can plausibly reduce movement for some hair, but reset and no silicone keep it bounded.",
+        "whyNotNeighborBand": "High would overread helper polymers and ignore the broad cleanser system; low would understate the oils plus cationic polymers."
+      }
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "low",
+      "rationale": "Volume is a tentative formula-first direction because the architecture has moderate-to-strong cleansing plus several texture/helper polymers and starch clues, but the helpers are not enough for a confident focus without visible positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "Acrylates Copolymer",
+          "position": 14,
+          "factId": "formula.function.14"
+        },
+        {
+          "ingredient": "Sodium Starch Octenylsuccinate",
+          "position": 21,
+          "factId": "formula.canonical_inci"
+        },
+        {
+          "ingredient": "Hydroxypropyl Starch Phosphate",
+          "position": 24,
+          "factId": "formula.function.24"
+        }
+      ],
+      "counterSignal": "Two oils and two cationic polymers are anti-volume weight signals, so this needs unblinded positioning to become robust.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": [
+        "formula.function.14",
+        "formula.function.24",
+        "formula.canonical_inci",
+        "formula.conditioning.08",
+        "formula.conditioning.09"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is retained because the oil/polymer care route and texture-helper route are not separable enough without claims.",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "factId": "formula.conditioning.08"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "factId": "formula.conditioning.17"
+        }
+      ],
+      "counterSignal": "Unblinded care or shine wording could support a second focus, but blind evidence does not independently establish one.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "evidenceRefs": [
+        "formula.conditioning.08",
+        "formula.conditioning.17",
+        "formula.function.14"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular remains the blind default because the formula lacks a recognized treatment active and no reset/occasional-use positioning is visible.",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "factId": "formula.surfactant.02"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "factId": "formula.surfactant.07"
+        }
+      ],
+      "counterSignal": "If revealed positioning names reset or oily-root use, the multiple anionic routes would make alternating plausible.",
+      "neighboringAlternative": "alternating",
+      "evidenceRefs": [
+        "formula.surfactant.02",
+        "formula.surfactant.03",
+        "formula.surfactant.07",
+        "formula.architecture.01"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "Not targeted is the best blind call because there is no recognized scalp-active route, and fragrance plus multiple anionic cleansing routes are comfort counter-signals.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "factId": "formula.surfactant.03"
+        },
+        {
+          "ingredient": "Parfum (Fragrance)",
+          "position": 12,
+          "factId": "formula.fragrance.12"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "Glycerin and panthenol are comfort-adjacent, but not enough to infer intentional scalp targeting.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": [
+        "formula.surfactant.03",
+        "formula.fragrance.12",
+        "formula.canonical_inci"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported is mechanical: the complete INCI contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {
+          "ingredient": "Aqua/Water/Eau",
+          "position": 1,
+          "factId": "formula.canonical_inci"
+        }
+      ],
+      "counterSignal": "No ingredient in the exact-GTIN formula is a v1.4 recognized anti-dandruff active.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "formula.canonical_inci"
+      ]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "7e56fd05827182a056dc6e24e8503a87d5ed5762056495b499a5c0f8447b9cd0",
+    "formulaFingerprintSha256": "e5044d605889525955db74baae6763d31653baa3ce5d6e8fe73586db1db139e6",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T17:00:00Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false,
+    "sourcePacketSha256": "7e56fd05827182a056dc6e24e8503a87d5ed5762056495b499a5c0f8447b9cd0",
+    "blindResultSha256": "04737246a4ca2946383bfb70a9e01389af3a2970f22322874ace0e1c41ba7dea",
+    "mappedAfterBlindFreeze": false,
+    "mappedAt": null
+  }
+}

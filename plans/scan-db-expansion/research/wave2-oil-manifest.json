@@ -35,9 +35,9 @@
             "weight": "light",
             "role_support": [
               "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
           },
           "product_oil_eligibility": [
             {
@@ -95,16 +95,6 @@
               "text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen."
             },
             "deviation": null
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
-              "text": "2-3 Pumphübe auf den Handflächen verreiben und in den feuchten oder trockenen Haarlängen und Spitzen des Haars verteilen. Bietet einen Hitzeschutz bis zu 230 °C."
-            },
-            "deviation": null,
-            "usable_on_dry_hair": true
           }
         ],
         "evidence": [
@@ -123,9 +113,9 @@
               "weight": "light",
               "role_support": [
                 "leave_on_fibre_conditioning",
-                "dry_finish",
-                "pre_heat_protection"
+                "dry_finish"
               ],
+              "provides_heat_protection": true,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -169,14 +159,14 @@
         "field_rationales": {
           "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
           "category_specs.product_oil_specs.weight": "light (abgeleitet): 'intensive Pflege, ohne das Haar zu beschweren', volatile-/silikon-geführte INCI (Isododecane), Pumpdosierung 2-3 Hübe.",
-          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Hitzeschutz bis zu 230 °C' — per R-E ausreichend, kein Packungs-Claim nötig. Kein Pre-Wash-Claim, nicht gestampt.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. Kein Pre-Wash-Claim, nicht gestampt.",
+          "category_specs.product_oil_specs.provides_heat_protection": "true: Beschreibungs-Claim 'Hitzeschutz bis zu 230 °C' — per R-E ausreichend, kein Packungs-Claim nötig.",
           "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-dominante INCI, Pflanzenöle im Mittelfeld; kein reines Pflanzenöl, nicht als Trockenöl vermarktet.",
           "category_specs.product_oil_eligibility.oil_purpose": "light_finish (abgeleitet): 'ohne das Haar zu beschweren' + 'Für ein gepflegtes und glänzendes Finish' (wörtlich in der Beschreibung).",
           "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Kokosöl, Buritiöl (Mauritia Flexuosa), Sonnenblumenöl, Caprylic/Capric Triglyceride + C12-15 Alkyl Benzoate (Ester-Emollients). Keine Humectants/Proteine/Polymere.",
           "thickness_eligibility": "Alle Stärken: leichte Formel, 'ohne zu beschweren'; kein Fein-Haar-Warnhinweis.",
           "concern_eligibility": "frizz: 'Wirkt gegen Frizz und fliegende Haare' (wörtlich). hair_damage bewusst NICHT aufgenommen: 'Intense Repair' ist nur der Linienname; weder Beschreibung noch Produktmerkmale claimen geschädigtes Haar als Zielgruppe. Kämmbarkeit/Glanz haben keinen Concern-Code.",
           "protocols": "Keine Deviation: Platzierung 'Haarlängen und Spitzen' konform, Pumpformat laut Pilot-Ruling mit 'wenige Tropfen'-Copy konsistent, feucht-oder-trocken deckt beide Care-Stamps.",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'in den feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
           "identifiers.cross_source_agreement": "false: EAN 4066447864793 nur auf der dm-Seite belegt (GTIN-Feld + JSON-LD). Externe Quellen (INCI Beauty 4058172702075/4066447241679, Hautschutzengel mit Cyclopentasiloxane-INCI) führen nur ÄLTERE Produktgenerationen — das Produkt wurde laut dm-Reviews (Aug/Sep 2026) frisch umformuliert. Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
           "identifiers.4066447864793": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
@@ -216,9 +206,9 @@
             "weight": "light",
             "role_support": [
               "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
           },
           "product_oil_eligibility": [
             {
@@ -277,16 +267,6 @@
               "text": "Anwendung: 1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Nicht ausspülen. Bei Bedarf Anwendung wiederholen."
             },
             "deviation": null
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
-              "text": "1–3 Tropfen in den Handflächen verteilen und in die trockenen oder handtuchtrockenen Haarlängen einarbeiten. Die silikonbasierte Formel mit einem reparierenden Silikonkomplex kann das Haar vor Stylinghitze schützen."
-            },
-            "deviation": null,
-            "usable_on_dry_hair": true
           }
         ],
         "evidence": [
@@ -305,9 +285,9 @@
               "weight": "light",
               "role_support": [
                 "leave_on_fibre_conditioning",
-                "dry_finish",
-                "pre_heat_protection"
+                "dry_finish"
               ],
+              "provides_heat_protection": true,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -351,14 +331,14 @@
         "field_rationales": {
           "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
           "category_specs.product_oil_specs.weight": "light (abgeleitet): Isododecane an INCI-Position 1, 1–3-Tropfen-Dosierung, 'ohne einen Farbstich oder Rückstände zu hinterlassen'.",
-          "category_specs.product_oil_specs.role_support": "dry_finish + leave_on_fibre_conditioning: Packung erlaubt explizit 'trockenen oder handtuchtrockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Mit Hitzeschutz' / 'kann das Haar vor Stylinghitze schützen' — per R-E ausreichend. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_specs.role_support": "dry_finish + leave_on_fibre_conditioning: Packung erlaubt explizit 'trockenen oder handtuchtrockenen' Haarlängen. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_specs.provides_heat_protection": "true: Beschreibungs-Claim 'Mit Hitzeschutz' / 'kann das Haar vor Stylinghitze schützen' — per R-E ausreichend.",
           "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (solide begründet): die Beschreibung nennt die Formel wörtlich 'silikonbasiert'; Silikone/Volatiles führen die INCI an.",
           "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Pflege-/Glanz-/Hitzeschutz-Multi-Use ohne wörtliche Finish- oder Styling-Zweckbindung; ein Einzelwert wäre unbelegte Präzision.",
           "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Amodimethicone, Phenyl Trimethicone. oils: Kamelienöl, Arganöl, Jojobaöl. Keine Humectants/Proteine/Polymere.",
           "thickness_eligibility": "Alle Stärken: 'ideal für alle Haartypen' (wörtlich), leichte Tropfen-Dosierung.",
           "concern_eligibility": "frizz: 'Kann Frizz entgegenwirken' / 'kann das Öl Frizz reduzieren'. hair_damage: 'besonders für blondiertes oder strapaziertes Haar' + 'ideale Pflege, besonders bei chemisch behandeltem Haar'. Kämmbarkeit/Glanz ohne Code; das Violett-Pigment (gegen Gelbstich-Optik) hat ebenfalls keinen Code — nur in den Notes.",
-          "protocols": "Keine Deviation: Platzierung Haarlängen, 'Nicht ausspülen' konform; 'Bei Bedarf Anwendung wiederholen' ist App-Stil (R-C: ignorieren, Template unverändert).",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'trockenen oder handtuchtrockenen' — either_state per P9-Mapping."
+          "protocols": "Keine Deviation: Platzierung Haarlängen, 'Nicht ausspülen' konform; 'Bei Bedarf Anwendung wiederholen' ist App-Stil (R-C: ignorieren, Template unverändert)."
         }
       }
     },
@@ -397,7 +377,8 @@
             "role_support": [
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -562,9 +543,9 @@
             "weight": "light",
             "role_support": [
               "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
           },
           "product_oil_eligibility": [
             {
@@ -623,16 +604,6 @@
               "text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten."
             },
             "deviation": null
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
-              "text": "Sparsam in die feuchten oder trockenen Haarlängen einarbeiten. Zudem bietet die vegane Formel einen integrierten Hitzeschutz."
-            },
-            "deviation": null,
-            "usable_on_dry_hair": true
           }
         ],
         "evidence": [
@@ -651,9 +622,9 @@
               "weight": "light",
               "role_support": [
                 "leave_on_fibre_conditioning",
-                "dry_finish",
-                "pre_heat_protection"
+                "dry_finish"
               ],
+              "provides_heat_protection": true,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -697,14 +668,14 @@
         "field_rationales": {
           "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix).",
           "category_specs.product_oil_specs.weight": "light (abgeleitet): 'pflegt das Haar, ohne es zu beschweren', volatile-dominante INCI (Isododecane, Isoalkane, Isohexadecane), sparsame Dosierung.",
-          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. pre_heat_protection: Beschreibungs-Claim 'Mit integriertem Hitzeschutz' — per R-E ausreichend. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: Packung erlaubt explizit 'feuchten oder trockenen' Haarlängen. Kein Pre-Wash-Claim.",
+          "category_specs.product_oil_specs.provides_heat_protection": "true: Beschreibungs-Claim 'Mit integriertem Hitzeschutz' — per R-E ausreichend.",
           "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): volatile-/silikon-geführte INCI mit Pflanzenölen im Mittelfeld; gleiche Formelfamilie wie das Isana-Pilot-Öl (dort ebenfalls styling-oel).",
           "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Repair-/Pflege-Positionierung ohne wörtliche Finish-/Styling-Zweckbindung.",
           "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethiconol, Dimethicone. oils: Sonnenblumenöl (2x), Maiskeimöl. Keine Humectants/Proteine/Polymere.",
           "thickness_eligibility": "Alle Stärken: leichte Formel mit Sparsamkeits-Hinweis, kein expliziter Fein-Haar-Warnhinweis.",
           "concern_eligibility": "hair_damage: 'speziell für die Bedürfnisse von chemisch behandeltem und geschädigtem Haar entwickelt'. repair: 'Intense-Repair-Technologie', 'Kräftigung der Haarstruktur', 'Widerstandsfähigkeit'.",
           "protocols": "Keine Deviation: Platzierung Haarlängen konform, feucht-oder-trocken deckt beide Care-Stamps; Schweigen zu Zeit/Rinse ändert nichts.",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'feuchten oder trockenen Haarlängen' — either_state per P9-Mapping.",
           "identifiers.cross_source_agreement": "false: EAN 4066447888218 nur via dm-JSON-LD belegt. INCI Beauty und die von Google indexierte dm-Alt-URL führen die Vorgänger-EAN 4066447668292 (Produktgenerationswechsel). Daher excluded_from_apply=true bis Zweitquelle oder physischer Scan (R-B).",
           "identifiers.4066447888218": "Nick W5 (2026-09-02): retailer-exklusive Marke — die strukturierte GTIN-Angabe des führenden Händlers ist die autoritative (einzig mögliche) Quelle; als verifiziert akzeptiert. Churn-Monitor-Notiz bleibt."
         }
@@ -745,7 +716,8 @@
             "role_support": [
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -909,7 +881,8 @@
               "pre_wash_fibre_treatment",
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {
@@ -1084,9 +1057,9 @@
             "weight": "light",
             "role_support": [
               "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection"
-            ]
+              "dry_finish"
+            ],
+            "provides_heat_protection": true
           },
           "product_oil_eligibility": [
             {
@@ -1146,16 +1119,6 @@
               "text": "Ein paar Tropfen Garnier Fructis Wunder-Öl Hitzeschutz und Anti-Frizz Pflege in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen."
             },
             "deviation": null
-          },
-          {
-            "template_id": "TPL-OIL-HEAT",
-            "product_source": {
-              "label": "dm.de Produktseite (Verwendungshinweise + Produktbeschreibung)",
-              "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
-              "text": "Ein paar Tropfen in die Handflächen geben. Gleichmäßig im nassen, feuchten oder trockenen Haar verteilen, besonders in den Spitzen. Schützt vor Hitze bis 230° C."
-            },
-            "deviation": null,
-            "usable_on_dry_hair": true
           }
         ],
         "evidence": [
@@ -1174,9 +1137,9 @@
               "weight": "light",
               "role_support": [
                 "leave_on_fibre_conditioning",
-                "dry_finish",
-                "pre_heat_protection"
+                "dry_finish"
               ],
+              "provides_heat_protection": true,
               "ingredient_flags": [
                 "silicones",
                 "oils"
@@ -1230,14 +1193,14 @@
           "product.name": "Exakter Name laut dm-Produktseite (ohne Größensuffix). Rossmann-Alias mit 'Anti-Spliss' in Evidence dokumentiert.",
           "category_key": "oil (Research-Verdikt mit R-A-Flag): anhydrische Öl-INCI, Tropfen-in-Handflächen-Applikation, Pflege-Rollen in allen drei Haarzuständen 'ohne ausspülen' — funktional ein Multi-Use-Öl der gleichen Formelfamilie wie Elvital Öl Magique (Pilot-Öl mit 230-°C-Claim). Retailer-Naming 'Hitzeschutzspray' spricht dagegen; deshalb tragen alle 3 Stamps das Identitäts-Flag als Deviation (Wahre-Schätze-Präzedenz) — Entscheidung bei Nick.",
           "category_specs.product_oil_specs.weight": "light (solide begründet): 'schwerelose und nicht fettende Formel' wörtlich, Isododecane an Position 1.",
-          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: 'im nassen, feuchten oder trockenen Haar verteilen' + 'Anti-Frizz Pflege ohne ausspülen'. pre_heat_protection: expliziter 230-°C-Claim + Föhn-Kontext.",
+          "category_specs.product_oil_specs.role_support": "leave_on_fibre_conditioning + dry_finish: 'im nassen, feuchten oder trockenen Haar verteilen' + 'Anti-Frizz Pflege ohne ausspülen'.",
+          "category_specs.product_oil_specs.provides_heat_protection": "true: expliziter 230-°C-Claim + Föhn-Kontext.",
           "category_specs.product_oil_eligibility.oil_subtype": "styling-oel (abgeleitet/konservativ): silikon-/volatile-geführte INCI mit Pflanzenölen/Sheabutter im Mittelfeld; als Spray vermarktet, aber tropfenweise appliziert — keine Trockenöl-Vermarktung.",
           "category_specs.product_oil_eligibility.oil_purpose": "null (bewusst): Multi-Use (Pflege + Hitzeschutz + Anti-Frizz) ohne dominante Zweckbindung.",
           "category_specs.product_oil_eligibility.ingredient_flags": "silicones: Dimethicone, Dimethiconol. oils: Olivenöl, Sonnenblumenöl, Kokosöl, Avocadoöl, Sheabutter. Zitronenprotein wird nur beworben, steht aber nicht in der INCI — kein proteins-Flag.",
           "thickness_eligibility": "Alle Stärken: dm-Haartyp 'Alle Haartypen', schwerelose Formel.",
           "concern_eligibility": "hair_damage: 'Speziell für stark geschädigtes Haar entwickelt'. frizz: 'Frizz wird gebändigt'. split_ends: 'Anti-Spliss' im Rossmann-Produktnamen (Evidence-Zeile) — Namens-Claim, als solcher markiert.",
           "protocols": "Alle 3 Stamps tragen die R-A-Kategorie-Identitätsfrage als strukturelle Deviation (kein Anwendungs-Konflikt: Platzierung Spitzen-Fokus, kein Ausspülen, feucht/nass/trocken sind template-konform).",
-          "protocols.tpl_oil_heat.usable_on_dry_hair": "true: 'im nassen, feuchten oder trockenen Haar' — either_state per P9-Mapping.",
           "protocols.category_identity": "Nick W1 (2026-09-02): definitiv Öl — Formel schlägt Retailer-Marketing. Deviations aufgehoben. (Fix 2026-09-03: erste Anwendung scheiterte an 'Wunder-Öl'-Schreibweise.)"
         }
       }
@@ -1277,7 +1240,8 @@
             "role_support": [
               "leave_on_fibre_conditioning",
               "dry_finish"
-            ]
+            ],
+            "provides_heat_protection": false
           },
           "product_oil_eligibility": [
             {

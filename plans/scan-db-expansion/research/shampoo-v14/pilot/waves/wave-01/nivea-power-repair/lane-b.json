@@ -1,0 +1,132 @@
+{
+  "version": "shampoo-v14-lane-b-v1",
+  "productId": "nivea-power-repair",
+  "properties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: SLES at position 2 provides effective cleansing, but CAPB, two early glucosides and a substantial oil/refatting care phase keep the net architecture below strong.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "primary anionic sulfate"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03", "observation": "amphoteric buffer"},
+        {"ingredient": "Decyl Glucoside", "position": 4, "factId": "formula.surfactant.04", "observation": "early nonionic glucoside support"},
+        {"ingredient": "Coco-Glucoside", "position": 5, "factId": "formula.surfactant.05", "observation": "second early nonionic glucoside support"}
+      ],
+      "counterSignal": "SLES and sodium chloride are still high enough that a low or truly gentle cleansing band would be too soft.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.surfactant.02", "formula.surfactant.03", "formula.surfactant.04", "formula.surfactant.05", "formula.architecture.01"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: squalane, panthenol, coconut oil, dicaprylyl ether, cationic guar, glyceryl oleate, glycerin, glycol distearate and hydrogenated castor oil create multiple complementary rinse-off care routes.",
+      "formulaFacts": [
+        {"ingredient": "Squalane", "position": 9, "factId": "formula.conditioning.09", "observation": "emollient lipid clue"},
+        {"ingredient": "Panthenol", "position": 10, "factId": "formula.canonical_inci", "observation": "humectant/hair-feel support"},
+        {"ingredient": "Cocos Nucifera Oil", "position": 11, "factId": "formula.conditioning.11", "observation": "nonvolatile plant oil clue"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "cationic guar polymer"}
+      ],
+      "counterSignal": "This is still a rinse-off shampoo with SLES-led cleansing, but the breadth of care routes is stronger than ordinary moderate conditioning.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conditioning.09", "formula.conditioning.11", "formula.conditioning.13", "formula.conditioning.14", "formula.conditioning.18"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: oils, squalane, cationic guar and waxy/refatting materials create noticeable residue potential, while SLES/CAPB/glucoside cleansing and no silicone stack keep it below high.",
+      "formulaFacts": [
+        {"ingredient": "Squalane", "position": 9, "factId": "formula.conditioning.09", "observation": "emollient lipid clue"},
+        {"ingredient": "Cocos Nucifera Oil", "position": 11, "factId": "formula.conditioning.11", "observation": "plant oil deposition clue"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "cationic polymer deposition clue"},
+        {"ingredient": "Hydrogenated Castor Oil", "position": 18, "factId": "formula.conditioning.18", "observation": "waxy lipid clue"}
+      ],
+      "counterSignal": "The formula is not silicone-based, and both manufacturer and retailer claim intensive care without weighing down, which is compatible with a moderate rather than high weight call.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci", "formula.conditioning.09", "formula.conditioning.11", "formula.conditioning.13", "formula.conditioning.14", "formula.conditioning.18", "claim:nivea-de-positioning", "claim:dm-de-positioning"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "moderate",
+        "unresolvedFacts": ["Exact oil/squalane/polymer levels cannot be proven from INCI order alone.", "Dicaprylyl Ether and Pantolactone are preserved as function clues rather than standalone high-persistence deposition routes."],
+        "whyThisBand": "Several nonvolatile care routes are present in the middle of the list, so low weight would understate the oil/polymer/refatter load.",
+        "whyNotNeighborBand": "Not high because the formula has meaningful anionic/amphoteric/glucoside reset and lacks silicone or a dense early butter/polymer stack."
+      }
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "high",
+      "rationale": "Repair: the exact-product positioning is damaged-hair repair, and the formula supports that with a broad oil, panthenol, cationic polymer and refatting care system.",
+      "formulaFacts": [
+        {"ingredient": "Squalane", "position": 9, "factId": "formula.conditioning.09", "observation": "repair-care compatible emollient lipid clue"},
+        {"ingredient": "Panthenol", "position": 10, "factId": "formula.canonical_inci", "observation": "hair-feel/humectant support"},
+        {"ingredient": "Cocos Nucifera Oil", "position": 11, "factId": "formula.conditioning.11", "observation": "oil care route"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13", "observation": "conditioning polymer support"}
+      ],
+      "counterSignal": "The same claims also mention moisture and no-weight care, but repair/damaged-hair positioning is the dominant v1.4-compatible focus.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["claim:nivea-de-positioning", "claim:dm-de-positioning", "formula.canonical_inci", "formula.conditioning.09", "formula.conditioning.11", "formula.conditioning.13"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: moisture/no-weight language is not a v1.4 secondary focus, and the care routes support the same repair positioning rather than an independent shine, volume, clarifying, gentle or scalp-active claim.",
+      "formulaFacts": [
+        {"ingredient": "Panthenol", "position": 10, "factId": "formula.canonical_inci", "observation": "moisture/hair-feel support not available as v1.4 focus"},
+        {"ingredient": "Squalane", "position": 9, "factId": "formula.conditioning.09", "observation": "repair-care route"}
+      ],
+      "counterSignal": "The formula has humectants and oils, but they are not a distinct secondary focus under v1.4.",
+      "neighboringAlternative": ["shine"],
+      "evidenceRefs": ["claim:nivea-de-positioning", "claim:dm-de-positioning", "formula.canonical_inci"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use, with no daily, treatment, alternating, clarifying or reset trigger.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02", "observation": "ordinary shampoo cleanser"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "factId": "formula.surfactant.03", "observation": "ordinary buffered shampoo route"}
+      ],
+      "counterSignal": "Repair wording changes product focus, not the usage role.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": ["usage:nivea-de", "usage:dm-de", "formula.canonical_inci"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: the packet targets damaged hair and repair/moisture care, not sensitive, itchy, dry-feeling or uncomfortable scalp.",
+      "formulaFacts": [
+        {"ingredient": "Panthenol", "position": 10, "factId": "formula.canonical_inci", "observation": "comfort-adjacent humectant without scalp positioning"},
+        {"ingredient": "Glycerin", "position": 15, "factId": "formula.canonical_inci", "observation": "humectant without scalp-comfort claim"},
+        {"ingredient": "Parfum", "position": 22, "factId": "formula.canonical_inci", "observation": "fragrance mixture"}
+      ],
+      "counterSignal": "Gentle cleansing wording is present, but v1.4 requires intentional sensitive/uncomfortable-scalp support for targeted.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": ["claim:nivea-de-positioning", "claim:dm-de-positioning", "formula.canonical_inci"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Not supported: the complete canonical formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        {"ingredient": "Panthenol", "position": 10, "factId": "formula.canonical_inci", "observation": "humectant/hair-feel support, not a v1.4 dandruff active"},
+        {"ingredient": "Benzoic Acid", "position": 21, "factId": "formula.canonical_inci", "observation": "preservation/pH-adjacent acid, not a recognized dandruff active"}
+      ],
+      "counterSignal": "No recognized v1.4 anti-dandruff active appears in the complete ordered INCI.",
+      "neighboringAlternative": "unknown",
+      "evidenceRefs": ["formula.canonical_inci", "formula.corroborating_inci"]
+    }
+  },
+  "independenceReceipt": {
+    "sourcePacketPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-01/nivea-power-repair/source-packet.json",
+    "sourcePacketSha256": "60677c08caabe9ae9c45d1d002dae4aa2b91a8418ee9d5dd1243a74b51c1cc8b",
+    "formulaFingerprint": "a053d47a346dc36db94461cc422e214892c0014f425ee419cc2333e293d037cf",
+    "policyHashes": {
+      "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "completedAt": "2026-09-03T15:46:55+02:00",
+    "consumedLaneA": false,
+    "consumedOldManifest": false,
+    "consumedHistoricalLabels": false
+  }
+}

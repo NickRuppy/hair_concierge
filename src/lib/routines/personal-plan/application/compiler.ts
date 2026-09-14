@@ -10,6 +10,7 @@ import type {
 import { normalizedApplicationInputSchema } from "./contracts"
 import {
   CANONICAL_APPLICATION_DAY_RULES,
+  heatEventMatchesOilCarrierDay,
   isAlwaysRelevantRoleForDay,
   routineItemsForDay,
 } from "./day-type-registry"
@@ -431,7 +432,22 @@ function compileDay(
   }
   const requiredRoles = CANONICAL_APPLICATION_DAY_RULES[key].requiredRoles
   const relevantItems = [...resolved.map(({ item }) => item), ...unresolvedRelevantItems]
-  if (!requiredRoles.some((role) => relevantItems.some((item) => item.role === role))) return null
+  const integratedOilHeatCarrier =
+    key === "styling_day" &&
+    heatEventMatchesOilCarrierDay(key, profile.heatEvents ?? []) &&
+    resolved.some(
+      ({ item, protocol }) =>
+        item.category === "oil" &&
+        item.role === "leave_in" &&
+        item.sourceRoutineRole === "leave_on_fibre_conditioning" &&
+        item.catalogFacts.provides_heat_protection === true &&
+        protocol.scope.kind === "product",
+    )
+  if (
+    !requiredRoles.some((role) => relevantItems.some((item) => item.role === role)) &&
+    !integratedOilHeatCarrier
+  )
+    return null
   if (
     key === "intensive_care_day" &&
     !["cleanse", "intensive_care"].every((role) => relevantItems.some((item) => item.role === role))
@@ -636,25 +652,50 @@ function compileDay(
       return consumed.has(block.applicationInstanceKey) ? [] : [block]
     })
   }
+  const appendHeatProtectionToOilStep = (steps: CompiledProductStep[]) => {
+    const immediateOilHeatNote =
+      "Diese Anwendung schützt beim unmittelbar folgenden Styling zugleich vor Hitze."
+    const stepIndex = steps.map(({ action }) => action).lastIndexOf("apply_product")
+    if (stepIndex < 0) return steps
+    const target = steps[stepIndex]
+    if (!target || target.copyDe.includes(immediateOilHeatNote)) return steps
+    return steps.map((step, index) =>
+      index === stepIndex ? { ...step, copyDe: `${step.copyDe} ${immediateOilHeatNote}` } : step,
+    )
+  }
+
   const publicProductBlock = (
     block: (typeof internalProductBlocks)[number],
-  ): CompiledProductBlock => ({
-    productId: block.productId,
-    productName: block.productName,
-    imageUrl: block.imageUrl ?? null,
-    category: block.category,
-    roles: [...block.roles].sort(),
-    applicationInstanceKey: block.applicationInstanceKey,
-    anchor: block.anchor,
-    steps: block.steps,
-    noteDe:
-      block.roles.includes("leave_in") && block.roles.includes("heat_protection")
-        ? heatProtectionNote()
-        : null,
-    status: block.status,
-    provisionalReason: block.provisionalReason,
-    heatEventIds: block.heatEventIds,
-  })
+  ): CompiledProductBlock => {
+    const heatCapableLeaveOnOil =
+      block.category === "oil" &&
+      block.roles.includes("leave_in") &&
+      block.scopeKind === "product" &&
+      block.sourceItems.some(
+        (item) =>
+          item.sourceRoutineRole === "leave_on_fibre_conditioning" &&
+          item.catalogFacts.provides_heat_protection === true,
+      ) &&
+      heatEventMatchesOilCarrierDay(key, profile.heatEvents ?? [])
+
+    return {
+      productId: block.productId,
+      productName: block.productName,
+      imageUrl: block.imageUrl ?? null,
+      category: block.category,
+      roles: [...block.roles].sort(),
+      applicationInstanceKey: block.applicationInstanceKey,
+      anchor: block.anchor,
+      steps: heatCapableLeaveOnOil ? appendHeatProtectionToOilStep(block.steps) : block.steps,
+      noteDe:
+        block.roles.includes("leave_in") && block.roles.includes("heat_protection")
+          ? heatProtectionNote()
+          : null,
+      status: block.status,
+      provisionalReason: block.provisionalReason,
+      heatEventIds: block.heatEventIds,
+    }
+  }
   const productBlocks = internalProductBlocks.map(publicProductBlock)
   if (productBlocks.length === 0)
     return unresolvedRelevantItems.length > 0

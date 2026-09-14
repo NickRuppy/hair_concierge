@@ -1,0 +1,823 @@
+{
+  "meta": {
+    "wave": "wave-3",
+    "created": "2026-09-03",
+    "status": "selection-draft, pending Nick skim",
+    "composition": {
+      "A_backlog_remainder": 22,
+      "B_topup_new": 15,
+      "C_shampoo_decision": 5
+    },
+    "excluded": [
+      "JF Salon Blonde Champagnerblond (toning, W2)",
+      "Plantur DMG Clinical Haarserum (scalp serum, Kategorie nicht geöffnet)",
+      "Alverde Lockenbalsam 2in1 (offenbar delistet — alle dm-URLs 404)",
+      "Jean&Len Colorglanz Trockenshampoo (offenbar delistet)",
+      "Based Bodyworks Curl Mousse (Styling — Scan-Miss nur identifiziert)"
+    ],
+    "existing_product_updates_candidates": [
+      {
+        "product": "Monday Moisture Conditioner (existing, recommended)",
+        "action": "add GTIN 4897097266404 (Rossmann-Relaunch)"
+      }
+    ],
+    "decisions_pending": [
+      "D1 shampoo routing",
+      "D2 H&S Kopfhautmaske scalp_care",
+      "D3 discontinued skip notes"
+    ]
+  },
+  "A_backlog_remainder": [
+    {
+      "rank": 80,
+      "brand": "Isana",
+      "name": "Spülung Seidenglanz",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "300 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "222 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 81,
+      "brand": "Isana",
+      "name": "Spülung Feuchtigkeit",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "300 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "187 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 82,
+      "brand": "Isana Professional",
+      "name": "Spülung Keratin & Repair",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "200 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "206 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 83,
+      "brand": "Isana",
+      "name": "Spülung Oil Repair Marulaöl",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "300 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "181 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 84,
+      "brand": "Isana Professional",
+      "name": "Plex Spülung",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "250 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "147 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 85,
+      "brand": "Isana Professional",
+      "name": "Spülung Locken Traum",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "200 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/conditioner/c/olcat3_4133121"
+      ],
+      "rationale": "211 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 87,
+      "brand": "Being (by ZURU)",
+      "name": "Bye Bye Frizz Conditioner",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "354 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+      ],
+      "rationale": "New Being brand line extension.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 88,
+      "brand": "Being (by ZURU)",
+      "name": "Curl Power Locken Conditioner",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "354 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+      ],
+      "rationale": "New Being brand line extension.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 89,
+      "brand": "Being (by ZURU)",
+      "name": "Nourish + Shine Spülung",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "345 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+      ],
+      "rationale": "New Being brand line extension.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 108,
+      "brand": "Isana Professional",
+      "name": "Plex Maske",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "125 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+      ],
+      "rationale": "117 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 110,
+      "brand": "Isana Professional",
+      "name": "Haarmaske Locken Traum",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "250 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+      ],
+      "rationale": "141 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 111,
+      "brand": "Bali Curls",
+      "name": "Deep Hydration Mask",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "200 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127"
+      ],
+      "rationale": "12 rossmann reviews, low priority; Bali Curls already has 3 masks in the catalog.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 112,
+      "brand": "Balea",
+      "name": "Haarkur Feuchtigkeit",
+      "category_key": "mask",
+      "retailers": [
+        "dm"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "25 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.dm.de/search?query=haarkur"
+      ],
+      "rationale": "102 dm reviews, ampoule format, distinct from catalog's 'Balea Haarkur reparierend'.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 114,
+      "brand": "Being (by ZURU)",
+      "name": "Mega Moisture Haarmaske",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": true,
+      "sizes": [
+        {
+          "size": "354 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+      ],
+      "rationale": "New Being brand line extension.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 115,
+      "brand": "Being (by ZURU)",
+      "name": "Mega Shine Haarmaske",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "354 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+      ],
+      "rationale": "New Being brand line extension.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 130,
+      "brand": "Afrolocke",
+      "name": "Leave-In Haarkur, für lockiges Haar",
+      "category_key": "leave_in",
+      "retailers": [
+        "dm"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "250 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.dm.de/search?query=leave-in"
+      ],
+      "rationale": "141 dm reviews, curl-focused niche brand.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 131,
+      "brand": "Aussie",
+      "name": "Leave-In Haarserum Oh My Gloss",
+      "category_key": "leave_in",
+      "retailers": [
+        "dm"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "160 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.dm.de/search?query=leave-in"
+      ],
+      "rationale": "62 dm reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 133,
+      "brand": "Pantene Pro-V",
+      "name": "Leave-In Spray Sunkiss Glow",
+      "category_key": "leave_in",
+      "retailers": [
+        "dm"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "200 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.dm.de/search?query=leave-in"
+      ],
+      "rationale": "66 dm reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 134,
+      "brand": "Plantur 39",
+      "name": "Leave-In Sprühkur",
+      "category_key": "leave_in",
+      "retailers": [
+        "dm"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "125 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.dm.de/search?query=leave-in"
+      ],
+      "rationale": "87 dm reviews; Plantur 39 shampoo already in catalog.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 136,
+      "brand": "Isana Professional",
+      "name": "Haarfluid Wunder Express",
+      "category_key": "leave_in",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "200 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+      ],
+      "rationale": "218 rossmann reviews.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 146,
+      "brand": "Gliss",
+      "name": "Hitzeschutz Öl-Spray Oil Nutritive",
+      "category_key": "oil",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "150 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+      ],
+      "rationale": "211 rossmann reviews, heat-protectant oil spray.",
+      "origin": "backlog-batch1"
+    },
+    {
+      "rank": 149,
+      "brand": "Alterra",
+      "name": "Haar- und Kopfhautöl",
+      "category_key": "oil",
+      "retailers": [
+        "rossmann"
+      ],
+      "rossmann_new": false,
+      "sizes": [
+        {
+          "size": "50 ml",
+          "eans": []
+        }
+      ],
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haaroel/c/olcat3_6076270"
+      ],
+      "rationale": "78 rossmann reviews, Rossmann natural-cosmetics private label.",
+      "origin": "backlog-batch1"
+    }
+  ],
+  "B_topup_new": [
+    {
+      "rank": 1,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Conditioner Feuchtigkeit, 200 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Core Alverde moisture conditioner (Aloe Vera & Hyaluron); 6 open user requests for the Alverde hair-care line.",
+      "source_urls": [
+        "https://www.dm.de/p/d/1704296/alverde-naturkosmetik-conditioner-feuchtigkeit"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 3,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Conditioner Nutri Care, 200 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Second core Alverde conditioner line (almond oil, for strapaziertes Haar); part of the requested Spülung/Feuchtigkeit cluster.",
+      "source_urls": [
+        "https://www.dm.de/p/d/3114892/alverde-naturkosmetik-conditioner-nutri-care"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 5,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Haarserum Nutri-Care, 75 ml",
+      "category_key": "leave_in",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Explicitly named Alverde item; leave-in heat-protection serum, recently price-refreshed (Nov 2025) so clearly active in current lineup.",
+      "source_urls": [
+        "https://www.dm.de/p/d/3106844/alverde-naturkosmetik-haarserum-nutri-care"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 7,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Haarmaske Hydro Feuchtigkeit, 20 ml",
+      "category_key": "mask",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Alverde's moisture hair mask (Aloe Vera & Hyaluron); fills the requested Kur/Maske slot for the Alverde cluster.",
+      "source_urls": [
+        "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 8,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Haarkur 4in1 Repair & Care Wunderkur, 200 ml",
+      "category_key": "mask",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Alverde's flagship repair treatment (avocado oil, cocoa butter, plant keratin); rounds out the requested Kur/Maske items.",
+      "source_urls": [
+        "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 11,
+      "brand": "Garnier Wahre Schätze",
+      "name": "Conditioner Traube Hydraboost, 250 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Conditioner companion to the requested Traube Hydraboost shampoo; 4.8/5 with 1,295 dm reviews.",
+      "source_urls": [
+        "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 14,
+      "brand": "MONDAY Haircare",
+      "name": "Deep Moisture Intensive Feuchtigkeit Haarmaske, 250 ml",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "new_arrival",
+      "rationale": "New MONDAY Haircare mask SKU at Rossmann; same brand as the identified mystery barcode, rounds out the mask category.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-deep-moisture-intensive-feuchtigkeit-haarmaske/p/4895248003984"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 15,
+      "brand": "MONDAY Haircare",
+      "name": "Moisture Feuchtigkeit Leave-In Conditioner, 150 ml",
+      "category_key": "leave_in",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "new_arrival",
+      "rationale": "New MONDAY Haircare leave-in SKU (hyaluronic acid) at Rossmann.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeit-leave-in-conditioner/p/4895248005162"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 16,
+      "brand": "MONDAY Haircare",
+      "name": "Smooth Antifrizz Conditioner, 350 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "new_arrival",
+      "rationale": "New MONDAY Haircare conditioner variant for curly/wavy hair; 4.4/5, 28 reviews.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-smooth-antifrizz-conditioner/p/4897097266398"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 17,
+      "brand": "MONDAY Haircare",
+      "name": "Repair Conditioner, 354 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "new_arrival",
+      "rationale": "New MONDAY Haircare Repair line conditioner (keratin, argan oil, cocoa butter); online-only Rossmann listing.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-repair-conditioner/p/4897097269160"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 22,
+      "brand": "OGX",
+      "name": "Conditioner Coconut Miracle Oil, 385 ml",
+      "category_key": "conditioner",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "bestseller",
+      "rationale": "OGX conditioner line at dm; companion to the Coconut Miracle Oil mask at Rossmann; brand not in the covered list.",
+      "source_urls": [
+        "https://www.dm.de/p/d/2201293/ogx-conditioner-coconut-miracle-oil"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 23,
+      "brand": "ogx",
+      "name": "Coconut Miracle Oil Haarmaske, 300 ml",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "new_arrival",
+      "rationale": "Recently relaunched at Rossmann with larger fill size (\"Neu: jetzt mit mehr Inhalt\"); coconut oil, vanilla bean, tiare essence.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-ogx-coconut-miracle-oil-haarmaske/p/3574661685168"
+      ],
+      "origin": "topup-new"
+    },
+    {
+      "rank": 21,
+      "brand": "OGX",
+      "name": "Haaröl Moroccan Argan Penetrating Oil, 100 ml",
+      "category_key": "oil",
+      "retailers": [
+        "dm",
+        "rossmann"
+      ],
+      "signal": "bestseller",
+      "rationale": "Strong dm bestseller oil (281 reviews); OGX brand not in the covered list.",
+      "source_urls": [
+        "https://www.dm.de/ogx-haaroel-moroccan-argan-penetrating-oil-p3574661563312.html",
+        "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-extra-penetrating-oil/p/3574661563336"
+      ],
+      "origin": "topup-verify-dup",
+      "dedupe_check": "vs Katalog \"OGX Argan Oil\" / \"OGX Argan weightless Öl\""
+    },
+    {
+      "rank": 25,
+      "brand": "HASK",
+      "name": "Argan Conditioning Treatment Haarkur, 50 ml",
+      "category_key": "mask",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "bestseller",
+      "rationale": "Established Rossmann in-store hair treatment (argan oil); HASK brand not in the covered list. Note: online listing shows \"Nur in der Filiale verfügbar\" (in-store only) at time of check.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-hask-argan-conditioning-treatment-haarkur/p/0071164333068"
+      ],
+      "origin": "topup-verify-dup",
+      "dedupe_check": "vs Katalog \"Hask Argan Oil Repairing Deep Conditioner\""
+    },
+    {
+      "rank": 20,
+      "brand": "ISANA PROFESSIONAL",
+      "name": "Leave-In Conditioner Hyaluron & Panthenol, 100 ml",
+      "category_key": "leave_in",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "bestseller",
+      "rationale": "Rossmann bestseller leave-in (4.5/5, 187 reviews), silicone-free, for dry hair.",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-panthenol-feuchtigkeitsspendend-silikonfrei-trockenes-haar/p/4305615946733"
+      ],
+      "origin": "topup-verify-dup",
+      "dedupe_check": "vs Katalog \"Isana Feuchtigkeits Leave-In (Hyaluron)\""
+    }
+  ],
+  "C_shampoo_decision": [
+    {
+      "rank": 2,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Shampoo Feuchtigkeit, 200 ml",
+      "category_key": "shampoo",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Companion shampoo to the Feuchtigkeit conditioner; Alverde shampoos are explicitly allowed under the demand exception.",
+      "source_urls": [
+        "https://www.dm.de/p/d/1710221/alverde-naturkosmetik-shampoo-feuchtigkeit"
+      ],
+      "origin": "topup-shampoo-decision"
+    },
+    {
+      "rank": 4,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Festes Shampoo Rosmarin-Öl & Meersalz, 60 g",
+      "category_key": "shampoo",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Explicitly named in the Alverde enumeration request; solid-shampoo format, vegan, Pro Climate line.",
+      "source_urls": [
+        "https://www.dm.de/p/d/3116959/alverde-naturkosmetik-festes-shampoo-rosmarin-oel-und-meersalz"
+      ],
+      "origin": "topup-shampoo-decision"
+    },
+    {
+      "rank": 6,
+      "brand": "alverde NATURKOSMETIK",
+      "name": "Shampoo Glanz, 200 ml",
+      "category_key": "shampoo",
+      "retailers": [
+        "dm"
+      ],
+      "signal": "user_demand",
+      "rationale": "Explicitly named \"Glanz-Shampoo\" in the Alverde enumeration request (Bio-Rosenblütenwasser).",
+      "source_urls": [
+        "https://www.dm.de/p/d/1714047/alverde-naturkosmetik-shampoo-glanz-mit-rosenbluetenwasser-und-pflanzlichem-protein"
+      ],
+      "origin": "topup-shampoo-decision"
+    },
+    {
+      "rank": 10,
+      "brand": "Garnier Wahre Schätze",
+      "name": "Shampoo Traube Hydraboost, 300 ml",
+      "category_key": "shampoo",
+      "retailers": [
+        "dm",
+        "rossmann"
+      ],
+      "signal": "user_demand",
+      "rationale": "The exact product behind the user request \"Garnier Traube Hydrabost\"; sold under the Wahre Schätze sub-brand. 4.8/5 with 1,379 dm reviews — very strong bestseller signal too.",
+      "source_urls": [
+        "https://www.dm.de/p/d/3115732/wahre-schaetze-shampoo-traube-hydraboost",
+        "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-regenerierendes-feuchtigkeitsspendendes-shampoo-traube-hydraboost/p/3600542656658"
+      ],
+      "origin": "topup-shampoo-decision"
+    },
+    {
+      "rank": 99,
+      "brand": "MONDAY Haircare",
+      "name": "Moisture Feuchtigkeits Shampoo, 350 ml",
+      "category_key": "shampoo",
+      "retailers": [
+        "rossmann"
+      ],
+      "signal": "scan_miss",
+      "rationale": "Der real gescannte Miss-Barcode 4897097266329 — das Scan-Event zählt als physischer Scan-Beleg (R-B).",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-monday-haircare-moisture-feuchtigkeits-shampoo/p/4897097266329"
+      ],
+      "origin": "topup-shampoo-decision"
+    }
+  ],
+  "D_flagged_not_included": [
+    {
+      "rank": 12,
+      "brand": "head&shoulders",
+      "name": "Kopfhautmaske DermaXPro Feuchtigkeits-Ritual inkl. Kopfhautmassager, 300 ml",
+      "category_key": "scalp_care",
+      "retailers": [
+        "dm",
+        "rossmann"
+      ],
+      "signal": "user_demand",
+      "rationale": "FLAGGED per instructions: this is a scalp_care item (category not generally opened) but explicitly requested by a user. Includes scalp massager; 4.8/5 with 736 dm reviews.",
+      "source_urls": [
+        "https://www.dm.de/p/d/3115760/head-und-shoulders-kopfhautmaske-dermaxpro-feuchtigkeits-ritual-inkl-kopfhautmassager",
+        "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-kopfhaut--haarmaske-feuchtigkeitsritual-massageset/p/8006530187541"
+      ]
+    }
+  ]
+}

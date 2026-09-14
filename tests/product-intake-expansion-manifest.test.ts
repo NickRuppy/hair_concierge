@@ -27,10 +27,7 @@ function allViolations(report: ExpansionManifestValidationReport): string[] {
 function assertSomeViolation(report: ExpansionManifestValidationReport, needle: string) {
   const violations = allViolations(report)
   const found = violations.some((violation) => violation.includes(needle))
-  assert.ok(
-    found,
-    `expected a violation containing "${needle}", got:\n${violations.join("\n")}`,
-  )
+  assert.ok(found, `expected a violation containing "${needle}", got:\n${violations.join("\n")}`)
 }
 
 test("valid-manifest.json: all products and existing_product_updates pass, no false positives", async () => {
@@ -105,7 +102,7 @@ test("heat-without-usable-on-dry-hair.json fails: heat templates require usable_
   assert.equal(report.products[0].status, "fail")
   assertSomeViolation(
     report,
-    "final.protocols.1.usable_on_dry_hair: TPL-LEAVEIN-HEAT / TPL-OIL-HEAT protocols require usable_on_dry_hair",
+    "final.protocols.1.usable_on_dry_hair: TPL-LEAVEIN-HEAT protocols require usable_on_dry_hair",
   )
 })
 
@@ -172,11 +169,54 @@ test("cross-product duplicate EANs are flagged and fail the manifest", () => {
   assert.equal(report.ok, false)
 })
 
-test("deriveRequiredProtocolRoles: oil derives roles from role_support, not a provides_heat_protection field", () => {
+test("deriveRequiredProtocolRoles: oil ignores the legacy heat role and derives only real purposes", () => {
   const roles = deriveRequiredProtocolRoles("oil", {
-    product_oil_specs: { role_support: ["pre_wash_fibre_treatment", "pre_heat_protection"] },
+    product_oil_specs: {
+      role_support: ["leave_on_fibre_conditioning", "pre_heat_protection"],
+      provides_heat_protection: true,
+    },
   })
-  assert.deepEqual(roles, ["pre_wash_fibre_treatment", "pre_heat_protection"])
+  assert.deepEqual(roles, ["leave_on_fibre_conditioning"])
+})
+
+test("oil expansion requires an explicit heat capability flag", async () => {
+  const raw = (await loadFixture("valid-manifest")) as {
+    products: Array<{
+      final: {
+        product: { category_key: string }
+        category_specs: { product_oil_specs?: { provides_heat_protection?: boolean } }
+      }
+    }>
+  }
+  const oil = raw.products.find((item) => item.final.product.category_key === "oil")!
+  delete oil.final.category_specs.product_oil_specs!.provides_heat_protection
+  const report = validateExpansionManifest(raw)
+
+  assert.equal(report.ok, false)
+  assertSomeViolation(report, "final.category_specs.product_oil_specs")
+})
+
+test("oil expansion rejects pre_heat_protection as a fourth purpose", async () => {
+  const raw = (await loadFixture("valid-manifest")) as {
+    products: Array<{
+      final: {
+        product: { category_key: string }
+        category_specs: {
+          product_oil_specs?: {
+            role_support: string[]
+            provides_heat_protection?: boolean
+          }
+        }
+        protocols: unknown[]
+      }
+    }>
+  }
+  const oil = raw.products.find((item) => item.final.product.category_key === "oil")!
+  oil.final.category_specs.product_oil_specs!.provides_heat_protection = true
+  oil.final.category_specs.product_oil_specs!.role_support.push("pre_heat_protection")
+  const report = validateExpansionManifest(raw)
+  assert.equal(report.ok, false)
+  assertSomeViolation(report, "final.category_specs.product_oil_specs")
 })
 
 test("deriveRequiredProtocolRoles: leave_in requires pre_heat_protection only when provides_heat_protection is true", () => {

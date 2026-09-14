@@ -240,6 +240,7 @@ test("regular quiz rewrite never overrides authenticated routing and forces orga
       existingPackageKey: "meta_personal_plan_v1",
       explicitlySelectsPackage: true,
       personalPlanEnabled: true,
+      scanFunnelEnabled: false,
       selectedPackage: {
         key: "default_organic",
         slug: "organic",

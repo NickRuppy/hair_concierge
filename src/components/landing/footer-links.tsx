@@ -1,34 +1,18 @@
 import Link from "next/link"
 
-export const footerProductLinks = [
-  { href: "/quiz", label: "Haaranalyse starten", prefetch: false },
-  { href: "/methodik", label: "Methodik" },
-] as const
-
-export const footerCompanyLinks = [
-  { href: "/impressum", label: "Impressum" },
+export const legalFooterLinks = [
   { href: "/kontakt", label: "Kontakt" },
-] as const
-
-export const footerLegalLinks = [
-  { href: "/datenschutz", label: "Datenschutz" },
-  { href: "/agb", label: "AGB" },
-  { href: "/widerruf", label: "Widerruf" },
-] as const
-
-export const offerFooterLinks = [
   { href: "/impressum", label: "Impressum" },
   { href: "/datenschutz", label: "Datenschutz" },
   { href: "/agb", label: "AGB" },
   { href: "/widerruf", label: "Widerruf" },
-  { href: "/kontakt", label: "Kontakt" },
 ] as const
 
 export const footerLinkClass =
-  "text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
+  "inline-flex min-h-11 items-center px-1 text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
 
 export const footerCookieButtonClass =
-  "cursor-pointer border-0 bg-transparent p-0 text-left font-[inherit] text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
+  "inline-flex min-h-11 cursor-pointer items-center border-0 bg-transparent px-1 py-0 text-left font-[inherit] text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
 
 export function FooterLink({
   href,
@@ -43,25 +27,6 @@ export function FooterLink({
     <Link href={href} prefetch={prefetch} className={footerLinkClass}>
       {label}
     </Link>
-  )
-}
-
-export function FooterButton({
-  label,
-  onClick,
-}: {
-  label: string
-  onClick: (trigger: HTMLButtonElement) => void
-}) {
-  return (
-    <button
-      type="button"
-      data-quiz-gate-trigger
-      className={`${footerLinkClass} text-left`}
-      onClick={(event) => onClick(event.currentTarget)}
-    >
-      {label}
-    </button>
   )
 }
 

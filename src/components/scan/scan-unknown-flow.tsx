@@ -7,6 +7,7 @@ import { ChevronDown } from "lucide-react"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ScanUnknownProductResult } from "@/lib/scan/types"
 import {
+  SCAN_UNKNOWN_BRIDGE,
   SCAN_UNKNOWN_HEADLINE,
   SCAN_UNKNOWN_QUESTION,
   SCAN_UNKNOWN_SUBLINE,
@@ -66,14 +67,18 @@ export function ScanUnknownFlow({
         <h2 className="font-header text-2xl leading-tight text-foreground">
           {SCAN_UNKNOWN_HEADLINE}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--text-sub)]">{SCAN_UNKNOWN_SUBLINE}</p>
+        <p className="mt-2 text-sm leading-6 text-foreground">{SCAN_UNKNOWN_BRIDGE}</p>
+        <p className="mt-1 text-sm leading-6 text-[var(--text-sub)]">{SCAN_UNKNOWN_SUBLINE}</p>
       </div>
 
       <p className="text-[15px] font-semibold leading-6 text-foreground">{SCAN_UNKNOWN_QUESTION}</p>
 
       <div className="grid gap-2">
         {visible.map((entry) => {
-          const isTapped = tappedCategory === entry.key
+          // Derived, not remembered: once the request has settled no card is "the one
+          // being submitted" any more. Keeping the raw `tappedCategory` here left a
+          // failed attempt highlighted and labelled as in flight next to its error (F17).
+          const isTapped = tappedCategory === entry.key && submitting
           return (
             <button
               key={entry.key}
@@ -90,7 +95,7 @@ export function ScanUnknownFlow({
               )}
             >
               <span className="block text-[17px] font-bold text-foreground">
-                {isTapped && submitting ? "Wird eingereicht" : entry.label}
+                {isTapped ? "Wird eingereicht" : entry.label}
               </span>
             </button>
           )

@@ -1,0 +1,159 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "fine"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "adjudication:being-big-hair:cleansingStrength",
+          "adjudication:being-big-hair:scalpComfortTarget"
+        ],
+        "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conflicting_global_manufacturer_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.07",
+          "formula.surfactant.15"
+        ],
+        "rationale": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:being-big-hair:conditioningLevel",
+          "adjudication:being-big-hair:weightPotential",
+          "adjudication:being-big-hair:focusPrimary",
+          "adjudication:being-big-hair:conditioningLevel",
+          "adjudication:being-big-hair:weightPotential",
+          "adjudication:being-big-hair:focusPrimary"
+        ],
+        "rationale": "Ideal: fine — The volume positioning is explicitly for thin/fine hair and the silicone-free formula has enough cleanser/texture support to keep fine hair in the ideal set. Conditional (not emitted): normal — Normal hair may use it for volume, but the moderate conditioning/weight route and fine-hair targeting make it less central."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci",
+          "formula.conflicting_global_manufacturer_inci",
+          "formula.surfactant.02",
+          "formula.surfactant.03",
+          "formula.surfactant.07",
+          "formula.surfactant.15"
+        ],
+        "rationale": "Strong: CAPB leads the surfactant system after water, but olefin sulfonate at position 3 is reinforced by coco-glucoside, sodium cocoyl isethionate and later sulfosuccinate. The volume positioning is compatible with a stronger cleansing chassis."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.08",
+          "formula.conditioning.09",
+          "formula.conditioning.17",
+          "formula.conditioning.18",
+          "claim:being-global-positioning"
+        ],
+        "rationale": "Moderate: macadamia oil, avocado oil, glycerin, panthenol, polyquaternium-10 and cationic guar provide real rinse-off care, but the product is not a rich 2-in-1 and has no silicone stack."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.corroborating_inci"
+        ],
+        "rationale": "Not supported: the complete exact-GTIN formula contains neither Piroctone Olamine nor Climbazole."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:rossmann-de-positioning",
+          "claim:being-global-positioning",
+          "formula.canonical_inci",
+          "formula.conditioning.08",
+          "formula.conditioning.09"
+        ],
+        "rationale": "Volume: the exact product identity centers on Big Hair and supporting positioning targets fullness/body for thin or fine hair; the silicone-free multi-surfactant formula is compatible with that role."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:rossmann-de-positioning",
+          "claim:being-global-positioning",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: the oil and humectant story supports care feel inside the volume product, not a separate exact-product secondary focus with an independent route."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claim:rossmann-de-positioning",
+          "claim:being-global-positioning",
+          "formula.canonical_inci",
+          "formula.fragrance.12"
+        ],
+        "rationale": "Not targeted: revealed claims target volume/fullness, not sensitive, itchy, dry-feeling or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "usage:being-global",
+          "usage:superdrug",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are ordinary wet-hair lather and rinse-out use with no treatment, daily/frequent, alternating or reset trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.conditioning.08",
+          "formula.conditioning.09",
+          "formula.conditioning.17",
+          "formula.conditioning.18",
+          "formula.surfactant.03",
+          "claim:being-global-positioning"
+        ],
+        "rationale": "Moderate: two plant oils plus polyquaternium-10 and cationic guar create noticeable but bounded residue potential, while the multi-surfactant, silicone-free, volume-positioned architecture keeps this below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "fine"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "normal"
+    ],
+    "productId": "being-big-hair",
+    "productName": "Big Hair Shampoo",
+    "rows": 1
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

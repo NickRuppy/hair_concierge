@@ -1,0 +1,334 @@
+{
+  "version": "shampoo-v14-adjudication-v1",
+  "productId": "head-shoulders-classic-clean",
+  "finalProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "Strong: SLES is reinforced by a second anionic sulfonate route and an oily-scalp/problem-led architecture, while CAPB and care routes do not fully offset the reset chassis.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "primary anionic sulfate"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "factId": "formula.surfactant.04",
+          "observation": "amphoteric buffer"
+        },
+        {
+          "ingredient": "TEA-Dodecylbenzenesulfonate",
+          "position": 16,
+          "factId": "formula.surfactant.16",
+          "observation": "second anionic surfactant route"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 10,
+          "factId": "formula.scalp_active.10",
+          "observation": "problem-led active architecture"
+        }
+      ],
+      "counterSignal": "CAPB and several conditioning routes buffer feel, so the call is strong because of the whole system rather than SLES alone.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.surfactant.02",
+        "formula.surfactant.04",
+        "formula.surfactant.16",
+        "claim:headshoulders-manufacturer-scalp-positioning"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone gum, dimethicone, cationic guar and glycol distearate should provide noticeable slip, but the strong anti-dandruff cleansing chassis keeps care bounded.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 9,
+          "factId": "formula.conditioning.09",
+          "observation": "refatting/wax ester"
+        },
+        {
+          "ingredient": "Dimethiconol",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "silicone gum clue"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic polymer"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 14,
+          "factId": "formula.conditioning.14",
+          "observation": "nonvolatile silicone slip clue"
+        }
+      ],
+      "counterSignal": "There are multiple substantive routes, but no clearly rich 2-in-1 or repair-care positioning.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.09",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: silicone gum, dimethicone and cationic guar can leave bounded residue, while strong reset architecture argues against high weight.",
+      "formulaFacts": [
+        {
+          "ingredient": "Dimethiconol",
+          "position": 11,
+          "factId": "formula.conditioning.11",
+          "observation": "persistent silicone gum clue"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "factId": "formula.conditioning.13",
+          "observation": "cationic polymer"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 14,
+          "factId": "formula.conditioning.14",
+          "observation": "nonvolatile silicone deposition clue"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "strong reset route"
+        }
+      ],
+      "counterSignal": "The formula also contains TEA-Dodecylbenzenesulfonate and problem-led/oily-scalp positioning, which raises reset capacity.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.conditioning.11",
+        "formula.conditioning.13",
+        "formula.conditioning.14",
+        "formula.surfactant.16"
+      ],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [
+          "Exact silicone/polymer deposition level cannot be proven from INCI order alone."
+        ],
+        "whyThisBand": "The silicone/polymer stack is substantive enough for noticeable residue in a rinse-off formula.",
+        "whyNotNeighborBand": "Not high because the product has a strong cleansing/reset system with a second anionic route and anti-dandruff/oily-scalp context."
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Scalp active: this is a problem-led anti-dandruff product and the formula contains Piroctone Olamine at position 10.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 10,
+          "factId": "formula.scalp_active.10",
+          "observation": "recognized active under v1.4 dandruff rule"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 24,
+          "factId": "formula.humectant_refatting.24",
+          "observation": "skin-care-adjacent support"
+        }
+      ],
+      "counterSignal": "Classic Clean also implies broad everyday cleansing, but the anti-dandruff/problem-led claim is dominant.",
+      "neighboringAlternative": "clarifying",
+      "evidenceRefs": [
+        "claim:headshoulders-manufacturer-scalp-positioning",
+        "claim:rossmann-scalp-positioning",
+        "formula.anti_dandruff_active.10"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying"
+      ],
+      "confidence": "moderate",
+      "rationale": "Clarifying is a secondary: the packet separately names oily scalp, and the formula has a strong cleanser plus second anionic route independent from the dandruff active.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "strong cleanser"
+        },
+        {
+          "ingredient": "TEA-Dodecylbenzenesulfonate",
+          "position": 16,
+          "factId": "formula.surfactant.16",
+          "observation": "second anionic route"
+        }
+      ],
+      "counterSignal": "There is no explicit deep-cleansing/reset product claim, so clarifying stays secondary rather than primary or usage-reset.",
+      "neighboringAlternative": [],
+      "evidenceRefs": [
+        "claim:headshoulders-manufacturer-scalp-positioning",
+        "formula.surfactant.02",
+        "formula.surfactant.16"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment: v1.4 routes problem-led recognized active formulas, especially anti-dandruff support, to treatment usage.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 10,
+          "factId": "formula.anti_dandruff_active.10",
+          "observation": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "factId": "formula.surfactant.02",
+          "observation": "product remains shampoo-format cleansing"
+        }
+      ],
+      "counterSignal": "The claim says ideal for daily application, but treatment is the more specific v1.4 trigger for a recognized anti-dandruff active.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "claim:headshoulders-manufacturer-scalp-positioning",
+        "claim:rossmann-scalp-positioning",
+        "formula.anti_dandruff_active.10"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: the product explicitly addresses dandruff-related itching and scalp problems and includes a recognized active, with panthenol/niacinamide as comfort-adjacent support.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 10,
+          "factId": "formula.scalp_active.10",
+          "observation": "recognized scalp active"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 24,
+          "factId": "formula.humectant_refatting.24",
+          "observation": "skin-care-adjacent vitamin clue"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 25,
+          "factId": "formula.conditioning.25",
+          "observation": "humectant/provitamin care clue"
+        }
+      ],
+      "counterSignal": "Strong cleansing and fragrance at position 6 are comfort counter-signals, so confidence is moderate rather than high.",
+      "neighboringAlternative": "not_targeted",
+      "evidenceRefs": [
+        "claim:headshoulders-manufacturer-scalp-positioning",
+        "formula.scalp_active.10",
+        "formula.exposure.06"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Supported: the complete formula contains Piroctone Olamine, one of the two v1.4 recognized anti-dandruff actives.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 10,
+          "factId": "formula.anti_dandruff_active.10",
+          "observation": "recognized anti-dandruff active"
+        }
+      ],
+      "counterSignal": "None material for the mechanical rule; supporting claims are not needed to establish this value.",
+      "neighboringAlternative": "not_supported",
+      "evidenceRefs": [
+        "formula.canonical_inci",
+        "formula.corroborating_inci",
+        "formula.anti_dandruff_active.10"
+      ]
+    }
+  },
+  "decisions": {
+    "cleansingStrength": {
+      "laneAValue": "strong",
+      "laneBValue": "strong",
+      "finalValue": "strong",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "conditioningLevel": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "weightPotential": {
+      "laneAValue": "moderate",
+      "laneBValue": "moderate",
+      "finalValue": "moderate",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "focusPrimary": {
+      "laneAValue": "scalp_active",
+      "laneBValue": "scalp_active",
+      "finalValue": "scalp_active",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "focusSecondary": {
+      "laneAValue": [],
+      "laneBValue": [
+        "clarifying"
+      ],
+      "finalValue": [
+        "clarifying"
+      ],
+      "outcome": "product_correction",
+      "rationale": "Keep clarifying as a secondary focus. The exact product separately names oily scalp, while the strong SLES plus TEA-Dodecylbenzenesulfonate route supports cleansing of that concern independently from Piroctone Olamine's dandruff route. Primary remains scalp_active and usage remains treatment."
+    },
+    "usageRole": {
+      "laneAValue": "treatment",
+      "laneBValue": "treatment",
+      "finalValue": "treatment",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "scalpComfortTarget": {
+      "laneAValue": "targeted",
+      "laneBValue": "targeted",
+      "finalValue": "targeted",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    },
+    "dandruffSupport": {
+      "laneAValue": "supported",
+      "laneBValue": "supported",
+      "finalValue": "supported",
+      "outcome": "agreement",
+      "rationale": "Both independent lanes selected the same value. The final record preserves Lane B's complete post-unblind rationale and evidence after main-agent verification."
+    }
+  },
+  "sourceIdentityFailure": false,
+  "systematicRuleGap": false,
+  "methodNote": "Final values were adjudicated against the frozen v1.4 standard without changing sources, rules, or labels to improve agreement. Every disagreement remains visible in comparison.json."
+}

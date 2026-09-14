@@ -1182,6 +1182,61 @@ test("verified integrated heat carriers suppress a duplicate standalone recommen
   assert.ok(result.criteria.some((criterion) => criterion.criterionId.includes("carrier")))
 })
 
+test("partially covered Oil heat events preserve the standalone Heat Protectant need", () => {
+  const heatInput = input("heat_protectant", "known")
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+  heatInput.categoryDecision = {
+    ...heatInput.categoryDecision,
+    target: {
+      category: "heat_protectant",
+      roles: ["pre_heat_protection"],
+      qualifyingRoutes: ["airflow_shaping"],
+      carrierPolicy: "integrated_or_separate_verified_binary_capability",
+    },
+  } as never
+  heatInput.heatCarrierCoverage = {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: ["heat:dryer", "heat:dryer-brush"],
+    verifiedEventIds: ["heat:dryer"],
+  }
+
+  const result = evaluateStage3Authority(heatInput)
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.ok(
+    result.criteria.some(
+      (criterion) => criterion.criterionId === "heat_protectant.carrier.uncovered",
+    ),
+  )
+})
+
+test("an Oil evaluated against no qualifying heat events cannot close a declared heat need", () => {
+  const heatInput = input("heat_protectant", "known")
+  heatInput.capturedProductId = null
+  heatInput.subjectIdentity = null
+  heatInput.productFacts = null
+  heatInput.heatCarrierCoverage = {
+    carrierCategory: "oil",
+    verifiedRoutes: [],
+    qualifyingEventIds: [],
+    verifiedEventIds: [],
+  }
+
+  const result = evaluateStage3Authority(heatInput)
+  assert.equal(result.status, "known")
+  if (result.status !== "known") return
+  assert.equal(result.verdict, "mismatch")
+  assert.ok(
+    result.criteria.some(
+      (criterion) => criterion.criterionId === "heat_protectant.carrier.uncovered",
+    ),
+  )
+})
+
 test("standalone Heat does not require a suitable-thickness fact", () => {
   const heatInput = input("heat_protectant", "known")
   if (heatInput.productFacts?.category !== "heat_protectant") {

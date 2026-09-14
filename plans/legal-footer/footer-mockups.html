@@ -1,0 +1,289 @@
+<title>Chaarlie Legal-Footer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --page-bg: #faf9f7;
+    --page-fg: #2a2438;
+    --page-muted: #6d6580;
+    --page-card: #ffffff;
+    --page-border: #e6e2ee;
+    --accent: #6b50a0;
+    /* Chaarlie product tokens (fixed — frames always render the light product) */
+    --cream: hsl(30 27% 98%);
+    --plum-darkest: #2a1845;
+    --plum: #6b50a0;
+    --plum-rgb: 107, 80, 160;
+    --coral: #d4616a;
+    --muted-fg: #8a8494;
+    --card-border: #eceaf2;
+    --sans: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+    --serif: "Playfair Display", Georgia, serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page-bg: #1c1826;
+      --page-fg: #efecf5;
+      --page-muted: #a79fba;
+      --page-card: #262130;
+      --page-border: #3a3348;
+      --accent: #a98fd8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page-bg: #1c1826;
+    --page-fg: #efecf5;
+    --page-muted: #a79fba;
+    --page-card: #262130;
+    --page-border: #3a3348;
+    --accent: #a98fd8;
+  }
+  body {
+    background: var(--page-bg);
+    color: var(--page-fg);
+    font-family: var(--sans);
+    line-height: 1.55;
+    padding: 40px 20px 80px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+  header.intro { max-width: 62ch; }
+  header.intro h1 { font-family: var(--serif); font-size: 2rem; font-weight: 600; margin: 0 0 10px; text-wrap: balance; }
+  header.intro p { margin: 0; color: var(--page-muted); }
+  .decision h2 { font-size: 1.15rem; font-weight: 700; margin: 0 0 4px; }
+  .decision > p.q { margin: 0 0 20px; color: var(--page-muted); max-width: 70ch; }
+  .decision-tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+  .frames { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  figure.frame { margin: 0; width: 390px; max-width: 100%; }
+  figure.frame figcaption { font-size: 0.82rem; font-weight: 600; margin-bottom: 8px; }
+  figure.frame figcaption span { display: block; font-weight: 400; color: var(--page-muted); }
+  .screen {
+    background: var(--cream); border: 1px solid var(--page-border); border-radius: 18px;
+    overflow: hidden; box-shadow: 0 18px 44px -32px rgba(0,0,0,0.35);
+    color: var(--plum-darkest); font-size: 14px;
+  }
+  .fade-top { height: 34px; background: linear-gradient(rgba(0,0,0,0.06), transparent); position: relative; }
+  .fade-top::after { content: "… Seitenende"; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 10px; color: var(--muted-fg); background: var(--cream); padding: 0 8px; border-radius: 99px; }
+
+  /* — CTA card (last real section of organic-refresh) — */
+  .cta-sec { padding: 20px 20px 40px; }
+  .cta-card { background: var(--plum); border-radius: 28px; padding: 34px 22px; text-align: center; color: #fff; box-shadow: 0 24px 54px -38px rgba(var(--plum-rgb), 0.85); }
+  .cta-card h3 { font-family: var(--serif); font-size: 1.75rem; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 10px; font-weight: 500; }
+  .cta-card p { margin: 0 0 20px; color: rgba(255,255,255,0.78); font-size: 0.95rem; }
+  .cta-card .pill { display: inline-block; background: #fff; color: var(--plum-darkest); font-weight: 800; border-radius: 99px; padding: 11px 26px; font-size: 0.95rem; }
+
+  /* — V1: ruhiger Abschluss (centered minimal) — */
+  .calm-footer { border-top: 1px solid var(--card-border); padding: 36px 20px 30px; text-align: center; }
+  .calm-footer .wordmark { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; }
+  .calm-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin: 18px 0 20px; font-size: 0.84rem; }
+  .calm-footer nav a, .calm-footer nav span { color: var(--muted-fg); text-decoration: none; }
+  .calm-footer .copy { font-size: 0.72rem; color: #9a9892; margin: 0; }
+
+  /* — V2: Marken-Echo (big type sign-off) — */
+  .echo-footer { border-top: 1px solid var(--card-border); padding: 34px 20px 26px; overflow: hidden; }
+  .echo-footer .big { font-family: var(--serif); font-weight: 600; font-size: 4.6rem; line-height: 0.95; letter-spacing: -0.03em; color: var(--plum); opacity: 0.16; text-align: center; margin: 0 0 22px; user-select: none; }
+  .echo-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin-bottom: 18px; font-size: 0.84rem; }
+  .echo-footer nav a, .echo-footer nav span { color: var(--muted-fg); text-decoration: none; }
+  .echo-footer .copy { font-size: 0.72rem; color: #9a9892; margin: 0; text-align: center; }
+
+  /* — V3: dunkler Sockel — */
+  .dark-footer { background: var(--plum-darkest); color: #fff; padding: 34px 22px 28px; }
+  .dark-footer .wordmark { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; }
+  .dark-footer .tagline { margin: 8px 0 0; color: rgba(255,255,255,0.55); font-size: 0.82rem; max-width: 300px; }
+  .dark-footer nav { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 22px 0; font-size: 0.84rem; }
+  .dark-footer nav a, .dark-footer nav span { color: rgba(255,255,255,0.72); text-decoration: none; }
+  .dark-footer .copy { border-top: 1px solid rgba(255,255,255,0.14); padding-top: 16px; font-size: 0.72rem; color: rgba(255,255,255,0.45); margin: 0; }
+
+  /* — Variante B / slim footer — */
+  .slim-footer { border-top: 1px solid rgba(var(--plum-rgb), 0.10); background: rgba(255,255,255,0.7); padding: 26px 20px; font-size: 0.86rem; }
+  .slim-footer .org { font-weight: 700; color: var(--plum-darkest); margin: 0 0 12px; }
+  .slim-footer .org a { color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+  .slim-footer nav { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+  .slim-footer nav a, .slim-footer nav span { color: var(--muted-fg); text-decoration: none; }
+
+  /* — AGB page bottom — */
+  .legal-body { padding: 26px 24px 30px; }
+  .legal-body h5 { font-size: 0.95rem; margin: 0 0 6px; font-weight: 600; }
+  .legal-body p { margin: 0; color: var(--muted-fg); font-size: 0.85rem; line-height: 1.65; }
+
+  /* — Profile bottom — */
+  .profile-body { padding: 22px 18px 26px; display: flex; flex-direction: column; gap: 18px; }
+  .pcard { background: #fff; border: 1px solid var(--card-border); border-radius: 14px; padding: 18px; }
+  .pcard .who { display: flex; gap: 12px; align-items: center; }
+  .pcard .ava { width: 40px; height: 40px; border-radius: 50%; background: var(--plum); color:#fff; display:flex; align-items:center; justify-content:center; font-weight: 700; }
+  .pcard .who p { margin: 0; font-size: 0.88rem; }
+  .pcard .who p + p { color: var(--muted-fg); font-size: 0.82rem; }
+  .pcard .signout { margin-top: 14px; border-top: 1px solid var(--card-border); padding-top: 14px; }
+  .pcard .signout .btn { display: block; text-align: center; border: 1px solid var(--card-border); border-radius: 10px; padding: 9px; font-weight: 600; font-size: 0.88rem; }
+  .profile-legal { text-align: center; font-size: 0.8rem; color: var(--muted-fg); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; padding-bottom: 4px; }
+  .profile-legal a { color: inherit; }
+
+  /* — Quiz first screen — */
+  .quiz-body { padding: 26px 20px 18px; }
+  .quiz-body .prog { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--plum); margin-bottom: 14px; }
+  .quiz-body h5 { font-family: var(--serif); font-size: 1.35rem; margin: 0 0 16px; font-weight: 500; }
+  .opt { border: 1px solid var(--card-border); background: #fff; border-radius: 14px; padding: 13px 16px; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; }
+  .quiz-legal { text-align: center; font-size: 0.74rem; color: var(--muted-fg); padding: 10px 0 16px; }
+  .quiz-legal a { color: inherit; }
+
+  .note { background: var(--page-card); border: 1px solid var(--page-border); border-radius: 12px; padding: 14px 18px; font-size: 0.86rem; color: var(--page-muted); max-width: 72ch; }
+  .note strong { color: var(--page-fg); }
+  .rec { color: var(--accent); font-weight: 700; }
+  a:focus-visible, .btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <h1>Legal-Footer: Mockups zur Entscheidung</h1>
+    <p>Impressum &amp; Datenschutz sind heute auf der Live-Startseite, den Rechtsseiten und in der App nicht verlinkt. Vier Entscheidungen, jeweils mit gerenderten Mobile-Frames (390&nbsp;px, echte Chaarlie-Tokens &amp; -Copy).</p>
+  </header>
+
+  <section class="decision">
+    <span class="decision-tag">D1 · Startseite (organic-refresh, auch /lp) — Redesign</span>
+    <h2>Drei frische Footer-Richtungen</h2>
+    <p class="q">Best Practice für Conversion-Lander: schlank statt Mega-Footer, Typografie statt Spalten, Legal-Links als eine gedämpfte Zeile. Alle drei Varianten tragen dieselben Links (Methodik, Kontakt, Impressum, Datenschutz, AGB, Widerruf, Cookie-Einstellungen). <span class="rec">Empfehlung: V1</span> — am ruhigsten, passt zum reduzierten Lander; V2 ist die mutigere Marken-Geste, V3 der kräftigste Seitenabschluss.</p>
+    <div class="frames">
+      <figure class="frame">
+        <figcaption>V1 — Ruhiger Abschluss<span>zentriert, Wortmarke + eine Linkzeile</span></figcaption>
+        <div class="screen">
+          <div class="fade-top"></div>
+          <div class="cta-sec">
+            <div class="cta-card">
+              <h3>Bereit, dein Haar besser zu verstehen?</h3>
+              <p>Zehn Fragen. Kostenlos. Dein persönliches Ergebnis direkt danach.</p>
+              <span class="pill">Analyse starten</span>
+            </div>
+          </div>
+          <footer class="calm-footer">
+            <div class="wordmark">chaarlie</div>
+            <nav>
+              <a>Methodik</a><a>Kontakt</a><a>Impressum</a><a>Datenschutz</a><a>AGB</a><a>Widerruf</a><span>Cookie-Einstellungen</span>
+            </nav>
+            <p class="copy">© 2026 Haarmony LLC · Dover, DE 19904, USA</p>
+          </footer>
+        </div>
+      </figure>
+
+      <figure class="frame">
+        <figcaption>V2 — Marken-Echo<span>große Wortmarke als Sign-off, Links darunter</span></figcaption>
+        <div class="screen">
+          <div class="fade-top"></div>
+          <div class="cta-sec">
+            <div class="cta-card">
+              <h3>Bereit, dein Haar besser zu verstehen?</h3>
+              <p>Zehn Fragen. Kostenlos. Dein persönliches Ergebnis direkt danach.</p>
+              <span class="pill">Analyse starten</span>
+            </div>
+          </div>
+          <footer class="echo-footer">
+            <p class="big">chaarlie</p>
+            <nav>
+              <a>Methodik</a><a>Kontakt</a><a>Impressum</a><a>Datenschutz</a><a>AGB</a><a>Widerruf</a><span>Cookie-Einstellungen</span>
+            </nav>
+            <p class="copy">© 2026 Haarmony LLC · Dover, DE 19904, USA</p>
+          </footer>
+        </div>
+      </figure>
+
+      <figure class="frame">
+        <figcaption>V3 — Dunkler Sockel<span>Plum-Darkest-Block als Seitenende</span></figcaption>
+        <div class="screen">
+          <div class="fade-top"></div>
+          <div class="cta-sec">
+            <div class="cta-card">
+              <h3>Bereit, dein Haar besser zu verstehen?</h3>
+              <p>Zehn Fragen. Kostenlos. Dein persönliches Ergebnis direkt danach.</p>
+              <span class="pill">Analyse starten</span>
+            </div>
+          </div>
+          <footer class="dark-footer">
+            <div class="wordmark">chaarlie</div>
+            <p class="tagline">Strukturierte Haarpflege-Auswertung auf Basis deiner Angaben.</p>
+            <nav>
+              <a>Methodik</a><a>Kontakt</a><a>Impressum</a><a>Datenschutz</a><a>AGB</a><a>Widerruf</a><span>Cookie-Einstellungen</span>
+            </nav>
+            <p class="copy">© 2026 Haarmony LLC · Dover, DE 19904, USA</p>
+          </footer>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="decision">
+    <span class="decision-tag">D2 · Rechtsseiten (/agb, /widerruf, /kontakt, /datenschutz, /impressum)</span>
+    <h2>Schlanker Footer als Querverlinkung</h2>
+    <p class="q">Heute enden die Rechtsseiten ohne Links zueinander. Vorschlag: derselbe schlanke Footer auf allen fünf Seiten (eigene Seite jeweils ohne Link auf sich selbst). Kein visueller Fork — nur zur Bestätigung.</p>
+    <div class="frames">
+      <figure class="frame">
+        <figcaption>Vorschlag — Ende von /agb<span>gilt analog für alle Rechtsseiten</span></figcaption>
+        <div class="screen">
+          <div class="fade-top"></div>
+          <div class="legal-body">
+            <h5>§ 9 Schlussbestimmungen</h5>
+            <p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Sollten einzelne Bestimmungen dieser AGB unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
+          </div>
+          <footer class="slim-footer">
+            <p class="org">Haarmony LLC · <a>info@chaarlie.de</a></p>
+            <nav>
+              <a>Impressum</a><a>Datenschutz</a><a>Widerruf</a><a>Kontakt</a><span>Cookie-Einstellungen</span>
+            </nav>
+          </footer>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="decision">
+    <span class="decision-tag">D3 · Eingeloggte App</span>
+    <h2>Rechtliches nur auf der Profilseite</h2>
+    <p class="q">Wie von dir vorgeschlagen: kein Footer auf jedem App-Screen, sondern eine dezente Linkzeile ganz unten auf /profile, unterhalb der Abmelden-Karte.</p>
+    <div class="frames">
+      <figure class="frame">
+        <figcaption>Vorschlag — Ende von /profile</figcaption>
+        <div class="screen">
+          <div class="fade-top"></div>
+          <div class="profile-body">
+            <div class="pcard">
+              <div class="who">
+                <div class="ava">N</div>
+                <div>
+                  <p><strong>Nick R.</strong></p>
+                  <p>nick@beispiel.de</p>
+                </div>
+              </div>
+              <div class="signout"><span class="btn">Abmelden</span></div>
+            </div>
+            <nav class="profile-legal" aria-label="Rechtliches">
+              <a>Impressum</a><a>Datenschutz</a><a>AGB</a><a>Widerruf</a><a>Kontakt</a><a>Cookie-Einstellungen</a>
+            </nav>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="decision">
+    <span class="decision-tag">D4 · Quiz-Lander (/lp/personal-plan-quiz)</span>
+    <h2>Mini-Legal-Zeile unter dem ersten Quiz-Screen?</h2>
+    <p class="q">Diese Variante startet direkt im Quiz — ein Marketing-Footer würde stören. Option 1: dezente Zeile nur auf dem ersten Screen. Option 2: weglassen (Datenschutz ist im Consent-Sheet verlinkt, aber die Seite hätte weiterhin kein erreichbares Impressum — Restrisiko bei bezahltem Traffic). <span class="rec">Empfehlung: Option 1.</span></p>
+    <div class="frames">
+      <figure class="frame">
+        <figcaption>Option 1 — erster Quiz-Screen mit Legal-Zeile</figcaption>
+        <div class="screen">
+          <div class="quiz-body">
+            <p class="prog">Frage 1 von 10</p>
+            <h5>Wie würdest du deine Haarstruktur beschreiben?</h5>
+            <div class="opt">Glatt</div>
+            <div class="opt">Wellig</div>
+            <div class="opt">Lockig</div>
+            <div class="opt">Kraus / Coily</div>
+          </div>
+          <p class="quiz-legal"><a>Impressum</a> · <a>Datenschutz</a></p>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <div class="note">
+    <strong>Bereits abgedeckt (keine Änderung):</strong> Auth-Seiten, Checkout, Cookie-Banner, Quiz-Consent-Sheet, Warteliste, Methodik, FAQ. Der Default-Landing-Variant und die Offer-Seite behalten ihre bestehenden Footer.
+  </div>
+</div>

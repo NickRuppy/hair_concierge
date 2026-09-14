@@ -345,3 +345,4 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/retailer-core-candidates.json
 !/data/scanner-catalog-coverage/2026-08-26/retailer-core-research.md
 !/data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json
+!plans/scanner-funnel/evidence/**/*.png

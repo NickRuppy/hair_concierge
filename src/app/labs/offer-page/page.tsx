@@ -8,6 +8,7 @@ import { PersonalPlanOffer } from "@/components/personal-plan-offer/personal-pla
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import OrganicPlanOfferVariant from "@/funnels/offers/organic-plan-v1"
 import OrganicPlanBeforeAfterOfferVariant from "@/funnels/offers/organic-plan-before-after-v1"
+import ScanRegalOfferVariant from "@/funnels/offers/scan-regal-v1"
 import { WelcomeClient } from "@/app/welcome/welcome-client"
 import { isOfferPageLabEnabled } from "@/lib/labs/offer-page-access"
 import { ModeratorAccountEntry } from "@/app/test/haarplan/konto/moderator-account-entry"
@@ -216,6 +217,21 @@ export default async function OfferPageLab({
             ? "personal_plan_launch_v1"
             : "standard"
         }
+      />
+    )
+  }
+
+  if (variant === "scan-regal-v1") {
+    return (
+      <ScanRegalOfferVariant
+        entryContext="quiz_completion"
+        isInternalTest
+        leadId={null}
+        name="Lea"
+        narrative={narrative}
+        offerVariant="scan-regal-v1"
+        pricingSlot={<StaticPricingPreview />}
+        quizAnswers={REVIEW_ANSWERS}
       />
     )
   }

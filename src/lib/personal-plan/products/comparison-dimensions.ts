@@ -367,8 +367,23 @@ function oilDimensions(
   if (input.role === "pre_wash_fibre_treatment") {
     return [application, thickness]
   }
+  const heatCapability =
+    input.role === "leave_on_fibre_conditioning" &&
+    input.coverage.some((fact) => fact.job === "heat_protection")
+      ? dimension(
+          "oil.heat_protection",
+          "Hitzeschutz",
+          "binary",
+          BINARY_STOPS,
+          true,
+          entries,
+          (facts) => (facts.category === "oil" ? facts.spec.providesHeatProtection : null),
+          "Hitzeschutz bleibt eine unabhängig bestätigte Produkteigenschaft.",
+        )
+      : null
   return [
     application,
+    ...(heatCapability ? [heatCapability] : []),
     dimension(
       "oil.weight",
       "Pflegegewicht",

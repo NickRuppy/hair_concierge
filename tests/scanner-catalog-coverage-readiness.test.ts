@@ -7,7 +7,10 @@ import {
   fingerprint,
   selectActiveSupportedProducts,
 } from "../scripts/scanner-catalog-coverage/readiness-export"
-import { evaluateScanCatalogReadiness, scanReadinessRoles } from "../src/lib/scan/catalog-readiness"
+import {
+  evaluateScanCatalogReadiness,
+  scanReadinessRoles,
+} from "../src/lib/product-intake/scan-catalog-readiness"
 import type { Stage3ShampooFacts } from "../src/lib/personal-plan/products/authority/contracts"
 
 function shampooFacts(

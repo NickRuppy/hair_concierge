@@ -1,0 +1,159 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-03",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "german_retailer_exact_gtin_formula",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "recorded_non_material_stale_same_gtin_conflict",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "AQUA (WATER, EAU)",
+      "SODIUM LAURETH SULFATE",
+      "SODIUM CHLORIDE",
+      "COCAMIDOPROPYL BETAINE",
+      "GLYCOSPHINGOLIPIDS",
+      "HYDROLYZED SILK",
+      "SERICIN",
+      "PARFUM (FRAGRANCE)",
+      "PEG-7 GLYCERYL COCOATE",
+      "POLYQUATERNIUM-10",
+      "SODIUM BENZOATE",
+      "PEG-120 METHYL GLUCOSE DIOLEATE",
+      "COCO-GLUCOSIDE",
+      "CITRIC ACID",
+      "GLYCERYL OLEATE",
+      "PEG-40 HYDROGENATED CASTOR OIL",
+      "GLYCOL DISTEARATE",
+      "HYDROGENATED CASTOR OIL",
+      "BUTYLENE GLYCOL",
+      "LAURETH-4",
+      "PRUNUS ARMENIACA (APRICOT) KERNEL OIL",
+      "PROPYLENE GLYCOL",
+      "SODIUM HYDROXIDE",
+      "BENZYL ALCOHOL",
+      "PHENOXYETHANOL",
+      "POTASSIUM SORBATE",
+      "METHYLPARABEN"
+    ],
+    "normalized_inci_string": "AQUA (WATER, EAU), SODIUM LAURETH SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, GLYCOSPHINGOLIPIDS, HYDROLYZED SILK, SERICIN, PARFUM (FRAGRANCE), PEG-7 GLYCERYL COCOATE, POLYQUATERNIUM-10, SODIUM BENZOATE, PEG-120 METHYL GLUCOSE DIOLEATE, COCO-GLUCOSIDE, CITRIC ACID, GLYCERYL OLEATE, PEG-40 HYDROGENATED CASTOR OIL, GLYCOL DISTEARATE, HYDROGENATED CASTOR OIL, BUTYLENE GLYCOL, LAURETH-4, PRUNUS ARMENIACA (APRICOT) KERNEL OIL, PROPYLENE GLYCOL, SODIUM HYDROXIDE, BENZYL ALCOHOL, PHENOXYETHANOL, POTASSIUM SORBATE, METHYLPARABEN",
+    "formula_fingerprint_sha256": "6832d1a0af15e97534cd859587f96295f9d652deb80ca3b4f683ae595fffe7f2",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "SODIUM LAURETH SULFATE",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "COCAMIDOPROPYL BETAINE",
+        "position": 4,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.04"
+      },
+      {
+        "ingredient": "COCO-GLUCOSIDE",
+        "position": 13,
+        "family": "nonionic glucoside surfactant",
+        "fact_id": "formula.surfactant.13"
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "POLYQUATERNIUM-10",
+        "position": 10,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.10"
+      },
+      {
+        "ingredient": "GLYCOSPHINGOLIPIDS",
+        "position": 5,
+        "route": "lipid-like care clue",
+        "fact_id": "formula.conditioning.05"
+      },
+      {
+        "ingredient": "HYDROLYZED SILK",
+        "position": 6,
+        "route": "protein-derived care clue",
+        "fact_id": "formula.conditioning.06"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate is at position 2 and amphoteric betaine at position 4."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Lipid-like and protein-derived care clues precede the fragrance region; a cationic polymer is at position 10."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion facts are recorded separately and excluded from independent cleansing-route count."
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "HYDROLYZED SILK",
+        "position": 6,
+        "clue": "protein-derived clue"
+      },
+      {
+        "ingredient": "SERICIN",
+        "position": 7,
+        "clue": "protein-derived clue"
+      },
+      {
+        "ingredient": "GLYCERYL OLEATE",
+        "position": 15,
+        "clue": "refatting lipid clue"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "PARFUM (FRAGRANCE)",
+        "position": 8,
+        "flag": "fragrance mixture"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 12,
+        "reason": "polymeric thickener/emulsifier clue; not treated as independent cleansing or substantive conditioning route"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.manufacturer_corroborating_inci",
+      "formula.rossmann_stale_conflict"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "LAURETH-4",
+        "position": 20,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.20",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-120 METHYL GLUCOSE DIOLEATE",
+        "position": 12,
+        "function": "polymeric_thickener_emulsifier_helper",
+        "fact_id": "formula.function.12",
+        "note": "Helper/emulsion fact; not an independent cleansing route."
+      }
+    ]
+  }
+}

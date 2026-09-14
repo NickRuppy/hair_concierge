@@ -11,6 +11,7 @@ import {
 } from "./personal-plan-quiz-continuation"
 import {
   PersonalPlanQuizFrame,
+  PersonalPlanQuizLegalLine,
   PersonalPlanQuizTextureQuestion,
 } from "./personal-plan-quiz-first-screen"
 import type { FreshPersonalPlanQuizEntry } from "./progressive-entry-contract"
@@ -45,9 +46,11 @@ function getLocalDraft(scope?: string) {
 
 export function PersonalPlanQuizEntry({
   fieldTest = false,
+  freemiumScannerFirst = false,
   resume = DISABLED_RESUME,
 }: {
   fieldTest?: boolean
+  freemiumScannerFirst?: boolean
   resume?: PersonalPlanQuizResumeBootstrap
 }) {
   const moderator = useModeratorQuiz()
@@ -230,23 +233,27 @@ export function PersonalPlanQuizEntry({
   }
 
   const shell = (
-    <PersonalPlanQuizFrame
-      canGoBack={false}
-      clientReady={clientReady}
-      currentSectionIndex={0}
-      fieldTest={fieldTest}
-      onBack={() => {}}
-      progress={4}
-      settledSectionIndices={new Set()}
-    >
-      <PersonalPlanQuizTextureQuestion
-        onSelect={selectTexture}
-        recoveryVisible={Boolean(
-          (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
-        )}
-        selected={selected}
-      />
-    </PersonalPlanQuizFrame>
+    <>
+      <PersonalPlanQuizFrame
+        canGoBack={false}
+        clientReady={clientReady}
+        currentSectionIndex={0}
+        fieldTest={fieldTest}
+        onBack={() => {}}
+        progress={4}
+        settledSectionIndices={new Set()}
+      >
+        <PersonalPlanQuizTextureQuestion
+          expectationLine={freemiumScannerFirst}
+          onSelect={selectTexture}
+          recoveryVisible={Boolean(
+            (selected || restoringLocalDraft) && failureCount > 0 && recoveryVisible,
+          )}
+          selected={selected}
+        />
+      </PersonalPlanQuizFrame>
+      <PersonalPlanQuizLegalLine />
+    </>
   )
 
   if (!showQuiz) return shell
@@ -263,9 +270,18 @@ export function PersonalPlanQuizEntry({
   return (
     <Suspense fallback={serverResume ? null : shell}>
       {serverResume ? (
-        <ServerResumeLazyPersonalPlanQuiz fieldTest={fieldTest} resume={resume} />
+        <ServerResumeLazyPersonalPlanQuiz
+          fieldTest={fieldTest}
+          freemiumScannerFirst={freemiumScannerFirst}
+          resume={resume}
+        />
       ) : (
-        <RecoveringLazyPersonalPlanQuiz entry={entry} fieldTest={fieldTest} resume={resume} />
+        <RecoveringLazyPersonalPlanQuiz
+          entry={entry}
+          fieldTest={fieldTest}
+          freemiumScannerFirst={freemiumScannerFirst}
+          resume={resume}
+        />
       )}
     </Suspense>
   )

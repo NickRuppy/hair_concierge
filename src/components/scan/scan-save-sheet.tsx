@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
 import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
+import { useLatestRequest } from "@/lib/scan/use-latest-request"
 // The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
 // `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
 import { useToast } from "@/providers/toast-provider"
@@ -89,6 +90,13 @@ async function callSaveApi(
   }
 }
 
+/**
+ * What one finished save reports back. The `productId` is the one the save was STARTED
+ * for, not whatever is on screen when it lands: the flow needs both halves to decide
+ * whether the completion still belongs to the product the user is looking at (F5).
+ */
+export type ScanSaveCompletion = { productId: string; savedState: ScanSavedStatePayload }
+
 export function ScanSaveSheet({
   open,
   productId,
@@ -100,10 +108,25 @@ export function ScanSaveSheet({
   productId: string
   savedState: ScanSavedStatePayload
   onOpenChange: (open: boolean) => void
-  onSavedStateChange: (savedState: ScanSavedStatePayload) => void
+  /**
+   * A save that actually completed for `productId`. The sheet does not close itself on
+   * it — the flow owns every consequence of a completion (state, analytics, closing).
+   */
+  onSavedStateChange: (completion: ScanSaveCompletion) => void
 }) {
   const { toast } = useToast()
   const [pending, setPending] = useState<ScanSaveKind | null>(null)
+  /**
+   * F5: only the newest save may report anything. Closing the sheet or unmounting it
+   * (the flow drops it the moment the result sheet closes) invalidates whatever is still
+   * in flight, so a response that lands after the user moved on toasts nothing, reports
+   * nothing and closes nothing on the product now on screen.
+   */
+  const requests = useLatestRequest()
+  useEffect(() => {
+    if (!open) requests.invalidateAll()
+    return () => requests.invalidateAll()
+  }, [open, requests])
 
   async function choose(option: (typeof OPTIONS)[number]) {
     if (pending) return
@@ -116,9 +139,14 @@ export function ScanSaveSheet({
     }
 
     setPending(option.kind)
+    // The product this save belongs to, captured before the await: the props may already
+    // describe the next product by the time the response lands.
+    const savedProductId = productId
+    const token = requests.begin()
     try {
       if (savedState.state === option.kind) {
-        const result = await callSaveApi("DELETE", productId, option.kind)
+        const result = await callSaveApi("DELETE", savedProductId, option.kind)
+        if (!requests.isCurrent(token)) return
         if (result.status === "not_removable_here") {
           toast({ title: NOT_REMOVABLE_HERE_TOAST })
           return
@@ -127,15 +155,15 @@ export function ScanSaveSheet({
           toast({ title: GENERIC_ERROR_TOAST, variant: "destructive" })
           return
         }
-        onSavedStateChange(result.savedState)
         toast({ title: option.removedToast })
-        onOpenChange(false)
+        onSavedStateChange({ productId: savedProductId, savedState: result.savedState })
         return
       }
 
       // One request: the handler saves the new destination and drops the other one, so
       // the product can never end up in both lists.
-      const result = await callSaveApi("POST", productId, option.kind)
+      const result = await callSaveApi("POST", savedProductId, option.kind)
+      if (!requests.isCurrent(token)) return
       if (result.status === "not_saveable") {
         toast({ title: NOT_SAVEABLE_TOAST, variant: "destructive" })
         return
@@ -144,9 +172,8 @@ export function ScanSaveSheet({
         toast({ title: GENERIC_ERROR_TOAST, variant: "destructive" })
         return
       }
-      onSavedStateChange(result.savedState)
       toast({ title: option.savedToast })
-      onOpenChange(false)
+      onSavedStateChange({ productId: savedProductId, savedState: result.savedState })
     } finally {
       setPending(null)
     }

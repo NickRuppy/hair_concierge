@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "wahre-schaetze-honig-schaetze",
+  "run1InputSha256": "b730a34ac3d52f1eb210cff4c7284e200f6de94c025f678de4a935d9dafea885",
+  "run2InputSha256": "b730a34ac3d52f1eb210cff4c7284e200f6de94c025f678de4a935d9dafea885",
+  "outputSha256": "db606dfdb305da063e536c9437bc5c258d9bb98780393e1def45aa17d41f761d",
+  "summarySha256": "c31c8f7ad961dc6a4547b49fcbb47000e1a9f34af69ddf75b7fe0e8858ad65af",
+  "byteIdentical": true
+}

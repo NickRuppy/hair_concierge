@@ -1,0 +1,165 @@
+{
+  "version": "shampoo-v14-lane-a-blind-result-rerun-v1",
+  "candidateSlot": "candidate-04",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "inputEvidence": {
+    "inputPath": "plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-02/blind-stage/inputs/candidate-04.json",
+    "formula_fingerprint_sha256": "bcec777ca479829587c7f5fdf9db5497b4b43d024de39c97830d78703cd3e71d",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none"
+  },
+  "provisionalProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "The sulfate-free system has enough breadth for effective ordinary cleansing, but isethionate/sarcosinate anionics are buffered by two betaines and a light polymer rather than reading as a strong reset chassis.",
+      "formulaFacts": [
+        "SODIUM COCOYL ISETHIONATE is an anionic isethionate at position 2.",
+        "LAURAMIDOPROPYL BETAINE and COCAMIDOPROPYL BETAINE are amphoteric betaines at positions 3 and 4.",
+        "SODIUM LAUROYL SARCOSINATE is an anionic sarcosinate at position 5.",
+        "POLYQUATERNIUM-10 at position 11 is a conditioning counter-signal."
+      ],
+      "counterSignal": "Two anionic cleansing routes plus TETRASODIUM EDTA position 13 provide more reset breadth than a low-cleansing mild shampoo.",
+      "neighboringAlternative": "strong",
+      "evidenceRefs": [
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.conditioning.11"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful cationic polymer route should provide some manageability support, but the late humectant/plant-juice clues and absence of silicone or rich lipid systems keep the level bounded.",
+      "formulaFacts": [
+        "POLYQUATERNIUM-10 appears at position 11 as the only conditioning/deposition route.",
+        "GLYCERIN position 24 and COCOS NUCIFERA FRUIT JUICE position 25 are late light care clues."
+      ],
+      "counterSignal": "The polymer is after fragrance/preservative ingredients and is not reinforced by silicone, fatty alcohol or meaningful lipid routes.",
+      "neighboringAlternative": "low",
+      "evidenceRefs": [
+        "candidate-04.json:formula.conditioning.11",
+        "candidate-04.json:formula.humectant_refatting_protein_film_clues"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Noticeable cumulative weight is unlikely because deposition is limited to one later cationic polymer and late light humectant/plant clues, while the cleansing system has broad reset capacity.",
+      "formulaFacts": [
+        "POLYQUATERNIUM-10 position 11 is the only substantive conditioning polymer route.",
+        "GLYCERIN position 24 and COCOS NUCIFERA FRUIT JUICE position 25 are late light care clues.",
+        "SODIUM COCOYL ISETHIONATE position 2 and SODIUM LAUROYL SARCOSINATE position 5, buffered by betaines at positions 3 and 4, provide effective cleansing/reset.",
+        "TETRASODIUM EDTA at position 13 adds chelating support but is not counted as deposition."
+      ],
+      "counterSignal": "Polyquaternium-10 can be persistent and could leave some residue on repeated use.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": [
+        "candidate-04.json:formula.conditioning.11",
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.humectant_refatting_protein_film_clues"
+      ],
+      "structuredWeightAssessment": {
+        "depositionLoad": "light",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [],
+        "whyThisBand": "One later cationic polymer with late humectant/plant clues is a light deposition pattern, and the same formula has multiple cleansing routes.",
+        "whyNotNeighborBand": "Not moderate because there is no silicone, rich lipid, waxy payload or interacting deposition system beyond polyquaternium-10."
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "The blind packet includes no exact-product claims, so the provisional claim-gated focus remains general.",
+      "formulaFacts": [
+        "The formula has a sulfate-free balanced-cleansing route and light polymer care, but no positioning evidence in the allowed input."
+      ],
+      "counterSignal": "The mild/balanced surfactant architecture could later support gentle or frequent-use positioning if exact claims establish it.",
+      "neighboringAlternative": "gentle",
+      "evidenceRefs": [
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.conditioning.11"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Secondary focus remains empty because the blind packet has no distinct secondary positioning; empty is the expected default when the three inclusion tests are not met.",
+      "formulaFacts": [
+        "A balanced sulfate-free cleansing route and light conditioning polymer are visible, but no secondary claim exists in the input."
+      ],
+      "counterSignal": "A later gentle or volume-adjacent claim could be formula-compatible, but it is not visible in Lane A blind input.",
+      "neighboringAlternative": "gentle",
+      "evidenceRefs": [
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.conditioning.11"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Regular is the blind default because no daily/frequent, reset, alternating or treatment trigger appears in the allowed input.",
+      "formulaFacts": [
+        "The formula has non-strong moderate cleansing and no recognized anti-dandruff active."
+      ],
+      "counterSignal": "The non-strong sulfate-free architecture could support frequent use if exact product positioning later says so.",
+      "neighboringAlternative": "frequent",
+      "evidenceRefs": [
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05",
+        "candidate-04.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "No scalp-comfort active or explicit sensitive/itchy/dry-scalp intent is present in the blind packet, although the balanced sulfate-free architecture could be compatible with such positioning.",
+      "formulaFacts": [
+        "recognized_scalp_actives_positions is empty.",
+        "PARFUM appears at position 8 with fragrance allergen/exposure ingredients later.",
+        "The surfactant system uses isethionate/sarcosinate plus betaines rather than SLES."
+      ],
+      "counterSignal": "The cleanser architecture is comfort-compatible enough that post-unblind sensitive positioning could change this property.",
+      "neighboringAlternative": "targeted",
+      "evidenceRefs": [
+        "candidate-04.json:formula.recognized_scalp_actives_positions",
+        "candidate-04.json:formula.fragrance_cooling_exposure_flags",
+        "candidate-04.json:formula.surfactant.02",
+        "candidate-04.json:formula.surfactant.03",
+        "candidate-04.json:formula.surfactant.04",
+        "candidate-04.json:formula.surfactant.05"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "The complete formula contains neither Piroctone Olamine nor Climbazole.",
+      "formulaFacts": [
+        "recognized_anti_dandruff_actives_positions is empty."
+      ],
+      "counterSignal": "SODIUM SALICYLATE at position 10 does not qualify under the v1.4 dandruff-support rule.",
+      "neighboringAlternative": "supported",
+      "evidenceRefs": [
+        "candidate-04.json:formula.recognized_anti_dandruff_actives_positions"
+      ]
+    }
+  }
+}

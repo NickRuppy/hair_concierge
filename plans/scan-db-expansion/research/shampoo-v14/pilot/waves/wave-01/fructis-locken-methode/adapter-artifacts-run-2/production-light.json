@@ -1,0 +1,166 @@
+{
+  "payload": {
+    "category_specs": {
+      "product_shampoo_specs": [
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "normal"
+        },
+        {
+          "cleansing_intensity": "regular",
+          "scalp_route": "balanced",
+          "shampoo_bucket": "normal",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_shampoo_specs": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "adjudication:fructis-locken-methode:cleansingStrength",
+          "adjudication:fructis-locken-methode:scalpComfortTarget"
+        ],
+        "rationale": "The packet does not target sensitive, itchy, dry-feeling, oily or dandruff scalp; the supported production route is the ordinary balanced shampoo bucket."
+      },
+      "category_specs.product_shampoo_specs.cleansing_intensity": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.same_gtin_delta",
+          "formula.surfactant.02",
+          "formula.surfactant.07",
+          "formula.conditioning.10"
+        ],
+        "rationale": "Strong: olefin sulfonate at position 2 is reinforced by sodium lauroyl sarcosinate and other surfactants; sulfate-free positioning does not make this chassis mild. Observed intensity: regular."
+      },
+      "product.suitable_thicknesses": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "adjudication:fructis-locken-methode:conditioningLevel",
+          "adjudication:fructis-locken-methode:weightPotential",
+          "adjudication:fructis-locken-methode:focusPrimary",
+          "adjudication:fructis-locken-methode:conditioningLevel",
+          "adjudication:fructis-locken-methode:weightPotential",
+          "adjudication:fructis-locken-methode:focusPrimary",
+          "adjudication:fructis-locken-methode:conditioningLevel",
+          "adjudication:fructis-locken-methode:weightPotential",
+          "adjudication:fructis-locken-methode:focusPrimary"
+        ],
+        "rationale": "Ideal: normal — Strong cleansing, high conditioning and moderate weight fit normal hair that wants moisture/curl care. coarse — High moisture/curl conditioning supports coarse hair while the strong cleanser prevents a heavy-only profile. Conditional (not emitted): fine — High curl-care conditioning and butter/polymer routes can weigh fine hair down, even though strong cleansing gives reset capacity."
+      },
+      "required_protocol_roles": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci"
+        ],
+        "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+      },
+      "research.properties.cleansingStrength": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.same_gtin_delta",
+          "formula.surfactant.02",
+          "formula.surfactant.07",
+          "formula.conditioning.10"
+        ],
+        "rationale": "Strong: olefin sulfonate at position 2 is reinforced by sodium lauroyl sarcosinate and other surfactants; sulfate-free positioning does not make this chassis mild."
+      },
+      "research.properties.conditioningLevel": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.same_gtin_delta",
+          "formula.humectant.04",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.humectant.14",
+          "formula.conditioning.21"
+        ],
+        "rationale": "High: early glycerin, glycol distearate, shea butter, sodium hyaluronate and two cationic polymer routes form a broad curl/moisture care system."
+      },
+      "research.properties.dandruffSupport": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.same_gtin_delta"
+        ],
+        "rationale": "Not supported: the complete INCI contains neither Piroctone Olamine nor Climbazole; salicylic acid alone is not enough under v1.4."
+      },
+      "research.properties.focusPrimary": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "claims.manufacturer",
+          "formula.canonical_inci",
+          "formula.same_gtin_delta",
+          "formula.humectant.04",
+          "formula.humectant.14",
+          "formula.conditioning.10"
+        ],
+        "rationale": "General: dominant positioning is curl-method moisture, but curl and moisture are not v1.4 focus values. The formula strongly supports moisture/curl care without fitting a more specific v1.4 focus cleanly."
+      },
+      "research.properties.focusSecondary": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "claims.manufacturer",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Empty: there is no distinct v1.4 secondary focus with its own independent claim route; sulfate-free, silicone-free and curl-method language all support the same moisture/curl positioning."
+      },
+      "research.properties.scalpComfortTarget": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.fragrance.08",
+          "claims.manufacturer"
+        ],
+        "rationale": "Not targeted: the scalp is named only as the application area; the claims target curly hair moisture, not sensitive, itchy or uncomfortable scalp."
+      },
+      "research.properties.usageRole": {
+        "confidence": "high",
+        "evidenceRefs": [
+          "directions.manufacturer",
+          "claims.manufacturer",
+          "formula.canonical_inci"
+        ],
+        "rationale": "Regular: directions are standard wet-scalp application and rinse-out, with no treatment or reset cadence trigger."
+      },
+      "research.properties.weightPotential": {
+        "confidence": "moderate",
+        "evidenceRefs": [
+          "formula.canonical_inci",
+          "formula.same_gtin_delta",
+          "formula.conditioning.06",
+          "formula.conditioning.10",
+          "formula.conditioning.19",
+          "formula.conditioning.21",
+          "formula.surfactant.02",
+          "formula.surfactant.07"
+        ],
+        "rationale": "Moderate: shea butter, glycol distearate and cationic guar/polyquaternium routes can leave curl-care residue, while the strong olefin-sulfonate/sarcosinate chassis and lack of silicone keep it below high."
+      }
+    },
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "suitable_thicknesses": [
+      "normal",
+      "coarse"
+    ]
+  },
+  "status": "property_lane_ready",
+  "summary": {
+    "conditionalThicknesses": [
+      "fine"
+    ],
+    "productId": "fructis-locken-methode",
+    "productName": "Locken Methode Feuchtigkeits-Shampoo",
+    "rows": 2
+  },
+  "version": "shampoo-production-light-v1",
+  "warnings": []
+}

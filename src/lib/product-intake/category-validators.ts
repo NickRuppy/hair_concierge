@@ -123,7 +123,11 @@ type ProductIntakeSpecRowByTable = {
     oil_purpose: string | null
     ingredient_flags: string[]
   }
-  product_oil_specs: { weight: "light" | "medium" | "rich"; role_support: string[] }
+  product_oil_specs: {
+    weight: "light" | "medium" | "rich"
+    role_support: string[]
+    provides_heat_protection: boolean
+  }
   product_dry_shampoo_specs: {
     primary_effect: string
     hair_color_fit: string
@@ -612,15 +616,9 @@ const oilSpecsSchema = z
       .object({
         weight: z.enum(["light", "medium", "rich"]),
         role_support: z
-          .array(
-            z.enum([
-              "pre_wash_fibre_treatment",
-              "leave_on_fibre_conditioning",
-              "dry_finish",
-              "pre_heat_protection",
-            ]),
-          )
+          .array(z.enum(["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"]))
           .min(1),
+        provides_heat_protection: z.boolean(),
       })
       .strict(),
     product_oil_eligibility: z
@@ -732,12 +730,7 @@ const REQUIRED_PROTOCOL_ROLES_BY_CATEGORY = {
   conditioner: ["conditioner_rinse_out"],
   leave_in: ["post_wash_leave_in", "pre_heat_protection"],
   mask: ["intensive_conditioning_mask"],
-  oil: [
-    "pre_wash_fibre_treatment",
-    "leave_on_fibre_conditioning",
-    "dry_finish",
-    "pre_heat_protection",
-  ],
+  oil: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
   dry_shampoo: ["root_refresh_bridge"],
   deep_cleansing_shampoo: ["residue_reset", "mineral_reset"],
   bondbuilder: ["specialized_bond_treatment"],

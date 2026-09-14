@@ -1,0 +1,125 @@
+{
+  "version": "shampoo-v14-lane-a-blind-v1",
+  "candidateSlot": "candidate-03",
+  "properties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "Strong is supported by a position-2 sulfate chassis reinforced by a second anionic sulfonate route and active/reset architecture, even after betaine and conditioning counter-signals.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "factId": "formula.surfactant.02"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 4, "factId": "formula.surfactant.04"},
+        {"ingredient": "TEA-Dodecylbenzenesulfonate", "position": 16, "factId": "formula.surfactant.16"},
+        {"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.scalp_active.10"}
+      ],
+      "counterSignal": "Cocamidopropyl Betaine at position 4 and silicone/polymer deposition routes soften the chassis but do not erase the second anionic route.",
+      "neighboringAlternative": "moderate",
+      "evidenceRefs": ["formula.surfactant.02", "formula.surfactant.04", "formula.surfactant.16", "formula.architecture.04", "formula.scalp_active.10"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate conditioning fits the silicone gum, cationic guar, dimethicone and refatting ester system, but the active strong-cleansing chassis keeps the care effect bounded.",
+      "formulaFacts": [
+        {"ingredient": "Glycol Distearate", "position": 9, "factId": "formula.conditioning.09"},
+        {"ingredient": "Dimethiconol", "position": 11, "factId": "formula.conditioning.11"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13"},
+        {"ingredient": "Dimethicone", "position": 14, "factId": "formula.conditioning.14"}
+      ],
+      "counterSignal": "Multiple silicone/polymer routes prevent a low conditioning call.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.conditioning.09", "formula.conditioning.11", "formula.conditioning.13", "formula.conditioning.14", "formula.surfactant.16"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate weight potential is the cleanest whole-formula band: persistent silicone/polymer routes can accumulate, but strong anionic reset prevents a high-weight conclusion.",
+      "formulaFacts": [
+        {"ingredient": "Dimethiconol", "position": 11, "factId": "formula.conditioning.11"},
+        {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 13, "factId": "formula.conditioning.13"},
+        {"ingredient": "Dimethicone", "position": 14, "factId": "formula.conditioning.14"},
+        {"ingredient": "TEA-Dodecylbenzenesulfonate", "position": 16, "factId": "formula.surfactant.16"}
+      ],
+      "counterSignal": "Sodium Laureth Sulfate at position 2 plus TEA-Dodecylbenzenesulfonate at position 16 gives strong reset capacity.",
+      "neighboringAlternative": "high",
+      "evidenceRefs": ["formula.conditioning.11", "formula.conditioning.13", "formula.conditioning.14", "formula.surfactant.02", "formula.surfactant.16"],
+      "weightAssessment": {
+        "depositionLoad": "moderate",
+        "persistence": "moderate",
+        "resetCapacity": "strong",
+        "unresolvedFacts": [],
+        "whyThisBand": "Silicone gum, dimethicone and cationic guar make noticeable residue plausible, while the strong surfactant chassis keeps it bounded.",
+        "whyNotNeighborBand": "High would ignore the strong reset route; low would ignore several persistent deposition signals."
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Scalp active is formula-derived because Piroctone Olamine is present at position 10 and is the v1.4 recognized anti-dandruff active.",
+      "formulaFacts": [
+        {"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.scalp_active.10"},
+        {"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.anti_dandruff_active.10"}
+      ],
+      "counterSignal": "The formula also carries silicone/polymer care routes, but they are secondary to the recognized active route.",
+      "neighboringAlternative": "general",
+      "evidenceRefs": ["formula.scalp_active.10", "formula.anti_dandruff_active.10", "formula.architecture.05"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "No secondary focus is kept because the formula has conditioning routes but no blind-safe distinct second role independent of the scalp-active route.",
+      "formulaFacts": [
+        {"ingredient": "Dimethiconol", "position": 11, "factId": "formula.conditioning.11"},
+        {"ingredient": "Dimethicone", "position": 14, "factId": "formula.conditioning.14"}
+      ],
+      "counterSignal": "The silicone/polymer system could later support a care secondary if visible positioning separates it.",
+      "neighboringAlternative": ["repair"],
+      "evidenceRefs": ["formula.conditioning.11", "formula.conditioning.13", "formula.conditioning.14"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment is formula-derived because the complete INCI contains Piroctone Olamine, a recognized anti-dandruff active under v1.4.",
+      "formulaFacts": [
+        {"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.anti_dandruff_active.10"},
+        {"ingredient": "TEA-Dodecylbenzenesulfonate", "position": 16, "factId": "formula.surfactant.16"}
+      ],
+      "counterSignal": "Strong cleansing alone would not create treatment use, but the recognized active does.",
+      "neighboringAlternative": "regular",
+      "evidenceRefs": ["formula.anti_dandruff_active.10", "formula.surfactant.16"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted is provisional but supported by the recognized scalp-active route plus later niacinamide and panthenol comfort clues.",
+      "formulaFacts": [
+        {"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.scalp_active.10"},
+        {"ingredient": "Niacinamide", "position": 24, "factId": "formula.canonical_inci"},
+        {"ingredient": "Panthenol", "position": 25, "factId": "formula.conditioning.25"}
+      ],
+      "counterSignal": "Parfum at position 6 and strong cleansing are meaningful comfort counter-signals.",
+      "neighboringAlternative": "not_targeted",
+      "evidenceRefs": ["formula.scalp_active.10", "formula.conditioning.25", "formula.canonical_inci", "formula.surfactant.02", "formula.surfactant.16"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Supported is mechanical: Piroctone Olamine appears in the complete INCI at position 10.",
+      "formulaFacts": [{"ingredient": "Piroctone Olamine", "position": 10, "factId": "formula.anti_dandruff_active.10"}],
+      "counterSignal": "No counter-signal changes the mechanical rule once Piroctone Olamine is present in a complete INCI.",
+      "neighboringAlternative": "not_supported",
+      "evidenceRefs": ["formula.anti_dandruff_active.10"]
+    }
+  },
+  "blindReceipt": {
+    "blindInputSha256": "ec19c666d76489b45c7a65b7af93a4b6ed0db2b3d3a1daba0cf3a3f7010203e3",
+    "formulaFingerprintSha256": "b1eb663939749d93f580c84af491006c685245d5df30f7826039a1adb96379c6",
+    "classificationStandardSha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "newProductRunbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+    "completedAt": "2026-09-03T07:50:05Z",
+    "identitySeen": false,
+    "claimsSeen": false,
+    "oldManifestSeen": false,
+    "laneBSeen": false
+  }
+}

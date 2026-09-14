@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "herbal-essences-fiji",
+  "run1InputSha256": "2e2af033b3a34e3614ff79019443e89076cc5135cefde148d9d7ca79466cc0e2",
+  "run2InputSha256": "2e2af033b3a34e3614ff79019443e89076cc5135cefde148d9d7ca79466cc0e2",
+  "outputSha256": "1651ad214bff5a976a00c0f44e346b18d7e211232e7ba9205e000bdbc21a77fa",
+  "summarySha256": "bc589e0712274aaeeb366b19bde57959572443e0022b5f8765ab2b92e9e8f24d",
+  "byteIdentical": true
+}

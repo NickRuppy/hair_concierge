@@ -1,7 +1,7 @@
 import { after, NextResponse, type NextRequest } from "next/server"
 import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
-import { createServerClient } from "@supabase/ssr"
+import { createClient as createRequestClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
@@ -23,8 +23,16 @@ import {
 import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
 import {
   resolveSubscriptionPricingCatalog,
+  STANDARD_PRICING_CATALOG,
   type SubscriptionPricingCatalog,
 } from "@/lib/billing/pricing-catalog"
+import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { buildFreemiumCheckoutReturnUrl } from "@/lib/freemium/checkout-return"
+import {
+  FREEMIUM_CHECKOUT_MARKER_KEY,
+  FREEMIUM_CHECKOUT_MARKER_VALUE,
+  FREEMIUM_CHECKOUT_USER_KEY,
+} from "@/lib/freemium/checkout-metadata"
 import {
   bindPersonalPlanOneTimeConsentProviderReference,
   createPersonalPlanOneTimeCheckoutConsent,
@@ -40,13 +48,19 @@ import {
 } from "@/lib/billing/offer-products"
 import {
   acquireMembershipReactivationCheckout,
-  bindMembershipReactivationProviderReference,
-  claimMembershipReactivationProvider,
   expireMembershipReactivationCheckoutReservation,
   markMembershipReactivationReconciliationRequired,
-  MembershipReactivationCheckoutConflictError,
   type MembershipReactivationCheckoutReservation,
 } from "@/lib/reactivation/checkout-reservations"
+import {
+  findOwnedReactivationCheckout,
+  reactivationRecoveryPayload,
+} from "@/lib/reactivation/checkout-recovery"
+import {
+  createDurableStripeReactivationCheckout,
+  preflightStripeReactivationCustomer,
+  verifyStripeReactivationProvider,
+} from "@/lib/reactivation/stripe-checkout-recovery"
 import { sanitizeReactivationReturnDestination } from "@/lib/reactivation/return-destination"
 import { createHash, timingSafeEqual } from "node:crypto"
 import type Stripe from "stripe"
@@ -61,6 +75,17 @@ type CheckoutAnalyticsPlan =
 
 export const runtime = "nodejs"
 
+/**
+ * freemium-scanner-first T14: `"premium_sheet"` is the third checkout entry point — the
+ * Premium sheet a free user opens from a gate. It is the ONLY source whose price catalog
+ * is pinned server-side (always `standard`, whatever `PERSONAL_PLAN_LAUNCH_PRICING_ENABLED`
+ * says — see the catalog resolution below), because the sheet renders standard prices
+ * unconditionally (`src/lib/premium-sheet/pricing.ts`) and a launch-pricing rollout must
+ * never charge a different amount than the sheet showed. The two pre-existing values keep
+ * the flag-aware resolver, so every legacy flow is unchanged.
+ */
+export type CheckoutRequestSource = "pricing_page" | "quiz_result_offer" | "premium_sheet"
+
 export const StripeCheckoutSessionRequestSchema = z
   .object({
     interval: z.enum(["month", "quarter", "year"]).optional(),
@@ -69,17 +94,24 @@ export const StripeCheckoutSessionRequestSchema = z
     // Accept null too — the client sends `leadId: null` when there's no ?lead=
     // in the URL (resubscribe path). `.optional()` alone rejects null.
     leadId: z.string().uuid().nullable().optional(),
-    source: z.enum(["pricing_page", "quiz_result_offer"]).default("pricing_page"),
+    source: z.enum(["pricing_page", "quiz_result_offer", "premium_sheet"]).default("pricing_page"),
     funnelEventId: z.string().uuid().optional(),
     checkoutAttemptId: z.string().uuid().optional(),
     checkoutSessionAttemptId: z.string().uuid().optional(),
     checkoutContext: z.literal("membership_reactivation").optional(),
+    recoveryOnly: z.boolean().optional(),
     returnDestination: z.string().max(500).optional(),
     presentation: z.literal("offer_overlay_elements").optional(),
     action: z.enum(["create", "prepare", "claim"]).default("create"),
     preparationId: z.string().uuid().optional(),
     preparationToken: z.string().min(32).max(256).optional(),
     preparedSessionId: z.string().startsWith("cs_").optional(),
+    /**
+     * T14, `source: "premium_sheet"` only: the app surface the sheet was opened from, so a
+     * redirect-based payment method returns THERE instead of `/welcome`. Untrusted —
+     * `sanitizeFreemiumCheckoutReturnPath` reduces it to an allowlisted app path.
+     */
+    returnPath: z.string().max(200).optional(),
   })
   .strict()
   .superRefine(
@@ -89,6 +121,7 @@ export const StripeCheckoutSessionRequestSchema = z
         checkoutAttemptId,
         checkoutSessionAttemptId,
         checkoutContext,
+        recoveryOnly,
         funnelEventId,
         funnelSessionId,
         interval,
@@ -99,10 +132,49 @@ export const StripeCheckoutSessionRequestSchema = z
         presentation,
         purchaseKind,
         returnDestination,
+        returnPath,
         source,
       },
       context,
     ) => {
+      if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "recovery is limited to reactivation",
+          path: ["recoveryOnly"],
+        })
+      // T14: the Premium sheet sells exactly one thing — a standard-catalog subscription,
+      // created in one step for an already-authenticated free user. Every other protocol
+      // this endpoint speaks (one-time product, lead/funnel offer contract, prepared/claim,
+      // reactivation, Elements presentation) is refused here rather than silently ignored,
+      // so the new source can never reach a legacy branch.
+      if (source === "premium_sheet") {
+        if (
+          purchaseKind ||
+          presentation ||
+          action !== "create" ||
+          leadId ||
+          funnelSessionId ||
+          preparationId ||
+          preparationToken ||
+          preparedSessionId ||
+          checkoutSessionAttemptId ||
+          checkoutContext ||
+          returnDestination
+        ) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "invalid Premium-sheet checkout contract",
+            path: ["source"],
+          })
+        }
+      } else if (returnPath !== undefined) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "returnPath is limited to Premium-sheet checkout",
+          path: ["returnPath"],
+        })
+      }
       if (purchaseKind === PERSONAL_PLAN_ONCE_KIND) {
         if (interval !== undefined) {
           context.addIssue({
@@ -315,6 +387,28 @@ export function reportMissingExactOfferFunnelContext(
   return true
 }
 
+/**
+ * Which price catalog a checkout SUBMITS (freemium-scanner-first T14, carry-forward from
+ * T13).
+ *
+ * The Premium sheet renders standard prices unconditionally
+ * (`src/lib/premium-sheet/pricing.ts`), so the price it charges is pinned to the same
+ * catalog here — a launch-pricing rollout must never charge 69,99 behind a 99,99 sheet.
+ * Every other source keeps the flag-aware resolver exactly as before.
+ *
+ * Exported because this is the one assertion worth making in both flag states.
+ */
+export function resolveCheckoutPricingCatalog({
+  source,
+  launchPricingEnabled,
+}: {
+  source: CheckoutRequestSource
+  launchPricingEnabled: boolean
+}): SubscriptionPricingCatalog {
+  if (source === "premium_sheet") return STANDARD_PRICING_CATALOG
+  return resolveSubscriptionPricingCatalog(launchPricingEnabled)
+}
+
 export function resolveStripeCheckoutSessionCreateOptions({
   reactivationReservationId,
   isPreparation,
@@ -328,7 +422,7 @@ export function resolveStripeCheckoutSessionCreateOptions({
   isPreparation: boolean
   preparationId?: string
   isOneTimePurchase: boolean
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   checkoutAttemptId?: string
   checkoutSessionAttemptId?: string
 }) {
@@ -347,6 +441,11 @@ export function resolveStripeCheckoutSessionCreateOptions({
         checkoutSessionAttemptId ?? checkoutAttemptId,
       ),
     }
+  }
+  // T14: a re-mounted sheet (React strict mode, a retry after a network blip) must recover
+  // the SAME Session rather than leave a trail of open ones behind the same CTA press.
+  if (source === "premium_sheet" && checkoutAttemptId) {
+    return { idempotencyKey: `premium-sheet:${checkoutAttemptId}` }
   }
   return undefined
 }
@@ -403,26 +502,36 @@ export async function POST(req: NextRequest) {
     checkoutAttemptId,
     checkoutSessionAttemptId,
     checkoutContext,
+    recoveryOnly,
     action,
     preparationId,
     preparationToken,
     preparedSessionId,
     returnDestination: rawReturnDestination,
+    returnPath: rawReturnPath,
     presentation,
   } = parsed.data
   const isOneTimePurchase = purchaseKind === PERSONAL_PLAN_ONCE_KIND
+  const isPremiumSheetCheckout = source === "premium_sheet"
   if (presentation === "offer_overlay_elements" && !isOfferElementsCheckoutEnabled()) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
+  }
+  // Flag-off byte-identity: with the freemium restructure disabled this source does not
+  // exist at all, exactly as before T14.
+  if (isPremiumSheetCheckout && !isFreemiumScannerFirstEnabled()) {
+    return NextResponse.json({ error: "not found" }, { status: 404 })
   }
   const isPreparation = action === "prepare"
   const subscriptionInterval = interval as BillingInterval
   const commerceInterval = isOneTimePurchase ? "one_time" : subscriptionInterval
   let checkoutIsInternalTest: boolean | undefined
+  let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
   try {
     // Identity resolution: prefer existing Stripe customer > email > 400
     // Priority: leadId email → authed user's stripe_customer_id → authed user's email → 400
     let customerId: string | undefined
     let customerEmail: string | undefined
+    let profileCustomerId: string | null = null
     let resolvedLeadId: string | null = null
     const preparedControlContext = () => ({
       commerceKind: isOneTimePurchase ? ("one_time" as const) : ("subscription" as const),
@@ -433,16 +542,7 @@ export async function POST(req: NextRequest) {
     })
 
     const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => cookieStore.getAll(),
-          setAll: () => {},
-        },
-      },
-    )
+    const supabase = await createRequestClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -452,7 +552,6 @@ export async function POST(req: NextRequest) {
       adminSupabase ??= createBillingAdminClient()
       return adminSupabase
     }
-    let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
     let oneTimeConsentId: string | null = null
     let oneTimeProviderLocked: "stripe" | null = null
 
@@ -593,8 +692,33 @@ export async function POST(req: NextRequest) {
 
     if (checkoutContext === "membership_reactivation") {
       if (!authenticatedUserId || !checkoutAttemptId || leadId) {
-        return NextResponse.json({ error: "authenticated reactivation required" }, { status: 401 })
+        captureServerPaymentFailure({
+          signal: "payment_checkout_initialization_failed",
+          origin: "provider_api",
+          method: "unknown",
+          truth: "unknown",
+          provider: "stripe",
+          stage: "stripe_checkout_session_create",
+          source,
+          commerceKind: "subscription",
+          interval: subscriptionInterval,
+          errorFamily: "authentication",
+          status: "reactivation_authentication_required",
+          live: resolvePaymentRuntime({
+            STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+            VERCEL_ENV: process.env.VERCEL_ENV,
+          }).stripeLive,
+          isInternalTest: checkoutIsInternalTest ?? false,
+        })
+        return NextResponse.json({ error: "reactivation_authentication_required" }, { status: 401 })
       }
+    }
+
+    // The sheet is only ever opened by a signed-in free user; there is no anonymous
+    // Premium-sheet purchase to recover, and the completion contract binds the Session to
+    // this exact user id.
+    if (isPremiumSheetCheckout && !authenticatedUserId) {
+      return NextResponse.json({ error: "authentication required" }, { status: 401 })
     }
 
     if (authenticatedUserId) {
@@ -627,29 +751,28 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      if (checkoutContext === "membership_reactivation" && checkoutAttemptId) {
-        const returnDestination = sanitizeReactivationReturnDestination(rawReturnDestination)
-        try {
-          reactivationReservation = await acquireMembershipReactivationCheckout(adminSupabase, {
-            userId: authenticatedUserId,
-            checkoutAttemptId,
-            interval: subscriptionInterval,
-            returnDestination,
-          })
-          reactivationReservation = await claimMembershipReactivationProvider(
-            adminSupabase,
-            reactivationReservation.id,
-            authenticatedUserId,
-            "stripe",
+      if (checkoutContext === "membership_reactivation") {
+        reactivationReservation = await findOwnedReactivationCheckout(
+          adminSupabase,
+          authenticatedUserId,
+        )
+        if (recoveryOnly && !reactivationReservation?.provider) {
+          return NextResponse.json(
+            {
+              error: "reactivation_checkout_unavailable",
+              recovery: { provider: null, state: "not_started" },
+            },
+            { status: 409 },
           )
-        } catch (error) {
-          if (error instanceof MembershipReactivationCheckoutConflictError) {
-            return NextResponse.json(
-              { error: "reactivation_checkout_in_progress" },
-              { status: 409 },
-            )
-          }
-          throw error
+        }
+        if (
+          reactivationReservation?.provider &&
+          (reactivationReservation.provider !== "stripe" ||
+            reactivationReservation.interval !== subscriptionInterval)
+        ) {
+          return NextResponse.json(reactivationRecoveryPayload(reactivationReservation, "resume"), {
+            status: 409,
+          })
         }
       }
     }
@@ -702,12 +825,14 @@ export async function POST(req: NextRequest) {
     if (!customerId && !customerEmail) {
       // Resubscribe, direct-entry, or stale lead path — lock to the authenticated user's identity.
       if (user?.id) {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("stripe_customer_id")
           .eq("id", user.id)
           .single()
 
+        if (profileError) throw profileError
+        profileCustomerId = profile?.stripe_customer_id ?? null
         if (profile?.stripe_customer_id) {
           customerId = profile.stripe_customer_id
         } else {
@@ -755,7 +880,10 @@ export async function POST(req: NextRequest) {
     const leadFunnelContext = resolvedLeadId
       ? await resolveFunnelContextForLead(resolvedLeadId, exactOfferFunnelSessionId)
       : null
-    const pricingCatalog = resolveSubscriptionPricingCatalog(isPersonalPlanLaunchPricingEnabled())
+    const pricingCatalog = resolveCheckoutPricingCatalog({
+      source,
+      launchPricingEnabled: isPersonalPlanLaunchPricingEnabled(),
+    })
     const analyticsPlan = isOneTimePurchase
       ? PERSONAL_PLAN_ONCE_PRODUCT
       : getStripePricingPlan(subscriptionInterval, pricingCatalog)
@@ -779,29 +907,60 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "price not configured" }, { status: 500 })
     }
 
+    let reactivationProvider: Awaited<ReturnType<typeof verifyStripeReactivationProvider>> | null =
+      null
+    if (checkoutContext === "membership_reactivation") {
+      const frozenPrice =
+        reactivationReservation?.stripe_checkout_context?.initial_params.line_items?.[0]?.price
+      reactivationProvider = await verifyStripeReactivationProvider(
+        stripe,
+        typeof frozenPrice === "string" ? frozenPrice : priceId,
+      )
+      const frozen = reactivationReservation?.stripe_checkout_context
+      if (
+        frozen &&
+        (frozen.stripe_account_id !== reactivationProvider.stripeAccountId ||
+          frozen.livemode !== reactivationProvider.livemode)
+      ) {
+        throw new Error("reactivation Stripe provider changed")
+      }
+    }
+
     if (reactivationReservation?.provider_reference) {
       const providerReference = reactivationReservation.provider_reference
       try {
         const existingSession = await stripe.checkout.sessions.retrieve(providerReference)
+        const frozen = reactivationReservation.stripe_checkout_context
+        if (
+          frozen &&
+          (existingSession.livemode !== frozen.livemode ||
+            existingSession.metadata?.reactivation_reservation_id !== reactivationReservation.id)
+        ) {
+          throw new Error("reactivation Stripe session context mismatch")
+        }
         if (existingSession.status === "expired") {
           await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
             reservationId: reactivationReservation.id,
             userId: authenticatedUserId!,
             providerReference,
           })
-          return NextResponse.json({ error: "reactivation_checkout_terminal" }, { status: 409 })
+          return NextResponse.json(
+            {
+              error: "reactivation_checkout_terminal",
+              recovery: { provider: null, state: "not_started" },
+            },
+            { status: 409 },
+          )
         }
-        if (!existingSession.client_secret) throw new Error("existing session has no client secret")
+        if (existingSession.status === "complete") {
+          return NextResponse.json({
+            statusUrl: `/welcome?session_id=${encodeURIComponent(existingSession.id)}`,
+          })
+        }
+        if (existingSession.status !== "open" || !existingSession.client_secret)
+          throw new Error("existing session has no client secret")
         return NextResponse.json({ client_secret: existingSession.client_secret })
       } catch (error) {
-        if (isDefinitivelyMissingStripeResource(error)) {
-          await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
-            reservationId: reactivationReservation.id,
-            userId: authenticatedUserId!,
-            providerReference,
-          })
-          return NextResponse.json({ error: "reactivation_checkout_terminal" }, { status: 409 })
-        }
         await markMembershipReactivationReconciliationRequired(
           getAdminSupabase(),
           reactivationReservation.id,
@@ -813,10 +972,16 @@ export async function POST(req: NextRequest) {
           interval: commerceInterval as never,
           reason: "reactivation_session_reconciliation_required",
         })
-        return NextResponse.json({ error: "reactivation_checkout_unavailable" }, { status: 409 })
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation), {
+          status: 409,
+        })
       }
     }
-    const shouldRecordCheckoutFunnel = shouldRecordFunnelForCheckoutAction(action)
+    // The Premium sheet is not a funnel surface: there is no lead, no quiz session and no
+    // offer touch to attribute, and recording a `checkout_started` milestone against a
+    // stray cookie context would attach an in-app upgrade to somebody's old quiz funnel.
+    const shouldRecordCheckoutFunnel =
+      shouldRecordFunnelForCheckoutAction(action) && !isPremiumSheetCheckout
     const cookieFunnelContext = shouldRecordCheckoutFunnel
       ? await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)
       : null
@@ -845,6 +1010,45 @@ export async function POST(req: NextRequest) {
       typeof funnelContext.isInternalTest === "boolean"
     ) {
       checkoutIsInternalTest = funnelContext.isInternalTest
+    }
+
+    if (checkoutContext === "membership_reactivation") {
+      if (!user?.email) throw new Error("reactivation account email unavailable")
+      if (!reactivationReservation?.stripe_checkout_context) {
+        const originalCustomerId = customerId
+        customerId = await preflightStripeReactivationCustomer(
+          stripe,
+          customerId,
+          reactivationProvider!.livemode,
+        )
+        customerEmail = customerId ? undefined : user.email
+        if (originalCustomerId && !customerId)
+          console.info("[stripe] reactivation customer recovery", { outcome: "customer_unusable" })
+      }
+      reactivationReservation = await acquireMembershipReactivationCheckout(getAdminSupabase(), {
+        userId: authenticatedUserId!,
+        checkoutAttemptId: reactivationReservation?.checkout_attempt_id ?? checkoutAttemptId!,
+        interval: subscriptionInterval,
+        returnDestination:
+          reactivationReservation?.return_destination ??
+          sanitizeReactivationReturnDestination(rawReturnDestination),
+      })
+      if (
+        reactivationReservation.provider &&
+        (reactivationReservation.provider !== "stripe" ||
+          reactivationReservation.interval !== subscriptionInterval)
+      ) {
+        return NextResponse.json(reactivationRecoveryPayload(reactivationReservation, "resume"), {
+          status: 409,
+        })
+      }
+      // Recheck access after awaited preflight; a parallel successful purchase must not start another.
+      const accessConflict = await createStripeCheckoutAccessConflictResponse(
+        getAdminSupabase(),
+        authenticatedUserId!,
+        user.email,
+      )
+      if (accessConflict) return accessConflict
     }
 
     const preparedMetadata = isPreparation
@@ -877,6 +1081,12 @@ export async function POST(req: NextRequest) {
       returnDestination: reactivationReservation?.return_destination,
       reactivationReservationId: reactivationReservation?.id,
       presentation: presentation === "offer_overlay_elements" ? "elements" : "embedded_page",
+      ...(isPremiumSheetCheckout
+        ? {
+            completion: "contextual" as const,
+            contextualReturnUrl: buildFreemiumCheckoutReturnUrl(origin, rawReturnPath),
+          }
+        : {}),
       ...(!isPreparation &&
       (checkoutAttemptId ||
         oneTimeConsentId ||
@@ -884,10 +1094,22 @@ export async function POST(req: NextRequest) {
         checkoutIsInternalTest !== undefined)
         ? {
             metadata: {
-              ...(checkoutAttemptId ? { checkout_attempt_id: checkoutAttemptId } : {}),
+              ...(checkoutAttemptId
+                ? {
+                    checkout_attempt_id:
+                      reactivationReservation?.checkout_attempt_id ?? checkoutAttemptId,
+                  }
+                : {}),
+              ...(reactivationReservation ? { stripe_checkout_context_version: "1" } : {}),
               ...(oneTimeConsentId ? { personal_plan_once_consent_id: oneTimeConsentId } : {}),
               ...(!isOneTimePurchase
                 ? { pricing_catalog: pricingCatalog, stripe_price_id: priceId }
+                : {}),
+              ...(isPremiumSheetCheckout
+                ? {
+                    [FREEMIUM_CHECKOUT_MARKER_KEY]: FREEMIUM_CHECKOUT_MARKER_VALUE,
+                    [FREEMIUM_CHECKOUT_USER_KEY]: authenticatedUserId!,
+                  }
                 : {}),
               ...(checkoutIsInternalTest !== undefined
                 ? { is_internal_test: String(checkoutIsInternalTest) }
@@ -906,24 +1128,53 @@ export async function POST(req: NextRequest) {
           }
         : {}),
     })
-    const session = await stripe.checkout.sessions.create(
-      params,
-      resolveStripeCheckoutSessionCreateOptions({
-        reactivationReservationId: reactivationReservation?.id,
-        isPreparation,
-        preparationId,
-        isOneTimePurchase,
-        source,
-        checkoutAttemptId,
-        checkoutSessionAttemptId,
-      }),
-    )
+    // recoveryOnly resumes the existing frozen request (including an idempotent
+    // create after a lost response); it never opens a new reservation/provider.
+    const session =
+      reactivationReservation && reactivationProvider
+        ? await createDurableStripeReactivationCheckout({
+            stripe,
+            client: getAdminSupabase(),
+            reservation: reactivationReservation,
+            userId: authenticatedUserId!,
+            accountEmail: user!.email!,
+            profileCustomerId,
+            ...reactivationProvider,
+            params,
+          })
+        : await stripe.checkout.sessions.create(
+            params,
+            resolveStripeCheckoutSessionCreateOptions({
+              reactivationReservationId: reactivationReservation?.id,
+              isPreparation,
+              preparationId,
+              isOneTimePurchase,
+              source,
+              checkoutAttemptId,
+              checkoutSessionAttemptId,
+            }),
+          )
     if (reactivationReservation) {
-      await bindMembershipReactivationProviderReference(
-        getAdminSupabase(),
-        reactivationReservation.id,
-        session.id,
-      )
+      if (session.status === "complete")
+        return NextResponse.json({
+          statusUrl: `/welcome?session_id=${encodeURIComponent(session.id)}`,
+        })
+      if (session.status === "expired") {
+        await expireMembershipReactivationCheckoutReservation(getAdminSupabase(), {
+          reservationId: reactivationReservation.id,
+          userId: authenticatedUserId!,
+          providerReference: session.id,
+        })
+        return NextResponse.json(
+          {
+            error: "reactivation_checkout_terminal",
+            recovery: { provider: null, state: "not_started" },
+          },
+          { status: 409 },
+        )
+      }
+      if (session.status !== "open" || !session.client_secret)
+        throw new Error("reactivation Stripe session unavailable")
     }
     if (oneTimeConsentId) {
       await bindPersonalPlanOneTimeConsentProviderReference(getAdminSupabase(), oneTimeConsentId, {
@@ -981,7 +1232,13 @@ export async function POST(req: NextRequest) {
           })
       : false
 
-    const response = NextResponse.json({ client_secret: session.client_secret })
+    const response = NextResponse.json({
+      client_secret: session.client_secret,
+      // T14 only: Stripe's embedded `onComplete` callback carries no Session id, and the
+      // sheet needs one to ask the server what actually happened. Added for the new source
+      // alone so every existing client's response body stays byte-identical.
+      ...(isPremiumSheetCheckout ? { session_id: session.id } : {}),
+    })
     if (funnelTouch && funnelRecorded) {
       response.cookies.set(FUNNEL_TOUCH_COOKIE, "", { path: "/", maxAge: 0 })
     }
@@ -994,6 +1251,21 @@ export async function POST(req: NextRequest) {
       leadId,
       source,
     })
+    if (checkoutContext === "membership_reactivation") {
+      if (reactivationReservation) {
+        reactivationReservation =
+          (await findOwnedReactivationCheckout(
+            createBillingAdminClient(),
+            reactivationReservation.user_id,
+          ).catch(() => reactivationReservation)) ?? reactivationReservation
+      }
+      return NextResponse.json(
+        reactivationReservation
+          ? reactivationRecoveryPayload(reactivationReservation)
+          : { error: "reactivation_checkout_unavailable" },
+        { status: 409 },
+      )
+    }
     throw error
   }
 }
@@ -1046,7 +1318,7 @@ type StripeCheckoutInitializationFailure = {
   commerceKind: "subscription" | "one_time"
   isInternalTest: boolean
   leadId?: string | null
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
 }
 
 type StripeCheckoutInitializationTelemetry = {
@@ -1124,7 +1396,7 @@ export async function reportPreparedCheckoutControlOutcome(
     isInternalTest: boolean
     leadId?: string | null
     checkoutAttemptId?: string | null
-    source: "pricing_page" | "quiz_result_offer"
+    source: CheckoutRequestSource
   },
   telemetry: PreparedCheckoutControlOutcomeTelemetry = {
     capture: captureServerPaymentFailure,
@@ -1183,7 +1455,7 @@ async function preparedCheckoutUnavailable(input: {
   isInternalTest: boolean
   leadId?: string | null
   checkoutAttemptId?: string | null
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
 }) {
   // Clients deliberately receive one outcome for identity, expiry, and token failures.
   // Detailed causes are safe to add to server-only diagnostics without becoming an oracle.
@@ -1197,7 +1469,7 @@ async function preparedCheckoutProviderLocked(
     isInternalTest: boolean
     leadId?: string | null
     checkoutAttemptId?: string | null
-    source: "pricing_page" | "quiz_result_offer"
+    source: CheckoutRequestSource
   },
   provider: "paypal" | "stripe",
 ) {
@@ -1230,7 +1502,7 @@ function buildPreparedCheckoutMetadata(input: {
   interval: CheckoutCommerceInterval
   priceId: string
   pricingCatalog?: SubscriptionPricingCatalog
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   presentation?: "offer_overlay_elements"
   identityHash: string
 }) {
@@ -1264,7 +1536,7 @@ export function validatePreparedCheckoutClaim(input: {
   preparationToken: string
   interval: CheckoutCommerceInterval
   priceId: string
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   presentation?: "offer_overlay_elements"
   identityHash: string
   checkoutAttemptId: string
@@ -1435,7 +1707,7 @@ export function validatePreparedCheckoutCanonicalMetadataRepair(input: {
   preparationToken: string
   interval: CheckoutCommerceInterval
   priceId: string
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   presentation?: "offer_overlay_elements"
   identityHash: string
   checkoutAttemptId: string
@@ -1552,7 +1824,7 @@ async function claimPreparedCheckoutSession(input: {
   stripe: Stripe
   requestedInterval: CheckoutCommerceInterval
   isOneTimePurchase: boolean
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   presentation?: "offer_overlay_elements"
   leadId: string | null
   userId?: string
@@ -1875,7 +2147,7 @@ async function repairCanonicalOneTimeClaimMetadata(input: {
 
 async function recordPreparedCheckoutStarted(input: {
   interval: CheckoutCommerceInterval
-  source: "pricing_page" | "quiz_result_offer"
+  source: CheckoutRequestSource
   leadId: string | null
   userId?: string
   checkoutAttemptId: string

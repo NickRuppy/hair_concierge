@@ -1,0 +1,223 @@
+{
+  "version": "shampoo-v14-blind-input-v1",
+  "candidateSlot": "candidate-02",
+  "researchMethod": {
+    "policy_id": "shampoo-classification-v1.4",
+    "model_version": "shampoo-inci-v1.4",
+    "policy_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula": {
+    "formula_source_tier": "manufacturer_de",
+    "formula_completeness": "complete_inci_published_for_exact_gtin",
+    "identity_confidence": "high",
+    "formula_conflict_status": "none",
+    "policy_hashes": {
+      "classification_standard_sha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+      "new_product_runbook_sha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+    },
+    "normalized_ordered_inci": [
+      "Aqua (Water, Eau)",
+      "Sodium Laureth Sulfate",
+      "Cocamidopropyl Betaine",
+      "Sodium Chloride",
+      "PEG-7 Glyceryl Cocoate",
+      "Hydrolyzed Keratin",
+      "Dimethicone",
+      "Sodium Benzoate",
+      "Parfum (Fragrance)",
+      "Citric Acid",
+      "Amodimethicone",
+      "Guar Hydroxypropyltrimonium Chloride",
+      "Hydrogenated Castor Oil",
+      "Glycol Distearate",
+      "Laureth-4",
+      "PEG-40 Hydrogenated Castor Oil",
+      "PEG-120 Methyl Glucose Dioleate",
+      "Tetramethyl Acetyloctahydronaphthalenes",
+      "Laureth-23",
+      "Prunus Armeniaca (Apricot) Kernel Oil",
+      "Trideceth-10",
+      "Sodium Hydroxide",
+      "Linalool",
+      "Linalyl Acetate",
+      "Propylene Glycol",
+      "Acetyl Cedrene",
+      "Phenoxyethanol",
+      "Sodium Salicylate"
+    ],
+    "normalized_inci_string": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-40 Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Linalool, Linalyl Acetate, Propylene Glycol, Acetyl Cedrene, Phenoxyethanol, Sodium Salicylate",
+    "formula_fingerprint_sha256": "9d68e3abce11e8e7af0982a2ee376633bdc8b4990df3e5d4b2808bef943dcc1a",
+    "surfactant_families_positions": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "ethoxylated anionic sulfate",
+        "fact_id": "formula.surfactant.02"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric betaine",
+        "fact_id": "formula.surfactant.03"
+      },
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 5,
+        "family": "nonionic/refatting surfactant or emollient-surfactant clue",
+        "fact_id": "formula.surfactant.05"
+      }
+    ],
+    "architecture_facts": [
+      {
+        "fact_id": "formula.architecture.01",
+        "text": "Primary anionic sulfate appears at position 2."
+      },
+      {
+        "fact_id": "formula.architecture.02",
+        "text": "Amphoteric betaine appears directly after the primary anionic route at position 3."
+      },
+      {
+        "fact_id": "formula.architecture.03",
+        "text": "A refatting/nonionic surfactant appears before the protein and silicone clues at position 5."
+      },
+      {
+        "fact_id": "formula.architecture.04",
+        "text": "Multiple conditioning/deposition routes appear before or near the fragrance/pH region."
+      },
+      {
+        "fact_id": "formula.architecture.helper_functions_preserved",
+        "text": "Helper/emulsion/solubilizer/hydrotrope facts are preserved in formula_function_facts_positions and excluded from independent cleansing-route count."
+      }
+    ],
+    "conditioning_deposition_routes_positions": [
+      {
+        "ingredient": "Hydrolyzed Keratin",
+        "position": 6,
+        "route": "hydrolyzed protein/film-forming care clue",
+        "fact_id": "formula.conditioning.06"
+      },
+      {
+        "ingredient": "Dimethicone",
+        "position": 7,
+        "route": "nonvolatile silicone deposition/slip clue",
+        "fact_id": "formula.conditioning.07"
+      },
+      {
+        "ingredient": "Amodimethicone",
+        "position": 11,
+        "route": "amine-functional silicone deposition clue",
+        "fact_id": "formula.conditioning.11"
+      },
+      {
+        "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+        "position": 12,
+        "route": "cationic conditioning polymer",
+        "fact_id": "formula.conditioning.12"
+      },
+      {
+        "ingredient": "Hydrogenated Castor Oil",
+        "position": 13,
+        "route": "waxy/lipid-like payload clue",
+        "fact_id": "formula.conditioning.13"
+      }
+    ],
+    "humectant_refatting_protein_film_clues": [
+      {
+        "ingredient": "PEG-7 Glyceryl Cocoate",
+        "position": 5,
+        "clue": "refatting/emollient-surfactant clue"
+      },
+      {
+        "ingredient": "Hydrolyzed Keratin",
+        "position": 6,
+        "clue": "protein/film clue"
+      },
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 14,
+        "clue": "pearlizing/refatting wax ester"
+      },
+      {
+        "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+        "position": 20,
+        "clue": "nonvolatile plant oil clue"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 25,
+        "clue": "solvent/humectant auxiliary"
+      }
+    ],
+    "recognized_scalp_actives_positions": [],
+    "recognized_anti_dandruff_actives_positions": [],
+    "fragrance_cooling_exposure_flags": [
+      {
+        "ingredient": "Parfum (Fragrance)",
+        "position": 9,
+        "flag": "fragrance mixture"
+      },
+      {
+        "ingredient": "Tetramethyl Acetyloctahydronaphthalenes",
+        "position": 18,
+        "flag": "fragrance allergen/disclosure ingredient"
+      },
+      {
+        "ingredient": "Linalool",
+        "position": 23,
+        "flag": "fragrance allergen"
+      },
+      {
+        "ingredient": "Linalyl Acetate",
+        "position": 24,
+        "flag": "fragrance component"
+      },
+      {
+        "ingredient": "Acetyl Cedrene",
+        "position": 26,
+        "flag": "fragrance component"
+      }
+    ],
+    "unresolved_ingredients": [
+      {
+        "ingredient": "PEG-120 Methyl Glucose Dioleate",
+        "position": 17,
+        "reason": "polymeric thickener/emulsifier clue; not treated as substantive conditioning without later whole-formula judgment"
+      }
+    ],
+    "source_fact_identifiers": [
+      "formula.canonical_inci",
+      "formula.corroborating_inci"
+    ],
+    "formula_function_facts_positions": [
+      {
+        "ingredient": "Laureth-4",
+        "position": 15,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.15",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "PEG-40 Hydrogenated Castor Oil",
+        "position": 16,
+        "function": "nonionic_solubilizer_emulsifier_helper",
+        "fact_id": "formula.function.16",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "Laureth-23",
+        "position": 19,
+        "function": "nonionic_emulsifier_helper",
+        "fact_id": "formula.function.19",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      },
+      {
+        "ingredient": "Trideceth-10",
+        "position": 21,
+        "function": "nonionic_silicone_emulsion_helper",
+        "fact_id": "formula.function.21",
+        "note": "Preserved from source architecture audit as helper/emulsion/solubilizer/hydrotrope fact, not an independent cleansing route."
+      }
+    ]
+  }
+}

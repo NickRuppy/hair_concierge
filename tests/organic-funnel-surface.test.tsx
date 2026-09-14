@@ -35,6 +35,17 @@ const offerProps: FunnelOfferVariantProps = {
   quizAnswers,
 }
 
+// Same rule as the scanner offer: the purchase starts here, so the unified
+// legal footer (PR #519) must be on the page, exactly once.
+test("the organic offer carries the unified legal footer", () => {
+  const html = renderToStaticMarkup(<OrganicPlanV1OfferVariant {...offerProps} />)
+
+  assert.equal((html.match(/<footer/g) ?? []).length, 1)
+  for (const label of ["Impressum", "Datenschutz", "AGB", "Widerruf", "Kontakt"]) {
+    assert.match(html, new RegExp(`>${label}</a>`), label)
+  }
+})
+
 test("organic refresh landing presents a calm free analysis with optional paid plan boundary", () => {
   const html = renderToStaticMarkup(<OrganicRefreshLandingVariant />)
 
@@ -76,7 +87,7 @@ test("quiz-gate landing keeps its approved copy and routes every quiz action to 
   assert.equal((modal.match(/Sonntag, 9\. August/g) ?? []).length, 1)
   assert.match(modal, /overlayClassName="bg-\[rgba\(42,24,69,0\.55\)\]"/)
   assert.doesNotMatch(landing, /href="\/quiz"/)
-  assert.match(landing, /<SiteFooter onQuizAction=\{openFooterModal\} \/>/)
+  assert.match(landing, /<SiteFooter \/>/)
   assert.match(landing, /<QuizGateModal open=\{modalOpen\} onOpenChange=\{updateModalOpen\} \/>/)
 })
 

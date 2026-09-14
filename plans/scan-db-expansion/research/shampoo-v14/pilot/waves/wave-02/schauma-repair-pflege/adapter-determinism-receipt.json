@@ -1,0 +1,9 @@
+{
+  "version": "shampoo-v14-adapter-determinism-receipt-v1",
+  "productId": "schauma-repair-pflege",
+  "run1InputSha256": "a6b7252b285924906efaa1258c0038411eb2fd83cc72378e00ddd24a86908047",
+  "run2InputSha256": "a6b7252b285924906efaa1258c0038411eb2fd83cc72378e00ddd24a86908047",
+  "outputSha256": "762e462f17706036f7054d859e1d43ef10d0c039af67d05751ec2844fd87604a",
+  "summarySha256": "74ba0d160792fc3f4b894e8ec8eb6cc0110fae69b51fcf7f282001c3db30ef17",
+  "byteIdentical": true
+}

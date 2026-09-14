@@ -1,8 +1,10 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { PartnerInvitationCard } from "../src/app/partner/einladung/partner-invitation-client"
+import { shouldClearQuizDraft } from "../src/lib/partner-access/quiz-context"
 
 test("creator invitation keeps the approved concise identity and account-creation copy", () => {
   const html = renderToStaticMarkup(
@@ -18,7 +20,10 @@ test("creator invitation keeps the approved concise identity and account-creatio
   assert.match(html, /lea@example\.test/)
   assert.match(html, /Nicht deine E-Mail\? Ändern/)
   assert.match(html, /Los geht’s/)
-  assert.match(html, /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\./)
+  assert.match(
+    html,
+    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\. Hast du schon eins, startest du damit neu\./,
+  )
   assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)
 })
 
@@ -44,4 +49,25 @@ test("email correction stays inline and short", () => {
   assert.match(html, /Wir senden dir einen Bestätigungslink\./)
   assert.match(html, /Bestätigungslink senden/)
   assert.match(html, /Abbrechen/)
+})
+
+test("the quiz draft is cleared only when the claim response signals a fresh start", () => {
+  assert.equal(shouldClearQuizDraft({ destination: "/quiz?partner=1", freshStart: true }), true)
+  assert.equal(shouldClearQuizDraft({ destination: "/quiz?partner=1", freshStart: false }), false)
+  assert.equal(shouldClearQuizDraft({ destination: "/quiz?partner=1" }), false)
+  assert.equal(shouldClearQuizDraft(null), false)
+  assert.equal(shouldClearQuizDraft("freshStart"), false)
+})
+
+test("the invitation client wires the draft-clearing predicate before navigating away", async () => {
+  const source = await readFile("src/app/partner/einladung/partner-invitation-client.tsx", "utf8")
+  assert.match(source, /shouldClearQuizDraft\(body\)/)
+  assert.match(source, /clearQuizDraft\(\)/)
+  const guardIndex = source.indexOf("isDestination(body)")
+  const clearIndex = source.indexOf("clearQuizDraft()")
+  const assignIndex = source.indexOf("window.location.assign(body.destination)")
+  assert.ok(
+    guardIndex > 0 && clearIndex > guardIndex && assignIndex > clearIndex,
+    "draft must be cleared after the destination guard and before navigating",
+  )
 })
