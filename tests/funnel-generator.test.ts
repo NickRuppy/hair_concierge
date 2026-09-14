@@ -1,16 +1,28 @@
 import assert from "node:assert/strict"
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import test from "node:test"
+import { fileURLToPath } from "node:url"
 
 import {
+  TEMPLATE_BASE_VARIANTS,
   checkFunnelFiles,
   createFunnelPackage,
   main,
   parseFunnelArgs,
   writeFunnelRegistries,
 } from "../scripts/funnels/new-package.mjs"
+
+const repoRoot = fileURLToPath(new URL("..", import.meta.url))
 
 function createFixture() {
   const root = mkdtempSync(path.join(os.tmpdir(), "chaarlie-funnel-generator-"))
@@ -22,8 +34,8 @@ function createFixture() {
     "export default function Default() {}\n",
   )
   writeFileSync(
-    path.join(root, "src/funnels/offers/default.tsx"),
-    "export default function Default() {}\n",
+    path.join(root, "src/funnels/offers/organic-plan-v1.tsx"),
+    "export default function OrganicPlanV1() {}\n",
   )
   writeFileSync(
     path.join(root, "src/funnels/packages.json"),
@@ -36,7 +48,7 @@ function createFixture() {
           status: "active",
           landingVariant: "default",
           quizVariant: "legacy-quiz-v1",
-          offerVariant: "default",
+          offerVariant: "organic-plan-v1",
         },
       ],
       null,
@@ -115,7 +127,7 @@ test("generator rejects duplicate packages and invalid identifiers", () => {
       slug: "package-a",
       landingVariant: "default",
       quizVariant: "legacy-quiz-v1",
-      offerVariant: "default",
+      offerVariant: "organic-plan-v1",
       channel: "meta",
       status: "placeholder",
     }
@@ -221,6 +233,81 @@ test("funnel check write mode repairs stale registries", () => {
     writeFileSync(path.join(root, "src/funnels/landing/registry.generated.ts"), "stale\n")
     main(["--check", "--write"], root)
     assert.doesNotThrow(() => checkFunnelFiles(root))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+function relativeImportTargets(source: string) {
+  return [...source.matchAll(/from "(\.\/[^"]+)"/g)].map((match) => match[1])
+}
+
+test("scaffolded wrappers import variants that exist in the real funnel tree", () => {
+  const root = mkdtempSync(path.join(os.tmpdir(), "chaarlie-funnel-scaffold-"))
+  try {
+    cpSync(path.join(repoRoot, "src/funnels"), path.join(root, "src/funnels"), { recursive: true })
+    const result = createFunnelPackage(
+      {
+        key: "throwaway_scaffold",
+        slug: "throwaway-scaffold",
+        landingVariant: "throwaway-landing",
+        quizVariant: "legacy-quiz-v1",
+        offerVariant: "throwaway-offer",
+        channel: "meta",
+        status: "placeholder",
+      },
+      root,
+    )
+    assert.deepEqual(result.created, [
+      "src/funnels/landing/throwaway-landing.tsx",
+      "src/funnels/offers/throwaway-offer.tsx",
+    ])
+
+    for (const created of result.created) {
+      const createdPath = path.join(root, created)
+      const targets = relativeImportTargets(readFileSync(createdPath, "utf8"))
+      assert.equal(targets.length, 1, created)
+      for (const target of targets) {
+        const targetPath = path.resolve(path.dirname(createdPath), `${target}.tsx`)
+        assert.ok(existsSync(targetPath), `${created} imports missing ${target}.tsx`)
+        assert.ok(
+          existsSync(path.join(repoRoot, path.relative(root, targetPath))),
+          `${created} import target ${target}.tsx is not in the repository`,
+        )
+      }
+    }
+    assert.match(
+      readFileSync(path.join(root, result.created[1]), "utf8"),
+      new RegExp(`from "\\./${TEMPLATE_BASE_VARIANTS.offer}"`),
+    )
+    assert.doesNotThrow(() => checkFunnelFiles(root))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test("generator refuses to scaffold when a template base variant is missing", () => {
+  const root = createFixture()
+  try {
+    rmSync(path.join(root, "src/funnels/offers/organic-plan-v1.tsx"))
+    writeFunnelRegistries(root)
+    assert.throws(
+      () =>
+        createFunnelPackage(
+          {
+            key: "orphan_offer",
+            slug: "orphan-offer",
+            landingVariant: "default",
+            quizVariant: "legacy-quiz-v1",
+            offerVariant: "orphan-offer",
+            channel: "meta",
+            status: "placeholder",
+          },
+          root,
+        ),
+      /template base src\/funnels\/offers\/organic-plan-v1\.tsx is missing/,
+    )
+    assert.ok(!existsSync(path.join(root, "src/funnels/offers/orphan-offer.tsx")))
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
