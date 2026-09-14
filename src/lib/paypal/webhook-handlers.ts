@@ -1,3 +1,6 @@
+import { recordLegacyPayPalPaidMembershipHistory } from "./prior-paid-history"
+import type { PayPalTrialActivationDeps } from "./trial-account-admission"
+import { handlePayPalTrialWebhook } from "./trial-webhook"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import {
   billingAnalyticsEventKey,
@@ -40,6 +43,7 @@ import {
   type PayPalCheckoutIntentRow,
 } from "@/lib/paypal/checkout-intents"
 import {
+  assertNewLegacyPayPalCheckoutPlan,
   ensurePayPalCheckoutAccount,
   completePayPalReactivationCheckout,
   type PayPalCheckoutAccountResult,
@@ -88,6 +92,8 @@ export type PayPalWebhookEvent = {
   resource?: {
     id?: string
     custom_id?: string
+    plan_id?: string
+    status_update_time?: string
     create_time?: string
     billing_agreement_id?: string
     subscription_id?: string
@@ -117,7 +123,8 @@ export type PayPalWebhookEvent = {
   }
 }
 
-export interface PayPalWebhookDeps extends PayPalWebhookFreemiumProvisioningDeps {
+export interface PayPalWebhookDeps
+  extends PayPalWebhookFreemiumProvisioningDeps, PayPalTrialActivationDeps {
   supabase: SupabaseClient
   premiumTierId: string
   freeTierId: string
@@ -154,6 +161,7 @@ type PayPalPaymentClassification = "initial" | "renewal" | "historical_noop"
 
 const MUTATING_EVENTS = new Set([
   "BILLING.SUBSCRIPTION.ACTIVATED",
+  "BILLING.SUBSCRIPTION.UPDATED",
   "PAYMENT.SALE.COMPLETED",
   "BILLING.SUBSCRIPTION.PAYMENT.FAILED",
   "BILLING.SUBSCRIPTION.CANCELLED",
@@ -163,7 +171,6 @@ const MUTATING_EVENTS = new Set([
 
 const KNOWN_LOG_ONLY_EVENTS = new Set([
   "BILLING.SUBSCRIPTION.CREATED",
-  "BILLING.SUBSCRIPTION.UPDATED",
   "PAYMENT.SALE.REFUNDED",
   "PAYMENT.SALE.REVERSED",
 ])
@@ -228,6 +235,7 @@ export async function handlePayPalWebhookEvent(
     if (!subscriptionId) throw new Error("PayPal webhook event is missing subscription id")
     const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalSubscriptionForWebhook
     const subscription = await retrieve(subscriptionId)
+    if (await handlePayPalTrialWebhook(event, subscription, deps)) return { handled: true }
 
     switch (eventType) {
       case "BILLING.SUBSCRIPTION.ACTIVATED": {
@@ -249,6 +257,23 @@ export async function handlePayPalWebhookEvent(
         }
         if (outcome.kind === "none") return { handled: true }
         const sale = assertValidPayPalSaleEvent(event)
+        if (outcome.billingRow.provider_customer_id)
+          await recordLegacyPayPalPaidMembershipHistory(
+            {
+              subscriptionId: outcome.billingRow.provider_subscription_id,
+              userId: outcome.billingRow.user_id,
+              expectedPayerId: outcome.billingRow.provider_customer_id,
+              saleId: event.resource!.id!,
+              saleAt: sale.occurredAt,
+            },
+            {
+              supabase: deps.supabase,
+              runtime: deps.paypalTrialRuntime,
+              attestApp: deps.attestPayPalApp,
+              retrieve: deps.retrievePayPalSubscription,
+              transactions: deps.listPayPalTrialTransactions,
+            },
+          )
         const providerInterval = getPayPalIntervalForPlanId(subscription.plan_id)
         if (providerInterval) {
           const applied = await applyPlanChangeAtRenewal(deps.supabase, {
@@ -595,6 +620,19 @@ async function activateOrRefreshSubscription(
     return { kind: "none", reason: "expired" }
   }
 
+  if (!existing) {
+    assertNewLegacyPayPalCheckoutPlan(subscription, {
+      expectedInterval: intent?.interval,
+      expectedPlanId:
+        typeof intent?.metadata?.paypal_plan_id === "string"
+          ? intent.metadata.paypal_plan_id
+          : null,
+      expectedPlanIdRequired: Boolean(
+        intent && Object.hasOwn(intent.metadata ?? {}, "paypal_plan_id"),
+      ),
+    })
+  }
+
   let boundIntent = intent
   if (token && intent && !intent.provider_subscription_id) {
     try {
@@ -656,6 +694,13 @@ async function activateOrRefreshSubscription(
     activationKey: boundIntent?.token,
     accountEmail: boundIntent?.email ?? null,
     interval: boundIntent?.interval ?? existing?.interval ?? intervalFromMetadata(subscription),
+    expectedPlanId:
+      typeof boundIntent?.metadata?.paypal_plan_id === "string"
+        ? boundIntent.metadata.paypal_plan_id
+        : null,
+    expectedPlanIdRequired: Boolean(
+      boundIntent && Object.hasOwn(boundIntent.metadata ?? {}, "paypal_plan_id"),
+    ),
     leadId: boundIntent?.lead_id ?? null,
     linkQuizToProfile: deps.linkQuizToProfile,
   })

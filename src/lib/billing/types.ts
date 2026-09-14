@@ -28,6 +28,7 @@ export type BillingAnalyticsDeliveryStatus =
   | "failed"
   | "failed_permanent"
 export type BillingAnalyticsEventName =
+  | "trial_started"
   | "purchase_completed"
   | "payment_completed"
   | "subscription_started"
@@ -51,6 +52,10 @@ export interface BillingSubscriptionRow {
   cancel_at_period_end: boolean
   cancel_scheduled_at: string | null
   cancelled_at: string | null
+  /** Immutable admission link; the database derives trial_access_facts. */
+  trial_enrollment_id?: string | null
+  /** Server-derived trial entitlement projection. Absent on legacy rows. */
+  trial_access_facts?: unknown
   metadata: Record<string, unknown>
   created_at: string
   updated_at: string
@@ -199,6 +204,7 @@ export type BillingSubscriptionInput = {
   cancel_at_period_end?: boolean
   cancel_scheduled_at?: string | null
   cancelled_at?: string | null
+  trial_enrollment_id?: string | null
   metadata?: Record<string, unknown>
 }
 

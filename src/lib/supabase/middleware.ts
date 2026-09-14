@@ -12,6 +12,7 @@ import {
   hasCurrentAppAccess,
   hasCurrentPaidAppAccess,
   hasCurrentPartnerAccess,
+  hasTrialBillingHistory,
 } from "@/lib/billing/subscriptions"
 import type { OneTimeAccessState } from "@/lib/billing/types"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
@@ -52,9 +53,14 @@ const SUB_REQUIRED_PREFIXES = [
 const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/reconcile",
   "/api/billing/payment-monitor",
+  "/api/billing/trial-cancellation/reconcile",
+  "/api/billing/stripe-trial-continuation/reconcile",
+  "/api/billing/trial-required-notices/reconcile",
+  "/api/billing/public-contract-declaration-receipts/reconcile",
   "/api/customerio/profile-sync/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/billing/contract-declarations",
   "/api/billing/one-time-activation-status",
   "/api/personal-plan/field-test/activate",
   "/api/personal-plan/field-test/moderator/start",
@@ -69,6 +75,7 @@ const ROUTES_WITHOUT_AUTH_LOOKUP = [
   "/icon",
   "/impressum",
   "/kontakt",
+  "/kuendigen",
   "/lp",
   "/methodik",
   "/opengraph-image",
@@ -140,6 +147,8 @@ export function isFreemiumKeepsakeReadRoutePath(pathname: string) {
 export type ReactivationRedirectContext = {
   pathname: string
   freemiumScannerFirstEnabled: boolean
+  /** A lapsed trial keeps content locked even if generic free previews are enabled. */
+  hasTrialBillingHistory?: boolean
   /**
    * The request method, used only by the keepsake read carve-out above. Omitted
    * (as every pre-T17 caller and test does) it can never admit anything: the
@@ -157,6 +166,7 @@ export type ReactivationRedirectContext = {
  * unchanged: always redirect/deny.
  */
 export function shouldRedirectToReactivation(ctx: ReactivationRedirectContext): boolean {
+  if (ctx.hasTrialBillingHistory) return true
   if (ctx.freemiumScannerFirstEnabled && isFreemiumAdmittedRoutePath(ctx.pathname)) {
     return false
   }
@@ -313,6 +323,7 @@ export type UpdateSessionDependencies = {
   hasCurrentAppAccess: typeof hasCurrentAppAccess
   hasCurrentPaidAppAccess?: typeof hasCurrentPaidAppAccess
   hasCurrentPartnerAccess?: typeof hasCurrentPartnerAccess
+  hasTrialBillingHistory?: typeof hasTrialBillingHistory
   resolveOneTimeAccessState: typeof resolveOneTimeAccessState
   resolveModeratorAccess?: (input: {
     client: Pick<SupabaseClient, "from">
@@ -345,6 +356,7 @@ const defaultUpdateSessionDependencies: UpdateSessionDependencies = {
   hasCurrentAppAccess,
   hasCurrentPaidAppAccess,
   hasCurrentPartnerAccess,
+  hasTrialBillingHistory,
   resolveOneTimeAccessState,
   // Moderator membership is deliberately service-only. Never pass the browser
   // session client here or RLS would convert ordinary protected requests into
@@ -487,6 +499,7 @@ export function createUpdateSession(
     // intake exemption below.
     let hasPaidAppAccessResult = false
     let moderatorAccess: ModeratorAccessState = "none"
+    let trialRequiresReactivation = false
 
     if (needsSub) {
       let active: boolean
@@ -543,6 +556,13 @@ export function createUpdateSession(
         })
         hasPaidAppAccessResult =
           active || oneTimeAccessState === "active" || moderatorAccess === "active"
+        if (
+          !hasPaidAppAccessResult &&
+          freemiumScannerFirstEnabled &&
+          dependencies.hasTrialBillingHistory
+        ) {
+          trialRequiresReactivation = await dependencies.hasTrialBillingHistory(supabase, user.id)
+        }
       } catch (error) {
         console.warn("[billing] app access check failed", error)
         if (fieldTestGuest) {
@@ -614,6 +634,7 @@ export function createUpdateSession(
             pathname,
             freemiumScannerFirstEnabled,
             method: request.method,
+            hasTrialBillingHistory: trialRequiresReactivation,
           })
         ) {
           if (pathMatchesRoutePrefix(pathname, "/api")) {

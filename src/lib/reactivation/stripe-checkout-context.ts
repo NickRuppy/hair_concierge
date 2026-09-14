@@ -26,6 +26,9 @@ const PARAM_KEYS = new Set([
   "expires_at",
   "automatic_tax",
   "subscription_data",
+  "payment_method_types",
+  "payment_method_collection",
+  "discounts",
   "excluded_payment_method_types",
   "consent_collection",
   "custom_text",
@@ -55,6 +58,82 @@ function canonicalJson(value: unknown): string {
       .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
       .join(",")}}`
   return JSON.stringify(value)
+}
+
+const SESSION_ONLY_METADATA_KEYS = new Set([
+  "lead_id",
+  "funnel_session_id",
+  "funnel_package_key",
+  "checkout_context",
+  "return_destination",
+  "reactivation_reservation_id",
+])
+
+function hasTrialMetadata(value: unknown): boolean {
+  return record(value) && Object.keys(value).some((key) => key.startsWith("trial_"))
+}
+
+function subscriptionMetadataMatchesSession(
+  metadata: Record<string, unknown>,
+  subscriptionMetadata: Record<string, unknown>,
+): boolean {
+  const comparableSessionMetadata = Object.fromEntries(
+    Object.entries(metadata).filter(([key]) => !SESSION_ONLY_METADATA_KEYS.has(key)),
+  )
+  return canonicalJson(subscriptionMetadata) === canonicalJson(comparableSessionMetadata)
+}
+
+function isTrialCheckoutRequest(params: Record<string, unknown>): boolean {
+  const metadata = params.metadata
+  const subscriptionData = params.subscription_data
+  const subscriptionMetadata = record(subscriptionData) ? subscriptionData.metadata : undefined
+  const hasTrialFields =
+    "payment_method_types" in params ||
+    "payment_method_collection" in params ||
+    "discounts" in params ||
+    hasTrialMetadata(metadata) ||
+    (record(subscriptionData) &&
+      ("trial_period_days" in subscriptionData ||
+        "trial_end" in subscriptionData ||
+        "billing_mode" in subscriptionData)) ||
+    hasTrialMetadata(subscriptionMetadata)
+  if (!hasTrialFields) return true
+
+  const discounts = params.discounts
+  const trialOfferId = record(metadata) ? metadata.trial_offer_id : undefined
+  return (
+    Array.isArray(params.payment_method_types) &&
+    params.payment_method_types.length === 1 &&
+    params.payment_method_types[0] === "card" &&
+    params.payment_method_collection === "always" &&
+    !("excluded_payment_method_types" in params) &&
+    (trialOfferId === "trial_v1:trial_launch_v1:month"
+      ? discounts === undefined
+      : trialOfferId === "trial_v1:trial_launch_v1:year" &&
+        (discounts === undefined ||
+          (Array.isArray(discounts) &&
+            discounts.length === 1 &&
+            record(discounts[0]) &&
+            typeof discounts[0].coupon === "string" &&
+            !!discounts[0].coupon &&
+            Object.keys(discounts[0]).every((key) => key === "coupon")))) &&
+    record(metadata) &&
+    metadata.trial_cohort === "trial_v1" &&
+    metadata.trial_offer_version === "trial_launch_v1" &&
+    (trialOfferId === "trial_v1:trial_launch_v1:month" ||
+      trialOfferId === "trial_v1:trial_launch_v1:year") &&
+    record(subscriptionData) &&
+    Object.keys(subscriptionData).every((key) =>
+      ["trial_period_days", "billing_mode", "metadata"].includes(key),
+    ) &&
+    subscriptionData.trial_period_days === 7 &&
+    record(subscriptionData.billing_mode) &&
+    Object.keys(subscriptionData.billing_mode).length === 1 &&
+    subscriptionData.billing_mode.type === "flexible" &&
+    record(subscriptionMetadata) &&
+    Object.values(subscriptionMetadata).every((entry) => typeof entry === "string") &&
+    subscriptionMetadataMatchesSession(metadata, subscriptionMetadata)
+  )
 }
 
 export function parseStripeCheckoutContext(value: unknown): StripeCheckoutContextV1 {
@@ -96,7 +175,8 @@ export function parseStripeCheckoutContext(value: unknown): StripeCheckoutContex
     !record(params.metadata) ||
     params.metadata.checkout_context !== "membership_reactivation" ||
     typeof params.metadata.reactivation_reservation_id !== "string" ||
-    Object.values(params.metadata).some((entry) => typeof entry !== "string")
+    Object.values(params.metadata).some((entry) => typeof entry !== "string") ||
+    !isTrialCheckoutRequest(params)
   ) {
     throw new Error("reactivation checkout initial request invalid")
   }

@@ -54,10 +54,13 @@ test("waitlist pages receive noindex headers", async () => {
   assert.deepEqual(rule?.headers, [{ key: "X-Robots-Tag", value: "noindex, nofollow" }])
 })
 
-test("quiz-gate entry declares a page-level noindex contract", () => {
+test("retired quiz-gate entry inherits the closed waitlist noindex contract", () => {
   const source = readFileSync("src/app/warteliste/b/page.tsx", "utf8")
+  const parent = readFileSync("src/app/warteliste/page.tsx", "utf8")
 
-  assert.match(source, /robots: \{ index: false, follow: false \}/)
+  assert.match(source, /import WaitlistPage, \{ metadata \} from "\.\.\/page"/)
+  assert.match(source, /export \{ metadata \}/)
+  assert.match(parent, /robots: \{ index: false, follow: false \}/)
 })
 
 test("CSP adds only the exact Typeform script and frame origins", async () => {

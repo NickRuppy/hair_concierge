@@ -22,6 +22,8 @@ import {
 } from "@/lib/billing/checkout-success-redirect"
 
 interface WelcomeClientProps {
+  /** Suppresses paid conversion telemetry; does not establish trial admission. */
+  isTrialCheckout?: boolean
   analyticsId?: string
   email?: string
   providerSubscriberEmail?: string | null
@@ -72,6 +74,7 @@ const ONE_TIME_RETURN_REVOKED_BODY =
   "Für diese Bestellung kann kein Zugang geöffnet werden. Wenn dir etwas unklar ist, kontaktiere bitte unseren Support."
 
 export function WelcomeClient({
+  isTrialCheckout = false,
   analyticsId: providedAnalyticsId,
   email,
   providerSubscriberEmail,
@@ -430,6 +433,7 @@ export function WelcomeClient({
     return (
       <>
         <CheckoutReturnAnalytics
+          isTrialCheckout={isTrialCheckout}
           purchase={purchase}
           purchaseKind={activationSource.purchaseKind}
           redirectTo={redirectTo}
@@ -600,6 +604,7 @@ export function WelcomeClient({
     return (
       <>
         <CheckoutReturnAnalytics
+          isTrialCheckout={isTrialCheckout}
           purchase={purchase}
           purchaseKind={activationSource.purchaseKind}
           sessionId={analyticsId}
@@ -625,6 +630,7 @@ export function WelcomeClient({
   return (
     <>
       <CheckoutReturnAnalytics
+        isTrialCheckout={isTrialCheckout}
         purchase={purchase}
         purchaseKind={activationSource.purchaseKind}
         sessionId={analyticsId}
@@ -636,7 +642,9 @@ export function WelcomeClient({
               <CheckCircle className="h-6 w-6 text-green-600" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
+              <p className="text-sm font-medium text-primary">
+                {isTrialCheckout ? "Dein Testzugang" : "Zahlung erfolgreich"}
+              </p>
               <h1 className="font-header text-3xl text-foreground sm:text-4xl">
                 {isOneTimePurchase ? "Zugang einrichten" : "Konto aktivieren"}
               </h1>

@@ -42,6 +42,8 @@ export default defineConfig({
         "personal-plan-stage3-focus.spec.ts",
         "personal-plan-preparation-browser.spec.ts",
         "scan-funnel-journey.spec.ts",
+        "public-contract-declarations.spec.ts",
+        "profile-trial-membership.spec.ts",
       ],
       use: { ...devices["iPhone 13"], browserName: "webkit" },
     },

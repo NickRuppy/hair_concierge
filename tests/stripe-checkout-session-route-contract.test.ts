@@ -90,6 +90,34 @@ test("accepts the allowlisted Elements presentation only for quiz-result offers"
   assert.equal(parsed.success, true)
 })
 
+test("retired one-time purchase requests stop before account or provider work", async () => {
+  for (const action of ["prepare", "claim"] as const) {
+    const body = {
+      purchaseKind: "personal_plan_once",
+      leadId: validRequest.leadId,
+      funnelSessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+      source: "quiz_result_offer",
+      presentation: "offer_overlay_elements",
+      action,
+      preparationId,
+      preparationToken,
+      ...(action === "claim"
+        ? { preparedSessionId: "cs_retired", checkoutAttemptId, funnelEventId }
+        : {}),
+    }
+    assert.equal(StripeCheckoutSessionRequestSchema.safeParse(body).success, true)
+    const response = await POST(
+      new NextRequest("http://localhost/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }),
+    )
+    assert.equal(response.status, 410)
+    assert.deepEqual(await response.json(), { error: "one_time_purchase_retired" })
+  }
+})
+
 test("accepts only one-time prepare/claim and rejects direct creation or a missing lead", () => {
   const oneTimeBase = {
     purchaseKind: "personal_plan_once" as const,

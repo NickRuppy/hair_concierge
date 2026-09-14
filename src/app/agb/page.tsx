@@ -11,7 +11,7 @@ export default function AgbPage() {
       <div className="flex flex-1 flex-col items-center px-4 py-16">
         <div className="w-full max-w-2xl space-y-8">
           <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-            Letzte Aktualisierung: August 2026
+            Letzte Aktualisierung: September 2026
           </p>
           <h1 className="break-words text-3xl font-semibold tracking-tight text-foreground max-[359px]:text-2xl">
             Allgemeine Geschäftsbedingungen (AGB)
@@ -55,27 +55,40 @@ export default function AgbPage() {
                 anwendbar. Die Zahlung erfolgt per Kreditkarte oder anderen angebotenen
                 Zahlungsmitteln über die sicheren Zahlungsdienstleister Stripe oder PayPal.
               </p>
+              <p className="mt-2">
+                Für neue Mitgliedschaften mit kostenlosem Test gelten folgende Konditionen:
+              </p>
               <ul className="mt-2 list-inside list-disc space-y-1">
                 <li>
-                  <strong className="text-foreground">Monatsplan:</strong> monatliche Abrechnung
+                  <strong className="text-foreground">Test:</strong> 7 Tage kostenlos ab
+                  erfolgreicher Autorisierung des Zahlungsmittels. Das genaue Testende und der
+                  vorgesehene erste Zahlungstermin werden beim Abschluss und in der
+                  Vertragsbestätigung genannt.
                 </li>
                 <li>
-                  <strong className="text-foreground">Quartalsplan:</strong> Abrechnung alle drei
-                  Monate
+                  <strong className="text-foreground">Monatsplan:</strong> danach 9,99 € pro Monat.
                 </li>
                 <li>
-                  <strong className="text-foreground">Jahresplan:</strong> jährliche Abrechnung
-                </li>
-                <li>
-                  <strong className="text-foreground">Einmalkauf persönlicher Haarplan:</strong>{" "}
-                  einmalige Zahlung; kein Abonnement und keine automatische Verlängerung
+                  <strong className="text-foreground">Jahresplan:</strong> 69,99 € für das erste
+                  bezahlte Jahr, danach 99,99 € jährlich. Der Einführungspreis gilt nur für das
+                  erste bezahlte Jahr.
                 </li>
               </ul>
               <p className="mt-2">
-                Der unmittelbar vor der Bestellung angezeigte Gesamtpreis je Abrechnungsperiode und
-                die dort ausgewiesenen Konditionen sind maßgeblich. Wird ein Aktions- oder
-                Einführungspreis ausdrücklich als bis zur Kündigung gültig ausgewiesen, gilt er auch
-                für die folgenden Verlängerungen derselben Mitgliedschaft bis zu deren Kündigung.
+                Der unmittelbar vor der verbindlichen Bestellung angezeigte Gesamtpreis ist
+                maßgeblich. Die erste volle bezahlte Laufzeit beginnt erst mit erfolgreicher
+                Zahlung. Ohne bestätigte Zahlung endet der Testzugang trotzdem zum ursprünglichen
+                Testende. Das Testangebot gilt einmalig. Abgebrochene oder fehlgeschlagene Versuche
+                ohne aktivierten Test verbrauchen es nicht. Eine Ablehnung des Tests löst keine
+                Zahlung aus. Bei einer fehlerhaften Zuordnung hilft info@chaarlie.de.
+              </p>
+              <p className="mt-2">
+                Für bereits bestehende Verträge bleiben die bei ihrem Abschluss vereinbarten Preise
+                und Konditionen maßgeblich, einschließlich ausdrücklich bis zur Kündigung zugesagter
+                Einführungspreise. Bereits gekaufte persönliche Haarpläne bleiben Einmalkäufe ohne
+                automatische Verlängerung. Diese Bestimmungen bieten keinen neuen Quartalsplan oder
+                Einmalkauf an und stellen bestehende Verträge nicht automatisch auf den kostenlosen
+                Test um.
               </p>
             </section>
 
@@ -84,36 +97,56 @@ export default function AgbPage() {
                 § 5 Laufzeit und Kündigung
               </h2>
               <p>
-                Die Monats-, Quartals- und Jahrespläne sind Abonnements mit automatischer
-                Verlängerung. Sie verlängern sich jeweils um die gewählte Laufzeit (1 Monat, 3
-                Monate oder 12 Monate), sofern sie nicht vor Ablauf der jeweiligen
-                Abrechnungsperiode gekündigt werden. Die Kündigung kann jederzeit über das Konto des
-                Nutzers oder formlos per E-Mail an{" "}
+                Während des kostenlosen Tests kannst du jederzeit bis zum angegebenen Testende
+                kündigen. Dein Zugang bleibt bis dahin bestehen; anschließend beginnt kein
+                kostenpflichtiger Zeitraum. Ohne Kündigung folgt die ausgewählte bezahlte
+                Mitgliedschaft. Du kannst online über{" "}
+                <Link href="/kuendigen" className="text-foreground underline">
+                  Verträge hier kündigen
+                </Link>
+                , über dein Konto oder per E-Mail an{" "}
                 <a href="mailto:info@chaarlie.de" className="text-foreground underline">
                   info@chaarlie.de
                 </a>{" "}
-                erfolgen. Die Kündigung wird zum Ende der laufenden Abrechnungsperiode wirksam;
-                bereits gezahlte Beträge werden nicht anteilig erstattet, vorbehaltlich des
-                gesetzlichen Widerrufsrechts und einer für die jeweilige Bestellung angebotenen
-                freiwilligen Geld-zurück-Garantie. Der Einmalkauf des persönlichen Haarplans ist
-                kein Abonnement, hat keine Laufzeit und ist nicht kündbar.
+                kündigen. Wir bestätigen den Eingang deiner Kündigung und das Vertragsende in
+                Textform.
+              </p>
+              <p className="mt-2">
+                Beim Monatsplan beträgt die erste bezahlte Laufzeit einen Monat. Danach läuft der
+                Vertrag auf unbestimmte Zeit weiter und ist jederzeit mit einer Frist von höchstens
+                einem Monat kündbar.
+              </p>
+              <p className="mt-2">
+                Beim Jahresplan beträgt die erste bezahlte Laufzeit ein Jahr. Du kannst zum Ende
+                dieses ersten Jahres kündigen. Danach läuft der Vertrag auf unbestimmte Zeit weiter;
+                es entsteht keine neue feste Jahresbindung. Die Abrechnung erfolgt weiterhin
+                jährlich im Voraus mit 99,99 €. Nach dem ersten Jahr kannst du jederzeit mit einer
+                Frist von höchstens einem Monat kündigen. Für die Zeit nach dem wirksamen
+                Vertragsende erstatten wir ungenutztes, im Voraus gezahltes Entgelt zeitanteilig.
+              </p>
+              <p className="mt-2">
+                Gesetzliche Widerrufsrechte und das Recht zur außerordentlichen Kündigung bleiben
+                unberührt. Für ältere Verträge gelten die jeweils vereinbarten Bedingungen, soweit
+                sie mit zwingendem Verbraucherrecht vereinbar sind.
               </p>
             </section>
 
             <section>
               <h2 className="mb-2 text-base font-medium text-foreground">§ 6 Widerrufsrecht</h2>
               <p>
-                Verbraucher haben ein gesetzliches Widerrufsrecht. Details siehe{" "}
+                Verbraucher haben ein gesetzliches Widerrufsrecht von 14 Tagen ab Vertragsschluss.
+                Der kostenlose Test ersetzt dieses Recht nicht. Die Nutzung des Tests bedeutet
+                keinen Verzicht auf das Widerrufsrecht. Details siehe{" "}
                 <Link href="/widerruf" className="text-foreground underline">
                   Widerrufsbelehrung
                 </Link>
                 .
               </p>
               <p className="mt-2">
-                Für den Einmalkauf des persönlichen Haarplans gilt zusätzlich eine
-                14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich nicht hilfreich ist, erhältst
-                du eine vollständige Rückerstattung. Gesetzliche Rechte werden dadurch nicht
-                eingeschränkt.
+                Für bereits abgeschlossene Einmalkäufe des persönlichen Haarplans gilt zusätzlich
+                die bei Abschluss zugesagte 14-Tage-Geld-zurück-Garantie: Wenn Chaarlie für dich
+                nicht hilfreich ist, erhältst du eine vollständige Rückerstattung. Gesetzliche
+                Rechte werden dadurch nicht eingeschränkt.
               </p>
             </section>
 

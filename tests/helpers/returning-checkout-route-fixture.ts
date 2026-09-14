@@ -26,6 +26,10 @@ export function returningCheckoutFixture(
     publishableKey?: string
     bindFailure?: boolean
     grantAccessOnIntentCreation?: boolean
+    trialMode?: "disabled" | "restricted" | "public"
+    unverifiedEmail?: boolean
+    trialCheckoutError?: string
+    attributedTrial?: boolean
   } = {},
 ) {
   const now = new Date()
@@ -53,8 +57,16 @@ export function returningCheckoutFixture(
     sessions: new Map<string, any>(),
     createError: options.createError,
     bindFailure: options.bindFailure,
+    trialCalls: [] as any[],
+    funnelEvents: [] as any[],
   }
-  const user = options.signedOut ? null : { id: USER_ID, email: profile.email }
+  const user = options.signedOut
+    ? null
+    : {
+        id: USER_ID,
+        email: profile.email,
+        email_confirmed_at: options.unverifiedEmail ? null : now.toISOString(),
+      }
   function query(table: string) {
     let operation = "read",
       values: any,
@@ -279,6 +291,33 @@ export function returningCheckoutFixture(
     NEXT_PUBLIC_PAYPAL_ENABLED: "true",
   }
   const overrides: Record<string, any> = {
+    "@/lib/billing/trial-runtime": {
+      readTrialRuntime: () =>
+        options.trialMode
+          ? {
+              enrollmentMode: options.trialMode,
+              allowedEmails: [profile.email],
+              stripeAccountId: "acct_fixture",
+              livemode: false,
+              identityKeys: [{ version: 1, secret: new Uint8Array(32).fill(7) }],
+            }
+          : null,
+      isTrialEnrollmentAllowed: (runtime: any, email: string) =>
+        runtime?.enrollmentMode === "public" ||
+        (runtime?.enrollmentMode === "restricted" && email === profile.email),
+    },
+    // This fixture tests route dispatch only. The real durable trial service and
+    // actual SQL have their own provider-boundary and PGlite tests.
+    "@/lib/stripe/trial-checkout": {
+      createDurableStripeTrialCheckout: async (...args: any[]) => {
+        state.trialCalls.push(args)
+        if (options.trialCheckoutError) throw new Error(options.trialCheckoutError)
+        return {
+          session: { id: "cs_trial", status: "open", client_secret: "trial_secret" },
+          offer: { firstAmountMinor: 6999, currency: "EUR" },
+        }
+      },
+    },
     "next/server": {
       NextResponse: {
         json: (body: any, opts: any = {}) => ({
@@ -313,7 +352,19 @@ export function returningCheckoutFixture(
     },
     "@/lib/funnel/server": {
       resolveFunnelCookieContext: async () => null,
-      resolveFunnelContextForLead: async () => null,
+      resolveFunnelContextForLead: async () =>
+        options.attributedTrial
+          ? {
+              visitorId: USER_ID,
+              sessionId: ATTEMPT_ID,
+              packageKey: "default_organic",
+              isInternalTest: true,
+            }
+          : null,
+      resolvePendingFunnelTouchValue: async () => null,
+      recordFunnelEvent: async (event: any) => {
+        state.funnelEvents.push(event)
+      },
     },
     "@/lib/funnel/flags": { isPersonalPlanLaunchPricingEnabled: () => false },
     "@/lib/entitlements/flag": { isFreemiumScannerFirstEnabled: () => false },
@@ -366,6 +417,7 @@ export function returningCheckoutFixture(
         console,
         Error,
         Buffer,
+        Uint8Array,
         URL,
         URLSearchParams,
         TextEncoder,

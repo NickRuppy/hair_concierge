@@ -1,0 +1,128 @@
+[
+  {
+    "key": "cancel-confirm",
+    "label": "1 · Kündigung bestätigen",
+    "group": "Kündigung",
+    "note": "Eine Bestätigung, keine Umfrage und kein Zusatzangebot. Der Eingang der Erklärung wird sofort dauerhaft bestätigt; Anbieterabgleich wird getrennt geführt.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "canceled",
+    "label": "2 · Kündigung erfolgreich",
+    "group": "Kündigung",
+    "note": "Der ursprüngliche Testzeitraum und die Produktnutzung bleiben bis zum Ablauf erhalten. Eine erforderliche Bestätigung wird zugestellt.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "cancel-error",
+    "label": "3 · Kündigung nicht bestätigt",
+    "group": "Kündigung",
+    "note": "Nur bei fehlgeschlagener Speicherung der Erklärung. Eine bereits eingegangene Kündigung bleibt wirksam, auch wenn der Anbieterabgleich noch läuft.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "cancel-received",
+    "label": "3b · Kündigung eingegangen",
+    "group": "Kündigung",
+    "note": "Rechtlicher Eingang und technische Anbieterbestätigung sind getrennt. Ein Eingang vor der Frist wird honoriert; irrtümliche spätere Abbuchungen werden abgewickelt. Wiederaufnahme bleibt bis zum sicheren Abgleich gesperrt.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "restore-confirm",
+    "label": "4 · Abo fortsetzen",
+    "group": "Kündigung",
+    "note": "PayPal-Beispiel. Bei Stripe entfällt dieser Hinweis, wenn keine erneute Anbieterfreigabe nötig ist. Kein Neustart der sieben Tage.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "restore-abandoned",
+    "label": "5 · PayPal-Freigabe abgebrochen",
+    "group": "Kündigung",
+    "note": "Dieser Status erscheint nur bei bestätigtem Abbruch ohne aktive Ersatzvereinbarung. Unbekannter Status wird zunächst abgeglichen.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "switch-monthly",
+    "label": "6 · Zum Monatsabo wechseln",
+    "group": "Planwechsel",
+    "note": "Kein Geld heute und keine zusätzlichen Testtage. Beim Monatsabo entfällt der Jahresrabatt. Stripe zeigt den PayPal-Hinweis nicht.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "switch-annual",
+    "label": "7 · Zum Jahresabo wechseln",
+    "group": "Planwechsel",
+    "note": "Beispiel für ein noch verfügbares, bestätigtes Launch-Angebot. Tatsächlicher Betrag kommt aus dem serverseitigen Angebot; kein stiller Preiswechsel.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "switch-pending",
+    "label": "8 · Wechsel wird abgeglichen",
+    "group": "Planwechsel",
+    "note": "Originale Testfrist bleibt bestehen. Erst nach bestätigtem Anbieterstatus werden der neue Plan und seine Zahlungstermine als aktiv gezeigt.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "switch-done",
+    "label": "9 · Wechsel abgeschlossen",
+    "group": "Planwechsel",
+    "note": "Unverändertes Testende; neue bestätigte Zahlungsbedingungen.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "payment-failed",
+    "label": "10 · Erste Zahlung fehlgeschlagen",
+    "group": "Zahlung",
+    "note": "Diese zahlbare Ansicht setzt voraus, dass keine alte Zahlung mehr aussteht oder noch eingezogen werden kann. Sonst erscheint zuerst die Prüfungsansicht. Keine persönliche Produktvorschau.",
+    "focus": ""
+  },
+  {
+    "key": "payment-processing",
+    "label": "11 · Zahlung wird geprüft",
+    "group": "Zahlung",
+    "note": "Nach Testende ohne bestätigte Zahlung kein Produktzugang. Kein zweiter Checkout, solange das Zahlungsergebnis unklar ist.",
+    "focus": ""
+  },
+  {
+    "key": "payment-success",
+    "label": "12 · Zahlung erfolgreich",
+    "group": "Zahlung",
+    "note": "Beispiel für erfolgreiche Zahlung drei Tage nach Testende: ein volles Jahr ab Zahlung. Bestehende Verwaltung nach dem bezahlten Start bleibt erhalten.",
+    "focus": "mitgliedschaft"
+  },
+  {
+    "key": "return-expired",
+    "label": "13 · Rückkehr nach Testende",
+    "group": "Zahlung",
+    "note": "Keine neue Testphase. Dieses Beispiel hat noch keinen bezahlten Launch-Jahresrabatt genutzt; andernfalls wird der zutreffende reguläre Preis gezeigt.",
+    "focus": ""
+  },
+  {
+    "key": "public-cancel",
+    "label": "14 · Kündigen ohne Login",
+    "group": "Erforderliche Funktionen",
+    "note": "Ständig erreichbarer Einstieg „Verträge hier kündigen“ im öffentlichen Footer. Zusätzlicher Weg zum Profil. Kein Login-/OTP-Zwang zum Übermitteln; keine Auskunft über Konten an Unbefugte. Sonderkündigung blendet ein Grundfeld ein; der Termin ist in der Umsetzung bearbeitbar.",
+    "focus": ""
+  },
+  {
+    "key": "public-cancel-received",
+    "label": "15 · Kündigungseingang",
+    "group": "Erforderliche Funktionen",
+    "note": "Beispiel einer zunächst ungeklärten Zuordnung. Die Erklärung samt Zeitstempel wird sofort bestätigt. Bei sicherer Zuordnung enthält die Bestätigung auch das konkrete Vertragsende. Ein Anbieterfehler macht die Erklärung nicht unwirksam.",
+    "focus": ""
+  },
+  {
+    "key": "withdrawal",
+    "label": "16 · Widerruf übermitteln",
+    "group": "Erforderliche Funktionen",
+    "note": "Eigenständiger gesetzlicher Widerruf, nicht mit ordentlicher Kündigung verwechselt. Einstieg während der Widerrufsfrist hervorgehoben und leicht erreichbar. Frist-/Leistungsbeginn und Abwicklung werden rechtlich geprüft; kein automatisches Erlöschen unterstellt.",
+    "focus": ""
+  },
+  {
+    "key": "withdrawal-received",
+    "label": "17 · Widerrufseingang",
+    "group": "Erforderliche Funktionen",
+    "note": "Dauerhafte Eingangsbestätigung mit Inhalt und Zeitstempel. Noch keine erfundene Rückerstattungszusage oder finale Entscheidung über die Anwendbarkeit des Widerrufsrechts.",
+    "focus": ""
+  }
+]

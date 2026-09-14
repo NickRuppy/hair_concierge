@@ -1,6 +1,14 @@
 import { redirect } from "next/navigation"
+import { readTrialRuntime } from "@/lib/billing/trial-runtime"
+import { trialOfferDestinationForReturningCustomer } from "@/lib/billing/trial-returning-customer"
 
-import { MembershipReactivationPage } from "@/components/reactivation/membership-reactivation-page"
+import {
+  MembershipReactivationPage,
+  TrialMembershipReactivationPage,
+} from "@/components/reactivation/membership-reactivation-page"
+import { buildTrialMembershipState } from "@/lib/billing/trial-membership"
+import { readTrialEffectiveContract } from "@/lib/billing/trial-effective-contract"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
@@ -46,6 +54,58 @@ export default async function ReactivatePage({
   }
 
   if (accessState === "active") redirect(returnDestination)
+  if (accessState === "uncertain") {
+    return <TrialMembershipReactivationPage initialState={{ kind: "uncertain" }} />
+  }
+
+  // Read the caller's enrollment before private profile content or legacy checkout.
+  // An unresolved enrollment must not start a second collectible agreement.
+  try {
+    const { data: enrollment, error } = await createAdminClient()
+      .from("trial_enrollments")
+      .select(
+        "id,user_id,accepted_offer,admission_status,authorization_succeeded_at,original_trial_end_at,first_payment_succeeded_at,paid_through_at,renewal_grace_ends_at,renewal_payment_failed,cancel_at_period_end,access_revoked",
+      )
+      .eq("user_id", user.id)
+      // A later denied attempt must not hide the customer's accepted contract.
+      .order("authorization_succeeded_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (error) throw error
+    if (enrollment) {
+      const contract = await readTrialEffectiveContract(createAdminClient(), enrollment.id)
+      const projected = buildTrialMembershipState(
+        { ...enrollment, accepted_offer: contract.offer },
+        user.id,
+        new Date(),
+      )
+      const state =
+        projected.kind === "trial_membership"
+          ? { ...projected, managementRevision: contract.revision }
+          : projected
+      return (
+        <TrialMembershipReactivationPage
+          initialState={state.kind === "trial_membership" ? state : { kind: "uncertain" }}
+        />
+      )
+    }
+  } catch (error) {
+    console.warn("[reactivate] trial membership unavailable", error)
+    return <TrialMembershipReactivationPage initialState={{ kind: "uncertain" }} />
+  }
+
+  let trialDestination: string | null
+  try {
+    trialDestination = await trialOfferDestinationForReturningCustomer(createAdminClient(), {
+      userId: user.id,
+      verifiedEmail: user.email_confirmed_at ? (user.email ?? null) : null,
+      runtime: readTrialRuntime(),
+    })
+  } catch {
+    return <TrialMembershipReactivationPage initialState={{ kind: "uncertain" }} />
+  }
+  if (trialDestination) redirect(trialDestination)
 
   const [{ data: profile, error: profileError }, { data: hairProfile, error: hairProfileError }] =
     await Promise.all([

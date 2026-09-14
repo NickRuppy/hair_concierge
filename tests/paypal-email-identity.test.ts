@@ -10,6 +10,8 @@ import {
   paypalCheckoutActivationHash,
   PayPalCheckoutActivationError,
 } from "../src/lib/paypal/checkout-activation"
+
+process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
 import { handlePayPalWebhookEvent } from "../src/lib/paypal/webhook-handlers"
 import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
 import type {
@@ -684,6 +686,45 @@ test("ensurePayPalCheckoutAccountForToken keeps checkout intent email as Chaarli
 
   assert.deepEqual(result, { status: "pending" })
   assert.equal(paypalIntents[0].email, "lead@example.com")
+})
+
+test("token activation rejects a malformed stored plan pin before creating an account", async () => {
+  const { supabase, profiles, billing, authUsers, paypalIntents } = createSupabaseStub({
+    paypalIntents: [
+      {
+        id: "intent-malformed-plan",
+        token: "checkout-token",
+        interval: "month",
+        source: "pricing_page",
+        status: "approved",
+        provider_subscription_id: "I-active",
+        lead_id: null,
+        email: "lead@example.com",
+        user_id: null,
+        expires_at: futureIso(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        metadata: { paypal_plan_id: ["P-month"] },
+      },
+    ],
+  })
+
+  await assert.rejects(
+    () =>
+      ensurePayPalCheckoutAccountForToken("checkout-token", {
+        supabase: supabase as any,
+        premiumTierId: "tier-premium",
+        retrievePayPalSubscription: async () => paypalSubscription("provider@example.com"),
+      }),
+    (error) =>
+      error instanceof PayPalCheckoutActivationError &&
+      error.code === "paypal_subscription_plan_mismatch",
+  )
+
+  assert.deepEqual(authUsers, {})
+  assert.deepEqual(profiles, {})
+  assert.deepEqual(billing, [])
+  assert.equal(paypalIntents[0].status, "approved")
 })
 
 test("webhook-first PayPal activation uses bound checkout intent email and keeps PayPal email in provider metadata", async () => {

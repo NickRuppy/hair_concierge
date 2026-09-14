@@ -1,3 +1,16 @@
+import { createDurablePayPalTrialCheckout } from "@/lib/paypal/trial-checkout"
+import {
+  readPayPalTrialRuntime,
+  createPayPalTrialSubscription,
+  retrievePayPalTrialSubscription,
+} from "@/lib/paypal/trial-runtime"
+import { getPayPalAppId } from "@/lib/paypal/client"
+import { retrievePayPalPlan } from "@/lib/paypal/subscriptions"
+import {
+  createTrialIdentityClaims,
+  type TrialIdentityInput,
+} from "@/lib/billing/trial-identity-claims"
+import { isTrialEnrollmentAllowed } from "@/lib/billing/trial-runtime"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -56,30 +69,58 @@ export const PayPalSubscriptionIntentRequestSchema = z
     checkoutContext: z.literal("membership_reactivation").optional(),
     recoveryOnly: z.boolean().optional(),
     returnDestination: z.string().max(500).optional(),
+    trial: z.literal(true).optional(),
   })
   .strict()
-  .superRefine(({ source, leadId, checkoutContext, returnDestination, recoveryOnly }, context) => {
-    if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "recovery is limited to reactivation",
-        path: ["recoveryOnly"],
-      })
-    // Cleanup batch: mirror Stripe's `create-checkout-session` premium_sheet contract
-    // (`StripeCheckoutSessionRequestSchema`'s `superRefine`). The Premium sheet sells
-    // exactly one thing — a standard-catalog subscription for an already-authenticated
-    // free user — and `leadId` (the lead/funnel offer contract) and `checkoutContext` /
-    // `returnDestination` (membership reactivation's own protocol) belong to OTHER
-    // checkout paths this endpoint speaks. `funnelEventId` and `checkoutAttemptId` stay
-    // allowed: both are legitimately used for premium_sheet, same as on the Stripe route.
-    if (source === "premium_sheet" && (leadId || checkoutContext || returnDestination)) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "invalid Premium-sheet checkout contract",
-        path: ["source"],
-      })
-    }
-  })
+  .superRefine(
+    (
+      {
+        source,
+        leadId,
+        checkoutContext,
+        returnDestination,
+        recoveryOnly,
+        trial,
+        interval,
+        checkoutAttemptId,
+      },
+      context,
+    ) => {
+      if (
+        trial &&
+        (interval === "quarter" ||
+          !checkoutAttemptId ||
+          recoveryOnly ||
+          source === "premium_sheet" ||
+          (source !== "quiz_result_offer" && checkoutContext !== "membership_reactivation"))
+      )
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "invalid trial checkout contract",
+          path: ["trial"],
+        })
+      if (recoveryOnly !== undefined && checkoutContext !== "membership_reactivation")
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "recovery is limited to reactivation",
+          path: ["recoveryOnly"],
+        })
+      // Cleanup batch: mirror Stripe's `create-checkout-session` premium_sheet contract
+      // (`StripeCheckoutSessionRequestSchema`'s `superRefine`). The Premium sheet sells
+      // exactly one thing — a standard-catalog subscription for an already-authenticated
+      // free user — and `leadId` (the lead/funnel offer contract) and `checkoutContext` /
+      // `returnDestination` (membership reactivation's own protocol) belong to OTHER
+      // checkout paths this endpoint speaks. `funnelEventId` and `checkoutAttemptId` stay
+      // allowed: both are legitimately used for premium_sheet, same as on the Stripe route.
+      if (source === "premium_sheet" && (leadId || checkoutContext || returnDestination)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "invalid Premium-sheet checkout contract",
+          path: ["source"],
+        })
+      }
+    },
+  )
 
 const ACCESS_CONFLICT_ERROR = "checkout_access_already_exists"
 
@@ -126,7 +167,24 @@ export function resolveStoredPayPalCheckoutIntentPlan({
   return { planId, pricingCatalog }
 }
 
+type PayPalSubscriptionIntentDeps = {
+  createAdminClient?: typeof createAdminClient
+  createClient?: typeof createClient
+  assertCanStartCheckout?: typeof assertCanStartCheckout
+  assertCanStartCheckoutForEmail?: typeof assertCanStartCheckoutForEmail
+  readTrialRuntime?: typeof readPayPalTrialRuntime
+  createTrialCheckout?: typeof createDurablePayPalTrialCheckout
+  cookies?: typeof cookies
+  resolveFunnelCookieContext?: typeof resolveFunnelCookieContext
+}
 export async function POST(request: Request) {
+  return handlePayPalSubscriptionIntent(request)
+}
+
+export async function handlePayPalSubscriptionIntent(
+  request: Request,
+  deps: PayPalSubscriptionIntentDeps = {},
+) {
   if (process.env.NEXT_PUBLIC_PAYPAL_ENABLED !== "true") {
     return NextResponse.json({ error: "paypal disabled" }, { status: 404 })
   }
@@ -149,8 +207,8 @@ export async function POST(request: Request) {
     returnDestination: rawReturnDestination,
   } = parsed.data
   try {
-    const admin = createAdminClient()
-    const supabase = await createClient()
+    const admin = (deps.createAdminClient ?? createAdminClient)()
+    const supabase = await (deps.createClient ?? createClient)()
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -183,7 +241,10 @@ export async function POST(request: Request) {
     let reactivationReservation: MembershipReactivationCheckoutReservation | null = null
 
     if (user?.id) {
-      const conflict = await toConflictResponse(assertCanStartCheckout(admin, user.id), user.email)
+      const conflict = await toConflictResponse(
+        (deps.assertCanStartCheckout ?? assertCanStartCheckout)(admin, user.id),
+        user.email,
+      )
       if (conflict) return conflict
     }
 
@@ -206,10 +267,118 @@ export async function POST(request: Request) {
 
     if (email) {
       const conflict = await toConflictResponse(
-        assertCanStartCheckoutForEmail(admin, email),
+        (deps.assertCanStartCheckoutForEmail ?? assertCanStartCheckoutForEmail)(admin, email),
         canExposeConflictEmail ? email : null,
       )
       if (conflict) return conflict
+    }
+
+    if (parsed.data.trial) {
+      if (
+        interval === "quarter" ||
+        !checkoutAttemptId ||
+        source === "premium_sheet" ||
+        recoveryOnly ||
+        (!resolvedLeadId && !user?.id)
+      )
+        return NextResponse.json({ error: "invalid_trial_checkout_contract" }, { status: 400 })
+      const trialRuntime = (deps.readTrialRuntime ?? readPayPalTrialRuntime)()
+      const verifiedEmail =
+        user?.email_confirmed_at && user.email ? user.email.trim().toLowerCase() : ""
+      if (!trialRuntime || !isTrialEnrollmentAllowed(trialRuntime.trial, verifiedEmail))
+        return NextResponse.json({ error: "trial_unavailable" }, { status: 404 })
+      if (!email || (user?.id && user.email?.trim().toLowerCase() !== email.trim().toLowerCase()))
+        return NextResponse.json({ error: "trial_identity_mismatch" }, { status: 409 })
+      const identities: TrialIdentityInput[] = user?.id
+        ? [{ kind: "account", namespace: "chaarlie", normalizedIdentity: user.id }]
+        : []
+      if (verifiedEmail)
+        identities.push({
+          kind: "verified_email",
+          namespace: "chaarlie",
+          normalizedIdentity: verifiedEmail,
+        })
+      const result = await (deps.createTrialCheckout ?? createDurablePayPalTrialCheckout)(
+        {
+          scope: user?.id ? { kind: "user", id: user.id } : { kind: "lead", id: resolvedLeadId! },
+          clientAttemptId: checkoutAttemptId,
+          interval,
+          serverVerifiedEmail: verifiedEmail,
+          claims: identities.length
+            ? createTrialIdentityClaims(identities, trialRuntime.trial.identityKeys)
+            : [],
+          email,
+          leadId: user?.id ? null : resolvedLeadId,
+          source,
+        },
+        {
+          supabase: admin,
+          runtime: trialRuntime,
+          attestApp: getPayPalAppId,
+          getPlan: retrievePayPalPlan,
+          createSubscription: createPayPalTrialSubscription,
+          retrieveSubscription: retrievePayPalTrialSubscription,
+        },
+      )
+      const cookieStore = await (deps.cookies ?? cookies)()
+      const funnelContext =
+        (await (deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext)(
+          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+        )) ?? (resolvedLeadId ? await resolveFunnelContextForLead(resolvedLeadId) : null)
+      const currentIntent = await admin
+        .from("paypal_checkout_intents")
+        .select("metadata")
+        .eq("token", result.token)
+        .single()
+      if (currentIntent.error) throw currentIntent.error
+      const metadata = currentIntent.data.metadata as Record<string, unknown>
+      const { error: contextError } = await admin
+        .from("paypal_checkout_intents")
+        .update({
+          ...(resolvedLeadId ? { lead_id: resolvedLeadId } : {}),
+          metadata: {
+            ...metadata,
+            ...(checkoutContext
+              ? {
+                  checkout_context: checkoutContext,
+                  return_destination: sanitizeReactivationReturnDestination(rawReturnDestination),
+                }
+              : {}),
+            ...(!metadata.funnel_session_id && funnelContext
+              ? {
+                  funnel_session_id: funnelContext.sessionId,
+                  funnel_package_key: funnelContext.packageKey,
+                }
+              : {}),
+          },
+        })
+        .eq("token", result.token)
+      if (contextError) throw contextError
+      if (funnelContext)
+        await recordFunnelEvent({
+          context: funnelContext,
+          eventId: funnelEventId ?? crypto.randomUUID(),
+          milestone: "checkout_started",
+          leadId: resolvedLeadId,
+          userId: user?.id,
+          checkoutProvider: "paypal",
+          checkoutReference: result.token,
+          properties: {
+            source,
+            interval,
+            checkout_attempt_id: checkoutAttemptId,
+            trial_cohort: "trial_v1",
+            plan_id: `trial_v1:${interval}`,
+            currency: "EUR",
+            value: 0,
+          },
+        }).catch((error) => console.warn("[funnel] PayPal trial checkout tracking failed", error))
+      return NextResponse.json({
+        trial: true,
+        token: result.token,
+        subscriptionId: result.subscription.id,
+        planId: result.subscription.plan_id,
+      })
     }
 
     const pricingCatalog = resolvePayPalCheckoutPricingCatalog(source)
@@ -437,6 +606,8 @@ export async function POST(request: Request) {
       interval,
       leadId,
     })
+    if (parsed.data.trial)
+      return NextResponse.json({ error: "paypal_trial_checkout_unavailable" }, { status: 503 })
     throw error
   }
 }

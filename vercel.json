@@ -1,7 +1,25 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["dub1"],
+  "regions": [
+    "dub1"
+  ],
   "crons": [
+    {
+      "path": "/api/billing/stripe-trial-continuation/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/billing/trial-required-notices/reconcile",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/billing/public-contract-declaration-receipts/reconcile",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/billing/trial-cancellation/reconcile",
+      "schedule": "*/5 * * * *"
+    },
     {
       "path": "/api/billing/reconcile",
       "schedule": "15 2 * * *"

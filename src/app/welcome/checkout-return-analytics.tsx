@@ -10,11 +10,20 @@ import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 export function shouldTrackCheckoutReturnSubscriptionStarted({
   purchaseKind,
   sessionId,
+  isTrialCheckout,
+  trialEnrollmentId,
 }: {
   purchaseKind?: "one_time"
   sessionId: string
+  isTrialCheckout?: boolean
+  trialEnrollmentId?: string
 }) {
-  return purchaseKind !== "one_time" && !sessionId.startsWith("paypal:")
+  return (
+    purchaseKind !== "one_time" &&
+    !isTrialCheckout &&
+    !trialEnrollmentId &&
+    !sessionId.startsWith("paypal:")
+  )
 }
 
 export function CheckoutReturnAnalytics({
@@ -22,11 +31,17 @@ export function CheckoutReturnAnalytics({
   purchaseKind,
   redirectTo,
   sessionId,
+  isTrialCheckout,
+  trialEnrollmentId,
 }: {
   purchase: CheckoutPurchaseAnalytics | null
   purchaseKind?: "one_time"
   redirectTo?: string
   sessionId: string
+  /** Metadata-derived browser suppression only; it never establishes trial success. */
+  isTrialCheckout?: boolean
+  /** Passed only from the server's canonical verified trial activation result. */
+  trialEnrollmentId?: string
 }) {
   const router = useRouter()
   const trackedRef = useRef(false)
@@ -45,12 +60,19 @@ export function CheckoutReturnAnalytics({
         stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
         paypalTokenPresent: sessionId.startsWith("paypal:"),
       })
-      if (shouldTrackCheckoutReturnSubscriptionStarted({ purchaseKind, sessionId })) {
+      if (
+        shouldTrackCheckoutReturnSubscriptionStarted({
+          purchaseKind,
+          sessionId,
+          isTrialCheckout,
+          trialEnrollmentId,
+        })
+      ) {
         trackAppEvent("subscription_started", {
           checkoutSessionId: sessionId,
         })
       }
-      if (purchase) {
+      if (purchase && !isTrialCheckout && !trialEnrollmentId) {
         trackAppEvent("purchase_completed", {
           checkoutSessionId: sessionId,
           currency: purchase.currency.toUpperCase(),
@@ -85,7 +107,7 @@ export function CheckoutReturnAnalytics({
         router.replace(redirectTo)
       }
     }
-  }, [purchase, purchaseKind, redirectTo, router, sessionId])
+  }, [purchase, purchaseKind, redirectTo, router, sessionId, isTrialCheckout, trialEnrollmentId])
 
   return null
 }

@@ -1,6 +1,8 @@
 import { after, NextResponse, type NextRequest } from "next/server"
+import { deferRequiredTrialNotices } from "@/lib/billing/trial-notice-dispatch"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { getStripe } from "@/lib/stripe/client"
+import { reconcileStripePriorPaidMembership } from "@/lib/stripe/trial-prior-paid-history"
 import {
   CheckoutActivationError,
   type CheckoutAccountResult,
@@ -43,6 +45,10 @@ import {
 } from "@/lib/billing/analytics-outbox"
 import type { BillingAnalyticsDestination, BillingInterval } from "@/lib/billing/types"
 import {
+  isTrialAnalyticsCandidate,
+  resolveTrialStartedAnalytics,
+} from "@/lib/billing/trial-analytics"
+import {
   identifyCustomerIoServerPerson,
   logCustomerIoServerResult,
   trackCustomerIoServerEvent,
@@ -60,6 +66,13 @@ import { captureCheckoutException } from "@/lib/observability/checkout"
 import type { PaymentFailureReporter } from "@/lib/observability/payment"
 import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
+import { readTrialRuntime } from "@/lib/billing/trial-runtime"
+import {
+  handleStripeTrialPaidRecoveryCompleted,
+  handleStripeTrialPaidRecoveryInvoice,
+} from "@/lib/stripe/trial-paid-recovery"
+import { handleStripeTrialManagementApprovalCompleted } from "@/lib/stripe/trial-management-approval"
+import { handleStripeTrialInvoice, type TrialInvoiceResult } from "@/lib/stripe/trial-invoice"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 /**
@@ -139,6 +152,52 @@ async function recordStripeBillingAnalytics(
   )
 }
 
+async function recordTrialInvoiceAnalytics(
+  trial: TrialInvoiceResult,
+  eventId: string,
+  supabase: SupabaseClient,
+  defer: (work: () => void | Promise<void>) => void,
+) {
+  const payment = trial.payment
+  if (
+    !payment ||
+    !["applied", "duplicate"].includes(payment.result.outcome) ||
+    payment.result.phase === "none"
+  )
+    return
+  // One revenue event per paid invoice; authorization never creates Purchase.
+  const eventName =
+    payment.result.phase === "first_paid" ? "purchase_completed" : "payment_completed"
+  await recordStripeBillingAnalytics(
+    supabase,
+    defer,
+    {
+      eventKey: billingAnalyticsEventKey({
+        provider: "stripe",
+        eventName,
+        sourceObjectId: trial.invoiceId,
+      }),
+      eventName,
+      userId: trial.userId,
+      providerCustomerId: trial.customerId,
+      providerSubscriptionId: trial.subscriptionId,
+      sourceEventId: eventId,
+      sourceObjectId: trial.invoiceId,
+      occurredAt: payment.occurredAt,
+      payload: {
+        value: amountFromMinorUnits(payment.amountMinor),
+        currency: "EUR",
+        interval: trial.interval,
+        invoice_id: trial.invoiceId,
+        trial_enrollment_id: trial.enrollmentId,
+        subscription_status: "active",
+        meta_event_id: trial.invoiceId,
+      },
+    },
+    ["posthog", "meta"],
+  )
+}
+
 async function recordStripeCheckoutAnalytics(input: {
   activation: CheckoutAccountResult
   defer: (work: () => void | Promise<void>) => void
@@ -152,6 +211,44 @@ async function recordStripeCheckoutAnalytics(input: {
 
   const interval = activation.subscriptionInterval
   if (interval !== "month" && interval !== "quarter" && interval !== "year") return
+  const trialCandidate = isTrialAnalyticsCandidate({ activation, session })
+  const trial = resolveTrialStartedAnalytics({ activation, interval, session })
+  if (trialCandidate) {
+    // A trial marker is never evidence of a paid conversion. Only the exact
+    // admission result below may emit analytics; malformed/replayed candidates
+    // remain silent for reconciliation instead of falling through to paid events.
+    if (!trial) return
+    await recordStripeBillingAnalytics(
+      supabase,
+      defer,
+      {
+        eventKey: billingAnalyticsEventKey({
+          provider: "stripe",
+          eventName: "trial_started",
+          sourceObjectId: trial.enrollmentId,
+        }),
+        eventName: "trial_started",
+        userId: activation.userId,
+        providerCustomerId: activation.stripeCustomerId,
+        providerSubscriptionId: activation.stripeSubscriptionId,
+        sourceEventId: eventId,
+        sourceObjectId: trial.enrollmentId,
+        occurredAt: trial.authorizationSucceededAt,
+        payload: {
+          checkout_session_id: session.id,
+          authorization_succeeded_at: trial.authorizationSucceededAt,
+          trial_enrollment_id: trial.enrollmentId,
+          trial_end_at: trial.trialEndAt,
+          value: trial.value,
+          currency: trial.currency,
+          interval: trial.interval,
+          subscription_status: activation.subscriptionStatus,
+        },
+      },
+      ["posthog"],
+    )
+    return
+  }
   const value = amountFromMinorUnits(session.amount_total)
   const currency = normalizedCurrency(session.currency)
   const purchasePricing = resolveStripeCheckoutPurchasePricing(session, interval)
@@ -302,6 +399,7 @@ function scheduleCheckoutCompletedSync(input: {
     ) {
       return
     }
+    if (isTrialAnalyticsCandidate({ activation, session })) return
     const sync = buildCustomerIoCheckoutCompletedSync({
       email: activation.email,
       interval: activation.subscriptionInterval,
@@ -345,6 +443,32 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      if (session.metadata?.trial_paid_recovery_operation_id) {
+        const recovery = await handleStripeTrialPaidRecoveryCompleted({
+          sessionId: session.id,
+          client: supabase,
+          stripe,
+        })
+        if (!recovery || recovery.status === "pending" || recovery.status === "approval_required") {
+          throw new Error("Stripe paid recovery requires reconciliation")
+        }
+        break
+      }
+      if (session.metadata?.trial_management_purpose === "restore_authorization") {
+        const management = await handleStripeTrialManagementApprovalCompleted({
+          sessionId: session.id,
+          client: supabase,
+          stripe,
+        })
+        if (
+          !management ||
+          management.status === "pending" ||
+          management.status === "approval_required"
+        ) {
+          throw new Error("Stripe trial restoration requires reconciliation")
+        }
+        break
+      }
       if (
         session.metadata?.product_kind === PERSONAL_PLAN_ONCE_KIND &&
         session.mode === "payment"
@@ -556,6 +680,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         expand: ["items.data.price"],
       })
       const result = await handleSubscriptionUpdated(subscription, {
+        stripe,
         supabase,
         defer,
       })
@@ -626,6 +751,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     case "customer.subscription.deleted": {
       const subscription = event.data.object as unknown as Stripe.Subscription
       const result = await handleSubscriptionDeleted(subscription, {
+        stripe,
         supabase,
         freeTierId: await resolveFreeTierId(supabase),
       })
@@ -679,6 +805,43 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as unknown as Stripe.Invoice
+      const recoverySubscriptionId = invoiceSubscriptionId(invoice)
+      if (recoverySubscriptionId && readTrialRuntime()) {
+        const recovery = await handleStripeTrialPaidRecoveryInvoice({
+          subscriptionId: recoverySubscriptionId,
+          invoiceId: invoice.id,
+          client: supabase,
+          stripe,
+        })
+        if (recovery?.status === "pending" || recovery?.status === "approval_required") {
+          throw new Error("Stripe paid recovery requires reconciliation")
+        }
+        if (recovery?.invoice && recordBillingAnalytics) {
+          await recordTrialInvoiceAnalytics(recovery.invoice, event.id, supabase, defer)
+        }
+        // Its exact initial invoice was already fulfilled by the atomic recovery commit.
+        if (recovery?.status === "committed" || recovery?.status === "abandoned") break
+      }
+      const trial = await handleStripeTrialInvoice(
+        {
+          invoice,
+          eventId: event.id,
+          eventCreated: event.created,
+          outcome: "succeeded",
+        },
+        { supabase, stripe },
+      )
+      if (trial) {
+        if (recordBillingAnalytics)
+          await recordTrialInvoiceAnalytics(trial, event.id, supabase, defer)
+        break
+      }
+      // Approved identity processing reconciles legacy paid use independently of analytics.
+      // No configured runtime means no provider reads or new claim writes.
+      await reconcileStripePriorPaidMembership(
+        { invoiceId: invoice.id, apply: true },
+        { supabase, stripe },
+      )
       if (!shouldRecordStripePaymentCompleted(invoice)) break
       const customerId = stripeId(invoice.customer)
       if (!customerId) break
@@ -711,6 +874,22 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "invoice.payment_failed": {
       const invoice = event.data.object as unknown as Stripe.Invoice
+      const trial = await handleStripeTrialInvoice(
+        {
+          invoice,
+          eventId: event.id,
+          eventCreated: event.created,
+          outcome: "failed",
+        },
+        { supabase, stripe },
+      )
+      if (trial) {
+        // A late failure delivery may retrieve an already paid invoice. Reconcile
+        // that success instead of downgrading access or sending a failure email.
+        if (recordBillingAnalytics)
+          await recordTrialInvoiceAnalytics(trial, event.id, supabase, defer)
+        break
+      }
       capturePayment({
         signal: "provider_payment_failed",
         provider: "stripe",
@@ -900,6 +1079,7 @@ export async function POST(req: NextRequest) {
     durationMs: Date.now() - startedAt,
   })
 
+  deferRequiredTrialNotices(after)
   return NextResponse.json({ received: true })
 }
 

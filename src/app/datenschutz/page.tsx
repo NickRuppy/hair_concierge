@@ -11,7 +11,7 @@ export default function DatenschutzPage() {
       <div className="flex flex-1 flex-col items-center px-4 py-16">
         <div className="w-full max-w-2xl space-y-8">
           <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-            Letzte Aktualisierung: Mai 2026
+            Letzte Aktualisierung: September 2026
           </p>
           <h1 className="break-words text-3xl font-semibold tracking-tight text-foreground max-[359px]:text-2xl">
             Datenschutzerklärung
@@ -95,6 +95,42 @@ export default function DatenschutzPage() {
                 Vorgangskennung, Zahlungsstatus und Fehlerkategorie. Wir nutzen diese Angaben, um
                 den Vorgang zu prüfen und dir Service-E-Mails zum Ergebnis zu senden. Wir speichern
                 dabei keine Kartendaten oder Fehlermeldungen des Zahlungsanbieters.
+              </p>
+              <p className="mt-2">
+                <strong className="text-foreground">
+                  g) Beim kostenlosen Mitgliedschaftstest:
+                </strong>{" "}
+                Um das einmalige Testangebot zu prüfen, gleichen wir verifizierte Konto- und
+                E-Mail-Kennungen sowie eine von Stripe bereitgestellte Zahlungsmittelkennung oder
+                die PayPal-Zahlerkennung mit bereits genutzten Tests ab. Dafür speichern wir
+                serverseitig kryptografisch geschützte Vergleichswerte (versionierte HMACs), den
+                Zeitpunkt der Testaktivierung und die notwendige Zuordnung zum Vorgang. Diese
+                Vergleichswerte sind pseudonymisierte personenbezogene Daten, keine anonymen Daten.
+                Rohe Kartenmerkmale, Kartennummern oder Sicherheitscodes speichern wir für diesen
+                Abgleich nicht. Name, Anschrift, IP-Adresse oder Gerät allein führen nicht zur
+                Ablehnung eines Tests. Ein gemeinsam genutztes Zahlungsmittel kann als bereits
+                verwendet erkannt werden; du kannst eine fehlerhafte Zuordnung prüfen lassen.
+              </p>
+              <p className="mt-2">
+                Zweck ist die Durchsetzung des einmaligen Einführungsangebots, nicht Werbung oder
+                die Bewertung deiner Kreditwürdigkeit. Rechtsgrundlage ist unser berechtigtes
+                Interesse nach Art. 6 Abs. 1 lit. f DSGVO, wiederholte kostenlose Inanspruchnahme
+                desselben Angebots zu begrenzen, soweit die dokumentierte Interessenabwägung den
+                jeweiligen Abgleich trägt. Eine Ablehnung löst weder eine Zahlung noch einen
+                kostenpflichtigen Vertrag aus. Die Prüfung und Berichtigung ist über
+                info@chaarlie.de möglich. Ein nicht aktivierter Test wird nicht als verbraucht
+                behandelt.
+              </p>
+              <p className="mt-2">
+                Vertragsbestätigungen, Zahlungsbelege sowie Kündigungs- und Widerrufsbestätigungen
+                und erforderliche jährliche Zahlungshinweise versenden wir über Customer.io. Dafür
+                verarbeiten wir die bestätigte Konto-E-Mail-Adresse beziehungsweise die von dir für
+                eine öffentliche Erklärung angegebene Empfangsadresse, die erforderlichen
+                Vertragsdaten und den Versandstatus. Rechtsgrundlagen sind Vertragserfüllung (Art. 6
+                Abs. 1 lit. b DSGVO) und gesetzliche Informationspflichten (Art. 6 Abs. 1 lit. c
+                DSGVO). Diese Mitteilungen enthalten keine Werbung und benötigen keine
+                Marketing-Einwilligung. Zum kostenlosen Test gibt es keine zusätzliche freiwillige
+                Erinnerungs-E-Mail.
               </p>
             </section>
 
@@ -266,6 +302,29 @@ export default function DatenschutzPage() {
                 offene Fälle bleiben bis zur Klärung gespeichert. Marketing-E-Mail-Daten bis zum
                 Widerruf der Einwilligung.
               </p>
+              <p className="mt-2">
+                Ein bereits genutzter Test wird durch eine gewöhnliche Kontolöschung nicht wieder
+                verfügbar. Die minimalen HMAC-Vergleichswerte können nach der Kontolöschung getrennt
+                fortbestehen, solange dasselbe einmalige Testprogramm angeboten wird und eine
+                aktuelle, dokumentierte Prüfung ihre weitere Erforderlichkeit und die
+                Interessenabwägung für die betroffenen Daten trägt. Allein ein fortbestehendes
+                Angebot rechtfertigt keine unbegrenzte Speicherung. Wir überprüfen dies mindestens
+                jährlich sowie bei Änderungen des Programms, des Zwecks oder bei relevanten
+                Fehlzuordnungen. Entfällt die Erforderlichkeit, endet das Programm dauerhaft oder
+                erfordert ein berechtigtes Löschungsbegehren die Entfernung, löschen wir die
+                betroffenen Vergleichswerte. Gesetzlich aufzubewahrende Zahlungsunterlagen werden
+                getrennt geprüft; ihre Aufbewahrung erlaubt nicht automatisch den weiteren
+                Testabgleich.
+              </p>
+              <p className="mt-2">
+                Bei einer Kontolöschung klären wir zuerst offene Mitgliedschaften und Zahlungen,
+                damit keine unbemerkten weiteren Abbuchungen entstehen. Eine Kontolöschung ersetzt
+                nicht die Kündigung. Erforderliche Vertrags- und Versandnachweise behalten wir nur,
+                solange eine konkrete gesetzliche Pflicht oder die begründete Nachweisführung zum
+                betreffenden Vertrag dies erfordert. Andere Kontoinhalte werden nach Prüfung deiner
+                Anfrage gelöscht; wir informieren dich über begründet zurückbehaltene Daten und
+                deren jeweilige Zwecke.
+              </p>
             </section>
 
             <section>
@@ -305,6 +364,19 @@ export default function DatenschutzPage() {
                 <a href="mailto:info@chaarlie.de" className="text-foreground underline">
                   info@chaarlie.de
                 </a>
+              </p>
+              <p className="mt-2">
+                Das gilt auch für den Testabgleich und die nach einer Kontolöschung verbliebenen
+                Vergleichswerte. Wir prüfen deine Berechtigung mit angemessenen Mitteln; sende uns
+                keine Kartennummern oder Sicherheitscodes. Bei einer Einschränkung setzen wir den
+                betroffenen Abgleich aus. Ein Widerspruch gegen die Verarbeitung aus berechtigtem
+                Interesse wird individuell geprüft; wir setzen sie nur bei nachgewiesenen
+                vorrangigen zwingenden Gründen oder zur Rechtsverteidigung fort. Bei einer
+                berechtigten Löschung entfernen wir die betroffenen Vergleichswerte und verhindern
+                ihre erneute Anlage durch spätere Zahlungsereignisse. Nach vollständiger Löschung
+                ist eine Wiedererkennung gegebenenfalls nicht mehr möglich. Über Maßnahmen oder
+                begründete Ablehnung informieren wir dich grundsätzlich innerhalb eines Monats; eine
+                gesetzlich zulässige Verlängerung begründen wir innerhalb dieser Frist.
               </p>
             </section>
 

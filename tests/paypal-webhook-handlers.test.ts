@@ -9,6 +9,8 @@ import type { FreemiumProvisioningResult } from "../src/lib/freemium/plan-provis
 import type { PayPalSubscription } from "../src/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
 
+process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
+
 function futureIso(days = 1) {
   return new Date(Date.now() + days * 86_400_000).toISOString()
 }
@@ -359,6 +361,7 @@ function createSupabaseStub(seed?: {
     calls,
     analyticsOutbox,
     analyticsDeliveries,
+    authUsers,
     billing,
     paypalIntents,
     profiles,
@@ -688,6 +691,109 @@ test("activation webhook does not rebind an intent that already belongs to anoth
   assert.equal(paypalIntents[0].provider_subscription_id, "I-original")
   assert.equal(paypalIntents[0].status, "approved")
   assert.equal(billing.length, 0)
+})
+
+test("new PayPal agreements with an unknown plan cannot bind a legacy intent or emit paid analytics", async () => {
+  const previousMonthlyPlan = process.env.PAYPAL_PLAN_ID_MONTHLY
+  process.env.PAYPAL_PLAN_ID_MONTHLY = "P-paid-month"
+  try {
+    const { supabase, billing, paypalIntents, profiles, analyticsOutbox, authUsers } =
+      createSupabaseStub({
+        billing: [],
+        paypalIntents: [
+          {
+            id: "intent-trial-plan",
+            token: "token-active",
+            interval: "month",
+            source: "pricing_page",
+            status: "approved",
+            provider_subscription_id: null,
+            expires_at: futureIso(),
+            metadata: { paypal_plan_id: "P-trial-month" },
+          },
+        ],
+      })
+
+    await assert.rejects(
+      () =>
+        handlePayPalWebhookEvent(paymentEvent("WH-unknown-trial-plan", "PAYMENT.SALE.COMPLETED"), {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          recordBillingAnalytics: true,
+          retrievePayPalSubscription: async () => ({
+            ...subscription("ACTIVE", futureIso()),
+            plan_id: "P-trial-month",
+          }),
+        }),
+      /configured interval/,
+    )
+
+    assert.equal(paypalIntents[0].provider_subscription_id, null)
+    assert.equal(paypalIntents[0].status, "approved")
+    assert.equal(billing.length, 0)
+    assert.deepEqual(profiles, {})
+    assert.deepEqual(authUsers, {})
+    assert.equal(analyticsOutbox.length, 0)
+  } finally {
+    if (previousMonthlyPlan === undefined) delete process.env.PAYPAL_PLAN_ID_MONTHLY
+    else process.env.PAYPAL_PLAN_ID_MONTHLY = previousMonthlyPlan
+  }
+})
+
+test("new PayPal agreements must match the intent's stored plan id before binding", async () => {
+  const previousMonthlyPlan = process.env.PAYPAL_PLAN_ID_MONTHLY
+  const previousLaunchMonthlyPlan = process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+  process.env.PAYPAL_PLAN_ID_MONTHLY = "P-paid-month"
+  process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = "P-other-month"
+  try {
+    const { supabase, billing, paypalIntents, profiles, analyticsOutbox, authUsers } =
+      createSupabaseStub({
+        billing: [],
+        paypalIntents: [
+          {
+            id: "intent-plan-mismatch",
+            token: "token-active",
+            interval: "month",
+            source: "pricing_page",
+            status: "approved",
+            provider_subscription_id: null,
+            expires_at: futureIso(),
+            metadata: { paypal_plan_id: "P-other-month" },
+          },
+        ],
+      })
+
+    await assert.rejects(
+      () =>
+        handlePayPalWebhookEvent(paymentEvent("WH-plan-mismatch", "PAYMENT.SALE.COMPLETED"), {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          recordBillingAnalytics: true,
+          retrievePayPalSubscription: async () => ({
+            ...subscription("ACTIVE", futureIso()),
+            plan_id: "P-paid-month",
+          }),
+        }),
+      /does not match the checkout intent/,
+    )
+
+    assert.equal(paypalIntents[0].provider_subscription_id, null)
+    assert.equal(paypalIntents[0].status, "approved")
+    assert.equal(billing.length, 0)
+    assert.deepEqual(profiles, {})
+    assert.deepEqual(authUsers, {})
+    assert.equal(analyticsOutbox.length, 0)
+  } finally {
+    if (previousMonthlyPlan === undefined) delete process.env.PAYPAL_PLAN_ID_MONTHLY
+    else process.env.PAYPAL_PLAN_ID_MONTHLY = previousMonthlyPlan
+    if (previousLaunchMonthlyPlan === undefined) {
+      delete process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY
+    } else {
+      process.env.PAYPAL_PLAN_ID_PERSONAL_PLAN_LAUNCH_MONTHLY = previousLaunchMonthlyPlan
+    }
+  }
 })
 
 test("activation webhook cancels subscriptions created from expired checkout intents", async () => {

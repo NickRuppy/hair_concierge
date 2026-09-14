@@ -31,6 +31,7 @@ export function buildCustomerIoCheckoutCompletedSync({
   stripeEventId,
   subscriptionStatus,
   timestamp,
+  trial,
   userId,
 }: {
   email: string
@@ -46,6 +47,12 @@ export function buildCustomerIoCheckoutCompletedSync({
   stripeEventId: string
   subscriptionStatus: string
   timestamp: string
+  trial?: {
+    authorizationSucceededAt: string
+    enrollmentId: string
+    trialEndAt: string
+    value: 0
+  } | null
   userId: string
 }) {
   const stripeCustomerId = idFrom(session.customer)
@@ -53,6 +60,26 @@ export function buildCustomerIoCheckoutCompletedSync({
   const currency = upperCurrency(session.currency)
   const value = amountFromCents(session.amount_total)
 
+  if (trial) {
+    const identifyTraits: CustomerIoServerProperties = {
+      email,
+      subscription_interval: interval,
+      subscription_status: subscriptionStatus,
+      stripe_customer_id: stripeCustomerId,
+      stripe_subscription_id: stripeSubscriptionId,
+    }
+    return {
+      userId,
+      identifyTraits,
+      identifyMessageId: `identify:stripe_checkout:${session.id}`,
+      // Customer.io has no approved trial lifecycle message. The webhook caller
+      // skips this sync altogether; this defensive shape also cannot fall through
+      // to paid purchase or subscription events.
+      events: [] satisfies CustomerIoLifecycleEvent[],
+    }
+  }
+
+  // Keep the legacy paid payload's property order and content unchanged.
   const identifyTraits: CustomerIoServerProperties = {
     email,
     is_customer: true,

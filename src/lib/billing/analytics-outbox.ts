@@ -76,18 +76,14 @@ export async function createBillingAnalyticsEvent(
   options: CreateBillingAnalyticsEventOptions = {},
 ): Promise<BillingAnalyticsOutboxRow> {
   const event = await insertOrFindOutboxEvent(supabase, input)
-  await ensureDeliveryRows(
-    supabase,
-    event.id,
-    options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
-  )
+  const destinations =
+    event.event_name === "trial_started"
+      ? ["posthog" as const]
+      : (options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS)
+  await ensureDeliveryRows(supabase, event.id, destinations)
 
   if (options.dispatch !== false) {
-    await dispatchBillingAnalyticsEvent(
-      supabase,
-      event,
-      options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
-    )
+    await dispatchBillingAnalyticsEvent(supabase, event, destinations)
   }
 
   return event

@@ -15,6 +15,9 @@ export type PayPalSubscription = {
   status?: string
   plan_id?: string
   start_time?: string
+  create_time?: string
+  status_update_time?: string
+  plan?: PayPalPlan
   custom_id?: string
   subscriber?: {
     payer_id?: string
@@ -22,6 +25,8 @@ export type PayPalSubscription = {
   }
   billing_info?: {
     next_billing_time?: string
+    last_payment?: { time?: string; amount?: { value?: string; currency_code?: string } }
+    last_failed_payment?: { time?: string; amount?: { value?: string; currency_code?: string } }
   }
   links?: Array<{ href?: string; rel?: string; method?: string }>
 }

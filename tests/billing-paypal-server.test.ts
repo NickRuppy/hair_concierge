@@ -28,6 +28,9 @@ import {
   paypalCheckoutActivationId,
   paypalCheckoutActivationHash,
 } from "../src/lib/paypal/checkout-activation"
+
+process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
+process.env.PAYPAL_PLAN_ID_QUARTERLY ??= "P-quarter"
 import {
   bindPayPalCheckoutIntentToSubscription,
   createPayPalCheckoutIntent,

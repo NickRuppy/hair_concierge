@@ -28,6 +28,8 @@ function createMiddleware({
   currentAccess = true,
   paidAccess = false,
   partnerAccess = false,
+  trialHistory = false,
+  trialHistoryUnavailable = false,
   frontierResult = { data: { eligible: false, source_ready: false, plan: null }, error: null },
   planResult = {
     data: { pending_routine_proposal_id: "proposal-1", active_routine_version_id: null },
@@ -46,6 +48,8 @@ function createMiddleware({
   currentAccess?: boolean
   paidAccess?: boolean
   partnerAccess?: boolean
+  trialHistory?: boolean
+  trialHistoryUnavailable?: boolean
   frontierResult?: {
     data: {
       eligible: boolean
@@ -151,6 +155,10 @@ function createMiddleware({
       paidAccess) as UpdateSessionDependencies["hasCurrentPaidAppAccess"],
     hasCurrentPartnerAccess: (async () =>
       partnerAccess) as UpdateSessionDependencies["hasCurrentPartnerAccess"],
+    hasTrialBillingHistory: async () => {
+      if (trialHistoryUnavailable) throw new Error("trial history unavailable")
+      return trialHistory
+    },
     resolveOneTimeAccessState: (async () =>
       oneTimeAccessState) as UpdateSessionDependencies["resolveOneTimeAccessState"],
     resolveModeratorAccess: (async () =>
@@ -348,6 +356,59 @@ test("flag on: a free authenticated user without current access is still gated o
       const body = await response.json()
       assert.deepEqual(body, { error: "subscription_required" })
     }
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("expired trial cannot fall back to free pages or keepsake APIs; recovery stays reachable", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const middleware = createMiddleware({
+      currentAccess: false,
+      trialHistory: true,
+      userAppMetadata: {},
+    })
+    const page = await middleware(new NextRequest("https://chaarlie.de/tracker"))
+    assert.equal(page.status, 307)
+    assert.equal(
+      page.headers.get("location"),
+      "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
+    )
+    for (const pathname of ["/api/scan", "/api/chat", "/api/chat/conversation-1"]) {
+      const response = await middleware(new NextRequest(`https://chaarlie.de${pathname}`))
+      assert.equal(response.status, 403, pathname)
+      assert.deepEqual(await response.json(), { error: "subscription_required" })
+    }
+    const recovery = await middleware(new NextRequest("https://chaarlie.de/reactivate"))
+    assert.equal(recovery.status, 200)
+  } finally {
+    if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+    else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
+  }
+})
+
+test("verified current access takes precedence over trial history and unavailable history never opens previews", async () => {
+  const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
+  process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
+  try {
+    const active = await createMiddleware({
+      currentAccess: true,
+      trialHistory: true,
+      trialHistoryUnavailable: true,
+      userAppMetadata: {},
+      onboardingCompleted: true,
+    })(new NextRequest("https://chaarlie.de/tracker"))
+    assert.equal(active.status, 200)
+    const unavailable = await createMiddleware({
+      currentAccess: false,
+      trialHistoryUnavailable: true,
+      userAppMetadata: {},
+    })(new NextRequest("https://chaarlie.de/api/chat"))
+    assert.equal(unavailable.status, 503)
+    assert.deepEqual(await unavailable.json(), { error: "access_check_unavailable" })
   } finally {
     if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
     else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original

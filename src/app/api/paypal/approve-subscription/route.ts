@@ -1,3 +1,8 @@
+import {
+  hasPayPalTrialMarker,
+  assertPayPalTrialBinding,
+} from "@/lib/paypal/trial-account-admission"
+import { findPayPalTrialCheckoutAttempt } from "@/lib/paypal/trial-checkout-attempt"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -10,6 +15,10 @@ import {
   isPayPalCheckoutIntentExpired,
   PayPalCheckoutIntentBindingError,
 } from "@/lib/paypal/checkout-intents"
+import {
+  assertNewLegacyPayPalCheckoutPlan,
+  PayPalCheckoutActivationError,
+} from "@/lib/paypal/checkout-activation"
 import {
   cancelPayPalSubscription as defaultCancelPayPalSubscription,
   retrievePayPalSubscription,
@@ -29,6 +38,42 @@ const BodySchema = z.object({
   subscription_id: z.string().min(1),
 })
 
+export async function bindNewPayPalAgreementForApproval(input: {
+  intent: PayPalCheckoutIntentRow
+  subscription: PayPalSubscription & { id: string }
+  bind: (email: string | null) => Promise<PayPalCheckoutIntentRow>
+}): Promise<
+  | { kind: "bound"; intent: PayPalCheckoutIntentRow }
+  | { kind: "invalid_plan"; response: NextResponse }
+> {
+  try {
+    assertNewLegacyPayPalCheckoutPlan(input.subscription, {
+      expectedInterval: input.intent.interval,
+      expectedPlanId:
+        typeof input.intent.metadata.paypal_plan_id === "string"
+          ? input.intent.metadata.paypal_plan_id
+          : null,
+      expectedPlanIdRequired: Object.hasOwn(input.intent.metadata, "paypal_plan_id"),
+    })
+  } catch (error) {
+    if (error instanceof PayPalCheckoutActivationError) {
+      return {
+        kind: "invalid_plan",
+        response: NextResponse.json(
+          { error: "paypal subscription plan mismatch" },
+          { status: 400 },
+        ),
+      }
+    }
+    throw error
+  }
+
+  if (input.intent.provider_subscription_id === input.subscription.id) {
+    return { kind: "bound", intent: input.intent }
+  }
+  return { kind: "bound", intent: await input.bind(getPayPalSubscriberEmail(input.subscription)) }
+}
+
 export async function POST(request: Request) {
   const parsed = BodySchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
@@ -40,7 +85,7 @@ export async function POST(request: Request) {
   try {
     const admin = createAdminClient()
     const intent = await findPayPalCheckoutIntentByToken(admin, token)
-    if (!intent || isPayPalCheckoutIntentExpired(intent)) {
+    if (!intent || (!hasPayPalTrialMarker(intent) && isPayPalCheckoutIntentExpired(intent))) {
       return NextResponse.json({ error: "paypal checkout expired" }, { status: 400 })
     }
     checkoutSource = intent.source
@@ -82,6 +127,14 @@ export async function POST(request: Request) {
     if (intent.provider_subscription_id && intent.provider_subscription_id !== subscription.id) {
       return NextResponse.json({ error: "paypal subscription mismatch" }, { status: 400 })
     }
+    if (hasPayPalTrialMarker(intent)) {
+      const attempt = await findPayPalTrialCheckoutAttempt(admin, token)
+      if (!attempt)
+        return NextResponse.json({ error: "paypal trial attempt missing" }, { status: 400 })
+      assertPayPalTrialBinding(intent, attempt, subscription)
+      // Access remains pending until the verified ACTIVATED event pins the original provider clock.
+      return NextResponse.json({ ok: true, token })
+    }
     const existingBilling = await findBillingSubscriptionByProviderId(
       admin,
       "paypal",
@@ -97,25 +150,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, token })
     }
 
-    const email = getPayPalSubscriberEmail(subscription)
-    let boundIntent: PayPalCheckoutIntentRow
-    if (intent.provider_subscription_id === subscription.id) {
-      boundIntent = intent
-    } else {
-      try {
-        boundIntent = await bindPayPalCheckoutIntentToSubscription(
-          admin,
-          token,
-          subscription.id,
-          intent.email ?? email,
-        )
-      } catch (error) {
-        if (error instanceof PayPalCheckoutIntentBindingError) {
-          return NextResponse.json({ error: "paypal subscription mismatch" }, { status: 409 })
-        }
-        throw error
+    let binding: Awaited<ReturnType<typeof bindNewPayPalAgreementForApproval>>
+    try {
+      binding = await bindNewPayPalAgreementForApproval({
+        intent,
+        subscription: subscription as PayPalSubscription & { id: string },
+        bind: (email) =>
+          bindPayPalCheckoutIntentToSubscription(
+            admin,
+            token,
+            subscription.id!,
+            intent.email ?? email,
+          ),
+      })
+    } catch (error) {
+      if (error instanceof PayPalCheckoutIntentBindingError) {
+        return NextResponse.json({ error: "paypal subscription mismatch" }, { status: 409 })
       }
+      throw error
     }
+    if (binding.kind === "invalid_plan") return binding.response
+    const boundIntent = binding.intent
     const duplicateReason = await findPayPalCheckoutDuplicateReason(
       admin,
       boundIntent,

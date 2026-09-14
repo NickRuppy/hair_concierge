@@ -1,12 +1,5 @@
-import type { Metadata } from "next"
+import WaitlistPage, { metadata } from "../page"
 
-import { QuizGateLanding } from "@/components/waitlist/quiz-gate-landing"
+export { metadata }
 
-export const metadata: Metadata = {
-  title: "Kostenloses Quiz | chaarlie",
-  robots: { index: false, follow: false },
-}
-
-export default function WaitlistQuizGatePage() {
-  return <QuizGateLanding />
-}
+export default WaitlistPage

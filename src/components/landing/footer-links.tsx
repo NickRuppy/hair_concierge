@@ -6,6 +6,8 @@ export const legalFooterLinks = [
   { href: "/datenschutz", label: "Datenschutz" },
   { href: "/agb", label: "AGB" },
   { href: "/widerruf", label: "Widerruf" },
+  { href: "/kuendigen", label: "Verträge hier kündigen" },
+  { href: "/widerruf/erklaeren", label: "Vertrag widerrufen" },
 ] as const
 
 export const footerLinkClass =
