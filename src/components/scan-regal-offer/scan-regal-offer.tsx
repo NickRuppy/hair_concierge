@@ -185,9 +185,7 @@ function SectionSub({ children }: { children: string }) {
 }
 
 function SectionCaption({ children }: { children: string }) {
-  return (
-    <p className="mt-3 text-center text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">{children}</p>
-  )
+  return <p className="mt-3 text-center text-xs text-[var(--text-caption)]">{children}</p>
 }
 
 function FaqItem({ answer, faqId, question }: { answer: string; faqId: string; question: string }) {
@@ -287,7 +285,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
           <SectionSub>{profileLine(quizAnswers)}</SectionSub>
           <figure className="mx-auto mt-5 max-w-[420px]">
             <ScanHeroDemo quizAnswers={quizAnswers} />
-            <figcaption className="mt-3 text-center text-xs leading-[1.5] text-[rgba(var(--brand-plum-rgb),0.58)]">
+            <figcaption className="mt-3 text-center text-xs leading-[1.5] text-[var(--text-caption)]">
               So prüft der Scanner Produkte für dein Profil – bei den gängigen Produkten von dm und
               Rossmann.
             </figcaption>
@@ -482,7 +480,7 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-center text-[11px] text-[rgba(var(--brand-plum-rgb),0.58)] sm:text-xs">
+              <p className="mt-3 text-center text-[11px] text-[var(--text-caption)] sm:text-xs">
                 Entwickelt gemeinsam mit Friseurmeistern.
               </p>
             </div>

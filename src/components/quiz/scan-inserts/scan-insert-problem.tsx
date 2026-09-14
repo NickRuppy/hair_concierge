@@ -32,7 +32,7 @@ export function ScanInsertProblemView({ answers, funnelPackageKey }: ScanInsertV
         suchen Klarheit, welche Produkte wirklich zu ihnen passen. Raten kostet Geld, Zeit und ein
         Regal voller halbleerer Flaschen.
         {/* Same source line the offer page prints under the same survey. */}
-        <span className="mt-2 block text-xs text-[rgba(var(--brand-plum-rgb),0.58)]">
+        <span className="mt-2 block text-xs text-[var(--text-caption)]">
           Quelle: eigene Umfrage · 4.024 Antworten · Mehrfachauswahl möglich
         </span>
       </span>
