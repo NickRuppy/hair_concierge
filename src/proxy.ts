@@ -84,11 +84,10 @@ export async function proxy(request: NextRequest) {
     status: response.status,
   })
   if (!isFunnelAttributionEnabled() || isPrefetchRequest(request.headers)) {
-    // A prefetch is not a visit. Next's <Link> prefetches `/` from every page
-    // that carries the wordmark (landing header, footer) as soon as the link is
-    // in view; `/` explicitly selects the organic package, so letting such a
-    // request through here restarted a scanner/meta session as organic one
-    // second after the landing view (observed in production 2026-09-14).
+    // Browser speculation (`Purpose` / `Sec-Purpose: prefetch`) is not a visit.
+    // Next's own router prefetch cannot be detected here (its headers are
+    // stripped before middleware), which is why `/` no longer counts as an
+    // explicit package choice below.
     return finalizeRegularQuizFieldTestRewrite(request, response, rewriteRegularFieldTest)
   }
 
@@ -111,10 +110,16 @@ export async function proxy(request: NextRequest) {
 
   const existingValue = request.cookies.get(FUNNEL_SESSION_COOKIE)?.value
   const existing = existingValue ? await decodeFunnelContext(existingValue, secret) : null
+  // Only a campaign landing (`/lp/<slug>`) or the field-test rewrite may
+  // replace an existing session. `/` used to count as an explicit organic
+  // choice, but every page carries a wordmark link to `/` and Next prefetches
+  // it as soon as it is in view — the proxy cannot tell that prefetch from a
+  // visit (Next strips its router headers before middleware runs), so the
+  // scan_v1 / meta session was restarted as default_organic one second after
+  // the landing view (production, 2026-09-14). A visitor without a session
+  // still gets default_organic on `/` through the `!existing` branch below.
   const explicitlySelectsPackage =
-    rewriteRegularFieldTest ||
-    request.nextUrl.pathname === "/" ||
-    request.nextUrl.pathname.startsWith("/lp/")
+    rewriteRegularFieldTest || request.nextUrl.pathname.startsWith("/lp/")
 
   const startNewSession = shouldStartNewFunnelSession({
     existingPackageKey: existing?.packageKey ?? null,
@@ -260,13 +265,12 @@ const SAFE_RETIRED_ROUTINE_QUERY_KEYS = new Set([
 ])
 
 /**
- * Prefetch/speculative requests never mutate funnel attribution: Next's router
- * prefetch (`Next-Router-Prefetch: 1`) and browser speculation
- * (`Purpose`/`Sec-Purpose: prefetch`, `X-Purpose: preview`) are not user visits.
+ * Browser speculation requests never mutate funnel attribution
+ * (`Purpose`/`Sec-Purpose: prefetch`, `X-Purpose: preview`). Next's router
+ * prefetch header is stripped before middleware runs, so it is deliberately
+ * not part of this check — see `explicitlySelectsPackage` in `proxy()`.
  */
 export function isPrefetchRequest(headers: Headers) {
-  if (headers.get("next-router-prefetch") === "1") return true
-  if (headers.get("x-middleware-prefetch") === "1") return true
   const purpose =
     `${headers.get("purpose") ?? ""} ${headers.get("sec-purpose") ?? ""} ${headers.get("x-purpose") ?? ""}`.toLowerCase()
   return /prefetch|prerender|preview/.test(purpose)

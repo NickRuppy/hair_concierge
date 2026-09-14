@@ -141,20 +141,53 @@ test("existing organic and meta attribution branches are unaffected by the scan 
   assert.equal(resolveAttributablePackageForPath("/lp/haarplan", false, true), null)
 })
 
-test("prefetch requests never touch funnel attribution", () => {
-  assert.equal(isPrefetchRequest(new Headers({ "next-router-prefetch": "1" })), true)
+test("browser speculation requests never touch funnel attribution", () => {
   assert.equal(isPrefetchRequest(new Headers({ purpose: "prefetch" })), true)
   assert.equal(isPrefetchRequest(new Headers({ "sec-purpose": "prefetch;prerender" })), true)
-  assert.equal(isPrefetchRequest(new Headers({ "x-middleware-prefetch": "1" })), true)
   assert.equal(isPrefetchRequest(new Headers({ accept: "text/html" })), false)
   assert.equal(isPrefetchRequest(new Headers()), false)
 
-  // The proxy bails out of attribution for prefetches before any cookie is
-  // issued or replaced (the `/` prefetch from a landing's wordmark link must
-  // not restart a scan_v1 session as default_organic).
   const proxySource = readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8")
   assert.match(
     proxySource,
     /!isFunnelAttributionEnabled\(\) \|\| isPrefetchRequest\(request\.headers\)/,
+  )
+})
+
+test("only a landing URL may replace an existing funnel session; `/` keeps it", () => {
+  // Next prefetches `/` from every wordmark link and strips its prefetch header
+  // before middleware, so `/` must not count as an explicit organic choice.
+  const proxySource = readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8")
+  assert.match(
+    proxySource,
+    /const explicitlySelectsPackage =\s*\n\s*rewriteRegularFieldTest \|\| request\.nextUrl\.pathname\.startsWith\("\/lp\/"\)/,
+  )
+  assert.doesNotMatch(proxySource, /request\.nextUrl\.pathname === "\/" \|\|/)
+
+  const scanPackage = getFunnelPackageBySlug("scan")
+  assert.ok(scanPackage)
+  const organicPackage = resolveAttributablePackageForPath("/", false, false)
+  assert.ok(organicPackage)
+  // An existing scan_v1 session survives a non-explicit `/` request …
+  assert.equal(
+    shouldStartNewFunnelSession({
+      existingPackageKey: scanPackage.key,
+      explicitlySelectsPackage: false,
+      personalPlanEnabled: false,
+      scanFunnelEnabled: false,
+      selectedPackage: organicPackage,
+    }),
+    false,
+  )
+  // … and a visitor without any session still starts the organic one.
+  assert.equal(
+    shouldStartNewFunnelSession({
+      existingPackageKey: null,
+      explicitlySelectsPackage: false,
+      personalPlanEnabled: false,
+      scanFunnelEnabled: false,
+      selectedPackage: organicPackage,
+    }),
+    true,
   )
 })
