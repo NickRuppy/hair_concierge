@@ -1,13 +1,29 @@
-# Mask evidence lexicon — v0.1
+# Mask evidence lexicon — v0.2
 
-Status: draft for Phase 3 review (created 2026-09-04). Not ruled. No thresholds, no product
-classification, no calibration set — the standard owns those.
+Status: draft (created 2026-09-04; **bumped to v0.2 on 2026-09-14**, superseding v0.1). Not ruled.
+No thresholds, no product classification, no calibration set — the standard owns those.
 Scope: rinse-out intensive hair masks / Kuren, German-EU drugstore market.
 Charter: `00_category_charter.md`. Property set: `01_property-set-v0.md`.
+Standard of record: `mask-classification-standard.v0.1.md` (**now at v0.2**).
 Evidence basis it builds on: `planning-evidence/2026-09-04-mask-formulation-evidence.md`
 (referred to below as "the prior pass"). Template shape: `docs/research/category-classification-engine-template.md` §4.
 
-Review date for every entry in this version: **2026-09-04**. Source keys resolve in §14.
+Review date for every entry not marked otherwise: **2026-09-04**. Source keys resolve in §14.
+
+**What changed in v0.2 (R8, 2026-09-14).** Five housekeeping patches from Nick's round-1 ruling R8,
+each marked in place with `(R8, 2026-09-14)`:
+
+1. **Lanolin / wool wax** added to family 3's **heavy** band (it had no entry at all).
+2. **The chelator list is reconciled with the standard** — §0.2, §10 and the standard's §3.1 tail
+   classes now carry one union list, and `Sodium Hydroxide` / `Sodium Chloride` are moved out of
+   the "chelators" label they were filed under (they are pH salts and electrolytes).
+3. **Three species added to the tail classes** — `Leuconostoc/Radish Root Ferment Filtrate`,
+   `Tetrasodium Glutamate Diacetate`, `Ethylhexylglycerin`.
+4. **Colourants lose marker status** — a CI number may no longer define `tail_marker_index`
+   (§0.2, §12), with a marker-precedence note. They keep zero care credit, as before.
+5. No value, band, threshold or role assignment moves. Since the standard's structural signals are
+   computed on the above-tail segment, patches 3 and 4 can move a *boundary*; every affected
+   record is re-derived under Standard v0.2, never patched.
 
 ---
 
@@ -28,16 +44,40 @@ below 1% they may be listed in **any order**. `[R-1]` There is no printed marker
 this lexicon uses a practical proxy:
 
 ```text
-tail_marker_index := index of the EARLIEST of
+tail_marker_index := index of the EARLIEST of                        # (R8, 2026-09-14)
     { Parfum / Fragrance / Aroma,
       any declared fragrance allergen (Limonene, Linalool, Geraniol, Hexyl Cinnamal, ...),
       any preservative (Phenoxyethanol, Sodium Benzoate, Potassium Sorbate, Benzyl Alcohol,
-                        Methylisothiazolinone, parabens, Chlorhexidine Digluconate, ...),
-      any CI colourant }
+                        Benzoic Acid, Methylisothiazolinone, parabens, DMDM Hydantoin,
+                        Dehydroacetic Acid / Sodium Dehydroacetate, Chlorhexidine Digluconate,
+                        Leuconostoc/Radish Root Ferment Filtrate, ...),
+      any preservative BOOSTER declared alongside a preservative above
+                       (Ethylhexylglycerin, Caprylyl Glycol, 1,2-Hexanediol,
+                        Glyceryl Caprylate, Caprylhydroxamic Acid),
+      any trace chelator (Disodium EDTA, Tetrasodium EDTA, Tetrasodium Glutamate Diacetate,
+                          Trisodium Ethylenediamine Disuccinate, Etidronic Acid,
+                          Phytic Acid / Sodium Phytate) }
+
+    # NOT marker-eligible: CI colourants (see the precedence note below),
+    #                      Citric Acid (ubiquitous pH adjuster, position varies),
+    #                      Sodium Hydroxide / Sodium Chloride (pH salt, electrolyte)
 
 above-tail := index < tail_marker_index
 tail       := index >= tail_marker_index
 ```
+
+- **Marker precedence — colourants never set the boundary `(R8, 2026-09-14)`.** v0.1 listed
+  `any CI colourant` as marker-eligible. Removed. Pigments are placed for shade, not for level, so
+  an early CI number would drop an entire conditioning architecture into the nominal sub-1 % tail
+  and collapse every judgment field to its floor — a disqualification driven by a listing
+  convention rather than by evidence. Colour-*depositing* masks are excluded at G0 anyway, so a CI
+  number on an eligible mask is an opacifier or a tinting trace. **Colourants keep zero care credit
+  wherever they sit** (family 10 treatment, unchanged); above the tail they are recorded as a
+  formula fact and earn nothing. Mirrors the standard's §3.1.
+- **Preservative boosters are marker-eligible only in a pair `(R8, 2026-09-14)`.**
+  `Ethylhexylglycerin`, `Caprylyl Glycol` and `1,2-Hexanediol` also appear as humectant-looking
+  tokens (§13 false-positive register). They define the boundary **only** when a conventional
+  preservative is declared on the same list; alone, they are neither markers nor humectants.
 
 - **Everything in the tail gets zero structural credit** for every judgment property
   (`conditioning_level`, `weight_potential`, `care_direction`, `repair_support_level`,
@@ -50,8 +90,15 @@ tail       := index >= tail_marker_index
   an extreme value on its own.
 - **Marker-failure fallback.** Some brands print `Parfum` last by house convention regardless of
   level. If Parfum is the final or penultimate entry and no preservative or allergen precedes it,
-  fall back to the earliest preservative/allergen. If none exists, set the boundary `unresolved`
-  and cap confidence — do not silently treat the whole list as above-tail.
+  fall back to the earliest preservative/allergen. If none exists, the boundary is **`absent`**
+  — cap confidence and route to review; do not silently treat the whole list as above-tail.
+- **Plausibility is a precondition `(R2/R8, 2026-09-14 — pointer, the standard owns the rule)`.**
+  A marker that sits *before* the species establishing the product's own care/weight architecture,
+  or that sits on a low-water / non-emulsion architecture, is **`unresolved`**: it may neither
+  disqualify a route nor qualify one, confidence is capped, and the calls route to review under the
+  standard's `tail_marker_unresolved` trigger. The two failure states are distinct and have
+  distinct remedies — `absent` needs a fuller capture, `unresolved` needs a human to read the
+  architecture. See Standard §3.1.1; this lexicon assigns families, never marker outcomes.
 
 Worked illustration (real German-market lists, `[D-1]`, `[D-2]`, `[D-3]`):
 
@@ -190,7 +237,9 @@ gel network that *is* the body of the mask.
 **Normalized name / representative aliases**
 *Butters / heavy:* `Butyrospermum Parkii (Shea) Butter`, `Theobroma Cacao Seed Butter`,
 `Mangifera Indica Seed Butter`, `Petrolatum`, `Hydrogenated Vegetable Oil`, `Cera Alba`,
-`Ricinus Communis Seed Oil`.
+`Ricinus Communis Seed Oil`,
+**`Lanolin` / wool wax and its derivatives `(R8, 2026-09-14)`** — `Lanolin`, `Lanolin Alcohol`,
+`Lanolin Oil`, `Hydrogenated Lanolin`, `Cera Lanae`, `PEG-75 Lanolin`.
 *Triglycerides / plant oils:* `Cocos Nucifera (Coconut) Oil`, `Argania Spinosa Kernel Oil`,
 `Olea Europaea Fruit Oil`, `Persea Gratissima (Avocado) Oil`, `Glycine Soja Oil`,
 `Helianthus Annuus Seed Oil`, `Prunus Armeniaca Kernel Oil`, `Macadamia Integrifolia Seed Oil`,
@@ -213,7 +262,14 @@ gel network that *is* the body of the mask.
 **Mask-specific evidence role**
 - **Primary `weight_potential` driver above the tail** — the best-supported axis in the category
   (prior pass §8). Three weight bands, by band not by threshold:
-  - *heavy:* butters, `Ricinus Communis`, petrolatum, hydrogenated fats, dense triglycerides;
+  - *heavy:* butters, `Ricinus Communis`, petrolatum, hydrogenated fats, dense triglycerides,
+    **lanolin / wool wax and its derivatives `(R8, 2026-09-14)`** — an occlusive wax-ester
+    complex, so it sits in the heavy band beside petrolatum and the hydrogenated fats, and counts
+    as an **R4b heavy lipid** for the standard's `weight_potential` anchors (§9.2) and its
+    lipid-led moisture-focus guard (§9.5.3 criterion 2). It had no entry in v0.1, so a lanolin
+    reading rested on reviewer judgment; it is now lexicon-backed. **`Lanolin Alcohol` is a
+    lanolin fraction, not a family-2 long-chain fatty alcohol** — it earns R4b heavy-lipid credit
+    and must **not** be counted toward S2 or toward the dense/thin fatty-base tests;
   - *mid:* conventional plant triglycerides (argan, avocado, olive, soy, apricot kernel);
   - *light / weight-neutral:* light esters and light hydrocarbons. Spreading-value data places
     `Isoamyl Laurate` in the high-spreading class (~1000–1700 mm²/10 min) and
@@ -598,8 +654,15 @@ for the direct-substantivity role, **transfer-limited** for coacervation (§15, 
 `Glyceryl Stearate`, `PEG-100 Stearate`, `Cetearyl Glucoside`, `C12-20 Alkyl Glucoside`.
 *Opacifiers/fillers:* `Kaolin`, `Silica`, `Bentonite`, `Magnesium Aluminum Silicate`,
 `Glycol Distearate`, `Mica`, `Titanium Dioxide`.
-*Chelators/pH salts:* `Disodium EDTA`, `Tetrasodium Glutamate Diacetate`,
-`Trisodium Ethylenediamine Disuccinate`, `Sodium Hydroxide`, `Sodium Chloride`.
+*Chelators `(R8, 2026-09-14 — reconciled with Standard §3.1; one union list in both files)`:*
+`Disodium EDTA`, `Tetrasodium EDTA`, `Tetrasodium Glutamate Diacetate`,
+`Trisodium Ethylenediamine Disuccinate`, `Etidronic Acid`, `Phytic Acid` / `Sodium Phytate`.
+**All six are marker-eligible** (§0.2) and carry zero care credit.
+*pH salts and electrolytes — NOT chelators and NOT marker-eligible `(R8, 2026-09-14)`:*
+`Sodium Hydroxide`, `Sodium Chloride`. v0.1 filed these under the chelator label; they chelate
+nothing, their position on a list is unconstrained, and treating either as a boundary marker would
+set `tail_marker_index` from a viscosity or pH adjustment. They stay in family 10 with zero credit.
+`Citric Acid` likewise is never a marker (family 8; Standard §3.1).
 
 **Functional family** — formulation infrastructure. No care payload.
 
@@ -680,8 +743,17 @@ evidence**, supplier-dominated (§15, W4).
 `Citral`, `Farnesol`.
 *Preservatives:* `Phenoxyethanol`, `Sodium Benzoate`, `Potassium Sorbate`, `Benzyl Alcohol`,
 `Benzoic Acid`, `Methylisothiazolinone`, `Methylparaben`, `Propylparaben`, `DMDM Hydantoin`,
-`Sodium Hydroxymethylglycinate`, `Chlorhexidine Digluconate`, `Dehydroacetic Acid`.
-*Colourants:* `CI 19140`, `CI 42090`, `CI 77891`, etc.
+`Sodium Hydroxymethylglycinate`, `Chlorhexidine Digluconate`, `Dehydroacetic Acid`,
+`Sodium Dehydroacetate`, **`Leuconostoc/Radish Root Ferment Filtrate` `(R8, 2026-09-14)`** — the
+standard "naturkosmetik" ferment preservative; without it, a naturally-preserved mask reads as
+marker-absent and its whole list is treated as above-tail.
+*Preservative boosters, marker-eligible only alongside a preservative above
+`(R8, 2026-09-14)`:* **`Ethylhexylglycerin`**, `Caprylyl Glycol`, `1,2-Hexanediol`,
+`Glyceryl Caprylate`, `Caprylhydroxamic Acid`.
+*Trace chelators, marker-eligible `(R8, 2026-09-14)`:* `Disodium EDTA`, `Tetrasodium EDTA`,
+`Tetrasodium Glutamate Diacetate`, `Trisodium Ethylenediamine Disuccinate`, `Etidronic Acid`,
+`Phytic Acid` / `Sodium Phytate` (see family 10 for the full reconciled list).
+*Colourants — **NOT marker-eligible** `(R8, 2026-09-14)`:* `CI 19140`, `CI 42090`, `CI 77891`, etc.
 
 **Functional family** — sensory and shelf-life infrastructure.
 
@@ -689,6 +761,12 @@ evidence**, supplier-dominated (§15, W4).
 - This family's entire engine role is to define `tail_marker_index` (§0.2) and thereby the
   above-tail/tail split that every other family depends on.
 - **Zero care credit for every property.** No focus, no weight, no conditioning, no repair.
+- **Colourants earn the zero credit but do not set the boundary `(R8, 2026-09-14)`.** A CI number
+  may no longer define `tail_marker_index` — see the precedence note in §0.2. Above the tail it is
+  recorded as a formula fact and earns nothing (like `Titanium Dioxide` and `Mica`, family 10);
+  at or after the tail it is an ordinary tail member. **A list whose only near-boundary declaration
+  is a CI number is read as marker-absent**, with the §0.2 fallback and the standard's
+  `tail_marker_anomaly` trigger, never as marker-present-at-the-pigment.
 
 **Exclusions, false positives, and label-vintage traps**
 - **Do not read allergen-block length as a formulation difference.** Regulation (EU) 2023/1545
@@ -706,8 +784,9 @@ evidence**, supplier-dominated (§15, W4).
   Professional Keratin Repair `[D-1]` `[D-3]`. A short above-tail section is itself informative
   (a structurally minimal formula), but it is *not* evidence of a bad or a weak product; it is
   evidence that little can be inferred.
-- The marker-failure fallback in §0.2 applies; when it also fails, mark the boundary `unresolved`
-  and cap confidence rather than guessing.
+- The marker-failure fallback in §0.2 applies; when it also fails, mark the boundary **`absent`**
+  and cap confidence rather than guessing `(R8, 2026-09-14 — state name aligned with the standard;`
+  `unresolved` now names the *implausible*-marker state, not the missing-marker one)`.
 
 **Source and review date** — `[R-1]`, `[R-3]`, `[R-4]`, `[D-1]`, `[D-3]`; reviewed 2026-09-04.
 
@@ -865,7 +944,13 @@ forward unchanged and are reinforced by the label data gathered here.
 1. Whether a family-1 rank-band refinement sharpens S1 (the surviving kernel of the rejected C1;
    see the adjudication note). The standard's count-based S1 stands; calibration decides whether
    rank bands add discrimination.
-2. How the `unresolved` tail-boundary state (§0.2 fallback) interacts with the `uncertain_fields` /
-   NEQI fallback pattern and the confidence ceiling.
+2. ~~How the `unresolved` tail-boundary state (§0.2 fallback) interacts with the `uncertain_fields` /
+   NEQI fallback pattern and the confidence ceiling.~~ **Closed by R2 (2026-09-14):** Standard
+   §3.1.1 defines the two states (`absent`, `unresolved`), their triggers, and the rule that an
+   implausible marker may neither qualify nor disqualify. What remains open is the *rate* — how
+   often each state fires on a real mask shelf (Standard §18.8).
+4. **New under R8 (2026-09-14):** the three added tail classes and the removal of colourants from
+   marker eligibility can move `tail_marker_index` on a real list. How often, and in which
+   direction, is a calibration observation — not a reason to re-tune a band.
 3. Whether the ≥3-humectant cluster survives once glycols and aloe are discounted per family 7 —
    this needs the calibration set to answer and may make `moisture` rarer than D5 assumed.

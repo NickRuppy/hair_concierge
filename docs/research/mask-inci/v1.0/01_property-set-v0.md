@@ -1,5 +1,16 @@
 # Mask v1.0 property set (v0 — ruled shape, pre-calibration)
 
+> **Amended by the round-1 rule rulings (R1–R9, Nick, 2026-09-14 —
+> `plans/mask-inci/round1-rule-rulings.md`; operationalized in Standard v0.2):**
+> R1 restates F1's principle as "no MODE is profiled twice" (a multi-mode product may hold one
+> profile per engine). R5 extends the D5 moisture-focus guard with the lipid-led disqualifier
+> (focus only; care_direction untouched). R6 supersedes this file's D6 note "`balanced` is
+> never a neither-bucket": `balanced` now carries two readings (both-substantive OR
+> neither-dominant, aligned with leave-in T19) — it remains never an *uncertainty* bucket.
+> R9 makes fields 7–9 (thickness/damage/texture) echo fields: derived, displayed as
+> annotations, not independently reviewed; still in the envelope and projections. Where this
+> file and Standard v0.2 diverge, the rulings ledger governs.
+
 Status: ruled by Nick 2026-09-04 (Phase 2 checkpoint); values and thresholds remain provisional
 until the first calibration set is reviewed ("first set, then adjust" caveat).
 Charter: `00_category_charter.md`. Evidence basis: `planning-evidence/2026-09-04-mask-formulation-evidence.md`.

@@ -1,14 +1,21 @@
-# Mask Research and Classification Standard v0.1
+# Mask Research and Classification Standard v0.2
 
-Status: **draft v0.1 — pre-calibration, not locked**
-Version: 0.1 (Phase 3 draft)
+Status: **draft v0.2 — pre-calibration, not locked**
+Version: 0.2 (round-1 rule rulings applied). **v0.2 supersedes v0.1, 2026-09-14.**
 Scope: rinse-out intensive masks/Haarkuren (Maske, Kur, Intensivkur, Express-Kur, Bond-Kur, Gloss-/Laminier-Kur), Germany/EU market, per `00_category_charter.md`
-Normative source: this Markdown file
-Drafted: 2026-09-04
+Normative source: this Markdown file (filename retained from v0.1 deliberately — one normative path, versioned in this header)
+Drafted: 2026-09-04 · Revised: 2026-09-14
+Superseded version: `mask-classification-standard.v0.1-archive.md` — a byte-identical copy of v0.1, retained as provenance for records derived before 2026-09-14
+
+**What changed in v0.2 (R1–R9, Nick, 2026-09-14).** Nine rule-level questions were settled before per-product review so the whole cohort re-derives consistently; the ruling ledger is `plans/mask-inci/round1-rule-rulings.md` and is binding. **R1** corrects the charter's Guhl boundary case — mode-scoped eligibility is decided by the directions test, and the principle is "no **mode** is profiled twice", not "no product". **R2** adopts the leave-in T16 plausibility conditional for the tail marker. **R3** fixes three evidence defects in `conditioning_level: high` (S1 mandatory, no tail-edge signal carriage, the counter-signal conjunct made operative) — explicitly **not** a distribution target. **R4** gives `weight_potential` its own evidence: the cationic gate comes off `high`, and `low` becomes a positive leanness test. **R5** makes the moisture-focus lipid-led guard operational (focus only; `care_direction` untouched). **R6** replaces `balanced` with the two-readings rule aligned to leave-in T19. **R7** restates the v1.5 tie-break discipline. **R8** adopts the leave-in housekeeping block whole: the conservative-failure invariant (§1.1), T18 source-conflict precedence (§2.4.1), the always-emitted `hinweise` record (§13.1), the lexicon patches, and the G0 placement default. **R9** marks fields 7–9 as echo fields on the T8 pattern. **Every passage changed by a ruling is marked `(R<n>, 2026-09-14)`.** Every `[judgment call — review]` annotation the rulings did not resolve is retained verbatim.
 
 **Binding upstream inputs.** `00_category_charter.md` (boundary rulings F1–F4, exclusions, evidence boundary, coverage target) and `01_property-set-v0.md` (nine-field shape, rulings D1–D6, moisture-focus guard, `bond_route` rule, watch-list) are **ruled by Nick and binding**. This standard operationalizes them; it may not widen, narrow, or reinterpret them. Where this standard adds an anchor, threshold, or operational test that the ruled inputs did not fix, that addition is marked **[judgment call — review]** and listed again in §16.
 
+**Where a later ruling supersedes an earlier one (R1–R9, 2026-09-14).** R1 corrects a charter line and R6 amends D6's `balanced` wording. A later dated ruling by Nick governs over an earlier one on the same question; this standard records both, names the superseding ruling, and never silently rewrites the earlier text. `01_property-set-v0.md` still carries D6's v0.1 wording — reconciling that file is **out of scope** for this revision and is carried as an open item (§18.9).
+
 **What this draft is not.** It is not locked, not calibrated, and carries no repeatability claim. Its anchors are provisional under Nick's "first set, then adjust" caveat (`01_property-set-v0.md` status line). It approves no product, activates no catalog field, writes nothing to Supabase, and changes no recommendation, matcher, intake rule, or user-facing copy (charter stop condition).
+
+**Rerun obligation (R1–R9, 2026-09-14).** R1–R9 are **systemic** rule changes, so §15's "systemic rule changes require a pilot rerun" applies in full: no agreement, repeatability, or distribution statement made under v0.1 carries into v0.2. Records derived under v0.1 must be re-derived, not patched.
 
 ---
 
@@ -27,6 +34,20 @@ It does not turn ingredient names into universal good/bad labels, does not diagn
 
 **Architecture is not the category.** A blind INCI read cannot reliably tell a mask from a conditioner (evidence §1). The category is decided at G0 from product metadata and authoritative directions, never from the ingredient list. This engine is the conditioner architecture run with a shifted richness prior and a mask-specific route and focus layer.
 
+### 1.1 The conservative-failure invariant **(R8, 2026-09-14 — adopted from leave-in T17/§1.1)**
+
+Every hard rule in this standard — every threshold, closed enumeration, gate, marker convention and counting rule — must fail in exactly one of two directions when its own input is implausible, absent, or otherwise untrustworthy: **toward human review, or toward the anchor's own conservative value.** A hard rule may never fail toward a recommendation, an upgrade, or any value that reads more favourably to a user than the evidence supports.
+
+This is not a new rule. It is the shape the mask standard already gave several of its own fallbacks — D1's "never encode unresolved uncertainty as an extreme" (§9.1), the NEQI weight fallback (§9.2), G5's smallest-affected-scope rule, and the `general` focus fallback (§9.5.2 step 8) — stated here once, generally, as the test every future rule change must pass before it is adopted. **A proposed rule or amendment that can be shown to fail toward a confident, more-favourable value on a plausible German-market input does not clear this bar, however cheap or well-motivated it otherwise is.**
+
+Three consequences are binding across the whole document:
+
+1. **An implausible input can neither qualify nor disqualify.** R2's tail-marker plausibility conditional (§3.1) is the primary instance: an implausible marker may not push a value *down* (it cannot disqualify a route that sits "below" it) and may not push a value *up* (nothing is credited as above-tail architecture solely because it outranks an unreliable marker). Plausibility is a precondition of the marker being read at all.
+2. **"Unresolved" means review, never a default good answer.** Every `unresolved`/`unknown` state in this standard routes to a named §14 trigger and caps confidence; none of them may resolve silently toward a higher `conditioning_level`, a richer `weight_potential`, a specialist `damage_fit`, or a `repair_support_level` above what the named evidence earns.
+3. **The two `low`/`high` extremes are asymmetric by design.** `high` on any field requires positive, converging evidence (D1). `low` on `weight_potential` is a *positive leanness test* (§9.2, R4) precisely so that "we could not find richness" cannot masquerade as "this is a light product" — an absence-based `low` would fail toward a more favourable fine-hair fit.
+
+**Conformance check for R1–R9.** R2 fails to `unresolved` + review. R3 removes two paths on which `high` could be reached without converging evidence. R4's `high` requires a positive heavy-lipid core and its `low` requires a positive leanness test. R5 only *disqualifies* a headline, never creates one. R6's `balanced` readings are positive architecture reads whose own failure paths step confidence down and route to review. R7 permits a tie-break only on a verdict that is already `dual_supported` and still forbids upgrading `nonspecific`. R8's §2.4.1 tier 2 fails to `unknown` + review. R9 changes a review surface and no value at all. All nine clear §1.1.
+
 ---
 
 ## 2. Category and identity gates
@@ -35,7 +56,9 @@ It does not turn ingredient names into universal good/bad labels, does not diagn
 
 Classification stops before formula analysis unless the product is **eligible** under the charter.
 
-**Eligible** — the product's authoritative directions describe a rinse-out intensive treatment applied after cleansing to lengths and ends, with a product-stated contact time, then rinsed out. The research unit is the exact market product, pack/formula version, never a brand line or marketing name.
+**Eligible** — the product's authoritative directions describe a rinse-out intensive treatment applied after cleansing, with a product-stated contact time, then rinsed out. The research unit is the exact market product, pack/formula version, never a brand line or marketing name.
+
+**Placement is not a G0 conjunct (R8, 2026-09-14).** "To lengths and ends" was written into v0.1's eligibility test as a required conjunct. It is removed as a conjunct: **where the directions are silent about placement, the product takes the P5 canonical placement (Längen und Spitzen, Ansatz aussparen) by default and remains eligible.** Silence about placement is the normal state of a German mask pack, and treating it as a failed conjunct made G0 fail toward exclusion on a bookkeeping absence rather than on evidence (§1.1). Two boundaries are unchanged: directions that **explicitly** direct whole-head or root application ("im ganzen Haar verteilen", "in die Kopfhaut einmassieren") still contradict P5, still fire the root/scalp review trigger, and still create no scalp property (R8, §5); and directions that place the product somewhere **incompatible with the category** (a pre-shampoo-only step, a leave-on step) still exclude at G0 on their own terms. The three surviving G0 conjuncts are therefore: **after cleansing · product-stated contact time · rinsed out.**
 
 Explicitly in scope:
 
@@ -53,19 +76,21 @@ Explicitly in scope:
 - products in the `bondbuilder` catalog category with specialist protocols (Olaplex-style);
 - color-depositing masks, scalp/medicated treatments, salon back-bar chemistry;
 - ampoule/shot formats **unless** the directions are post-shampoo rinse-out with dwell;
-- a multi-use product whose only rinse-out mode is a short **conditioner** mode (e.g. Guhl Panthenol + Reparatur 2in1 Kur & Spülung) — Conditioner-engine territory.
+- a multi-use product **none of whose** stated rinse-out modes clears the three G0 conjuncts — for example a product whose only rinse-out mode is an immediate-rinse **conditioner/Spülung** mode with no stated contact time. **(R1, 2026-09-14 — rewritten.)** v0.1 listed Guhl Panthenol + Reparatur 2in1 Kur & Spülung here as the worked example of this exclusion. That was wrong on the facts: its directions state a distinct **2–3-minute Kur mode**, which clears the conjuncts, so the product is **eligible, mode-scoped** (§2.2). The exclusion itself stands; only its example was mistaken.
 
-**No product ever receives two engine profiles.** Excluded rows stay visible as boundary evidence and stress cases; they are never forced through the mask ontology.
+**No MODE is ever profiled twice (R1, 2026-09-14 — restated principle).** v0.1 stated this as "no *product* ever receives two engine profiles", and that phrasing is what produced the Guhl error: it forced a whole multi-mode product to one engine, so a genuine Kur mode had to be argued away to protect a Spülung profile that lives in a different engine. The correct principle is **mode-scoped**: a multi-mode product may hold **one profile per engine**, each covering exactly one mode, and **no single mode may be profiled by two engines**. A Guhl-style 2in1 may therefore carry a Conditioner-engine profile for its Spülung mode *and* a Mask-engine profile for its Kur mode; those are two modes, not two readings of one mode. This is consistent with — and forward-compatible with — the cross-category multi-row architecture Nick parked (charter). Excluded rows stay visible as boundary evidence and stress cases; they are never forced through the mask ontology.
 
 ### 2.2 G0 multi-use variant (charter F1) — eligibility is read from directions, not from the jar
 
 For a product with several stated modes, the engine classifies **use, not jar**.
 
 1. Locate the **authoritative directions** for the exact pack (source hierarchy §2.4). Marketing names ("3 in 1", "Kur & Spülung") never decide.
-2. Test each stated mode against §2.1. A mode qualifies as a mask mode when the directions place it **after cleansing**, on **lengths and ends**, with a **stated contact time**, followed by a **rinse**.
+2. Test each stated mode against §2.1. A mode qualifies as a mask mode when the directions place it **after cleansing**, with a **stated contact time**, followed by a **rinse**. **(R8, 2026-09-14)** Placement is no longer a conjunct here either: a mode silent on placement takes the P5 canonical placement by default; a mode whose directions explicitly place it at the roots/whole head fires the root/scalp trigger and is a P5 deviation, not an automatic disqualification.
 3. If **exactly one** mode qualifies → classify only that mode. Record `multi_use: true` and name the uncovered modes.
-4. If **no** mode qualifies → `excluded_product_form`, with the reason recorded (e.g. conditioner-mode-only, leave-on-only).
+4. If **no** mode qualifies → `excluded_product_form`, with the reason recorded (e.g. no-dwell-rinse-mode-only, leave-on-only).
 5. If the directions are ambiguous about which mode carries the dwell, or the modes cannot be separated → do **not** guess. Set identity state `insufficient_information`, fire the `multi_use_directions_ambiguity` review trigger (§14), and stop.
+
+**A qualifying Kur mode inside a self-labelled 2in1 is in scope (R1, 2026-09-14).** A pack that sells itself as "2in1 Kur & Spülung" — or as anything else — does not thereby leave the category. Step 2 is applied to each stated mode on its own terms, and a **2–3-minute Kur mode with a stated dwell and a rinse is a mask mode**, whatever the front of pack calls the product and whatever other mode sits beside it. The worked case is **Guhl Panthenol + Reparatur 2in1 Kur & Spülung**: its Spülung mode is an immediate-rinse conditioner mode and does not qualify; its Kur mode states 2–3 minutes and does. So the product is **eligible, mode-scoped**, with `multi_use: true`, `multi_use_covered_mode: post_shampoo_rinse_out_mask`, and `multi_use_uncovered_modes: ["conditioner"]`. Its Conditioner-engine profile for the Spülung mode is **untouched and not in conflict** — that is a different mode, and the §2.1 principle forbids profiling one *mode* twice, not one product (R1). Where **both** modes would qualify as mask modes, the directions cannot be separated into exactly one covered mode: that is step 5, `multi_use_directions_ambiguity`, not a licence to classify both.
 
 **`multi_use` flag semantics** (research envelope, trace level):
 
@@ -78,7 +103,7 @@ multi_use_directions_source_id: <source id>
 
 `multi_use: true` means: *this profile describes only the rinse-out mask mode of a product that also has other stated modes.* It is a scope declaration, never a quality signal, never a penalty, and never an input to any comparison field. Cross-category multi-row architecture (one 3in1 spawning sibling rows per category) is **parked out of scope** by Nick (charter). Mode-scoped classification is forward-compatible with it.
 
-Live boundary cases already identified (charter, 2026-09-04): Garnier/Fructis Hair Food line, Balea 3 in 1 Intensivmaske, Isana 3in1, Balea Aqua Hyaluron 3 in 1 → eligible, mode-scoped. Pantene Pro-V Serum Shot → eligible **only** if directions show post-shampoo rinse-out with dwell. Bali Curls Bonding Repair Overnight Elixir → excluded.
+Live boundary cases already identified (charter, 2026-09-04; Guhl row corrected **R1, 2026-09-14**): Garnier/Fructis Hair Food line, Balea 3 in 1 Intensivmaske, Isana 3in1, Balea Aqua Hyaluron 3 in 1 → eligible, mode-scoped. **Guhl Panthenol + Reparatur 2in1 Kur & Spülung → eligible, mode-scoped on its 2–3-minute Kur mode** (v0.1 recorded this as excluded; superseded). Pantene Pro-V Serum Shot → eligible **only** if directions show post-shampoo rinse-out with dwell. Bali Curls Bonding Repair Overnight Elixir → excluded.
 
 ### 2.3 Identity gates
 
@@ -93,7 +118,7 @@ Classification stops before formula analysis unless all of the following are kno
 - raw INCI;
 - product-form status (§2.1/§2.2 resolved);
 - source/formula conflicts;
-- **the authoritative directions text** carrying the mode, placement, contact time and rinse (mask-specific — §2.2 and P5 both depend on it).
+- **the authoritative directions text** carrying the mode, contact time and rinse (mask-specific — §2.2 and P5 both depend on it). **(R8, 2026-09-14)** Placement is recorded when the directions state it and defaults to the P5 canonical placement when they do not; its absence no longer blocks the identity gate.
 
 Allowed identity states (inherited from Conditioner §2):
 
@@ -109,6 +134,37 @@ A GTIN may survive reformulation. Formula identity and product identity are rela
 4. reputable fallback/corroboration.
 
 Never merge lists across product identifiers, sizes, markets, or versions. Retain divergent retailer transcriptions as provenance rather than averaging formulas.
+
+### 2.4.1 Formula-set conflicts between same-market captures — convergence, then the conservative fallback **(R8, 2026-09-14 — adopted from leave-in T18/§2.4.2)**
+
+§2.4 ranks sources and G5 preserves conflicts, but neither says **how to decide which of several disagreeing captures of the same German-market unit is the formula of record.** Without that rule two reviewers split predictably: one abstains on every affected field, the other classifies from whichever capture the packet happened to freeze as primary. The second reading is a source preference wearing a procedural disguise, and the leave-in unseen test proved the frozen primary can itself be the outlier. The rule is stated in two tiers.
+
+**What counts as a conflict here.** A **formula-set conflict**: two or more independent captures of the same nominal German-market SKU disagree on **which species are declared**. Ordering differences alone, and differences that are only the granularity of a fragrance/allergen declaration (one source itemising aroma chemicals another leaves inside `Parfum`), are **not** set conflicts. A set conflict on the above-tail architecture, on a functional species, or on any species a §9 field reads is what this clause governs.
+
+**Tier 1 — convergence resolution (primary).** A set conflict is **resolved** when all three hold:
+
+1. **at least three independent sources** return the **identical ingredient list in identical order**;
+2. **at least one of the three is a GTIN-anchored German retailer capture** — the GTIN visible on the page or in its URL/markup, never inferred from the product name;
+3. **the manufacturer's own printed formula markers match across them where visible** (formula prefixes, F.I.L. fragrance codes). **A trailing revision digit difference does not break the match** (`C240136/1` vs `C240136/2` is the same fragrance declaration); a different code *family* does.
+
+Where the bar is met, **that convergent list is the formula of record**, and:
+
+- the packet's primary capture is **(re-)anchored to it via a dated amendment-log entry** — never silently;
+- every outlier capture is **demoted to an additional capture with a note stating why**, and **never deleted** (G5's preserve-don't-resolve discipline is unchanged: demotion is a ranking, not a deletion);
+- identity state becomes **`verified_with_minor_source_difference`**, not `verified`;
+- **confidence on every affected §9 field drops one step** below what a single clean capture would have earned;
+- the record carries the `formula_conflict_convergence` review trigger (§14), so a human still sees the residual;
+- **classification then proceeds from the convergent list normally — no blanket `unknown`s.** Resolving the conflict is the point; a resolved conflict is not re-punished by withholding the values it decided.
+
+**Tier 2 — conservative fallback.** Any set conflict that **cannot** reach that bar: the affected fields take **`unknown`**, the record carries the named **`formula_source_conflict`** trigger (§14), and it **routes to human review**. A tier-2 record is not publishable as a research profile beyond its identity block, and — consistent with the charter stop condition — nothing derived from it may be proposed for any downstream use until the conflict is resolved, whether by a fresh exact-pack capture or by later reaching tier 1's bar.
+
+**The reading this clause explicitly rejects.** Classifying from whichever capture the packet froze as primary is **not** an admissible resolution. A capture's position in a packet is a bookkeeping fact, never evidence about the formula. (This narrows, and does not contradict, G5: G5 governs how far a conflict's scope reaches; this clause governs which list is read in the first place.)
+
+**Scope boundary — same market only.** This clause governs conflicts **between captures of the same German-market unit**. A genuine **cross-market** formula difference (a non-German formula that really differs) is an identity question under §2.4, not a convergence question: three non-German sources agreeing with each other say nothing about the German-sold unit, because they are evidence about a different product. Never resolve a cross-market difference by convergence counting.
+
+**§1.1 conformance.** Tier 2 fails to the conservative value and to review. Tier 1 is an evidence resolution, not a recommendation-ward failure: it takes the reading three converging sources support, keeps the outliers on file, lowers confidence, and still routes to a human.
+
+**[judgment call — review]** The three-source count and the German-retailer/GTIN requirement are adopted from leave-in T18 unchanged; whether a drugstore mask shelf with thinner retailer coverage can routinely reach a three-source bar is a calibration question (§18.10).
 
 ### 2.5 Protocol boundary (owned by TPL-MASK / P5 — not by this engine)
 
@@ -147,9 +203,11 @@ Because Art. 19 hides the 1% boundary, this standard uses a conservative, reprod
 
 - fragrance: `Parfum`, `Fragrance`, `Aroma`;
 - declared fragrance allergens: `Limonene`, `Linalool`, `Citronellol`, `Geraniol`, `Citral`, `Coumarin`, `Hexyl Cinnamal`, `Benzyl Salicylate`, `Benzyl Benzoate`, `Alpha-Isomethyl Ionone`, `Butylphenyl Methylpropional`, `Eugenol`, `Amyl Cinnamal`, `Hydroxycitronellal`, `Isoeugenol`, `Farnesol` …;
-- conventional preservatives: `Phenoxyethanol`, `Sodium Benzoate`, `Potassium Sorbate`, `Benzyl Alcohol`, `Chlorphenesin`, `Methylisothiazolinone`, `Methylchloroisothiazolinone`, `DMDM Hydantoin`, `Sodium Hydroxymethylglycinate`, `Iodopropynyl Butylcarbamate`, `Dehydroacetic Acid`;
-- trace chelators: `Disodium EDTA`, `Tetrasodium EDTA`, `Trisodium Ethylenediamine Disuccinate`, `Etidronic Acid`, `Phytic Acid`;
-- colorants: any `CI 1xxxx` / `CI 7xxxx`.
+- conventional preservatives: `Phenoxyethanol`, `Sodium Benzoate`, `Potassium Sorbate`, `Benzyl Alcohol`, `Benzoic Acid`, `Chlorphenesin`, `Methylisothiazolinone`, `Methylchloroisothiazolinone`, `DMDM Hydantoin`, `Sodium Hydroxymethylglycinate`, `Iodopropynyl Butylcarbamate`, `Dehydroacetic Acid`, `Sodium Dehydroacetate`, `Methylparaben`, `Propylparaben`, **`Leuconostoc/Radish Root Ferment Filtrate`** *(R8, 2026-09-14)*;
+- preservative boosters, **only when declared alongside a preservative from the line above**: **`Ethylhexylglycerin`**, `Caprylyl Glycol`, `1,2-Hexanediol`, `Glyceryl Caprylate`, `Caprylhydroxamic Acid` *(R8, 2026-09-14)*;
+- trace chelators: `Disodium EDTA`, `Tetrasodium EDTA`, **`Tetrasodium Glutamate Diacetate`** *(R8, 2026-09-14)*, `Trisodium Ethylenediamine Disuccinate`, `Etidronic Acid`, `Phytic Acid` / `Sodium Phytate`.
+
+**Colourants are NOT marker-eligible (R8, 2026-09-14 — marker precedence).** v0.1 listed `CI 1xxxx` / `CI 7xxxx` as a tail class, so a colourant could **define** `tail_index`. It is removed from the marker classes, and the precedence rule is: **`tail_index` is set only by the earliest fragrance / declared allergen / preservative / booster-in-a-pair / chelator species. A colourant never sets it.** Two reasons, both §1.1 reasons. (a) Colourants are placed for shade, not for level: a pigment declared early would drop an entire conditioning architecture into the nominal sub-1 % tail and collapse every field to its floor — a disqualification driven by a listing convention, not by evidence. (b) The category's colour-*depositing* products are excluded at G0 anyway, so an early colourant on an eligible mask is an opacifier or a tinting trace, not a boundary. **Colourants keep zero care credit wherever they sit** — above the tail they are recorded as an E1 formula fact and earn nothing, exactly as `Titanium Dioxide` and `Mica` do (lexicon family 10) — and they remain tail members for credit purposes when they fall at or after `tail_index`. This mirrors the leave-in treatment, where colourants count inside the vacuity set but are not marker-eligible.
 
 **Above the tail** = strictly before `tail_index`. **In the tail** = at or after `tail_index`.
 
@@ -159,9 +217,29 @@ Because Art. 19 hides the 1% boundary, this standard uses a conservative, reprod
 - Tail ingredients may still be recorded as E1 formula facts and as claim context.
 - `Citric Acid` is **never** used as a tail marker: it is a ubiquitous pH adjuster whose position varies (evidence §6).
 - If **no** tail-class ingredient appears in the list, set `tail_marker: absent`, treat the whole list as above-tail, and cap every judgment field's confidence at `moderate` (an INCI with no fragrance and no preservative is more likely truncated than genuinely preservative-free). Fire the `tail_marker_anomaly` review trigger.
-- If `tail_index` falls implausibly early — before any conditioning ingredient, or at rank ≤ 3 — this is a G5 source conflict. Set `tail_marker: unresolved`, cap affected fields at `moderate` confidence, and fire `tail_marker_anomaly`.
 
-**[judgment call — review]** The tail-class enumeration, the "no tail marker → cap at moderate" rule, and the "rank ≤ 3 is implausible" threshold are operational additions. The ruled inputs fix only the principle ("above the fragrance/preservative tail"), not the list or the anomaly handling.
+#### 3.1.1 The plausibility conditional **(R2, 2026-09-14 — adopted from leave-in T16/§3.1.1 clause 5)**
+
+v0.1 disqualified a marker on a **rank threshold** ("before any conditioning ingredient, or at rank ≤ 3"). That test is replaced. A fixed rank cut is arbitrary across list lengths and, worse, it decided in both directions: on a short list it could void a perfectly ordinary marker, and on a long list it let an obviously broken marker keep disqualifying real architecture. **The marker's plausibility is now tested against the formula's own architecture, by rank comparison, so the condition is itself deterministic rather than a judgment call.**
+
+**The test.** Identify the species that establish this product's **care and weight architecture** — the cationics, fatty alcohols and lipids that §9.1's S1/S2/S3 and §9.2's anchors actually read.
+
+- **Plausible** — every architecture-establishing species **outranks** (sits above) `tail_index`.
+- **Implausible** — `tail_index` **outranks** one or more of them, i.e. the marker sits *before* the architecture it is supposed to bound; **or** the product is a **low-water / non-emulsion architecture** (an anhydrous or near-anhydrous oil- or butter-based Kur, a solvent- or glycol-continuous system) in which the ~1 % band the marker proxies does not sit where an O/W emulsion's does at all.
+
+**Consequence of an implausible marker.** Set **`tail_marker: unresolved`**. Then, binding in both directions (§1.1):
+
+1. **It may not disqualify.** A route, species or signal that would fail only because it sits at or after this marker is instead read **on its own merits**, from the ordinal architecture read. An implausible marker never pushes a value down.
+2. **It may not qualify.** Nothing is credited as above-tail architecture **solely** because it outranks this marker. An implausible marker never pushes a value up.
+3. **Confidence on every affected field is capped at `moderate`**, and drops to `low` where the field's value rested on the marker boundary alone.
+4. **Every affected call routes to human review** under the named **`tail_marker_unresolved`** trigger (§14) — distinct from `tail_marker_anomaly`, which keeps the marker-**absent** case.
+5. It **never auto-decides toward a value in either direction.** `unresolved` is a review state, not a shortcut to `low`, to `moderate`, or to a richer read.
+
+*Worked shape (leave-in's Redken record, carried as the pattern rather than as a mask product record):* a `Phenoxyethanol` at rank 3 of 24, sitting **before** the product's own main conditioning silicone at rank 4, would absurdly place that silicone in the sub-1 % tail. That is a listing artifact, not a 1 % boundary. Under v0.1's rank rule the same record was already caught (`rank ≤ 3`), but a marker at rank 7 of 30 sitting before a rank-9 cationic base was not; the architecture test catches both and stops mis-catching a rank-3 marker on a six-species list whose architecture genuinely sits at ranks 1–2.
+
+**A merely early marker is still a marker.** Where `tail_index` is early **but still sits after every architecture-establishing species** (a fatty-alcohol base at ranks 2–3, marker at rank 6), the marker is **plausible** and the ordinary rules govern it unchanged. Earliness on its own is a counter-signal to record, never a disqualification.
+
+**[judgment call — review]** The tail-class enumeration, the "no tail marker → cap at moderate" rule, and the identification of which species count as "architecture-establishing" for the plausibility test are operational additions. The ruled inputs fix the principle ("above the fragrance/preservative tail") and, from R2, the conditional's *direction* (implausible → `unresolved`, review, never auto-decide); they do not fix the enumeration.
 
 ---
 
@@ -187,9 +265,10 @@ Every direct property carries (Conditioner §4 pattern):
 
 Mask-specific additions to every record:
 
-- `tail_marker` — `{ ingredient, index }` | `absent` | `unresolved` (§3.1)
+- `tail_marker` — `{ ingredient, index, plausible: true|false }` | `absent` | `unresolved` (§3.1, §3.1.1). **(R2, 2026-09-14)** The `plausible` prong is mandatory: a record that does not state it has not applied §3.1.1
 - `above_tail_segment` — the ordered ingredient slice used for structural signals
 - `multi_use_scope` — §2.2 envelope, when `multi_use: true`
+- `hinweise` — the always-emitted §13.1 record **(R8, 2026-09-14)**; empty when nothing fired, never omitted
 - `protocol_metadata_ref` — pointer to the sourced TPL-MASK/P5 contact time; **never** an input to any value
 
 Formula observations state what is literally present. Product inferences state what might follow. **A derived fit without both `derived_from` and `profile_fact_ids` is invalid.**
@@ -447,12 +526,14 @@ The ruled shape (`01_property-set-v0.md`) is Conditioner v1.6's nine fields, re-
 4 repair_support_level    low / medium / high                → repair_support_level
 5 primary_focus           1 of 9 values                      → via benefits mapping
 6 secondary_focus         0–2 further values                 → via benefits mapping
-7 hair_thickness_fit      subset of fine / normal / coarse   → suitable_thicknesses
-8 damage_fit              subset of healthy / moderately_damaged / highly_damaged   (research-only)
-9 texture_fit             subset of straight / wavy / curly / coily                 (research-only)
+7 hair_thickness_fit      subset of fine / normal / coarse   → suitable_thicknesses     [ECHO — R9]
+8 damage_fit              subset of healthy / moderately_damaged / highly_damaged   (research-only)  [ECHO — R9]
+9 texture_fit             subset of straight / wavy / curly / coily                 (research-only)  [ECHO — R9]
 ```
 
-Trace level, beneath the profile: `bond_route`, the protein-payload counter-signal (§13), the `multi_use` envelope (§2.2), and `ingredient_flags` (silicones/polymers/oils/proteins/humectants — deterministic presence flags from the normalized complete INCI; **not** a judgment field and never a tie-breaker).
+**(R9, 2026-09-14)** Fields 7–9 are **echo fields** (§9.5E): deterministically derived, displayed as „→ ergibt:" annotations on the rows that drive them, and **not separately reviewed**. They are still emitted in the research envelope and in every projection, and `suitable_thicknesses` still projects. The per-product review surface is therefore **seven rows**: fields 1–6 plus the `hinweise` record (§13.1).
+
+Trace level, beneath the profile: `bond_route`, the `balanced_reading` tag wherever `care_direction: balanced` (§9.3, R6), the protein-payload counter-signal (§13), the `multi_use` envelope (§2.2), the always-emitted `hinweise` record (§13.1, R8), and `ingredient_flags` (silicones/polymers/oils/proteins/humectants — deterministic presence flags from the normalized complete INCI; **not** a judgment field and never a tie-breaker).
 
 ### 9.1 `conditioning_level` — the `concentration` twin (D1, binding)
 
@@ -468,39 +549,63 @@ Trace level, beneath the profile: `bond_route`, the protein-payload counter-sign
 | **S2** | Fatty-alcohol prominence | A long-chain fatty alcohol at rank **2 or 3** of the full list (i.e. immediately after the aqueous phase) |
 | **S3** | Lipid breadth above the tail | ≥ 2 **distinct** non-fatty-alcohol lipids (R4a or R4b) above the tail |
 
-**Thresholds.**
+**Thresholds (R3, 2026-09-14 — three evidence defects fixed).**
 
-- `high` — **≥ 2 of {S1, S2, S3}** satisfied **and** no material counter-signal. (Extremes require multiple independent structural signals — D1.)
+- `high` — **S1 satisfied** (mandatory) **and at least one of {S2, S3}** satisfied, **and** no material counter-signal (see below). Two independent structural signals are still required, as D1 demands; what changed is that they may no longer be *any* two. **Why S1 specifically:** of the three, S1 is the only one that reads **conditioning breadth** — how many distinct deposition species the formula runs. S2 (a fatty alcohol at rank 2–3) and S3 (two lipids above the tail) both read the **fatty/emollient load**, which is the axis §9.2 owns and which R4 now anchors on its own evidence. Allowing S2+S3 alone to reach `high` therefore made `conditioning_level: high` and `weight_potential: high` two readings of one observation — exactly the shared-mechanism double count G3 and §6 rule 1 forbid ("a rich R1+R4 base is **one** M1 observation"). A formula with S2+S3 and a single cationic species is `moderate`, and its richness is said once, in `weight_potential`.
+  > **The honest caveat, recorded not resolved.** The lexicon's own false-positive register notes that *two* distinct above-tail cationics is "near-baseline in this market" (lexicon §13), i.e. S1's threshold sits low against the German shelf. R3 makes S1 **necessary** for `high`; it does not claim S1 is by itself *sufficient*, which is why a second signal is still required. Whether S1's count should rise to three on calibration evidence is §18.1's question — and it is a question about the signal's *threshold*, never about the resulting distribution.
 - `low` — **none** of {S1, S2, S3} satisfied, i.e. a single cationic species, no fatty alcohol in the top three, and at most one lipid above the tail.
-- `moderate` — everything else, **including exactly one satisfied signal**, and including the unresolvable fallback.
+- `moderate` — everything else, **including S2+S3 without S1**, including exactly one satisfied signal, and including the unresolvable fallback.
 
-**Fallback (D1, binding).** Unresolvable cases → `moderate` + the field listed in `uncertain_fields` (NEQI fallback pattern). Never encode unresolved uncertainty as an extreme.
+**The tail-edge exclusion (R3, 2026-09-14).** A species declared at **`tail_index − 1`** — the last rank above the tail — sits inside the marker's boundary *band* (§3.1: the proxy is a band, not a cut point), so it **may not be the species that makes a signal fire.** Operationally, and deterministically: **recompute S1, S2 and S3 with every `tail_index − 1` species removed; a signal counts only if it still fires.** Consequences: S1 needs two distinct cationics both ranked above `tail_index − 1`; S3 needs two distinct qualifying lipids both ranked above `tail_index − 1`; S2 is unaffected unless the list is short enough that rank 2 or 3 *is* `tail_index − 1`. A tail-edge species is still recorded as an E1 formula fact and listed in `supporting_signals[]` — it is excluded from *carrying* a signal, not from the record. This closes the reading in which a mask reached `high` on a second cationic that sat one rank above the Parfum.
 
-**Counter-signals (never inputs, always recorded).** Rheology-only ingredients (`Hydroxyethylcellulose`, `Xanthan Gum`, `Carbomer`, `Acrylates/…Crosspolymer`) — these thicken the jar, not the fibre. Long ingredient lists. Sub-1% hero tails (hydrolyzed keratin, panthenol, ceramides listed after fragrance). None of these move the value in any direction (evidence §2 false-signal list).
+**The counter-signal conjunct is operative (R3, 2026-09-14).** v0.1 wrote "and no material counter-signal" into the `high` threshold and then, three paragraphs later, said counter-signals "never move the value in any direction" — so the conjunct was dead text. It is now live, **for `high` only**, and it caps at `moderate` rather than moving the value further:
 
-**Confidence rule.** `high` requires a resolved tail marker, a complete exact-market INCI, and ≥ 2 signals pointing the same way with no counter-signal. `moderate` is the default, and is mandatory when the tail marker is `absent`/`unresolved`. `low` when the formula source is conflicted or the above-tail segment cannot be determined.
+> **Material counter-signal (closed list).** (a) `tail_marker` is `absent` or `unresolved` (§3.1, §3.1.1) — the above-tail segment the signals were counted on is not reliable; (b) a §2.4.1 **tier-2** formula-set conflict touches any species that carried a fired signal; (c) a fired signal rests wholly on a species whose functional family is contested on this list or that lexicon family 10 claims as rheology-only/emulsifier (the classic case: `Glyceryl Stearate` or the `Ceteareth-20` half of a `Cetearyl Alcohol / Ceteareth-20` blend counted as a lipid or a fatty alcohol). **Any one of these → `conditioning_level` caps at `moderate`, the counter-signal is recorded, and the field is listed in `uncertain_fields`.**
+
+**Non-material counter-signals — unchanged, and explicitly never capping.** Rheology-only ingredients present in the formula (`Hydroxyethylcellulose`, `Xanthan Gum`, `Carbomer`, `Acrylates/…Crosspolymer`) — these thicken the jar, not the fibre. Long ingredient lists. Sub-1 % hero tails (hydrolyzed keratin, panthenol, ceramides listed after fragrance). "Reichhaltig"/"Intensiv" positioning with no matching architecture. None of these move the value **or** cap it; they are recorded and nothing else (evidence §2 false-signal list). The material list above is material precisely because each of its three members undercuts *the reliability of a signal that actually fired*, which is a different thing from being a false signal in its own right.
+
+**This is an evidence fix, not a distribution target (R3, 2026-09-14 — recorded because it was explicitly challenged).** The three changes above were adopted because each closes a per-product evidence defect — a `high` reachable without the multiple-independent-signals breadth D1 requires, a `high` carried by a boundary-band species, and a dead conjunct — **not** because the first cohort produced more `high` calls than expected. The product-truth-≠-distribution invariant governs: **if most masks earn `high` on real evidence, they keep it.** No threshold in this section may be tuned toward a target prevalence, and §15 must report prevalence as a finding, never as a pass/fail criterion. The two known re-derivations under this rule (two cohort products moving `high` → `moderate`, five evidence-backed `high` calls standing) are consequences of the defect fixes, not their purpose.
+
+**Fallback (D1, binding).** Unresolvable cases → `moderate` + the field listed in `uncertain_fields` (NEQI fallback pattern). Never encode unresolved uncertainty as an extreme (§1.1).
+
+**Confidence rule (R3, 2026-09-14).** `high` requires a resolved **and plausible** tail marker (§3.1.1), a complete exact-market INCI, **S1 plus at least one of S2/S3 surviving the tail-edge exclusion**, and no material counter-signal. `moderate` is the default, and is mandatory when the tail marker is `absent`/`unresolved`. `low` when the formula source is conflicted (including a §2.4.1 tier-1 step-down that lands there) or the above-tail segment cannot be determined.
 
 **Honest limitation, stated in every record.** A three-step concentration scale is at the **edge of INCI support** (confidence low-moderate at method level; evidence §2). No published dataset maps INCI patterns to validated low/medium/high thresholds. These anchors are provisional and are the first thing the calibration set should move.
 
-**[judgment call — review]** S1/S2/S3 as the exact operational triple, the "≥2 signals → high / 0 signals → low" arithmetic, and the "fatty alcohol at rank 2–3" cut are this standard's additions. D1 fixes the *signal families* (cationic count and rank, fatty-alcohol rank, lipid-above-tail breadth) and the *extremes-need-multiple-signals* principle, not the counting rule.
+**[judgment call — review]** S1/S2/S3 as the exact operational triple, the "0 signals → low" arithmetic, and the "fatty alcohol at rank 2–3" cut remain this standard's additions. D1 fixes the *signal families* (cationic count and rank, fatty-alcohol rank, lipid-above-tail breadth) and the *extremes-need-multiple-signals* principle, not the counting rule. **(R3, 2026-09-14)** The `high` half of the old "≥ 2 of three" arithmetic is **no longer a free judgment call** — R3 rules S1 mandatory and S2/S3 as its alternatives. What stays open and calibration-testable: the exact membership of the material-counter-signal closed list, and whether `tail_index − 1` is the right width for the boundary band (a two-rank band was considered and rejected as unevidenced).
 
 ### 9.2 `weight_potential`
 
 **Meaning.** An ingredient-informed matching prior, not a prediction that the product will visibly flatten hair. Best-supported axis in the category — but inferred, never measured (evidence §8).
 
-**Anchors (evidence §8, adopted provisionally):**
+**Weight gets its own evidence (R4, 2026-09-14).** v0.1 gated `weight_potential: high` behind a **cationic** base condition (≥ 2 distinct cationics plus a cetearyl-class fatty alcohol in the top three). That gate is removed. It imported `conditioning_level`'s S1 signal into a field whose own evidence base says something different: the weight driver in this category is **fatty-alcohol and butter/triglyceride load**, explicitly **not** silicone and explicitly not cationic breadth (evidence §8, and §5 R2's mask delta). Gating weight on cationic count made the two fields echo each other, so a lipid-rich, single-cationic mask could not reach `rich` however heavy its lipid load was — and, symmetrically, it let cationic breadth substitute for the lipid evidence the field is actually about. `weight_potential` now stands on lipid and fatty-base evidence alone.
 
-- `low` — a single cationic species **and** no cetearyl-class fatty alcohol in the top three **and** no R4b heavy lipid (butter / heavy triglyceride / occlusive hydrocarbon) above the tail.
-- `high` — the rich-base condition (**≥ 2 distinct cationics** above the tail **and** a cetearyl-class fatty alcohol **in the top three**) **plus at least one** of: (a) an R4b heavy lipid above the tail, (b) an occlusive silicone stack above the tail (two or more silicone species, or a dimethicone/dimethiconol pair) — **and** no material unresolved counter-signal.
+**Anchors (evidence §8; `high`/`low` restated R4, 2026-09-14):**
+
+- `high` — **required core:** a **heavy-lipid load above the marker** — at least one R4b heavy lipid (butter, heavy triglyceride, hydrogenated fat, occlusive hydrocarbon) declared above the tail — **completed by either**: (a) a **dense fatty-alcohol base**, or (b) an **occlusive silicone stack** above the tail (two or more silicone species, or a dimethicone/dimethiconol pair). **And** no material unresolved counter-signal. No cationic condition applies in either direction: cationic breadth neither qualifies nor blocks `high`.
+- `low` — a **positive leanness test**, all three conjuncts required: **no R4b heavy lipid above the marker**, **and** a **thin fatty base**, **and** **no occlusive silicone stack** above the tail. The v0.1 conjuncts are gone: the single-cationic requirement (removed with the gate above) and the "no cetearyl-class fatty alcohol in the top three" rank test (replaced by the thin-fatty-base test, which reads the whole above-tail segment instead of three ranks).
 - `moderate` — everything else. **The expected majority, and accepted** (evidence §8).
 
-**[RULED — Nick, 2026-09-04]** Evidence §8 lists the four `high` markers as one conjunction ("≥2 cationics, cetearyl top-3, butter/heavy oil above tail, occlusive silicone stack"). Requiring all four would make `high` nearly unreachable on real drugstore formulas (none of five verified formulas would qualify, against a catalog showing ~20% rich). Nick ruled that `high` must not be near-unreachable and confirmed this standard's reading: the first two markers are the **required base** and the last two are **alternatives** — the same base-plus-one-supporting-route structure as Conditioner v1.6's weight-high rule. Still first in line for checking against the calibration set.
+**The two base terms, defined so both anchors are deterministic (R4, 2026-09-14):**
+
+| Term | Test (on the above-tail segment) |
+|---|---|
+| **Dense fatty-alcohol base** | **≥ 2 distinct** long-chain fatty alcohols (`Cetearyl`, `Cetyl`, `Stearyl`, `Behenyl`, `Myristyl Alcohol`) above the tail, **or** a cetearyl-class fatty alcohol within the **top three ranks** |
+| **Thin fatty base** | **At most one** long-chain fatty-alcohol species above the tail, **and** that species **not** within the top three ranks (a formula whose rank-2 ingredient is Cetearyl Alcohol does not have a thin base, whatever else it lacks) |
+
+Neither term counts an emulsifier half of a blend (`Ceteareth-20`, `Glyceryl Stearate`, `PEG-100 Stearate` — lexicon family 10), and neither counts a fatty alcohol at `tail_index − 1` (§9.1's tail-edge exclusion applies here too).
+
+**Why `low` is a positive test and not an absence (R4, §1.1).** An absence-based `low` — "we found no richness" — fails toward the more favourable value: it would hand a lean fit prior, and therefore a fine-hair recommendation, to any product whose formula we simply could not read well. The three conjuncts must each be *observed* on a readable above-tail segment. Where the segment is not readable (tail marker `absent`/`unresolved`, or a §2.4.1 tier-2 conflict), `low` is **not available**: the field takes `moderate` and goes to `uncertain_fields`.
+
+**[SUPERSEDED — the v0.1 `high` reading]** v0.1 recorded a ruling of Nick's dated 2026-09-04 reading evidence §8's four markers ("≥ 2 cationics, cetearyl top-3, butter/heavy oil above tail, occlusive silicone stack") as **base-plus-one-alternative**, with the first two markers required, on the ground that requiring all four would make `high` nearly unreachable (none of five verified formulas would have qualified against a catalog showing ~20 % rich). **R4 (2026-09-14) supersedes that reading**, and it does so on the same evidence: the reachability problem was real, but its cause was the cationic base condition, not the number of markers. The reading is retained here as provenance because records derived under v0.1 used it. **Both the "all four" and the "cationic base plus one" readings are closed as live options** — §18's open question 1 is closed by R4.
 
 **Conflict fallback (Conditioner 10.1 pattern, retained).** When a formula-only `high` is already conflict-tagged, exact-product intended finish materially contradicts it (e.g. "leichte Pflege", "ohne zu beschweren", a volume-positioned Kur), and no finished-product evidence resolves the conflict → use `moderate` for lean matching and keep `weight_potential` in `uncertain_fields`. Do not encode unresolved uncertainty as a restrictive `high` that automatically removes fine hair from the broad prior.
 
-**Counter-signals.** Silicone presence per se (**not** the weight driver — evidence §8). `silicone-free` positioning (proves nothing about lightness). Viscosity. A "reichhaltig"/"nourishing" claim without a matching lipid architecture.
+**Counter-signals.** Silicone presence per se (**not** the weight driver — evidence §8; the occlusive-stack sub-signal is the one narrow exception, and only as a *completer* of an already-present heavy-lipid core, never on its own). `silicone-free` positioning (proves nothing about lightness). Viscosity. A "reichhaltig"/"nourishing" claim without a matching lipid architecture. **(R4, 2026-09-14)** Cationic count is now explicitly on this list too: it is neither a weight signal nor a weight counter-signal, in either direction.
 
-**Confidence rule.** `high` requires the full anchor pattern with a resolved tail marker and no positioning conflict; otherwise `moderate`; `low` on formula conflict.
+**Confidence rule (R4, 2026-09-14).** `high` requires the full anchor pattern with a resolved **and plausible** tail marker (§3.1.1) and no positioning conflict. `low` requires the same marker quality — the leanness test is unavailable on an unreadable segment. Otherwise `moderate`; `low` confidence on formula conflict.
+
+**[judgment call — review]** The "dense" and "thin" fatty-base tests above are this standard's operationalization. R4 fixes the *structure* (heavy-lipid core required; fatty-base or occlusive-stack completer; leanness positively tested) and the removal of the cationic gate; it does not fix the two-species / top-three cuts. These are first in line for the calibration set (§15).
 
 **Wording rule.** Weight drives a **soft preference with a stated reason**, never "fine hair must avoid masks". Fine-hair flattening is a **fit mismatch, not a hair-type law** — silicone-microemulsion evidence shows fine hair can benefit from conditioning products (evidence §8).
 
@@ -508,23 +613,39 @@ Trace level, beneath the profile: `bond_route`, the protein-payload counter-sign
 
 **Meaning.** The formula's comparative care emphasis. **Never** an assertion that a user has a protein or moisture deficiency (G6).
 
-**Values — strict Conditioner v1.6 semantics, no redefinition, no empty value, no `none`** (a `none` value was considered and withdrawn — D6):
+**Values — no empty value and no `none`** (a `none` value was considered and withdrawn — D6). **What R6 amends, and what it does not (2026-09-14).** D6's three value names, its "no `none`" rule, its `protein` bar and its `moisture` default are unchanged. What R6 amends is D6's sentence that `balanced` is "**never** a 'neither' middle bucket": Nick raised that `balanced` can also mean *both-not*, matching his own leave-in T19 ruling, and ruled the unified two-readings rule below. The distinction D6 was protecting is kept exactly — **`balanced` is never an *uncertainty* bucket** — and reading (b) is not an uncertainty read but a positive finding about a readable formula. `01_property-set-v0.md` still carries D6's v0.1 wording; reconciling it is out of scope here (§18.9).
+
+**Direction is decided by which side leads (R6, 2026-09-14 — the both-readings rule, aligned with leave-in T19).** `care_direction` is a **protein-versus-moisture comparison**: the value names which of the two legs leads the formula. `balanced` is what the field says when **neither leads** — and there are **two co-equal ways** for neither to lead, not one. Neither reading is the fallback of the other, and neither is an uncertainty bucket.
 
 | Value | Requires |
 |---|---|
-| `protein` | A **material identifiable R5 protein/peptide/keratin film-support route** that is more than ordinary conditioning |
-| `moisture` | A coherent conditioning / humectant / emollient architecture as the material direction, **without** a dominant protein-film route. This is the category's honest default |
-| `balanced` | A **substantive mixed** protein-plus-moisture architecture. **Reserved** — never a "neither" middle bucket, never an uncertainty bucket |
+| `protein` | The **protein leg leads**: a **material identifiable R5 protein/peptide/keratin film-support route** that is more than ordinary conditioning, **and** no qualifying humectant cluster beside it |
+| `moisture` | The **moisture leg leads**: a coherent conditioning / humectant / emollient architecture as the material direction, **without** a material protein-film route. This is the category's honest default |
+| `balanced` **(a) both-substantive** | Both legs are substantive: a material R5 route **and** a qualifying humectant cluster, both above the tail. Record `balanced_reading: both_substantive` |
+| `balanced` **(b) neither-dominant** | Neither leg leads because the formula's care result is carried by a **film or acid route** instead — the film/acid-led rule below. Record `balanced_reading: neither_dominant` |
 
 **Operational test for "material R5 route":** a qualifying R5 species (§5, R5 — free amino acids excluded) above the tail, **plus either** (a) a second distinct qualifying R5 species above the tail, **or** (b) a single qualifying R5 species within the **first eight above-tail ranks**. **[judgment call — review]** — D6 fixes "material and more than ordinary conditioning"; the two-species / rank-8 disjunction is this standard's operationalization.
 
-**Operational test for `balanced`:** the material R5 route above **and** a qualifying humectant cluster (§9.5 moisture guard: ≥ 3 distinct humectants above the tail, ≥ 2 of them non-glycerin) **or** a substantial R4 lipid/emollient stack (S3 satisfied). Anything that fails both stays `moisture` (or `protein` if only the protein leg qualifies). `balanced` **bridge-matches** in the production fit layer, so inflating it has real downstream cost.
+**Operational test for `balanced` reading (a) — both-substantive (R6, 2026-09-14).** The material R5 route above **and** a qualifying humectant cluster (§9.5.3 criterion 1: ≥ 3 distinct humectants above the tail, ≥ 2 of them non-glycerin). **The lipid-leg alternative is deleted.** v0.1 also let a substantial R4 lipid/emollient stack (S3 satisfied) stand in for the humectant cluster, which meant **"protein + generic lipids" reached `balanced`** — and generic lipids are exactly what every rich mask carries (evidence §1). That path made `balanced` a synonym for "a repair mask that is also a mask", inflating a value that **bridge-matches** in the production fit layer and therefore has real downstream cost. **A protein-led formula whose only other leg is lipid breadth now reads `protein`**, which is what its architecture says.
 
-**Gloss/lamination masks (D6, verbatim in substance).** They classify by the **care base they actually carry**. Evidence: L'Oréal Glycolic Gloss treatment and Balea Glow & Shine Laminier-Kur both run a conventional cetearyl / behentrimonium / amodimethicone conditioning base under the acid route, so they land in `moisture` — **or higher if a protein route is material**, e.g. Balea's keratin. The gloss identity is carried by the `shine` focus, not by `care_direction`.
+**Operational test for `balanced` reading (b) — neither-dominant / film- or acid-led (R6, 2026-09-14).** A record takes reading (b) when **all four** hold:
 
-**Counter-signals.** Heavy protein payload → confidence cap (§13). "Feuchtigkeit"/"Hydration" naming with no qualifying cluster → recorded, never decisive. Protein naming with the protein only in the tail → `moisture`, with the claim recorded.
+1. **No protein anchor.** No material R5 route above the tail.
+2. **A film- or acid-led primary care mechanism, present above the tail.** The conditioning result is carried by a substantive **R2 silicone system** or **R3 cationic-polymer film**, or by an **R6a acid-gloss** architecture, with at least one such species above the tail.
+3. **No leading moisture leg.** Above the tail, the formula carries **neither** a partial humectant cluster (≥ 2 distinct R9 humectants) **nor** an R4 lipid stack (S3 satisfied) — i.e. nothing beyond the bare R1 category baseline, which §9.5.2 step 1 and §6 rule 3 already forbid reading as a direction. A single glycerin is not a leg (D5 guard). Leg species present **only in the tail** are subordinate: recorded, and creating no direction.
+4. **Ordinal corroboration.** Every film/acid species establishing clause 2 ranks **above** every candidate leg species noted under clause 3, so the read does not rest on the marker's exact rank alone.
 
-**Confidence rule.** `high` requires a resolved tail marker and an unambiguous route separation. Capped at `moderate` whenever the D4 protein-payload counter-signal fires (§13, binding), whenever the tail marker is unresolved, or whenever `protein` and `moisture` legs are close enough that a reviewer could plausibly call `balanced`.
+The anchor case is the structurally minimal gloss mask — single-cationic, lipid-free, humectant-poor, with the optical route and the acid carrying the product (lexicon §8, L'Oréal Elsève Glycolic Gloss). Its care direction is genuinely *neither*, and saying so is a **positive architecture finding**, not an abstention: nothing is missing from the record. **Where a moisture leg is present as architecture, `moisture` still governs, film lead or not** — this boundary does not move; clause 3 makes it checkable rather than lowering it.
+
+**The reading is recorded, always.** Every `balanced` rationale states which reading it took and names the evidence: for (a) the R5 species and the cluster members with ranks; for (b) the marker and its rank, the film/acid species with ranks, and **every subordinate leg species with its rank**. A `balanced` with no recorded reading is an invalid record.
+
+**`balanced` is still never an uncertainty bucket.** Unreadable evidence does not land here. Where the formula or identity cannot be read at all — a §2.4.1 tier-2 conflict, an unresolvable capture — the affected field takes `unknown` under G5 and routes to review; it does not take `balanced` (§1.1).
+
+**Gloss/lamination masks (D6, verbatim in substance; extended R6, 2026-09-14).** They classify by the **care base they actually carry**, never by the acid claim. Where that base is a conventional cetearyl / behentrimonium / amodimethicone conditioning base with a real emollient or humectant leg above the tail — as L'Oréal Glycolic Gloss treatment and Balea Glow & Shine Laminier-Kur were read under v0.1 — they land in `moisture`, or `protein` where a protein route is material (Balea's keratin). **(R6)** Where the base is instead structurally minimal — single-cationic, lipid-free, no humectant pair above the tail, with the silicone/polymer film and the acid carrying the product — reading (b) applies and the value is `balanced` / `neither_dominant`. This is not a new licence for gloss products: it is the same "classify by the base you carry" rule, now able to say *this base leads in neither direction* instead of defaulting a film-led formula into `moisture`. The gloss identity is still carried by the `shine` focus, never by `care_direction`.
+
+**Counter-signals.** Heavy protein payload → confidence cap (§13). "Feuchtigkeit"/"Hydration" naming with no qualifying cluster → recorded, never decisive. Protein naming with the protein only in the tail → the value the architecture supports, with the claim recorded as a `hinweise` note that moves nothing (§13.1, R8).
+
+**Confidence rule (R6, 2026-09-14).** `high` requires a resolved and plausible tail marker and an unambiguous route separation. Capped at `moderate` whenever the D4 protein-payload counter-signal fires (§13, binding), whenever the tail marker is `absent`/`unresolved`, or whenever the leading leg is close enough to the other that a reviewer could plausibly call `balanced` reading (a). For `balanced` reading (b) specifically: ceiling `moderate` where clauses 2–4 hold on ranks; **step down to `low` and route to review** where the leg-absence reading rests on a marker the record flags as `absent` or `unresolved`, or where clause 4's ordering does not hold.
 
 #### 9.3.1 `care_direction: moisture` ≠ `primary_focus: moisture`
 
@@ -555,7 +676,7 @@ A mask can — and usually will — be `care_direction: moisture` with `primary_
 > 2. **Dwell is not repair.** A long or "intensive" contact time carries zero credit (evidence §3).
 > 3. **"Bond"/"Reparatur"/"Plex" on the pack is not repair.** "Bond" front-of-pack is frequently an ordinary rich mask (evidence §6). Naming is E0.
 
-**Confidence rule.** `high` is `deterministic` on the token, so confidence tracks the *identity* evidence, not the judgment: `high` confidence only with a verified exact-market INCI and a resolved tail marker. `medium` follows §9.3's protein-route confidence. Every `high` rationale must carry the standing caveat from R7 (no strong independent product-level substantiation at drugstore concentrations; gluconamide bonding has zero independent literature).
+**Confidence rule.** `high` is `deterministic` on the token, so confidence tracks the *identity* evidence, not the judgment: `high` confidence only with a verified exact-market INCI and a resolved, plausible tail marker (§3.1.1, R2, 2026-09-14). `medium` follows §9.3's protein-route confidence. Every `high` rationale must carry the standing caveat from R7 (no strong independent product-level substantiation at drugstore concentrations; gluconamide bonding has zero independent literature).
 
 **Wording.** Comparative formula potential, never efficacy. Banned: "repairs", "rebuilds bonds", "restores structure", "reverses damage".
 
@@ -585,7 +706,15 @@ Every mask focus record carries one **`focus_care_verdict`** (named to avoid col
 
 **Claim role** ∈ `candidate` | `tie_breaker` | `corroborating` | `not_applicable`.
 
-**The hard rule (binding, adapted from v1.5 and D5):** exact-product claims **may break a genuinely `dual_supported` tie**. Claims can **never** convert `nonspecific` formula evidence into a confident specialist focus. `nonspecific` resolves to `general` (or to `smoothing` when the dry-surface route genuinely clears §9.5.2 step 6), never to `moisture` and never to `repair`.
+**The hard rule (binding, adapted from v1.5 and D5; scope clarified R7, 2026-09-14):** exact-product claims **may break a genuinely `dual_supported` tie**. Claims can **never** convert `nonspecific` formula evidence into a confident specialist focus. `nonspecific` resolves to `general` (or to `smoothing` when the dry-surface route genuinely clears §9.5.2 step 6), never to `moisture` and never to `repair`.
+
+**The tie-break is not confined to one step of the hierarchy (R7, 2026-09-14).** On a verdict that is genuinely `dual_supported`, **exact-product positioning may break the tie regardless of which §9.5.2 step the two tied candidates sit at** — and may break it in either direction, including deciding which of the two takes `primary_focus` and which takes a `secondary_focus` slot. v0.1 left this ambiguous: §9.5.2 tests special-purpose routes in a fixed order, and a reviewer could read that order as itself resolving every tie, leaving the claim leg with nothing to do. The order decides **which routes are tested first**; it does not decide a tie between two routes that both genuinely cleared their own thresholds on the formula.
+
+The v1.5 discipline is carried over verbatim in substance and is **not** widened by this clarification:
+
+> **Break ties: yes. Create routes: never. Upgrade nonspecific evidence: never.**
+
+So, exhaustively: positioning may choose between two candidates the **formula already supports**; it may not make a third candidate appear, may not lower either candidate's own threshold, may not turn a `nonspecific` verdict into a specialist focus, and may not substitute for the corroboration legs that specific focus values require in their own right (`shine` §9.5.4 criterion 3, `color_care` §9.5.2 step 3). Current catalog values remain excluded from tie-breaking entirely (§9.5.2 step 9). Every tie broken this way records the verdict `dual_supported`, `claim_role: tie_breaker`, the exact claim text used, and the competing focus that lost.
 
 Ingredient order is used qualitatively, not as a concentration claim. Rinse-off limitation, shared conditioning routes, and counter-signals stay visible in the record.
 
@@ -618,11 +747,19 @@ Apply in order, after §7 direct properties are complete.
 
 1. **Cluster size.** At least **three distinct humectant-class ingredients** (R9 list) declared **above the tail**, of which **at least two are not glycerin**.
    *This is the operationalization of the ruled guard "glycerin alone never qualifies — `moisture` requires at least two further distinct humectants above the fragrance/preservative tail."* It reproduces the ruled discrimination set exactly: Balea Aqua Hyaluron 3in1 (4 humectants above tail, no protein/bond/silicone routes) → clears; Guhl 30 sek Feuchtigkeit (3 humectants, no competing route) → clears; Gliss Bonding (glycerin at #3 but repair routes win) → fails at criterion 3; Pantene Bond (no cluster) → fails at criterion 1.
-2. **Not the baseline.** Intensive conditioning alone never qualifies. A rich R1/R4 architecture is M1, not M5 (§6 rule 3).
-3. **No richer special-purpose route wins.** `repair`, `curl_support`, `color_care`, and `lightness` are tested first (§9.5.2 step 3). If any clears, `moisture` may still take a **secondary** slot if it independently meets criteria 1–2 and adds distinct matching information.
+2. **Not the baseline — and not lipid-led (R5, 2026-09-14: criterion 2 made operational).** Intensive conditioning alone never qualifies. A rich R1/R4 architecture is M1, not M5 (§6 rule 3). v0.1 stated that principle and gave a reviewer no way to apply it, so a mask with a real humectant cluster *and* a heavy lipid payload could take the moisture headline on the cluster alone while the formula was plainly a rich nourishing Kur. The disqualifier is now a test, and it fires when **either** limb holds:
+   > **(i) Heavy-lipid load.** **≥ 2 distinct R4b heavy lipids** (butters, heavy triglycerides, hydrogenated fats, occlusive hydrocarbons) declared **above the marker**; **or**
+   > **(ii) Cluster ranked under the lipids.** The **entire** qualifying humectant cluster — every member counted under criterion 1 — ranks **below the highest-ranked R4b heavy lipid** above the marker.
+   
+   Either limb ⇒ **`moisture` is disqualified as `primary_focus`.** The formula is lipid-led; its distinctive job is richness, not humectancy. The record states which limb fired, with the species and ranks.
+   
+   **What this does not do.** It is a **focus** rule and nothing else. It does **not** touch `care_direction` — a lipid-led formula is still `care_direction: moisture` on §9.3's own (much lower) bar, and that remains correct and is not a contradiction (§9.3.1). It does **not** move `conditioning_level` or `weight_potential`. It does **not** disqualify `moisture` as a **secondary** focus: where the cluster independently meets criterion 1 and adds distinct matching information, the secondary slot stays available (criterion 3's existing rule). And it only ever **removes** a headline — it can never create or upgrade one (§1.1).
+   
+   **[judgment call — review]** The "≥ 2 R4b" count and the highest-lipid ordering comparison are this standard's operationalization. R5 fixes that criterion 2 must be operational, that it is focus-only, and the two limbs' shape; the exact count is calibration-testable.
+3. **No richer special-purpose route wins.** `repair`, `curl_support`, `color_care`, and `lightness` are tested first (§9.5.2 step 3). If any clears, `moisture` may still take a **secondary** slot if it independently meets **criterion 1 and criterion 2's baseline sentence** and adds distinct matching information. **(R5, 2026-09-14)** Criterion 2's **lipid-led disqualifier** — limbs (i) and (ii) — applies to the **headline only** and does **not** block the secondary slot: R5 rules the guard focus-primary-scoped, and a genuinely present humectant cluster on a rich mask is exactly the case where a secondary slot carries useful matching information.
 4. **Hydrolyzed proteins are not counted** toward the cluster (they are R5).
 
-**Confidence rule.** `high` requires ≥ 3 distinct qualifying humectants above the tail **with at least one within the first five ranks** of the full list, a resolved tail marker, and no competing route. Otherwise `moderate`. **[judgment call — review]** — the "one within the first five ranks" cut is this standard's addition. It is consistent with the v1.5 pilot's Elvital Hydra Hyaluronic call (`moisture`, moderate confidence, "humectant not early"), which D5 cites as consistent with the above-the-tail requirement.
+**Confidence rule.** `high` requires ≥ 3 distinct qualifying humectants above the tail **with at least one within the first five ranks** of the full list, a resolved and plausible tail marker (§3.1.1, R2, 2026-09-14), and no competing route. Otherwise `moderate`. **[judgment call — review]** — the "one within the first five ranks" cut is this standard's addition. It is consistent with the v1.5 pilot's Elvital Hydra Hyaluronic call (`moisture`, moderate confidence, "humectant not early"), which D5 cites as consistent with the above-the-tail requirement.
 
 **Wording (D5, binding).** E2 phrasing is **"humectant-forward comparative direction"**. **Never** "proven hydration", "hydrates the hair", "moisturizes", "restores moisture balance", or any moisture-delivery claim.
 
@@ -642,7 +779,23 @@ R6a acid-gloss context (`Glycolic Acid` above the tail in a gloss-positioned pro
 
 Care direction for these products is decided by the base they carry (§9.3, D6) — typically `moisture`, or `protein` where a keratin route is material (Balea Glow & Shine).
 
-### 9.6 `hair_thickness_fit` — derived policy
+### 9.5E Echo fields — fields 7–9 are annotations, not reviewable items **(R9, 2026-09-14 — adopted from leave-in T8)**
+
+`hair_thickness_fit` (§9.6), `damage_fit` (§9.7) and `texture_fit` (§9.8) are **deterministic projections of fields already reviewed** — `weight_potential` for 7 and 9, `conditioning_level` + `repair_support_level`/`bond_route` for 8. Each table below has **no second input and no rule that can change its output** once its driving fields are set. Reviewing them separately asks a human the same question twice and invites the two answers to diverge.
+
+**The rule.** An echo field **is not a separately reviewable item.** It is displayed as an annotation on its driving field's row — „→ ergibt: `normal`, `coarse`" — and **approving the driving field approves the projection.** The per-product review surface is therefore **seven reviewed rows**, not ten: fields 1–6 plus the `hinweise` record (§13.1), with fields 7–9 shown as annotations on the rows that produce them.
+
+**What does not change — stated exhaustively, because this is a review-surface rule and nothing else:**
+
+- **All three fields are still emitted**, with the same values, in the research envelope and in every projection. `suitable_thicknesses` still projects exactly as before.
+- **The projection tables in §9.6–§9.8 are unchanged.** No mapping, anchor or value moves.
+- **Their review triggers still fire.** `specialist_damage_fit` (§14) still fires on a `moderately_damaged` + `highly_damaged` result — but it is a trigger on the *specialist route that produced it*, and a reviewer who disagrees with the result disagrees with `repair_support_level` or `bond_route`, which are reviewable.
+- **Their confidence still tracks the driving field.** An echo cannot be more confident than what it echoes.
+- A reviewer who disagrees with an annotation disagrees with the field that emitted it; that field is on the sheet.
+
+**Watch-list item 1 is unaffected.** Whether `damage_fit` should be demoted from a reviewed field to a computed row was already on the watch-list (§9.7). R9 answers the *review-surface* half of that question and leaves the *storage* half open (§18.5): an echo field is still stored and still emitted; it is simply not re-adjudicated.
+
+### 9.6 `hair_thickness_fit` — derived policy **(echo field — R9, 2026-09-14; annotated on the `weight_potential` row)**
 
 Deterministically derived from `weight_potential` (`01_property-set-v0.md` field 7):
 
@@ -656,7 +809,7 @@ This is a **desired-finish / dosage prior**, not a universal exclusion (evidence
 
 **Vocabulary delta:** this repo's canonical thickness vocabulary is `fine` / `normal` / `coarse` (project conventions). The Conditioner standard's §10.4 text says "medium"; `normal` is the same middle value under the repo's canonical name. No semantic change.
 
-### 9.7 `damage_fit` — derived policy, specialist-route pattern (Conditioner v1.6 re-stated for masks)
+### 9.7 `damage_fit` — derived policy, specialist-route pattern (Conditioner v1.6 re-stated for masks) **(echo field — R9, 2026-09-14; annotated on the `conditioning_level` and `repair_support_level` rows)**
 
 | Condition | `damage_fit` |
 |---|---|
@@ -677,7 +830,7 @@ This is a **broad product prior**, not a repair-efficacy claim.
 >
 > **Watch-list item 1** (`01_property-set-v0.md`): `damage_fit` may be fully derivable from conditioning level + repair route and could become a computed row. The table above is already deterministic given fields 1 and 4 — the first-set review should decide whether to keep it as a reviewed field or demote it to a computed projection.
 
-### 9.8 `texture_fit` — derived policy (Conditioner 10.4 pattern)
+### 9.8 `texture_fit` — derived policy (Conditioner 10.4 pattern) **(echo field — R9, 2026-09-14; annotated on the `weight_potential` row)**
 
 | Architecture | `texture_fit` |
 |---|---|
@@ -686,6 +839,8 @@ This is a **broad product prior**, not a repair-efficacy claim.
 | High-slip, high-deposition architecture (`weight_potential: high` with a coherent high-slip R1/R3 route) | `wavy`, `curly`, `coily` |
 
 **Curl branding alone never determines the result.**
+
+**Echo-field caveat (R9, 2026-09-14 — flagged, resolved conservatively).** The `high` row carries a **second condition** beyond `weight_potential` ("with a coherent high-slip R1/R3 route"), and §9.7's specialist-route test likewise admits legs (c) "exceptional corroborated protection" and (d) "a relevant exact-product test" that are not projections of fields 1 and 4. Strictly, a field with a second input is not an echo on the leave-in T8 definition. R9 nevertheless names all three of fields 7–9 as echo fields, so the conservative reading is adopted: **these secondary conditions are evaluated from facts already recorded and already reviewed elsewhere in the profile** — the R1/R3 route facts from §5/§7, the protection and product-test facts from §7/§8 — and they are **read, never re-judged, at the echo step.** Where such a fact is *not* already on the record, the echo does **not** get to establish it: the driving field's ordinary value governs (`weight_potential: high` without a recorded high-slip route gives the `moderate` row's `texture_fit`; a specialist `damage_fit` needs leg (a) or (b), or a leg (c)/(d) fact recorded and reviewed in §7/§8). Whether legs (c) and (d) should be removed outright, making the two tables pure projections, is carried as an open question (§18.11).
 
 Research-only: mask matching does not consume `texture_fit` today. Nick ruled 2026-09-04 that it stays, because it is needed for user-profile matching down the line. It is **off** the watch-list.
 
@@ -725,7 +880,7 @@ The lexicon **extracts evidence**; it must not silently become a label algorithm
 1. Build a **blind packet**: normalized complete INCI, product form, and the directions facts needed for G0/§2.2 — with brand, product name, claims, prior catalog labels, and fit outcomes removed.
 2. **Freeze its hash** before unblinding.
 3. Classify §7 direct properties and §9 fields 1–4 and 6–9 from the blind packet.
-4. **Unblind.** Claims may influence **only**: the `shine` focus corroboration leg (§9.5.4 criterion 3), a genuinely `dual_supported` focus tie (§9.5.1), the `bond_claim_review` trigger, the `weight_potential` conflict fallback (§9.2), and `color_care` corroboration. Claims may influence **nothing else** — in particular not `conditioning_level`, not `care_direction`, not `repair_support_level`, and not the moisture guard.
+4. **Unblind.** Claims may influence **only**: the `shine` focus corroboration leg (§9.5.4 criterion 3), a genuinely `dual_supported` focus tie (§9.5.1 — **at any step of the §9.5.2 hierarchy, R7, 2026-09-14**), the `bond_claim_review` trigger, the `weight_potential` conflict fallback (§9.2), and `color_care` corroboration. Claims may influence **nothing else** — in particular not `conditioning_level` (and not its material-counter-signal list, R3), not `care_direction` or its `balanced` reading (R6), not `repair_support_level`, not the moisture guard, and not R5's lipid-led disqualifier. A claim/formula mismatch is recorded in the `hinweise` record (§13.1) and moves no value.
 5. Record every blind-to-final change with its reason.
 6. The same evidence packet and policy must be usable by an independent second researcher.
 
@@ -733,14 +888,14 @@ The lexicon **extracts evidence**; it must not silently become a label algorithm
 
 ## 12. Gates
 
-- **G0 — Boundary (charter, §2.1/§2.2).** Excluded forms do not classify. Multi-use products classify **mode-scoped** or not at all. Eligibility is read from authoritative directions, never from the jar, the marketing name, or the INCI. No product receives two engine profiles.
+- **G0 — Boundary (charter as corrected by R1, §2.1/§2.2).** Excluded forms do not classify. Multi-use products classify **mode-scoped** or not at all. Eligibility is read from authoritative directions, never from the jar, the marketing name, or the INCI; the conjuncts are **after cleansing · stated contact time · rinsed out**, with placement defaulting to P5 when unstated (R8). **No MODE is profiled twice (R1, 2026-09-14)** — a multi-mode product may hold one profile per engine, one mode each.
 - **G1 — Identity/formula.** Follow the canonical source hierarchy, preserve the conflict, and complete a provisional research profile from the best available exact-market evidence.
 - **G2 — Evidence firewall.** observation → direct property → profile fit. No shortcuts. Protocol metadata (dwell, heat, cadence, amount, placement, rinse) never crosses into a comparison property.
 - **G3 — Anti-double-counting.** One shared mechanism counts once unless endpoint-specific evidence separates it (§6). M5 stays disjoint from M1.
 - **G4 — Evidence cap.** Formula-only ≤ E2; claim-only E0. Every v0.1 profile is an E2 document.
 - **G5 — Conflict.** Preserve source conflicts and lower the **smallest affected scope**; a conflict that changes one property makes that property `unknown`, not the whole profile.
 - **G6 — Medical.** No diagnosis, treatment, hair-loss lifecycle, inflammation, infection, or structural-regeneration suitability. Healthy/cosmetic population only. Cosmetic guidance stays separate from medically adjacent scalp or hair-loss guidance. "Protein overload" is banned vocabulary (§13).
-- **G7 — Review freshness.** Review fingerprints must match identity, formula, analysis, and standard. Each newly written profile field uses a deterministic **unsalted** SHA-256 fingerprint of its canonical field evidence/value payload; equality proves the field content is unchanged and preserves its approval, changed content reopens. The whole-profile fingerprint binds the canonical nine-field profile plus `standard_version`, and is **not** a substitute for the per-field fingerprints. Because v0.1 is a draft, **every** field is open; no approvals carry forward into a later version until that version explicitly says which fields it leaves closed.
+- **G7 — Review freshness.** Review fingerprints must match identity, formula, analysis, and standard. Each newly written profile field uses a deterministic **unsalted** SHA-256 fingerprint of its canonical field evidence/value payload; equality proves the field content is unchanged and preserves its approval, changed content reopens. The whole-profile fingerprint binds the canonical nine-field profile plus `standard_version`, and is **not** a substitute for the per-field fingerprints. Because v0.1 was a draft, **every** field was open under it. **(R1–R9, 2026-09-14)** v0.2 is also a draft and **leaves no field closed**: R1–R9 touch G0 eligibility, the tail marker, and fields 1, 2, 3, 5, 6 and the review surface of 7–9, so no v0.1 approval carries forward into v0.2 and no v0.1-derived fingerprint matches. Records are re-derived, not patched (§15).
 
 ---
 
@@ -768,6 +923,33 @@ A **heavy protein payload** — multiple distinct R5 species above the tail, and
 **Parked out of scope (Nick, 2026-09-04):** a routine-level protein-stacking heads-up — a warning when protein-focused products combine across one routine — belongs to the production/fit layer as its own later decision. It is not part of this engine.
 
 **[judgment call — review]** The operational trigger ("multiple distinct R5 species above the tail, and/or a qualifying R5 species in the top five ranks") is this standard's; D4 fixes only the *handling* of a heavy protein payload, not its detection threshold.
+
+### 13.1 The `hinweise` record **(R8, 2026-09-14 — adopted from leave-in T5/§8.6)**
+
+**One record per product, always emitted, listing only what fired.** Three observations in this standard move no value but must reach a reviewer — the D4 overload counter-signal, the `multi_use` scope declaration, and claim-vs-formula mismatches. v0.1 scattered them across three sections with three different carriers. They are now carried in one record, reviewed as **one item** (the seventh reviewed row alongside fields 1–6 — §9.5E, R9).
+
+```jsonc
+{
+  "hinweise": {
+    "fired": [
+      { "flag": "protein_payload" | "protein_tail_only" | "multi_use"
+              | "claim_formula_mismatch" | "tail_marker" | "formula_conflict",
+        "value": "<the flag's own value>",
+        "note": "<one line: what fired, and what it does not mean>" }
+    ]
+  }
+}
+```
+
+**Rules.**
+
+1. **Always emitted, never omitted.** An empty `fired` array is the normal case and is written out as an empty record, so *"no Hinweise"* and *"Hinweise not researched"* stay distinguishable. This is why the record is emitted rather than conditional.
+2. **Only fired flags appear.** `protein_payload` fires on a D4 heavy payload (§13). `protein_tail_only` fires where a protein species appears **only in the tail** — see below. `multi_use` fires when `multi_use: true` (§2.2), carrying the covered and uncovered modes. `claim_formula_mismatch` fires where exact-product positioning contradicts the formula read (a "Bond" pack with `bond_route: none`; "Feuchtigkeit" naming with no qualifying cluster; "reichhaltig" with a thin fatty base; "leicht" on a `weight_potential: high` anchor). `tail_marker` fires on `absent` or `unresolved` (§3.1, §3.1.1). `formula_conflict` fires on either §2.4.1 tier.
+3. **Tail-only protein payloads are a note that moves no value (R8, 2026-09-14).** A hydrolyzed protein, peptide or keratin species declared **at or after `tail_index`** is a sub-1 % hero tail: the §3.1 tail rule applies without exception, so it contributes **nothing** to `care_direction`, `repair_support_level`, `damage_fit` or the `repair` focus, and it is **not** a D4 payload either (D4 counts above-tail species). It is recorded here, with the species and ranks, and with a note stating plainly that the payload is present and carries no classification credit. **This flag may not cap a confidence, fire a review trigger of its own, or move any value** — it exists so that a reviewer who sees "Keratin" on the pack and "Keratin" in the list, and a `care_direction: moisture`, can see that the engine saw it too and why it earned nothing. Where a protein species sits **above** the tail, D4 and §9.3 govern instead and `protein_payload` is the applicable flag.
+4. **The per-observation rules are unchanged.** §13, §2.2, §3.1 and §2.4.1 still decide whether something fires; §13.1 only decides how it is carried. Nothing gains or loses a state.
+5. **Nothing here is a score and nothing here projects.** The record is not part of the nine-field profile, is never a comparison field, never a user-facing verdict, and never a suitability exclusion. Its only downstream consequence is the review routing the individual rules already carried.
+6. **Never compute a matrix over it.** Collapsing several observations into one record does not make them a set that can be reasoned over, ranked, or scored.
+7. **The banned vocabulary of §13 applies to every note in this record**, as does the potential-not-performance wording rule (§7).
 
 ---
 
@@ -797,11 +979,16 @@ Require targeted human review for:
 | `express_dwell_unknown` | The product's stated dwell is in the **7-second segment**, which is outside all tested contact times. The record must carry `dwell_efficacy: unknown` and must not extrapolate in either direction (evidence §3) |
 | `protein_payload_review` | D4 heavy protein payload (§13) |
 | `gloss_lamination_claim` | Any Gloss / Glaze / Laminierung / Lamination positioning (charter F4) — verify the shine threshold was met independently and the banned wording is absent |
-| `tail_marker_anomaly` | Tail marker `absent` or `unresolved` (§3.1) |
+| `tail_marker_anomaly` | Tail marker **`absent`** — no tail-class species appears in the list at all (§3.1). **(R2, 2026-09-14 — narrowed:** this trigger no longer covers the implausible-marker case, which has its own trigger below) |
+| `tail_marker_unresolved` | **(R2, 2026-09-14 — new.)** Tail marker `unresolved` under the §3.1.1 plausibility conditional — the marker outranks an architecture-establishing species, or the product is a low-water/non-emulsion architecture. Every field whose read touched the marker boundary is listed with the trigger; the two are separate triggers because their remedies differ (an absent marker needs a fuller capture; an implausible marker needs a human to read the architecture) |
+| `formula_conflict_convergence` | **(R8, 2026-09-14 — new.)** A §2.4.1 **tier-1** convergence resolution was applied: the formula of record was re-anchored, outliers demoted, identity stepped to `verified_with_minor_source_difference`, confidence stepped down one. A human confirms the re-anchoring |
+| `formula_source_conflict` | **(R8, 2026-09-14 — new.)** A §2.4.1 **tier-2** formula-set conflict: affected fields are `unknown` and the record is not publishable beyond its identity block until the conflict is resolved |
 | `missing_sourced_contact_time` | TPL-MASK/P5 has no sourced contact time. The product is **not stampable** and goes to Nick. (The research profile may still complete; the protocol may not) |
 | `weight_high_conflict` | `weight_potential` reached the `high` anchor while exact-product positioning materially claims lightness (§9.2 fallback applied) |
 | `low_confidence_field` | Any of the nine fields lands at `low` confidence |
-| `specialist_damage_fit` | `damage_fit` resolved to `moderately_damaged` + `highly_damaged` — verify the specialist route genuinely qualified |
+| `specialist_damage_fit` | `damage_fit` resolved to `moderately_damaged` + `highly_damaged` — verify the specialist route genuinely qualified. **(R9, 2026-09-14)** `damage_fit` is an echo field and is not separately reviewed, but this trigger still fires: it routes the reviewer to the **specialist route** (`repair_support_level` / `bond_route`) that produced the result, which is reviewable |
+
+**Note on echo fields (R9, 2026-09-14).** No trigger is removed by the echo ruling. A trigger that names an echo field routes a human to the *driving* field; the echo itself is never the thing adjudicated.
 
 ---
 
@@ -819,15 +1006,27 @@ Report separately:
 - **deterministic-property agreement separately** (`bond_route` and `ingredient_flags` should be at or near 100%; anything less is a lexicon defect, not a judgment disagreement);
 - every disagreement and its adjudication.
 
-**Systemic rule changes require a pilot rerun.** Product-specific uncertainty remains uncertainty. Passing shows research-process repeatability, not real-world outcome accuracy.
+**Systemic rule changes require a pilot rerun.** Product-specific uncertainty remains uncertainty. Passing shows research-process repeatability, not real-world outcome accuracy. **(R1–R9, 2026-09-14)** R1–R9 are systemic by this definition. Any record derived under v0.1 must be re-derived under v0.2 before it appears in an agreement, repeatability or distribution statement.
 
-**v0.1 status.** This document is **pre-calibration**. No blind lane has run against it and **no repeatability claim exists**. The anchors most likely to move on first contact with real formulas, in priority order:
+**Prevalence is a finding, never a criterion (R3, 2026-09-14).** §15 reports label prevalence per field. That report exists to expose a scale that has collapsed to one value, **not** to set a target. No threshold in §9 may be tuned toward an expected distribution: if the real German shelf earns a value, it keeps it. The one legitimate inference from prevalence is the §9.1 honest-limitation question — whether a three-step scale is supportable at all — and that is a question about the *scale*, not about individual products.
 
-1. the `weight_potential: high` conjunction-vs-alternatives reading (§9.2) — the largest unruled judgment call;
-2. the S1/S2/S3 counting rule for `conditioning_level` (§9.1) — a three-step scale is at the edge of INCI support;
-3. the `care_direction: protein` rank-8 / two-species test (§9.3);
+**The four Phase-3 provisional defaults — status after R1–R9 (2026-09-14).** The Phase-3 checkpoint accepted four technical defaults on the understanding that calibration would test them. Their status is now:
+
+| Phase-3 default | Status |
+|---|---|
+| **S1 two-of-three arithmetic** (`conditioning_level`) | **Superseded by R3.** S1 is mandatory for `high`, completed by S2 or S3; the tail-edge exclusion and the material-counter-signal cap are added. The `low` end (0 of 3) is unchanged and still provisional |
+| **Moisture-`high` first-five-ranks rule** (§9.5.3 confidence) | **Unchanged and still provisional.** R5 amends criterion 2, not the confidence cut; it remains a `[judgment call — review]` |
+| **No-tail-marker moderate cap** (§3.1) | **Unchanged and still provisional** for the marker-**absent** case. R2 adds a *separate* rule for the implausible-marker case — it does not replace this one |
+| **Protein-flag trigger** (multiple R5 above tail, or one in the top five — §13) | **Unchanged and still provisional.** R8 changes how the flag is *carried* (the `hinweise` record, §13.1), not when it fires |
+
+**v0.2 status.** This document is **pre-calibration**. No blind lane has run against it and **no repeatability claim exists**. The anchors most likely to move on first contact with real formulas, in priority order (R1–R9 revised, 2026-09-14):
+
+1. the `weight_potential` **dense- and thin-fatty-base** cuts (§9.2) — R4 fixed the structure of both anchors; the two-species / top-three thresholds inside them are now the largest unruled judgment call in the document;
+2. the S1/S2/S3 signal definitions and the `low` end of the `conditioning_level` scale (§9.1) — a three-step scale remains at the edge of INCI support; R3 fixed the `high` end only;
+3. the `care_direction: protein` rank-8 / two-species test (§9.3), and — new under R6 — how often `balanced` reading (b) is actually reachable on a real mask shelf;
 4. whether `lightness` and `detangling` are ever selected in this category (§9.5.2 steps 3 and 7);
-5. whether `damage_fit` should become a computed row (watch-list item 1).
+5. whether §2.4.1 tier 1's three-source convergence bar is reachable on drugstore masks, or whether tier 2 will dominate;
+6. the R5 lipid-led disqualifier's `≥ 2 R4b` count (§9.5.3 criterion 2) — how much of the shelf it removes from the `moisture` headline.
 
 Calibration product selection, the frozen cohort, the envelope/adapter schema, and the runbook are **out of scope for this document** and are separate Phase-4 artifacts.
 
@@ -839,14 +1038,20 @@ Calibration product selection, the frozen cohort, the envelope/adapter schema, a
 
 | # | Area | Conditioner v1.6 | Mask v0.1 | Why |
 |---:|---|---|---|---|
-| 1 | **Category boundary** | Masks/deep treatments are an **excluded form** (§2) | Masks are **the** category; conditioner-mode-only multi-use products are excluded here | Charter category definition; no product receives two engine profiles (F1) |
-| 2 | **Multi-use products** | Excluded outright ("multi-use products permitting materially different rinse-out and leave-on behavior") | **Eligible, mode-scoped** — classified only in the rinse-out mask mode, with a `multi_use` envelope naming uncovered modes | Charter F1. Eight such products are live and `is_chaarlie_recommended`; excluding them would forfeit the coverage target |
+| 1 | **Category boundary** | Masks/deep treatments are an **excluded form** (§2) | Masks are **the** category; a multi-use product none of whose rinse-out modes clears the G0 conjuncts is excluded here | Charter category definition; **no MODE is profiled twice (R1, 2026-09-14)** — a multi-mode product may hold one profile per engine |
+| 2 | **Multi-use products** | Excluded outright ("multi-use products permitting materially different rinse-out and leave-on behavior") | **Eligible, mode-scoped** — classified only in the rinse-out mask mode, with a `multi_use` envelope naming uncovered modes. **(R1)** A self-labelled 2in1 with a qualifying 2–3-min Kur mode is in scope even where its other mode is Conditioner-engine territory | Charter F1 as corrected by R1. Eight such products are live and `is_chaarlie_recommended`; excluding them would forfeit the coverage target |
+| 2a | **G0 placement conjunct (R8, 2026-09-14)** | n/a | "To lengths and ends" is **not** a G0 conjunct; unstated placement defaults to the P5 canonical placement. Three conjuncts remain: after cleansing · stated contact time · rinsed out | Silence about placement is the normal state of a German mask pack; failing G0 on a bookkeeping absence fails toward exclusion, not toward evidence (§1.1) |
+| 2b | **Conservative-failure invariant (R8, 2026-09-14)** | Implicit in individual fallbacks | **Stated once, globally (§1.1):** every hard rule fails toward review or the conservative value, never toward a recommendation — and is the admission test for future amendments | Adopted from leave-in T17/§1.1 so the mask engine and the leave-in engine share one invariant |
+| 2c | **Source-conflict precedence (R8, 2026-09-14)** | Conflicts preserved; no rule for choosing the formula of record | **§2.4.1 two tiers:** three-source convergence incl. one GTIN-anchored German retailer → formula of record, confidence stepped down, review routed; otherwise `unknown` + `formula_source_conflict` | Adopted from leave-in T18. Classifying from whichever capture a packet froze as primary is a source preference wearing a procedural disguise |
 | 3 | **Reference distribution** | Anchored across conventional rinse-out conditioners | Anchored **within the mask shelf** — the same formula may read one step lower here | Evidence §1: masks shift richer on one continuum; a shared scale would push the whole category to `high` |
 | 4 | **Field 1 name/semantics** | `conditioning_level` from `conditioning_deposition_potential` | `conditioning_level` as the **`concentration` twin** — overall treatment intensity from structural position only | D1 (binding) |
-| 5 | **Structural-signal formalism** | Prose ("count architecture, not ingredient points") | Explicit **S1/S2/S3** signals with a counting rule and a `moderate` fallback | D1 requires "extremes need multiple independent structural signals" + NEQI-pattern fallback; evidence §2 names the honest and false signals |
-| 6 | **Tail marker** | The under-1% boundary is acknowledged as invisible; no operational marker | An explicit **`tail_index` rule** with a tail-class list and anomaly handling | D1: "ingredients after the fragrance/preservative block contribute nothing" needs a reproducible cut for a blind lane |
+| 5 | **Structural-signal formalism** | Prose ("count architecture, not ingredient points") | Explicit **S1/S2/S3** signals with a counting rule and a `moderate` fallback. **(R3, 2026-09-14)** S1 is **mandatory** for `high`; no signal may be carried by a `tail_index − 1` species; the "no material counter-signal" conjunct is operative with a closed list | D1 requires "extremes need multiple independent structural signals" + NEQI-pattern fallback; evidence §2 names the honest and false signals. R3 fixes three per-product evidence defects and sets **no distribution target** |
+| 6 | **Tail marker** | The under-1% boundary is acknowledged as invisible; no operational marker | An explicit **`tail_index` rule** with a tail-class list and anomaly handling. **(R2, R8, 2026-09-14)** Plus the **plausibility conditional** (§3.1.1, leave-in T16), a widened tail-class list, and **colourants removed from the marker classes** with a precedence note | D1: "ingredients after the fragrance/preservative block contribute nothing" needs a reproducible cut for a blind lane. R2 replaces a rank threshold with an architecture comparison, in both directions (§1.1) |
+| 6a | **`weight_potential` evidence base (R4, 2026-09-14)** | Weight-high = rich base plus one supporting route | **No cationic gate.** `high` = heavy-lipid core above the marker **+** dense fatty-alcohol base **or** occlusive silicone stack. `low` = a **positive leanness test** (no R4b + thin fatty base + no occlusive stack) | Evidence §8: the weight driver is fatty-alcohol/butter load, not cationic breadth and not silicone. An absence-based `low` would fail toward a favourable fine-hair fit (§1.1) |
 | 7 | **Focus vocabulary** | Eight values | **Nine** — plus `moisture` | D5 (binding), ruled by Nick 2026-09-04; provenance is Shampoo Focus v1.5 |
-| 8 | **`moisture` guard** | n/a | Cluster guard: ≥ 3 distinct humectants above the tail, ≥ 2 non-glycerin, no richer route winning | D5, tested on four real formulas (Balea Aqua Hyaluron, Guhl 30 sek pass; Gliss Bonding, Pantene Bond fail) |
+| 8 | **`moisture` guard** | n/a | Cluster guard: ≥ 3 distinct humectants above the tail, ≥ 2 non-glycerin, no richer route winning. **(R5, 2026-09-14)** Plus an operational **lipid-led disqualifier** on criterion 2 — ≥ 2 R4b heavy lipids above the marker, or the whole cluster ranked below the highest R4b lipid — **focus only**, `care_direction` untouched | D5, tested on four real formulas (Balea Aqua Hyaluron, Guhl 30 sek pass; Gliss Bonding, Pantene Bond fail). R5 closes the reading in which a rich nourishing Kur takes the moisture headline on its cluster alone |
+| 8a | **`balanced` semantics (R6, 2026-09-14)** | `balanced` = substantive mixed architecture; never a "neither" bucket | **Two co-equal readings:** (a) both-substantive (material R5 route **and** humectant cluster), (b) neither-dominant (film- or acid-led, four clauses). The **lipid-leg shortcut is deleted** — "protein + generic lipids" now reads `protein`. The reading is recorded | Aligned with leave-in T19 on Nick's own "balanced can also be both-not". `balanced` bridge-matches downstream, so the deleted lipid shortcut was a real inflation cost |
+| 8b | **Focus tie-break scope (R7, 2026-09-14)** | Claims may break a `dual_supported` tie | Same, **at any step of the §9.5.2 hierarchy**, including which candidate takes primary vs secondary | v1.5 discipline, verbatim in substance: break ties yes; create routes or upgrade `nonspecific` never |
 | 9 | **New route R9** | No humectant route | **R9 humectant cluster** + mechanism **M5**, kept disjoint from M1 | The `moisture` focus needs a route to hang on, and it must not be satisfiable by a rich emollient base |
 | 10 | **Formula-first care verdict** | Not present | **`focus_care_verdict`** (repair/moisture/dual/nonspecific/not_applicable) + `claim_role`, with "claims may break a dual tie, never upgrade nonspecific" | Adapted from the approved Shampoo Focus v1.5 discipline, as D5 instructs for Phase 3 |
 | 11 | **`bond_route`** | R7 is a review flag; `bond_specific_support` is a graded direct property | A **deterministic four-value enum** (`maleate`/`gluconamide`/`peptide`/`none`) that **gates** `repair_support_level: high`, requiring a nameable INCI token | `01_property-set-v0.md` trace-level ruling + charter F3. Bond positioning is far more common on masks than on conditioners |
@@ -855,7 +1060,8 @@ Calibration product selection, the frozen cohort, the envelope/adapter schema, a
 | 14 | **Lipid route granularity** | Single R4 | **R4a light/mid vs R4b heavy**, with only R4b feeding the `weight_potential: high` anchor | Evidence §8: butter/heavy-triglyceride load is the weight driver; evidence §1: masks carry heavier lipids |
 | 15 | **Silicone and weight** | `weight_deposition_potential` false-signal rule says "silicone-free is not light" | Same, **plus** the positive direction closed: "silicone presence is not the weight driver" | Evidence §8 states the driver explicitly. Masks carry more silicone, so the inflation risk is larger |
 | 16 | **Dwell / heat** | Not applicable (conditioners have no meaningful dwell axis) | **Explicitly zero classification credit**, with the 7-second segment marked `unknown` and a dedicated trigger | Evidence §3 and §4 + `01_property-set-v0.md` "explicitly protocol-only". This is the category's biggest temptation to over-infer |
-| 17 | **Overload handling** | Not addressed | **D4 rule**: trace counter-signal + `care_direction` confidence cap + review trigger; never a field, never diagnosis language | D4 (binding) + evidence §5: "protein overload" is not an established condition |
+| 17 | **Overload handling** | Not addressed | **D4 rule**: trace counter-signal + `care_direction` confidence cap + review trigger; never a field, never diagnosis language. **(R8, 2026-09-14)** Carried, with `multi_use` and claim/formula mismatches, in one always-emitted **`hinweise` record** (§13.1) — including tail-only protein payloads as a note that moves no value | D4 (binding) + evidence §5: "protein overload" is not an established condition. The record is a review-surface decision (leave-in T5), not an evidence decision |
+| 17a | **Echo fields (R9, 2026-09-14)** | Fields 7–9 are reviewed fields | Fields 7–9 are **echo fields**: deterministic projections displayed as „→ ergibt:" annotations on their driving rows, not separately reviewed. **All three still emitted, in envelope and projections; `suitable_thicknesses` still projects** | Leave-in T8: reviewing a projection asks a human the same question twice and lets the two answers diverge. Seven reviewed rows per product |
 | 18 | **Thickness vocabulary** | fine / medium / coarse | fine / **normal** / coarse | Repo canonical vocabulary. Same middle value, no semantic change |
 | 19 | **`usage_role` / `scalp_application_fit`** | Excluded, with the reasoning that a mask/intensive protocol "belongs to its applicable product-form boundary" | Excluded **and** the protocol explicitly owned by TPL-MASK/P5 (`replaces_conditioner`, Längen und Spitzen, required sourced contact time) | The boundary Conditioner v1.6 pointed at is this document's P5 boundary |
 | 20 | **Scalp reasoning** | R8 carries a root/scalp suitability discussion | R8 notes that a directions-compliant mask is **not a scalp product**; whole-head directions are a P5 deviation | P5: Ansatz aussparen |
@@ -875,11 +1081,11 @@ Calibration product selection, the frozen cohort, the envelope/adapter schema, a
 | **Shared mechanisms M1–M4** | Inherited unchanged; M5 appended |
 | **Anti-double-counting (G3)** | Inherited unchanged, then tightened with three mask-specific applications |
 | **Direct-property table shape** | Conditioner §7 pattern, including the "`higher` needs multiple independent endpoint-relevant observations" rule and the potential-not-performance wording rule |
-| **`care_direction` semantics** | **Strict v1.6, no redefinition** — `protein` needs a material film route, `moisture` is the coherent non-protein direction, `balanced` is reserved for substantive mixed architecture and is never a "neither" bucket. D6 makes this explicit and binding |
+| **`care_direction` semantics** | **v1.6 value names and bars retained** — `protein` needs a material film route, `moisture` is the coherent non-protein direction, and `balanced` is never an *uncertainty* bucket. **(R6, 2026-09-14 — one deliberate divergence, moved to §16.1 row 8a:)** `balanced` is no longer reserved for substantive mixed architecture alone; a film- or acid-led architecture in which neither leg leads reads `balanced` / `neither_dominant`. Conditioner v1.6 reconciliation is parked (§18.9) |
 | **`repair_support_level` semantics** | v1.6 low/medium/high meanings inherited; only the `high` gate is made deterministic |
 | **Focus hierarchy discipline** | Baseline exclusion, mechanism grouping, special-purpose-routes-first, positioning corroborates but never creates, catalog values never break ties, required focus explanation, at most two secondaries that must add distinct endpoints |
-| **`damage_fit` specialist-route pattern** | Inherited exactly, including "the specialist result **replaces** the general-high set; never emit all three values" |
-| **`texture_fit` mapping** | Conditioner 10.4 pattern inherited unchanged |
+| **`damage_fit` specialist-route pattern** | Inherited exactly, including "the specialist result **replaces** the general-high set; never emit all three values". **(R9, 2026-09-14)** The *mapping* is unchanged; only its review surface moves (echo field) |
+| **`texture_fit` mapping** | Conditioner 10.4 pattern inherited unchanged. **(R9, 2026-09-14)** Unchanged as a mapping; echo field for review purposes |
 | **`weight_potential` conflict fallback** | The NEQI rule inherited: never encode unresolved uncertainty as a restrictive `high` that removes fine hair from the broad prior |
 | **Gates G0–G7** | Same seven gates, same meanings; G0 and G7 re-scoped to this category and this draft status |
 | **Human review triggers** | Conditioner §12 list inherited whole, then extended |
@@ -894,11 +1100,12 @@ Mapping to `category-classification-engine-template.md` (the 12-section shell), 
 
 | Template section | Satisfied by |
 |---|---|
-| 1. Category boundary | §2.1, §2.2 (charter-derived) |
-| 2. Input authority | §2.3, §2.4 |
+| 0. Failure discipline **(R8)** | §1.1 conservative-failure invariant |
+| 1. Category boundary | §2.1, §2.2 (charter-derived, R1-corrected) |
+| 2. Input authority | §2.3, §2.4, §2.4.1 source-conflict precedence **(R8)** |
 | 3. Direct product properties | §7.1, §7.2, §9 (per-field: values, signals, thresholds, counter-signals, confidence, fit consumers) |
 | 4. Evidence lexicon | §10 |
-| 5. Deterministic vs judgment | §4 (`decision_type`), §9 per field; deterministic = `bond_route`, `ingredient_flags`, fields 7–9; claim-gated = `shine` corroboration, `color_care`, bond claim; not inferable = §7.2 |
+| 5. Deterministic vs judgment | §4 (`decision_type`), §9 per field; deterministic = `bond_route`, `ingredient_flags`, fields 7–9 (**echo fields — §9.5E, R9**); claim-gated = `shine` corroboration, `color_care`, bond claim, and the §9.5.1 `dual_supported` tie-break (**R7**); not inferable = §7.2 |
 | 6. Formula/input-first sequence | §11 |
 | 7. Confidence | §4.1, plus a per-field confidence rule in every §9 subsection |
 | 8. Product truth vs user fit | §9 (fields 1–6 = product truth; fields 7–9 = broad fit priors), §9.9 |
@@ -911,11 +1118,26 @@ Mapping to `category-classification-engine-template.md` (the 12-section shell), 
 
 ## 18. Open questions for the first-set review
 
-1. **`weight_potential: high`** — is the base-plus-one-alternative reading (§9.2) the intended reading of evidence §8's four markers, or should all four be required? Highest-impact unruled call in this document.
-2. **`conditioning_level` counting** — do S1/S2/S3 with the "≥2 → high, 0 → low" rule produce a usable spread on the real shelf, or does it collapse to `moderate`? If it collapses, is a two-step scale more honest than a three-step one (evidence §2: three steps are at the edge of INCI support)?
-3. **`care_direction: protein`** — is the "second species OR within first eight above-tail ranks" test the right bar, and should `Keratin Amino Acids` really be non-qualifying alone?
-4. **`lightness` and `detangling`** — if neither is ever selected across the first set, do they stay in the vocabulary for parity, or come out?
-5. **`damage_fit`** — promote to a computed row (watch-list item 1), or keep as a reviewed field?
-6. **Gloss cohort** — do L'Oréal Glycolic Gloss, Syoss Lamination Intense Glaze, and Neqi Gloss Glaze actually clear the three-criterion `shine` threshold on their real INCIs, or does the low-lipid-load criterion exclude products the charter explicitly wants classified as shine-focused?
-7. **`bond_route: gluconamide`** — can the exact qualifying INCI token(s) be pinned from the Gliss 4-in-1 Repair Bond formula, so the enum value is as deterministic as `maleate`? Until then, `gluconamide` calls rest on reviewer identification and should be flagged.
-8. **Tail-marker absence rate** — how often do exact-market drugstore mask INCIs lack any tail-class ingredient? If it is common, the "cap at moderate" rule will dominate the confidence distribution and needs revisiting.
+**Closed by the 2026-09-14 rulings — recorded so they are not reopened by habit:**
+
+| v0.1 question | Closed by |
+|---|---|
+| **1. `weight_potential: high`** — all four markers, or base-plus-one? | **R4.** Neither: the cationic base gate is removed entirely. `high` = heavy-lipid core + (dense fatty base **or** occlusive stack); `low` = a positive leanness test (§9.2) |
+| **2. `conditioning_level` counting**, `high` half | **R3** — for the `high` end only: S1 is mandatory, completed by S2 or S3, with the tail-edge exclusion and the material-counter-signal cap. **The `low` end and the three-step-scale question stay open** — see §18.1 below |
+| **5. `damage_fit`** — computed row or reviewed field? | **R9** — for the *review surface*: it is an echo field, annotated not adjudicated. **The storage half stays open** — see §18.5 below |
+| **8. Tail-marker absence rate** | **Partly, by R2.** The implausible-marker case now has its own rule and its own trigger, so it no longer rides on the absence cap. The *absence* rate question itself stays open — §18.8 below |
+
+**Open for the first-set review (renumbered continuously; v0.1 numbering preserved where the question survives unchanged):**
+
+1. **`conditioning_level` scale (was 2, narrowed by R3).** Does S1-mandatory-plus-one produce a usable spread on the real shelf, or does the field collapse to `moderate`? If it collapses, is a two-step scale more honest than a three-step one (evidence §2: three steps are at the edge of INCI support)? **Report prevalence as a finding about the scale, never as a target (R3).**
+2. **`weight_potential` base cuts (new under R4).** Are "≥ 2 distinct fatty alcohols above the tail, or a cetearyl-class one in the top three" (dense) and "at most one, and not in the top three" (thin) the right cuts? This is now the largest unruled judgment call in the document. In particular: does the thin-base test make `low` reachable at all on a real mask shelf, or does it merely relocate v0.1's unreachability from `high` to `low`?
+3. **`care_direction: protein` (was 3, unchanged).** Is the "second species OR within first eight above-tail ranks" test the right bar, and should `Keratin Amino Acids` really be non-qualifying alone?
+4. **`balanced` reading (b) reachability (new under R6).** How often is the film-/acid-led `neither_dominant` reading actually reached on German drugstore masks, given that clause 3 requires *no* humectant pair and *no* lipid stack above the tail? If it is reached never or almost never, is clause 3 too strict, or is the reading simply correct and rare? And how often does deleting the lipid-leg shortcut move a product from `balanced` to `protein`?
+5. **`damage_fit` storage (was 5, narrowed by R9).** R9 settles that it is not separately reviewed. Should it additionally stop being *stored* as a field and become a computed row at read time (watch-list item 1)?
+6. **Gloss cohort (was 6, unchanged and now doubly live).** Do L'Oréal Glycolic Gloss, Syoss Lamination Intense Glaze and Neqi Gloss Glaze clear the three-criterion `shine` threshold on their real INCIs? **Added under R6:** do those same products now land on `care_direction: balanced / neither_dominant` rather than `moisture`, and is that the reading Nick wants for a gloss mask?
+7. **`bond_route: gluconamide` (was 7, unchanged).** Can the exact qualifying INCI token(s) be pinned from the Gliss 4-in-1 Repair Bond formula, so the enum value is as deterministic as `maleate`? Until then, `gluconamide` calls rest on reviewer identification and should be flagged.
+8. **Tail-marker absence rate (was 8, narrowed by R2).** How often do exact-market drugstore mask INCIs lack any tail-class ingredient? If it is common, the marker-absent "cap at moderate" rule will dominate the confidence distribution. **Added under R2:** how often does the *plausibility* conditional fire, and does the low-water/non-emulsion limb ever fire on a rinse-out mask at all, or is it dead text inherited from a leave-on category?
+9. **Upstream reconciliation (new under R1/R6/R8) — three named gaps.** (a) `01_property-set-v0.md` still carries D6's v0.1 `balanced` wording, which R6 amends; that file is outside this revision's write scope. (b) The **charter's Category definition** still reads "applied after cleansing **to hair lengths and ends**", while R8 removes placement as a G0 conjunct (§2.1); the charter was amended for **R1 only** on 2026-09-14, so the two texts differ on placement until Nick rules the charter wording. **The standard's §2.1 governs classification in the meantime, and the divergence is recorded rather than resolved silently.** (c) Does the **Conditioner v1.6** engine adopt the two-readings rule too (parked with the moisture-focus extension) or deliberately diverge?
+10. **§2.4.1 convergence reachability (new under R8).** Is a three-source convergence bar — including one GTIN-anchored German retailer — reachable on the drugstore mask shelf, whose retailer coverage is thinner than the leave-in shelf's? If tier 2 dominates, a large share of the cohort becomes non-publishable on a rule imported rather than calibrated.
+11. **Echo-field purity (new under R9).** `texture_fit`'s `high` row carries a second condition (a coherent high-slip R1/R3 route) and `damage_fit`'s specialist test admits legs (c) and (d). Should those be removed so both tables become pure projections of fields 1/2/4, or is the "read, never re-judge" convention in §9.8 enough?
+12. **`hinweise` volume (new under R8).** How many products fire nothing at all? If the empty record is rare, the seventh reviewed row is not the light-touch item T5 intended and its contents may need splitting.

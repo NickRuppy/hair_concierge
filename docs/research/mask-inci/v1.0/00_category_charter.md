@@ -4,6 +4,7 @@ Status: ruled by Nick — Phase 1 checkpoint complete
 Version: 1.0
 Market: Germany/EU
 Ruling date: 2026-09-04
+Amended: 2026-09-14 — **R1 only** (Nick's round-1 rule rulings, `plans/mask-inci/round1-rule-rulings.md`): the Guhl boundary case is corrected to eligible/mode-scoped, and the F1 principle is restated as "no MODE is profiled twice". No other ruling is applied to this file; R2–R9 live in the standard and the lexicon. Placement wording in the Category definition below is **not** amended here — see Standard v0.2 §2.1/§18.9 for R8's G0 placement default and the open reconciliation item.
 
 ## Category definition
 
@@ -16,7 +17,7 @@ The engine classifies **use, not jar**: for a product with several stated modes,
 - **Rinse-out Haarkuren/Masken for lengths and ends, at every stated dwell duration.** Express treatments (7 sec / 30 sec / 1 minute Kuren) are in scope: marketed form and the `intensive_conditioning_mask` role decide; dwell is protocol metadata under P5, never a boundary test. (F2)
 - **Bond-claim drugstore masks** (Plex/Bond positioning, e.g. Balea Plex Care, Gliss Bonding, Pantene Bond Repair). The bond route is claim-gated, mirroring the Conditioner R7 pattern; a high repair-support conclusion requires named chemistry visible in the reviewed formula. (F3)
 - **Gloss/lamination rinse-out treatments** (e.g. Glycolic Gloss lamination, lamination glazes): treated as shine-focused masks; lamination/acid-gloss claims remain claim-gated and conservative. (F4)
-- **Multi-use products (3in1/2in1) — mode-scoped.** Eligible when authoritative directions state a distinct rinse-out mask mode with dwell. Classification covers only that mode; the research envelope carries `multi_use: true` and names the uncovered modes (leave-in, conditioner). A multi-use product whose only rinse-out mode is a short conditioner mode (e.g. Guhl Panthenol + Reparatur 2in1 Kur & Spülung) remains Conditioner-engine territory — no product receives two engine profiles. (F1)
+- **Multi-use products (3in1/2in1) — mode-scoped.** Eligible when authoritative directions state a distinct rinse-out mask mode with dwell. Classification covers only that mode; the research envelope carries `multi_use: true` and names the uncovered modes (leave-in, conditioner). A multi-use product **none of whose** rinse-out modes states a dwell — an immediate-rinse Spülung mode only — is not eligible here. **No MODE is ever profiled twice (R1, Nick, 2026-09-14 — corrected principle).** v0.1 of this charter said "no *product* receives two engine profiles"; that phrasing forced a whole multi-mode product onto one engine and produced the Guhl error below. The correct principle is mode-scoped: a multi-mode product **may hold one profile per engine, covering one mode each**, and no single mode may be profiled by two engines. This is consistent with, and forward-compatible with, the parked cross-category multi-row architecture. (F1)
 
 ## Excluded
 
@@ -50,7 +51,7 @@ Längen und Spitzen, Ansatz aussparen; canonical conditioner relationship `repla
 ## Known boundary cases (live catalog, 2026-09-04)
 
 - Garnier/Fructis Hair Food line, Balea 3 in 1 Intensivmaske, Isana 3in1, Balea Aqua Hyaluron 3 in 1: multi-use → eligible mode-scoped (F1); 8 such products are live and `is_chaarlie_recommended`.
-- Guhl Panthenol + Reparatur 2in1 Kur & Spülung: conditioner-mode only → excluded here, Conditioner-engine eligible.
+- Guhl Panthenol + Reparatur 2in1 Kur & Spülung: **eligible, mode-scoped (R1, Nick, 2026-09-14 — corrects the 2026-09-04 entry, which read "conditioner-mode only → excluded here").** The **directions test decides**, not the pack name: this product states a distinct **2–3-minute Kur mode** — after cleansing, stated contact time, rinsed out — and that mode qualifies as a mask mode (F1). It is classified in that mode only, with `multi_use: true` and `multi_use_uncovered_modes: ["conditioner"]`. Its Spülung mode is an immediate-rinse conditioner mode and stays Conditioner-engine territory; that profile is **untouched and not in conflict**, because the two engines cover two different modes and no mode is profiled twice.
 - Gliss 7sec Express-Repair, Guhl 30 sec, Wahre Schätze 1-Minute Kuren: express → included (F2).
 - Bali Curls Bonding Repair Overnight Elixir: leave-on overnight → excluded.
 - Pantene Pro-V Serum Shot: eligible only if directions show post-shampoo rinse-out with dwell.

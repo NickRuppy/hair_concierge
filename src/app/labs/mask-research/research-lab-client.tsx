@@ -23,6 +23,18 @@ export type MaskAgreementCell = {
   match: boolean | null
 }
 
+// A derived profile field (hairThicknessFit, damageFit, textureFit) shown as
+// a compact "→ ergibt:" annotation on its driving row instead of its own
+// reviewable row (R9 "echo fields", T8 pattern — ported from the leave-in lab).
+export type MaskDerivedAnnotation = {
+  field: string
+  label: string
+  fieldLabel: string
+  value: string
+  note: string | null
+  disagreement: MaskAgreementCell | null
+}
+
 export type MaskProperty = {
   path: string
   kind: "g0" | "profile"
@@ -41,6 +53,7 @@ export type MaskProperty = {
   multiUse: boolean | null
   disagreement: MaskAgreementCell | null
   humanReviewStatus: MaskPropertyReviewStatus
+  derivedAnnotations: MaskDerivedAnnotation[]
 }
 
 export type MaskReviewDecision = {
@@ -608,6 +621,21 @@ function DetailPanel({
                   <span aria-hidden="true">●</span> Abweichung
                 </button>
               ) : null}
+              {property.derivedAnnotations
+                .filter((annotation) => annotation.disagreement)
+                .map((annotation) => (
+                  <button
+                    key={annotation.field}
+                    type="button"
+                    data-mask-disagreement={`${property.path}→${annotation.field}`}
+                    title={`Blind-/Key-Lane-Abweichung: ${annotation.fieldLabel}`}
+                    aria-label={`Blind-/Key-Lane-Abweichung: ${annotation.fieldLabel}`}
+                    onClick={() => toggleExpanded(property.path)}
+                    className="inline-flex items-center gap-1 rounded-full border border-rose-300 bg-rose-50 px-1.5 py-px text-[10px] font-semibold text-rose-900"
+                  >
+                    <span aria-hidden="true">●</span> Abweichung: {annotation.fieldLabel}
+                  </button>
+                ))}
             </span>
             <p className="mt-0.5 font-mono text-[11px] text-stone-500">{property.path}</p>
           </td>
@@ -626,6 +654,20 @@ function DetailPanel({
                 ) : null}
               </p>
             ) : null}
+            {property.derivedAnnotations.map((annotation) => (
+              <p
+                key={annotation.field}
+                className="mt-1 text-[11px] leading-5 text-stone-500"
+                data-mask-derived-annotation={annotation.field}
+                title="Deterministische Projektion dieser Eigenschaft — wird mit ihr freigegeben, nicht separat geprüft."
+              >
+                → ergibt: {annotation.label}:{" "}
+                <span className="font-medium text-stone-700">{annotation.value}</span>
+                {annotation.note ? (
+                  <span className="block text-stone-500">{annotation.note}</span>
+                ) : null}
+              </p>
+            ))}
           </td>
           <td className="px-3 py-2 text-[13px] leading-6 text-stone-800">
             {property.rationale

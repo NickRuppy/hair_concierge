@@ -174,6 +174,37 @@ export const MASK_PROFILE_FIELD_LABELS: Record<MaskProfileFieldKey, string> = {
   textureFit: "Passung Textur",
 }
 
+// The three derived profile fields (R9 "echo fields", T8 pattern) are not
+// independently reviewable rows. Each is a deterministic projection of one
+// or two "driving" fields and is shown as a compact annotation attached to
+// its driver's row instead — see buildDerivedAnnotation below.
+export const MASK_REVIEWABLE_PROFILE_FIELD_KEYS = [
+  "conditioningLevel",
+  "weightPotential",
+  "careDirection",
+  "repairSupportLevel",
+  "primaryFocus",
+  "secondaryFocus",
+] as const
+
+export const MASK_DERIVED_PROFILE_FIELD_KEYS = [
+  "hairThicknessFit",
+  "damageFit",
+  "textureFit",
+] as const
+
+const DERIVED_FIELD_DRIVERS: Partial<Record<MaskProfileFieldKey, readonly MaskProfileFieldKey[]>> =
+  {
+    weightPotential: ["hairThicknessFit", "textureFit"],
+    conditioningLevel: ["damageFit"],
+  }
+
+// damageFit is also driven by repairSupportLevel, but is only annotated once
+// (under conditioningLevel) — the annotation label mentions both drivers.
+const DERIVED_FIELD_ALSO_DRIVEN_BY: Partial<Record<MaskProfileFieldKey, MaskProfileFieldKey>> = {
+  damageFit: "repairSupportLevel",
+}
+
 const profileSchema = z
   .object(
     Object.fromEntries(MASK_PROFILE_FIELD_KEYS.map((key) => [key, profileFieldSchema])) as Record<
@@ -392,6 +423,17 @@ export type MaskReviewStatus = "needs_review" | "rework_open" | "approved" | "ex
 export type MaskPropertyReviewStatus = "unreviewed" | "rework_open" | "approved"
 export type MaskCategoryBoundaryStatus = "eligible" | "excluded_product_form" | "pending"
 
+// A derived profile field's value shown as an annotation on its driving
+// row, not as its own reviewable row (R9 "echo fields").
+export type MaskDerivedAnnotation = {
+  field: MaskProfileFieldKey
+  label: string
+  fieldLabel: string
+  value: string
+  note: string | null
+  disagreement: MaskAgreementCell | null
+}
+
 export type MaskProperty = {
   path: string
   kind: "g0" | "profile"
@@ -410,6 +452,7 @@ export type MaskProperty = {
   multiUse: boolean | null
   disagreement: MaskAgreementCell | null
   humanReviewStatus: MaskPropertyReviewStatus
+  derivedAnnotations: MaskDerivedAnnotation[]
 }
 
 export type MaskClaimNote = string
@@ -530,6 +573,28 @@ function statusLabelFor(
   return excluded ? "G0 (ungeprüft)" : "offen"
 }
 
+function buildDerivedAnnotation(
+  derivedKey: MaskProfileFieldKey,
+  profile: NonNullable<MaskReferenceRecord["profile"]>,
+  agreement: MaskAgreement | null,
+  productId: string,
+): MaskDerivedAnnotation {
+  const field = profile[derivedKey]
+  const fieldLabel = MASK_PROFILE_FIELD_LABELS[derivedKey]
+  const alsoDrivenBy = DERIVED_FIELD_ALSO_DRIVEN_BY[derivedKey]
+  const label = alsoDrivenBy
+    ? `${fieldLabel} (auch getrieben von ${MASK_PROFILE_FIELD_LABELS[alsoDrivenBy]})`
+    : fieldLabel
+  return {
+    field: derivedKey,
+    label,
+    fieldLabel,
+    value: formatFieldValue(field.value),
+    note: field.derivation ?? field.rationale ?? null,
+    disagreement: findAgreementCell(agreement, productId, derivedKey),
+  }
+}
+
 function buildProperties(
   record: MaskReferenceRecord,
   agreement: MaskAgreement | null,
@@ -559,13 +624,16 @@ function buildProperties(
       multiUse: record.g0.multiUse == null ? null : Boolean(record.g0.multiUse),
       disagreement: findAgreementCell(agreement, productId, "g0"),
       humanReviewStatus: statusFor("g0"),
+      derivedAnnotations: [],
     },
   ]
 
   if (record.profile) {
-    for (const key of MASK_PROFILE_FIELD_KEYS) {
-      const field = record.profile[key]
+    const profile = record.profile
+    for (const key of MASK_REVIEWABLE_PROFILE_FIELD_KEYS) {
+      const field = profile[key]
       const path = `profile.${key}`
+      const derivedKeys = DERIVED_FIELD_DRIVERS[key] ?? []
       properties.push({
         path,
         kind: "profile",
@@ -584,6 +652,9 @@ function buildProperties(
         multiUse: null,
         disagreement: findAgreementCell(agreement, productId, key),
         humanReviewStatus: statusFor(path),
+        derivedAnnotations: derivedKeys.map((derivedKey) =>
+          buildDerivedAnnotation(derivedKey, profile, agreement, productId),
+        ),
       })
     }
   }
