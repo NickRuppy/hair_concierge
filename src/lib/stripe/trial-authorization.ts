@@ -131,7 +131,9 @@ export function verifyStripeTrialAuthorization(
   if (
     session.mode !== "subscription" ||
     session.status !== "complete" ||
-    session.payment_status !== "no_payment_required" ||
+    // Stripe can settle the zero-value trial invoice as `paid`. That status
+    // does not prove a paid period: require zero total and the trial proof below.
+    (session.payment_status !== "no_payment_required" && session.payment_status !== "paid") ||
     session.amount_total !== 0 ||
     session.livemode !== input.expectedLivemode ||
     subscription.livemode !== input.expectedLivemode ||
