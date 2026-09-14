@@ -126,7 +126,7 @@ test("Product Intake retains the full research artifact and replaces handwritten
   assert.equal(specs.weight, "light")
   assert.deepEqual(specs.roles, ["replacement_conditioner"])
   assert.equal(specs.provides_heat_protection, false)
-  assert.equal(specs.heat_protection_max_c, null)
+  assert.ok(!("heat_protection_max_c" in specs))
   assert.equal(specs.heat_activation_required, false)
   assert.deepEqual(specs.care_benefits, ["moisture", "detangling", "shine"])
   assert.deepEqual(specs.ingredient_flags, ["humectants"])

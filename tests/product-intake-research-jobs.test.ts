@@ -307,7 +307,6 @@ function validCategorySpecsForAudit(
           weight: "light",
           roles: ["styling_prep"],
           provides_heat_protection: true,
-          heat_protection_max_c: 220,
           heat_activation_required: false,
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],
@@ -853,7 +852,6 @@ test("review property rows show exact database field paths and raw approval valu
         weight: "medium",
         roles: ["styling_prep", "extension_conditioner"],
         provides_heat_protection: true,
-        heat_protection_max_c: 230,
         heat_activation_required: false,
         care_benefits: ["repair", "protein", "shine", "anti_frizz"],
         ingredient_flags: ["silicones", "oils", "proteins", "humectants"],
@@ -917,7 +915,6 @@ test("review property rows show exact database field paths and raw approval valu
   assert.equal(valuesByPath.get("product_conditioner_rerank_specs[0].balance_direction"), "null")
   assert.equal(valuesByPath.get("product_mask_specs[0].ingredient_flags"), '["humectants","oils"]')
   assert.equal(valuesByPath.get("product_leave_in_specs[0].provides_heat_protection"), "true")
-  assert.equal(valuesByPath.get("product_leave_in_specs[0].heat_protection_max_c"), "230")
   assert.equal(valuesByPath.get("product_leave_in_specs[0].heat_activation_required"), "false")
   assert.equal(
     valuesByPath.get("product_leave_in_specs[0].roles"),

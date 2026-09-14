@@ -207,7 +207,6 @@ function validCategorySpecs(categoryKey: ProductIntakeReviewCategoryKey): Record
           weight: "light",
           roles: ["styling_prep"],
           provides_heat_protection: true,
-          heat_protection_max_c: 220,
           heat_activation_required: false,
           care_benefits: ["moisture", "anti_frizz"],
           ingredient_flags: ["polymers"],

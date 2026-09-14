@@ -86,7 +86,6 @@ function factsFor(category: string, row: ProductRow) {
       format: "spray" | "milk" | "lotion" | "cream" | "serum"
       roles: string[]
       provides_heat_protection: boolean
-      heat_protection_max_c: number | null
       heat_activation_required: boolean
       application_stage: string[]
     }>(row.product_leave_in_specs)

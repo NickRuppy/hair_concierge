@@ -237,7 +237,6 @@
             "weight": "light",
             "roles": ["extension_conditioner"],
             "provides_heat_protection": true,
-            "heat_protection_max_c": 200,
             "heat_activation_required": false,
             "care_benefits": ["moisture"],
             "ingredient_flags": ["humectants"],

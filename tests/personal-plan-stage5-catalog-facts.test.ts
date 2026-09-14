@@ -10,7 +10,6 @@ test("adapts Leave-in catalog fields with catalog-spec provenance", () => {
       format: "spray",
       roles: ["styling_prep", "extension_conditioner"],
       provides_heat_protection: true,
-      heat_protection_max_c: 230,
       heat_activation_required: false,
       application_stage: ["towel_dry", "pre_heat"],
     },
@@ -20,7 +19,6 @@ test("adapts Leave-in catalog fields with catalog-spec provenance", () => {
     format: "spray",
     roles: ["styling_prep", "extension_conditioner"],
     providesHeatProtection: true,
-    heatProtectionMaxC: 230,
     heatActivationRequired: false,
     applicationStage: ["towel_dry", "pre_heat"],
   })
@@ -28,7 +26,6 @@ test("adapts Leave-in catalog fields with catalog-spec provenance", () => {
     format: "catalog_spec",
     roles: "catalog_spec",
     providesHeatProtection: "catalog_spec",
-    heatProtectionMaxC: "catalog_spec",
     heatActivationRequired: "catalog_spec",
     applicationStage: "catalog_spec",
   })

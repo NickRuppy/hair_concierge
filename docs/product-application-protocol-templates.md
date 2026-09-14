@@ -883,9 +883,9 @@ statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-
 
 **Typical deviations to watch for**
 
-- **A stated max temperature** ("Schutz bis 230 °C"). The numeric value belongs in
-  `product_leave_in_specs.heat_protection_max_c`; only the sourced sentence may be
-  appended to the `tool` step copy.
+- **A stated max temperature** ("Schutz bis 230 °C"). Binary only; degrees cut
+  over 2026-09-14 (AD-6) — the numeric value is never stored, only the sourced
+  sentence may be appended to the `tool` step copy.
 - **Heat activation required** (`heat_activation_required = true`) → the copy must
   not imply the product works without heat; flag.
 - **"Vor dem Glätteisen antrocknen lassen"** → add a `wait` step.

@@ -39,7 +39,6 @@ export interface LeaveInFitSpec {
   weight: "light" | "medium" | "rich" | null
   roles: LeaveInRole[]
   provides_heat_protection: boolean
-  heat_protection_max_c?: number | null
   heat_activation_required?: boolean | null
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags?: LeaveInIngredientFlag[] | null

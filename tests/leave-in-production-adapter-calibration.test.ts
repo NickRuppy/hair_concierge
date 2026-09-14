@@ -78,7 +78,7 @@ test("the golden projections stay inside the intake vocabularies", () => {
     assert.ok(fit.care_benefits.length > 0, `${file}: fit care_benefits`)
     assert.ok(eligibility.length > 0, `${file}: eligibility`)
 
-    assert.equal(specs.heat_protection_max_c, null, `${file}: AD-6`)
+    assert.ok(!("heat_protection_max_c" in specs), `${file}: AD-6`)
     assert.equal(specs.heat_activation_required, false, `${file}: AD-3`)
     assert.equal(fit.weight, specs.weight, `${file}: fit_specs.weight === specs.weight`)
     assert.ok(!specs.roles.includes("oil_replacement"), `${file}: oil_replacement is never emitted`)

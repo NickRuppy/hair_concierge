@@ -101,7 +101,6 @@ test("projects the complete v1.0 lean profile into exact current Leave-In fields
     weight: "medium",
     roles: ["replacement_conditioner"],
     provides_heat_protection: true,
-    heat_protection_max_c: null,
     heat_activation_required: false,
     care_benefits: ["repair", "anti_frizz"],
     ingredient_flags: ["silicones", "polymers", "oils", "proteins", "humectants"],
@@ -157,7 +156,6 @@ test("emits plain-string rationales under the exact intake field paths", () => {
     "category_specs.product_leave_in_specs.weight",
     "category_specs.product_leave_in_specs.roles",
     "category_specs.product_leave_in_specs.provides_heat_protection",
-    "category_specs.product_leave_in_specs.heat_protection_max_c",
     "category_specs.product_leave_in_specs.heat_activation_required",
     "category_specs.product_leave_in_specs.care_benefits",
     "category_specs.product_leave_in_specs.ingredient_flags",
@@ -301,7 +299,7 @@ test("AD-3/AD-4: the conditioner relationship and roles follow the ruled derivat
   }
 })
 
-test("AD-6: heat_protection_max_c is null whatever the heat binary says", () => {
+test("AD-6: heat_protection_max_c is never emitted whatever the heat binary says", () => {
   for (const providesHeatProtection of [true, false]) {
     const input = completeInput()
     input.profile.specialistFunctions = evidence({ providesHeatProtection })
@@ -309,7 +307,7 @@ test("AD-6: heat_protection_max_c is null whatever the heat binary says", () => 
     assert.equal(outcome.status, "projection_ready")
     if (outcome.status !== "projection_ready") continue
     const specs = outcome.productionProjection.category_specs.product_leave_in_specs
-    assert.equal(specs.heat_protection_max_c, null)
+    assert.ok(!("heat_protection_max_c" in specs))
     assert.equal(specs.provides_heat_protection, providesHeatProtection)
     assert.equal(specs.heat_activation_required, false)
     assert.deepEqual(

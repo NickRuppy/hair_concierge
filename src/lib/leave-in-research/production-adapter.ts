@@ -351,7 +351,6 @@ type LeaveInSpecsRow = {
   weight: LeaveInWeight
   roles: LeaveInRole[]
   provides_heat_protection: boolean
-  heat_protection_max_c: null
   heat_activation_required: false
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
@@ -1034,13 +1033,13 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
   }
   const suitableThicknesses = recommendedThicknesses.map((thickness) => thicknessMap[thickness])
 
-  // AD-6: the adapter writes null always; the degree logic ships its own removal PR.
+  // AD-6 (2026-09-14): heat_protection_max_c cut over to binary-only. Degree values were
+  // unverifiable legacy heuristics; the adapter no longer emits this field at all.
   const specs: LeaveInSpecsRow = {
     format,
     weight,
     roles,
     provides_heat_protection: providesHeatProtection,
-    heat_protection_max_c: null,
     heat_activation_required: false,
     care_benefits: careBenefits,
     ingredient_flags: ingredientFlags,
@@ -1181,9 +1180,7 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     "category_specs.product_leave_in_specs.format": `AD-1: the research presentation form and the production \`format\` enum are one shared vocabulary; captured at identity as \`${format}\` and projected without a mapping layer.`,
     "category_specs.product_leave_in_specs.weight": `${weightRationale} Current compatibility mapping: ${weightPotential} -> ${weight}.`,
     "category_specs.product_leave_in_specs.roles": rolesRationale,
-    "category_specs.product_leave_in_specs.provides_heat_protection": `${heatRationale} §13.3 carries one binary; the four-state evidence detail stays in the research trace.`,
-    "category_specs.product_leave_in_specs.heat_protection_max_c":
-      "AD-6: the adapter writes null always. Legacy 221-232 °C figures are marketing use-condition parameters, not measured protection levels (§13.3, FS-14).",
+    "category_specs.product_leave_in_specs.provides_heat_protection": `${heatRationale} §13.3 carries one binary; the four-state evidence detail stays in the research trace. AD-6 (2026-09-14): degree values (heat_protection_max_c) were cut over — legacy 221-232 °C figures were marketing use-condition parameters, not measured protection levels, and are never written.`,
     "category_specs.product_leave_in_specs.heat_activation_required":
       "AD-3: always false. The standard has no research source for heat activation, so the adapter never claims it.",
     "category_specs.product_leave_in_specs.care_benefits": careBenefitsRationale,
@@ -1285,7 +1282,7 @@ export function renderLeaveInProductionMarkdown(outcome: LeaveInProductionAdapte
     `- Format: ${specs.format}`,
     `- Weight: ${specs.weight}`,
     `- Roles: ${specs.roles.join(", ")}`,
-    `- Heat protection: ${specs.provides_heat_protection} (max °C: ${specs.heat_protection_max_c ?? "null"}, activation required: ${specs.heat_activation_required})`,
+    `- Heat protection: ${specs.provides_heat_protection} (binary only, AD-6; activation required: ${specs.heat_activation_required})`,
     `- Care benefits: ${specs.care_benefits.join(", ")}`,
     `- Functional benefits: ${specs.functional_benefits.join(", ")}`,
     `- Ingredient flags: ${specs.ingredient_flags.join(", ") || "none"}`,

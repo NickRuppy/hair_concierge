@@ -683,7 +683,6 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
       weight: "medium",
       roles: ["replacement_conditioner"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["anti_frizz"],
       ingredient_flags: [],
@@ -695,7 +694,6 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: 220,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -714,7 +712,7 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
   assert.equal(reranked[0]?.recommendation_meta?.category, "leave_in")
 })
 
-test("engine leave-in reranking softly prefers stronger heat protection under CareBalance heat pressure", () => {
+test("engine leave-in reranking under CareBalance heat pressure ranks by base score/fit only (AD-6: no degree preference)", () => {
   const profile = {
     ...SEVERE_DAMAGE_PROFILE,
     heat_styling: "daily" as const,
@@ -742,7 +740,6 @@ test("engine leave-in reranking softly prefers stronger heat protection under Ca
         weight: "medium",
         roles: ["replacement_conditioner", "styling_prep"],
         provides_heat_protection: true,
-        heat_protection_max_c: 180,
         heat_activation_required: false,
         care_benefits: ["repair", "anti_frizz"],
         ingredient_flags: [],
@@ -754,11 +751,14 @@ test("engine leave-in reranking softly prefers stronger heat protection under Ca
         weight: "medium",
         roles: ["replacement_conditioner", "styling_prep"],
         provides_heat_protection: true,
-        heat_protection_max_c: 230,
         heat_activation_required: false,
         care_benefits: ["repair", "anti_frizz"],
         ingredient_flags: [],
         application_stage: ["towel_dry", "pre_heat"],
+        // A stray legacy degree value (the DB column still exists; only the
+        // readers are gone). Must have zero effect on ranking and reasons —
+        // this line is what makes the test detect a restored degree bonus.
+        ...({ heat_protection_max_c: 230 } as Record<string, unknown>),
       },
     ],
     decision,
@@ -766,9 +766,16 @@ test("engine leave-in reranking softly prefers stronger heat protection under Ca
     runtime,
   } as Parameters<typeof rerankLeaveInProductsWithEngine>[0] & { runtime: typeof runtime })
 
-  assert.equal(reranked[0]?.id, "strong-heat")
-  const meta = reranked[0]?.recommendation_meta as LeaveInRecommendationMetadata | undefined
-  assert.match(JSON.stringify(meta), /care_balance|heat_protectant|230|strong/i)
+  // Both providers have identical provides_heat_protection=true and identical specs
+  // otherwise; with no degree bonus (AD-6), ranking follows base score/fit, so the
+  // higher combined_score candidate ("basic-heat") wins — not a degree preference.
+  assert.equal(reranked[0]?.id, "basic-heat")
+  for (const product of reranked) {
+    const meta = product.recommendation_meta as LeaveInRecommendationMetadata | undefined
+    const reasons = JSON.stringify(meta?.top_reasons ?? [])
+    assert.doesNotMatch(reasons, /CareBalance-Hinweis/)
+    assert.doesNotMatch(reasons, /\d+\s*°?\s*C\)/)
+  }
 })
 
 test("engine leave-in reranking excludes hard mismatches when three viable fits exist", () => {
@@ -789,7 +796,6 @@ test("engine leave-in reranking excludes hard mismatches when three viable fits 
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["moisture", "anti_frizz"],
       ingredient_flags: [],
@@ -801,7 +807,6 @@ test("engine leave-in reranking excludes hard mismatches when three viable fits 
       weight: "light",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["moisture", "anti_frizz"],
       ingredient_flags: [],
@@ -813,7 +818,6 @@ test("engine leave-in reranking excludes hard mismatches when three viable fits 
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -825,7 +829,6 @@ test("engine leave-in reranking excludes hard mismatches when three viable fits 
       weight: "rich",
       roles: ["extension_conditioner"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["moisture", "shine"],
       ingredient_flags: [],
@@ -876,7 +879,6 @@ test("engine leave-in reranking does not use hard-gated mismatches as fallback f
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["protein", "repair", "anti_frizz"],
       ingredient_flags: [],
@@ -888,7 +890,6 @@ test("engine leave-in reranking does not use hard-gated mismatches as fallback f
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["protein", "repair", "anti_frizz"],
       ingredient_flags: [],
@@ -900,7 +901,6 @@ test("engine leave-in reranking does not use hard-gated mismatches as fallback f
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["protein", "repair", "anti_frizz"],
       ingredient_flags: [],
@@ -951,7 +951,6 @@ test("engine leave-in reranking uses balance mismatches only as caveated fallbac
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["protein", "repair", "anti_frizz"],
       ingredient_flags: [],
@@ -963,7 +962,6 @@ test("engine leave-in reranking uses balance mismatches only as caveated fallbac
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -975,7 +973,6 @@ test("engine leave-in reranking uses balance mismatches only as caveated fallbac
       weight: "medium",
       roles: ["replacement_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["moisture", "anti_frizz"],
       ingredient_flags: [],
@@ -1037,7 +1034,6 @@ test("engine leave-in reranking honors explicit spray and cream comparison reque
       weight: "medium",
       roles: ["extension_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -1049,7 +1045,6 @@ test("engine leave-in reranking honors explicit spray and cream comparison reque
       weight: "medium",
       roles: ["extension_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -1061,7 +1056,6 @@ test("engine leave-in reranking honors explicit spray and cream comparison reque
       weight: "medium",
       roles: ["extension_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["moisture", "anti_frizz"],
       ingredient_flags: [],
@@ -1130,7 +1124,6 @@ test("engine leave-in reranking prefers integrated heat bonus when separate heat
       weight: "medium",
       roles: ["extension_conditioner"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -1142,7 +1135,6 @@ test("engine leave-in reranking prefers integrated heat bonus when separate heat
       weight: "medium",
       roles: ["extension_conditioner"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -1154,7 +1146,6 @@ test("engine leave-in reranking prefers integrated heat bonus when separate heat
       weight: "medium",
       roles: ["extension_conditioner"],
       provides_heat_protection: false,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "anti_frizz"],
       ingredient_flags: [],
@@ -1166,7 +1157,6 @@ test("engine leave-in reranking prefers integrated heat bonus when separate heat
       weight: "medium",
       roles: ["extension_conditioner", "styling_prep"],
       provides_heat_protection: true,
-      heat_protection_max_c: null,
       heat_activation_required: false,
       care_benefits: ["repair", "detangling", "anti_frizz"],
       ingredient_flags: [],
@@ -1212,7 +1202,6 @@ test("engine leave-in metadata exposes product conditioner relationship, not tar
         weight: "medium",
         roles: ["replacement_conditioner", "styling_prep"],
         provides_heat_protection: true,
-        heat_protection_max_c: null,
         heat_activation_required: false,
         care_benefits: ["protein", "repair", "anti_frizz"],
         ingredient_flags: [],

@@ -4,7 +4,6 @@ type LeaveInSpecRow = {
   format: "spray" | "milk" | "lotion" | "cream" | "serum"
   roles: string[]
   provides_heat_protection: boolean
-  heat_protection_max_c: number | null
   heat_activation_required: boolean
   application_stage: string[]
 }
@@ -47,7 +46,6 @@ export function adaptCatalogApplicationFacts(
           format: input.spec.format,
           roles: input.spec.roles,
           providesHeatProtection: input.spec.provides_heat_protection,
-          heatProtectionMaxC: input.spec.heat_protection_max_c,
           heatActivationRequired: input.spec.heat_activation_required,
           applicationStage: input.spec.application_stage,
         },
@@ -55,7 +53,6 @@ export function adaptCatalogApplicationFacts(
           format: catalogSpec,
           roles: catalogSpec,
           providesHeatProtection: catalogSpec,
-          heatProtectionMaxC: catalogSpec,
           heatActivationRequired: catalogSpec,
           applicationStage: catalogSpec,
         },

@@ -92,7 +92,7 @@ This package does **not**:
 1. **`roles[]` derivation** — `product_leave_in_specs.roles` has no research-side counterpart since T12 removed `usage_role[]`. What, if anything, derives it is undecided.
 2. **`conditioner_relationship`** — `product_leave_in_fit_specs.conditioner_relationship` (`replacement_capable` / `booster_only`) has no dimension behind it in this standard.
 3. **Eligibility emission** — how, and whether, a research record emits leave-in eligibility, given that an excluded product emits no lean profile at all (§2.3.1).
-4. **`heat_protection_max_c` cutover** — the field is removed from the research model (charter ruling 6, OA-2), but is live in `src/lib/recommendation-engine/selection.ts` and in personal-plan catalog facts. Its removal is a scoped migration plus code-path change, surfaced to Nick before execution.
+4. **`heat_protection_max_c` cutover** — the field is removed from the research model (charter ruling 6, OA-2). Heat protection is binary only; degrees cut over 2026-09-14 (AD-6) via a scoped migration plus code-path change across `src/lib/recommendation-engine/selection.ts` and personal-plan catalog facts.
 
 The §17 open evidence gaps stay open under v1.0 and are inherited by every record that touches them.
 
