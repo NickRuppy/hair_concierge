@@ -39,7 +39,19 @@ test.describe("retired waitlist entry points", () => {
   test("email survey access remains available for existing signups", async ({ page }) => {
     await openWithConsentSettled(page, `/api/waitlist/survey-access?token=${"a".repeat(64)}`)
 
-    await expect(page).toHaveURL(`${baseUrl}/warteliste/umfrage`)
+    const expectedOrigin = new URL(baseUrl)
+    const localHosts = new Set(["127.0.0.1", "localhost"])
+    await expect(page).toHaveURL(
+      (url) =>
+        url.protocol === expectedOrigin.protocol &&
+        url.port === expectedOrigin.port &&
+        (localHosts.has(expectedOrigin.hostname)
+          ? localHosts.has(url.hostname)
+          : url.hostname === expectedOrigin.hostname) &&
+        url.pathname === "/warteliste/umfrage" &&
+        url.search === "" &&
+        url.hash === "",
+    )
     await expect(page.getByRole("heading", { name: "Dein Platz ist fast gesichert" })).toBeVisible()
   })
 })
