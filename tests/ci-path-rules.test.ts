@@ -144,3 +144,15 @@ test("field-test access seams trigger the contracts they can invalidate", () => 
     assert.equal(classifyCiScope([path]).personal_plan_journey, true, path)
   }
 })
+
+test("admin user history changes run the browser journey regression", () => {
+  for (const file of [
+    "src/app/admin/users/page.tsx",
+    "src/app/admin/layout.tsx",
+    "src/app/api/admin/users/route.ts",
+    "src/app/labs/admin-users/page.tsx",
+    "tests/admin-users-page.spec.ts",
+  ]) {
+    assert.equal(classifyCiScope([file]).personal_plan_journey, true, file)
+  }
+})
