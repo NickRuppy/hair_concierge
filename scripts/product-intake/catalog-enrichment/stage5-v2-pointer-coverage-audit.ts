@@ -17,11 +17,13 @@ import { stage5ProtocolClientAdapters } from "./stage5-protocol-client"
 
 async function main() {
   loadLocalEnv()
-  const rows = await stage5ProtocolClientAdapters().v2.listPointerCoverage()
-  const gaps = findStage5V2PointerCoverageGaps(rows)
+  const { totalRows, candidates } = await stage5ProtocolClientAdapters().v2.listPointerCoverage()
+  // The server already filtered to V1-present/V2-NULL; the library predicate is
+  // re-applied as the final word so the invariant stays unit-testable.
+  const gaps = findStage5V2PointerCoverageGaps(candidates)
   printJson({
     mode: "read-only",
-    observed: { curated_protocol_rows: rows.length, uncovered_rows: gaps.length },
+    observed: { curated_protocol_rows: totalRows, uncovered_rows: gaps.length },
     uncovered: gaps.map((row) => ({
       product_id: row.product_id,
       product: [row.brand, row.product_name].filter(Boolean).join(" ") || null,

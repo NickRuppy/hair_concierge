@@ -15,15 +15,19 @@ type QueryResult<T> = Promise<{ data: T | null; error: { message: string } | nul
 type SelectBuilder<T> = PromiseLike<{
   data: T[] | null
   error: { message: string } | null
+  count: number | null
 }> & {
   in: (column: string, values: string[]) => QueryResult<T[]>
   eq: (column: string, value: string | boolean) => SelectBuilder<T>
-  order: (column: string, options: { ascending: boolean }) => SelectBuilder<T>
-  range: (from: number, to: number) => SelectBuilder<T>
+  is: (column: string, value: null) => SelectBuilder<T>
+  not: (column: string, operator: "is", value: null) => SelectBuilder<T>
 }
 type Stage5ProtocolClient = {
   from: (table: string) => {
-    select: <T = Record<string, unknown>>(columns: string) => SelectBuilder<T>
+    select: <T = Record<string, unknown>>(
+      columns: string,
+      options?: { count: "exact"; head: boolean },
+    ) => SelectBuilder<T>
   }
   rpc: (
     name:
@@ -297,43 +301,55 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
        * pointer-coverage audit. The V1/V2 gap is computed in the library so the
        * invariant is unit-testable rather than embedded in a query.
        */
-      async listPointerCoverage(): Promise<Stage5V2PointerCoverageRow[]> {
-        // Paginated with a stable order: PostgREST caps a response at its
-        // configured max-rows, and a silently truncated audit could report a
-        // false all-covered. The loop only stops on a short page.
-        const pageSize = 500
-        const rows: Stage5V2PointerCoverageRow[] = []
-        for (let offset = 0; ; offset += pageSize) {
-          const { data, error } = await client
-            .from("product_application_protocols")
-            .select<{
-              product_id: string
-              category: string
-              role: string
-              application_family: string
-              guidance_payload: unknown
-              guidance_payload_v2: unknown
-              products: { name: string | null; brand: string | null } | null
-            }>(
-              "product_id,category,role,application_family,guidance_payload,guidance_payload_v2,products!inner(name,brand,origin,is_active,lifecycle_status)",
-            )
+      async listPointerCoverage(): Promise<{
+        totalRows: number
+        candidates: Stage5V2PointerCoverageRow[]
+      }> {
+        // The gap predicate runs SERVER-SIDE in one request, so there is no
+        // pagination and therefore no page-boundary race: an offset walk over
+        // 400+ rows can silently skip an existing uncovered row when a product
+        // is deactivated between pages. The gap set itself is tiny by
+        // definition (it is the audit's failure output), and PostgREST's
+        // max-rows cap only truncates it once 1000+ rows are simultaneously
+        // uncovered — a catastrophe the non-zero exit reports loudly anyway.
+        // The total is a separate head-count for observability only.
+        const filters = <T>(builder: SelectBuilder<T>) =>
+          builder
             .eq("products.origin", "curated")
             .eq("products.is_active", true)
             .eq("products.lifecycle_status", "active")
-            .order("product_id", { ascending: true })
-            .order("role", { ascending: true })
-            .order("application_family", { ascending: true })
-            .range(offset, offset + pageSize - 1)
-          if (error) throw new Error(`Stage 5 V2 pointer coverage audit failed: ${error.message}`)
-          const page = data ?? []
-          rows.push(
-            ...page.map(({ products, ...protocol }) => ({
-              ...protocol,
-              product_name: products?.name ?? null,
-              brand: products?.brand ?? null,
-            })),
-          )
-          if (page.length < pageSize) return rows
+        const counted = await filters(
+          client
+            .from("product_application_protocols")
+            .select("product_id,products!inner(origin,is_active,lifecycle_status)", {
+              count: "exact",
+              head: true,
+            }),
+        )
+        if (counted.error) {
+          throw new Error(`Stage 5 V2 pointer coverage count failed: ${counted.error.message}`)
+        }
+        const { data, error } = await filters(
+          client.from("product_application_protocols").select<{
+            product_id: string
+            category: string
+            role: string
+            application_family: string
+            guidance_payload: unknown
+            guidance_payload_v2: unknown
+            products: { name: string | null; brand: string | null } | null
+          }>("product_id,category,role,application_family,guidance_payload,guidance_payload_v2,products!inner(name,brand,origin,is_active,lifecycle_status)"),
+        )
+          .not("guidance_payload", "is", null)
+          .is("guidance_payload_v2", null)
+        if (error) throw new Error(`Stage 5 V2 pointer coverage audit failed: ${error.message}`)
+        return {
+          totalRows: counted.count ?? 0,
+          candidates: (data ?? []).map(({ products, ...protocol }) => ({
+            ...protocol,
+            product_name: products?.name ?? null,
+            brand: products?.brand ?? null,
+          })),
         }
       },
       async apply(artifactJson: string, fingerprint: string) {

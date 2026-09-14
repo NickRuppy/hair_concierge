@@ -372,6 +372,10 @@ test("the delta executor migration is atomic, fingerprint-pinned, and service-ro
   assert.match(source, /SET search_path = ''/)
   assert.match(source, /#variable_conflict use_column/)
   assert.match(source, /pg_advisory_xact_lock/)
+  // The shared cross-executor serialization key: every catalog-apply executor
+  // that takes product row locks must hold this before locking, so two
+  // executors with different product-lock orders can never deadlock.
+  assert.match(source, /'catalog-enrichment:product-apply'/)
   assert.match(source, /personal_plan_stage5_v2_canonical_json_v1/)
   assert.match(source, /extensions\.digest\(/)
   assert.match(source, /\^S5V2D-\[0-9\]\{2\}-\[a-z0-9-\]\+\$/)

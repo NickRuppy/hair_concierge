@@ -110,6 +110,20 @@ BEGIN
     RAISE EXCEPTION 'Stage 5 V2 pointer delta contains duplicate product roles';
   END IF;
 
+  -- Cross-executor serialization. This executor locks product rows in UUID
+  -- order (the item loop below is ordered by product_id), but the leave-in
+  -- calibration executor (20260914163000) locks its products in product_key
+  -- order — two different orders, so concurrent multi-product runs could
+  -- deadlock on inverted product locks. Every catalog-apply executor that takes
+  -- product row locks must take THIS shared advisory lock first; holders are
+  -- mutually exclusive, which makes lock-order inversion between them
+  -- impossible. (The calibration executor gains the same lock in its own
+  -- hardening pass; until then the sequenced, Nick-gated runs and the
+  -- single-item reviewed delta keep the window closed operationally, and a
+  -- deadlock aborts one transaction cleanly rather than writing anything.)
+  PERFORM pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
+  );
   PERFORM pg_catalog.pg_advisory_xact_lock(
     pg_catalog.hashtextextended('personal-plan-stage5-v2-pointer-delta:' || v_batch_id, 0)
   );
