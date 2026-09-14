@@ -391,7 +391,14 @@ export function ScanRegalOffer(props: FunnelOfferVariantProps) {
                       src={card.src}
                       width={375}
                     />
-                    <span className="absolute left-2.5 top-2.5 rounded-full bg-[var(--brand-plum)] px-2 py-[3px] text-[9.5px] font-extrabold uppercase tracking-[0.12em] text-white">
+                    {/*
+                      Bottom left, not top left: three of the four screenshots
+                      open with the app header, and a tag in the top corner sat
+                      on the chaarlie wordmark — it read as a rendering fault.
+                      Down here it pairs with the tile title right below it, and
+                      all four tiles keep their natural top-aligned crop.
+                    */}
+                    <span className="absolute bottom-2.5 left-2.5 rounded-full bg-[var(--brand-plum)] px-2 py-[3px] text-[9.5px] font-extrabold uppercase tracking-[0.12em] text-white shadow-[0_4px_12px_-4px_rgba(42,24,69,0.7)]">
                       {card.tag}
                     </span>
                   </div>
