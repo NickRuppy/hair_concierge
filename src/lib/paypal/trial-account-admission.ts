@@ -267,7 +267,11 @@ export async function ensurePayPalTrialCheckoutAccount(
     Date.parse(subscription.billing_info?.next_billing_time ?? "") !== Date.parse(trialEnd)
   )
     throw new CheckoutRecoveryError("trial_reconciliation_required", {
-      cause: new Error("PayPal trial billing deadline is not verified"),
+      // Timestamps and status only — no payer data. Needed to see what the
+      // provider actually stored after the post-approval start_time patch.
+      cause: new Error(
+        `PayPal trial billing deadline is not verified (status=${subscription.status ?? "missing"} start=${subscription.start_time ?? "missing"} nextBilling=${subscription.billing_info?.next_billing_time ?? "missing"} expected=${trialEnd})`,
+      ),
     })
   const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)
   try {
