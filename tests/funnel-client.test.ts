@@ -146,3 +146,21 @@ test("an identity-only milestone before bootstrap still permits the acquisition 
   assert.deepEqual(await bootstrap.bootstrap(), parseFunnelContext(scannerContext))
   assert.equal(calls, 1)
 })
+
+test("a successful HTTP response with incomplete scanner metadata is retried and never cached as ready", async () => {
+  let calls = 0
+  const partial = {
+    funnelSessionId: "session-1",
+    funnelPackageKey: "scan_v1",
+    analyticsContextReady: false,
+  }
+  const ready = { ...scannerContext, analyticsContextReady: true }
+  const bootstrap = createFunnelContextBootstrap({
+    maxAttempts: 2,
+    wait: async () => undefined,
+    fetchContext: async () => new Response(JSON.stringify(++calls <= 2 ? partial : ready)),
+  })
+  assert.deepEqual(await bootstrap.bootstrap(), partial)
+  assert.deepEqual(await bootstrap.bootstrap(), parseFunnelContext(ready))
+  assert.equal(calls, 3)
+})

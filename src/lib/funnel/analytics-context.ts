@@ -13,6 +13,7 @@ export function buildScannerAnalyticsContext(
   }
   if (context.packageKey !== "scan_v1") return result
   result.issuedAt = context.issuedAt
+  result.analyticsContextReady = !lookupFailed
   if (lookupFailed) return result
   const matchingTouch =
     touch?.sessionId === context.sessionId && touch.visitorId === context.visitorId ? touch : null

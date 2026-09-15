@@ -65,3 +65,8 @@ test("safe source does not reveal raw dynamic paths, querystrings or unsupported
   assert.equal(result.funnelSessionId, "session")
   assert.equal(result.funnelPackageKey, "scan_v1")
 })
+
+test("scanner metadata readiness distinguishes a database failure from a confirmed empty acquisition", () => {
+  assert.equal(buildScannerAnalyticsContext(context, null, null, true).analyticsContextReady, false)
+  assert.equal(buildScannerAnalyticsContext(context, null, null).analyticsContextReady, true)
+})

@@ -9,13 +9,28 @@ test.use({
 
 const refinementEnabled = process.env.SCANNER_FUNNEL_REFINEMENT_ENABLED === "true"
 
-async function isolateQuizStartTelemetry(page: Page) {
+async function isolateQuizStartTelemetry(page: Page, failFirstContext = false) {
+  let contextRequests = 0
   await page.route("**/api/funnel/session", async (route) => {
     if (route.request().method() === "GET") {
+      contextRequests += 1
+      if (failFirstContext && contextRequests === 1) {
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({
+            enabled: true,
+            funnelPackageKey: "scan_v1",
+            funnelSessionId: "isolated-entry-session",
+            analyticsContextReady: false,
+          }),
+        })
+        return
+      }
       await route.fulfill({
         contentType: "application/json",
         body: JSON.stringify({
           enabled: true,
+          analyticsContextReady: true,
           entryPath: "/lp/scan",
           funnelPackageKey: "scan_v1",
           funnelSessionId: "isolated-entry-session",
@@ -166,6 +181,7 @@ test.describe("scanner refinement attributed quiz entry", () => {
       process.env.NEXT_PUBLIC_ENABLE_LOCAL_VENDOR_ANALYTICS !== "true",
       "requires local vendor analytics enabled in both the server and test process; all transport is intercepted",
     )
+    await isolateQuizStartTelemetry(page, true)
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "webdriver", { get: () => false })
       Object.defineProperty(navigator, "userAgentData", { get: () => undefined })

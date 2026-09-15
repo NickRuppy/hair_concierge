@@ -6,6 +6,7 @@ import type { FunnelMilestone } from "./server"
 export type CurrentFunnelContext = {
   funnelSessionId: string
   funnelPackageKey: string
+  analyticsContextReady?: boolean
   entryPath?: string
   issuedAt?: number
   utmSource?: string
@@ -57,6 +58,9 @@ export function parseFunnelContext(value: unknown): CurrentFunnelContext | null 
   return {
     funnelSessionId,
     funnelPackageKey,
+    ...(typeof body.analyticsContextReady === "boolean"
+      ? { analyticsContextReady: body.analyticsContextReady }
+      : {}),
     ...(entryPath?.startsWith("/") ? { entryPath } : {}),
     ...(issuedAt === undefined ? {} : { issuedAt }),
     ...(utmSource ? { utmSource } : {}),
@@ -140,12 +144,13 @@ export function createFunnelContextBootstrap(options: FunnelContextBootstrapOpti
           )
             return currentContext
           setCurrentContext(context)
-          hasBootstrappedContext = true
-          return currentContext
+          hasBootstrappedContext = context.analyticsContextReady !== false
+          if (hasBootstrappedContext) return currentContext
         }
         if (attempt + 1 < maxAttempts) await wait(retryDelayMs)
       }
-      return null
+      // Keep signed identity available to UI callers, but retry acquisition on the next call.
+      return currentContext?.analyticsContextReady === false ? currentContext : null
     })().finally(() => {
       // A failed bounded attempt must never poison a later page-event bootstrap.
       bootstrapPromise = null

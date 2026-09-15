@@ -46,7 +46,11 @@ export function createScannerQuizViewTracker({
     const attempt = (number: number) => {
       void bootstrap()
         .then((context) => {
-          if (context?.funnelPackageKey === "scan_v1" && isCurrent()) {
+          if (
+            context?.funnelPackageKey === "scan_v1" &&
+            context.analyticsContextReady !== false &&
+            isCurrent()
+          ) {
             track("scanner_quiz_viewed", {
               funnelEventId: quizViewId,
               funnelPackageKey: context.funnelPackageKey,
@@ -72,7 +76,8 @@ export function createScannerQuizViewTracker({
             })
             return
           }
-          if (!context && number < 3) retry(() => attempt(number + 1))
+          if ((!context || context.analyticsContextReady === false) && number < 3)
+            retry(() => attempt(number + 1))
         })
         .catch(() => {
           if (number < 3) retry(() => attempt(number + 1))

@@ -199,3 +199,25 @@ test("scanner quiz views are PostHog-only and map their bounded snapshot", () =>
     },
   ])
 })
+
+test("incomplete scanner metadata retries before capture and persistent failure emits no view", async () => {
+  for (const recover of [true, false]) {
+    let calls = 0
+    const events: unknown[] = []
+    const tracker = createScannerQuizViewTracker({
+      bootstrap: async () => ({
+        funnelSessionId: "session-partial",
+        funnelPackageKey: "scan_v1",
+        analyticsContextReady: ++calls > 1 && recover,
+        ...(calls > 1 && recover ? { isInternalTest: true, utmSource: "meta" } : {}),
+      }),
+      retry: (callback) => callback(),
+      track: ((_: string, payload: unknown) => events.push(payload)) as never,
+    })
+    tracker({ displayedFunnelPackageKey: "scan_v1", step: 2, resumed: false })
+    for (let i = 0; i < 10; i += 1) await Promise.resolve()
+    assert.equal(events.length, recover ? 1 : 0)
+    assert.equal(calls, recover ? 2 : 3)
+    if (recover) assert.equal((events[0] as { isInternalTest: boolean }).isInternalTest, true)
+  }
+})
