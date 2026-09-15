@@ -1,4 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin"
+import {
+  DIAGNOSTICS_SCHEMA_VERSION,
+  QUIZ_CONTEXT_SCHEMA_VERSION,
+  projectArtifactToFacts,
+  projectLegacyLeadToFacts,
+} from "@/lib/user-facts"
+import { saveUserFacts } from "@/lib/user-facts/save"
 import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers, projectQuizAnswersToLegacyVocabulary } from "./normalization"
@@ -115,16 +122,12 @@ export function buildProfileDataFromPersonalPlanCanonicalProfile(
 
 export type LinkQuizToProfileOptions = {
   /**
-   * `"create_only"` — the FREE-registration binding mode (PR6 review, finding
-   * V4). The confirm route reads bind evidence ("does this account already have
-   * a profile?") and then calls this function; a profile created in that window
-   * — a concurrent paid activation or onboarding — used to be overwritten
-   * unconditionally by the `existing` branch below. In this mode the
-   * `hair_profiles` write may CREATE but never overwrite, and a lost insert race
-   * (the table's `user_id UNIQUE`, so the DB itself adjudicates) is resolved by
-   * standing down rather than by re-reading and updating.
-   *
-   * Omitted everywhere else, so legacy and paid linking behave exactly as before.
+   * Historically the FREE-registration binding mode (PR6 review, finding V4):
+   * `hair_profiles` writes could CREATE but never overwrite. Task 5a (central
+   * user profile PR1) moved every account-link write onto `saveUserFacts` in
+   * `create_only` mode UNCONDITIONALLY (F14/F28) — the facts domains a user
+   * already has are never overwritten by a link, regardless of this option.
+   * Kept only so existing callers keep type-checking; it is now a no-op.
    */
   profileWrite?: "create_only"
   /** Injection seam for tests; production always builds its own admin client. */
@@ -137,7 +140,8 @@ export type LinkQuizToProfileOptions = {
  * Strategy:
  *  1. Try direct lead ID lookup (if leadId passed from quiz CTA)
  *  2. Fall back to email lookup (most recent unlinked lead)
- *  3. Create/update hair_profiles with mapped quiz data
+ *  3. Project the lead's quiz answers into native diagnostics (+ quiz_context
+ *     for a personal-plan lead) and write them via `saveUserFacts` (create_only)
  *  4. Set leads.user_id to mark the lead as linked
  */
 export async function linkQuizToProfile(
@@ -149,7 +153,6 @@ export async function linkQuizToProfile(
   console.log("[linkQuizToProfile] start", { userId, email, leadId })
 
   const admin = options?.admin ?? createAdminClient()
-  const createOnly = options?.profileWrite === "create_only"
 
   // --- Find the lead ---
   let lead: {
@@ -207,82 +210,91 @@ export async function linkQuizToProfile(
     return
   }
 
-  const { profileData, incomingGoals } =
-    lead.quiz_kind === "personal_plan"
-      ? await preparePersonalPlanProfileProjection(admin, lead.id, userId)
-      : prepareLegacyProfileProjection(lead.quiz_answers)
+  // --- Project the lead's quiz answers into the native fact domains and write
+  // them through `saveUserFacts` in `create_only` mode (F14/F28): account
+  // linking must never overwrite facts the user already has. `hair_profiles`
+  // and its legacy columns are derived inside `user_facts_save_v1` itself —
+  // this function never touches that table directly any more.
+  const nowIso = new Date().toISOString()
 
-  if (!profileData) {
-    console.log("[linkQuizToProfile] lead has no usable quiz diagnostics, skipping")
-    return
-  }
-
-  profileData.user_id = userId
-  delete profileData.goals
-
-  // --- Check if hair_profiles row already exists ---
-  const { data: existing, error: fetchErr } = await admin
-    .from("hair_profiles")
-    .select("id, goals")
-    .eq("user_id", userId)
-    .single()
-
-  if (fetchErr && fetchErr.code !== "PGRST116") {
-    throw new Error(`hair_profiles lookup failed: ${fetchErr.message}`)
-  }
-
-  if (existing) {
-    // V4: a free bind never clobbers a profile that exists by the time we write.
-    if (createOnly) {
-      console.warn(
-        "[linkQuizToProfile] create_only: the account already has a profile — standing down",
-        { userId, leadId: lead.id },
-      )
-      return
+  if (lead.quiz_kind === "personal_plan") {
+    const { data, error } = await admin.rpc("link_personal_plan_artifact_to_user", {
+      p_lead_id: lead.id,
+      p_user_id: userId,
+    })
+    if (error) {
+      throw new Error(`personal plan artifact link failed: ${error.message}`)
     }
-    const updates = { ...profileData }
-    delete updates.user_id
-
-    // Only write goals if user has none yet — never clobber existing goals from
-    // a stale unlinked lead matched via the email fallback above.
-    const existingGoals = (existing as { goals: string[] | null }).goals
-    if (incomingGoals && (!existingGoals || existingGoals.length === 0)) {
-      updates.goals = incomingGoals
-      updates.desired_volume = null
+    const result = Array.isArray(data) ? data[0] : data
+    if (!isRecord(result)) {
+      throw new Error("personal plan artifact link returned no result")
     }
 
-    if (Object.keys(updates).length > 0) {
-      const { error: updateErr } = await admin
-        .from("hair_profiles")
-        .update(updates)
-        .eq("id", existing.id)
-      if (updateErr) {
-        throw new Error(`hair_profiles update failed: ${updateErr.message}`)
-      }
-      console.log("[linkQuizToProfile] updated existing profile", existing.id)
+    // The RPC above no longer hands back the projection: load the attached
+    // artifact's own `quiz_answers` envelope (mirrors stage1-supabase.ts:121-130).
+    const { data: artifact, error: artifactErr } = await admin
+      .from("personal_plan_prepared_artifacts")
+      .select("id, quiz_answers")
+      .eq("lead_id", lead.id)
+      .eq("user_id", userId)
+      .eq("status", "attached")
+      .maybeSingle()
+    if (artifactErr) {
+      throw new Error(`attached personal plan artifact lookup failed: ${artifactErr.message}`)
     }
+    if (!artifact) {
+      throw new Error(`no attached personal plan artifact found for lead ${lead.id} after link`)
+    }
+
+    const { diagnostics, quizContext } = projectArtifactToFacts({
+      envelope: artifact.quiz_answers,
+      artifactId: artifact.id as string,
+      leadId: lead.id,
+    })
+
+    await saveUserFacts(admin, {
+      userId,
+      domain: "diagnostics",
+      patch: diagnostics,
+      provenance: {
+        source: { kind: "personal_plan_artifact", id: artifact.id as string },
+        schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
+        at: nowIso,
+        preservedCandidates: [{ kind: "artifact", id: artifact.id as string, at: nowIso }],
+      },
+      mode: "create_only",
+    })
+    await saveUserFacts(admin, {
+      userId,
+      domain: "quiz_context",
+      patch: quizContext,
+      provenance: {
+        source: { kind: "personal_plan_artifact", id: artifact.id as string },
+        schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
+        at: nowIso,
+      },
+      mode: "create_only",
+    })
+    console.log("[linkQuizToProfile] wrote diagnostics + quiz_context facts for user", userId)
   } else {
-    // Create new hair_profiles row
-    if (incomingGoals) {
-      profileData.goals = incomingGoals
-      profileData.desired_volume = null
-    }
-    const { error: insertErr } = await admin.from("hair_profiles").insert(profileData)
-    if (insertErr) {
-      // V4: the TOCTOU window itself. `hair_profiles.user_id` is UNIQUE, so a
-      // profile created between the read above and this insert makes the DB
-      // reject it (23505) — which is exactly the answer a free bind must accept.
-      // Nothing is re-read and nothing is updated: the concurrent writer wins.
-      if (createOnly && isUniqueViolation(insertErr)) {
-        console.warn(
-          "[linkQuizToProfile] create_only: lost the profile-creation race — standing down",
-          { userId, leadId: lead.id },
-        )
-        return
-      }
-      throw new Error(`hair_profiles insert failed: ${insertErr.message}`)
-    }
-    console.log("[linkQuizToProfile] created new profile for user", userId)
+    const { diagnostics } = projectLegacyLeadToFacts({
+      leadId: lead.id,
+      quizAnswers: lead.quiz_answers as QuizAnswers,
+    })
+
+    await saveUserFacts(admin, {
+      userId,
+      domain: "diagnostics",
+      patch: diagnostics,
+      provenance: {
+        source: { kind: "legacy_lead", id: lead.id },
+        schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
+        at: nowIso,
+        preservedCandidates: [{ kind: "lead", id: lead.id, at: nowIso }],
+      },
+      mode: "create_only",
+    })
+    console.log("[linkQuizToProfile] wrote diagnostics facts for user", userId)
   }
 
   // --- Link the lead to the user ---
@@ -297,59 +309,6 @@ export async function linkQuizToProfile(
   console.log("[linkQuizToProfile] done — lead", lead.id, "linked to user", userId)
 }
 
-function prepareLegacyProfileProjection(quizAnswers: unknown): {
-  profileData: Record<string, unknown> | null
-  incomingGoals: string[] | null
-} {
-  const answers = isRecord(quizAnswers) ? normalizeStoredQuizAnswers(quizAnswers) : null
-  if (!answers) return { profileData: null, incomingGoals: null }
-
-  console.log("[linkQuizToProfile] legacy answers:", Object.keys(answers))
-  return {
-    profileData: buildProfileDataFromQuizAnswers(answers),
-    incomingGoals: (() => {
-      const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
-      return goals.length > 0 ? goals : null
-    })(),
-  }
-}
-
-async function preparePersonalPlanProfileProjection(
-  admin: ReturnType<typeof createAdminClient>,
-  leadId: string,
-  userId: string,
-): Promise<{
-  profileData: Record<string, unknown>
-  incomingGoals: string[] | null
-}> {
-  const { data, error } = await admin.rpc("link_personal_plan_artifact_to_user", {
-    p_lead_id: leadId,
-    p_user_id: userId,
-  })
-
-  if (error) {
-    throw new Error(`personal plan artifact link failed: ${error.message}`)
-  }
-
-  const result = Array.isArray(data) ? data[0] : data
-  if (!isRecord(result) || !("canonical_profile" in result)) {
-    throw new Error("personal plan artifact link returned no canonical diagnostics")
-  }
-
-  const profileData = buildProfileDataFromPersonalPlanCanonicalProfile(result.canonical_profile)
-  const incomingGoals =
-    Array.isArray(profileData.goals) && profileData.goals.length > 0
-      ? (profileData.goals as string[])
-      : null
-
-  return { profileData, incomingGoals }
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
-}
-
-/** Postgres `unique_violation` as PostgREST reports it. */
-function isUniqueViolation(error: unknown): boolean {
-  return isRecord(error) && error.code === "23505"
 }

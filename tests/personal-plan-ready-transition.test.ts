@@ -130,7 +130,12 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(route, /deps\.loadReadiness\(admin, readinessInput\)/)
   assert.match(readiness, /\.eq\("id", leadId\)/)
   assert.match(readiness, /canLinkDirectQuizLead/)
-  assert.match(readiness, /\.upsert\(output, \{ onConflict: "user_id" \}\)/)
+  // Task 5a (central user profile PR1): the direct `hair_profiles` upsert this
+  // used to assert is gone — the profile write now goes through `saveUserFacts`
+  // (create_only), which derives `hair_profiles` and its legacy columns inside
+  // `user_facts_save_v1` itself.
+  assert.match(readiness, /saveUserFacts\(supabase, \{/)
+  assert.match(readiness, /mode: "create_only"/)
   assert.doesNotMatch(readiness, /hair_profiles insert failed/)
   assert.doesNotMatch(readiness, /\.eq\("email", email\.toLowerCase\(\)\)/)
 })
