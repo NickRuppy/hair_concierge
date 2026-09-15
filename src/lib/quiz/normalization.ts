@@ -324,7 +324,6 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
   concerns: ProfileConcern[]
   goals: Goal[]
 } {
-  const hasFineOrLowDensity = answers.thickness === "fine" || answers.density === "low"
   const projectedGoals = new Set<Goal>()
   for (const value of answers.goals ?? []) {
     if (value === "volume_balance") {
@@ -340,7 +339,9 @@ export function projectQuizAnswersToLegacyVocabulary(answers: QuizAnswers): {
     if (mapped) projectedGoals.add(mapped)
   }
   if (projectedGoals.has("volume") && projectedGoals.has("less_volume")) {
-    projectedGoals.delete(hasFineOrLowDensity ? "less_volume" : "volume")
+    projectedGoals.delete(
+      answers.thickness === "fine" || answers.density === "low" ? "less_volume" : "volume",
+    )
   }
 
   const projectedConcerns = new Set<ProfileConcern>()

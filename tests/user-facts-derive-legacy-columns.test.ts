@@ -169,6 +169,12 @@ test("rule 6: goals map incl. volume_balance resolution, no cap, absent -> null"
     ).goals,
     ["moisture", "less_frizz", "shine", "curl_definition", "anti_breakage", "healthy_scalp"],
   )
+  // frizz_surface and manageability_styling both map to less_frizz: deduped, first occurrence wins.
+  assert.deepEqual(
+    deriveDiagnosticsColumns(diagnostics({ goals: ["frizz_surface", "manageability_styling"] }))
+      .goals,
+    ["less_frizz"],
+  )
   assert.equal(deriveDiagnosticsColumns(diagnostics({})).goals, null)
 })
 
@@ -257,7 +263,7 @@ test("rule 10: heat_styling picks the highest frequency among heat events", () =
   assert.equal(rarely.heat_styling, "rarely")
 })
 
-test("rule 11: styling_tools orders drying-route sources first, then additionalHeatTools", () => {
+test("rule 11 (amended 2026-09-15): styling_tools is emitted in canonical STAGE2_HEAT_EVENT_SOURCES order, regardless of dryingRoutes/additionalHeatTools input order", () => {
   const result = deriveCareHabitsColumns(
     careHabits({
       dryingRoutes: ["ordinary_blow_dry"],
@@ -269,7 +275,31 @@ test("rule 11: styling_tools orders drying-route sources first, then additionalH
       },
     }),
   )
-  assert.deepEqual(result.styling_tools, ["blow_dryer", "flat_iron", "hot_air_brush"])
+  // Canonical order is ordinary_blow_dry, dryer_brush, straightener (not the given
+  // additionalHeatTools order [straightener, dryer_brush]).
+  assert.deepEqual(result.styling_tools, ["blow_dryer", "hot_air_brush", "flat_iron"])
+
+  const reversedInputOrder = deriveCareHabitsColumns(
+    careHabits({
+      dryingRoutes: ["diffuser_or_airflow_shaping", "ordinary_blow_dry"],
+      additionalHeatTools: ["thermal_rollers", "straightener"],
+      heatEvents: {
+        "heat:diffuser_airflow_shaping": {
+          frequency: "weekly_1x",
+          protectionConsistency: "always",
+        },
+        "heat:ordinary_blow_dry": { frequency: "weekly_1x" },
+        "heat:thermal_rollers": { frequency: "weekly_1x", protectionConsistency: "always" },
+        "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+      },
+    }),
+  )
+  assert.deepEqual(reversedInputOrder.styling_tools, [
+    "blow_dryer",
+    "diffuser",
+    "flat_iron",
+    "thermal_rollers",
+  ])
 })
 
 test("rule 12: uses_heat_protection is true only if every protection-carrying event is 'always'", () => {

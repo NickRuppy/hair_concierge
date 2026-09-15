@@ -182,14 +182,14 @@ function deriveHeatColumns(careHabits: CareHabitsV1): HeatColumns {
 
   const heat_styling = highestFrequency ? PRODUCT_FREQUENCY_TO_HEAT_STYLING[highestFrequency] : null
 
-  // Drying-route-sourced heat events first, then additionalHeatTools in the order
-  // they were selected (not vocabulary order — see task-2-brief.md rule 11).
-  const dryingRouteSources = selectedSources.filter(
-    (source) => source === "ordinary_blow_dry" || source === "diffuser_airflow_shaping",
-  )
-  const toolSources = careHabits.additionalHeatTools ?? []
-  const styling_tools =
-    mapVocabularyArray([...dryingRouteSources, ...toolSources], HEAT_SOURCE_TO_STYLING_TOOL) ?? []
+  // Emitted in CANONICAL `STAGE2_HEAT_EVENT_SOURCES` order, regardless of the order
+  // `dryingRoutes`/`additionalHeatTools` were given in: a derived projection must not
+  // depend on click order, so the value is a stable function of the selected set alone
+  // (needed for stable `changed` detection and trivial SQL parity in task 3). Controller
+  // ruling 2026-09-15, task-2-brief.md rule 11 (amended). `selectedSources` is already in
+  // that canonical order (`getSelectedStage2HeatEventSources` filters
+  // `STAGE2_HEAT_EVENT_SOURCES` in place), so a single pass over it is sufficient.
+  const styling_tools = mapVocabularyArray(selectedSources, HEAT_SOURCE_TO_STYLING_TOOL) ?? []
 
   const uses_heat_protection =
     protectionValues.length > 0 && protectionValues.every((value) => value === "always")
