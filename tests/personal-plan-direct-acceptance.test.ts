@@ -21,6 +21,7 @@ import {
   directAcceptanceAssumptions,
 } from "../src/lib/personal-plan/direct-acceptance/defaults"
 import { createPersistedStage2RefinementGateway } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
+import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import { buildPlanRoutineContextFromCompletedRefinement } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
@@ -1613,4 +1614,38 @@ test("direct acceptance's facts write uses the injected now() for provenance.at"
 
   assert.equal(harness.saveFactsCalls.length, 1)
   assert.equal(harness.saveFactsCalls[0]!.provenance.at, "2026-09-16T09:00:00.000Z")
+})
+
+/**
+ * Fix round 2, ruling 1: only a `revision_conflict` that ORIGINATES FROM THE FACTS
+ * WRITE may be mapped to `DirectAcceptanceError("conflict")`. A real revision race
+ * inside `persistence.complete` itself (e.g. the completion RPC's own `stale_source`,
+ * "The initial need changed; reload refinement") is a DIFFERENT origin and must
+ * propagate exactly as it did before this task — raw, uncaught by `accept.ts`, so the
+ * route's freemium-provisioning classification sees it as `temporarily_unavailable`,
+ * not a 409 conflict.
+ */
+test("a non-facts revision conflict from persistence.complete propagates raw, not as DirectAcceptanceError", async () => {
+  const harness = createHarness()
+  // The facts write succeeds (default fake); force the completion RPC itself to report a
+  // real race, mirroring what `stale_source`/a lost revision CAS looked like before this
+  // task ever added a facts write or a try/catch around this call.
+  const rawConflict = new Stage2RefinementError(
+    "revision_conflict",
+    "The initial need changed; reload refinement",
+  )
+  harness.db.persistence.complete = async () => {
+    throw rawConflict
+  }
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => {
+      assert.equal(error, rawConflict, "the exact same error instance must propagate, untranslated")
+      assert.ok(!(error instanceof DirectAcceptanceError))
+      return true
+    },
+  )
+  // The facts write itself must have gone through fine — only the RPC failed.
+  assert.equal(harness.saveFactsCalls.length, 1)
 })

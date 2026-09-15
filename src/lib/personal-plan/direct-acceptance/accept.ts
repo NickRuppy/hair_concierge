@@ -17,6 +17,7 @@ import type { Stage3AuthorityProductionGateway } from "../products/production-pe
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
 import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
 import { Stage2RefinementError } from "../refinement/gateway"
+import type { Stage2RefinementHandoff } from "../refinement/session"
 import { semanticHash } from "../routine/canonicalize"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 
@@ -459,11 +460,17 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
   // facts and the refined version, in the SAME order (`writeCareHabitsFacts` runs before
   // `persistence.complete`) the shared service uses everywhere else. A missing `saveFacts`
   // is a wiring bug, not a user-facing conflict — the shared service throws a plain `Error`
-  // rather than silently skipping the write (M5); a `draft_conflict`/`revision_conflict`
-  // from the facts write throws `Stage2RefinementError("revision_conflict")` there, which is
-  // translated to `DirectAcceptanceError("conflict")` below, exactly like every other
-  // conflict this function reports.
-  let handoff
+  // rather than silently skipping the write (M5).
+  //
+  // Only a `revision_conflict` that ORIGINATES FROM THE FACTS WRITE (`error.detail.source
+  // === "facts"`, set by `writeCareHabitsFacts`) is translated to
+  // `DirectAcceptanceError("conflict")` here — exactly like every other conflict this
+  // function reports. Every OTHER `Stage2RefinementError` `.complete()` can throw (a real
+  // draft/session revision race, or the completion RPC's own `stale_source` — "The initial
+  // need changed; reload refinement") is untagged and propagates unchanged, exactly as it
+  // did before this task existed (fix round 2, ruling 1) — this call had no try/catch at
+  // all until the facts write moved in here, so any such error reached the caller raw.
+  let handoff: Stage2RefinementHandoff
   try {
     handoff = await createPersistedStage2RefinementGateway({
       userId: deps.userId,
@@ -472,7 +479,11 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
       now: deps.now,
     }).complete({ expectedRevision: saved.revision })
   } catch (error) {
-    if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
+    if (
+      error instanceof Stage2RefinementError &&
+      error.code === "revision_conflict" &&
+      error.detail?.source === "facts"
+    ) {
       throw new DirectAcceptanceError("conflict")
     }
     throw error

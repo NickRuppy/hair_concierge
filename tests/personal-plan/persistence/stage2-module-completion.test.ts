@@ -533,7 +533,11 @@ test("a lost revision race maps to a typed revision conflict and writes nothing"
 
   await assert.rejects(
     () => service.completeModule({ module: "products", expectedRevision: 4 }),
-    (error: { code?: string }) => error.code === "revision_conflict",
+    // A `persistence.completeModule`-originated conflict (the facts write itself
+    // succeeded first) carries no `detail` — only a facts-originated conflict is tagged
+    // (fix round 2, ruling 1).
+    (error: { code?: string; detail?: unknown }) =>
+      error.code === "revision_conflict" && error.detail === undefined,
   )
   assert.equal(db.needVersions.length, 0)
   assert.deepEqual(db.row.moduleProjections, {})
@@ -701,7 +705,12 @@ test("a draft_conflict from saveFacts maps to revision_conflict and persistence.
 
   await assert.rejects(
     () => service.completeModule({ module: "products", expectedRevision: 2 }),
-    (error: { code?: string }) => error.code === "revision_conflict",
+    (error: { code?: string; detail?: { source?: string; status?: string } }) =>
+      error.code === "revision_conflict" &&
+      // Fix round 2, ruling 1: tagged so a caller (direct acceptance) can tell a
+      // facts-originated conflict apart from every other `revision_conflict`.
+      error.detail?.source === "facts" &&
+      error.detail?.status === "draft_conflict",
   )
   assert.deepEqual(db.order, ["saveFacts"])
   assert.equal(db.moduleCalls.length, 0)

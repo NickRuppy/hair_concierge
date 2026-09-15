@@ -245,7 +245,14 @@ export function createStage2RefinementService(input: {
     })
     if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
       cached = null
-      throw new Stage2RefinementError("revision_conflict")
+      // Tagged with `detail.source: "facts"` (fix round 2, ruling 1) so a caller — direct
+      // acceptance — can map ONLY this origin to its own conflict error; every other
+      // `revision_conflict` in this file stays untagged and propagates unchanged. `code`
+      // itself never changes, so the stage-2 route's 409 mapping is untouched.
+      throw new Stage2RefinementError("revision_conflict", undefined, undefined, {
+        source: "facts",
+        status: facts.status,
+      })
     }
   }
 
