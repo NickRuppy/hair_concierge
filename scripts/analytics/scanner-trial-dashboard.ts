@@ -121,7 +121,7 @@ export type ScannerInsightSpec = {
 }
 
 const cohortDescription =
-  "Datumsfilter = Start-Kohorte; Folgeereignisse bis jetzt, auch nach dem Filter-Ende. Ohne passende Aktivierung bleibt die Kachel leer; neue Ereignisse erscheinen automatisch. Nur v1-Telemetrie mit eindeutiger Enrollment-ID und Scanner-Zuordnung; markierte Tests ausgeschlossen."
+  "Start-Kohorten; Folgen bis jetzt (UTC), auch nach Filter-Ende. Nur zugeordnete v1-Trials ohne Tests. Ohne Aktivierung leer; neue Ereignisse erscheinen automatisch."
 export const scannerTrialInsights: ScannerInsightSpec[] = [
   {
     key: "trial-overview",

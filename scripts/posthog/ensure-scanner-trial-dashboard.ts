@@ -113,6 +113,8 @@ export async function runScannerTrialDashboard(
     throw new Error("--publish-awaiting-telemetry requires --apply.")
   if (apply && !args.includes(`--confirm-project=${scannerProjectId}`))
     throw new Error(`--apply requires --confirm-project=${scannerProjectId}.`)
+  if (scannerInsights.some((spec) => spec.description.length > 400))
+    throw new Error("PostHog insight descriptions must not exceed 400 characters.")
   const deps = {
     fetch: overrides.fetch ?? fetch,
     token: overrides.token ?? process.env.POSTHOG_PERSONAL_API_KEY,

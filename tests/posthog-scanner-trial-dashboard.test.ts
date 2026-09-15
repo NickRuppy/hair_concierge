@@ -195,3 +195,19 @@ test("scanner installer updates audited tiles, adds six lifecycle/content charts
   assert.match(offer.query.source.query, /event='trial_started'/)
   assert.equal(scannerInsights.length, 16)
 })
+
+test("PostHog description length is validated before any API call", async () => {
+  const spec = scannerInsights.find((item) => item.key === "trial-overview")!
+  const original = spec.description
+  const deps = fixture()
+  try {
+    spec.description = "x".repeat(401)
+    await assert.rejects(
+      runScannerTrialDashboard(["--apply", "--confirm-project=126788"], deps),
+      /400 characters/,
+    )
+    assert.equal(deps.calls(), 0)
+  } finally {
+    spec.description = original
+  }
+})
