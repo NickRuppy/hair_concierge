@@ -129,7 +129,7 @@ async function clean(context: BrowserContext) {
 
 test(
   "actual Chromium exercises OpenAI browser consent, navigation and checkout attribution",
-  { timeout: 60000 },
+  { timeout: 60000, skip: process.env.OPENAI_ADS_BROWSER_TEST_ENABLED !== "true" },
   async (t) => {
     const source = await bundle()
     const browser = await chromium.launch({ headless: true })

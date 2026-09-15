@@ -54,6 +54,8 @@ Official [Measurement Pixel](https://developers.openai.com/ads/measurement-pixel
 
 Node 22 checks cover payloads/transport, browser consent races, exact-session context, billing routing and Stripe/PayPal SQL producers. Real PostgreSQL tests verify multiconnection locks/privileges in a disposable schema; Chromium tests execute the actual browser helper with intercepted API/SDK responses. Neither proves production provider receipt.
 
+Run the Chromium fixture explicitly with `OPENAI_ADS_BROWSER_TEST_ENABLED=true node --import ./tests/server-only-register.cjs --import tsx --test tests/openai-ads-browser-integration.test.ts` after installing Playwright Chromium. The generic Node suite skips this browser-dependent test.
+
 The static setup scanner passes with configured-ID detection. Its literal-ID option intentionally finds no hardcoded ID in application source. The secret scanner flags one synthetic unit-test placeholder assignment; manual review confirms it is not a credential. No real CAPI key is included.
 
 Optional events outside this chosen scope: checkout, lead, registration, subscription, content and custom events. Cart, appointment and native-app events have no selected flow here. User matching enrichment is omitted under the approved reference-only policy.
