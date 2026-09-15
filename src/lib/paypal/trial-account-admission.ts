@@ -273,7 +273,7 @@ export async function ensurePayPalTrialCheckoutAccount(
     if (!(error instanceof CheckoutAccessAlreadyExistsError)) throw error
     const own = await findBillingSubscriptionByProviderId(deps.supabase, "paypal", subscription.id!)
     if (!own || own.user_id !== identity.userId || own.trial_enrollment_id !== enrollment.id) {
-      await blockPayPalTrialAgreement(intent, attempt, deps)
+      await blockPayPalTrialAgreement(intent, attempt, deps, "existing_access")
       return duplicateTrialActivation("checkout_existing_access")
     }
   }
@@ -399,6 +399,7 @@ async function blockPayPalTrialAgreement(
   intent: PayPalCheckoutIntentRow,
   attempt: PayPalTrialCheckoutAttempt,
   deps: PayPalTrialActivationDeps,
+  recoveryReason?: "existing_access",
 ) {
   try {
     const result = await deps.supabase
@@ -406,6 +407,7 @@ async function blockPayPalTrialAgreement(
       .update({
         admission_status: "blocked",
         provider_agreement_id: attempt.providerReference,
+        ...(recoveryReason ? { admission_recovery_reason: recoveryReason } : {}),
         neutralization_required: true,
       })
       .eq("id", attempt.enrollmentId)

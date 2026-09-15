@@ -389,11 +389,7 @@ function parseActivationTarget(body: Record<string, unknown>): CheckoutActivatio
 function isPaymentIncompleteError(
   code: CheckoutActivationError["code"] | PayPalCheckoutActivationError["code"],
 ): boolean {
-  return (
-    code === "checkout_session_incomplete" ||
-    code === "checkout_session_unpaid" ||
-    code === "paypal_subscription_inactive"
-  )
+  return code === "checkout_session_incomplete" || code === "checkout_session_unpaid"
 }
 
 function captureRecoveryCause(

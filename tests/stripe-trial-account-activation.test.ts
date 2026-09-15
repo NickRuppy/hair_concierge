@@ -68,6 +68,7 @@ function fixture() {
     accepted_offer: offer,
     admission_status: "reserved",
     admission_denial_reason: null,
+    admission_recovery_reason: null,
     first_payment_succeeded_at: null,
     provider_agreement_id: null,
     access_revoked: false,
@@ -478,6 +479,15 @@ test("existing independent paid access cancels the duplicate trial and leaves or
   assert.equal(f.tables.profiles[0].subscription_status, "active")
   assert.equal(f.tables.billing_subscriptions.length, 0)
   assert.ok(!f.effects.some((e) => e[0] === "admit_trial_enrollment"))
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(f.session, {
+      supabase: f.deps.supabase,
+      stripe: f.deps.stripe,
+      trialRuntime: f.deps.trialRuntime,
+    }),
+    "checkout_existing_access",
+  )
 })
 
 test("read-only Stripe return recovery exposes a released prior-use denial only after binding proof", async () => {
@@ -536,6 +546,28 @@ test("read-only Stripe return recovery sends outstanding cleanup and unsafe repl
       supabase: mismatch.deps.supabase,
       stripe: mismatch.deps.stripe,
       trialRuntime: mismatch.deps.trialRuntime,
+    }),
+    "trial_reconciliation_required",
+  )
+})
+
+test("persisted Stripe existing-access reason does not outrank outstanding cleanup", async () => {
+  const f = fixture()
+  f.tables.profiles.push({
+    id: userId,
+    email: "owner@example.com",
+    subscription_status: "active",
+    current_period_end: "2027-01-01T00:00:00Z",
+  })
+  f.failCancel()
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps))
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(f.enrollment.neutralization_required, true)
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(f.session, {
+      supabase: f.deps.supabase,
+      stripe: f.deps.stripe,
+      trialRuntime: f.deps.trialRuntime,
     }),
     "trial_reconciliation_required",
   )

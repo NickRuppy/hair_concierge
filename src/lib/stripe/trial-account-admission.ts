@@ -49,7 +49,7 @@ export async function prepareStripeTrialAccountAdmission(
   const { data: enrollment, error } = await deps.supabase
     .from("trial_enrollments")
     .select(
-      "id,user_id,provider,accepted_offer,admission_status,admission_denial_reason,provider_agreement_id,access_revoked,neutralization_required",
+      "id,user_id,provider,accepted_offer,admission_status,admission_denial_reason,admission_recovery_reason,provider_agreement_id,access_revoked,neutralization_required",
     )
     .eq("id", enrollmentId!)
     .maybeSingle()
@@ -141,6 +141,7 @@ export async function rejectStripeTrialForExistingAccess(
     .update({
       admission_status: "blocked",
       provider_agreement_id: prepared.authorization.providerAgreementId,
+      admission_recovery_reason: "existing_access",
       neutralization_required: true,
     })
     .eq("id", prepared.enrollment.id)

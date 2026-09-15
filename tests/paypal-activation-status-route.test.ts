@@ -35,6 +35,7 @@ test("polling distinguishes invalid proof, reconciliation, transient failure and
   for (const [providerCode, expectedCode, status] of [
     ["paypal_checkout_intent_expired", "activation_link_invalid", 400],
     ["paypal_subscription_plan_mismatch", "trial_reconciliation_required", 503],
+    ["paypal_subscription_inactive", "trial_reconciliation_required", 503],
   ] as const) {
     const response = await handlePayPalActivationStatus(request, {
       ...base,

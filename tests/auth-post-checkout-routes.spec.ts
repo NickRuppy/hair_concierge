@@ -15,6 +15,7 @@ import { handleSendSetupLink } from "../src/app/api/auth/send-setup-link/route"
 import { handleSetCheckoutPassword } from "../src/app/api/auth/set-checkout-password/route"
 import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
 import { CheckoutActivationError } from "../src/lib/stripe/checkout-activation"
+import { PayPalCheckoutActivationError } from "../src/lib/paypal/checkout-activation"
 
 function sessionHash(sessionId: string) {
   return createHash("sha256").update(sessionId).digest("hex")
@@ -862,6 +863,47 @@ test("PayPal subscription pending returns status-retry recovery before auth side
 
   expect(magicResponse).toMatchObject({ status: 409, body: { code: "activation_pending" } })
   expect(otpCalls).toBe(0)
+})
+
+test("inactive PayPal subscriptions return support recovery on both auth submissions", async () => {
+  for (const method of ["password", "magic"] as const) {
+    const captured: unknown[] = []
+    let otpCalls = 0
+    const error = new PayPalCheckoutActivationError(
+      "paypal_subscription_inactive",
+      "private provider details",
+    )
+    const f = stubDeps({
+      ensurePayPalCheckoutAccountForToken: async () => {
+        throw error
+      },
+      captureCheckoutException: (cause: unknown) => {
+        captured.push(cause)
+      },
+    })
+    f.deps.supabase.auth.signInWithOtp = async () => {
+      otpCalls++
+      return { data: { user: null, session: null }, error: null }
+    }
+    const response =
+      method === "password"
+        ? await handleSetCheckoutPassword(
+            { provider: "paypal", token: "I-closed", password: "long-enough" },
+            f.deps,
+          )
+        : await handleSendMagicLink(
+            { provider: "paypal", token: "I-closed" },
+            {
+              ...f.deps,
+              siteUrl: "https://hair.example",
+            },
+          )
+    expect(response).toMatchObject({ status: 503, body: { code: "trial_reconciliation_required" } })
+    expect(response.body.error).not.toContain("private provider details")
+    expect(f.calls.some(([op]) => op === "updateUserById")).toBe(false)
+    expect(otpCalls).toBe(0)
+    expect(captured).toContain(error)
+  }
 })
 
 test("typed reconciliation causes are retained in checkout monitoring", async () => {

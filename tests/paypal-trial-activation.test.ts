@@ -69,6 +69,7 @@ function fixture() {
     user_id: USER,
     provider: "paypal",
     admission_status: "reserved",
+    admission_recovery_reason: null,
     accepted_offer: offer,
     provider_agreement_id: null,
     access_revoked: false,
@@ -668,9 +669,59 @@ test("typed access conflict neutralizes the duplicate agreement even when its me
     f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
     false,
   )
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "checkout_existing_access",
+  })
+})
+
+test("PayPal existing-access cleanup failure preserves its recovery reason for a successful replay", async () => {
+  const f = fixture()
+  const conflict = new CheckoutAccessAlreadyExistsError()
+  f.deps.assertCheckoutAccess = async () => {
+    throw conflict
+  }
+  const cancel = f.deps.cancelPayPalSubscription
+  f.deps.cancelPayPalSubscription = async () => {
+    throw new Error("provider cancellation timeout")
+  }
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    (error: unknown) =>
+      error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
+  )
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(f.enrollment.neutralization_required, true)
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+
+  f.deps.cancelPayPalSubscription = cancel
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "checkout_existing_access",
+  })
+  assert.equal(f.enrollment.admission_status, "released")
+  assert.equal(f.enrollment.neutralization_required, false)
 })
 
 test("persisted PayPal terminal admissions retain only verified recovery reasons", () => {
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "blocked",
+      admission_recovery_reason: "existing_access",
+      neutralization_required: true,
+    }),
+    "trial_reconciliation_required",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "released",
+      admission_recovery_reason: "existing_access",
+      admission_denial_reason: "trial_used",
+      neutralization_required: false,
+    }),
+    "checkout_existing_access",
+  )
   assert.equal(
     getPersistedTrialRecoveryCode({
       admission_status: "released",

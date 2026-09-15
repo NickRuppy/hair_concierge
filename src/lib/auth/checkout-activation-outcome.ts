@@ -173,10 +173,12 @@ export function checkoutRecoveryResponse(code: CheckoutRecoveryCode) {
 export function getPersistedTrialRecoveryCode(row: {
   admission_status?: unknown
   admission_denial_reason?: unknown
+  admission_recovery_reason?: unknown
   neutralization_required?: unknown
 }): CheckoutRecoveryCode | null {
   if (row.admission_status !== "blocked" && row.admission_status !== "released") return null
   if (row.neutralization_required !== false) return "trial_reconciliation_required"
+  if (row.admission_recovery_reason === "existing_access") return "checkout_existing_access"
   if (row.admission_denial_reason === "trial_used") return "trial_unavailable"
   if (row.admission_denial_reason === "claim_reserved") return "trial_checkout_conflict"
   return "trial_checkout_closed"

@@ -175,3 +175,20 @@ New final states: `checkout_incomplete` directs the user to finish the existing 
 Final focused server suite: 152 passed. Final browser/auth/webhook suite: 93 passed, plus the real Next.js activation-choice/send test passed. The latter uses an intercepted email response and sends no email. Production schema prerequisites were checked read-only. The external reviewer additionally reported all 7,389 Node tests passing on its pre-integration tree; that report is supplementary, not substituted for final-tree verification.
 
 Artifact disposition: commit plan, static preview, historical audit/testing research, development-only real-component lab, production changes and regression tests. Archive counterpart reports and final verification/review manifests outside the repository. Discard only this task's generated test output and temporary base-refresh stash after restoration is verified. No production data mutation or provider authorization is part of these checks.
+
+
+### Post-publication recovery review
+
+GitHub review at `070fb348` found two message-consistency defects: legacy inactive PayPal statuses were classified as incomplete checkouts, and independently verified existing-access denials lost their login-first reason after reload. Both are implementation corrections to the approved recovery journey; no new product choice or access policy is introduced.
+
+- Inactive PayPal subscriptions use the existing support/reconciliation outcome. APPROVAL_PENDING and APPROVED keep their pending behavior; only Stripe incomplete/unpaid errors invite completing the same checkout.
+- An additive nullable `trial_enrollments.admission_recovery_reason` field, constrained to `existing_access`, records that verified presentation reason in the same guarded blocking update before provider cleanup. Eligibility denial reasons and release evidence remain unchanged. Pending cleanup always takes priority. Existing rows remain null; no backfill or customer-data repair.
+- Apply the additive migration before deploying readers/writers, verify the live column/constraint, PostgREST schema-cache visibility, and tracked migration identity. The new explicit Stripe SELECT fields make migration-first mandatory for all trial returns. Old code remains compatible. Rollback may leave the nullable field in place.
+- Regressions cover initial denial then replay on both providers, cleanup-failure priority, actual canceled/suspended/expired PayPal adapters, and executable PostgreSQL constraint behavior.
+
+This supersedes the earlier no-migration statement. Original user approval remains unchanged; this is internal revalidation of the agreed recovery behavior. No payments, emails, trial exceptions, or customer records are created by verification.
+
+
+Final delta review: Claude Opus 5/high verified the persistence implementation and identified legacy auth-submit helpers bypassing the shared inactive-PayPal classification. Both helpers now leave terminal PayPal errors to the shared mapper; password and magic-link regressions confirm support responses, retained monitoring and no auth side effects. The orchestrator reviewed this correction directly. Additional tests cover SQL release preservation and PayPal cleanup failure/replay.
+
+Migration `20260915070715_admission_recovery_reason.sql` was applied through Supabase MCP before application release. The local CLI-generated file was aligned to the version returned by the live migration history; SQL content is unchanged. Verified the nullable text column, CHECK constraint and production PostgREST `select(admission_recovery_reason).limit(0)` schema visibility. No customer rows were read or updated by the verification. The additive schema is compatible with the currently deployed older application.

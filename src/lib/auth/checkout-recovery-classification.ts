@@ -17,6 +17,9 @@ const persistentProviderFailureCodes = new Set([
   "checkout_user_race_unresolved",
   "checkout_reactivation_pending_binding",
   "paypal_subscription_period_missing",
+  // APPROVAL_PENDING/APPROVED return pending before this error is emitted.
+  // Inactive subscriptions need support; reloading cannot finish their checkout.
+  "paypal_subscription_inactive",
   "paypal_subscription_interval_unknown",
   "paypal_subscription_plan_mismatch",
   "paypal_user_race_unresolved",
@@ -29,13 +32,7 @@ export function classifyCheckoutRecoveryError(error: unknown): CheckoutRecoveryC
   if (error instanceof CheckoutRecoveryError) return error.code
   const code = getErrorCode(error)
   if (!code) return null
-  if (
-    [
-      "checkout_session_incomplete",
-      "checkout_session_unpaid",
-      "paypal_subscription_inactive",
-    ].includes(code)
-  )
+  if (["checkout_session_incomplete", "checkout_session_unpaid"].includes(code))
     return "checkout_incomplete"
   if (code === "resource_missing" || invalidActivationReferenceCodes.has(code)) {
     return "activation_link_invalid"

@@ -84,7 +84,7 @@ export async function getStripeTrialReturnRecoveryCode(
   const { data: enrollment, error } = await deps.supabase
     .from("trial_enrollments")
     .select(
-      "id,provider,admission_status,admission_denial_reason,neutralization_required,provider_agreement_id",
+      "id,provider,admission_status,admission_denial_reason,admission_recovery_reason,neutralization_required,provider_agreement_id",
     )
     .eq("id", enrollmentId)
     .maybeSingle()

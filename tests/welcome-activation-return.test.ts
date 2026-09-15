@@ -298,3 +298,16 @@ test("incomplete and unpaid Stripe returns allow finishing the same checkout", a
     assert.ok(!f.calls.includes("ensureCheckoutAccount"))
   }
 })
+
+test("inactive PayPal returns offer support instead of retrying a terminal checkout", async () => {
+  const f = loadWelcome({
+    paypalError: Object.assign(new Error("PayPal subscription is not active"), {
+      code: "paypal_subscription_inactive",
+    }),
+  })
+  assertRecoveryPanel(
+    await f.render({ provider: "paypal", token: "token" }),
+    f.CheckoutRecoveryPanel,
+    "trial_reconciliation_required",
+  )
+})
