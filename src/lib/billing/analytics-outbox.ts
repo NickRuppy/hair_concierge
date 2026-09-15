@@ -1,3 +1,5 @@
+import { deliverBillingAnalyticsToSlack } from "./analytics-destinations/slack"
+import { canDispatchSlackGrowth } from "./slack-growth-state"
 import type {
   BillingAnalyticsDeliveryRow,
   BillingAnalyticsDestination,
@@ -56,6 +58,7 @@ type DispatchBillingAnalyticsOptions = {
 }
 
 type DispatchBillingAnalyticsDependencies = {
+  isSlackEnabled: (supabase: SupabaseBillingAnalyticsClient) => Promise<boolean>
   findProfile: (
     supabase: SupabaseBillingAnalyticsClient,
     userId: string,
@@ -276,6 +279,24 @@ async function dispatchDelivery(
   delivery: BillingAnalyticsDeliveryRow,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ): Promise<DispatchDeliveryOutcome> {
+  if (delivery.destination === "slack") {
+    try {
+      if (!(await (dependencies.isSlackEnabled ?? canDispatchSlackGrowth)(supabase)))
+        return "not_claimed"
+    } catch {
+      // Optional Slack outages must not stop other destinations in webhook batches.
+      console.warn("[billing-analytics] Slack state unavailable; delivery remains queued")
+      return "not_claimed"
+    }
+  }
+  if (
+    delivery.destination === "slack" &&
+    delivery.next_attempt_at &&
+    Date.parse(delivery.next_attempt_at) > Date.now()
+  )
+    return "not_claimed"
+  const previousStatus = delivery.status
+  const previousNextAttempt = delivery.next_attempt_at
   const claimed = await claimDeliveryForDispatch(supabase, delivery)
   if (!claimed) return "not_claimed"
 
@@ -292,11 +313,31 @@ async function dispatchDelivery(
   } catch (error) {
     result = {
       ok: false,
-      error: error instanceof Error ? error.message : String(error),
+      error:
+        claimed.destination === "slack"
+          ? "slack_delivery_failed"
+          : error instanceof Error
+            ? error.message
+            : String(error),
     }
   }
 
-  if (claimed.destination === "openai" && result.skipped) {
+  if (claimed.destination === "slack" && result.paused) {
+    const { error } = await supabase
+      .from("billing_analytics_deliveries")
+      .update({
+        status: previousStatus === "processing" ? "pending" : previousStatus,
+        processing_started_at: null,
+        next_attempt_at: previousNextAttempt,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", claimed.id)
+      .eq("status", "processing")
+    if (error) throw new Error("slack_pause_restore_failed")
+    return "not_claimed"
+  }
+
+  if ((claimed.destination === "openai" || claimed.destination === "slack") && result.skipped) {
     const { error } = await supabase
       .from("billing_analytics_deliveries")
       .update({
@@ -327,6 +368,8 @@ function deliverToDestination(
   input: BillingAnalyticsDeliveryInput,
 ) {
   switch (destination) {
+    case "slack":
+      return deliverBillingAnalyticsToSlack(input)
     case "customerio":
       return deliverBillingAnalyticsToCustomerIo(input)
     case "openai":
@@ -405,7 +448,7 @@ async function markDeliveryFailed(
       processing_started_at: null,
       delivered_at: null,
       last_error: result.error ?? "Unknown billing analytics delivery error",
-      next_attempt_at: permanent ? null : nextAttemptAt(attempts),
+      next_attempt_at: permanent ? null : nextAttemptAt(attempts, result.retryAfterSeconds),
       provider_request_id: result.providerRequestId ?? null,
       updated_at: new Date().toISOString(),
     })
@@ -449,7 +492,7 @@ async function findBillingAnalyticsProfile(
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id,email,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end",
+      "id,email,full_name,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status,current_period_end",
     )
     .eq("id", userId)
     .maybeSingle()
@@ -458,9 +501,13 @@ async function findBillingAnalyticsProfile(
   return (data as BillingAnalyticsProfile | null) ?? null
 }
 
-function nextAttemptAt(attempts: number) {
-  const delayMinutes = Math.min(60, attempts * attempts)
-  return new Date(Date.now() + delayMinutes * 60_000).toISOString()
+function nextAttemptAt(attempts: number, retryAfterSeconds?: number) {
+  const delayMs = Math.min(60, attempts * attempts) * 60_000
+  const retryMs =
+    typeof retryAfterSeconds === "number" && Number.isFinite(retryAfterSeconds)
+      ? Math.max(0, Math.min(86_400, retryAfterSeconds)) * 1000
+      : 0
+  return new Date(Date.now() + Math.max(delayMs, retryMs)).toISOString()
 }
 
 function sanitizePayload(payload: Record<string, unknown>) {

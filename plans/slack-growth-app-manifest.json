@@ -1,0 +1,25 @@
+{
+  "display_information": {
+    "name": "Chaarlie Events",
+    "description": "Benachrichtigungen über Trial-Starts und erste Zahlungen.",
+    "background_color": "#345b38"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Chaarlie Events",
+      "always_online": false
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": ["incoming-webhook"]
+    }
+  },
+  "settings": {
+    "incoming_webhooks": {
+      "incoming_webhooks_enabled": true
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false
+  }
+}
