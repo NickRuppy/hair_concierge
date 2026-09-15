@@ -23,9 +23,12 @@ import type { OneTimeAccessState } from "../src/lib/billing/types"
  * 1. Middleware (T2): premium API prefixes that stay fully subscription-gated
  *    (no freemium admission). `/api/chat` already has this proof in
  *    tests/auth-middleware-personal-plan-routine.test.ts; the two rows below
- *    (`/api/profile`, `/api/personal-plan/stage-1/previews`) had no
+ *    (`/api/memory`, `/api/personal-plan/stage-1/previews`) had no
  *    dedicated e2e proof yet, only the pure `shouldRedirectToReactivation`
- *    prefix-list test — added here per the matrix doc.
+ *    prefix-list test — added here per the matrix doc. (`/api/memory` stands
+ *    in for the removed `/api/profile` probe — task 5c, central-user-profile
+ *    PR1 — deleted that route as dead code with no in-repo caller; this test
+ *    demonstrates the same non-admitted-prefix classification.)
  * 2. In-route guards (T4, this task): `/api/scan/save` and
  *    `/api/scan/wishlist`, which the middleware now admits to free users
  *    (see enforcement-matrix.md) and which therefore need their own
@@ -105,10 +108,10 @@ async function withFlagOn(fn: () => Promise<void>) {
   }
 }
 
-test("flag on: a free authenticated user is still denied /api/profile (non-admitted, subscription_required)", async () => {
+test("flag on: a free authenticated user is still denied /api/memory (non-admitted, subscription_required)", async () => {
   await withFlagOn(async () => {
     const response = await createFreeUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile"),
+      new NextRequest("https://chaarlie.de/api/memory"),
     )
     assert.equal(response.status, 403)
     assert.deepEqual(await response.json(), { error: "subscription_required" })
@@ -116,26 +119,27 @@ test("flag on: a free authenticated user is still denied /api/profile (non-admit
 })
 
 /**
- * T15 (freemium-scanner-first PR5): the profile page's Haar-Check corner lock relies on
- * PUT /api/profile (the route the inline quiz editor's save eventually reaches) staying
- * premium-gated — the row above only ever exercised GET. Middleware gates the whole
- * `/api/profile` prefix regardless of method (matrix note: "method-agnostic"), but this is
- * the first test that actually proves PUT, not just GET.
+ * T15 (freemium-scanner-first PR5) originally proved this against `PUT /api/profile`,
+ * the route the profile page's Haar-Check corner lock relied on staying premium-gated —
+ * the row above only ever exercised GET. `PUT /api/profile` was deleted as dead code
+ * with no in-repo caller (task 5c, central-user-profile PR1); `/api/memory` stands in
+ * to keep proving the same mechanism: middleware gates the whole prefix regardless of
+ * method (matrix note: "method-agnostic"), not just GET.
  */
-test("flag on: a free authenticated user is still denied PUT /api/profile (non-admitted, subscription_required)", async () => {
+test("flag on: a free authenticated user is still denied PUT /api/memory (non-admitted, subscription_required)", async () => {
   await withFlagOn(async () => {
     const response = await createFreeUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile", { method: "PUT" }),
+      new NextRequest("https://chaarlie.de/api/memory", { method: "PUT" }),
     )
     assert.equal(response.status, 403)
     assert.deepEqual(await response.json(), { error: "subscription_required" })
   })
 })
 
-test("flag on: a paid authenticated user reaches PUT /api/profile unchanged", async () => {
+test("flag on: a paid authenticated user reaches PUT /api/memory unchanged", async () => {
   await withFlagOn(async () => {
     const response = await createPaidUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile", { method: "PUT" }),
+      new NextRequest("https://chaarlie.de/api/memory", { method: "PUT" }),
     )
     assert.equal(response.status, 200)
     assert.equal(response.headers.get("location"), null)
@@ -558,11 +562,13 @@ test("hasFreemiumPaidAccess: a field-test guest's moderator lookup is skipped, m
  * none, moderator-unavailable) and asserts identical allow/deny/unavailable
  * outcomes.
  *
- * The middleware seam is exercised at `/api/profile` — a premium route that
+ * The middleware seam is exercised at `/api/memory` — a premium route that
  * stays outside `FREEMIUM_ADMITTED_ROUTE_PREFIXES` (see
  * enforcement-matrix.md), so the composite's allow/deny/unavailable outcome
  * directly determines the response instead of being masked by the freemium
- * admission carve-out that `/api/scan` gets.
+ * admission carve-out that `/api/scan` gets. (Originally exercised at
+ * `/api/profile`, deleted as dead code with no in-repo caller — task 5c,
+ * central-user-profile PR1 — `/api/memory` has the identical classification.)
  */
 
 const parityUserId = "44444444-4444-4444-8444-444444444444"
@@ -722,7 +728,7 @@ for (const scenario of parityScenarios) {
       }
 
       const response = await createUpdateSession(dependencies)(
-        new NextRequest("https://chaarlie.de/api/profile"),
+        new NextRequest("https://chaarlie.de/api/memory"),
       )
 
       if (scenario.expected === "allowed") {

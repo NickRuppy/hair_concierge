@@ -33,7 +33,6 @@ test("isFreemiumAdmittedRoutePath admits the app-shell page prefixes and /api/sc
 test("isFreemiumAdmittedRoutePath does NOT admit any other /api/* prefix", () => {
   for (const pathname of [
     "/api/chat",
-    "/api/profile",
     "/api/personal-plan",
     "/api/personal-plan/anything",
     "/api/routine",
@@ -129,7 +128,6 @@ test("flag on: non-admitted routes still redirect to reactivation", () => {
     "/onboarding",
     "/plan-start",
     "/api/chat",
-    "/api/profile",
     "/api/personal-plan",
     "/api/routine",
     "/api/tracker",

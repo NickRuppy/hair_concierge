@@ -345,7 +345,10 @@ test("flag on: a free authenticated user without current access is still gated o
       new NextRequest("https://chaarlie.de/api/chat/feedback", { method: "POST" }),
       new NextRequest("https://chaarlie.de/api/chat/trigger", { method: "POST" }),
       new NextRequest("https://chaarlie.de/api/chat/product-selection", { method: "POST" }),
-      new NextRequest("https://chaarlie.de/api/profile"),
+      // /api/memory stands in for the deleted /api/profile route (dead code,
+      // no in-repo caller — task 5c, central-user-profile PR1); it is another
+      // non-admitted API prefix, proving this isn't just a /api/chat quirk.
+      new NextRequest("https://chaarlie.de/api/memory"),
     ]) {
       const response = await createMiddleware({
         currentAccess: false,

@@ -29,7 +29,6 @@ test("all membership surfaces remain subscription gated", () => {
     "/api/chat",
     "/api/routine",
     "/api/tracker",
-    "/api/profile",
     "/api/memory",
   ]) {
     assert.equal(requiresSubscriptionPath(path), true, path)

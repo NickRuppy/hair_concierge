@@ -104,7 +104,6 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/personal-plan",
   "/api/product-intake",
   "/api/products",
-  "/api/profile",
   "/api/routine",
   "/api/scan",
   "/api/tracker",

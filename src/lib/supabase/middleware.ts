@@ -39,7 +39,6 @@ const SUB_REQUIRED_PREFIXES = [
   "/api/chat",
   "/api/product-intake",
   "/profile",
-  "/api/profile",
   "/plan-start",
   "/api/personal-plan",
   "/api/memory",
