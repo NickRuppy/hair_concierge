@@ -19,6 +19,7 @@ import { ScanInsertProblem } from "@/components/quiz/scan-inserts/scan-insert-pr
 import { ScanInsertSolution } from "@/components/quiz/scan-inserts/scan-insert-solution"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { createScannerQuizViewTracker } from "@/lib/analytics/scanner-quiz-view"
 import {
   getLegacyQuizScreenPosition,
   seedLegacyQuizBrowserHistoryToDepth,
@@ -65,6 +66,9 @@ export default function QuizPage() {
   const [draftStatus, setDraftStatus] = useState<"checking" | "ready" | "unavailable">("checking")
   const [migrationRecoveryAttempt, setMigrationRecoveryAttempt] = useState(0)
   const quizStartedRef = useRef(false)
+  const scannerQuizMountedRef = useRef(true)
+  const scannerQuizViewedRef = useRef(false)
+  const scannerQuizViewTrackerRef = useRef(createScannerQuizViewTracker())
   const lastTrackedStepRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -154,10 +158,30 @@ export default function QuizPage() {
     }
   }, [restoreDraft, migrationRecoveryAttempt])
 
+  useEffect(() => {
+    scannerQuizMountedRef.current = true
+    return () => {
+      scannerQuizMountedRef.current = false
+    }
+  }, [])
+
   function retryMigrationRecoveryCheck() {
     setDraftStatus("checking")
     setMigrationRecoveryAttempt((attempt) => attempt + 1)
   }
+
+  useEffect(() => {
+    if (draftStatus !== "ready" || funnelPackageKey !== "scan_v1" || scannerQuizViewedRef.current)
+      return
+    scannerQuizViewedRef.current = true
+    scannerQuizViewTrackerRef.current({
+      displayedFunnelPackageKey: funnelPackageKey,
+      isCurrent: () =>
+        scannerQuizMountedRef.current && useQuizStore.getState().funnelPackageKey === "scan_v1",
+      resumed: step !== 2,
+      step,
+    })
+  }, [draftStatus, funnelPackageKey, step])
 
   useEffect(() => {
     if (draftStatus !== "ready") return

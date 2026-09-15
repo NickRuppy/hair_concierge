@@ -616,6 +616,22 @@ export type AppEventMap = {
     stepName: string
     stepNumber: number
   }
+  scanner_quiz_viewed: FunnelAnalyticsEnvelope & {
+    entryAt?: string
+    entryPath?: string
+    isResumed: boolean
+    isInternalTest?: boolean
+    quizStep: number
+    quizViewId: string
+    scannerTrackingVersion: 1
+    testKind?: FunnelTestKind | null
+    utmCampaign?: string
+    utmContent?: string
+    utmMedium?: string
+    utmSource?: string
+    utmTerm?: string
+    viewedAt: string
+  }
   quiz_step_viewed: {
     stepName: string
     stepNumber: number

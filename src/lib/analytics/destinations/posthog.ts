@@ -176,6 +176,27 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         step_number: data.stepNumber,
       }
     }
+    case "scanner_quiz_viewed": {
+      const data = payload as AppEventMap["scanner_quiz_viewed"]
+      return {
+        entry_at: data.entryAt,
+        entry_path: data.entryPath,
+        funnel_package_key: data.funnelPackageKey,
+        funnel_session_id: data.funnelSessionId,
+        is_resumed: data.isResumed,
+        is_internal_test: data.isInternalTest,
+        quiz_step: data.quizStep,
+        quiz_view_id: data.quizViewId,
+        scanner_tracking_version: data.scannerTrackingVersion,
+        test_kind: data.testKind,
+        utm_campaign: data.utmCampaign,
+        utm_content: data.utmContent,
+        utm_medium: data.utmMedium,
+        utm_source: data.utmSource,
+        utm_term: data.utmTerm,
+        viewed_at: data.viewedAt,
+      }
+    }
     case "chat_product_recommendation_shown": {
       const data = payload as AppEventMap["chat_product_recommendation_shown"]
       return { productCount: data.productCount }

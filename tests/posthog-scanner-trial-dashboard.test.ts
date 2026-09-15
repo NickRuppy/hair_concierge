@@ -5,24 +5,33 @@ import {
   scannerDashboardId,
   scannerInsightQuery,
   scannerInsights,
+  scannerPreviouslyPublishedInsights,
 } from "../scripts/analytics/scanner-trial-dashboard"
 import { runScannerTrialDashboard } from "../scripts/posthog/ensure-scanner-trial-dashboard"
 
 function fixture(
-  options: { ready?: boolean; drift?: boolean; shared?: boolean; queryFailure?: boolean } = {},
+  options: {
+    ready?: boolean
+    drift?: boolean
+    shared?: boolean
+    queryFailure?: boolean
+    published?: boolean
+  } = {},
 ) {
   let nextId = 7000000
   const insights = new Map(
-    scannerBaselineInsights.map((spec) => [
-      spec.id!,
-      {
-        id: spec.id!,
-        name: spec.name,
-        description: spec.description,
-        query: scannerInsightQuery(spec),
-        dashboards: [scannerDashboardId],
-      },
-    ]),
+    (options.published ? scannerPreviouslyPublishedInsights : scannerBaselineInsights).map(
+      (spec, index) => [
+        spec.id ?? 8000000 + index,
+        {
+          id: spec.id ?? 8000000 + index,
+          name: spec.name,
+          description: spec.description,
+          query: scannerInsightQuery(spec),
+          dashboards: [scannerDashboardId],
+        },
+      ],
+    ),
   )
   if (options.drift) insights.values().next().value!.description = "Unreviewed user edit"
   if (options.shared) insights.values().next().value!.dashboards.push(999)
@@ -156,8 +165,8 @@ test("missing trial cohorts produce no aggregate zero rows and unavailable offer
     )
   }
   const offer = scannerInsights.find((item) => item.key === "offer")!.query
-  assert.match(offer, /'05 Trial v1 aktiviert',\(SELECT sessions FROM counts/)
-  assert.match(offer, /event='trial_started'\)>0,coalesce/)
+  assert.match(offer, /'05 Trial v1 aktiviert',nullIf\(trials,0\)/)
+  assert.match(offer, /if\(trials>0,paid,NULL\)/)
 })
 
 test("all new query results are verified before any dashboard mutations", async () => {
@@ -209,5 +218,41 @@ test("PostHog description length is validated before any API call", async () => 
     assert.equal(deps.calls(), 0)
   } finally {
     spec.description = original
+  }
+})
+
+test("scanner page repair preserves existing lifecycle definitions and uses one page cohort for acquisition and offer", () => {
+  const keys = ["funnel", "offer", "traffic", "health"]
+  for (const key of keys) {
+    const next = scannerInsights.find((item) => item.key === key)!
+    assert.match(next.query, /scanner_quiz_viewed/)
+    assert.doesNotMatch(next.query, /properties.\$pathname='\/lp\/scan'/)
+  }
+  for (const previous of scannerPreviouslyPublishedInsights.filter(
+    (item) => !keys.includes(item.key),
+  ))
+    assert.deepEqual(
+      scannerInsights.find((item) => item.key === previous.key),
+      previous,
+    )
+})
+
+test("page repair accepts exact published sixteen-chart predecessor and changes only four affected queries", async () => {
+  const deps = fixture({ published: true })
+  const previous = new Map(
+    [...deps.insights].map(([id, insight]) => [id, structuredClone(insight)]),
+  )
+  await runScannerTrialDashboard(["--apply", "--confirm-project=126788"], deps)
+  const changed = deps.writes.filter((write) => write.path.includes("/insights/"))
+  assert.equal(changed.length, 4)
+  assert.equal(
+    changed.every((write) => write.method === "PATCH"),
+    true,
+  )
+  for (const spec of scannerPreviouslyPublishedInsights.filter(
+    (item) => !["funnel", "offer", "traffic", "health"].includes(item.key),
+  )) {
+    const old = [...previous.values()].find((item) => item.name === spec.name)!
+    assert.deepEqual(deps.insights.get(old.id), old)
   }
 })

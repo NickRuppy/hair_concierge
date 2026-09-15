@@ -1,3 +1,4 @@
+import { buildScannerPageQuery } from "./scanner-page-query"
 import baseline from "./scanner-dashboard-baseline.json"
 
 export const scannerDashboardId = 953895
@@ -215,7 +216,7 @@ export const scannerBaselineInsights: ScannerInsightSpec[] = baseline.insights.m
   display: spec.display as ScannerInsightSpec["display"],
 }))
 
-export const scannerInsights: ScannerInsightSpec[] = [
+export const scannerPreviouslyPublishedInsights: ScannerInsightSpec[] = [
   ...scannerBaselineInsights.map((spec) => {
     if (spec.key === "offer")
       return {
@@ -259,4 +260,39 @@ export const scannerInsights: ScannerInsightSpec[] = [
 ]
 
 export const scannerDashboardDescription =
-  "Scanner-Akquisition und Trial-Lebenszyklus. Akquisitions-/Offer-Kacheln: gewählter Ereigniszeitraum. Trial-Kacheln: Aktivierungs-Kohorte im Zeitraum, Folgen bis jetzt (UTC). StartTrial = bestätigte Zahlungsverifikation, 0 €; Purchase = erster bezahlter Zeitraum. 14-Tage-Bezahlquote nur für gleich lang beobachtete Trials. Historische Aktivierungen ohne v1-Telemetrie bleiben außerhalb der Trial-Kohorten; siehe Qualitätskachel. Meta-Empfang separat verifizieren."
+  "Scanner-Akquisition und Trial-Lebenszyklus. Akquisitions-/Offer-Kacheln: Scannerquiz-Anzeige/Legacy-Start im Zeitraum, eindeutige Journeys, Folgen bis jetzt. Keine Landingpage-Voraussetzung. Legacy-Anteil separat in Qualitätskachel. Trial-Kacheln: Aktivierungs-Kohorte im Zeitraum, Folgen bis jetzt (UTC). StartTrial = bestätigte Zahlungsverifikation, 0 €; Purchase = erster bezahlter Zeitraum. 14-Tage-Bezahlquote nur für gleich lang beobachtete Trials. Historische Aktivierungen ohne v1-Telemetrie bleiben außerhalb der Trial-Kohorten; siehe Qualitätskachel. Meta-Empfang separat verifizieren."
+
+export const scannerInsights: ScannerInsightSpec[] = scannerPreviouslyPublishedInsights.map(
+  (spec) => {
+    if (spec.key === "funnel")
+      return {
+        ...spec,
+        name: "01 · Scanner — Quiz angezeigt bis Checkout",
+        description:
+          "Scannerquiz im gewählten Zeitraum: eindeutige Journeys, keine Besuche. Frühester Seitenaufruf/Legacy-Start; neue Metadaten bevorzugt. Folgen bis jetzt (UTC), streng geordnet. Legacy-Fallback separat in Qualitätskachel. Keine /lp/scan-Seitenansicht nötig; wiederholte Ansichten zählen einmal.",
+        query: buildScannerPageQuery("funnel"),
+      }
+    if (spec.key === "offer")
+      return {
+        ...spec,
+        description:
+          "Dieselbe Scannerquiz-Kohorte wie Kachel 01; Folgen bis jetzt (UTC). Offer und spätere Meilensteine müssen nach Quiz/Legacy-Start liegen. Ab Offer keine strikte Schrittfolge. Fehlende frühere Captures: Qualitätskachel. Trial/Kauf nur mit v1-Telemetrie; ältere Historie unvollständig. Aktivierung ist kein Umsatz.",
+        query: buildScannerPageQuery("offer"),
+      }
+    if (spec.key === "traffic")
+      return {
+        ...spec,
+        description:
+          "Dieselbe Scannerquiz-Kohorte wie Kachel 01: eindeutige Journeys mit Anzeige/Legacy-Start im Zeitraum. Quelle aus ursprünglicher Akquisition des neuen Seitenereignisses; ohne dieses aus Legacy quiz_started. Fehlende UTM sind unbekannt, kein Beweis für organischen Traffic. Messbasis separat ausgewiesen.",
+        query: buildScannerPageQuery("traffic"),
+      }
+    if (spec.key === "health")
+      return {
+        ...spec,
+        description:
+          "Quiz-Kohorte und Legacy-Anteil, fehlende Seiten-/Lead-/Checkout-Captures separat. Fehlend im Fenster kann frühere Aktivität außerhalb des Filters bedeuten. Projektweite fehlende Trial-Zuordnung darf nicht dem Scanner zugerechnet werden. Meta-Empfang separat prüfen.",
+        query: `SELECT * FROM (${spec.query}) UNION ALL SELECT * FROM (${buildScannerPageQuery("health")})`,
+      }
+    return spec
+  },
+)

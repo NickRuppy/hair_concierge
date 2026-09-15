@@ -91,3 +91,11 @@ No blocking findings in the independent Claude Opus 4.8/high correctness and str
 ## Authorized production rollout — 2026-09-15
 
 Nick authorized shipping and making this live for dashboard review. Supabase migration `20260915113126_trial_lifecycle_analytics` was applied first through the migration API; the local filename matches its recorded server version. All seven lifecycle triggers are enabled. Private-context RLS is enabled and browser roles cannot read the context or call its read RPC. No historical conversions were replayed. Application deployment and final dashboard publication are verified separately in the release receipt.
+
+## Scanner page experience repair
+
+The scanner campaign URL `/lp/scan` redirects to the shared `/quiz` URL. The displayed scanner variant is identified by the signed `scan_v1` journey assignment, not a pageview of the redirect URL. `scanner_quiz_viewed` records that displayed quiz experience and its position; it does not mean an answer was submitted. Legacy `quiz_started` retains its existing consumers and is explicitly labelled as a historical proxy in reporting.
+
+Page views have per-mount identifiers; headline counts use distinct `funnel_session_id` journeys, which can include return visits. Original campaign metadata comes from the durable session's first touch (or a matching signed pending touch before persistence), restricted to entry path and UTM fields. Never send the full cookie, raw URL, or click IDs as general analytics properties. Original metadata must not be overwritten by a later same-package visit. Scanner context responses are private/no-store. An explicit readiness flag distinguishes lookup failure from confirmed missing campaign fields: retry incomplete context and suppress the new scanner page event if it remains incomplete. Signed identity stays available for existing UI callers.
+
+The scanner dashboard no longer requires a rendered `/lp/scan` pageview. Main journey and offer-summary panels share their scanner-page cohort and follow later milestones to the report time; strict-order and missing-upstream diagnostics remain distinguishable. During migration, legacy scanner quiz events provide a labelled fallback rather than synthetic pageviews or Meta conversion replay. Trial activation/payment cohort definitions are unchanged.
