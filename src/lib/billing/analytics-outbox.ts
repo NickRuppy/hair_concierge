@@ -1,5 +1,3 @@
-import { deliverBillingAnalyticsToSlack } from "./analytics-destinations/slack"
-import { canDispatchSlackGrowth } from "./slack-growth-state"
 import type {
   BillingAnalyticsDeliveryRow,
   BillingAnalyticsDestination,
@@ -58,7 +56,6 @@ type DispatchBillingAnalyticsOptions = {
 }
 
 type DispatchBillingAnalyticsDependencies = {
-  isSlackEnabled: (supabase: SupabaseBillingAnalyticsClient) => Promise<boolean>
   findProfile: (
     supabase: SupabaseBillingAnalyticsClient,
     userId: string,
@@ -159,6 +156,8 @@ export async function dispatchBillingAnalyticsDueWithStats(
   supabase: SupabaseBillingAnalyticsClient,
   options: DispatchBillingAnalyticsOptions = {},
 ): Promise<BillingAnalyticsDueStats> {
+  // Supabase owns Slack delivery; even explicit legacy calls must not query or claim it.
+  if (options.destination === "slack") return { processed: 0, delivered: 0, failed: 0 }
   const event = options.eventKey
     ? await findBillingAnalyticsEventByKey(supabase, options.eventKey)
     : null
@@ -171,6 +170,7 @@ export async function dispatchBillingAnalyticsDueWithStats(
   let query = supabase
     .from("billing_analytics_deliveries")
     .select("*")
+    .in("destination", ["customerio", "meta", "posthog", "funnel", "openai"])
     .in("status", ["pending", "failed", "processing"])
     .or(
       `next_attempt_at.is.null,next_attempt_at.lte.${now},processing_started_at.lte.${staleProcessingCutoff}`,
@@ -213,7 +213,10 @@ export async function dispatchBillingAnalyticsEvent(
     .from("billing_analytics_deliveries")
     .select("*")
     .eq("outbox_id", event.id)
-    .in("destination", dispatchDestinations)
+    .in(
+      "destination",
+      dispatchDestinations.filter((destination) => destination !== "slack"),
+    )
 
   if (error) throw error
   const deliveries = ((data as BillingAnalyticsDeliveryRow[] | null) ?? []).filter(
@@ -279,24 +282,7 @@ async function dispatchDelivery(
   delivery: BillingAnalyticsDeliveryRow,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ): Promise<DispatchDeliveryOutcome> {
-  if (delivery.destination === "slack") {
-    try {
-      if (!(await (dependencies.isSlackEnabled ?? canDispatchSlackGrowth)(supabase)))
-        return "not_claimed"
-    } catch {
-      // Optional Slack outages must not stop other destinations in webhook batches.
-      console.warn("[billing-analytics] Slack state unavailable; delivery remains queued")
-      return "not_claimed"
-    }
-  }
-  if (
-    delivery.destination === "slack" &&
-    delivery.next_attempt_at &&
-    Date.parse(delivery.next_attempt_at) > Date.now()
-  )
-    return "not_claimed"
-  const previousStatus = delivery.status
-  const previousNextAttempt = delivery.next_attempt_at
+  if (delivery.destination === "slack") return "not_claimed"
   const claimed = await claimDeliveryForDispatch(supabase, delivery)
   if (!claimed) return "not_claimed"
 
@@ -313,31 +299,11 @@ async function dispatchDelivery(
   } catch (error) {
     result = {
       ok: false,
-      error:
-        claimed.destination === "slack"
-          ? "slack_delivery_failed"
-          : error instanceof Error
-            ? error.message
-            : String(error),
+      error: error instanceof Error ? error.message : String(error),
     }
   }
 
-  if (claimed.destination === "slack" && result.paused) {
-    const { error } = await supabase
-      .from("billing_analytics_deliveries")
-      .update({
-        status: previousStatus === "processing" ? "pending" : previousStatus,
-        processing_started_at: null,
-        next_attempt_at: previousNextAttempt,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", claimed.id)
-      .eq("status", "processing")
-    if (error) throw new Error("slack_pause_restore_failed")
-    return "not_claimed"
-  }
-
-  if ((claimed.destination === "openai" || claimed.destination === "slack") && result.skipped) {
+  if (claimed.destination === "openai" && result.skipped) {
     const { error } = await supabase
       .from("billing_analytics_deliveries")
       .update({
@@ -369,7 +335,7 @@ function deliverToDestination(
 ) {
   switch (destination) {
     case "slack":
-      return deliverBillingAnalyticsToSlack(input)
+      throw new Error("Slack delivery is owned by Supabase")
     case "customerio":
       return deliverBillingAnalyticsToCustomerIo(input)
     case "openai":
