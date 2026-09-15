@@ -444,12 +444,12 @@ test("case 16: unsupported envelope version 4 throws (no partial object)", () =>
   }, "spec rule 6: unsupported envelope versions throw, they don't silently produce a partial object")
 })
 
-test("case 17: legacy lead missing structure (texture) throws rather than producing a partial object", () => {
+test("case 17: legacy lead missing structure (texture) returns partial diagnostics, not a throw (I2 ruling, task 5a fix round 1)", () => {
   const answers = fullLegacyAnswers()
   delete (answers as Record<string, unknown>).structure
-  assert.throws(() => {
-    projectLegacyLeadToFacts({ leadId: "lead-legacy-17", quizAnswers: answers })
-  }, "spec rule 6: missing required diagnostics must throw, not silently synthesize/omit")
+  const facts = projectLegacyLeadToFacts({ leadId: "lead-legacy-17", quizAnswers: answers })
+  assert.equal(facts.diagnostics.texture, undefined)
+  assert.equal(facts.diagnostics.source.kind, "legacy_quiz")
 })
 
 // ---------------------------------------------------------------------------

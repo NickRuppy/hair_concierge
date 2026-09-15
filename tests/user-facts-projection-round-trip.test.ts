@@ -423,11 +423,21 @@ test("projectArtifactToFacts throws a typed error for an unsupported envelope ve
   )
 })
 
-test("projectLegacyLeadToFacts throws a typed error instead of returning a silent partial object", () => {
+test("projectLegacyLeadToFacts returns partial diagnostics for a legacy lead missing a scalar field (I2 ruling, task 5a fix round 1)", () => {
   const { structure: _structure, ...incompleteAnswers } = LEGACY_ANSWERS
 
+  const facts = projectLegacyLeadToFacts({
+    leadId: "lead-incomplete",
+    quizAnswers: incompleteAnswers,
+  })
+
+  assert.equal(facts.diagnostics.texture, undefined)
+  assert.equal(facts.diagnostics.source.kind, "legacy_quiz")
+})
+
+test("projectLegacyLeadToFacts throws only when quizAnswers is not a usable record", () => {
   assert.throws(
-    () => projectLegacyLeadToFacts({ leadId: "lead-incomplete", quizAnswers: incompleteAnswers }),
+    () => projectLegacyLeadToFacts({ leadId: "lead-bad", quizAnswers: null as never }),
     UnsupportedUserFactsSourceError,
   )
 })

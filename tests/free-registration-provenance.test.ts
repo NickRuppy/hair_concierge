@@ -114,7 +114,13 @@ type RpcCall = { fn: string; args: Row }
  * task 3's real create_only rule closely enough for this file's purpose,
  * without re-simulating the whole RPC (that has its own tests).
  */
-function linkAdmin(input: { existingDiagnostics: Row | null }) {
+type RpcResult = { data: unknown; error: { message: string } | null }
+
+function linkAdmin(input: {
+  existingDiagnostics: Row | null
+  /** Overrides every `user_facts_save_v1` response (transport failures, bad statuses). */
+  userFactsSaveOverride?: RpcResult
+}) {
   const rpcs: RpcCall[] = []
   const updates: { table: string; values: Row }[] = []
 
@@ -161,6 +167,7 @@ function linkAdmin(input: { existingDiagnostics: Row | null }) {
         return { data: [{ artifact_id: "artifact-1" }], error: null }
       }
       if (fn === "user_facts_save_v1") {
+        if (input.userFactsSaveOverride) return input.userFactsSaveOverride
         const preserveDiagnostics =
           args.p_domain === "diagnostics" &&
           args.p_mode === "create_only" &&
@@ -177,6 +184,51 @@ function linkAdmin(input: { existingDiagnostics: Row | null }) {
         }
       }
       return { data: null, error: null }
+    },
+  }
+  return { admin: admin as never, rpcs, updates }
+}
+
+/** A minimal fake for the LEGACY branch: one lead lookup, one `user_facts_save_v1` call, one claim. */
+function legacyLinkAdmin(input: { quizAnswers: Row; userFactsSaveOverride?: RpcResult }) {
+  const rpcs: RpcCall[] = []
+  const updates: { table: string; values: Row }[] = []
+
+  const admin = {
+    from(table: string) {
+      const chain = {
+        select: () => chain,
+        eq: () => chain,
+        update(values: Row) {
+          updates.push({ table, values })
+          return chain
+        },
+        async single() {
+          if (table === "leads") {
+            return {
+              data: {
+                id: LEAD_ID,
+                email: "lena@example.com",
+                quiz_kind: "legacy",
+                quiz_answers: input.quizAnswers,
+                user_id: null,
+              },
+              error: null,
+            }
+          }
+          return { data: null, error: { code: "PGRST116", message: "no rows" } }
+        },
+        then: (resolve: (result: { error: unknown }) => void) => resolve({ error: null }),
+      }
+      return chain
+    },
+    async rpc(fn: string, args: Row) {
+      rpcs.push({ fn, args })
+      if (input.userFactsSaveOverride) return input.userFactsSaveOverride
+      return {
+        data: { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
+        error: null,
+      }
     },
   }
   return { admin: admin as never, rpcs, updates }
@@ -223,4 +275,69 @@ test("V4: profileWrite is a no-op — create_only applies whether or not it is p
     // distinguishes "free" from "paid/legacy" linking at all.
     assert.deepEqual(updates, [{ table: "leads", values: { user_id: USER_ID, status: "linked" } }])
   }
+})
+
+// --- fix round 1: I5-4, I2, M1 -----------------------------------------------
+
+test("I5-4: a saveUserFacts transport failure on the paid path propagates, and the lead is not claimed", async () => {
+  // The old V4 RACE test's "a unique violation on the PAID path is still a
+  // genuine failure, not a silent stand-down" case, restored in its new form:
+  // the race itself moved inside `user_facts_save_v1` (task 3), so what this
+  // file can still prove is that a genuine `saveUserFacts` failure propagates
+  // instead of being swallowed, and never claims the lead on the way out.
+  const failing = linkAdmin({
+    existingDiagnostics: null,
+    userFactsSaveOverride: { data: null, error: { message: "boom" } },
+  })
+
+  await assert.rejects(
+    () => linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: failing.admin }),
+    /user_facts_save_v1 transport error/,
+  )
+  assert.deepEqual(failing.updates, [], "a genuine failure claims nothing")
+})
+
+const INCOMPLETE_LEGACY_ANSWERS = {
+  // `structure` (-> `texture`) missing on purpose.
+  thickness: "fine",
+  density: "low",
+  hair_length: "medium",
+  fingertest: "rau",
+  pulltest: "snaps",
+  scalp_type: "trocken",
+  has_scalp_issue: false,
+  treatment: ["gefaerbt"],
+  concerns: ["frizz"],
+  goals: ["moisture"],
+}
+
+test("I2: an incomplete legacy lead still links — saveUserFacts gets the partial patch, and the lead is claimed", async () => {
+  const legacy = legacyLinkAdmin({ quizAnswers: INCOMPLETE_LEGACY_ANSWERS })
+
+  await linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: legacy.admin })
+
+  const factsCall = legacy.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.ok(factsCall, "expected a user_facts_save_v1 call")
+  assert.equal(factsCall!.args.p_domain, "diagnostics")
+  assert.equal(
+    (factsCall!.args.p_patch as Row).texture,
+    undefined,
+    "the missing field stays absent",
+  )
+  assert.deepEqual(legacy.updates, [
+    { table: "leads", values: { user_id: USER_ID, status: "linked" } },
+  ])
+})
+
+test("M1: an unexpected saveUserFacts status throws and the lead is not claimed", async () => {
+  const weird = linkAdmin({
+    existingDiagnostics: null,
+    userFactsSaveOverride: { data: { status: "revision_conflict", revision: 3 }, error: null },
+  })
+
+  await assert.rejects(
+    () => linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: weird.admin }),
+    /saveUserFacts\(diagnostics\) returned unexpected status "revision_conflict"/,
+  )
+  assert.deepEqual(weird.updates, [])
 })

@@ -9,8 +9,6 @@ import {
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
 } from "../src/app/plan-bereit/readiness"
-import { projectLegacyLeadToFacts } from "../src/lib/user-facts"
-import type { QuizAnswers } from "../src/lib/quiz/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
@@ -637,26 +635,59 @@ test("missing hair length persists against the exact owner-scoped lead with sour
     ],
   )
 
-  // F28/task 5a: the direct `hair_profiles` upsert is gone — the fact write now
-  // goes through `saveUserFacts` (create_only), with exactly the same legacy
-  // projection `linkQuizToProfile` uses.
+  // F28/task 5a: the direct `hair_profiles` upsert is gone.
   assert.equal(db.upserts.length, 0)
-  const nextAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" }
-  const expectedDiagnostics = projectLegacyLeadToFacts({
-    leadId: "lead-legacy",
-    quizAnswers: nextAnswers as QuizAnswers,
-  }).diagnostics
+  // I3 (fix round 1): this is a correction to a single already-established fact,
+  // not a fresh account-link projection — `saveUserFacts` gets `mode: "upsert"`
+  // with a single-field `{ hairLength }` patch (so it lands even when a
+  // diagnostics document already exists), not the full create_only projection.
   const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
   assert.ok(factsCall, "expected a user_facts_save_v1 call")
   assert.equal(factsCall!.args.p_user_id, "user-1")
   assert.equal(factsCall!.args.p_domain, "diagnostics")
-  assert.equal(factsCall!.args.p_mode, "create_only")
-  assert.deepEqual(factsCall!.args.p_patch, expectedDiagnostics)
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.deepEqual(factsCall!.args.p_patch, { hairLength: "long" })
   const provenance = factsCall!.args.p_provenance as Row
   assert.deepEqual(provenance.source, { kind: "legacy_lead", id: "lead-legacy" })
-  assert.deepEqual(provenance.preservedCandidates, [
-    { kind: "lead", id: "lead-legacy", at: provenance.at },
-  ])
+  assert.equal(provenance.editedAt, undefined)
+  assert.equal(provenance.preservedCandidates, undefined)
+})
+
+test("missing hair length still corrects the fact when a diagnostics document already exists (I3)", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [{ user_id: "user-1", diagnostics: { texture: "straight" }, facts_revision: 2 }],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready")
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.ok(factsCall, "the upsert must still land against an existing diagnostics document")
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.deepEqual(factsCall!.args.p_patch, { hairLength: "long" })
+  // The pre-existing `texture` field survives the field-level merge; only
+  // `hairLength` was patched in.
+  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, {
+    texture: "straight",
+    hairLength: "long",
+  })
 })
 
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {

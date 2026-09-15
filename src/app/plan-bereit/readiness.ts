@@ -539,6 +539,11 @@ export async function loadPlanBereitInitialReadiness(
   // readiness predicate now — independent of candidate creation order, and of
   // which candidate (or an entirely different source) actually wrote them.
   // Ownership/link checks are unchanged.
+  // (M4) `facts_revision > 0` as "has been written at least once" relies on
+  // `user_facts_save_v1` being the ONLY writer of `hair_profiles.facts_revision`
+  // — true today (task 3), and the historical-user backfill also writes through
+  // that same RPC (`source.kind: "legacy_columns"`), so the invariant holds for
+  // backfilled rows too, not just fresh account links.
   const alreadyProjected =
     (candidate.lead.quiz_kind === "legacy"
       ? candidate.lead.user_id === input.userId
@@ -620,7 +625,7 @@ async function writeLegacyDiagnosticsFacts(
   const { diagnostics } = projectLegacyLeadToFacts({ leadId, quizAnswers })
   const nowIso = new Date().toISOString()
 
-  await saveUserFacts(supabase, {
+  const result = await saveUserFacts(supabase, {
     userId,
     domain: "diagnostics",
     patch: diagnostics,
@@ -632,6 +637,7 @@ async function writeLegacyDiagnosticsFacts(
     },
     mode: "create_only",
   })
+  assertUserFactsWriteApplied(result, "diagnostics")
 }
 
 /**
@@ -653,7 +659,7 @@ async function writeArtifactDiagnosticsFacts(
   })
   const nowIso = new Date().toISOString()
 
-  await saveUserFacts(supabase, {
+  const diagnosticsResult = await saveUserFacts(supabase, {
     userId,
     domain: "diagnostics",
     patch: diagnostics,
@@ -665,7 +671,8 @@ async function writeArtifactDiagnosticsFacts(
     },
     mode: "create_only",
   })
-  await saveUserFacts(supabase, {
+  assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
+  const quizContextResult = await saveUserFacts(supabase, {
     userId,
     domain: "quiz_context",
     patch: quizContext,
@@ -676,6 +683,24 @@ async function writeArtifactDiagnosticsFacts(
     },
     mode: "create_only",
   })
+  assertUserFactsWriteApplied(quizContextResult, "quiz_context")
+}
+
+/**
+ * (M1) Neither `linkExactPlanBereitSourceToProfile` nor
+ * `updateMissingPlanBereitSourceFact` passes `expectedRevision`/`draftBinding`,
+ * so `saveUserFacts` should only ever come back `ok` or `preserved` here. A
+ * `revision_conflict`/`draft_conflict` would mean something is badly wrong —
+ * fail loudly instead of silently proceeding to claim the lead/patch the fact
+ * as if the write had applied.
+ */
+function assertUserFactsWriteApplied(
+  result: { status: string },
+  domain: "diagnostics" | "quiz_context",
+): void {
+  if (result.status !== "ok" && result.status !== "preserved") {
+    throw new Error(`saveUserFacts(${domain}) returned unexpected status "${result.status}"`)
+  }
 }
 
 /**
@@ -905,12 +930,23 @@ export async function updateMissingPlanBereitSourceFact(
     }
   }
 
-  await writeLegacyDiagnosticsFacts(
-    supabase,
-    input.userId,
-    input.leadId,
-    nextAnswers as QuizAnswers,
-  )
+  // (I3, task 5a fix round 1): this is a correction to a single already-established
+  // fact, not a fresh account-link projection — it must land even when a
+  // diagnostics document already exists (an `updated_at`-guarded lead, so a
+  // stale corrector can't race past that either). `upsert` + a single-field
+  // patch, not the full `writeLegacyDiagnosticsFacts` create_only projection.
+  const factsResult = await saveUserFacts(supabase, {
+    userId: input.userId,
+    domain: "diagnostics",
+    patch: { hairLength: input.value },
+    provenance: {
+      source: { kind: "legacy_lead", id: input.leadId },
+      schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
+      at: new Date().toISOString(),
+    },
+    mode: "upsert",
+  })
+  assertUserFactsWriteApplied(factsResult, "diagnostics")
 
   return loadPlanBereitReadiness(supabase, input)
 }

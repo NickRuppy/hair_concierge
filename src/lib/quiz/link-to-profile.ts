@@ -252,7 +252,7 @@ export async function linkQuizToProfile(
       leadId: lead.id,
     })
 
-    await saveUserFacts(admin, {
+    const diagnosticsResult = await saveUserFacts(admin, {
       userId,
       domain: "diagnostics",
       patch: diagnostics,
@@ -264,7 +264,8 @@ export async function linkQuizToProfile(
       },
       mode: "create_only",
     })
-    await saveUserFacts(admin, {
+    assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
+    const quizContextResult = await saveUserFacts(admin, {
       userId,
       domain: "quiz_context",
       patch: quizContext,
@@ -275,6 +276,7 @@ export async function linkQuizToProfile(
       },
       mode: "create_only",
     })
+    assertUserFactsWriteApplied(quizContextResult, "quiz_context")
     console.log("[linkQuizToProfile] wrote diagnostics + quiz_context facts for user", userId)
   } else {
     const { diagnostics } = projectLegacyLeadToFacts({
@@ -282,7 +284,7 @@ export async function linkQuizToProfile(
       quizAnswers: lead.quiz_answers as QuizAnswers,
     })
 
-    await saveUserFacts(admin, {
+    const diagnosticsResult = await saveUserFacts(admin, {
       userId,
       domain: "diagnostics",
       patch: diagnostics,
@@ -294,6 +296,7 @@ export async function linkQuizToProfile(
       },
       mode: "create_only",
     })
+    assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
     console.log("[linkQuizToProfile] wrote diagnostics facts for user", userId)
   }
 
@@ -311,4 +314,20 @@ export async function linkQuizToProfile(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+/**
+ * (M1) Account linking never passes `expectedRevision`/`draftBinding`, so
+ * `saveUserFacts` should only ever come back `ok` or `preserved` here. A
+ * `revision_conflict`/`draft_conflict` would mean something is badly wrong —
+ * fail loudly instead of silently falling through to claim the lead as if the
+ * write had applied.
+ */
+function assertUserFactsWriteApplied(
+  result: { status: string },
+  domain: "diagnostics" | "quiz_context",
+): void {
+  if (result.status !== "ok" && result.status !== "preserved") {
+    throw new Error(`saveUserFacts(${domain}) returned unexpected status "${result.status}"`)
+  }
 }
