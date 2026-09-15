@@ -22,6 +22,7 @@ async function db(t: { after(fn: () => Promise<void>): void }) {
     "20260914142559_trial_prior_paid_claims.sql",
     "20260914144351_trial_identity_rights_lifecycle.sql",
     "20260914153229_trial_identity_key_registry_safe_updates.sql",
+    "20260915190000_paypal_trial_frozen_end.sql",
   ])
     await pg.exec(await readFile(new URL(`supabase/migrations/${file}`, ROOT), "utf8"))
   const offer = createTrialOfferSnapshot("month", {
@@ -255,4 +256,59 @@ test("key registry updates are scoped, idempotent and retain claimed versions", 
     /DELETE FROM private\.trial_identity_key_versions WHERE NOT\(version=ANY\(p_versions\)\)/,
   )
   assert.doesNotMatch(source, /DELETE FROM private\.trial_identity_key_versions\s*;/)
+})
+
+test("admission stores a verified provider trial end of at least seven and at most ten days", async (t) => {
+  const pg = await db(t)
+  const admitWithEnd = async (end: string, id = ID, values = claims) =>
+    (
+      await pg.query<{ s: string }>(
+        "SELECT public.admit_trial_enrollment($1,$2,'2020-01-01Z',$3,$4::timestamptz) s",
+        [id, JSON.stringify(values), `sub_${id}`, end],
+      )
+    ).rows[0]!.s
+  const storedEnd = async (id: string) =>
+    (
+      await pg.query<{ e: number }>(
+        "SELECT extract(epoch FROM original_trial_end_at)::bigint AS e FROM public.trial_enrollments WHERE id=$1",
+        [id],
+      )
+    ).rows[0]!.e
+  await assert.rejects(admitWithEnd("2020-01-07T23:59:59Z"), /Invalid verified trial end/)
+  await assert.rejects(admitWithEnd("2020-01-11T00:00:01Z"), /Invalid verified trial end/)
+  // Frozen PayPal end: the UTC midnight nine days after a midnight freeze.
+  assert.equal(await admitWithEnd("2020-01-10T00:00:00Z"), "active")
+  assert.equal(Number(await storedEnd(ID)), Date.parse("2020-01-10T00:00:00Z") / 1000)
+  // Replays with the same end, or without one, stay idempotent; a different end is a foreign clock.
+  assert.equal(await admitWithEnd("2020-01-10T00:00:00Z"), "active")
+  assert.equal(await admit(pg), "active")
+  assert.equal(await admitWithEnd("2020-01-09T00:00:00Z"), "invalid_state")
+  assert.equal(Number(await storedEnd(ID)), Date.parse("2020-01-10T00:00:00Z") / 1000)
+  // Without a provider end (Stripe) the exact seven-day end is stored.
+  const other = [
+    { kind: "account", keyVersion: 1, namespace: "chaarlie", value: "c".repeat(64) },
+    { kind: "stripe_card", keyVersion: 1, namespace: "acct_owner:live", value: "d".repeat(64) },
+  ]
+  assert.equal(await admit(pg, ID2, other), "active")
+  assert.equal(Number(await storedEnd(ID2)), Date.parse("2020-01-08T00:00:00Z") / 1000)
+  // The table itself bounds the end (terms are immutable after authorization, so probe via insert).
+  for (const end of ["2020-01-07T00:00:00Z", "2020-01-11T00:00:01Z"]) {
+    await assert.rejects(
+      pg.query(
+        "INSERT INTO public.trial_enrollments(id,provider,accepted_offer,authorization_succeeded_at,original_trial_end_at) VALUES(gen_random_uuid(),'paypal',$1,'2020-01-01Z',$2::timestamptz)",
+        [
+          JSON.stringify(
+            createTrialOfferSnapshot("month", {
+              monthPriceId: "price_month",
+              yearPriceId: "price_year",
+              annualCouponId: "coupon_year",
+            }),
+          ),
+          end,
+        ],
+      ),
+      /trial_enrollments_trial_end_bounds/,
+      end,
+    )
+  }
 })

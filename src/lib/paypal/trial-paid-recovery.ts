@@ -222,8 +222,9 @@ async function transactions(
   o: TrialPaidRecoveryOperation,
   d: PayPalTrialPaidRecoveryDeps,
 ) {
+  // Fallback precedes any authorization: the stored end is at most ten days after it.
   const from =
-    s.create_time ?? new Date(Date.parse(o.originalTrialEndAt) - 7 * 86400000).toISOString()
+    s.create_time ?? new Date(Date.parse(o.originalTrialEndAt) - 10 * 86400000).toISOString()
   return (d.transactions ?? listPayPalTrialTransactions)(s.id!, from, new Date().toISOString())
 }
 async function neutralizeSource(

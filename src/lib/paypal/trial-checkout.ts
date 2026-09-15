@@ -3,6 +3,7 @@ import {
   loadFrozenTrialManagementCatalog,
 } from "../billing/trial-management-operations"
 import "server-only"
+import { frozenPayPalTrialStart } from "./trial-collection-start"
 import {
   freezeTrialAnalyticsContext,
   type TrialAnalyticsContextInput,
@@ -20,7 +21,6 @@ import {
   bindPayPalTrialCheckoutReference,
   createPayPalTrialCheckoutAttempt,
   freezePayPalTrialCheckoutAttempt,
-  provisionalPayPalTrialStart,
   findPayPalTrialCheckoutAttemptByScope,
   loadPayPalTrialPlanCatalog,
   freezePayPalTrialPlanCatalog,
@@ -177,7 +177,7 @@ export async function createDurablePayPalTrialCheckout(input: Input, deps: Deps)
         planId: attempt.paypalPlanId,
         customId: attempt.intentToken,
         requestId: attempt.requestId,
-        startTime: provisionalPayPalTrialStart(attempt),
+        startTime: frozenPayPalTrialStart(attempt.requestExpiresAt),
         offer: attempt.offer,
       })
   if (
