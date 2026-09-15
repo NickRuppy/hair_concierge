@@ -649,9 +649,7 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.screenshot({ path: "/tmp/chaarlie-payment-support-handoff.png" })
   })
 
-  test("a newly activated customer sees confirmed payment and can choose a login link", async ({
-    page,
-  }) => {
+  test("a newly activated customer can choose a login link", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     let magicLinkRequests = 0
     await page.route("**/api/auth/send-magic-link", async (route) => {
@@ -666,11 +664,11 @@ test.describe("@ci personal plan offer motion hooks", () => {
     await page.goto("/labs/offer-page?variant=payment-welcome", {
       waitUntil: "domcontentloaded",
     })
-    await expect(page.getByText("Zahlung erfolgreich", { exact: true })).toBeVisible()
+    await expect(page.getByText("Zahlung erfolgreich", { exact: true })).toHaveCount(0)
     await expect(page.getByRole("heading", { name: "Zugang einrichten" })).toBeVisible()
     await expect(page.getByLabel("Chaarlie-E-Mail")).toHaveValue("lea@example.com")
-    await expect(page.getByRole("heading", { name: "Mit Passwort fortfahren" })).toBeVisible()
-    await expect(page.getByRole("heading", { name: "Ohne Passwort fortfahren" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Mit Passwort", exact: true })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Mit Login-Link", exact: true })).toBeVisible()
     await page.screenshot({ path: "/tmp/chaarlie-payment-activation-choice.png" })
 
     await page.getByRole("button", { name: "Login-Link senden" }).click()

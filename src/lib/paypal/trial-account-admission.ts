@@ -34,10 +34,17 @@ import {
 import type { PayPalSubscription } from "./subscription-shapes"
 import { markPayPalCheckoutIntentActivated, type PayPalCheckoutIntentRow } from "./checkout-intents"
 import {
+  CheckoutRecoveryError,
+  getPersistedTrialRecoveryCode,
+  type CheckoutRecoveryCode,
+} from "@/lib/auth/checkout-activation-outcome"
+import {
   ensurePayPalTrialAccountIdentity,
   type PayPalCheckoutActivationDeps,
   type PayPalCheckoutAccountResult,
 } from "./checkout-activation"
+
+export { getPersistedTrialRecoveryCode } from "@/lib/auth/checkout-activation-outcome"
 
 export type PayPalTrialActivationDeps = PayPalCheckoutActivationDeps & {
   recordBillingAnalytics?: boolean
@@ -138,11 +145,14 @@ export async function ensurePayPalTrialCheckoutAccount(
   )
     throw new Error("PayPal trial enrollment unavailable")
   if (enrollment.admission_status !== "active")
-    assertPayPalTrialBinding(intent, attempt, subscription)
+    assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
   if (enrollment.admission_status === "blocked" || enrollment.admission_status === "released") {
     if (enrollment.neutralization_required)
-      await neutralizePayPalTrialAgreement(intent, attempt, deps)
-    return { status: "duplicate" }
+      await neutralizePayPalTrialAgreementForRecovery(intent, attempt, deps)
+    return duplicateTrialActivation(
+      getPersistedTrialRecoveryCode({ ...enrollment, neutralization_required: false }) ??
+        "trial_reconciliation_required",
+    )
   }
   if (!attempt.authorizationSucceededAt) return { status: "pending" }
   const authorizationAt = new Date(attempt.authorizationSucceededAt)
@@ -152,7 +162,7 @@ export async function ensurePayPalTrialCheckoutAccount(
     if (effective.provider !== "paypal" || !effective.agreementId)
       throw new Error("PayPal effective trial agreement unavailable")
     if (effective.revision === 0 && effective.agreementId === attempt.providerReference)
-      assertPayPalTrialBinding(intent, attempt, subscription)
+      assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
     else {
       subscription = await retrieve(effective.agreementId)
       const catalog = await loadPayPalTrialPlanCatalog(deps.supabase, enrollment.id)
@@ -225,33 +235,37 @@ export async function ensurePayPalTrialCheckoutAccount(
     Date.parse(subscription.start_time ?? "") <= Date.now()
   ) {
     await blockPayPalTrialAgreement(intent, attempt, deps)
-    return { status: "duplicate" }
+    return duplicateTrialActivation("trial_checkout_closed")
   }
   if (Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd)) {
     if (
       Date.parse(subscription.start_time ?? "") !== Date.parse(provisionalPayPalTrialStart(attempt))
     )
-      throw new Error("PayPal provisional trial start mismatch")
+      throw new CheckoutRecoveryError("trial_reconciliation_required", {
+        cause: new Error("PayPal provisional trial start mismatch"),
+      })
     try {
       await (deps.patchPayPalTrialStart ?? patchPayPalTrialStart)(subscription.id!, trialEnd)
     } catch {
       // A timeout can mean the patch succeeded. Re-read before deciding whether to retry.
       subscription = await retrieve(subscription.id!)
-      assertPayPalTrialBinding(intent, attempt, subscription)
+      assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
       if (Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd)) {
         await blockPayPalTrialAgreement(intent, attempt, deps)
-        return { status: "duplicate" }
+        return duplicateTrialActivation("trial_checkout_closed")
       }
     }
     subscription = await retrieve(subscription.id!)
   }
-  assertPayPalTrialBinding(intent, attempt, subscription)
+  assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
   if (
     subscription.status !== "ACTIVE" ||
     Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd) ||
     Date.parse(subscription.billing_info?.next_billing_time ?? "") !== Date.parse(trialEnd)
   )
-    throw new Error("PayPal trial billing deadline is not verified")
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error("PayPal trial billing deadline is not verified"),
+    })
   const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)
   try {
     await (deps.assertCheckoutAccess ?? assertCanStartCheckout)(deps.supabase, identity.userId)
@@ -260,7 +274,7 @@ export async function ensurePayPalTrialCheckoutAccount(
     const own = await findBillingSubscriptionByProviderId(deps.supabase, "paypal", subscription.id!)
     if (!own || own.user_id !== identity.userId || own.trial_enrollment_id !== enrollment.id) {
       await blockPayPalTrialAgreement(intent, attempt, deps)
-      return { status: "duplicate" }
+      return duplicateTrialActivation("checkout_existing_access")
     }
   }
   if (enrollment.user_id && enrollment.user_id !== identity.userId)
@@ -312,9 +326,15 @@ export async function ensurePayPalTrialCheckoutAccount(
     claims: createTrialIdentityClaims(identities, runtime.trial.identityKeys),
   })
   if (admitted !== "active") {
-    if (admitted === "trial_used" || admitted === "claim_reserved")
-      await neutralizePayPalTrialAgreement(intent, attempt, deps)
-    return { status: "duplicate" }
+    if (admitted === "trial_used" || admitted === "claim_reserved") {
+      await neutralizePayPalTrialAgreementForRecovery(intent, attempt, deps)
+      return duplicateTrialActivation(
+        admitted === "trial_used" ? "trial_unavailable" : "trial_checkout_conflict",
+      )
+    }
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error(`PayPal trial admission result unavailable: ${admitted}`),
+    })
   }
   await finishPayPalTrialProjection(
     intent,
@@ -357,24 +377,47 @@ function resolvePayPalTrialCohortEligibility(
   })
 }
 
+function duplicateTrialActivation(
+  recoveryCode: CheckoutRecoveryCode,
+): Extract<PayPalCheckoutAccountResult, { status: "duplicate" }> {
+  return { status: "duplicate", recoveryCode }
+}
+
+function assertPayPalTrialBindingForRecovery(
+  intent: PayPalCheckoutIntentRow,
+  attempt: PayPalTrialCheckoutAttempt,
+  subscription: PayPalSubscription,
+) {
+  try {
+    assertPayPalTrialBinding(intent, attempt, subscription)
+  } catch (cause) {
+    throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+  }
+}
+
 async function blockPayPalTrialAgreement(
   intent: PayPalCheckoutIntentRow,
   attempt: PayPalTrialCheckoutAttempt,
   deps: PayPalTrialActivationDeps,
 ) {
-  const result = await deps.supabase
-    .from("trial_enrollments")
-    .update({
-      admission_status: "blocked",
-      provider_agreement_id: attempt.providerReference,
-      neutralization_required: true,
-    })
-    .eq("id", attempt.enrollmentId)
-    .eq("admission_status", "reserved")
-    .select("id")
-    .maybeSingle()
-  if (result.error || !result.data) throw new Error("PayPal trial denial reconciliation required")
-  await neutralizePayPalTrialAgreement(intent, attempt, deps)
+  try {
+    const result = await deps.supabase
+      .from("trial_enrollments")
+      .update({
+        admission_status: "blocked",
+        provider_agreement_id: attempt.providerReference,
+        neutralization_required: true,
+      })
+      .eq("id", attempt.enrollmentId)
+      .eq("admission_status", "reserved")
+      .select("id")
+      .maybeSingle()
+    if (result.error || !result.data) throw new Error("PayPal trial denial reconciliation required")
+    await neutralizePayPalTrialAgreementForRecovery(intent, attempt, deps)
+  } catch (cause) {
+    if (cause instanceof CheckoutRecoveryError) throw cause
+    throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+  }
 }
 
 async function neutralizePayPalTrialAgreement(
@@ -409,6 +452,18 @@ async function neutralizePayPalTrialAgreement(
     ))
   )
     throw new Error("PayPal trial claim release reconciliation required")
+}
+
+async function neutralizePayPalTrialAgreementForRecovery(
+  intent: PayPalCheckoutIntentRow,
+  attempt: PayPalTrialCheckoutAttempt,
+  deps: PayPalTrialActivationDeps,
+) {
+  try {
+    await neutralizePayPalTrialAgreement(intent, attempt, deps)
+  } catch (cause) {
+    throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+  }
 }
 
 async function finishPayPalTrialProjection(

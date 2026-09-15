@@ -8,6 +8,11 @@ import {
   claimCheckoutActivation,
   releaseCheckoutActivationClaim,
 } from "@/lib/auth/checkout-activation-claim"
+import {
+  CheckoutRecoveryError,
+  checkoutRecoveryResponse,
+} from "@/lib/auth/checkout-activation-outcome"
+import { classifyCheckoutRecoveryError } from "@/lib/auth/checkout-recovery-classification"
 import { checkRateLimit, SET_CHECKOUT_PASSWORD_RATE_LIMIT } from "@/lib/rate-limit"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
@@ -37,16 +42,8 @@ const WEAK_PASSWORD_ERROR = "Das Passwort muss mindestens 8 Zeichen lang sein."
 const RATE_LIMIT_ERROR = "Zu viele Versuche. Bitte warte kurz und versuche es erneut."
 const RATE_LIMIT_UNAVAILABLE_ERROR =
   "Passwort kann gerade nicht gesetzt werden. Bitte versuche es gleich erneut."
-const EXISTING_ACCOUNT_ERROR =
-  "Für diese E-Mail gibt es bereits ein Konto. Bitte melde dich an oder nutze den Login-Link."
-const EXPIRED_ACTIVATION_ERROR =
-  "Diese Passwort-Aktivierung ist nicht mehr gültig. Bitte melde dich an oder nutze den Login-Link."
-const INVALID_SESSION_ERROR =
-  "Checkout konnte nicht bestätigt werden. Bitte öffne den Link aus deiner Bestellbestätigung erneut."
 const INCOMPLETE_PAYMENT_ERROR =
   "Deine Zahlung ist noch nicht abgeschlossen. Bitte schließe den Checkout zuerst ab."
-const ACTIVATION_PENDING_ERROR = "Deine Zahlung ist bestätigt. Wir schließen deinen Zugang noch ab."
-const SERVER_ERROR = "Passwort konnte nicht gesetzt werden. Bitte versuche es später erneut."
 
 type RateLimitResult = { allowed: boolean; error?: string }
 
@@ -129,6 +126,7 @@ export async function handleSetCheckoutPassword(
     return {
       status,
       body: {
+        ...(status === 429 ? checkoutRecoveryResponse("auth_rate_limited").body : {}),
         error:
           rateCheck.error === "service_unavailable"
             ? RATE_LIMIT_UNAVAILABLE_ERROR
@@ -147,12 +145,12 @@ export async function handleSetCheckoutPassword(
     )
 
     if (!account.canSetInitialPassword) {
-      return { status: 409, body: { error: EXISTING_ACCOUNT_ERROR } }
+      throw new CheckoutRecoveryError("activation_login_required")
     }
 
     const metadata = await loadCurrentAppMetadata(deps.supabase, account.userId)
     if (!isActivationStillValid(metadata, target.activationId)) {
-      return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
+      throw new CheckoutRecoveryError("activation_login_required")
     }
 
     const claimed = await (deps.claimCheckoutActivation ?? claimCheckoutActivation)(
@@ -162,7 +160,7 @@ export async function handleSetCheckoutPassword(
       "password",
     )
     if (!claimed) {
-      return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
+      throw new CheckoutRecoveryError("activation_login_required")
     }
 
     const mergedMetadata: Record<string, unknown> = {
@@ -184,31 +182,66 @@ export async function handleSetCheckoutPassword(
         status: 500,
         reason: "update_user_failed",
       })
-      await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
-        deps.supabase,
-        target.activationId,
-      )
-      return { status: 500, body: { error: SERVER_ERROR } }
+      try {
+        await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
+          deps.supabase,
+          target.activationId,
+        )
+      } catch (releaseError) {
+        ;(deps.captureCheckoutException ?? captureCheckoutException)(releaseError, {
+          ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+          status: 500,
+          reason: "release_checkout_activation_claim_failed_after_password_error",
+        })
+        return checkoutRecoveryResponse("activation_login_required")
+      }
+      return checkoutRecoveryResponse("activation_temporary")
     }
 
     return { status: 200, body: { ok: true, email: account.email, next } }
   } catch (err) {
+    if (err instanceof CheckoutRecoveryError) {
+      captureRecoveryCause(err, target, deps)
+      return checkoutRecoveryResponse(err.code)
+    }
+
     if (err instanceof CheckoutActivationPendingError) {
-      return {
-        status: 409,
-        body: { code: "activation_pending", error: ACTIVATION_PENDING_ERROR },
-      }
+      return checkoutRecoveryResponse("activation_pending")
     }
 
     if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
-      return {
-        status: isPaymentIncompleteError(err.code) ? 403 : 400,
-        body: {
-          error: isPaymentIncompleteError(err.code)
-            ? INCOMPLETE_PAYMENT_ERROR
-            : INVALID_SESSION_ERROR,
-        },
+      if (isPaymentIncompleteError(err.code)) {
+        return { status: 403, body: { error: INCOMPLETE_PAYMENT_ERROR } }
       }
+      const recoveryCode = classifyCheckoutRecoveryError(err)
+      if (recoveryCode) {
+        if (recoveryCode === "trial_reconciliation_required") {
+          ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+            ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+            status: checkoutRecoveryResponse(recoveryCode).status,
+            reason: err.code,
+          })
+        }
+        return checkoutRecoveryResponse(recoveryCode)
+      }
+      ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+        ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+        status: 503,
+        reason: err.code,
+      })
+      return checkoutRecoveryResponse("activation_temporary")
+    }
+
+    const recoveryCode = classifyCheckoutRecoveryError(err)
+    if (recoveryCode) {
+      if (recoveryCode === "trial_reconciliation_required") {
+        ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+          ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+          status: checkoutRecoveryResponse(recoveryCode).status,
+          reason: "classified_persistent_provider_error",
+        })
+      }
+      return checkoutRecoveryResponse(recoveryCode)
     }
 
     console.error("[set-checkout-password] failed:", err)
@@ -216,7 +249,7 @@ export async function handleSetCheckoutPassword(
       ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
       status: 500,
     })
-    return { status: 500, body: { error: SERVER_ERROR } }
+    return checkoutRecoveryResponse("activation_temporary")
   }
 }
 
@@ -296,11 +329,9 @@ async function ensureActiveCheckoutAccount(
     premiumTierId,
     linkQuizToProfile: deps.linkQuizToProfile,
   })
-  if (account.status === "pending" || account.status === "duplicate") {
-    throw new PayPalCheckoutActivationError(
-      "paypal_subscription_inactive",
-      "PayPal subscription is not ready for activation",
-    )
+  if (account.status === "pending") throw new CheckoutRecoveryError("activation_pending")
+  if (account.status === "duplicate") {
+    throw new CheckoutRecoveryError(account.recoveryCode ?? "checkout_existing_access")
   }
   return account
 }
@@ -353,6 +384,23 @@ function isPaymentIncompleteError(
     code === "checkout_session_unpaid" ||
     code === "paypal_subscription_inactive"
   )
+}
+
+function captureRecoveryCause(
+  error: CheckoutRecoveryError,
+  target: CheckoutActivationTarget,
+  deps: SetCheckoutPasswordDeps,
+) {
+  if (
+    error.cause === undefined ||
+    (error.code !== "trial_reconciliation_required" && error.code !== "activation_temporary")
+  )
+    return
+  ;(deps.captureCheckoutException ?? captureCheckoutException)(error.cause, {
+    ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+    status: checkoutRecoveryResponse(error.code).status,
+    reason: error.code,
+  })
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

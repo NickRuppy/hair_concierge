@@ -13,6 +13,8 @@ import { buildAuthenticatedAppRedirectUrl } from "../src/lib/supabase/middleware
 import { handleSendMagicLink } from "../src/app/api/auth/send-magic-link/route"
 import { handleSendSetupLink } from "../src/app/api/auth/send-setup-link/route"
 import { handleSetCheckoutPassword } from "../src/app/api/auth/set-checkout-password/route"
+import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
+import { CheckoutActivationError } from "../src/lib/stripe/checkout-activation"
 
 function sessionHash(sessionId: string) {
   return createHash("sha256").update(sessionId).digest("hex")
@@ -418,7 +420,7 @@ test("returns 503 when the rate-limit service is unavailable", async () => {
   expect(response.body.error).toContain("Bitte versuche es")
 })
 
-test("returns 409 when the checkout account cannot set an initial password", async () => {
+test("returns the consumed-claim recovery when the checkout account cannot set an initial password", async () => {
   const { deps } = stubDeps({
     ensureCheckoutAccount: async () => ({
       userId: "user-existing",
@@ -433,9 +435,7 @@ test("returns 409 when the checkout account cannot set an initial password", asy
   )
 
   expect(response.status).toBe(409)
-  expect(response.body.error).toBe(
-    "Für diese E-Mail gibt es bereits ein Konto. Bitte melde dich an oder nutze den Login-Link.",
-  )
+  expect(response.body).toMatchObject({ code: "activation_login_required" })
 })
 
 test("merges app metadata, clears activation hash, and confirms email on success", async () => {
@@ -480,7 +480,7 @@ test("rejects password creation when the checkout activation was already claimed
   )
 
   expect(response.status).toBe(409)
-  expect(response.body.error).toContain("nicht mehr gültig")
+  expect(response.body).toMatchObject({ code: "activation_login_required" })
   expect(calls.some(([op]) => op === "updateUserById")).toBe(false)
 })
 
@@ -501,8 +501,34 @@ test("releases the checkout activation claim if password creation fails", async 
     deps,
   )
 
-  expect(response.status).toBe(500)
+  expect(response).toMatchObject({ status: 503, body: { code: "activation_temporary" } })
   expect(releasedSessionId).toBe("cs_test_password")
+})
+
+test("password update failure with a stuck claim returns login recovery", async () => {
+  const captured: unknown[][] = []
+  const { deps } = stubDeps({
+    releaseCheckoutActivationClaim: async () => {
+      throw new Error("claim release failed")
+    },
+    captureCheckoutException: (error: unknown, details: Record<string, unknown>) => {
+      captured.push([error, details])
+    },
+  } as any)
+  deps.supabase.auth.admin.updateUserById = async () => ({
+    data: { user: null },
+    error: { message: "password update failed" } as any,
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({ status: 409, body: { code: "activation_login_required" } })
+  expect(captured[1]?.[1]).toMatchObject({
+    reason: "release_checkout_activation_claim_failed_after_password_error",
+  })
 })
 
 test("rejects when the activation marker no longer matches immediately before update", async () => {
@@ -518,7 +544,7 @@ test("rejects when the activation marker no longer matches immediately before up
   )
 
   expect(response.status).toBe(409)
-  expect(response.body.error).toContain("nicht mehr gültig")
+  expect(response.body).toMatchObject({ code: "activation_login_required" })
   expect(calls.some(([op]) => op === "updateUserById")).toBe(false)
 })
 
@@ -723,6 +749,151 @@ test("password activation returns the server-resolved personal-plan transition",
     },
   })
   expect(calls.some(([op]) => op === "updateUserById")).toBe(true)
+})
+
+test("terminal trial denial returns a typed recovery without password or OTP side effects", async () => {
+  const password = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw new CheckoutRecoveryError("trial_unavailable")
+    },
+  })
+  const passwordResponse = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    password.deps,
+  )
+
+  expect(passwordResponse).toMatchObject({ status: 403, body: { code: "trial_unavailable" } })
+  expect(password.calls.some(([op]) => op === "updateUserById")).toBe(false)
+
+  const magic = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw new CheckoutRecoveryError("trial_unavailable")
+    },
+  })
+  let otpCalls = 0
+  magic.deps.supabase.auth.signInWithOtp = async () => {
+    otpCalls += 1
+    return { data: { user: null, session: null }, error: null }
+  }
+  const magicResponse = await handleSendMagicLink({ session_id: "cs_test_password" }, {
+    ...magic.deps,
+    siteUrl: "https://hair.example",
+  } as any)
+
+  expect(magicResponse).toMatchObject({ status: 403, body: { code: "trial_unavailable" } })
+  expect(otpCalls).toBe(0)
+})
+
+test("invalid provider references are safe and do not start auth side effects", async () => {
+  const { calls, deps } = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw new CheckoutActivationError("checkout_session_id_missing", "provider secret detail")
+    },
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({ status: 400, body: { code: "activation_link_invalid" } })
+  expect(response.body.error).not.toContain("provider secret detail")
+  expect(calls.some(([op]) => op === "updateUserById")).toBe(false)
+})
+
+test("Stripe resource-missing errors are treated as invalid activation references", async () => {
+  const { calls, deps } = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw Object.assign(new Error("provider object absent"), { code: "resource_missing" })
+    },
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({ status: 400, body: { code: "activation_link_invalid" } })
+  expect(calls.some(([op]) => op === "updateUserById")).toBe(false)
+})
+
+test("persistent provider validation maps to reconciliation instead of a retry loop", async () => {
+  const { deps } = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw new CheckoutActivationError("checkout_subscription_expired", "subscription expired")
+    },
+  })
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 503,
+    body: { code: "trial_reconciliation_required" },
+  })
+})
+
+test("PayPal subscription pending returns status-retry recovery before auth side effects", async () => {
+  const password = stubDeps({
+    ensurePayPalCheckoutAccountForToken: async () => ({ status: "pending" }),
+  })
+  const passwordResponse = await handleSetCheckoutPassword(
+    { provider: "paypal", token: "I-pending", password: "long-enough" },
+    password.deps,
+  )
+
+  expect(passwordResponse).toMatchObject({ status: 409, body: { code: "activation_pending" } })
+  expect(password.calls.some(([op]) => op === "updateUserById")).toBe(false)
+
+  const magic = stubDeps({
+    ensurePayPalCheckoutAccountForToken: async () => ({ status: "pending" }),
+  })
+  let otpCalls = 0
+  magic.deps.supabase.auth.signInWithOtp = async () => {
+    otpCalls += 1
+    return { data: { user: null, session: null }, error: null }
+  }
+  const magicResponse = await handleSendMagicLink({ provider: "paypal", token: "I-pending" }, {
+    ...magic.deps,
+    siteUrl: "https://hair.example",
+  } as any)
+
+  expect(magicResponse).toMatchObject({ status: 409, body: { code: "activation_pending" } })
+  expect(otpCalls).toBe(0)
+})
+
+test("typed reconciliation causes are retained in checkout monitoring", async () => {
+  const captured: unknown[][] = []
+  const cause = new Error("cleanup reconciliation failed")
+  const { deps } = stubDeps({
+    ensureCheckoutAccount: async () => {
+      throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+    },
+    captureCheckoutException: (error: unknown, details: Record<string, unknown>) => {
+      captured.push([error, details])
+    },
+  } as any)
+
+  const response = await handleSetCheckoutPassword(
+    { session_id: "cs_test_password", password: "long-enough" },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 503,
+    body: { code: "trial_reconciliation_required" },
+  })
+  expect(captured).toEqual([
+    [
+      cause,
+      expect.objectContaining({
+        reason: "trial_reconciliation_required",
+        stage: "checkout_password_activation",
+      }),
+    ],
+  ])
 })
 
 test("send magic link derives email from checkout activation and consumes matching password marker", async () => {
@@ -1287,7 +1458,7 @@ test("send magic link rejects when the checkout activation was already claimed",
   )
 
   expect(response.status).toBe(409)
-  expect(response.body.error).toContain("nicht mehr gültig")
+  expect(response.body).toMatchObject({ code: "activation_login_required" })
 })
 
 test("send magic link reports app rate limits to checkout Sentry context", async () => {
@@ -1343,8 +1514,34 @@ test("send magic link releases the checkout activation claim if email sending fa
     },
   )
 
-  expect(response.status).toBe(500)
+  expect(response).toMatchObject({ status: 500, body: { code: "auth_link_send_failed" } })
   expect(releasedSessionId).toBe("cs_magic")
+})
+
+test("magic-link send failure with failed claim release does not promise a resend", async () => {
+  const { deps } = stubDeps()
+  const captured: any[] = []
+  deps.supabase.auth.signInWithOtp = async () => ({
+    data: { user: null, session: null },
+    error: { message: "delivery provider failed" } as any,
+  })
+
+  const response = await handleSendMagicLink({ session_id: "cs_magic" }, {
+    ...deps,
+    siteUrl: "https://hair.example",
+    releaseCheckoutActivationClaim: async () => {
+      throw new Error("claim release failed")
+    },
+    captureCheckoutException: (error: unknown, details: Record<string, unknown>) => {
+      captured.push([error, details])
+    },
+  } as any)
+
+  expect(response).toMatchObject({ status: 409, body: { code: "activation_login_required" } })
+  expect(response.body.error).not.toContain("delivery provider failed")
+  expect(captured[1]?.[1]).toMatchObject({
+    reason: "release_checkout_activation_claim_failed_after_otp_error",
+  })
 })
 
 test("send magic link reports Supabase Auth email-send rate limits to checkout Sentry context", async () => {
@@ -1373,7 +1570,7 @@ test("send magic link reports Supabase Auth email-send rate limits to checkout S
     },
   } as any)
 
-  expect(response.status).toBe(500)
+  expect(response).toMatchObject({ status: 429, body: { code: "auth_rate_limited" } })
   expect(captured).toEqual([
     expect.objectContaining({
       provider: "stripe",
@@ -1414,22 +1611,16 @@ test("deprecated setup link route returns 410 without side effects", async () =>
   })
 })
 
-test("welcome activation UI renders both equal checkout choices with a read-only email", async () => {
+test("welcome activation UI renders password and login-link choices with a read-only email", async () => {
   const source = readFileSync("src/app/welcome/welcome-client.tsx", "utf-8")
 
   expect(source).toContain("Zahlung erfolgreich")
   expect(source).toContain("Konto aktivieren")
   expect(source).toContain("readOnly")
-  expect(source).toContain("Mit Passwort fortfahren")
-  expect(source).toContain(
-    "Erstelle ein Passwort und melde dich künftig direkt mit deiner E-Mail an.",
-  )
+  expect(source).toContain("Mit Passwort")
   expect(source).toContain("Passwort wiederholen")
   expect(source).toContain("Passwort erstellen")
-  expect(source).toContain("Ohne Passwort fortfahren")
-  expect(source).toContain(
-    "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet.",
-  )
+  expect(source).toContain("Mit Login-Link")
   expect(source).toContain("Login-Link senden")
   expect(source).not.toContain("send-setup-link")
   expect(source).not.toContain("zuruecksetzen")

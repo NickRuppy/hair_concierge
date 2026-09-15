@@ -8,6 +8,11 @@ import {
   claimCheckoutActivation,
   releaseCheckoutActivationClaim,
 } from "@/lib/auth/checkout-activation-claim"
+import {
+  CheckoutRecoveryError,
+  checkoutRecoveryResponse,
+} from "@/lib/auth/checkout-activation-outcome"
+import { classifyCheckoutRecoveryError } from "@/lib/auth/checkout-recovery-classification"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { checkRateLimit, SEND_AUTH_LINK_RATE_LIMIT } from "@/lib/rate-limit"
 import {
@@ -37,13 +42,6 @@ const RATE_LIMIT_UNAVAILABLE_ERROR =
   "Login-Link kann gerade nicht gesendet werden. Bitte versuche es gleich erneut."
 const INCOMPLETE_PAYMENT_ERROR =
   "Deine Zahlung ist noch nicht abgeschlossen. Bitte schließe den Checkout zuerst ab."
-const ACTIVATION_PENDING_ERROR = "Deine Zahlung ist bestätigt. Wir schließen deinen Zugang noch ab."
-const INVALID_SESSION_ERROR =
-  "Checkout konnte nicht bestätigt werden. Bitte öffne den Link aus deiner Bestellbestätigung erneut."
-const SEND_ERROR = "Login-Link konnte nicht gesendet werden. Bitte versuche es erneut."
-const EXPIRED_ACTIVATION_ERROR =
-  "Diese Kontoaktivierung ist nicht mehr gültig. Bitte melde dich an oder nutze den Login-Link."
-const SERVER_ERROR = "Kontoaktivierung konnte nicht abgeschlossen werden. Bitte versuche es erneut."
 
 type RateLimitResult = { allowed: boolean; error?: string }
 
@@ -121,6 +119,7 @@ export async function handleSendMagicLink(
     return {
       status,
       body: {
+        ...(status === 429 ? checkoutRecoveryResponse("auth_rate_limited").body : {}),
         error:
           rateCheck.error === "service_unavailable"
             ? RATE_LIMIT_UNAVAILABLE_ERROR
@@ -145,7 +144,7 @@ export async function handleSendMagicLink(
       "passwordless",
     )
     if (!claimed) {
-      return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
+      throw new CheckoutRecoveryError("activation_login_required")
     }
 
     const { error } = await deps.supabase.auth.signInWithOtp({
@@ -166,11 +165,22 @@ export async function handleSendMagicLink(
         reason: rateLimitReason ?? "sign_in_with_otp_failed",
         rateLimitSource: rateLimitReason ? "supabase_auth" : undefined,
       })
-      await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
-        deps.supabase,
-        parsed.target.activationId,
+      try {
+        await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
+          deps.supabase,
+          parsed.target.activationId,
+        )
+      } catch (releaseError) {
+        ;(deps.captureCheckoutException ?? captureCheckoutException)(releaseError, {
+          ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+          status: 500,
+          reason: "release_checkout_activation_claim_failed_after_otp_error",
+        })
+        return checkoutRecoveryResponse("activation_login_required")
+      }
+      return checkoutRecoveryResponse(
+        rateLimitReason ? "auth_rate_limited" : "auth_link_send_failed",
       )
-      return { status: 500, body: { error: SEND_ERROR } }
     }
 
     try {
@@ -186,22 +196,51 @@ export async function handleSendMagicLink(
 
     return { status: 200, body: { ok: true, email: account.email, next } }
   } catch (err) {
+    if (err instanceof CheckoutRecoveryError) {
+      captureRecoveryCause(err, parsed.target, deps)
+      return checkoutRecoveryResponse(err.code)
+    }
+
     if (err instanceof CheckoutActivationPendingError) {
-      return {
-        status: 409,
-        body: { code: "activation_pending", error: ACTIVATION_PENDING_ERROR },
-      }
+      return checkoutRecoveryResponse("activation_pending")
     }
 
     if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
-      return {
-        status: isPaymentIncompleteError(err.code) ? 403 : 400,
-        body: {
-          error: isPaymentIncompleteError(err.code)
-            ? INCOMPLETE_PAYMENT_ERROR
-            : INVALID_SESSION_ERROR,
-        },
+      if (isPaymentIncompleteError(err.code)) {
+        return { status: 403, body: { error: INCOMPLETE_PAYMENT_ERROR } }
       }
+      const recoveryCode = classifyCheckoutRecoveryError(err)
+      if (recoveryCode) {
+        if (recoveryCode === "trial_reconciliation_required") {
+          ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+            ...checkoutActivationTargetSentryDetails(
+              parsed.target,
+              "checkout_magic_link_activation",
+            ),
+            status: checkoutRecoveryResponse(recoveryCode).status,
+            reason: err.code,
+          })
+        }
+        return checkoutRecoveryResponse(recoveryCode)
+      }
+      ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+        ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+        status: 503,
+        reason: err.code,
+      })
+      return checkoutRecoveryResponse("activation_temporary")
+    }
+
+    const recoveryCode = classifyCheckoutRecoveryError(err)
+    if (recoveryCode) {
+      if (recoveryCode === "trial_reconciliation_required") {
+        ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+          ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+          status: checkoutRecoveryResponse(recoveryCode).status,
+          reason: "classified_persistent_provider_error",
+        })
+      }
+      return checkoutRecoveryResponse(recoveryCode)
     }
 
     console.error("[send-magic-link] failed:", err)
@@ -209,7 +248,7 @@ export async function handleSendMagicLink(
       ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
       status: 500,
     })
-    return { status: 500, body: { error: SERVER_ERROR } }
+    return checkoutRecoveryResponse("activation_temporary")
   }
 }
 
@@ -312,11 +351,9 @@ async function ensureActiveCheckoutAccount(
     premiumTierId,
     linkQuizToProfile: deps.linkQuizToProfile,
   })
-  if (account.status === "pending" || account.status === "duplicate") {
-    throw new PayPalCheckoutActivationError(
-      "paypal_subscription_inactive",
-      "PayPal subscription is not ready for activation",
-    )
+  if (account.status === "pending") throw new CheckoutRecoveryError("activation_pending")
+  if (account.status === "duplicate") {
+    throw new CheckoutRecoveryError(account.recoveryCode ?? "checkout_existing_access")
   }
   return account
 }
@@ -357,6 +394,23 @@ function isPaymentIncompleteError(
     code === "checkout_session_unpaid" ||
     code === "paypal_subscription_inactive"
   )
+}
+
+function captureRecoveryCause(
+  error: CheckoutRecoveryError,
+  target: CheckoutActivationTarget,
+  deps: SendMagicLinkDeps,
+) {
+  if (
+    error.cause === undefined ||
+    (error.code !== "trial_reconciliation_required" && error.code !== "activation_temporary")
+  )
+    return
+  ;(deps.captureCheckoutException ?? captureCheckoutException)(error.cause, {
+    ...checkoutActivationTargetSentryDetails(target, "checkout_magic_link_activation"),
+    status: checkoutRecoveryResponse(error.code).status,
+    reason: error.code,
+  })
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
