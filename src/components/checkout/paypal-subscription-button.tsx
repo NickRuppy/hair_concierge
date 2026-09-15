@@ -21,6 +21,7 @@ import { capturePaymentFailure, type PaymentErrorFamily } from "@/lib/observabil
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import { syncOpenAIAdsBeforeCheckout } from "@/lib/openai-ads/browser"
 import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import {
@@ -901,6 +902,7 @@ async function createSubscriptionIntent({
   trial?: boolean
   funnelEventId: string
 }): Promise<{ token: string; planId: string; subscriptionId?: string }> {
+  await syncOpenAIAdsBeforeCheckout()
   const response = await fetch("/api/paypal/create-subscription-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

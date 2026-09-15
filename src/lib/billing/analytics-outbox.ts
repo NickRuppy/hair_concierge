@@ -8,6 +8,10 @@ import type {
 } from "@/lib/billing/types"
 import { deliverBillingAnalyticsToCustomerIo } from "./analytics-destinations/customerio"
 import { deliverBillingAnalyticsToFunnel } from "./analytics-destinations/funnel"
+import {
+  deliverBillingAnalyticsToOpenAI,
+  isOpenAIBillingEvent,
+} from "./analytics-destinations/openai-capi"
 import { deliverBillingAnalyticsToMeta } from "./analytics-destinations/meta-capi"
 import { deliverBillingAnalyticsToPostHog } from "./analytics-destinations/posthog-server"
 import type {
@@ -66,22 +70,44 @@ export type BillingAnalyticsDueStats = {
   processed: number
   delivered: number
   failed: number
+  skipped?: number
 }
 
-type DispatchDeliveryOutcome = "skipped" | "delivered" | "failed"
+type DispatchDeliveryOutcome = "not_claimed" | "skipped" | "delivered" | "failed"
 
 export async function createBillingAnalyticsEvent(
   supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
   options: CreateBillingAnalyticsEventOptions = {},
 ): Promise<BillingAnalyticsOutboxRow> {
-  const event = await insertOrFindOutboxEvent(supabase, input)
-  const destinations = event.event_name.startsWith("trial_")
+  const { event, created } = await insertOrFindOutboxEvent(supabase, input)
+  const legacyDestinations = event.event_name.startsWith("trial_")
     ? event.event_name === "trial_started" && event.payload.trial_analytics_version === 1
       ? ["posthog" as const, "meta" as const]
       : ["posthog" as const]
     : (options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS)
-  await ensureDeliveryRows(supabase, event.id, destinations)
+  const destinations: BillingAnalyticsDestination[] = [...legacyDestinations].filter(
+    (d) => d !== "openai",
+  )
+  if (
+    created &&
+    isOpenAIBillingEvent(event) &&
+    (process.env.OPENAI_ADS_ENABLED === "true" || options.destinations?.includes("openai"))
+  ) {
+    destinations.push("openai")
+  }
+  await ensureDeliveryRows(
+    supabase,
+    event.id,
+    destinations.filter((destination) => destination !== "openai"),
+  )
+  if (destinations.includes("openai")) {
+    // The database trigger normally creates this row. A fallback failure must not
+    // interfere with the established billing destinations.
+    try {
+      await ensureDeliveryRows(supabase, event.id, ["openai"])
+    } catch {}
+  }
 
   if (options.dispatch !== false) {
     await dispatchBillingAnalyticsEvent(supabase, event, destinations)
@@ -162,9 +188,10 @@ export async function dispatchBillingAnalyticsDueWithStats(
     const event = await findOutboxEventById(supabase, delivery.outbox_id)
     if (!event) continue
     const outcome = await dispatchDelivery(supabase, event, delivery, options.dependencies)
-    if (outcome === "skipped") continue
+    if (outcome === "not_claimed") continue
     stats.processed += 1
-    stats[outcome] += 1
+    if (outcome === "skipped") stats.skipped = (stats.skipped ?? 0) + 1
+    else stats[outcome] += 1
   }
 
   return stats
@@ -176,15 +203,21 @@ export async function dispatchBillingAnalyticsEvent(
   destinations: BillingAnalyticsDestination[] = BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ) {
+  const dispatchDestinations = isOpenAIBillingEvent(event)
+    ? [...new Set([...destinations, "openai"])]
+    : destinations.filter((d) => d !== "openai")
   const { data, error } = await supabase
     .from("billing_analytics_deliveries")
     .select("*")
     .eq("outbox_id", event.id)
-    .in("destination", destinations)
+    .in("destination", dispatchDestinations)
 
   if (error) throw error
   const deliveries = ((data as BillingAnalyticsDeliveryRow[] | null) ?? []).filter(
-    (delivery) => delivery.status !== "delivered" && delivery.status !== "failed_permanent",
+    (delivery) =>
+      delivery.status !== "delivered" &&
+      delivery.status !== "failed_permanent" &&
+      delivery.status !== "skipped",
   )
 
   for (const delivery of deliveries) {
@@ -195,7 +228,7 @@ export async function dispatchBillingAnalyticsEvent(
 async function insertOrFindOutboxEvent(
   supabase: SupabaseBillingAnalyticsClient,
   input: BillingAnalyticsEventInput,
-): Promise<BillingAnalyticsOutboxRow> {
+): Promise<{ event: BillingAnalyticsOutboxRow; created: boolean }> {
   const now = new Date().toISOString()
   const row = {
     event_key: input.eventKey,
@@ -213,12 +246,12 @@ async function insertOrFindOutboxEvent(
 
   const insert = await supabase.from("billing_analytics_outbox").insert(row).select("*").single()
 
-  if (!insert.error) return insert.data as BillingAnalyticsOutboxRow
+  if (!insert.error) return { event: insert.data as BillingAnalyticsOutboxRow, created: true }
   if (!isDuplicateKeyError(insert.error)) throw insert.error
 
   const existing = await findBillingAnalyticsEventByKey(supabase, input.eventKey)
   if (!existing) throw insert.error
-  return existing
+  return { event: existing, created: false }
 }
 
 async function ensureDeliveryRows(
@@ -244,14 +277,16 @@ async function dispatchDelivery(
   dependencies: Partial<DispatchBillingAnalyticsDependencies> = {},
 ): Promise<DispatchDeliveryOutcome> {
   const claimed = await claimDeliveryForDispatch(supabase, delivery)
-  if (!claimed) return "skipped"
+  if (!claimed) return "not_claimed"
 
   let result: BillingAnalyticsDeliveryResult
   try {
     const findProfile = dependencies.findProfile ?? findBillingAnalyticsProfile
     const deliver = dependencies.deliver ?? deliverToDestination
     const profile =
-      claimed.destination === "funnel" ? null : await findProfile(supabase, event.user_id)
+      claimed.destination === "funnel" || claimed.destination === "openai"
+        ? null
+        : await findProfile(supabase, event.user_id)
     const input: BillingAnalyticsDeliveryInput = { event, profile, supabase }
     result = await deliver(claimed.destination, input)
   } catch (error) {
@@ -259,6 +294,23 @@ async function dispatchDelivery(
       ok: false,
       error: error instanceof Error ? error.message : String(error),
     }
+  }
+
+  if (claimed.destination === "openai" && result.skipped) {
+    const { error } = await supabase
+      .from("billing_analytics_deliveries")
+      .update({
+        status: "skipped",
+        attempts: claimed.attempts + 1,
+        processing_started_at: null,
+        next_attempt_at: null,
+        delivered_at: null,
+        last_error: result.error ?? "skipped",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", claimed.id)
+    if (error) throw error
+    return "skipped"
   }
 
   if (result.ok) {
@@ -277,6 +329,8 @@ function deliverToDestination(
   switch (destination) {
     case "customerio":
       return deliverBillingAnalyticsToCustomerIo(input)
+    case "openai":
+      return deliverBillingAnalyticsToOpenAI(input)
     case "meta":
       return deliverBillingAnalyticsToMeta(input)
     case "posthog":
@@ -424,6 +478,10 @@ function sanitizePayload(payload: Record<string, unknown>) {
     "client_ip_address",
     "meta_context",
     "marketing_consent",
+    "oppref",
+    "obref",
+    "__oppref",
+    "__obref",
   ])
   return Object.fromEntries(Object.entries(payload).filter(([key]) => !blockedKeys.has(key)))
 }

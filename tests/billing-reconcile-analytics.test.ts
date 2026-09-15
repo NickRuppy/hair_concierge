@@ -363,6 +363,7 @@ test("billing reconcile drains all destinations with a limit of ten when enabled
     { destination: "posthog", limit: 10 },
     { destination: "meta", limit: 10 },
     { destination: "funnel", limit: 10 },
+    { destination: "openai", limit: 10 },
   ])
   assert.deepEqual(response.body, {
     browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
@@ -376,6 +377,7 @@ test("billing reconcile drains all destinations with a limit of ten when enabled
       posthog: { processed: 2, delivered: 2, failed: 0 },
       meta: { processed: 1, delivered: 0, failed: 1 },
       funnel: { processed: 1, delivered: 0, failed: 1 },
+      openai: { processed: 1, delivered: 0, failed: 1 },
     },
   })
 })
@@ -396,7 +398,7 @@ test("billing reconcile isolates and sanitizes one analytics destination rejecti
   )
 
   assert.equal(response.status, 500)
-  assert.deepEqual(completed.sort(), ["customerio", "funnel", "meta"])
+  assert.deepEqual(completed.sort(), ["customerio", "funnel", "meta", "openai"])
   assert.deepEqual(response.body, {
     browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
     downgraded: 2,
@@ -409,6 +411,7 @@ test("billing reconcile isolates and sanitizes one analytics destination rejecti
       posthog: { processed: 0, delivered: 0, failed: 0, status: "error" },
       meta: { processed: 4, delivered: 3, failed: 1 },
       funnel: { processed: 4, delivered: 3, failed: 1 },
+      openai: { processed: 4, delivered: 3, failed: 1 },
     },
   })
 })
@@ -485,7 +488,7 @@ test("billing reconcile isolates entitlement failure from integrity, analytics, 
 
   assert.equal(response.status, 500)
   assert.equal(integrityRuns, 1)
-  assert.equal(analyticsRuns, 4)
+  assert.equal(analyticsRuns, 5)
   assert.equal(oneTimeRetryRuns, 1)
   assert.equal(JSON.stringify(response.body).includes("entitlement secret"), false)
   assert.deepEqual(response.body, {
@@ -501,6 +504,7 @@ test("billing reconcile isolates entitlement failure from integrity, analytics, 
       posthog: { processed: 0, delivered: 0, failed: 0 },
       meta: { processed: 0, delivered: 0, failed: 0 },
       funnel: { processed: 0, delivered: 0, failed: 0 },
+      openai: { processed: 0, delivered: 0, failed: 0 },
     },
     entitlements: { status: "error", reason: "entitlement_reconcile_failed" },
   })
@@ -562,7 +566,7 @@ test("billing reconcile isolates one-time fulfillment failure from other branche
   assert.equal(response.status, 500)
   assert.equal(entitlementRuns, 1)
   assert.equal(integrityRuns, 1)
-  assert.equal(analyticsRuns, 4)
+  assert.equal(analyticsRuns, 5)
   assert.equal(JSON.stringify(response.body).includes("fulfillment secret"), false)
   assert.deepEqual(response.body.oneTimeFulfillmentRetry, { status: "error" })
 })
@@ -602,7 +606,7 @@ test("billing reconcile isolates integrity failure and marks the daily check-in 
 
   assert.equal(response.status, 500)
   assert.equal(entitlementRuns, 1)
-  assert.equal(analyticsRuns, 4)
+  assert.equal(analyticsRuns, 5)
   assert.equal(JSON.stringify(response.body).includes("provider secret"), false)
   assert.deepEqual(response.body, {
     browserRecoveryCleanup: emptyBrowserRecoveryCleanup,
@@ -623,6 +627,7 @@ test("billing reconcile isolates integrity failure and marks the daily check-in 
       posthog: { processed: 1, delivered: 1, failed: 0 },
       meta: { processed: 1, delivered: 1, failed: 0 },
       funnel: { processed: 1, delivered: 1, failed: 0 },
+      openai: { processed: 1, delivered: 1, failed: 0 },
     },
   })
   assert.deepEqual(checkIns, [
@@ -684,3 +689,30 @@ function oneTimeFulfillmentJob(): PersonalPlanOneTimeFulfillmentJobRow {
     updated_at: timestamp,
   }
 }
+
+test("OpenAI cleanup reports deletion and isolates database failures", async () => {
+  const success = await handleBillingReconcile(
+    request(),
+    createDeps({
+      analyticsRetryEnabled: true,
+      cleanupOpenAIAdsContext: async () => 3,
+    }),
+  )
+  assert.deepEqual((success.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {
+    deleted: 3,
+  })
+  const failure = await handleBillingReconcile(
+    request(),
+    createDeps({
+      analyticsRetryEnabled: true,
+      cleanupOpenAIAdsContext: async () => {
+        throw new Error("private database detail")
+      },
+    }),
+  )
+  assert.deepEqual((failure.body.analyticsRetry as Record<string, unknown>).openaiCleanup, {
+    status: "error",
+  })
+  assert.equal(failure.body.downgraded, 2)
+  assert.ok(!JSON.stringify(failure.body).includes("private database detail"))
+})

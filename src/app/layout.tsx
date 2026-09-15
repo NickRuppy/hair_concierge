@@ -5,6 +5,7 @@ import { PrivacySafeSpeedInsights } from "@/components/observability/privacy-saf
 import { PaymentRuntimeProvider } from "@/components/providers/payment-runtime-provider"
 import { getPaymentRuntime } from "@/lib/billing/payment-runtime"
 import { ROOT_METADATA } from "@/lib/seo/site-identity"
+import { OpenAIAdsProvider } from "@/providers/openai-ads-provider"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -52,6 +53,7 @@ export default function RootLayout({
       >
         <PaymentRuntimeProvider runtime={paymentRuntime}>{children}</PaymentRuntimeProvider>
         <LazyCookieConsent />
+        <OpenAIAdsProvider />
         <PrivacySafeSpeedInsights />
       </body>
     </html>
