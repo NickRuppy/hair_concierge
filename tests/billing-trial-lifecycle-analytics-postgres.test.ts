@@ -22,7 +22,7 @@ async function setup(
   await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
     CREATE TABLE profiles(id uuid PRIMARY KEY);
     CREATE TABLE billing_subscriptions(id uuid PRIMARY KEY,user_id uuid,provider text,provider_subscription_id text,provider_customer_id text,metadata jsonb);
-    CREATE TABLE funnel_sessions(id uuid PRIMARY KEY,package_key text,landing_variant text,quiz_variant text,offer_variant text,is_internal_test boolean,test_kind text);
+    CREATE TABLE funnel_sessions(id uuid PRIMARY KEY,package_key text,landing_variant text,quiz_variant text,offer_variant text,is_internal_test boolean,test_kind text,visitor_id uuid);
     CREATE TABLE paypal_checkout_intents(id uuid PRIMARY KEY,metadata jsonb);
     GRANT USAGE ON SCHEMA public TO service_role; GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role;`)
   for (const name of [
@@ -50,13 +50,17 @@ async function setup(
   await db.exec(
     readFileSync("supabase/migrations/20260915113126_trial_lifecycle_analytics.sql", "utf8"),
   )
-  if (openai)
-    await db.exec(
-      readFileSync("supabase/migrations/20260915141328_openai_ads_billing_delivery.sql", "utf8"),
-    )
+  if (openai) {
+    for (const name of [
+      "20260915141251_openai_ads_consent_context",
+      "20260915141328_openai_ads_billing_delivery",
+      "20260915145322_openai_ads_canonical_test_exclusion",
+    ])
+      await db.exec(readFileSync(`supabase/migrations/${name}.sql`, "utf8"))
+  }
   await db.query("INSERT INTO profiles VALUES($1)", [U])
   await db.query(
-    "INSERT INTO funnel_sessions VALUES($1,'scan_v1','scan','legacy-quiz-v1','scan-regal-v1',false,NULL)",
+    "INSERT INTO funnel_sessions VALUES($1,'scan_v1','scan','legacy-quiz-v1','scan-regal-v1',false,NULL,NULL)",
     [S],
   )
   await db.query(

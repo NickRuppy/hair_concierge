@@ -185,6 +185,14 @@ test("initializes once and does not Pixel-measure private routes", async () => {
   await tick()
   commands = (globalThis.window as any).oaiq.q
   assert.equal(commands.filter((entry: unknown[]) => entry[0] === "measure").length, 1)
+  b.location.pathname = "/"
+  b.location.href = "https://chaarlie.de/"
+  a.trackOpenAIAdsPage()
+  await tick()
+  await tick()
+  commands = (globalThis.window as any).oaiq.q
+  assert.equal(commands.filter((entry: unknown[]) => entry[0] === "measure").length, 2)
+  assert.equal(commands.filter((entry: unknown[]) => entry[0] === "init").length, 1)
 })
 
 test("checkout context capture stays bounded when context fetch hangs", async () => {

@@ -35,6 +35,16 @@ test("allows acquisition landing pages and funnel tracking through without auth 
   }
 })
 
+test("allows OpenAI consent GET and POST without a session lookup", async () => {
+  for (const method of ["GET", "POST"]) {
+    const response = await updateSession(
+      new NextRequest("https://chaarlie.de/api/openai-ads/context", { method }),
+    )
+    assert.equal(response.status, 200)
+    assert.equal(response.headers.get("location"), null)
+  }
+})
+
 test("passes unknown pages and APIs to Next.js without auth lookup", async () => {
   for (const pathname of ["/does-not-exist-seo-check", "/api/does-not-exist-seo-check"]) {
     const response = await updateSession(new NextRequest(`https://chaarlie.de${pathname}`))

@@ -9,12 +9,18 @@ async function setup(t: { after(fn: () => Promise<void>): void }) {
   const db = new PGlite()
   t.after(() => db.close())
   await db.exec(
-    `CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS; CREATE TABLE public.funnel_sessions(id uuid PRIMARY KEY,visitor_id uuid); GRANT SELECT ON public.funnel_sessions TO service_role;`,
+    `CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS; CREATE TABLE public.funnel_sessions(id uuid PRIMARY KEY,visitor_id uuid,is_internal_test boolean DEFAULT false,test_kind text); CREATE TABLE public.billing_analytics_outbox(event_name text,payload jsonb); GRANT SELECT ON public.funnel_sessions TO service_role;`,
   )
   await db.exec(
     readFileSync("supabase/migrations/20260915141251_openai_ads_consent_context.sql", "utf8"),
   )
-  await db.query("INSERT INTO funnel_sessions VALUES($1,$2)", [S, V])
+  await db.exec(
+    readFileSync(
+      "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "utf8",
+    ),
+  )
+  await db.query("INSERT INTO funnel_sessions(id,visitor_id) VALUES($1,$2)", [S, V])
   return db
 }
 async function action(
@@ -107,4 +113,30 @@ test("public roles cannot read or execute; service role allowed; expiry denies a
     (await db.query<{ count: number }>("SELECT cleanup_openai_ads_context() count")).rows[0].count,
     1,
   )
+})
+
+test("canonical noncommercial classification suppresses context even when purchase payload omits markers", async (t) => {
+  const db = await setup(t)
+  await action(db, "choice", 0, true)
+  const occurred = (await db.query<{ at: string }>("SELECT clock_timestamp()::text at")).rows[0].at
+  const read = async () =>
+    (
+      await db.query<{ value: unknown }>("SELECT read_openai_ads_event_context($1,$2) value", [
+        S,
+        occurred,
+      ])
+    ).rows[0].value
+  assert.ok(await read())
+  for (const [internal, kind] of [
+    [true, null],
+    [false, "field_test"],
+    [false, "partner"],
+  ] as const) {
+    await db.query("UPDATE funnel_sessions SET is_internal_test=$1,test_kind=$2 WHERE id=$3", [
+      internal,
+      kind,
+      S,
+    ])
+    assert.equal(await read(), null)
+  }
 })

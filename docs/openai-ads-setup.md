@@ -40,7 +40,7 @@ Both IDs must match. Public variables require a rebuild. The integration also us
 
 1. Review the finished provider disclosure/permission coverage and verify automatic advanced matching is disabled. The unchanged banner is not evidence that this review is complete.
 2. Provision the server-only CAPI key securely and confirm the Pixel IDs and funnel signing/attribution configuration **before enabling either flag**. Missing/mismatched configuration produces terminal skips; fixing configuration does not replay those events.
-3. After publication and production authorization, apply `20260915141251_openai_ads_consent_context.sql` then `20260915141328_openai_ads_billing_delivery.sql` through the established migration process. Deploy with both OpenAI flags off first.
+3. After publication and production authorization, apply `20260915141251_openai_ads_consent_context.sql` then `20260915141328_openai_ads_billing_delivery.sql` and `20260915145322_openai_ads_canonical_test_exclusion.sql` through the established migration process. Deploy with both OpenAI flags off first.
 4. Enable both flags in a new deployment. Verify a controlled, permitted trial and purchase against received events in Ads Manager; separately verify attribution. No live conversion has been sent by this local work.
 5. Nick completes account payment recovery and business verification; these can still prevent ad delivery independently of measurement.
 

@@ -104,6 +104,7 @@ test("classifies every current public page and route handler", () => {
     "/api/auth/set-checkout-password",
     "/api/billing/one-time-activation-status",
     "/api/funnel/session",
+    "/api/openai-ads/context",
     "/api/og/result/lead-123",
     "/api/paypal/activation-status",
     "/api/paypal/approve-subscription",

@@ -96,8 +96,8 @@ test(
     }
     const migration = (name: string) => readFileSync(`supabase/migrations/${name}.sql`, "utf8")
     await sql(`DO $$ BEGIN IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon; END IF; IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated; END IF; IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='service_role') THEN CREATE ROLE service_role BYPASSRLS; END IF; END $$;
- CREATE TABLE public.funnel_sessions(id uuid PRIMARY KEY,visitor_id uuid);
- INSERT INTO funnel_sessions VALUES('${S}','${V}'); GRANT SELECT ON funnel_sessions TO service_role;`)
+ CREATE TABLE public.funnel_sessions(id uuid PRIMARY KEY,visitor_id uuid,is_internal_test boolean DEFAULT false,test_kind text);
+ INSERT INTO funnel_sessions(id,visitor_id) VALUES('${S}','${V}'); GRANT SELECT ON funnel_sessions TO service_role;`)
     await sql(migration("20260915141251_openai_ads_consent_context"))
     await sql(`CREATE TABLE private.trial_analytics_contexts(enrollment_id uuid PRIMARY KEY,marketing_consent boolean,acquisition jsonb);
  CREATE TABLE public.billing_analytics_outbox(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),event_key text UNIQUE NOT NULL,event_name text NOT NULL,provider text NOT NULL,payload jsonb NOT NULL);
@@ -105,6 +105,7 @@ test(
  GRANT SELECT,INSERT,UPDATE ON billing_analytics_outbox,billing_analytics_deliveries TO service_role; GRANT SELECT ON private.trial_analytics_contexts TO service_role;
  ${event("historical", "trial_started", trial)}`)
     await sql(migration("20260915141328_openai_ads_billing_delivery"))
+    await sql(migration("20260915145322_openai_ads_canonical_test_exclusion"))
     await sql(
       `CREATE TRIGGER guard_trial_analytics_delivery BEFORE INSERT ON billing_analytics_deliveries FOR EACH ROW EXECUTE FUNCTION private.guard_trial_analytics_delivery();`,
     )
@@ -240,6 +241,59 @@ test(
           `INSERT INTO billing_analytics_deliveries(outbox_id,destination) SELECT id,'openai' FROM billing_analytics_outbox WHERE event_key='renewal';`,
         )
         assert.equal(await sql("SELECT count(*) FROM billing_analytics_deliveries;"), "2")
+      },
+    )
+    await t.test(
+      "canonical test sessions block unmarked purchases and late classifications suppress queued context",
+      async () => {
+        const sessionIds = [
+          crypto.randomUUID(),
+          crypto.randomUUID(),
+          crypto.randomUUID(),
+          crypto.randomUUID(),
+        ]
+        for (const [index, session] of sessionIds.entries()) {
+          const internal = index === 0
+          const kind = index === 1 ? "field_test" : index === 2 ? "partner" : null
+          await sql(
+            `INSERT INTO funnel_sessions(id,visitor_id,is_internal_test,test_kind) VALUES('${session}','${V}',${internal},${kind ? quote(kind) : "NULL"}); ${choice(crypto.randomUUID(), 0, true, session)}`,
+          )
+          await sql(
+            `SET ROLE service_role; ${event(`canonical-${index}`, "purchase_completed", { funnel_session_id: session, value: 20, currency: "EUR" })}`,
+          )
+          const count = await sql(
+            `SELECT count(*) FROM billing_analytics_deliveries d JOIN billing_analytics_outbox e ON e.id=d.outbox_id WHERE e.event_key='canonical-${index}'`,
+          )
+          assert.equal(count, index === 3 ? "1" : "0")
+          const absent = await sql(
+            `SET ROLE service_role; SELECT read_openai_ads_event_context('${session}',clock_timestamp()) IS NULL;`,
+          )
+          assert.equal(absent, index === 3 ? "f" : "t")
+        }
+        const commercial = sessionIds[3]
+        assert.equal(
+          await sql(
+            "SELECT provolatile FROM pg_proc WHERE oid='private.is_openai_ads_billing_event(public.billing_analytics_outbox)'::regprocedure",
+          ),
+          "s",
+        )
+        await sql(`UPDATE funnel_sessions SET test_kind='field_test' WHERE id='${commercial}';`)
+        assert.equal(
+          await sql(
+            `SET ROLE service_role; SELECT read_openai_ads_event_context('${commercial}',clock_timestamp()) IS NULL;`,
+          ),
+          "t",
+        )
+        // Existing destination remains for the dispatcher to mark skipped; it can no longer resolve context.
+        assert.equal(
+          await sql(
+            "SELECT count(*) FROM billing_analytics_deliveries d JOIN billing_analytics_outbox e ON e.id=d.outbox_id WHERE e.event_key='canonical-3'",
+          ),
+          "1",
+        )
+        await sql(
+          `DELETE FROM billing_analytics_deliveries WHERE outbox_id IN(SELECT id FROM billing_analytics_outbox WHERE event_key LIKE 'canonical-%');`,
+        )
       },
     )
     await t.test(

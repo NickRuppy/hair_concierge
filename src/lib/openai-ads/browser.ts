@@ -185,7 +185,10 @@ async function measure(state: Context, token: number) {
 async function synchronize(reason: Reason = "background") {
   if (!pixelId()) return
   const token = ++generation
-  if (!publicPath(window.location.pathname)) denyPixel()
+  if (!publicPath(window.location.pathname)) {
+    lastMeasuredPath = null
+    denyPixel()
+  }
   if (loadConsent()?.marketing !== true) {
     denyPixel()
     await persistDenial()
