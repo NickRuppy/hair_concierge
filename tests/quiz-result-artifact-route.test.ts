@@ -2,12 +2,17 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  createResultArtifactEmailKindResolver,
   createSupabaseResultArtifactStore,
   handleQuizResultArtifactRequest,
   type ResultArtifactStore,
 } from "../src/app/api/quiz/result-artifact/route"
 import type { CustomerIoTransactionalEmailPayload } from "../src/lib/customerio/transactional"
 import type { QuizAnswers } from "../src/lib/quiz/types"
+import {
+  SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV,
+  type ResultArtifactEmailKind,
+} from "../src/lib/customerio/scanner-result-artifact"
 
 const leadId = "550e8400-e29b-41d4-a716-446655440000"
 
@@ -55,17 +60,70 @@ function createStore(initialLead: Lead): ResultArtifactStore & {
   }
 }
 
-function createDeps(store: ResultArtifactStore, sends: CustomerIoTransactionalEmailPayload[] = []) {
+function createDeps(
+  store: ResultArtifactStore,
+  sends: CustomerIoTransactionalEmailPayload[] = [],
+  emailKind: ResultArtifactEmailKind = "organic",
+) {
   return {
     store,
     siteUrl: "https://chaarlie.de",
     checkRateLimit: async () => ({ allowed: true }),
+    resolveEmailKind: async () => emailKind,
     isConfigured: () => true,
     send: async (payload: CustomerIoTransactionalEmailPayload) => {
       sends.push(payload)
     },
   }
 }
+
+async function withScannerMessageId<T>(run: () => Promise<T>): Promise<T> {
+  const previous = process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+  process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "18"
+  try {
+    return await run()
+  } finally {
+    if (previous === undefined) delete process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+    else process.env[SCANNER_RESULT_ARTIFACT_MESSAGE_ID_ENV] = previous
+  }
+}
+
+test("resolves the latest persisted scanner package without an analytics flag", async () => {
+  const calls: Array<[string, unknown]> = []
+  const resolveEmailKind = createResultArtifactEmailKindResolver({
+    from(table: string) {
+      assert.equal(table, "funnel_sessions")
+      const builder = {
+        select: (columns: string) => {
+          calls.push(["select", columns])
+          return builder
+        },
+        eq: (column: string, value: unknown) => {
+          calls.push(["eq", [column, value]])
+          return builder
+        },
+        order: (column: string, options: unknown) => {
+          calls.push(["order", [column, options]])
+          return builder
+        },
+        limit: (value: number) => {
+          calls.push(["limit", value])
+          return builder
+        },
+        maybeSingle: async () => ({ data: { package_key: "scan_v1" }, error: null }),
+      }
+      return builder
+    },
+  } as never)
+
+  assert.equal(await resolveEmailKind(leadId), "scanner")
+  assert.deepEqual(calls, [
+    ["select", "package_key"],
+    ["eq", ["lead_id", leadId]],
+    ["order", ["first_seen_at", { ascending: false }]],
+    ["limit", 1],
+  ])
+})
 
 test("the production claim excludes moderator-owned legacy leads", async () => {
   const filters: Array<[string, string, unknown]> = []
@@ -146,6 +204,91 @@ test("does not claim or mutate when Customer.io transactional config is missing"
   assert.equal(claimCount, 0)
   assert.deepEqual(store.sent, [])
   assert.deepEqual(store.failures, [])
+})
+
+test("does not claim a scanner lead when its dedicated Customer.io config is missing", async () => {
+  let claimCount = 0
+  const store = createStore({
+    id: leadId,
+    quiz_kind: "legacy",
+    name: "Lea Beispiel",
+    email: "lea@example.com",
+    quiz_answers: completeAnswers,
+    artifact_email_status: null,
+  })
+  const originalClaimLead = store.claimLead
+  store.claimLead = async (id) => {
+    claimCount += 1
+    return originalClaimLead(id)
+  }
+
+  const response = await handleQuizResultArtifactRequest(
+    { leadId },
+    {
+      ...createDeps(store, [], "scanner"),
+      isConfigured: (kind) => kind !== "scanner",
+    },
+  )
+
+  assert.equal(response.status, 503)
+  assert.equal(claimCount, 0)
+})
+
+test("does not claim when persisted funnel attribution is unavailable", async () => {
+  let claimCount = 0
+  const store = createStore({
+    id: leadId,
+    quiz_kind: "legacy",
+    name: "Lea Beispiel",
+    email: "lea@example.com",
+    quiz_answers: completeAnswers,
+    artifact_email_status: null,
+  })
+  const originalClaimLead = store.claimLead
+  store.claimLead = async (id) => {
+    claimCount += 1
+    return originalClaimLead(id)
+  }
+
+  const response = await handleQuizResultArtifactRequest(
+    { leadId, packageKey: "scan_v1" },
+    {
+      ...createDeps(store),
+      resolveEmailKind: async () => {
+        throw new Error("funnel_sessions unavailable")
+      },
+    },
+  )
+
+  assert.equal(response.status, 502)
+  assert.equal(claimCount, 0)
+})
+
+test("scanner attribution sends the scanner email for an existing lead without a consent gate", async () => {
+  const sends: CustomerIoTransactionalEmailPayload[] = []
+  const store = createStore({
+    id: leadId,
+    quiz_kind: "legacy",
+    name: "Lea Beispiel",
+    email: "lea@example.com",
+    quiz_answers: completeAnswers,
+    artifact_email_status: null,
+  })
+
+  await withScannerMessageId(async () => {
+    const response = await handleQuizResultArtifactRequest(
+      { leadId, packageKey: "default_organic" },
+      createDeps(store, sends, "scanner"),
+    )
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(response.body, { sent: true, skipped: false })
+    assert.equal(sends.length, 1)
+    assert.deepEqual(sends[0].messageData, {
+      lead_id: leadId,
+      result_url: `https://chaarlie.de/result/${leadId}?entry=result_email`,
+    })
+  })
 })
 
 test("skips personal-plan rows before parsing or sending a legacy result email", async () => {
@@ -252,6 +395,34 @@ test("two calls only send once with an atomic store claim", async () => {
   assert.deepEqual(store.sent, [leadId])
 })
 
+test("two scanner requests only send once with the existing atomic claim", async () => {
+  const sends: CustomerIoTransactionalEmailPayload[] = []
+  const store = createStore({
+    id: leadId,
+    quiz_kind: "legacy",
+    name: "Lea Beispiel",
+    email: "lea@example.com",
+    quiz_answers: completeAnswers,
+    artifact_email_status: null,
+  })
+
+  await withScannerMessageId(async () => {
+    const [first, second] = await Promise.all([
+      handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends, "scanner")),
+      handleQuizResultArtifactRequest({ leadId }, createDeps(store, sends, "scanner")),
+    ])
+
+    assert.deepEqual(
+      [first.body, second.body],
+      [
+        { sent: true, skipped: false },
+        { sent: false, skipped: true },
+      ],
+    )
+    assert.equal(sends.length, 1)
+  })
+})
+
 test("send failure marks failed and redacts secret-ish tokens", async () => {
   const store = createStore({
     id: leadId,
@@ -298,4 +469,27 @@ test("incomplete quiz answers fail before sending", async () => {
   assert.equal(sends.length, 0)
   assert.equal(store.failures.length, 1)
   assert.match(store.failures[0].error, /quiz answers/i)
+})
+
+test("persisted attribution distinguishes absent or organic rows from lookup failure", async () => {
+  function resolver(data: { package_key: string } | null, error: { message: string } | null) {
+    return createResultArtifactEmailKindResolver({
+      from() {
+        const builder = {
+          select: () => builder,
+          eq: () => builder,
+          order: () => builder,
+          limit: () => builder,
+          maybeSingle: async () => ({ data, error }),
+        }
+        return builder
+      },
+    } as never)
+  }
+  assert.equal(await resolver(null, null)(leadId), "organic")
+  assert.equal(await resolver({ package_key: "default_organic" }, null)(leadId), "organic")
+  await assert.rejects(
+    resolver(null, { message: "temporary failure" })(leadId),
+    /attribution lookup failed/,
+  )
 })
