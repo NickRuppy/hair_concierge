@@ -650,3 +650,34 @@ test("an unrelated error with old access-conflict words is propagated without ca
   assert.equal(f.calls.filter((c) => c.cancel).length, 0)
   assert.equal(f.tables.billing_subscriptions.length, 0)
 })
+
+test("trial authorization timestamp qualifies a legacy-quiz lead for the plan destination cutover", async () => {
+  const LEAD = "44444444-4444-4444-8444-444444444444"
+  const values = {
+    PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true",
+    PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: "2026-08-12T19:06:16Z",
+  }
+  const previous = Object.fromEntries(Object.keys(values).map((key) => [key, process.env[key]]))
+  try {
+    Object.assign(process.env, values)
+    const f = fixture()
+    f.intent.lead_id = LEAD
+    // The lead is linked by the activation projection itself; a resolver that
+    // runs before linking sees no owned lead and must come back ineligible.
+    f.tables.leads = [{ id: LEAD, user_id: null, quiz_kind: "legacy" }]
+    f.deps.linkQuizToProfile = async () => {
+      f.tables.leads[0].user_id = USER
+    }
+    const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+    assert.equal(result.status, "active")
+    assert.equal((result as any).legacyQuizFuturePurchaseEligible, true)
+    const replay = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+    assert.equal(replay.status, "active")
+    assert.equal((replay as any).legacyQuizFuturePurchaseEligible, true)
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+  }
+})

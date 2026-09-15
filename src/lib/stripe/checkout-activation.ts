@@ -384,15 +384,21 @@ export async function ensureCheckoutAccount(
 
   await linkCheckoutQuizProfile(session, deps, userId, valid.email)
   const subscriptionPaidAtSeconds = typeof sub.created === "number" ? sub.created : null
-  const legacyQuizFuturePurchaseEligible =
-    !trial && typeof subscriptionPaidAtSeconds === "number"
-      ? await resolveLegacyQuizFuturePurchaseEligibility(deps.supabase, {
-          userId,
-          leadId: session.metadata?.lead_id,
-          paidAt: new Date(subscriptionPaidAtSeconds * 1000).toISOString(),
-          provider: "stripe",
-        })
-      : false
+  // A trial has no payment yet; its verified authorization time is the cohort
+  // timestamp that decides the first-time destination cutover.
+  const legacyQuizCohortTimestamp = trial
+    ? trial.authorization.authorizationSucceededAt
+    : typeof subscriptionPaidAtSeconds === "number"
+      ? new Date(subscriptionPaidAtSeconds * 1000).toISOString()
+      : null
+  const legacyQuizFuturePurchaseEligible = legacyQuizCohortTimestamp
+    ? await resolveLegacyQuizFuturePurchaseEligibility(deps.supabase, {
+        userId,
+        leadId: session.metadata?.lead_id,
+        paidAt: legacyQuizCohortTimestamp,
+        provider: "stripe",
+      })
+    : false
 
   if (
     session.metadata?.checkout_context === "membership_reactivation" &&
