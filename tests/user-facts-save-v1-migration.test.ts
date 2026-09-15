@@ -564,12 +564,65 @@ test("create_only overwrites diagnostics whose source is the backfill's own lega
   })
   assert.equal(row.hair_texture, "wavy")
   assert.equal(row.thickness, "coarse")
-  // A normal write: the link provenance replaces the backfill's, and nothing was
-  // recorded as preserved.
-  assert.deepEqual(row.facts_provenance, {
+  // A normal write: the link provenance replaces the backfill's, and the
+  // candidate the caller passed is NOT recorded — this write applied its source
+  // rather than preserving anything.
+  assert.deepEqual(row.facts_provenance, { diagnostics: DIAGNOSTICS_PROVENANCE })
+})
+
+test("preservedCandidates is written only by the preserve path", async (t) => {
+  const pg = await freshDatabase(t)
+  const candidate = { kind: "artifact", id: "artifact-2", at: "2026-09-15T13:00:00.000Z" }
+
+  // (a) A normal write that carries a candidate records nothing: the account-link
+  // caller passes one unconditionally, and this write applied its own source.
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: FULL_DIAGNOSTICS,
+    provenance: { ...DIAGNOSTICS_PROVENANCE, preservedCandidates: [candidate] },
+  })
+  assert.deepEqual((await readHairProfile(pg, USER))?.facts_provenance, {
+    diagnostics: DIAGNOSTICS_PROVENANCE,
+  })
+
+  // (b) A create_only link that really preserves records it.
+  const preserved = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "straight" },
+    provenance: {
+      source: { kind: "account_link", id: "artifact-2" },
+      schemaVersion: 1,
+      at: "2026-09-15T13:00:00.000Z",
+      preservedCandidates: [candidate],
+    },
+    mode: "create_only",
+  })
+  assert.equal(preserved.status, "preserved")
+  assert.deepEqual((await readHairProfile(pg, USER))?.facts_provenance, {
+    diagnostics: { ...DIAGNOSTICS_PROVENANCE, preservedCandidates: [candidate] },
+  })
+
+  // (c) A later normal write keeps that history instead of dropping it, and
+  // still refuses to add its own candidate.
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "curly" },
+    provenance: {
+      source: { kind: "profile_editor" },
+      schemaVersion: 1,
+      at: "2026-09-16T09:00:00.000Z",
+      preservedCandidates: [{ kind: "lead", id: "lead-9", at: "2026-09-16T09:00:00.000Z" }],
+    },
+  })
+  assert.deepEqual((await readHairProfile(pg, USER))?.facts_provenance, {
     diagnostics: {
-      ...DIAGNOSTICS_PROVENANCE,
-      preservedCandidates: [{ kind: "artifact", id: "artifact-9", at: "2026-09-15T13:00:00.000Z" }],
+      source: { kind: "profile_editor" },
+      schemaVersion: 1,
+      at: "2026-09-16T09:00:00.000Z",
+      preservedCandidates: [candidate],
     },
   })
 })

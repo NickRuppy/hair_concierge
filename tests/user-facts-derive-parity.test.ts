@@ -66,9 +66,11 @@ async function writeRow(
 test("every derivation row projects identically in SQL and in the TypeScript oracle", async (t) => {
   const pg = await migratedPersonalPlanDatabase(t)
   const rows = [...DIAGNOSTICS_DERIVATION_ROWS, ...CARE_HABITS_DERIVATION_ROWS]
-  // The two lists together must exercise the whole rule set; a shrinking source
-  // would otherwise silently weaken this guard.
-  assert.ok(rows.length >= 45, `expected a broad row source, got ${rows.length}`)
+  // The two lists together must exercise the whole rule set and every key of
+  // every vocabulary table (see the fixture's coverage contract); a shrinking
+  // source would otherwise silently weaken this guard.
+  assert.ok(rows.length >= 100, `expected a broad row source, got ${rows.length}`)
+  assert.equal(new Set(rows.map((row) => row.name)).size, rows.length, "row names must be unique")
 
   for (const [index, row] of rows.entries()) {
     const stored = await writeRow(pg, row, index)

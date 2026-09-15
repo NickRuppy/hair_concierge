@@ -474,11 +474,17 @@ BEGIN
     INSERT INTO public.hair_profiles (user_id) VALUES (p_user_id)
       ON CONFLICT (user_id) DO NOTHING;
     SELECT * INTO v_profile FROM public.hair_profiles WHERE user_id = p_user_id FOR UPDATE;
+    -- Unreachable in practice (the insert either wrote the row or lost to a
+    -- concurrent writer whose row is now visible and locked). Raising beats
+    -- continuing: every UPDATE below is keyed on user_id, so a vanished row
+    -- would silently update ZERO rows and still return {"status":"ok"}.
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'user_facts_save_v1: hair_profiles row vanished for user %', p_user_id
+        USING ERRCODE = 'internal_error';
+    END IF;
   END IF;
 
-  -- COALESCE is belt-and-braces: the column is NOT NULL DEFAULT 0, so this only
-  -- guards against a row that somehow vanished between the insert and re-select.
-  v_current_revision := COALESCE(v_profile.facts_revision, 0);
+  v_current_revision := v_profile.facts_revision;
   IF p_expected_revision IS NOT NULL AND p_expected_revision <> v_current_revision THEN
     RETURN pg_catalog.jsonb_build_object(
       'status', 'revision_conflict', 'revision', v_current_revision);
@@ -529,9 +535,8 @@ BEGIN
   v_new_domain := (COALESCE(v_old_domain, '{}'::jsonb) || p_patch) - v_cleared_keys;
   v_changed := v_new_domain IS DISTINCT FROM v_old_domain;
 
-  -- (6) Provenance: this write's envelope, plus the accumulated per-field map
-  -- (cleared fields drop out with the data they described) and the union of
-  -- preserved candidates.
+  -- (6) Provenance: this write's envelope plus the accumulated per-field map
+  -- (cleared fields drop out with the data they described).
   v_fields := (
     COALESCE(v_old_provenance -> 'fields', '{}'::jsonb)
     || COALESCE(p_provenance -> 'fields', '{}'::jsonb)
@@ -540,8 +545,17 @@ BEGIN
   IF v_fields <> '{}'::jsonb THEN
     v_merged_provenance := v_merged_provenance || pg_catalog.jsonb_build_object('fields', v_fields);
   END IF;
-  v_candidates := public.user_facts_union_preserved_candidates_v1(
-    v_old_provenance -> 'preservedCandidates', p_provenance -> 'preservedCandidates');
+
+  -- `preservedCandidates` is evidence of a source that was NOT applied, so only
+  -- the preserve path above may add to it (controller ruling 2026-09-15). This
+  -- write applied its source, so any incoming array is ignored — the account-link
+  -- caller passes one unconditionally — while an array recorded by an EARLIER
+  -- preserve survives untouched.
+  v_candidates := CASE
+    WHEN pg_catalog.jsonb_typeof(v_old_provenance -> 'preservedCandidates') = 'array'
+      THEN v_old_provenance -> 'preservedCandidates'
+    ELSE NULL
+  END;
   IF v_candidates IS NOT NULL THEN
     v_merged_provenance :=
       v_merged_provenance || pg_catalog.jsonb_build_object('preservedCandidates', v_candidates);
