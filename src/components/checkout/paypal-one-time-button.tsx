@@ -27,6 +27,7 @@ import { paymentFeedback } from "@/lib/checkout/payment-feedback"
 import { isPaymentFeedbackV2Enabled, isPaymentSupportUiEnabled } from "@/lib/funnel/flags"
 import { buildPayPalOneTimeWelcomeUrl } from "@/lib/paypal/welcome-url"
 import type { CheckoutLifecycleClaim } from "@/lib/analytics/checkout-attempt"
+import { syncOpenAIAdsBeforeCheckout } from "@/lib/openai-ads/browser"
 import {
   createCheckoutWatchdog,
   createCheckoutWatchdogRegistry,
@@ -573,6 +574,7 @@ export function PayPalOneTimeButton({
             )
             let response: Response
             try {
+              await syncOpenAIAdsBeforeCheckout()
               response = await fetch("/api/paypal/create-order-intent", {
                 method: "POST",
                 headers: { "content-type": "application/json" },

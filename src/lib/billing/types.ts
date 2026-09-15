@@ -20,8 +20,9 @@ export type BillingPlanChangeStatus =
   | "reconciling"
   | "applied"
   | "failed"
-export type BillingAnalyticsDestination = "customerio" | "meta" | "posthog" | "funnel"
+export type BillingAnalyticsDestination = "customerio" | "meta" | "posthog" | "funnel" | "openai"
 export type BillingAnalyticsDeliveryStatus =
+  | "skipped"
   | "pending"
   | "processing"
   | "delivered"

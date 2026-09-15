@@ -12,13 +12,17 @@ const offer = createTrialOfferSnapshot("month", {
   yearPriceId: "price_year",
   annualCouponId: "coupon",
 })
-async function setup(t: { after(fn: () => Promise<void>): void }, provider = "stripe") {
+async function setup(
+  t: { after(fn: () => Promise<void>): void },
+  provider = "stripe",
+  openai = false,
+) {
   const db = new PGlite()
   t.after(() => db.close())
   await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
     CREATE TABLE profiles(id uuid PRIMARY KEY);
     CREATE TABLE billing_subscriptions(id uuid PRIMARY KEY,user_id uuid,provider text,provider_subscription_id text,provider_customer_id text,metadata jsonb);
-    CREATE TABLE funnel_sessions(id uuid PRIMARY KEY,package_key text,landing_variant text,quiz_variant text,offer_variant text,is_internal_test boolean,test_kind text);
+    CREATE TABLE funnel_sessions(id uuid PRIMARY KEY,package_key text,landing_variant text,quiz_variant text,offer_variant text,is_internal_test boolean,test_kind text,visitor_id uuid);
     CREATE TABLE paypal_checkout_intents(id uuid PRIMARY KEY,metadata jsonb);
     GRANT USAGE ON SCHEMA public TO service_role; GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role;`)
   for (const name of [
@@ -46,9 +50,17 @@ async function setup(t: { after(fn: () => Promise<void>): void }, provider = "st
   await db.exec(
     readFileSync("supabase/migrations/20260915113126_trial_lifecycle_analytics.sql", "utf8"),
   )
+  if (openai) {
+    for (const name of [
+      "20260915141251_openai_ads_consent_context",
+      "20260915141328_openai_ads_billing_delivery",
+      "20260915145322_openai_ads_canonical_test_exclusion",
+    ])
+      await db.exec(readFileSync(`supabase/migrations/${name}.sql`, "utf8"))
+  }
   await db.query("INSERT INTO profiles VALUES($1)", [U])
   await db.query(
-    "INSERT INTO funnel_sessions VALUES($1,'scan_v1','scan','legacy-quiz-v1','scan-regal-v1',false,NULL)",
+    "INSERT INTO funnel_sessions VALUES($1,'scan_v1','scan','legacy-quiz-v1','scan-regal-v1',false,NULL,NULL)",
     [S],
   )
   await db.query(
@@ -493,3 +505,45 @@ test("mixed old webhook destination inserts cannot bypass new trial consent or r
     )
   }
 })
+
+for (const provider of ["stripe", "paypal"]) {
+  test(`OpenAI delivery follows actual ${provider} trial and first-paid SQL producers without changing Meta`, async (t) => {
+    const db = await setup(t, provider, true)
+    await freeze(db, false)
+    await activate(db)
+    const fact = {
+      provider,
+      enrollmentId: E,
+      agreementId: "sub_original",
+      sourceEventId: "evt_openai_paid",
+      sourceObjectId: "first_invoice",
+      outcome: "succeeded",
+      occurredAt: "2026-09-08T10:00:00Z",
+      amountMinor: 999,
+      currency: "EUR",
+      periodStartAt: "2026-09-08T10:00:00Z",
+      periodEndAt: "2026-10-08T10:00:00Z",
+    }
+    await db.query("SELECT record_trial_payment_event($1::jsonb)", [JSON.stringify(fact)])
+    await db.query("SELECT record_trial_payment_event($1::jsonb)", [
+      JSON.stringify({ ...fact, sourceEventId: "paid_alias" }),
+    ])
+    const deliveries = (
+      await db.query<{ event_name: string }>(
+        "SELECT e.event_name FROM billing_analytics_deliveries d JOIN billing_analytics_outbox e ON e.id=d.outbox_id WHERE d.destination='openai' ORDER BY e.occurred_at",
+      )
+    ).rows
+    assert.deepEqual(
+      deliveries.map((r) => r.event_name),
+      ["trial_started", "purchase_completed"],
+    )
+    assert.equal(
+      (
+        await db.query<{ n: number }>(
+          "SELECT count(*)::int n FROM billing_analytics_deliveries WHERE destination='meta'",
+        )
+      ).rows[0].n,
+      0,
+    )
+  })
+}

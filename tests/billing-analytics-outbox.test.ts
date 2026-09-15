@@ -652,3 +652,93 @@ test("permanent delivery results stop after the first attempt", async () => {
   assert.equal(deliveries[0].next_attempt_at, null)
   assert.equal(deliveries[0].last_error, "invalid funnel data")
 })
+
+test("OpenAI queues only new trial/first purchase events and never backfills a duplicate", async () => {
+  const previous = process.env.OPENAI_ADS_ENABLED
+  process.env.OPENAI_ADS_ENABLED = "true"
+  try {
+    for (const eventName of [
+      "trial_started",
+      "purchase_completed",
+      "payment_completed",
+      "subscription_updated",
+    ] as const) {
+      const { supabase, deliveries } = createSupabaseStub()
+      const input = {
+        eventKey: `stripe:${eventName}:openai-fixture`,
+        eventName,
+        userId: "user-123",
+        provider: "stripe" as const,
+        occurredAt: new Date().toISOString(),
+        payload: {
+          trial_analytics_version: 1,
+          trial_authorized_at: new Date().toISOString(),
+          value: eventName === "trial_started" ? 0 : 9.99,
+          currency: "EUR",
+          attempt_phase: "first_paid",
+          funnel_session_id: "11111111-1111-4111-8111-111111111111",
+        },
+      }
+      await createBillingAnalyticsEvent(supabase, input, { dispatch: false })
+      assert.equal(
+        deliveries.some((row) => row.destination === "openai"),
+        eventName === "trial_started" || eventName === "purchase_completed",
+      )
+      const openaiIndex = deliveries.findIndex((row) => row.destination === "openai")
+      if (openaiIndex >= 0) deliveries.splice(openaiIndex, 1)
+      await createBillingAnalyticsEvent(supabase, input, { dispatch: false })
+      assert.equal(
+        deliveries.some((row) => row.destination === "openai"),
+        false,
+      )
+    }
+  } finally {
+    if (previous === undefined) delete process.env.OPENAI_ADS_ENABLED
+    else process.env.OPENAI_ADS_ENABLED = previous
+  }
+})
+
+test("OpenAI skips are terminal and counted without reading a customer profile", async () => {
+  const { supabase, deliveries } = createSupabaseStub()
+  const event = await createBillingAnalyticsEvent(
+    supabase,
+    {
+      eventKey: "stripe:purchase_completed:openai-skip",
+      eventName: "purchase_completed",
+      userId: "user-123",
+      provider: "stripe",
+      occurredAt: new Date().toISOString(),
+      payload: {
+        value: 9.99,
+        currency: "EUR",
+        funnel_session_id: "11111111-1111-4111-8111-111111111111",
+      },
+    },
+    { dispatch: false, destinations: ["openai"] },
+  )
+  let calls = 0
+  const stats = await dispatchBillingAnalyticsDueWithStats(supabase, {
+    destination: "openai",
+    eventKey: event.event_key,
+    dependencies: {
+      findProfile: async () => {
+        assert.fail("OpenAI must not read contact profiles")
+      },
+      deliver: async () => {
+        calls++
+        return { ok: false, skipped: true, error: "consent_denied" }
+      },
+    },
+  })
+  assert.deepEqual(stats, { processed: 1, delivered: 0, failed: 0, skipped: 1 })
+  assert.equal(deliveries[0].status, "skipped")
+  assert.equal(deliveries[0].next_attempt_at, null)
+  assert.equal(deliveries[0].delivered_at, null)
+  await dispatchBillingAnalyticsEvent(supabase, event, ["openai"], {
+    deliver: async () => {
+      calls++
+      return { ok: true }
+    },
+  })
+  assert.equal(calls, 1)
+})

@@ -41,6 +41,7 @@ import {
   type CheckoutLifecycleClaim,
 } from "@/lib/analytics/checkout-attempt"
 import { createFunnelEventId, getCurrentFunnelContext } from "@/lib/funnel/client"
+import { syncOpenAIAdsBeforeCheckout } from "@/lib/openai-ads/browser"
 import {
   isOfferPaymentOverlayEnabled,
   isPaymentFeedbackV2Enabled,
@@ -1205,6 +1206,7 @@ function MembershipResultOfferPricing({
         provider: "stripe",
         transition: "preparation_started",
       })
+      await syncOpenAIAdsBeforeCheckout()
       response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: { "content-type": "application/json" },
