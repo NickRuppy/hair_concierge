@@ -1,6 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { ensureCheckoutAccount } from "../src/lib/stripe/checkout-activation"
+import {
+  ensureCheckoutAccount,
+  getStripeTrialReturnRecoveryCode,
+} from "../src/lib/stripe/checkout-activation"
+import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 
 const userId = "00000000-0000-4000-8000-000000000001"
@@ -63,6 +67,8 @@ function fixture() {
     provider: "stripe",
     accepted_offer: offer,
     admission_status: "reserved",
+    admission_denial_reason: null,
+    admission_recovery_reason: null,
     first_payment_succeeded_at: null,
     provider_agreement_id: null,
     access_revoked: false,
@@ -178,6 +184,7 @@ function fixture() {
       if (name === "get_personal_plan_one_time_access_state") return { data: "none", error: null }
       if (name === "admit_trial_enrollment") {
         enrollment.admission_status = admissionResult === "active" ? "active" : "blocked"
+        enrollment.admission_denial_reason = admissionResult === "active" ? null : admissionResult
         enrollment.provider_agreement_id = args.p_provider_agreement_id
         enrollment.neutralization_required = admissionResult !== "active"
         if (admissionResult === "active") {
@@ -253,6 +260,9 @@ function fixture() {
     effects,
     deny: () => {
       admissionResult = "trial_used"
+    },
+    invalidateAdmission: () => {
+      admissionResult = "invalid_state"
     },
     failCancel: () => {
       cancelFailure = true
@@ -332,7 +342,11 @@ test("a paid zero-total checkout activates trial access without marking the firs
 test("a used card receives no profile/billing access and its trial agreement is canceled without invoicing", async () => {
   const f = fixture()
   f.deny()
-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), /trial_used/)
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "trial_unavailable")
+    return true
+  })
   assert.equal(f.tables.billing_subscriptions.length, 0)
   assert.equal(f.tables.profiles[0].subscription_status, null)
   assert.deepEqual(
@@ -342,11 +356,30 @@ test("a used card receives no profile/billing access and its trial agreement is 
   assert.ok(f.effects.some((e) => e[0] === "release_trial_enrollment"))
 })
 
+test("unexpected Stripe admission state requires reconciliation without neutralizing the agreement", async () => {
+  const f = fixture()
+  f.invalidateAdmission()
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "trial_reconciliation_required")
+    assert.match(String(error.cause), /unexpected Stripe trial admission result: invalid_state/i)
+    return true
+  })
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+  assert.ok(!f.effects.some((effect) => effect[0] === "cancel"))
+  assert.ok(!f.effects.some((effect) => effect[0] === "release_trial_enrollment"))
+})
+
 test("provider neutralization timeout remains retryable and does not release the claim or grant access", async () => {
   const f = fixture()
   f.deny()
   f.failCancel()
-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), /provider timeout/)
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "trial_reconciliation_required")
+    assert.match(String(error.cause), /provider timeout/)
+    return true
+  })
   assert.equal(f.tables.billing_subscriptions.length, 0)
   assert.ok(!f.effects.some((e) => e[0] === "release_trial_enrollment"))
 })
@@ -376,6 +409,18 @@ test("missing runtime, foreign enrollment, revoked admission and invalid card pr
   }
 })
 
+test("unsafe Stripe authorization proof is terminal reconciliation and preserves its proof cause", async () => {
+  const f = fixture()
+  f.subscription.status = "canceled"
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "trial_reconciliation_required")
+    assert.match(String(error.cause), /authorization is not verified/)
+    return true
+  })
+  assert.equal(f.effects.length, 0)
+})
+
 test("competing enrollment ownership cannot be overwritten or grant product access", async () => {
   const f = fixture()
   f.raceOwner()
@@ -393,7 +438,11 @@ test("lost cancellation response or claim release failure converges from persist
     await assert.rejects(ensureCheckoutAccount(f.session, f.deps))
     assert.equal(f.subscription.status, "canceled")
     f.restoreRelease()
-    await assert.rejects(ensureCheckoutAccount(f.session, f.deps), /admission denied/)
+    await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+      assert.ok(error instanceof CheckoutRecoveryError)
+      assert.equal(error.code, "trial_unavailable")
+      return true
+    })
     assert.equal(f.enrollment.admission_status, "released")
     assert.equal(f.tables.billing_subscriptions.length, 0)
     assert.equal(f.effects.filter((e) => e[0] === "cancel").length, 1)
@@ -404,7 +453,12 @@ test("a successful payment discovered while neutralizing remains a reconciliatio
   const f = fixture()
   f.deny()
   f.addPaidInvoice()
-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), /collection reconciliation/)
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "trial_reconciliation_required")
+    assert.match(String(error.cause), /collection reconciliation/)
+    return true
+  })
   assert.ok(!f.effects.some((e) => e[0] === "release_trial_enrollment"))
 })
 
@@ -416,11 +470,107 @@ test("existing independent paid access cancels the duplicate trial and leaves or
     subscription_status: "active",
     current_period_end: "2027-01-01T00:00:00Z",
   })
-  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), /already has access/)
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps), (error: unknown) => {
+    assert.ok(error instanceof CheckoutRecoveryError)
+    assert.equal(error.code, "checkout_existing_access")
+    return true
+  })
   assert.equal(f.subscription.status, "canceled")
   assert.equal(f.tables.profiles[0].subscription_status, "active")
   assert.equal(f.tables.billing_subscriptions.length, 0)
   assert.ok(!f.effects.some((e) => e[0] === "admit_trial_enrollment"))
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(f.session, {
+      supabase: f.deps.supabase,
+      stripe: f.deps.stripe,
+      trialRuntime: f.deps.trialRuntime,
+    }),
+    "checkout_existing_access",
+  )
+})
+
+test("read-only Stripe return recovery exposes a released prior-use denial only after binding proof", async () => {
+  const f = fixture()
+  f.deny()
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps))
+  const effectsBeforeRecoveryRead = [...f.effects]
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(f.session, {
+      supabase: f.deps.supabase,
+      stripe: f.deps.stripe,
+      trialRuntime: f.deps.trialRuntime,
+    }),
+    "trial_unavailable",
+  )
+  assert.deepEqual(f.effects, effectsBeforeRecoveryRead)
+  assert.equal(f.effects.filter((effect) => effect[0] === "cancel").length, 1)
+  assert.equal(f.tables.profiles.length, 1)
+})
+
+test("read-only Stripe return recovery sends outstanding cleanup and unsafe replay bindings to reconciliation", async () => {
+  const cleanup = fixture()
+  cleanup.deny()
+  cleanup.failCancel()
+  await assert.rejects(ensureCheckoutAccount(cleanup.session, cleanup.deps))
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(cleanup.session, {
+      supabase: cleanup.deps.supabase,
+      stripe: cleanup.deps.stripe,
+      trialRuntime: cleanup.deps.trialRuntime,
+    }),
+    "trial_reconciliation_required",
+  )
+
+  const unconfirmed = fixture()
+  unconfirmed.deny()
+  await assert.rejects(ensureCheckoutAccount(unconfirmed.session, unconfirmed.deps))
+  unconfirmed.subscription.status = "trialing"
+  const effectsBeforeRecoveryRead = [...unconfirmed.effects]
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(unconfirmed.session, {
+      supabase: unconfirmed.deps.supabase,
+      stripe: unconfirmed.deps.stripe,
+      trialRuntime: unconfirmed.deps.trialRuntime,
+    }),
+    "trial_reconciliation_required",
+  )
+  assert.deepEqual(unconfirmed.effects, effectsBeforeRecoveryRead)
+
+  const mismatch = fixture()
+  mismatch.deny()
+  await assert.rejects(ensureCheckoutAccount(mismatch.session, mismatch.deps))
+  mismatch.subscription.customer = "cus_other"
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(mismatch.session, {
+      supabase: mismatch.deps.supabase,
+      stripe: mismatch.deps.stripe,
+      trialRuntime: mismatch.deps.trialRuntime,
+    }),
+    "trial_reconciliation_required",
+  )
+})
+
+test("persisted Stripe existing-access reason does not outrank outstanding cleanup", async () => {
+  const f = fixture()
+  f.tables.profiles.push({
+    id: userId,
+    email: "owner@example.com",
+    subscription_status: "active",
+    current_period_end: "2027-01-01T00:00:00Z",
+  })
+  f.failCancel()
+  await assert.rejects(ensureCheckoutAccount(f.session, f.deps))
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(f.enrollment.neutralization_required, true)
+  assert.equal(
+    await getStripeTrialReturnRecoveryCode(f.session, {
+      supabase: f.deps.supabase,
+      stripe: f.deps.stripe,
+      trialRuntime: f.deps.trialRuntime,
+    }),
+    "trial_reconciliation_required",
+  )
 })
 
 test("a deleted or missing bound owner never recreates an account on late trial callbacks", async () => {

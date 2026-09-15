@@ -84,7 +84,7 @@ test.describe.skip("Stripe subscription golden path (manual)", () => {
 
     // 5. After redirect, welcome page should be visible with the magic-link copy.
     await page.waitForURL(/\/welcome\?session_id=/, { timeout: 60_000 })
-    await expect(page.getByText(/Zahlung erfolgreich/i)).toBeVisible()
+    await expect(page.getByText(/Konto aktivieren/i)).toBeVisible()
     await expect(page.getByText(TEST_EMAIL)).toBeVisible()
   })
 })

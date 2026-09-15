@@ -13,6 +13,12 @@ import { markPlanOpeningStart } from "@/app/plan-bereit/opening-beat"
 import { PlanBereitArrival } from "@/app/plan-bereit/plan-ready-arrival"
 import { PlanStartOpening } from "@/components/personal-plan-start/plan-start-opening"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
+import { CheckoutRecoveryPanel } from "./checkout-recovery-panel"
+import {
+  getCheckoutRecoveryContent,
+  isCheckoutRecoveryCode,
+  type CheckoutRecoveryCode,
+} from "@/lib/auth/checkout-activation-outcome"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 import { clearWelcomeReturn } from "./return-recovery"
 import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
@@ -25,6 +31,7 @@ import {
 interface WelcomeClientProps {
   /** Suppresses paid conversion telemetry; does not establish trial admission. */
   isTrialCheckout?: boolean
+  recoveryCode?: CheckoutRecoveryCode
   analyticsId?: string
   email?: string
   providerSubscriberEmail?: string | null
@@ -58,13 +65,9 @@ type OneTimeActivationStatus =
   | "failed_permanent"
   | "permanent_failure"
 
-const SIGN_IN_AFTER_PASSWORD_ERROR =
-  "Passwort wurde erstellt, aber die Anmeldung hat nicht geklappt. Bitte melde dich mit deiner E-Mail und deinem Passwort an."
 const NETWORK_ERROR =
   "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
 const UNKNOWN_ERROR = "Unbekannter Fehler"
-const MAGIC_LINK_BODY =
-  "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet."
 const ONE_TIME_PENDING_TIMEOUT_TITLE = "Das dauert gerade länger als erwartet"
 const ONE_TIME_PENDING_TIMEOUT_BODY =
   "Deine Zahlung ist sicher erfasst – du wirst nicht erneut belastet. Wir senden dir eine E-Mail, sobald dein Zugang bereit ist."
@@ -77,6 +80,7 @@ const ONE_TIME_RETURN_REVOKED_BODY =
 
 export function WelcomeClient({
   isTrialCheckout = false,
+  recoveryCode: initialRecoveryCode,
   analyticsId: providedAnalyticsId,
   email,
   providerSubscriberEmail,
@@ -111,9 +115,16 @@ export function WelcomeClient({
     providerSubscriberEmail?.trim().toLowerCase() !== email?.trim().toLowerCase()
 
   const [state, setState] = useState<ScreenState>({ view: "choice" })
+  const [clientReady, setClientReady] = useState(false)
+  useEffect(() => {
+    setClientReady(true)
+  }, [])
   const [loading, setLoading] = useState<LoadingState>(null)
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [recoveryCode, setRecoveryCode] = useState<CheckoutRecoveryCode | undefined>(
+    initialRecoveryCode,
+  )
   const [message, setMessage] = useState<string | null>(null)
   const [highlightMagicLink, setHighlightMagicLink] = useState(false)
   const [oneTimePendingState, setOneTimePendingState] = useState<OneTimePendingState>(
@@ -122,7 +133,14 @@ export function WelcomeClient({
   const [oneTimePendingCheck, setOneTimePendingCheck] = useState(0)
 
   useEffect(() => {
-    if (mode !== "pending" || !paypalActivationToken) return
+    if ((mode !== "pending" && recoveryCode !== "activation_pending") || !paypalActivationToken)
+      return
+    if (
+      recoveryCode &&
+      getCheckoutRecoveryContent(recoveryCode).presentation === "panel" &&
+      recoveryCode !== "activation_pending"
+    )
+      return
     const token = paypalActivationToken
 
     let cancelled = false
@@ -137,6 +155,13 @@ export function WelcomeClient({
         const body = await response.json().catch(() => ({}))
         if (cancelled) return
 
+        if (isCheckoutRecoveryCode(body.code) && body.code !== "activation_pending") {
+          const outcome = getCheckoutRecoveryContent(body.code)
+          if (outcome.presentation === "panel") {
+            setRecoveryCode(body.code)
+            return
+          }
+        }
         if (response.ok && body.status === "active") {
           addCheckoutBreadcrumb({
             provider: "paypal",
@@ -203,7 +228,7 @@ export function WelcomeClient({
           source: "welcome",
           providerReferencePresent: true,
         })
-        setMessage("Das dauert gerade etwas länger. Bitte aktualisiere die Seite gleich erneut.")
+        setRecoveryCode("activation_delayed")
       }
     }
 
@@ -212,7 +237,7 @@ export function WelcomeClient({
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [isOneTimePurchase, mode, paypalActivationToken, paypalLive])
+  }, [isOneTimePurchase, mode, paypalActivationToken, paypalLive, recoveryCode])
 
   useEffect(() => {
     if (
@@ -324,6 +349,21 @@ export function WelcomeClient({
     oneTimePollingBlockedByReturnState,
   ])
 
+  function applyRecovery(body: { code?: unknown }): boolean {
+    if (!isCheckoutRecoveryCode(body.code)) return false
+    if (isOneTimePurchase && body.code === "activation_pending") return false
+    const content = getCheckoutRecoveryContent(body.code)
+    addCheckoutBreadcrumb({
+      provider: activationSource.provider,
+      stage: "checkout_return",
+      source: "welcome",
+      reason: body.code,
+    })
+    setRecoveryCode(body.code)
+    setMessage(content.presentation === "inline" ? content.message : null)
+    return true
+  }
+
   async function handleCreatePassword(e: FormEvent) {
     e.preventDefault()
     setMessage(null)
@@ -345,6 +385,7 @@ export function WelcomeClient({
       const body = await res.json().catch(() => ({}))
 
       if (!res.ok) {
+        if (applyRecovery(body)) return
         const errorMessage = typeof body.error === "string" ? body.error : UNKNOWN_ERROR
         if (res.status === 409 || errorMessage.includes("Login-Link")) {
           setHighlightMagicLink(true)
@@ -368,7 +409,7 @@ export function WelcomeClient({
           ...checkoutActivationSentryDetails(activationSource, "checkout_password_activation"),
           reason: "supabase_password_sign_in_failed",
         })
-        setMessage(SIGN_IN_AFTER_PASSWORD_ERROR)
+        setRecoveryCode("password_sign_in_failed")
         return
       }
 
@@ -397,6 +438,7 @@ export function WelcomeClient({
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
+        if (applyRecovery(body)) return
         const errorMessage = typeof body.error === "string" ? body.error : UNKNOWN_ERROR
         captureCheckoutException(new Error(errorMessage), {
           ...checkoutActivationSentryDetails(activationSource, "checkout_magic_link_activation"),
@@ -410,6 +452,10 @@ export function WelcomeClient({
     } finally {
       setLoading(null)
     }
+  }
+
+  if (recoveryCode && getCheckoutRecoveryContent(recoveryCode).presentation === "panel") {
+    return <CheckoutRecoveryPanel code={recoveryCode} />
   }
 
   if (redirectTo) {
@@ -565,25 +611,11 @@ export function WelcomeClient({
       )
     }
 
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
-        <div aria-live="polite" className="w-full max-w-md space-y-5 text-center" role="status">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-            <LoaderCircle className="h-6 w-6 animate-spin text-primary motion-reduce:animate-none" />
-          </div>
-          <div className="space-y-2">
-            <h1 className="font-header text-3xl text-foreground">Wir aktivieren dein Abo...</h1>
-            <p className="text-base text-muted-foreground">
-              Das dauert normalerweise nur ein paar Sekunden.
-            </p>
-          </div>
-          {message && <p className="text-sm text-muted-foreground">{message}</p>}
-        </div>
-      </main>
-    )
+    return <CheckoutRecoveryPanel code="activation_pending" />
   }
 
   if (mode === "duplicate") {
+    if (!isOneTimePurchase) return <CheckoutRecoveryPanel code="checkout_existing_access" />
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
         <div className="w-full max-w-md space-y-5 text-center">
@@ -649,15 +681,9 @@ export function WelcomeClient({
               <CheckCircle className="h-6 w-6 text-green-600" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-medium text-primary">
-                {isTrialCheckout ? "Dein Testzugang" : "Zahlung erfolgreich"}
-              </p>
               <h1 className="font-header text-3xl text-foreground sm:text-4xl">
                 {isOneTimePurchase ? "Zugang einrichten" : "Konto aktivieren"}
               </h1>
-              <p className="text-base text-muted-foreground">
-                Wähle, wie du dich bei Chaarlie anmelden möchtest.
-              </p>
             </div>
           </div>
 
@@ -694,18 +720,21 @@ export function WelcomeClient({
           </div>
 
           {message && (
-            <div className="mx-auto w-full max-w-2xl rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
-              {message}
+            <div
+              role="alert"
+              className="mx-auto w-full max-w-2xl rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm text-destructive"
+            >
+              {message}{" "}
+              <a href="/kontakt" className="text-primary underline underline-offset-4">
+                Hilfe
+              </a>
             </div>
           )}
 
           <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
-            <section className="flex min-h-[360px] flex-col rounded-lg border bg-card p-5 shadow-sm">
+            <section className="flex flex-col rounded-lg border bg-card p-5 shadow-sm">
               <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-foreground">Mit Passwort fortfahren</h2>
-                <p className="min-h-[72px] text-sm leading-6 text-muted-foreground">
-                  Erstelle ein Passwort und melde dich künftig direkt mit deiner E-Mail an.
-                </p>
+                <h2 className="text-xl font-semibold text-foreground">Mit Passwort</h2>
               </div>
 
               <form onSubmit={handleCreatePassword} className="mt-5 flex flex-1 flex-col">
@@ -719,7 +748,7 @@ export function WelcomeClient({
                       type="password"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      disabled={loading !== null}
+                      disabled={!clientReady || loading !== null}
                       minLength={8}
                       required
                       autoComplete="new-password"
@@ -738,7 +767,7 @@ export function WelcomeClient({
                       type="password"
                       value={confirmPassword}
                       onChange={(event) => setConfirmPassword(event.target.value)}
-                      disabled={loading !== null}
+                      disabled={!clientReady || loading !== null}
                       minLength={8}
                       required
                       autoComplete="new-password"
@@ -754,8 +783,8 @@ export function WelcomeClient({
 
                 <button
                   type="submit"
-                  disabled={loading !== null || !password || !confirmPassword}
-                  className="mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
+                  disabled={!clientReady || loading !== null || !password || !confirmPassword}
+                  className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
                 >
                   {loading === "password" ? "Wird erstellt..." : "Passwort erstellen"}
                 </button>
@@ -764,22 +793,19 @@ export function WelcomeClient({
 
             <section
               className={[
-                "flex min-h-[360px] flex-col rounded-lg border bg-card p-5 shadow-sm transition-colors",
+                "flex flex-col rounded-lg border bg-card p-5 shadow-sm transition-colors",
                 highlightMagicLink ? "border-primary bg-primary/5" : "",
               ].join(" ")}
             >
               <div className="space-y-2">
-                <h2 className="text-xl font-semibold text-foreground">Ohne Passwort fortfahren</h2>
-                <p className="min-h-[72px] text-sm leading-6 text-muted-foreground">
-                  {MAGIC_LINK_BODY}
-                </p>
+                <h2 className="text-xl font-semibold text-foreground">Mit Login-Link</h2>
               </div>
 
               <div className="mt-5 flex flex-1 flex-col justify-end">
                 <button
                   type="button"
                   onClick={handleMagicLink}
-                  disabled={loading !== null}
+                  disabled={!clientReady || loading !== null}
                   className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
                 >
                   {loading === "magic_link" ? "Wird gesendet..." : "Login-Link senden"}

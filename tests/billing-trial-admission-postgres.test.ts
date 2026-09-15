@@ -19,6 +19,7 @@ import { createTrialIdentityClaims } from "../src/lib/billing/trial-identity-cla
  */
 const ROOT = new URL("../", import.meta.url)
 const MIGRATION = "supabase/migrations/20260914044650_trial_admission_foundation.sql"
+const RECOVERY_REASON_MIGRATION = "supabase/migrations/20260915070715_admission_recovery_reason.sql"
 const DAY_SECONDS = 7 * 24 * 60 * 60
 const AUTHORIZED_AT = "2020-01-01T10:00:00.000Z"
 const MUTANT = process.env.TRIAL_ADMISSION_MUTANT
@@ -81,8 +82,50 @@ async function database(t: { after: (fn: () => Promise<void>) => void }) {
     )
   }
   await pg.exec(migration)
+  await pg.exec(await readFile(new URL(RECOVERY_REASON_MIGRATION, ROOT), "utf8"))
   return pg
 }
+
+test("admission recovery reason accepts only the verified existing-access marker", async (t) => {
+  const pg = await database(t)
+  await enrollment(pg, IDS.first)
+  await pg.query(
+    "UPDATE public.trial_enrollments SET admission_recovery_reason = 'existing_access' WHERE id = $1::uuid",
+    [IDS.first],
+  )
+  const result = await pg.query<{ admission_recovery_reason: string | null }>(
+    "SELECT admission_recovery_reason FROM public.trial_enrollments WHERE id = $1::uuid",
+    [IDS.first],
+  )
+  assert.equal(result.rows[0]?.admission_recovery_reason, "existing_access")
+  await pg.query(
+    `UPDATE public.trial_enrollments
+       SET admission_status = 'blocked', neutralization_required = true
+       WHERE id = $1::uuid`,
+    [IDS.first],
+  )
+  assert.equal(await release(pg, IDS.first, "stripe:canceled:sub_existing_access"), true)
+  const released = await pg.query<{
+    admission_recovery_reason: string | null
+    admission_status: string
+    neutralization_required: boolean
+  }>(
+    "SELECT admission_recovery_reason, admission_status, neutralization_required FROM public.trial_enrollments WHERE id = $1::uuid",
+    [IDS.first],
+  )
+  assert.deepEqual(released.rows[0], {
+    admission_recovery_reason: "existing_access",
+    admission_status: "released",
+    neutralization_required: false,
+  })
+  await assert.rejects(
+    pg.query(
+      "UPDATE public.trial_enrollments SET admission_recovery_reason = 'trial_used' WHERE id = $1::uuid",
+      [IDS.first],
+    ),
+    /admission_recovery_reason_check/,
+  )
+})
 
 async function enrollment(pg: PGlite, id: string, userId: string | null = null) {
   if (userId)

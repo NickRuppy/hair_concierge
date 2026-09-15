@@ -36,7 +36,7 @@ test("PayPal pending polling depends on the stable token instead of the activati
   )
   assert.match(
     welcomeClientSource,
-    /\}, \[isOneTimePurchase, mode, paypalActivationToken, paypalLive\]\)/,
+    /\}, \[isOneTimePurchase, mode, paypalActivationToken, paypalLive, recoveryCode\]\)/,
   )
   assert.doesNotMatch(welcomeClientSource, /\}, \[activationSource, mode\]\)/)
 })
@@ -165,7 +165,7 @@ test("paid Stripe checkout_one_time_invalid verification failures recover to pen
   assert.match(verificationBranch, /oneTimeReturnState=\{oneTimeReturnStateFromError\(err\)\}/)
   assert.ok(
     verificationBranch.indexOf('recoveredSession?.mode === "payment"') <
-      verificationBranch.indexOf('redirect("/pricing")'),
+      verificationBranch.indexOf("classifyCheckoutRecoveryError(err)"),
   )
 })
 
@@ -177,7 +177,7 @@ test("a paid Stripe verification failure preserves the revoked return state", ()
   assert.match(welcomePageSource, /error\.code === "checkout_one_time_charge_revoked"/)
 })
 
-test("unpaid or non-payment Stripe verification failures retain the pricing fallback", () => {
+test("unpaid or non-payment Stripe verification failures expose safe recovery without repricing", () => {
   const verificationStart = welcomePageSource.indexOf(
     "session = await verifyCheckoutSessionForActivation(session_id, stripe)",
   )
@@ -191,7 +191,8 @@ test("unpaid or non-payment Stripe verification failures retain the pricing fall
     verificationBranch,
     /recoveredSession\?\.mode === "payment" && recoveredSession\.payment_status === "paid"/,
   )
-  assert.match(verificationBranch, /redirect\("\/pricing"\)/)
+  assert.match(verificationBranch, /classifyCheckoutRecoveryError\(err\)/)
+  assert.doesNotMatch(verificationBranch, /redirect\("\/pricing"\)/)
 })
 
 test("PayPal one-time pending and revoked returns do not require an account", () => {

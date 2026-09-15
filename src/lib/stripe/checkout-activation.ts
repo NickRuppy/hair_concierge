@@ -39,6 +39,12 @@ import {
 import { intervalFromPrice } from "./intervals"
 import { getStripePriceCatalogForId } from "./client"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
+import { readTrialRuntime } from "../billing/trial-runtime"
+import {
+  CheckoutRecoveryError,
+  getPersistedTrialRecoveryCode,
+  type CheckoutRecoveryCode,
+} from "../auth/checkout-activation-outcome"
 
 export interface CheckoutActivationDeps {
   supabase: SupabaseClient
@@ -51,6 +57,74 @@ export interface CheckoutActivationDeps {
   /** Kept unavailable until controlled deployment provisions the trial runtime. */
   trialRuntime?: StripeTrialRuntime
   sendOneTimeConfirmation?: typeof sendPersonalPlanOneTimeConfirmation
+}
+
+type StripeTrialReturnRecoveryDeps = Pick<
+  CheckoutActivationDeps,
+  "supabase" | "stripe" | "trialRuntime"
+>
+
+/**
+ * Reads a persisted terminal trial result for a retrieved Stripe return proof.
+ * It intentionally does not activate, cancel, release, or create an account.
+ */
+export async function getStripeTrialReturnRecoveryCode(
+  session: Stripe.Checkout.Session,
+  deps: StripeTrialReturnRecoveryDeps,
+): Promise<CheckoutRecoveryCode | null> {
+  const enrollmentId = session.metadata?.trial_enrollment_id
+  if (
+    session.metadata?.trial_cohort !== "trial_v1" ||
+    typeof enrollmentId !== "string" ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(enrollmentId)
+  ) {
+    return null
+  }
+
+  const { data: enrollment, error } = await deps.supabase
+    .from("trial_enrollments")
+    .select(
+      "id,provider,admission_status,admission_denial_reason,admission_recovery_reason,neutralization_required,provider_agreement_id",
+    )
+    .eq("id", enrollmentId)
+    .maybeSingle()
+  if (error) throw error
+  const code = getPersistedTrialRecoveryCode(enrollment ?? {})
+  if (!code) return null
+
+  const runtime = deps.trialRuntime ?? readTrialRuntime()
+  const agreementId =
+    typeof enrollment?.provider_agreement_id === "string" ? enrollment.provider_agreement_id : null
+  const customerId = stripeObjectId(session.customer)
+  const sessionAgreementId = stripeObjectId(session.subscription)
+  if (
+    !runtime ||
+    !/^acct_\w+$/.test(runtime.stripeAccountId) ||
+    typeof runtime.livemode !== "boolean" ||
+    enrollment?.provider !== "stripe" ||
+    !agreementId ||
+    session.mode !== "subscription" ||
+    session.livemode !== runtime.livemode ||
+    sessionAgreementId !== agreementId ||
+    !customerId
+  ) {
+    return "trial_reconciliation_required"
+  }
+
+  const account = await deps.stripe.accounts.retrieve(null)
+  const subscription = await deps.stripe.subscriptions.retrieve(agreementId)
+  if (
+    account.id !== runtime.stripeAccountId ||
+    subscription.id !== agreementId ||
+    subscription.livemode !== runtime.livemode ||
+    subscription.status !== "canceled" ||
+    stripeObjectId(subscription.customer) !== customerId ||
+    subscription.metadata?.trial_cohort !== "trial_v1" ||
+    subscription.metadata.trial_enrollment_id !== enrollmentId
+  ) {
+    return "trial_reconciliation_required"
+  }
+  return code
 }
 
 export type CheckoutActivationErrorCode =
@@ -294,8 +368,10 @@ export async function ensureCheckoutAccount(
       if (existingProfile) await assertCanStartCheckout(deps.supabase, existingProfile.id, now)
       await assertCanStartCheckoutForEmail(deps.supabase, valid.email, now)
     } catch (error) {
-      if (error instanceof CheckoutAccessAlreadyExistsError)
+      if (error instanceof CheckoutAccessAlreadyExistsError) {
         await rejectStripeTrialForExistingAccess(trial, deps)
+        throw new CheckoutRecoveryError("checkout_existing_access", { cause: error })
+      }
       throw error
     }
   }

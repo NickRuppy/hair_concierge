@@ -10,6 +10,10 @@ import {
 } from "../billing/trial-identity-claims"
 import { parseTrialOfferSnapshot } from "../billing/trial-offer"
 import { retrieveStripeTrialAuthorizationEvidence } from "./trial-authorization"
+import {
+  CheckoutRecoveryError,
+  getPersistedTrialRecoveryCode,
+} from "../auth/checkout-activation-outcome"
 
 /** Server-owned configuration. Provision only after the real-processing release checks. */
 export type StripeTrialRuntime = {
@@ -45,7 +49,7 @@ export async function prepareStripeTrialAccountAdmission(
   const { data: enrollment, error } = await deps.supabase
     .from("trial_enrollments")
     .select(
-      "id,user_id,provider,accepted_offer,admission_status,provider_agreement_id,access_revoked,neutralization_required",
+      "id,user_id,provider,accepted_offer,admission_status,admission_denial_reason,admission_recovery_reason,provider_agreement_id,access_revoked,neutralization_required",
     )
     .eq("id", enrollmentId!)
     .maybeSingle()
@@ -63,18 +67,29 @@ export async function prepareStripeTrialAccountAdmission(
   const account = await deps.stripe.accounts.retrieve(null)
   if (account.id !== runtime.stripeAccountId) throw new Error("Stripe trial account mismatch")
   if (["blocked", "released"].includes(enrollment.admission_status)) {
+    let neutralizationSettled = enrollment.neutralization_required === false
     if (enrollment.neutralization_required && enrollment.provider_agreement_id) {
       // The original denial persisted the verified agreement before cancellation.
       // A lost response must reconcile that agreement without requiring it to
       // become trialing again or creating another account.
-      await neutralizeStripeTrialAgreement(
-        deps,
-        enrollment.id,
-        enrollment.provider_agreement_id,
-        runtime.livemode,
-      )
+      try {
+        await neutralizeStripeTrialAgreement(
+          deps,
+          enrollment.id,
+          enrollment.provider_agreement_id,
+          runtime.livemode,
+        )
+      } catch (cause) {
+        throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+      }
+      neutralizationSettled = true
     }
-    throw new Error("Stripe trial admission denied")
+    throw new CheckoutRecoveryError(
+      getPersistedTrialRecoveryCode({
+        ...enrollment,
+        neutralization_required: neutralizationSettled ? false : enrollment.neutralization_required,
+      }) ?? "trial_checkout_closed",
+    )
   }
   if (enrollment.user_id === null && enrollment.admission_status !== "reserved") {
     throw new Error("Stripe trial owner is unavailable")
@@ -91,7 +106,13 @@ export async function prepareStripeTrialAccountAdmission(
     (enrollment.provider_agreement_id &&
       enrollment.provider_agreement_id !== proof.authorization.providerAgreementId)
   ) {
-    throw new Error("Stripe trial authorization is not verified")
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error(
+        !proof
+          ? "Stripe trial authorization is not verified"
+          : "Stripe trial authorization agreement does not match enrollment",
+      ),
+    })
   }
   // Validate keys before creating an account or persisting any admission claim.
   const cardClaims = createTrialIdentityClaims(
@@ -120,6 +141,7 @@ export async function rejectStripeTrialForExistingAccess(
     .update({
       admission_status: "blocked",
       provider_agreement_id: prepared.authorization.providerAgreementId,
+      admission_recovery_reason: "existing_access",
       neutralization_required: true,
     })
     .eq("id", prepared.enrollment.id)
@@ -127,13 +149,17 @@ export async function rejectStripeTrialForExistingAccess(
     .select("id")
     .maybeSingle()
   if (error) throw error
-  if (!data) throw new Error("Stripe trial denial reconciliation required")
-  await neutralizeStripeTrialAgreement(
-    deps,
-    prepared.enrollment.id,
-    prepared.authorization.providerAgreementId,
-    prepared.runtime.livemode,
-  )
+  if (!data) throw new CheckoutRecoveryError("trial_reconciliation_required")
+  try {
+    await neutralizeStripeTrialAgreement(
+      deps,
+      prepared.enrollment.id,
+      prepared.authorization.providerAgreementId,
+      prepared.runtime.livemode,
+    )
+  } catch (cause) {
+    throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+  }
 }
 
 async function neutralizeStripeTrialAgreement(
@@ -231,13 +257,22 @@ export async function admitStripeTrialAccount(
     // Only a fully verified, denied free agreement is neutralized. API failures
     // propagate; no claim release or fallback paid checkout follows a timeout.
     if (result === "trial_used" || result === "claim_reserved") {
-      await neutralizeStripeTrialAgreement(
-        deps,
-        enrollment.id,
-        authorization.providerAgreementId,
-        runtime.livemode,
+      try {
+        await neutralizeStripeTrialAgreement(
+          deps,
+          enrollment.id,
+          authorization.providerAgreementId,
+          runtime.livemode,
+        )
+      } catch (cause) {
+        throw new CheckoutRecoveryError("trial_reconciliation_required", { cause })
+      }
+      throw new CheckoutRecoveryError(
+        result === "trial_used" ? "trial_unavailable" : "trial_checkout_conflict",
       )
     }
-    throw new Error(`Stripe trial admission denied: ${result}`)
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error(`Unexpected Stripe trial admission result: ${result}`),
+    })
   }
 }

@@ -11,6 +11,8 @@ import {
 import { recordVerifiedPayPalTrialSale } from "../src/lib/paypal/trial-webhook"
 import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
 import { paypalCheckoutActivationHash } from "../src/lib/paypal/checkout-activation"
+import { getPersistedTrialRecoveryCode } from "../src/lib/paypal/trial-account-admission"
+import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
 
 const USER = "11111111-1111-4111-8111-111111111111"
 const ENROLLMENT = "22222222-2222-4222-8222-222222222222"
@@ -67,6 +69,7 @@ function fixture() {
     user_id: USER,
     provider: "paypal",
     admission_status: "reserved",
+    admission_recovery_reason: null,
     accepted_offer: offer,
     provider_agreement_id: null,
     access_revoked: false,
@@ -385,6 +388,7 @@ test("a rejected patch cancels and reconciles the unadmitted collectible agreeme
   }
   assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
     status: "duplicate",
+    recoveryCode: "trial_checkout_closed",
   })
   assert.equal(f.subscription.status, "CANCELLED")
   assert.equal(f.enrollment.admission_status, "released")
@@ -396,7 +400,11 @@ test("a provider start without the exact next billing boundary never grants acce
   f.deps.patchPayPalTrialStart = async (_id: string, start: string) => {
     f.subscription.start_time = start
   }
-  await assert.rejects(() => ensurePayPalTrialCheckoutAccount(f.intent, f.deps), /deadline/)
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    (error: unknown) =>
+      error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
+  )
   assert.equal(f.tables.billing_subscriptions.length, 0)
 })
 
@@ -405,6 +413,7 @@ test("a repeated payer is denied and cancellation is confirmed before claims rel
   f.setAdmission("trial_used")
   assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
     status: "duplicate",
+    recoveryCode: "trial_unavailable",
   })
   assert.equal(f.tables.billing_subscriptions.length, 0)
   assert.equal(f.subscription.status, "CANCELLED")
@@ -417,11 +426,31 @@ test("a racing transaction prevents denied agreement claim release", async () =>
   f.deps.listPayPalTrialTransactions = async () => [{ id: "SALE-racing", status: "COMPLETED" }]
   await assert.rejects(
     () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
-    /transaction reconciliation/,
+    (error: unknown) =>
+      error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
   )
   assert.equal(f.enrollment.neutralization_required, true)
   assert.equal(
     f.calls.some((c) => c.rpc === "release_trial_enrollment"),
+    false,
+  )
+})
+
+test("an invalid PayPal admission result requires reconciliation without granting or neutralizing", async () => {
+  const f = fixture()
+  f.setAdmission("invalid_state")
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    (error: unknown) =>
+      error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
+  )
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+  assert.equal(
+    f.calls.some((call) => call.cancel),
+    false,
+  )
+  assert.equal(
+    f.calls.some((call) => call.rpc === "release_trial_enrollment"),
     false,
   )
 })
@@ -632,6 +661,7 @@ test("typed access conflict neutralizes the duplicate agreement even when its me
   }
   assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
     status: "duplicate",
+    recoveryCode: "checkout_existing_access",
   })
   assert.equal(f.calls.filter((c) => c.cancel).length, 1)
   assert.equal(f.tables.billing_subscriptions.length, 0)
@@ -639,7 +669,116 @@ test("typed access conflict neutralizes the duplicate agreement even when its me
     f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
     false,
   )
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "checkout_existing_access",
+  })
 })
+
+test("PayPal existing-access cleanup failure preserves its recovery reason for a successful replay", async () => {
+  const f = fixture()
+  const conflict = new CheckoutAccessAlreadyExistsError()
+  f.deps.assertCheckoutAccess = async () => {
+    throw conflict
+  }
+  const cancel = f.deps.cancelPayPalSubscription
+  f.deps.cancelPayPalSubscription = async () => {
+    throw new Error("provider cancellation timeout")
+  }
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    (error: unknown) =>
+      error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
+  )
+  assert.equal(f.enrollment.admission_recovery_reason, "existing_access")
+  assert.equal(f.enrollment.neutralization_required, true)
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+
+  f.deps.cancelPayPalSubscription = cancel
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "checkout_existing_access",
+  })
+  assert.equal(f.enrollment.admission_status, "released")
+  assert.equal(f.enrollment.neutralization_required, false)
+})
+
+test("persisted PayPal terminal admissions retain only verified recovery reasons", () => {
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "blocked",
+      admission_recovery_reason: "existing_access",
+      neutralization_required: true,
+    }),
+    "trial_reconciliation_required",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "released",
+      admission_recovery_reason: "existing_access",
+      admission_denial_reason: "trial_used",
+      neutralization_required: false,
+    }),
+    "checkout_existing_access",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "released",
+      admission_denial_reason: "trial_used",
+      neutralization_required: false,
+    }),
+    "trial_unavailable",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "blocked",
+      admission_denial_reason: "claim_reserved",
+      neutralization_required: false,
+    }),
+    "trial_checkout_conflict",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "released",
+      admission_denial_reason: null,
+      neutralization_required: false,
+    }),
+    "trial_checkout_closed",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "blocked",
+      admission_denial_reason: "trial_used",
+      neutralization_required: true,
+    }),
+    "trial_reconciliation_required",
+  )
+  assert.equal(
+    getPersistedTrialRecoveryCode({
+      admission_status: "reserved",
+      admission_denial_reason: "trial_used",
+      neutralization_required: false,
+    }),
+    null,
+  )
+})
+
+test("persisted PayPal cleanup returns its settled denial reason after release", async () => {
+  const f = fixture()
+  Object.assign(f.enrollment, {
+    admission_status: "blocked",
+    admission_denial_reason: "trial_used",
+    neutralization_required: true,
+  })
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "trial_unavailable",
+  })
+  assert.equal(f.enrollment.admission_status, "released")
+  assert.equal(f.enrollment.neutralization_required, false)
+})
+
 test("an unrelated error with old access-conflict words is propagated without canceling the agreement", async () => {
   const f = fixture()
   const error = new Error("backend failure: already has access cache unavailable")

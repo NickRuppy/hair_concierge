@@ -20,6 +20,7 @@ import {
 } from "./subscription-shapes"
 import { getPayPalIntervalForPlanId } from "./plans"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "@/lib/personal-plan/legacy-cutover-eligibility"
+import type { CheckoutRecoveryCode } from "@/lib/auth/checkout-activation-outcome"
 
 export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
@@ -82,7 +83,7 @@ export type PayPalCheckoutAccountResult =
       trialEndAt?: string
     }
   | { status: "pending" }
-  | { status: "duplicate" }
+  | { status: "duplicate"; recoveryCode?: CheckoutRecoveryCode }
 
 type ProfileRow = {
   id: string

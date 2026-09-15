@@ -212,6 +212,19 @@ test("unknown enrollment and access failures never expose a private preview or p
     { lookupError: true },
     { trial: { ...enrollment, accepted_offer: {} } },
     { trial: { ...enrollment, admission_status: "reserved" } },
+    {
+      trial: { ...enrollment, admission_status: "blocked", admission_denial_reason: "trial_used" },
+    },
+    {
+      trial: { ...enrollment, admission_status: "released", admission_denial_reason: "trial_used" },
+    },
+    {
+      trial: {
+        ...enrollment,
+        admission_status: "released",
+        admission_denial_reason: "claim_reserved",
+      },
+    },
     { trial: enrollment, contractError: true },
     { trial: enrollment, contract: {} },
     { accessError: true },
