@@ -267,7 +267,9 @@ export async function recordVerifiedPayPalTrialSale(
       ? billing.metadata.paypal_sale_period_start
       : enrollment.first_payment_succeeded_at
         ? billing.current_period_end
-        : live.start_time)
+        : // The first paid period begins with the actual payment success (the
+          // provider's batch), matching the ledger's paid-through contract.
+          occurredAt)
   const periodEndAt = setupPayment?.periodEndAt ?? live.billing_info?.next_billing_time
   if (
     !periodStartAt ||

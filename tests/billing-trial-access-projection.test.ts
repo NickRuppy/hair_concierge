@@ -1,3 +1,7 @@
+import {
+  paypalTrialCollectionStart,
+  paypalTrialCollectionWindowEnd,
+} from "../src/lib/paypal/trial-collection-start"
 import assert from "node:assert/strict"
 import test from "node:test"
 import { resolveBillingTrialAccess } from "../src/lib/billing/trial-access-projection"
@@ -40,13 +44,19 @@ test("leaves only a completely unmarked legacy billing row to legacy access hand
   )
 })
 
-test("uses the existing policy at the exact seven-day boundary without an injected 24-hour grace", () => {
+test("bridges the first-collection window at the seven-day boundary and locks when it closes", () => {
   assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {
     hasAccess: true,
     phase: "trial",
     reason: "trial_active",
   })
   assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {
+    hasAccess: true,
+    phase: "trial",
+    reason: "first_collection_pending",
+  })
+  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))
+  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {
     hasAccess: false,
     phase: "locked",
     reason: "trial_expired_without_payment",

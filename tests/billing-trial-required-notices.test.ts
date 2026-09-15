@@ -321,3 +321,19 @@ test("paid cancellation receipt preserves paid access and pending provider work 
     /Invalid/,
   )
 })
+
+test("PayPal contract confirmation states the day-after first-charge date instead of the trial-end moment", () => {
+  const message = buildTrialRequiredNoticeMessage("contract_confirmation", {
+    ...snapshot,
+    provider: "paypal",
+  })
+  // trialEndAt 2026-09-21T10:00:00Z → collection starts 2026-09-22T00:00Z → Berlin date 22.09.
+  assert.match(message.receipt_text, /Die erste Zahlung ist für den 22\. September 2026 vorgesehen/)
+  assert.doesNotMatch(message.receipt_text, /zu diesem Zeitpunkt/)
+  assert.match(message.receipt_text, /21\. September 2026 um 12:00:00 MESZ/)
+})
+
+test("Stripe contract confirmation keeps the exact-moment first-charge statement", () => {
+  const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
+  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
+})

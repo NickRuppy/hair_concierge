@@ -51,6 +51,9 @@ export function TrialMembership({ state }: { state: TrialMembershipState }) {
   const deadline = Date.parse(state.originalTrialEndAt)
   const expired = now >= deadline
   const canceled = state.cancelAtPeriodEnd || receipt !== null
+  // Day-after collection: the trial phase continues past the deadline while
+  // the first payment is being collected; access stays active.
+  const collectionPending = expired && !canceled && state.phase === "trial"
   const canCancel = state.canCancelTrial && !expired && !canceled
   const money = (amount: number) =>
     new Intl.NumberFormat("de-DE", { style: "currency", currency: state.currency }).format(
@@ -151,9 +154,11 @@ export function TrialMembership({ state }: { state: TrialMembershipState }) {
               ? "Aktiv"
               : state.phase === "renewal_grace"
                 ? "Zahlung offen"
-                : expired || state.phase === "locked"
-                  ? "Testphase beendet"
-                  : "Testphase"}
+                : collectionPending
+                  ? "Zahlung ausstehend"
+                  : expired || state.phase === "locked"
+                    ? "Testphase beendet"
+                    : "Testphase"}
         </span>
       </div>
       {receipt ? (
@@ -208,6 +213,11 @@ export function TrialMembership({ state }: { state: TrialMembershipState }) {
               </p>
               <p>Es wird kein kostenpflichtiges Abo gestartet.</p>
             </div>
+          ) : collectionPending ? (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Deine Testphase ist beendet. Die Bestätigung deiner ersten Zahlung über{" "}
+              {money(state.firstAmountMinor)} steht noch aus — dein Zugang bleibt vorerst aktiv.
+            </p>
           ) : expired || state.phase === "locked" ? (
             <p className="mt-1 text-sm text-muted-foreground">
               Deine Testphase ist beendet. Dein Zugang ist gesperrt. Deine gespeicherten Daten
@@ -235,7 +245,7 @@ export function TrialMembership({ state }: { state: TrialMembershipState }) {
               </div>
             </>
           )}
-          {expired || state.phase === "locked" ? (
+          {(expired && !collectionPending) || state.phase === "locked" ? (
             <TrialPaidRecoveryActions state={state} onChanged={() => window.location.reload()} />
           ) : null}
           {!expired && state.phase === "trial" && state.firstPaymentSucceededAt === null ? (

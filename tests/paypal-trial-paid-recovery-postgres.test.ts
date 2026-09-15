@@ -16,7 +16,11 @@ const catalog = {
   month: createTrialOfferSnapshot("month", rawCatalog),
   year: createTrialOfferSnapshot("year", rawCatalog),
 }
-async function setup(t: { after(fn: () => Promise<void>): void }) {
+async function setup(
+  t: { after(fn: () => Promise<void>): void },
+  trialEndInterval = "3 days",
+  beginRecovery = true,
+) {
   const pg = new PGlite()
   t.after(() => pg.close())
   await pg.exec(`CREATE ROLE anon;CREATE ROLE authenticated;CREATE ROLE service_role BYPASSRLS;
@@ -39,6 +43,7 @@ async function setup(t: { after(fn: () => Promise<void>): void }) {
     "20260914143014_paypal_trial_paid_recovery_requests",
     "20260914143515_trial_paid_recovery_ledger",
     "20260914144638_paypal_trial_candidate_expiry",
+    "20260915143327_trial_paid_recovery_collection_window_gate",
   ])
     await pg.exec(
       await readFile(new URL(`../supabase/migrations/${migration}.sql`, import.meta.url), "utf8"),
@@ -62,13 +67,18 @@ async function setup(t: { after(fn: () => Promise<void>): void }) {
     [attempt.enrollment_id],
   )
   await pg.query(
-    "UPDATE public.trial_enrollments SET admission_status='active',provider_agreement_id='I-old',authorization_succeeded_at=now()-interval '10 days',original_trial_end_at=now()-interval '3 days',cancel_at_period_end=false WHERE id=$1",
+    "UPDATE public.trial_enrollments SET admission_status='active',provider_agreement_id='I-old',authorization_succeeded_at=now()-interval '" +
+      trialEndInterval +
+      "'-interval '7 days',original_trial_end_at=now()-interval '" +
+      trialEndInterval +
+      "',cancel_at_period_end=false WHERE id=$1",
     [attempt.enrollment_id],
   )
   await pg.query(
     "INSERT INTO public.billing_subscriptions(id,user_id,provider,provider_subscription_id,provider_customer_id,trial_enrollment_id) VALUES($1,$2,'paypal','I-old','PAYER',$1)",
     [attempt.enrollment_id, USER],
   )
+  if (!beginRecovery) return { pg, attempt, operation: null as any }
   const op = await pg.query<{ row: any }>(
     "SELECT public.begin_trial_paid_recovery_operation($1,$2,$3,'recover_unpaid',0) AS row",
     [OP, attempt.enrollment_id, USER],
@@ -226,4 +236,25 @@ test("expired PayPal candidate lease uses frozen expiry and skips concurrent wor
     (await pg.query("SELECT public.claim_paypal_trial_candidate_expiry(5)")).rows.length,
     0,
   )
+})
+
+test("recover_unpaid waits for the collection window unless the trial was cancelled", async (t) => {
+  const { pg, attempt } = await setup(t, "1 day", false)
+  await assert.rejects(
+    () =>
+      pg.query("SELECT public.begin_trial_paid_recovery_operation($1,$2,$3,'recover_unpaid',0)", [
+        OP,
+        attempt.enrollment_id,
+        USER,
+      ]),
+    /Paid recovery unavailable/,
+  )
+  await pg.query("UPDATE public.trial_enrollments SET cancel_at_period_end=true WHERE id=$1", [
+    attempt.enrollment_id,
+  ])
+  const op = await pg.query<{ row: any }>(
+    "SELECT public.begin_trial_paid_recovery_operation($1,$2,$3,'recover_unpaid',0) AS row",
+    [OP, attempt.enrollment_id, USER],
+  )
+  assert.equal(op.rows[0].row.kind, "recover_unpaid")
 })

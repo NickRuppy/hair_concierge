@@ -1,4 +1,5 @@
 import { readTrialEffectiveContract } from "../billing/trial-effective-contract"
+import { paypalTrialCollectionStart, paypalTrialNextBillingMatches } from "./trial-collection-start"
 import {
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
@@ -170,12 +171,21 @@ function assertFutureTrial(
   operation: TrialManagementOperation,
   requireActive = true,
 ) {
+  // Day-after collection: start_time sits at the collection start (legacy
+  // agreements at the second-exact trial end), and the batch time is verified
+  // at the provider's own granularity.
+  const scheduledStart =
+    sameTime(subscription.start_time, operation.originalTrialEndAt) ||
+    sameTime(subscription.start_time, paypalTrialCollectionStart(operation.originalTrialEndAt))
   if (
     Date.parse(operation.originalTrialEndAt) <= Date.now() ||
-    !sameTime(subscription.start_time, operation.originalTrialEndAt) ||
+    !scheduledStart ||
     (requireActive &&
       (subscription.status !== "ACTIVE" ||
-        !sameTime(subscription.billing_info?.next_billing_time, operation.originalTrialEndAt)))
+        !paypalTrialNextBillingMatches(
+          operation.originalTrialEndAt,
+          subscription.billing_info?.next_billing_time,
+        )))
   )
     throw new Error("PayPal trial management original deadline is not verified")
 }
@@ -284,7 +294,12 @@ export async function beginPayPalTrialManagement(
       cancel_url: frozen.cancelUrl,
     },
     ...(operation.kind === "restore"
-      ? { start_time: operation.originalTrialEndAt, custom_id: `trial-management:${operation.id}` }
+      ? {
+          // Replacement agreements collect on the same day-after schedule the
+          // original was verified against.
+          start_time: paypalTrialCollectionStart(operation.originalTrialEndAt),
+          custom_id: `trial-management:${operation.id}`,
+        }
       : {}),
   }
   const response = await (deps.request ?? paypalRequest)<PayPalSubscription>(

@@ -2,6 +2,7 @@ import {
   parseTrialRequiredNoticeSnapshot,
   type TrialRequiredNoticeSnapshot,
 } from "./trial-required-notices"
+import { paypalTrialCollectionStart } from "../paypal/trial-collection-start"
 
 export type TrialReminderMessageData = Readonly<{
   subject: string
@@ -83,10 +84,15 @@ export function buildTrialReminderMessage(value: unknown): TrialReminderMessage 
 
   const plan = trialPlan(snapshot)
   const trialEndDate = date(snapshot.trialEndAt)
-  const firstChargeDate = dateOnly(snapshot.trialEndAt)
+  // PayPal collects in a daily batch on the day after the trial end; Stripe
+  // charges at the exact trial-end moment.
+  const firstChargeDate =
+    snapshot.provider === "paypal"
+      ? dateOnly(paypalTrialCollectionStart(snapshot.trialEndAt))
+      : dateOnly(snapshot.trialEndAt)
   const firstAmount = money(snapshot.firstAmountMinor)
   const renewalAmount = money(snapshot.renewalAmountMinor)
-  const subject = `Dein kostenloser Test endet am ${firstChargeDate}`
+  const subject = `Dein kostenloser Test endet am ${dateOnly(snapshot.trialEndAt)}`
   const receiptText = `Dein kostenloser Test endet bald.\n\nWie versprochen, erinnern wir dich vor deiner ersten Zahlung.\n\nTestende: ${trialEndDate}\nErste Zahlung: ${firstAmount} am ${firstChargeDate}\n${plan.label}: danach ${renewalAmount} ${plan.intervalLabel}.\n\nNach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\n\nMein Abo ansehen: ${MANAGEMENT_URL}\n\nDu möchtest nicht weitermachen? Vor Testende kündigen: ${CANCELLATION_URL}\nDann beginnt kein bezahlter Zeitraum.\n\nFalls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\n\nFragen? Antworte einfach auf diese E-Mail.\n\nChaarlie · Haarmony LLC\n1111B S Governors Ave # 84075, Dover, DE 19904, USA`
   const messageData: TrialReminderMessageData = {
     subject,

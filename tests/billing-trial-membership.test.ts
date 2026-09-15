@@ -132,7 +132,7 @@ test("read scopes an enrollment to the authenticated owner and preserves expired
     admin,
     userId,
     enrollment.id,
-    new Date("2026-09-21T00:00:00Z"),
+    new Date("2026-09-23T00:00:00Z"),
   )
   assert.deepEqual(filters, [
     ["user_id", userId],
@@ -171,7 +171,7 @@ test("composed membership read prefers expired trial facts to a stale active com
   const response = await readMembershipResponse(
     { id: userId },
     admin,
-    new Date("2026-09-20T10:30:01Z"),
+    new Date("2026-09-23T00:00:00Z"),
   )
   assert.equal(response.status, 200)
   const body = await response.json()

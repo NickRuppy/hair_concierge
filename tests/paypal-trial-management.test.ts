@@ -1,3 +1,4 @@
+import { paypalTrialCollectionStart } from "../src/lib/paypal/trial-collection-start"
 import assert from "node:assert/strict"
 import test from "node:test"
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
@@ -289,7 +290,7 @@ test("restore requests no-free replacement at original deadline and cancellation
   assert.equal(result.status, "approval_required")
   assert.equal(f.tables.trial_enrollments[0].cancel_at_period_end, true)
   const request = f.calls.find((c) => c.path)
-  assert.equal(request.body.start_time, f.deadline)
+  assert.equal(request.body.start_time, paypalTrialCollectionStart(f.deadline))
   assert.equal(request.body.plan.billing_cycles[0].pricing_scheme.fixed_price.value, "69.99")
   assert.equal(request.body.plan.billing_cycles[1].pricing_scheme.fixed_price.value, "99.99")
   assert.equal(f.operation.status, "pending")
@@ -328,8 +329,10 @@ test("changed next billing boundary after revision is rejected without local ter
   const f = fixture("switch")
   await beginPayPalTrialManagement(f.input, f.deps)
   f.approve()
+  // Within the day-after collection window a shifted boundary is provider
+  // normalization; only a boundary outside the window is a changed contract.
   f.source.billing_info.next_billing_time = new Date(
-    Date.parse(f.deadline) + 86400000,
+    Date.parse(f.deadline) + 4 * 86400000,
   ).toISOString()
   await assert.rejects(() => reconcilePayPalTrialManagement(f.input, f.deps), /deadline/)
   assert.equal(f.operation.status, "pending")

@@ -11,6 +11,9 @@ import {
 import type { BillingSubscriptionRow } from "../src/lib/billing/types"
 
 const NOW = new Date("2026-09-20T12:00:00.000Z")
+// The first-collection bridge keeps an unpaid, uncancelled trial open until
+// the collection window closes (trial end 09-20 -> window closes 09-23T00Z).
+const AFTER_WINDOW = new Date("2026-09-23T00:00:00.000Z")
 
 function facts(overrides: Record<string, unknown> = {}) {
   return {
@@ -170,9 +173,17 @@ test("expired trial does not inherit stale active/null-end profile access at the
     profile: { id: "user-1", subscription_status: "active", current_period_end: null },
   })
 
-  assert.equal(await hasCurrentAppAccess(supabase as never, { userId: "user-1" }, NOW), false)
-  assert.equal(await hasCurrentPaidAppAccess(supabase as never, { userId: "user-1" }, NOW), false)
-  await assert.doesNotReject(() => assertCanStartCheckout(supabase as never, "user-1", NOW))
+  assert.equal(
+    await hasCurrentAppAccess(supabase as never, { userId: "user-1" }, AFTER_WINDOW),
+    false,
+  )
+  assert.equal(
+    await hasCurrentPaidAppAccess(supabase as never, { userId: "user-1" }, AFTER_WINDOW),
+    false,
+  )
+  await assert.doesNotReject(() =>
+    assertCanStartCheckout(supabase as never, "user-1", AFTER_WINDOW),
+  )
 })
 
 test("trial access remains strict after a failed first payment but admits later paid renewal grace", async () => {
@@ -180,7 +191,10 @@ test("trial access remains strict after a failed first payment but admits later 
     billing: [trialRow({ current_period_end: null })],
     profile: { id: "user-1", subscription_status: "active", current_period_end: null },
   })
-  assert.equal(await hasCurrentAppAccess(failedFirst as never, { userId: "user-1" }, NOW), false)
+  assert.equal(
+    await hasCurrentAppAccess(failedFirst as never, { userId: "user-1" }, AFTER_WINDOW),
+    false,
+  )
 
   const laterPaidGrace = trialRow({
     trial_access_facts: facts({

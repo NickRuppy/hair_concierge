@@ -81,3 +81,16 @@ test("escapes all rendered data and keeps its trusted links fixed", () => {
   )
   assert.equal(message.messageData.trial_end_date, "21. September 2026 um 12:00 Uhr MESZ")
 })
+
+test("PayPal reminder states the day-after first-charge date while the trial end stays exact", () => {
+  const message = buildTrialReminderMessage({ ...annual, provider: "paypal" })
+  assert.equal(message.messageData.first_charge_date, "22. September 2026")
+  assert.match(message.messageData.trial_end_date, /21\. September 2026 um 12:00/)
+  assert.match(message.messageData.subject, /21\. September 2026/)
+})
+
+test("Stripe reminder keeps the trial-end date as the first-charge date", () => {
+  const message = buildTrialReminderMessage(annual)
+  assert.equal(message.messageData.first_charge_date, "21. September 2026")
+  assert.match(message.messageData.subject, /21\. September 2026/)
+})
