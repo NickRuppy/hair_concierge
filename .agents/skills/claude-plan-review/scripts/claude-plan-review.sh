@@ -95,7 +95,7 @@ $repo_dir
 Constraints:
 - Use the reviewing-plans skill if available.
 - Read $repo_dir/.agents/skills/plan-hardening-loop/SKILL.md and its references/plan-format.md before reviewing.
-- Inspect Decision coverage for complete buckets, the original user acknowledgement/request and approved scope, separate current internal revalidation, hidden consequential assumptions, and choices that still require a decision from Nick. Distinguish an already approved choice from a newly introduced tradeoff.
+- Inspect Decision coverage for complete buckets, the original user acknowledgement/request and approved scope, separate current internal revalidation, hidden consequential assumptions, and choices that still require a decision from Nick. Distinguish an already approved choice from a newly introduced tradeoff; missing record formatting alone does not require new user approval.
 - Do not treat evidence, reviewer preference, or the orchestrator's recommendation as Nick's approval.
 - Ground findings in the actual codebase with file:line citations.
 - Do not edit files.

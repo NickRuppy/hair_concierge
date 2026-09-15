@@ -17,36 +17,17 @@ A Goal can contain this loop. The loop does not require formal Goal mode.
 
 ## 1. Anchor the outcome
 
-Read the approved plan when one exists and inspect any active goal before editing.
+Read the requested outcome and approved plan or contract when one exists. Apply **Working together and planning decisions** in `AGENTS.md`: carry existing authorization forward and resolve only actual open consequential choices. For plan-backed work, record current confirmed decision coverage, original authorization and scope, and internal revalidation. Repair missing or stale documentation from the available evidence yourself; ask only when the intended behavior or authorization is genuinely unclear.
 
-For plan-backed work, confirm the plan's **Decision coverage** is current and `confirmed`, states `Undiscussed consequential assumptions affecting this handoff: none`, and has no open decision that the handed-off tasks depend on. "Current" means the record reflects the latest chosen direction, scoped tasks, evidence, and counterpart findings; its original coverage acknowledgement names the approved scope, and separate internal revalidation links that approval to the current revision without claiming a new user acknowledgement. When a plan written before this contract is the current source for implementation or verification, refresh that active plan or its handoff before continuing, even if implementation edits are already complete; do not bulk retrofit historical plans that are not driving active work.
+For new flows or material UX changes, confirm the concrete evidence and journey were approved together or in an earlier review. Exact routine changes and faithful execution of an approved design do not require another sign-off. If a prototype settled a decision, record its finding and disposition and implement retained behavior through the normal test and safeguard workflow.
 
-For clearly bounded non-user-facing work without a durable plan, present the compact coverage and cite the explicit task request. If that request uniquely determines the scope and no consequential choice remains, mark coverage `confirmed` and proceed without a second acknowledgement. An ambiguous request, evidence favoring one of several consequential options, or silence does not supply approval. Return unresolved consequential choices to `plan-hardening-loop` and pause only dependent work.
-
-For user-facing work, also confirm **Planning evidence**, confirmed evidence review, a **Designed user journey**, and explicit user-journey sign-off. If any required gate is missing or pending, return to `plan-hardening-loop`; do not implement. A prose-only visual description or general plan approval is not a substitute. If a prototype settled a decision, confirm its finding and disposition are recorded and rewrite retained behavior through the normal production test and safeguard workflow. For non-user-facing work, use the approved implementation contract and state that no surface, copy, timing, or user-visible feedback changes. A separate operator/integration walkthrough is required only to settle a consequential choice absent from that contract.
+Keep the implementation contract brief; link existing decision coverage instead of repeating it. A bounded explicit request with no unresolved consequential choice is sufficient authorization.
 
 Use formal Goal mode only when the user explicitly asks for it and the work is likely to span multiple turns, resumptions, or a long implementation sequence. If formal Goal mode is requested, first inspect the existing goal to avoid replacing unrelated active work.
 
 On resume, continue a matching active goal without replacement. Reconcile plan status with `git log`, the current diff, and receipts; trust durable artifacts over chat and do not repeat completed slices after compaction. If the goal is paused, wait for the user or system to resume it. If an existing goal is unrelated or cannot be reconciled safely, ask before replacing it.
 
-In every implementation-loop run, state a compact implementation contract. Formal Goal mode supplements this contract; it does not replace it:
-
-```text
-Outcome: <user-visible or repository state that must become true>
-Scope: <plan path and boundaries>
-Decision coverage: <confirmed from approved plan or explicit bounded internal-work request | pending for unresolved consequential choices>
-Confirmed with Nick: <plan section or consequential choices>
-Inherited from evidence or contract: <plan section or determining sources>
-Implementation defaults: <plan section or non-consequential choices only>
-Open consequential assumptions: <none, or acknowledged parked work>
-Undiscussed consequential assumptions affecting this handoff: <none, or list>
-Coverage acknowledgement: <original user acknowledgement/request and approved scope>
-Internal revalidation: <current revision/evidence checked; changes since acknowledgement>
-Verification: <proof required>
-Stop: <last authorized external action>
-```
-
-Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine non-user-facing automation runs do not trigger this skill and do not require an implementation contract or formal Goal unless evidence exposes a consequential choice. Use the consequence-based definition of "tiny" in `AGENTS.md`; line count alone does not create an exemption. A tiny user-facing fix still returns to `plan-hardening-loop` for contextual evidence review and journey sign-off.
+State the outcome, scope, verification, and last authorized action. Record any actual open decision with its affected work. For non-trivial work, keep the decision coverage in the plan or a compact inline record using `plan-hardening-loop`'s fields; routine bounded work skips this loop unless a consequential choice appears.
 
 Completion criterion: the controlling outcome is stable, authorization is clear, and process details are subordinate to it.
 
@@ -103,6 +84,6 @@ Completion criterion: no blocking verified findings remain and verification/revi
 
 ## 6. Hand off
 
-Report outcome, changed behavior, revalidated decision-coverage status and coverage acknowledgement, verification, review findings, artifact disposition, residual risk, branch/worktree, and the next authorized action. Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action.
+Continue into the next workflow stage when it is already authorized. Otherwise report the completed outcome, verification/review, residual risks, branch/worktree, artifact disposition, and a concrete recommended next action. If blocked, state the missing decision, access, or evidence and what would resolve it; finish independent authorized work first.
 
-Use `ship-it` only after the user asks to publish the verified branch.
+Stop before commit, push, PR, merge, deploy, production write, or cleanup unless the user explicitly authorized that action. Use `ship-it` when publication is authorized; do not ask again for actions already included in that request.
