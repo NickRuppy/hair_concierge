@@ -238,9 +238,12 @@ export async function ensurePayPalTrialCheckoutAccount(
     return duplicateTrialActivation("trial_checkout_closed")
   }
   if (Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd)) {
-    if (
-      Date.parse(subscription.start_time ?? "") !== Date.parse(provisionalPayPalTrialStart(attempt))
+    // PayPal echoes start_time in whole seconds; a sub-second delta against the
+    // frozen provisional start is provider rounding, not a mismatched agreement.
+    const provisionalDeltaMs = Math.abs(
+      Date.parse(subscription.start_time ?? "") - Date.parse(provisionalPayPalTrialStart(attempt)),
     )
+    if (!(provisionalDeltaMs < 1000))
       throw new CheckoutRecoveryError("trial_reconciliation_required", {
         cause: new Error("PayPal provisional trial start mismatch"),
       })

@@ -820,3 +820,55 @@ test("trial authorization timestamp qualifies a legacy-quiz lead for the plan de
     }
   }
 })
+
+test("provisional trial start is second-precision for the provider", async () => {
+  const { provisionalPayPalTrialStart } = await import("../src/lib/paypal/trial-checkout-attempt")
+  const start = provisionalPayPalTrialStart({ requestExpiresAt: "2026-09-18T10:47:36.026Z" } as any)
+  assert.equal(start, "2026-09-22T10:47:36.000Z")
+})
+
+test("provider whole-second start_time still verifies the provisional trial start", async () => {
+  const f = fixture()
+  // Freeze timestamps carry sub-second precision; PayPal stores and echoes
+  // start_time in whole seconds (prod incident 2026-09-15, sub I-EYRE7NUCK430).
+  const expires = Date.parse(f.attempt.request_expires_at)
+  f.attempt.request_expires_at = new Date(Math.floor(expires / 1000) * 1000 + 26).toISOString()
+  const providerStored =
+    Math.floor((Date.parse(f.attempt.request_expires_at) + 4 * 86400000) / 1000) * 1000
+  f.subscription.start_time = new Date(providerStored).toISOString()
+  f.subscription.billing_info.next_billing_time = f.subscription.start_time
+  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+  assert.equal(result.status, "active")
+})
+
+test("provisional start tolerance accepts sub-second deltas only and fails closed on garbage", async () => {
+  const alignProviderStart = (f: any, offsetMs: number) => {
+    const expires = Date.parse(f.attempt.request_expires_at)
+    f.attempt.request_expires_at = new Date(Math.floor(expires / 1000) * 1000 + 600).toISOString()
+    const floored =
+      Math.floor((Date.parse(f.attempt.request_expires_at) + 4 * 86400000) / 1000) * 1000
+    f.subscription.start_time = new Date(floored + offsetMs).toISOString()
+    f.subscription.billing_info.next_billing_time = f.subscription.start_time
+  }
+
+  const accepted = fixture()
+  alignProviderStart(accepted, 500)
+  assert.equal(
+    (await ensurePayPalTrialCheckoutAccount(accepted.intent, accepted.deps)).status,
+    "active",
+  )
+
+  const rejected = fixture()
+  alignProviderStart(rejected, 1000)
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(rejected.intent, rejected.deps),
+    /trial_reconciliation_required/,
+  )
+
+  const invalid = fixture()
+  invalid.subscription.start_time = "not-a-timestamp"
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(invalid.intent, invalid.deps),
+    /trial_reconciliation_required/,
+  )
+})
