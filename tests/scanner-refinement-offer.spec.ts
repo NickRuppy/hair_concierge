@@ -65,16 +65,12 @@ test.describe("scanner refinement offer lab", () => {
       expect(dockGeometry.separate).toBe(true)
       expect(dockGeometry.dockTop - dockGeometry.whatsappBottom).toBeCloseTo(12, 0)
 
-      const whatsapp = page.getByRole("button", { name: "Frage per WhatsApp stellen" })
+      const whatsapp = page.getByRole("link", { name: "Frage per WhatsApp stellen" })
       await expect(whatsapp).toHaveCount(1)
-      await whatsapp.click()
-      const contactDialog = page.getByRole("dialog", {
-        name: "WhatsApp-Kontakt noch nicht verfügbar",
-      })
-      await expect(contactDialog).toBeVisible()
-      await page.keyboard.press("Escape")
-      await expect(contactDialog).toBeHidden()
-      await expect(whatsapp).toBeFocused()
+      await expect(whatsapp).toHaveAttribute("href", "https://wa.me/message/NIQW4GQHV7UTD1")
+      await expect(whatsapp).toHaveAttribute("target", "_blank")
+      await expect(whatsapp).toHaveAttribute("rel", "noopener")
+      await expect(page.getByText("WhatsApp-Kontakt noch nicht verfügbar")).toHaveCount(0)
 
       const zoom = page.getByRole("button", {
         name: "Scan-Ergebnis für ein Beispielprofil vergrößern",

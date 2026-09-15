@@ -88,7 +88,7 @@ export const scannerRefinedStyles = `
 .sr-offer .sr-faq details[open] summary>span{transform:rotate(45deg)}
 .sr-offer .sr-faq details>p{font-size:13px;line-height:1.7;padding:0 26px 19px 0;margin:0}
 .sr-offer .sr-footer-contact{padding:0 18px 18px}
-.sr-offer .sr-footer-contact button{margin-top:0}
+.sr-offer .sr-footer-contact .sr-contact-inline{margin-top:0}
 .sr-offer .sr-footer{margin-top:0;padding:24px 18px;background:#fcfaf7}
 .sr-offer .sr-footer nav a{min-height:44px;font-size:12px;color:#624c76}
 .sr-offer .sr-dock{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;box-sizing:border-box;padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:45;background:#fcfaf7;border-top:1px solid #e3d9eb;box-shadow:0 -4px 16px #2a18450a}
