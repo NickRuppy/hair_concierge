@@ -9,8 +9,8 @@
 This file adapts the shared `AGENTS.md` workflow to Claude's tools. Its Claude-specific session/tool instructions do not govern Codex. Current repository contracts take precedence over dated workflow memories. This is the repo's canonical loop, shared with Codex. Each stage's contract of record is `.agents/skills/<name>/SKILL.md` — read it when entering the stage. Claude-side execution of each stage:
 
 - **`$wayfinder`** — explicit-only pre-planning for open-ended work; read its SKILL.md when Nick invokes it.
-- **`plan-hardening-loop`** — run via Plan Mode + the User-Facing Planning Gates below. Creation or hardening ends with current, confirmed decision coverage and an approved implementation handoff (for user-facing work: confirmed evidence review + journey sign-off). Review-only requests end with findings and missing gates.
-- **`implementation-loop`** — enforce the decision-coverage intake gate, then execute via `executing-plans` / `subagent-driven-development`, `branch-gate` first.
+- **`plan-hardening-loop`** — run via Plan Mode using the shared planning and authorization contract below. Continue to authorized execution when the plan is ready. Review-only requests end with findings and missing gates.
+- **`implementation-loop`** — carry existing authorization and settled decisions into execution via `executing-plans` / `subagent-driven-development`, `branch-gate` first.
 - **`ready-check`** — repo, decision-coverage, and user-flow verification on the exact tree to be reviewed: run the checks appropriate to the approved change and observe the affected flow when one changes; reuse applicable evidence under `ready-check`. Documentation-only changes need instruction/metadata/reference validation, not an application build.
 - **`request-code-review`** — the single review router; on the Claude side this is the Codex whole-branch review ("Finishing a Feature Branch" step 2). One counterpart lane, no stacked reviewers.
 - **`ship-it`** — the `/ship` agent: publish-only (commit, push, PR). Skip re-running verification `/ship` would duplicate on an unchanged tree.
@@ -24,22 +24,9 @@ Inspect the task context first. For plan creation or hardening, follow `plan-har
 
 Present 2-3 similarly scoped options only for a meaningful unresolved fork. Recommend a direction from evidence and ask only when the remaining choice is consequential. Do not ask the user to choose routine implementation details.
 
-Use the decision-coverage record and acknowledgement rules in `plan-hardening-loop`. An explicit request for bounded non-user-facing work can authorize execution without a second acknowledgement when no consequential choice remains. Preserve the original user approval and scope; record internal revalidation separately. Create or reuse the task worktree before writing the chosen plan under `plans/`.
+Follow **Working together and planning decisions** in `AGENTS.md` for autonomy, decision coverage, and user-facing evidence. Use existing authorization and continue through applicable workflow stages; do not add a fresh approval gate when entering Plan Mode or an execution skill. Create or reuse the task worktree before writing a persistent plan.
 
-Quick audits, questions, queue/status passes, tiny non-user-facing fixes, and routine non-user-facing automation runs may skip the options comparison and decision-coverage checkpoint unless evidence exposes a consequential choice. "Tiny" means mechanically bounded work that cannot affect a consequential category above; line count alone does not make a change tiny. User-facing work still requires decision coverage plus the mockup and journey gates below even when the eventual code diff is small.
-
-## User-Facing Planning Gates
-
-Before any user-facing implementation:
-
-1. Inspect the current product surface and create at least one reviewable mockup during planning. Use an annotated current/proposed screenshot for a small existing-surface change, a wireframe for a new flow, or rendered lightweight HTML for layout and responsive behavior. For copy-only work, show the before/after copy inside the real component layout. Markdown, ASCII, detached copy samples, and prose-only descriptions do not count as mockups for an existing surface.
-2. Show 2-3 variants for a meaningful visual fork, use realistic German copy, and include responsive or critical loading/error/recovery states when they materially affect the experience.
-3. If interaction, changing state, or a logic model cannot be judged from static evidence, first name the question and decision criterion, then follow the repo's `prototype` contract (`.agents/skills/prototype/SKILL.md`) as a higher-fidelity branch of this mockup step. Record what it proved and rewrite retained behavior through the normal production implementation and test workflow.
-4. Present the relevant evidence to Nick, incorporate feedback, and record evidence review as confirmed in the implementation plan.
-5. Translate the final design into a concrete user journey: entry state, ordered user actions and system responses, meaningful variants, error/recovery states, and completion.
-6. Revalidate and present the final decision-coverage record with the journey, then obtain explicit sign-off. Earlier general plan approval does not satisfy the evidence or journey gate, and sign-off is invalid while an open or undiscussed consequential assumption affects the handed-off scope.
-
-Before implementation, follow the current `implementation-loop` intake. User-facing work requires confirmed evidence review and user-journey sign-off. For internal work, the approved implementation contract suffices unless an operator/integration interaction introduces a consequential choice absent from that contract. State that no surface, copy, timing, or user-visible feedback changes. Pause only work dependent on unresolved choices; continue independent authorized work. The quick-work exemption above remains conditional on no consequential choice surfacing.
+For new flows or material UX changes, present the concrete evidence and journey together for one approval. Reuse that approval unless the proposal changes materially. Exact routine edits and faithful execution of an approved design proceed with contextual verification. Keep consequential decisions, review-only scope, and publication/production boundaries intact.
 
 ## Branch Gate
 
