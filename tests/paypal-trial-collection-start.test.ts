@@ -3,6 +3,7 @@ import test from "node:test"
 import {
   frozenPayPalTrialStart,
   paypalTrialCollectionStart,
+  paypalTrialProviderStart,
   paypalTrialCollectionWindowEnd,
   paypalTrialNextBillingMatches,
   trialFirstCollectionWindowEnd,
@@ -120,4 +121,15 @@ test("the access bridge keeps exact-seven-day contracts on their original window
     "2026-09-26T00:00:00.000Z",
   )
   assert.throws(() => trialFirstCollectionWindowEnd("nope", "2026-09-24T00:00:00Z"))
+})
+
+test("new provider requests use noon on the eligible UTC date without moving the trial end", () => {
+  for (const [end, expected] of [
+    ["2026-09-24T00:00:00Z", "2026-09-24T12:00:00.000Z"],
+    ["2026-09-24T00:00:00.001Z", "2026-09-25T12:00:00.000Z"],
+    ["2026-10-25T00:00:00Z", "2026-10-25T12:00:00.000Z"],
+    ["2026-12-31T23:30:00Z", "2027-01-01T12:00:00.000Z"],
+  ])
+    assert.equal(paypalTrialProviderStart(end), expected)
+  assert.throws(() => paypalTrialProviderStart("bad"))
 })

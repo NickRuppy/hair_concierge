@@ -1,6 +1,5 @@
 import { assertPayPalPaidRecoveryPlan } from "./trial-paid-recovery"
 import {
-  frozenPayPalTrialStart,
   paypalTrialCollectionStart,
   paypalTrialCollectionWindowEnd,
 } from "./trial-collection-start"
@@ -26,6 +25,7 @@ import { cancelPayPalSubscription } from "./subscriptions"
 import { assertPlanMatchesAcceptedOffer, type PayPalTrialRuntime } from "./trial-checkout"
 import {
   findPayPalTrialCheckoutAttempt,
+  payPalTrialCheckoutSchedule,
   pinPayPalTrialActivation,
   type PayPalTrialCheckoutAttempt,
 } from "./trial-checkout-attempt"
@@ -163,7 +163,8 @@ export async function ensurePayPalTrialCheckoutAccount(
   // The PayPal trial ends on the collection midnight frozen at checkout, never
   // on a moment derived from approval: PayPal computed its billing clock once
   // from that start_time and never recomputes it after a patch.
-  const frozenTrialEnd = frozenPayPalTrialStart(attempt.requestExpiresAt)
+  const { trialEndAt: frozenTrialEnd, providerStartTime: expectedProviderStart } =
+    payPalTrialCheckoutSchedule(attempt)
   // Agreements admitted before the frozen-end contract stored approval + 7 days.
   const legacyTrialEnd = new Date(authorizationAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString()
   if (enrollment.admission_status === "active") {
@@ -252,7 +253,7 @@ export async function ensurePayPalTrialCheckoutAccount(
     await blockPayPalTrialAgreement(intent, attempt, deps)
     return duplicateTrialActivation("trial_checkout_closed")
   }
-  if (providerStart !== Date.parse(trialEnd)) {
+  if (providerStart !== Date.parse(expectedProviderStart)) {
     // Agreements created before the frozen-end contract carry the retired
     // provisional start (freeze + 7 days, echoed in whole seconds). Close them
     // so the customer retries with a fresh checkout instead of activating a
@@ -261,19 +262,18 @@ export async function ensurePayPalTrialCheckoutAccount(
     const retiredProvisionalStart =
       Math.floor((Date.parse(attempt.requestExpiresAt ?? "") + 4 * 24 * 60 * 60 * 1000) / 1000) *
       1000
-    if (Math.abs(providerStart - retiredProvisionalStart) < 1000) {
+    if (!attempt.providerStartTime && Math.abs(providerStart - retiredProvisionalStart) < 1000) {
       await blockPayPalTrialAgreement(intent, attempt, deps)
       return duplicateTrialActivation("trial_checkout_closed")
     }
     throw new CheckoutRecoveryError("trial_reconciliation_required", {
       cause: new Error(
-        `PayPal trial start is not the frozen trial end (start=${subscription.start_time ?? "missing"} expected=${trialEnd})`,
+        `PayPal trial start is not the frozen provider request (start=${subscription.start_time ?? "missing"} expected=${expectedProviderStart})`,
       ),
     })
   }
-  // First collection lands in PayPal's daily batch on the frozen end's UTC date
-  // (or at latest the next day): verified at the batch's own granularity, never
-  // before the trial end.
+  // A requested/echoed start does not prove when PayPal will collect. Verify
+  // the reported batch independently, never before the promised trial end.
   const nextBillingAt = Date.parse(subscription.billing_info?.next_billing_time ?? "")
   if (
     subscription.status !== "ACTIVE" ||
