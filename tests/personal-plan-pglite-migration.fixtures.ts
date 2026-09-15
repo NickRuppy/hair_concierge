@@ -23,6 +23,12 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *     EXISTS-checks, which every test here satisfies with EMPTY arrays (a
  *     vacuous EXISTS-over-empty-array is always satisfied), so no row content
  *     in these stub tables is ever asserted on.
+ *   - `public.hair_profiles`: the pre-existing production table the central
+ *     user profile migrations ALTER. Its real DDL is spread over ~15 migration
+ *     files that also build leads/products/conversations/RLS, so it is
+ *     transcribed here column-for-column (with the owning migration cited per
+ *     column) instead of replayed. The three user-facts migrations themselves
+ *     are applied for real on top of it.
  *   - `public.update_updated_at_column()`, `auth.uid()`: generic,
  *     project-wide utility functions defined far outside this feature's own
  *     migrations (00001_initial_schema.sql and Supabase's own `auth` schema
@@ -52,6 +58,9 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *   - 20260825120000 (answer provenance): applied for real deploy-order
  *     fidelity even though neither RPC under test reads its column.
  *   - 20260825130000 / 20260825140000: the two migrations under test.
+ *   - 20260915120000 / 20260915120100 / 20260915120200 (central user profile
+ *     PR1): the hair_profiles fact domains, the personal_plans facts cursor +
+ *     refinement-draft `origin`, and `public.user_facts_save_v1`.
  */
 
 const ROOT = new URL("../", import.meta.url)
@@ -70,6 +79,11 @@ const MIGRATIONS = [
   "supabase/migrations/20260825120000_personal_plan_refinement_answer_provenance.sql",
   "supabase/migrations/20260825130000_personal_plan_complete_stage2_module.sql",
   "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+  // Central user profile PR1: the fact domains on hair_profiles, the plan-side
+  // facts cursor, and the single write function over both.
+  "supabase/migrations/20260915120000_user_facts_domains.sql",
+  "supabase/migrations/20260915120100_personal_plan_facts_cursor.sql",
+  "supabase/migrations/20260915120200_user_facts_save_v1.sql",
 ] as const
 
 const STUB_PREREQUISITES = `
@@ -117,6 +131,67 @@ CREATE TABLE public.product_submissions (
   category text,
   status text
 );
+
+-- public.hair_profiles as production has it TODAY (before
+-- 20260915120000_user_facts_domains.sql, which this harness then applies for
+-- real). Hand-written rather than replayed from the migration chain because
+-- that chain (00001_initial_schema.sql + ~14 later files) also creates leads,
+-- products, conversations, RLS policies and admin functions this harness has no
+-- use for. Every column, type and CHECK below is transcribed from the owning
+-- migration, cited inline, so a future schema change is easy to mirror:
+--   00001_initial_schema.sql:51-65          id, user_id, concerns, products_used,
+--                                           heat_styling, styling_tools, goals,
+--                                           additional_notes, created_at, updated_at
+--   20260307152000:7-11 / 20260417130000:30 routine_preference (the other two
+--                                           columns from that file were dropped again)
+--   20260307180000                          hair_texture/thickness CHECKs,
+--                                           cuticle_condition, protein_moisture_balance,
+--                                           scalp_type, scalp_condition, chemical_treatment
+--   20260314153000 / 20260314210546         desired_volume / density (+ CHECKs)
+--   20260408090000:29-36                    towel_material, towel_technique,
+--                                           drying_method, brush_type, night_protection,
+--                                           uses_heat_protection
+--   20260408130000:4-5                      conversation_memory
+--   20260417130000:9-28                     drying_method -> scalar text + CHECK,
+--                                           nullable drying_method/night_protection
+--   20260521194000:27-29 / 20260615120000:23-28  towel technique/material vocabulary
+--   20260618120000 / 20260626143000         hair_length / brush_type text[]
+-- wash_frequency is deliberately absent (dropped by 20260609121000:163-165).
+CREATE TABLE public.hair_profiles (
+  id uuid PRIMARY KEY DEFAULT extensions.uuid_generate_v4(),
+  user_id uuid UNIQUE NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  hair_texture text CHECK (hair_texture IS NULL OR hair_texture IN ('straight','wavy','curly','coily')),
+  thickness text CHECK (thickness IS NULL OR thickness IN ('fine','normal','coarse')),
+  density text CHECK (density IS NULL OR density IN ('low','medium','high')),
+  hair_length text CHECK (hair_length IS NULL OR hair_length IN ('very_short','short','medium','long','very_long')),
+  cuticle_condition text,
+  protein_moisture_balance text,
+  scalp_type text,
+  scalp_condition text,
+  chemical_treatment text[] DEFAULT '{}',
+  concerns text[] DEFAULT '{}',
+  goals text[] DEFAULT '{}',
+  desired_volume text CHECK (desired_volume IS NULL OR desired_volume IN ('less','balanced','more')),
+  products_used text,
+  styling_tools text[],
+  heat_styling text,
+  towel_material text CHECK (towel_material IS NULL OR towel_material IN ('frottee','mikrofaser','tshirt','turban_mikrofaser','no_towel')),
+  towel_technique text CHECK (towel_technique IN ('rough_rubbing','gentle_press')),
+  drying_method text CHECK (drying_method IS NULL OR drying_method IN ('air_dry','blow_dry','blow_dry_diffuser')),
+  brush_type text[] CHECK (brush_type IS NULL OR brush_type <@ ARRAY['wide_tooth_comb','detangling','paddle','round','boar_bristle','fingers']::text[]),
+  night_protection text[],
+  uses_heat_protection boolean NOT NULL DEFAULT false,
+  routine_preference text CHECK (routine_preference IS NULL OR routine_preference IN ('minimal','balanced','advanced')),
+  conversation_memory text,
+  additional_notes text,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- 00001_initial_schema.sql:425-427.
+CREATE TRIGGER set_updated_at_hair_profiles
+  BEFORE UPDATE ON public.hair_profiles
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 `
 
 export type PersonalPlanTestDb = PGlite
@@ -504,4 +579,107 @@ export function pgliteReactivationClient(pg: PersonalPlanTestDb) {
       return { data: rows[0]!.result, error: null }
     },
   }
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR1): `public.user_facts_save_v1`
+// ---------------------------------------------------------------------------
+
+export type UserFactsSaveResult = {
+  status: "ok" | "preserved" | "revision_conflict" | "draft_conflict" | "invalid_input"
+  revision?: number
+  changed?: boolean
+  diagnosticsHash?: string | null
+  reason?: string
+}
+
+export type UserFactsSaveInput = {
+  userId: string
+  domain: string
+  patch: unknown
+  provenance: unknown
+  expectedRevision?: number | null
+  mode?: string
+  sourceDraftId?: string | null
+  expectedDraftRevision?: number | null
+  expectedInitialVersionId?: string | null
+}
+
+/** Calls the RPC with the exact signature task 4's TypeScript client will use. */
+export async function saveUserFacts(
+  pg: PersonalPlanTestDb,
+  input: UserFactsSaveInput,
+): Promise<UserFactsSaveResult> {
+  const { rows } = await pg.query<{ result: UserFactsSaveResult }>(
+    `SELECT public.user_facts_save_v1(
+       p_user_id => $1::uuid,
+       p_domain => $2::text,
+       p_patch => $3::jsonb,
+       p_provenance => $4::jsonb,
+       p_expected_revision => $5::integer,
+       p_mode => $6::text,
+       p_source_draft_id => $7::uuid,
+       p_expected_draft_revision => $8::bigint,
+       p_expected_initial_version_id => $9::uuid
+     ) AS result`,
+    [
+      input.userId,
+      input.domain,
+      JSON.stringify(input.patch),
+      JSON.stringify(input.provenance),
+      input.expectedRevision ?? null,
+      input.mode ?? "upsert",
+      input.sourceDraftId ?? null,
+      input.expectedDraftRevision ?? null,
+      input.expectedInitialVersionId ?? null,
+    ],
+  )
+  return rows[0]!.result
+}
+
+/** Every column the fact domains own, plus the domains themselves. */
+export type HairProfileRow = {
+  diagnostics: Record<string, unknown> | null
+  care_habits: Record<string, unknown> | null
+  quiz_context: Record<string, unknown> | null
+  facts_provenance: Record<string, unknown>
+  facts_revision: number
+  hair_texture: string | null
+  thickness: string | null
+  density: string | null
+  hair_length: string | null
+  cuticle_condition: string | null
+  protein_moisture_balance: string | null
+  scalp_type: string | null
+  scalp_condition: string | null
+  chemical_treatment: string[] | null
+  concerns: string[] | null
+  goals: string[] | null
+  desired_volume: string | null
+  drying_method: string | null
+  heat_styling: string | null
+  styling_tools: string[] | null
+  uses_heat_protection: boolean
+  towel_material: string | null
+  towel_technique: string | null
+  night_protection: string[] | null
+  brush_type: string[] | null
+  updated_at: Date
+}
+
+export async function readHairProfile(
+  pg: PersonalPlanTestDb,
+  userId: string,
+): Promise<HairProfileRow | null> {
+  const { rows } = await pg.query<HairProfileRow>(
+    `SELECT diagnostics, care_habits, quiz_context, facts_provenance, facts_revision,
+            hair_texture, thickness, density, hair_length, cuticle_condition,
+            protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment,
+            concerns, goals, desired_volume, drying_method, heat_styling, styling_tools,
+            uses_heat_protection, towel_material, towel_technique, night_protection,
+            brush_type, updated_at
+       FROM public.hair_profiles WHERE user_id = $1`,
+    [userId],
+  )
+  return rows[0] ?? null
 }
