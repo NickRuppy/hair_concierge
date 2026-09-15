@@ -58,7 +58,7 @@ The default trigger name is `chaarlie_required_contract_notice_v1`. Optional ove
 }
 ```
 
-The actual builder includes the German HTML document shell and font/line-height styles. Both HTML and plaintext are supplied. Untrusted public-declaration text enters `message_data`; it is not interpolated into Liquid source. HTML uses the escape filter. Open/click tracking is disabled. Existing callers without `inlineContent` retain their original transport payload unchanged. [Customer.io API contract](https://docs.customer.io/integrations/api/app/tag/send-messages/sendemail/) and [inline examples](https://docs.customer.io/messaging/send/transactional/api-examples/), and [transactional trigger-variable semantics](https://docs.customer.io/messaging/send/transactional/api/#trigger-data-and-content-variables).
+The actual builder includes the German HTML document shell and font/line-height styles. Both HTML and plaintext are supplied. Untrusted public-declaration text enters `message_data`; it is not interpolated into Liquid source. HTML uses Customer.io’s `htmlencode` filter. Open/click tracking is disabled. Existing callers without `inlineContent` retain their original transport payload unchanged. [Customer.io API contract](https://docs.customer.io/integrations/api/app/tag/send-messages/sendemail/) and [inline examples](https://docs.customer.io/messaging/send/transactional/api-examples/), and [transactional trigger-variable semantics](https://docs.customer.io/messaging/send/transactional/api/#trigger-data-and-content-variables).
 
 ### Queue and scheduler
 
