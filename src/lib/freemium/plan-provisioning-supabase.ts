@@ -23,6 +23,7 @@ import {
   createSupabaseRoutineCadenceAuthorityReader,
   type RoutineCadenceAuthorityReadClient,
 } from "@/lib/personal-plan/routine/cadence-authority"
+import { saveUserFacts } from "@/lib/user-facts/save"
 
 import type {
   AcceptInitialRoutineResult,
@@ -218,6 +219,7 @@ async function acceptInitialRoutineForUser(
           stage4Enabled: isPersonalPlanStage4Enabled(),
         },
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin as never),
+        saveFacts: (factsInput) => saveUserFacts(admin as never, factsInput),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin

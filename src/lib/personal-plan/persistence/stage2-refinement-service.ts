@@ -189,15 +189,65 @@ export function createStage2RefinementService(input: {
   snapshotBuilder: Stage2RefinementSnapshotBuilder
   /**
    * Writes the `care_habits` user-facts domain from the draft's own answers, bound to the
-   * source draft's revision (F04/F22). Optional so every existing caller that never reaches
-   * `completeModule` (or supplies its own fake in tests) keeps compiling unchanged; the
-   * production factory (`createPersistedStage2RefinementGateway`) always wires the real
-   * `saveUserFacts`. When omitted, a module completion writes no facts — that must never be
-   * true for the real production gateway.
+   * source draft's revision (F04/F22). EVERY lane that publishes a refined version from
+   * draft answers writes facts first — the terminal `complete()` (and the closing module,
+   * which delegates to it) and a non-closing `completeModule` alike (controller ruling,
+   * task 5b fix round 1, I1). Optional in the TYPE only, so test harnesses that never
+   * reach a completion path keep compiling unchanged; the production factory
+   * (`createPersistedStage2RefinementGateway`) always wires the real `saveUserFacts`, and
+   * every completion path THROWS if it is missing at the write point (M5) — it is never
+   * silently skipped.
    */
   saveFacts?: SaveCareHabitsFacts
+  /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
+  now?: () => Date
 }) {
   let cached: Stage2PersistedDraft | null = null
+  const now = input.now ?? (() => new Date())
+
+  /**
+   * Writes `care_habits` from the draft's own current answers, bound to the draft
+   * actually being closed. Shared by `completeDraft` (the terminal `complete()` lane,
+   * including the closing module's delegate to it) and `completeModule`'s own non-closing
+   * branch — exactly the two places a refined version is ever published from draft
+   * answers. Throws a plain `Error` (never `Stage2RefinementError`) if `saveFacts` is
+   * missing: a wiring bug, not a user-facing conflict (M5). A `draft_conflict` or
+   * `revision_conflict` result maps to the existing `Stage2RefinementError("revision_conflict")`
+   * and the caller must not proceed to its own RPC.
+   */
+  async function writeCareHabitsFacts(
+    draft: Stage2PersistedDraft,
+    expectedRevision: number,
+  ): Promise<void> {
+    if (!input.saveFacts) {
+      throw new Error(
+        "stage2-refinement-service: completing a Feinschliff module or draft requires saveFacts",
+      )
+    }
+    const facts = await input.saveFacts({
+      userId: input.userId,
+      domain: "care_habits",
+      patch: toCareHabitsPatch(draft.answers),
+      provenance: {
+        source: { kind: "feinschliff_draft", id: draft.id },
+        schemaVersion: CARE_HABITS_SCHEMA_VERSION,
+        at: now().toISOString(),
+        fields: toFieldProvenance({
+          completedQuestionIds: draft.completedQuestionIds,
+          answerProvenance: draft.answerProvenance,
+        }),
+      },
+      draftBinding: {
+        sourceDraftId: draft.id,
+        expectedDraftRevision: expectedRevision,
+        expectedInitialVersionId: draft.baseInitialNeedVersionId,
+      },
+    })
+    if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
+      cached = null
+      throw new Stage2RefinementError("revision_conflict")
+    }
+  }
 
   async function loadDraft(): Promise<Stage2PersistedDraft> {
     const draft = await input.persistence.loadOrCreate(input.userId)
@@ -221,6 +271,9 @@ export function createStage2RefinementService(input: {
       completedQuestionIds: draft.completedQuestionIds,
     })
     if (!contract.isComplete) throw new Stage2RefinementError("incomplete_refinement")
+    // I1: EVERY lane that publishes a refined version writes facts first, including this
+    // terminal completion (and, by extension, the closing module — it delegates here).
+    await writeCareHabitsFacts(draft, expectedRevision)
     const snapshot = input.snapshotBuilder({
       baseInitialNeedVersionId: draft.baseInitialNeedVersionId,
       preparedArtifactSourceId: draft.preparedArtifactSourceId,
@@ -342,49 +395,24 @@ export function createStage2RefinementService(input: {
         )
       }
 
-      // `care_habits` covers the FULL answer set (both modules), so every module
-      // completion writes it — before either the terminal `complete()` delegate
-      // below or `persistence.completeModule` (F04/F22): a stale completion
-      // (draft moved on, or the plan's initial need moved) must never publish
-      // older facts. Bound to the draft actually being closed, not the
-      // resolver's own assumptions for this call — the merge keeps whatever an
-      // earlier write recorded for a question the current path no longer asks.
-      if (input.saveFacts) {
-        const facts = await input.saveFacts({
-          userId: input.userId,
-          domain: "care_habits",
-          patch: toCareHabitsPatch(draft.answers),
-          provenance: {
-            source: { kind: "feinschliff_draft", id: draft.id },
-            schemaVersion: CARE_HABITS_SCHEMA_VERSION,
-            at: new Date().toISOString(),
-            fields: toFieldProvenance({
-              completedQuestionIds: draft.completedQuestionIds,
-              answerProvenance: draft.answerProvenance,
-            }),
-          },
-          draftBinding: {
-            sourceDraftId: draft.id,
-            expectedDraftRevision: expectedRevision,
-            expectedInitialVersionId: draft.baseInitialNeedVersionId,
-          },
-        })
-        if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
-          cached = null
-          throw new Stage2RefinementError("revision_conflict")
-        }
-      }
-
       const stage3Handoff = stage2Module === "products"
       // Both modules answered ⇒ the canonical path is complete by construction,
       // so the closing module delegates to the existing terminal completion
       // rather than teaching the module RPC a second way to close a draft. The
       // durable Stage-3 entry marker for that case stays today's `complete`
-      // draft status, so nothing extra is persisted.
+      // draft status, so nothing extra is persisted. `completeDraft` writes
+      // `care_habits` facts itself (I1) — writing here too would double-publish.
       if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
         const handoff = await completeDraft(expectedRevision)
         return { ...handoff, module: stage2Module, status: "complete", stage3Handoff }
       }
+
+      // Non-closing module completion: `completeDraft` is not on this path, so this is the
+      // only place `care_habits` gets published for it — before `persistence.completeModule`
+      // (F04/F22), bound to the draft actually being closed, not the resolver's own
+      // assumptions for this call (the merge keeps whatever an earlier write recorded for a
+      // question the current path no longer asks).
+      await writeCareHabitsFacts(draft, expectedRevision)
 
       const snapshot = input.snapshotBuilder({
         baseInitialNeedVersionId: draft.baseInitialNeedVersionId,

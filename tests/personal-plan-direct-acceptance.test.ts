@@ -1342,6 +1342,7 @@ test("a real Stage 2 replaying the defaults completes as a clean re-refinement",
   const gateway = createPersistedStage2RefinementGateway({
     userId: USER_ID,
     persistence: harness.db.persistence,
+    saveFacts: createFakeSaveFacts().saveFacts,
   })
   const completedSession = await gateway.load()
   assert.equal(completedSession.status, "complete")
@@ -1385,6 +1386,7 @@ test("a real Stage 2 that changes an answer produces a successor refined source"
   const gateway = createPersistedStage2RefinementGateway({
     userId: USER_ID,
     persistence: harness.db.persistence,
+    saveFacts: createFakeSaveFacts().saveFacts,
   })
   const completedSession = await gateway.load()
   const reopened = await gateway.saveAnswer({
@@ -1578,4 +1580,37 @@ test("a revision_conflict from saveFacts also aborts direct acceptance", async (
 
   assert.equal(harness.stage3Calls.length, 0)
   assert.equal(harness.db.needVersions.length, 0)
+})
+
+/**
+ * Fix round 1, M5: a missing `saveFacts` must fail loud in direct acceptance too — the
+ * shared service throws a plain `Error` at its own write point, which is exactly where
+ * `completeSyntheticRefinement` now wires `deps.saveFacts` through (no separate manual
+ * write to duplicate the check in).
+ */
+test("acceptIdealPlan throws a plain Error when saveFacts is missing, before any Stage 3 write", async () => {
+  const harness = createHarness()
+  const depsWithoutSaveFacts = { ...harness.deps, saveFacts: undefined }
+
+  await assert.rejects(
+    acceptIdealPlan(depsWithoutSaveFacts, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof Error &&
+      !(error instanceof DirectAcceptanceError) &&
+      /requires saveFacts/.test(error.message),
+  )
+  assert.equal(harness.stage3Calls.length, 0)
+  assert.equal(harness.db.needVersions.length, 0)
+})
+
+/** Fix round 1, M2: `provenance.at` uses the injected clock in direct acceptance too. */
+test("direct acceptance's facts write uses the injected now() for provenance.at", async () => {
+  const fixedNow = () => new Date("2026-09-16T09:00:00.000Z")
+  const harness = createHarness()
+  const depsWithClock = { ...harness.deps, now: fixedNow }
+
+  await acceptIdealPlan(depsWithClock, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(harness.saveFactsCalls.length, 1)
+  assert.equal(harness.saveFactsCalls[0]!.provenance.at, "2026-09-16T09:00:00.000Z")
 })

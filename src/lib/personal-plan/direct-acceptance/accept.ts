@@ -16,9 +16,8 @@ import type { PersonalPlanCategory, Stage3DecisionDeferralReason } from "../prod
 import type { Stage3AuthorityProductionGateway } from "../products/production-persistence-gateway"
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
 import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
+import { Stage2RefinementError } from "../refinement/gateway"
 import { semanticHash } from "../routine/canonicalize"
-import { toCareHabitsPatch, toFieldProvenance } from "@/lib/user-facts/from-refinement-draft"
-import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
 import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 
 import {
@@ -128,11 +127,14 @@ export type AcceptIdealPlanDeps = {
    * acceptance saves, bound to that draft's revision (F04/F22) — this flow never goes
    * through `completeModule`, only the terminal `complete()` (see
    * `completeSyntheticRefinement`), so it writes facts itself, right before that call.
-   * Every synthetic default is `"assumed"` provenance. Optional so existing test harnesses
-   * that construct `AcceptIdealPlanDeps` directly keep compiling unchanged; the production
-   * route always wires the real `saveUserFacts`.
+   * Every synthetic default is `"assumed"` provenance. Optional in the TYPE only, so test
+   * harnesses that never reach `completeSyntheticRefinement` keep compiling unchanged; the
+   * production route always wires the real `saveUserFacts`, and completion THROWS if it is
+   * missing at the write point (M5) — it is never silently skipped.
    */
   saveFacts?: SaveCareHabitsFacts
+  /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
+  now?: () => Date
 }
 
 /**
@@ -435,52 +437,46 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
     }
   }
 
+  // Every synthetic default this write produces is an assumption, never a real answer —
+  // see refinement/answer-provenance.ts. Computed once (M6).
+  const assumedProvenance = buildAssumedAnswerProvenance(defaults.completedQuestionIds)
+
   const saved = await deps.refinementPersistence.save({
     userId: deps.userId,
     draft,
     expectedRevision: draft.revision,
     answers: defaults.answers,
     completedQuestionIds: defaults.completedQuestionIds,
-    // Every synthetic default this write produces is an assumption, never a
-    // real answer — see refinement/answer-provenance.ts.
-    answerProvenance: buildAssumedAnswerProvenance(defaults.completedQuestionIds),
+    answerProvenance: assumedProvenance,
   })
   if (saved.outcome !== "saved") throw new DirectAcceptanceError("conflict")
 
-  // This flow never calls `completeModule` — only the terminal `complete()` below — so it
-  // writes `care_habits` facts itself, bound to the draft it just saved, before that call
-  // (same F04/F22 ordering `stage2-refinement-service.ts`'s module completion uses). Every
-  // synthetic default answer is `"assumed"` provenance, mirroring the draft write above.
-  const assumedProvenance = buildAssumedAnswerProvenance(defaults.completedQuestionIds)
-  if (deps.saveFacts) {
-    const facts = await deps.saveFacts({
+  // This flow never calls `completeModule` — only the terminal `complete()` below. Rather
+  // than writing `care_habits` facts itself and then calling `complete()` too (which would
+  // double-write, since `stage2-refinement-service.ts`'s `complete()` now performs this
+  // write unconditionally — I1, task 5b fix round 1), it wires its own `saveFacts`/`now`
+  // straight into this one `complete()` call: the SAME single write publishes both the
+  // facts and the refined version, in the SAME order (`writeCareHabitsFacts` runs before
+  // `persistence.complete`) the shared service uses everywhere else. A missing `saveFacts`
+  // is a wiring bug, not a user-facing conflict — the shared service throws a plain `Error`
+  // rather than silently skipping the write (M5); a `draft_conflict`/`revision_conflict`
+  // from the facts write throws `Stage2RefinementError("revision_conflict")` there, which is
+  // translated to `DirectAcceptanceError("conflict")` below, exactly like every other
+  // conflict this function reports.
+  let handoff
+  try {
+    handoff = await createPersistedStage2RefinementGateway({
       userId: deps.userId,
-      domain: "care_habits",
-      patch: toCareHabitsPatch(defaults.answers),
-      provenance: {
-        source: { kind: "feinschliff_draft", id: draft.id },
-        schemaVersion: CARE_HABITS_SCHEMA_VERSION,
-        at: new Date().toISOString(),
-        fields: toFieldProvenance({
-          completedQuestionIds: defaults.completedQuestionIds,
-          answerProvenance: assumedProvenance,
-        }),
-      },
-      draftBinding: {
-        sourceDraftId: draft.id,
-        expectedDraftRevision: saved.revision,
-        expectedInitialVersionId: draft.baseInitialNeedVersionId,
-      },
-    })
-    if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
+      persistence: deps.refinementPersistence,
+      saveFacts: deps.saveFacts,
+      now: deps.now,
+    }).complete({ expectedRevision: saved.revision })
+  } catch (error) {
+    if (error instanceof Stage2RefinementError && error.code === "revision_conflict") {
       throw new DirectAcceptanceError("conflict")
     }
+    throw error
   }
-
-  const handoff = await createPersistedStage2RefinementGateway({
-    userId: deps.userId,
-    persistence: deps.refinementPersistence,
-  }).complete({ expectedRevision: saved.revision })
 
   return {
     personalPlanId: draft.personalPlanId,

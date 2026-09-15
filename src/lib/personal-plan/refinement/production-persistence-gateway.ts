@@ -4,6 +4,7 @@ import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import type { Stage2RefinementGateway } from "./gateway"
 import {
   createStage2RefinementService,
+  type SaveCareHabitsFacts,
   type Stage2RefinementPersistence,
 } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "@/lib/personal-plan/persistence"
@@ -22,12 +23,18 @@ export function createPersistedStage2RefinementGateway(input: {
   persistence: Stage2RefinementPersistence
   /**
    * The same admin (service-role) client the caller built `persistence` with — see
-   * `createSupabaseStage2RefinementPersistence`. Optional so every existing caller that
-   * never reaches `completeModule` (e.g. direct acceptance, which only calls `complete`)
-   * keeps compiling unchanged; when omitted, module completion writes no `care_habits`
-   * facts. The route that serves module completion (`stage-2/route.ts`) always passes it.
+   * `createSupabaseStage2RefinementPersistence`. Ignored when `saveFacts` is given
+   * directly (a caller with its own injected `saveFacts`, e.g. direct acceptance, wires
+   * that instead — see `saveFacts` below). Every production caller that can reach
+   * `complete()` or `completeModule()` must supply one or the other: `completeModule`
+   * and the terminal `complete()` lane both THROW if neither is present at the write
+   * point (M5, task 5b fix round 1) — `care_habits` facts are never silently skipped.
    */
   admin?: SupabaseClient
+  /** Takes precedence over `admin` when both are given. See `admin` above. */
+  saveFacts?: SaveCareHabitsFacts
+  /** Injected clock for `provenance.at` (M2). Defaults to the real time. */
+  now?: () => Date
 }): Stage2RefinementGateway {
   return createStage2RefinementService({
     userId: input.userId,
@@ -37,7 +44,10 @@ export function createPersistedStage2RefinementGateway(input: {
         ...snapshotInput,
         createdAt: new Date().toISOString(),
       }),
-    saveFacts: input.admin ? (factsInput) => saveUserFacts(input.admin!, factsInput) : undefined,
+    saveFacts:
+      input.saveFacts ??
+      (input.admin ? (factsInput) => saveUserFacts(input.admin!, factsInput) : undefined),
+    now: input.now,
   })
 }
 
