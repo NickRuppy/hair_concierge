@@ -225,6 +225,8 @@ test("service attests each provider interaction, freezes accepted terms, and ver
     paypalPlanId: null,
     requestId: null,
     requestExpiresAt: null,
+    trialEndAt: null,
+    providerStartTime: null,
     providerReference: null,
   }
   const row = (x: any) => ({
@@ -242,6 +244,8 @@ test("service attests each provider interaction, freezes accepted terms, and ver
     request_id: x.requestId,
     request_expires_at: x.requestExpiresAt,
     provider_reference: x.providerReference,
+    trial_end_at: x.trialEndAt ?? null,
+    provider_start_time: x.providerStartTime ?? null,
   })
   let frozenManagementCatalog: any = null
   let frozenPlanCatalog: any = null
@@ -251,7 +255,10 @@ test("service attests each provider interaction, freezes accepted terms, and ver
       analyticsFrozen = true
       return { data: null, error: null }
     }
-    if (name === "get_paypal_trial_checkout_attempt_by_scope")
+    if (
+      name === "get_paypal_trial_checkout_attempt_by_scope_v2" ||
+      name === "get_paypal_trial_checkout_attempt_by_scope"
+    )
       return { data: row(attempt), error: null }
     if (name === "load_frozen_trial_management_catalog")
       return { data: frozenManagementCatalog, error: null }
@@ -270,8 +277,15 @@ test("service attests each provider interaction, freezes accepted terms, and ver
       }
       return { data: frozenPlanCatalog, error: null }
     }
-    if (name === "create_paypal_trial_checkout_attempt") return { data: row(attempt), error: null }
-    if (name === "freeze_paypal_trial_checkout_attempt") {
+    if (
+      name === "create_paypal_trial_checkout_attempt_v2" ||
+      name === "create_paypal_trial_checkout_attempt"
+    )
+      return { data: row(attempt), error: null }
+    if (
+      name === "freeze_paypal_trial_checkout_attempt_v2" ||
+      name === "freeze_paypal_trial_checkout_attempt"
+    ) {
       attempt = {
         ...attempt,
         status: "frozen",
@@ -281,6 +295,8 @@ test("service attests each provider interaction, freezes accepted terms, and ver
         requestId: args.p_request_id,
         // Freeze = expiry - 72h = 2098-12-29T00:00Z; frozen trial end = next UTC midnight after freeze + 8d.
         requestExpiresAt: "2099-01-01T00:00:00.000Z",
+        trialEndAt: "2099-01-07T00:00:00.000Z",
+        providerStartTime: "2099-01-07T12:00:00.000Z",
       }
       return { data: row(attempt), error: null }
     }
@@ -324,7 +340,12 @@ test("service attests each provider interaction, freezes accepted terms, and ver
       assert.equal(analyticsFrozen, true, "context must precede provider creation")
       calls.push(input)
       if (calls.length === 1) throw new Error("lost response")
-      return { id: "I-subscription", plan_id: input.planId, custom_id: input.customId }
+      return {
+        id: "I-subscription",
+        plan_id: input.planId,
+        custom_id: input.customId,
+        start_time: input.startTime,
+      }
     },
     retrieveSubscription: async () => ({}),
   }
@@ -356,18 +377,39 @@ test("service attests each provider interaction, freezes accepted terms, and ver
     {
       planId: "P-first",
       customId: "token-1",
-      requestId: `paypal-trial:${ATTEMPT}:v1`,
-      startTime: "2099-01-07T00:00:00.000Z",
+      requestId: `paypal-trial:${ATTEMPT}:v2`,
+      startTime: "2099-01-07T12:00:00.000Z",
       offer: OFFER,
     },
     {
       planId: "P-first",
       customId: "token-1",
-      requestId: `paypal-trial:${ATTEMPT}:v1`,
-      startTime: "2099-01-07T00:00:00.000Z",
+      requestId: `paypal-trial:${ATTEMPT}:v2`,
+      startTime: "2099-01-07T12:00:00.000Z",
       offer: OFFER,
     },
   ])
+  // An old frozen request survives a new deployment/lost provider response unchanged.
+  const noonAttempt = { ...attempt }
+  attempt = {
+    ...attempt,
+    status: "frozen",
+    providerReference: null,
+    requestId: `paypal-trial:${ATTEMPT}:v1`,
+    trialEndAt: null,
+    providerStartTime: null,
+  }
+  await createDurablePayPalTrialCheckout(input, deps)
+  assert.equal((calls.at(-1) as any).startTime, "2099-01-07T00:00:00.000Z")
+  assert.equal(calls.at(-1)!.requestId, `paypal-trial:${ATTEMPT}:v1`)
+  attempt = noonAttempt
+  deps.retrieveSubscription = async () => ({
+    id: "I-subscription",
+    plan_id: "P-first",
+    custom_id: "token-1",
+    start_time: "2099-01-07T00:00:00.000Z",
+  })
+  await assert.rejects(() => createDurablePayPalTrialCheckout(input, deps), /subscription mismatch/)
   deps.retrieveSubscription = async () => ({
     id: "I-different",
     plan_id: "P-first",
@@ -399,6 +441,8 @@ test("service attests each provider interaction, freezes accepted terms, and ver
     paypalPlanId: null,
     requestId: null,
     requestExpiresAt: null,
+    trialEndAt: null,
+    providerStartTime: null,
     providerReference: null,
   }
   attestedApp = "APP-owned"

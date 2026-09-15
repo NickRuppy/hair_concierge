@@ -1,16 +1,10 @@
 const DAY = 24 * 60 * 60 * 1000
 const HOUR = 60 * 60 * 1000
 
-/**
- * PayPal collects subscriptions in a daily batch (~09:00–10:00 UTC) keyed to
- * the UTC date of the subscription's start_time, and can schedule that batch
- * earlier in the day than the start_time itself. A first collection therefore
- * starts on a UTC midnight: a trial end that already sits on a midnight (the
- * frozen PayPal trial end) collects on that same disclosed date; a second-exact
- * legacy trial end collects on the next UTC midnight after it, so the charge
- * can never fall inside the trial. The access bridge uses
- * trialFirstCollectionWindowEnd instead, which keeps the exact-seven-day
- * contracts (Stripe, legacy PayPal) on their original window.
+/** Earliest collection date boundary used by access windows and legacy requests.
+ * This is not the provider start timestamp for new agreements. PayPal's live
+ * annual midnight request scheduled the prior day's batch; the noon probe
+ * scheduled the disclosed date. Always verify next_billing_time separately.
  */
 export function paypalTrialCollectionStart(trialEndIso: string): string {
   const trialEnd = Date.parse(trialEndIso)
@@ -19,21 +13,25 @@ export function paypalTrialCollectionStart(trialEndIso: string): string {
 }
 
 /**
- * The PayPal trial end is fixed when the checkout attempt is frozen, before
- * the customer approves, because PayPal computes its billing clock once from
- * the start_time it was created with and never recomputes it after a patch.
- * The frozen end is the next UTC midnight strictly after freeze + 8 days: every
- * approval inside the 24-hour checkout intent window (freeze ≤ approval ≤
- * freeze + 24h) still gets at least 7 × 24h before that midnight, and PayPal's
- * batch on that date can never precede it. The attempt records freeze + 72h as
- * request_expires_at; the start is derived from that frozen value so activation
- * verifies the provider's echoed start_time against exactly what was requested.
+ * The customer trial end is the next UTC midnight strictly after freeze + 8 days.
+ * Every approval within the 24h intent window retains at least seven full days.
+ * request_expires_at stores freeze + 72h. Legacy requests sent this end as their
+ * provider start; v2 persists a separate noon start before creating the agreement.
  */
 export function frozenPayPalTrialStart(requestExpiresAtIso: string | null | undefined): string {
   const expiry = Date.parse(requestExpiresAtIso ?? "")
   if (!Number.isFinite(expiry)) throw new Error("PayPal trial frozen start unavailable")
   const freeze = expiry - 72 * HOUR
   return new Date((Math.floor((freeze + 8 * DAY) / DAY) + 1) * DAY).toISOString()
+}
+
+/** Candidate provider timestamp for a NEW initial or restored agreement only.
+ * Never use this to recompute an already-frozen request or its idempotent retry.
+ * The exact timestamp is persisted; the provider billing date must still pass
+ * the unchanged trial-end/window checks after approval.
+ */
+export function paypalTrialProviderStart(trialEndIso: string): string {
+  return new Date(Date.parse(paypalTrialCollectionStart(trialEndIso)) + 12 * HOUR).toISOString()
 }
 
 /**
