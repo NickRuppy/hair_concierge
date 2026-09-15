@@ -108,6 +108,9 @@ export async function runScannerTrialDashboard(
   overrides: Partial<ScannerDashboardDependencies> = {},
 ) {
   const apply = args.includes("--apply")
+  const publishAwaitingTelemetry = args.includes("--publish-awaiting-telemetry")
+  if (publishAwaitingTelemetry && !apply)
+    throw new Error("--publish-awaiting-telemetry requires --apply.")
   if (apply && !args.includes(`--confirm-project=${scannerProjectId}`))
     throw new Error(`--apply requires --confirm-project=${scannerProjectId}.`)
   const deps = {
@@ -170,7 +173,7 @@ export async function runScannerTrialDashboard(
     )
     return { mode: "dry-run", action: "preflight", ready }
   }
-  if (!ready)
+  if (!ready && !publishAwaitingTelemetry)
     throw new Error(
       "No attributed v1 scanner trial activation received in the last 30 days. Deploy and verify telemetry before replacing unavailable metrics.",
     )

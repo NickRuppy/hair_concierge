@@ -59,11 +59,14 @@ node --import tsx scripts/posthog/ensure-scanner-trial-dashboard.ts
 # Read-only live preflight, using a PostHog personal API key from the environment.
 node --import tsx scripts/posthog/ensure-scanner-trial-dashboard.ts --inspect
 
-# Authorized rollout only, after v1 scanner activation is received.
+# Publish live queries after deployment, before the first new activation; empty cohorts stay unavailable.
+node --import tsx scripts/posthog/ensure-scanner-trial-dashboard.ts --apply --confirm-project=126788 --publish-awaiting-telemetry
+
+# Normal guarded update after v1 scanner activation is received.
 node --import tsx scripts/posthog/ensure-scanner-trial-dashboard.ts --apply --confirm-project=126788
 ```
 
-The installer verifies the exact dashboard and audited/current chart definitions, refuses shared/drifted charts, checks for received v1 scanner trial telemetry, and runs changed queries before saving them. Reruns do not create duplicate insights. Existing unavailable-trial placeholders are not replaced by misleading zeroes before the instrumentation arrives.
+The installer verifies the exact dashboard and audited/current chart definitions, refuses shared/drifted charts, checks for received v1 scanner trial telemetry, and runs changed queries before saving them. Reruns do not create duplicate insights. The explicit pre-telemetry publication saves the real queries, so new events populate automatically without a later activation step. Empty trial cohorts return no aggregate rows; offer trial/payment counts remain unavailable until a matching activation exists. Existing acquisition/offer charts retain their live data.
 
 ## Verification and release boundary
 
@@ -84,3 +87,7 @@ Immediate webhook dispatch targets the event key for that request. A PayPal effe
 ### Local review result
 
 No blocking findings in the independent Claude Opus 4.8/high correctness and structural review. The combined main-session focused suite passed 81/81; production build and lint passed (unrelated warnings remain). Real offer-event browser assertions have passing Chromium and mobile WebKit cases; one local hydration failure passed on an unchanged rerun. Removing Continue tracking caused the expected missing-event failure. Migration tests use PGlite and do not establish independent two-session concurrency. Meta receipt and deployment are still unverified.
+
+## Authorized production rollout — 2026-09-15
+
+Nick authorized shipping and making this live for dashboard review. Supabase migration `20260915113126_trial_lifecycle_analytics` was applied first through the migration API; the local filename matches its recorded server version. All seven lifecycle triggers are enabled. Private-context RLS is enabled and browser roles cannot read the context or call its read RPC. No historical conversions were replayed. Application deployment and final dashboard publication are verified separately in the release receipt.

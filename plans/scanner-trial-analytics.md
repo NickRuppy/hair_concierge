@@ -131,3 +131,7 @@ Plan review completed and coverage confirmed. Continue in implementation-loop wi
 ## Final internal revalidation and code review
 
 2026-09-15: original acknowledgement and scope remain confirmed. Local implementation complete; no customer journey, payment decision, or campaign setting changed. Independent Claude Opus 4.8/high whole-tree correctness/structural review found no hard defects. Consent-gated trial purchases are the documented contract, including lower Meta signal from non-consenting traffic; no external marketing stakeholder or additional approval was introduced. Delayed PayPal dispatch is documented, the Customer.io diagnostic was clarified, and generated Playwright state is restored. Main reviewed the subsequent cancellation-before-payment predicate, payment-timing column, unused-binding cleanup and documentation delta. Verification and rollout limits: `docs/analytics/scanner-trial-tracking.md`. Transient review output discarded after incorporation.
+
+## Shipping acknowledgement
+
+2026-09-15: Nick explicitly requested “ship this, make it live” so the final dashboard can be reviewed. This authorizes publication, merge, migration-first production deployment and the dashboard update. Before the first new verified trial, lifecycle panels remain empty/unavailable while original acquisition/offer data stays visible. The explicitly authorized pre-telemetry publication installs live queries that populate automatically; ordinary updates retain their received-v1 guard. No synthetic conversion or historical replay is needed for layout review.

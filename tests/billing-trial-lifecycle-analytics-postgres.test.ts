@@ -44,7 +44,7 @@ async function setup(t: { after(fn: () => Promise<void>): void }, provider = "st
     ALTER TABLE billing_analytics_deliveries DROP CONSTRAINT billing_analytics_deliveries_destination_check;
     ALTER TABLE billing_analytics_deliveries ADD CHECK(destination IN ('customerio','meta','posthog','funnel'));`)
   await db.exec(
-    readFileSync("supabase/migrations/20260915104519_trial_lifecycle_analytics.sql", "utf8"),
+    readFileSync("supabase/migrations/20260915113126_trial_lifecycle_analytics.sql", "utf8"),
   )
   await db.query("INSERT INTO profiles VALUES($1)", [U])
   await db.query(

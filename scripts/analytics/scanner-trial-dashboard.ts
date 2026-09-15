@@ -72,10 +72,10 @@ export function buildTrialChartQuery(chart: TrialChart, options: QueryOptions = 
     AND package_key='scan_v1' AND notEmpty(session_id) AND is_test=0)`
 
   const queries: Record<TrialChart, string> = {
-    overview: `SELECT * FROM (SELECT '01 Trial aktiviert' AS status,count() AS trials FROM cohort
-UNION ALL SELECT '02 Erstmals bezahlt',countIf(paid=1) FROM cohort
-UNION ALL SELECT '03 Trial läuft noch',countIf(paid=0 AND ends_at>${cutoff}) FROM cohort
-UNION ALL SELECT '04 Trial beendet, bisher unbezahlt',countIf(paid=0 AND ends_at<=${cutoff}) FROM cohort
+    overview: `SELECT * FROM (SELECT '01 Trial aktiviert' AS status,count() AS trials FROM cohort HAVING count()>0
+UNION ALL SELECT '02 Erstmals bezahlt',countIf(paid=1) FROM cohort HAVING count()>0
+UNION ALL SELECT '03 Trial läuft noch',countIf(paid=0 AND ends_at>${cutoff}) FROM cohort HAVING count()>0
+UNION ALL SELECT '04 Trial beendet, bisher unbezahlt',countIf(paid=0 AND ends_at<=${cutoff}) FROM cohort HAVING count()>0
 ) ORDER BY status`,
     cohorts: `SELECT toDate(toDateTime(started_at)) AS trial_start,
 count() AS trials, countIf(paid=1) AS bisher_bezahlt,
@@ -90,14 +90,14 @@ countIf(paid=1) AS spaeter_bezahlt,
 countIf(restores>0) AS mit_wiederherstellung
 FROM cohort WHERE requested_in_trial=1
 GROUP BY trial_tag ORDER BY trial_tag`,
-    recovery: `SELECT * FROM (SELECT '01 Erste Abbuchung fehlgeschlagen' AS verlauf,countIf(failed_at>0) AS trials FROM cohort
-UNION ALL SELECT '02 Nach Fehler erstmals bezahlt',countIf(failed_at>0 AND paid=1 AND paid_at>=failed_at) FROM cohort
-UNION ALL SELECT '03 Nach Fehler bisher unbezahlt',countIf(failed_at>0 AND paid=0) FROM cohort
-UNION ALL SELECT '04 Im Trial selbst gekündigt',countIf(requested_in_trial=1) FROM cohort
-UNION ALL SELECT '05 Anbieter-Kündigung beobachtet',countIf(observed_at>0) FROM cohort
-UNION ALL SELECT '06 Kündigung beim Anbieter bestätigt',countIf(confirmed_at>0) FROM cohort
-UNION ALL SELECT '07 Kündigung wiederhergestellt',countIf(restores>0) FROM cohort
-UNION ALL SELECT '08 Aktueller Kündigungswunsch, bisher unbezahlt',countIf(paid=0 AND last_cancel_action IN ('trial_cancellation_requested','trial_cancellation_observed')) FROM cohort
+    recovery: `SELECT * FROM (SELECT '01 Erste Abbuchung fehlgeschlagen' AS verlauf,countIf(failed_at>0) AS trials FROM cohort HAVING count()>0
+UNION ALL SELECT '02 Nach Fehler erstmals bezahlt',countIf(failed_at>0 AND paid=1 AND paid_at>=failed_at) FROM cohort HAVING count()>0
+UNION ALL SELECT '03 Nach Fehler bisher unbezahlt',countIf(failed_at>0 AND paid=0) FROM cohort HAVING count()>0
+UNION ALL SELECT '04 Im Trial selbst gekündigt',countIf(requested_in_trial=1) FROM cohort HAVING count()>0
+UNION ALL SELECT '05 Anbieter-Kündigung beobachtet',countIf(observed_at>0) FROM cohort HAVING count()>0
+UNION ALL SELECT '06 Kündigung beim Anbieter bestätigt',countIf(confirmed_at>0) FROM cohort HAVING count()>0
+UNION ALL SELECT '07 Kündigung wiederhergestellt',countIf(restores>0) FROM cohort HAVING count()>0
+UNION ALL SELECT '08 Aktueller Kündigungswunsch, bisher unbezahlt',countIf(paid=0 AND last_cancel_action IN ('trial_cancellation_requested','trial_cancellation_observed')) FROM cohort HAVING count()>0
 ) ORDER BY verlauf`,
     providers: `SELECT provider AS zahlungsanbieter,count() AS trials,countIf(paid=1) AS bisher_bezahlt,
 countIf(requested_in_trial=1) AS im_trial_gekuendigt,
@@ -121,7 +121,7 @@ export type ScannerInsightSpec = {
 }
 
 const cohortDescription =
-  "Datumsfilter = Start-Kohorte; Folgeereignisse bis jetzt, auch nach dem Filter-Ende. Nur v1-Telemetrie mit eindeutiger Enrollment-ID und Scanner-Zuordnung; markierte Tests ausgeschlossen."
+  "Datumsfilter = Start-Kohorte; Folgeereignisse bis jetzt, auch nach dem Filter-Ende. Ohne passende Aktivierung bleibt die Kachel leer; neue Ereignisse erscheinen automatisch. Nur v1-Telemetrie mit eindeutiger Enrollment-ID und Scanner-Zuordnung; markierte Tests ausgeschlossen."
 export const scannerTrialInsights: ScannerInsightSpec[] = [
   {
     key: "trial-overview",
@@ -229,11 +229,11 @@ export const scannerInsights: ScannerInsightSpec[] = [
           )
           .replace(
             "'05 Trial aktiviert — Attribution fehlt',NULL",
-            "'05 Trial v1 aktiviert',coalesce((SELECT sessions FROM counts WHERE event='trial_started'),0)",
+            "'05 Trial v1 aktiviert',(SELECT sessions FROM counts WHERE event='trial_started')",
           )
           .replace(
             "'06 Kauf — Attribution unvollständig',NULL",
-            "'06 Trial v1 erstmals bezahlt',coalesce((SELECT sessions FROM counts WHERE event='purchase_completed'),0)",
+            "'06 Trial v1 erstmals bezahlt',if((SELECT sessions FROM counts WHERE event='trial_started')>0,coalesce((SELECT sessions FROM counts WHERE event='purchase_completed'),0),NULL)",
           ),
       }
     if (spec.key === "cta")
