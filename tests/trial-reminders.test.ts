@@ -69,6 +69,15 @@ test("escapes all rendered data and keeps its trusted links fixed", () => {
   })
   assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)
   assert.doesNotMatch(message.htmlBody, /\{\{\s*trigger\./)
-  assert.doesNotMatch(message.htmlBody, /https:\/\/chaarlie\.de\/impressum/)
+  assert.deepEqual(
+    Array.from(message.htmlBody.matchAll(/href="([^"]+)"/g), (match) => match[1]),
+    [
+      "https://chaarlie.de/profile",
+      "https://chaarlie.de/kuendigen",
+      "{% unsubscribe_url %}",
+      "https://chaarlie.de/impressum",
+      "https://chaarlie.de/datenschutz",
+    ],
+  )
   assert.equal(message.messageData.trial_end_date, "21. September 2026 um 12:00 Uhr MESZ")
 })

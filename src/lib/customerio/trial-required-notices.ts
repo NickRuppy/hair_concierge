@@ -17,6 +17,11 @@ const escapeHtml = (value: string) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;")
+
+const REQUIRED_NOTICE_HTML_PREFIX =
+  '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#fff"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff"><tr><td align="center" style="padding:28px 16px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px"><tr><td style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#2d1b46;white-space:pre-wrap;overflow-wrap:anywhere">'
+const REQUIRED_NOTICE_HTML_SUFFIX =
+  '</td></tr><tr><td align="center" style="padding:20px 0 0;font-family:Arial,sans-serif;font-size:12px;line-height:1.8;color:#655471"><p style="margin:0"><a href="{% unsubscribe_url %}" class="untracked" style="color:#655471">Abmelden</a> · <a href="https://chaarlie.de/impressum" style="color:#655471">Impressum</a> · <a href="https://chaarlie.de/datenschutz" style="color:#655471">Datenschutz</a></p></td></tr></table></td></tr></table></body></html>'
 export function buildRequiredNoticeEmail(input: {
   email: string
   messageId: string
@@ -33,21 +38,22 @@ export function buildRequiredNoticeEmail(input: {
       from: input.sender,
       // Use Liquid only as a fixed template over message_data: user text in a
       // public declaration can contain Liquid tags and must not become template code.
+      // Customer.io `escape` percent-encodes; `htmlencode` preserves readable text/URLs.
       subject: "{{ trigger.subject }}",
       htmlBody:
-        '<!doctype html><html lang="de"><meta charset="utf-8"><body><div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere">{{ trigger.receipt_text | escape }}</div></body></html>',
+        REQUIRED_NOTICE_HTML_PREFIX +
+        "{{ trigger.receipt_text | htmlencode }}" +
+        REQUIRED_NOTICE_HTML_SUFFIX,
       textBody: "{{ trigger.receipt_text }}",
       autoCreate: true,
       tracked: false,
     },
   }
 }
-/** Local preview helper; matches the escaped Liquid body and never sends. */
+/** Local HTML preview; provider-rendered delivery must also be checked. */
 export function previewRequiredNoticeHtml(message: TrialRequiredNoticeMessage): string {
   return (
-    '<!doctype html><html lang="de"><meta charset="utf-8"><body><div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere">' +
-    escapeHtml(message.receipt_text) +
-    "</div></body></html>"
+    REQUIRED_NOTICE_HTML_PREFIX + escapeHtml(message.receipt_text) + REQUIRED_NOTICE_HTML_SUFFIX
   )
 }
 export function sendTrialRequiredNotice(input: {
